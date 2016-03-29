@@ -1,0 +1,97 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "ZacNBMGz+Wd9QHKuMGTRzavA",
+		"timestamp": 1417169106786,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+	        "name": "clientName",
+	        "type": "string",
+	        "isDefault": true,
+	        "filterOperator": null,
+	        "filterValue": null,
+	        "sort": null,
+	        "label": null,
+	        "isVisible": true
+	    },{
+			"name": "date",
+			"type": "date",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "desc",
+			"isVisible": true
+		},{
+			"name": "createdBy",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},{
+			"name": "documentType",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+			"name": "documentStatus",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+			"name": "clientNeed",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+			"name": "status",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[1,"ASSENDA RED S A1", 1417169287115, "Jose Carlino", "1000102", 1, "", "Followup"],
+			[2,"ASSENDA RED S A2", 1418041489226, "Jose Carlino", "1000103", 0, "", "Draft"],
+			[3,"ASSENDA RED S A3", 1421061515633, "Jose Carlino", "1000104", 1, "", "Completed"],
+			[4,"ASSENDA RED S A4", 1421061515633, "Jose Carlino", "1000105", 0, "", "Followup"],
+			[5,"ASSENDA RED S A5", 1417169287115, "Jose Carlino", "1000106", 0, "", "Completed"],
+			[6,"ASSENDA RED S A6", 1418041489226, "Jose Carlino", "1000107", 1, "", "Completed"],
+			[7,"ASSENDA RED S A7", 1418041489226, "Jose Carlino", "1000108", 0, "", "Completed"],
+			[8,"ASSENDA RED S A8", 1417169287115, "Jose Carlino", "1000109", 1, "", "Followup"],
+			[9,"ASSENDA RED S A9", 1417169287115, "Jose Carlino", "1000110", 0, "", "Draft"],
+			[10,"ASSENDA RED S A10", 1417169287115, "Jose Carlino", "1000111", 1, "", "Followup"],
+			[11,"ASSENDA RED S A11", 1417169287115, "Jose Carlino", "1000112", 1, "", "Followup"]
+		]
+	}
+}

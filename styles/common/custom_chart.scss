@@ -1,0 +1,65 @@
+/* Custom chart tooltip */
+.chart-tooltip {
+	position: absolute;
+	background-color: $color-dark-two;
+	color: $color-white;
+	left: 100px;
+	top: -50px;
+	margin-left: 10px;
+}
+.chart-tooltip:before {
+	position: absolute;
+	left: 0;
+	top: 20px;
+	color: $color-dark-two;
+}
+.chart-tooltip-group-bg {
+	background-color: $color-dark-two;
+	padding-top: 5px;
+	padding-left: 15px;
+	margin-left: 8px;
+	padding-right: 15px;
+	border-radius: $border-radius;
+}
+
+.legend .chart-tooltip-group-bg {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.legend h3 {
+	line-height: normal;
+	padding: 0;
+	margin: 0;
+}
+
+.chart-tooltip-title {
+	font-size: 35px;
+	color: $color-white;
+	margin-bottom: 0px;
+	font-weight: normal;
+	font-family: $base-font-family-two;
+}
+
+.chart-tooltip-detail {
+	white-space: nowrap;
+	padding: 5px 0px;
+	line-height: 16px;
+	font-weight: bold;
+}
+/* Chart Tooltip for LineChart */
+.line-chart {
+	.chart-tooltip {
+		left: -20px;
+	}
+}
+
+.donut {
+	.chart-tooltip {
+		left: 0;
+	}
+}
+
+.legend .chart-tooltip-container{
+	z-index: 1000;
+}

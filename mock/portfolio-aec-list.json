@@ -1,0 +1,111 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "UgmhD+y7a25mvkvvYSjodhjS",
+		"timestamp": 1422347824754,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "date",
+			"type": "date",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "desc",
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "createdBy",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "statusId",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "status",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "documentStatus",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[4929969, 1420430018854, "rm1", 676, "test_aec_level_3", 1],
+			[4929971, 1420041600000, "rm1", 676, "test_aec_level_3", 0],
+			[4929974, 1419177600000, "rm1", 676, "test_aec_level_3", 1],
+			[4929482, 1419845584674, "rm1", 676, "test_aec_level_3", 1],
+			[4929517, 1419925742329, "rm1", 676, "test_aec_level_3", 1],
+			[4929478, 1419844742132, "rm1", 676, "test_aec_level_3", 1],
+			[4929511, 1419925322055, "rm1", 676, "test_aec_level_3", 1],
+			[4929513, 1419925742329, "rm1", 676, "test_aec_level_3", 1],
+			[4929459, 1419842959066, "rm1", 675, "test_aec_level_2", 1],
+			[4929803, 1420045200000, "rm1", 675, "test_aec_level_2", 0],
+			[4929425, 1419837012320, "rm1", 676, "test_aec_level_3", 1],
+			[4929451, 1419842956456, "rm1", 676, "test_aec_level_3", 1],
+			[4929453, 1419842959066, "rm1", 675, "test_aec_level_2", 1],
+			[4929464, 1419843146006, "rm1", 675, "test_aec_level_2", 1],
+			[4929341, 1419411447092, "rm1", 673, "test_aec_level_normal", 1],
+			[4929573, 1420004749730, "rm1", 675, "test_aec_level_2", 0],
+			[4929343, 1419411447092, "rm1", 673, "test_aec_level_normal", 1],
+			[4930048, 1420514611778, "rm1", 676, "test_aec_level_3", 1],
+			[4930098, 1420646400000, "rm1", 676, "test_aec_level_3", 1],
+			[4930046, 1420514611778, "rm1", 674, "test_aec_level_1", 0],
+			[4930100, 1420300800000, "rm1", 674, "test_aec_level_1", 1],
+			[4929472, 1419843613985, "rm1", 675, "test_aec_level_2", 1],
+			[4929582, 1420021122340, "rm1", 676, "test_aec_level_3", 1],
+			[4929586, 1420021515852, "rm1", 676, "test_aec_level_3", 1],
+			[4929588, 1420021515852, "rm1", 676, "test_aec_level_3", 1],
+			[4929590, 1420021515852, "rm1", 676, "test_aec_level_3", 1],
+			[4929427, 1419837623495, "rm1", 676, "test_aec_level_3", 1],
+			[4929447, 1419842649712, "rm1", 676, "test_aec_level_3", 1],
+			[4929592, 1420021781967, "rm1", 676, "test_aec_level_3", 1],
+			[4929445, 1419842487674, "rm1", 676, "test_aec_level_3", 1],
+			[4929580, 1420021122340, "rm1", 676, "test_aec_level_3", 1],
+			[4929449, 1419842959066, "rm1", 676, "test_aec_level_3", 1],
+			[4929523, 1419934193757, "rm1", 674, "test_aec_level_1", 0],
+			[4929584, 1420021122340, "rm1", 676, "test_aec_level_3", 1],
+			[4929594, 1420021781967, "rm1", 676, "test_aec_level_3", 1],
+			[4929480, 1419845149063, "rm1", 675, "test_aec_level_2", 1]
+		]
+	}
+}

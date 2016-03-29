@@ -1,0 +1,37 @@
+.aec-summary {
+	.chart {
+		svg {
+			float: right;
+		}
+	}
+}
+
+.aec-summary {
+	.legend-list {
+		background: none;
+		padding: 0px;
+	}
+	.legend-title {
+		margin-bottom: 28px;
+	}
+	.legend-item-title {
+		font-weight: bold;
+		font-size: 16px;
+	}
+	.legend-item-detail {
+		font-size: 25px;
+	}
+	.legend-item {
+		padding: 0;
+	}
+	.legend-item-title {
+		margin-bottom: 4px;
+	}
+	.legend-bullet-group {
+		padding: 0 26px;
+		position: relative;
+	}
+	.aec-chart-wrapper {
+		position: relative;
+	}
+}

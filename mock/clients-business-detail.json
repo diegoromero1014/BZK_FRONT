@@ -1,0 +1,35 @@
+{
+	"messageHeader":    {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417000708968,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+ 	},
+	"messageBody":    {
+		"id": 1,
+		"createdTimestamp": 1416399013827,
+		"updatedTimestamp": 1417588119103,
+		"createdBy": 23,
+		"updatedBy": 1,
+		"status": 0,
+		"documentType": 1,
+		"documentNumber": "adv1bp01",
+		"client": 27,
+		"documentStatus": 0,
+		"executiveSummary": "executiveSummary",
+		"objective": null,
+		"opportunitiesAndThreats": null,
+		"clientNeedFulfillmentPlan": [],
+		"relatedInternalParties": [],
+		"year": 2015,
+		"approximateValueOfBusinessByNeed": 1000
+	}
+}

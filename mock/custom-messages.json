@@ -1,0 +1,20 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "XklQ80RCRKNAzWQ8O7U9bUFS",
+		"timestamp": 1417431780787,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+
+	"messageBody": {
+		"welcome": ""
+	}
+}

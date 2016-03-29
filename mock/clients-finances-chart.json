@@ -1,0 +1,25 @@
+{
+	"messageHeader": {
+		"applicationVersion": "1.0.0",
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": "clientContactList",
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "1",
+		"status": 0,
+		"technicalErrorMessage": null,
+		"timestamp": null,
+		"username": "jose"
+	},
+	"messageBody": [{
+		"needId": 1,
+		"needName": "Préstamos",
+		"amount": 49,
+		"format": "0%"
+	}, {
+		"needId": 2,
+		"needName": "Depósitos",
+		"amount": 51,
+		"format": "0%"
+	}]
+}

@@ -1,0 +1,82 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "ZacNBMGz+Wd9QHKuMGTRzavA",
+		"timestamp": 1417169106786,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "string",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+			"name": "clientId",
+			"type": "string",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},{
+			"name": "shareHolderIdType",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},{
+			"name": "shareHolderIdNumber",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},{
+			"name": "shareHolderType",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},{
+			"name": "shareHolderName",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},{
+			"name": "sharePercentage",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[4932784, 4932773, "CEDULA DE CIUDADANIA", "234234", "PN", "1111", 10],
+			[4932785, 4932773, "CEDULA DE CIUDADANIA", "234234", "PN", "2222", 10],
+			[4932786, 4932773, "CEDULA DE CIUDADANIA", "234234", "PN", "3333", 10],
+			[4932787, 4932773, "CEDULA DE CIUDADANIA", "234234", "PN", "4444", 10],
+			[4932788, 4932773, "CEDULA DE CIUDADANIA", "234234", "PN", "5555", 30]
+		]
+	}
+}

@@ -1,0 +1,132 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "",
+		"timestamp": 1420453171224,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "clientName",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "date",
+			"type": "date",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "createdBy",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "needId",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "need",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "status",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "documentStatus",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		},
+		{
+			"name": "clientId",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}],
+		"rows": [
+			[10163, "Client 7", 1418989412880, "rm 1", null, null, "1", 0, 4931744],
+			[10123, "Client 7", 1418965167613, "rm 1", null, null, "1", 0, 4931745],
+			[4929261, "Client 7", 1419329822952, "rm 1", 1, "need 1", "test_status_1", 0, 2],
+			[10229, "Client 7", 1419234593544, "rm 1", null, null, "1", 0, 2],
+			[4929287, "Client 7", 1419336131974, "rm 1", 2, "need 2", "test_status_3", 0, 2],
+			[4929329, "abc", 1419410220429, "rm 1", 1, "need 1", "1", 1, 2],
+			[10177, "FClient 6", 1419217189383, "rm 1", null, null, "1", 0, 2],
+			[10099, "FClient 6", 1418888460823, "rm 1", 1, "need 1", "test_status_1", 1, 2],
+			[4929875, "1111", 1420259953568, "rm 1", 1, "need 1", "test_status_1", 0, 2],
+			[4929874, "1111", 1420259953568, "rm 1", 1, "need 1", "test_status_1", 0, 2],
+			[4929274, "ZClient 9", 1419331646611, "rm 1", 1, "need 1", "test_status_1", 0, 2],
+			[10140, "ZClient 9", 1418984668360, "rm 1", null, null, "test 2", 0, 2],
+			[10189, "Client 8", 1419219748308, "rm 1", 1, "need 1", "test 2", 1, 2],
+			[4929218, "abc", 1419323573461, "rm 1", null, null, "test_status_2", 0, 2],
+			[10095, "Cemil & Co", 1418885355589, "rm 1", 1, "need 1", "test_status_2", 0, 2],
+			[4929249, "Cemil & Co", 1419325026994, "rm 1", null, null, "test_status_1", 0, 2],
+			[10106, "Cemil & Co", 1418896906662, "rm 1", 2, "need 2", "test_status_2", 0, 2],
+			[4929241, "Cemil & Co", 1419324893103, "rm 1", null, null, "test_status_1", 0, 2],
+			[4929237, "Cemil & Co", 1419324846967, "rm 1", null, null, "test_status_1", 0, 2],
+			[10216, "Client 4", 1419230595589, "rm 1", null, null, "1", 0, 2],
+			[4929256, "Client 4", 1419325354708, "rm 1", 1, "need 1", "1", 1, 2],
+			[4929252, "Client 3", 1419325191952, "rm 1", 1, "need 1", "test_status_3", 0, 2],
+			[4929634, "Client 2", 1420180210176, "rm 1", 2, "need 2", "test_status_1", 0, 2],
+			[4929281, "Client 2", 1419332594748, "rm 1", 1, "need 1", "test_status_3", 1, 2],
+			[4929646, "Client 2", 1420181721476, "rm 1", 1, "need 1", "test_status_1", 0, 2],
+			[4929638, "Client 2", 1420181117222, "rm 1", 2, "need 2", "test_status_1", 0, 2],
+			[4929233, "Client 1", 1419324612210, "rm 1", null, null, "test_status_3", 0, 2],
+			[4929226, "Client 1", 1419324278871, "rm 1", null, null, "test_status_2", 0, 2],
+			[10197, "Client 1", 1419223216667, "rm 1", null, null, "test_status_1", 0, 3]
+		]
+	}
+}

@@ -1,0 +1,105 @@
+{
+	"messageHeader": {
+		"applicationVersion": "1.0.0",
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": "groupDetails",
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "1",
+		"status": 0,
+		"technicalErrorMessage": null,
+		"timestamp": null,
+		"username": "jose",
+		"lang": "es"
+	},
+	"messageBody":    {
+		"cols":       [
+		{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},
+		{
+			"name": "title",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},
+		{
+			"name": "name",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},
+		{
+			"name": "photo",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},
+		{
+			"name": "mail",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},
+		{
+			"name": "phone",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		},
+		{
+			"name": "employeeType",
+			"type": "string",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},
+		{
+		             "name": "lineOfBusiness",
+		             "type": "number",
+		             "isDefault": false,
+		             "filterOperator": null,
+		             "filterValue": null,
+		             "sort": null,
+		             "isVisible": false
+		         }
+		],
+		"rows": [
+				[1,"Primary rm", "David Cristobal Andre Rodriguez","mock/img/profiles/avatar.jpg","jose@bancolombia.com","12345678", "rm", -1],
+				[2,"Gerente Valores Bancolombia","Jose Alejandro Leandro Carlino","mock/img/profiles/avatar.jpg","jose@bancolombia.com","12345678", "rm", 342],
+				[3,"Gerente Banca Inversion","Alejandro Leandro Carlino","mock/img/profiles/avatar.jpg", "paul@bancolombia.com","11111111", "rm", 343],
+				[4,"Gerente Factoring","Paul Restrepo", "mock/img/profiles/avatar.jpg","paul@bancolombia.com", "11111111", "rm", 341],
+				[5,"Gerente Fiduciaria", "David Restrepo", "mock/img/profiles/avatar.jpg" , "david@bancolombia.com", "11111111", "rm", 344 ],
+				[6,"Gerente Fiduciaria", "David Restrepo", "mock/img/profiles/avatar.jpg" , "david@bancolombia.com", "11111111", "rm", 348 ],
+				[7,"Gerente Fiduciaria", "David Restrepo", "mock/img/profiles/avatar.jpg" , "david@bancolombia.com", "11111111", "rm", 346 ],
+				[8,"Gerente Fiduciaria", "Jose Carlino", "mock/img/profiles/avatar.jpg", "jose@bancolombia.com", "11111111", "assistant", 350 ],
+				[9,"Gerente Fiduciaria", "Jose Carlino", "mock/img/profiles/avatar.jpg", "jose@bancolombia.com", "11111111", "assistant", 349 ],
+				[10,"", "Jose Carlino", "mock/img/profiles/avatar.jpg", "jose@bancolombia.com", "11111111", "others", 352],
+				[11,"", "Jose Carlino","mock/img/profiles/avatar.jpg", "jose@bancolombia.com", "11111111", "others", 344]
+
+		]
+	}
+}

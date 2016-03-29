@@ -1,0 +1,95 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "mVFZr+QKANObaqh2Y6w3LOFx",
+		"timestamp": 1426522678017,
+		"service": null,
+		"sessionExpiryInterval": 0,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "clientId",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": false
+		}, {
+			"name": "clientName",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "date",
+			"type": "date",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "desc",
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "lineOfBusiness",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "amount",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "status",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "documentStatus",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[4933134, 2254, "ASSENDA RED S A", 1426521117936, "Bancolombia", 133030.0, "Alto", 1],
+			[4933127, 2254, "ASSENDA RED S A", 1428422400000, null, 50000, "Victoria", 1]
+		]
+	}
+}

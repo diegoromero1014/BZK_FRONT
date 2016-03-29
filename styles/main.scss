@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Main styles: combine everything together
+   ========================================================================== */
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+
+// SASS mixin function
+@import "common/mixins";
+@import "app/global";
+
+// SASS-based styles for plugins,
+// DON'T import .CSS here since the compiler won't inline them
+// USE the <link> directive in index.html within the build:css plugin group instead
+@import "modules/c3";
+
+// Theme config and variables
+@import "themes/default/theme";
+
+// WEB ARCH MODULES
+@import "modules/layout",                // Main Layout
+"modules/horizontal_menu",       // Horizontal Menu
+"modules/typo",                  // Typography
+"modules/misc",                  // Misc
+"modules/form_elements",         // Form elements
+"modules/portlets",              // Portlets
+"modules/message_notifications", // Message and Notifications
+"modules/tiles",                 // Tiles
+"modules/buttons",               // Buttons
+"modules/tabs_accordians",       // Tabs and Accordians
+"modules/slider",                // Sliders
+"modules/tables",                // Tables
+"modules/datatable",             // Data Table
+"modules/charts",                // Charts
+"modules/user_profile",          // User Profile
+"modules/vector_maps",           // Vector Maps
+"modules/error_page",            // Error Page wrappers
+"modules/timeline",              // Timeline
+"modules/search_results",        // Search Results
+"modules/select2",
+"modules/simple_pagination",
+"modules/ios7_switch",        // Search Results
+"modules/boostrap_datetimepicker",        // Search Results
+"modules/bootstrap_icons";        // Search Results
+
+@import "common/custom_datatable",		//Custom components
+"common/custom_chart";		//Custom components
+// Custom icons set
+@import "common/icons"; // from web-arch's custom-icon-set.css
+
+@import "app/login",
+"app/welcome",          // welcome page
+"app/dashboard",        // dashboard
+"app/clients",
+"app/portfolio",
+"app/popup",
+"app/client_by_segment",
+"app/pipeline",
+"app/aec_summary",
+"app/flags";
+
+// Helpers
+@import "common/helpers"; // helpers must be at the bottom of the stylesheet to get higher priority by source order

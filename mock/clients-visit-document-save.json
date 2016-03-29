@@ -1,0 +1,17 @@
+{
+   "messageHeader":    {
+      "username": "user",
+      "sessionToken": "YQu1DV1Pk-yMQsuJWw6r70Kw",
+      "timestamp": 1417590557385,
+      "service": "authenticateUser",
+      "sessionExpiryInterval": 6000,
+      "status": "0",
+      "language": null,
+      "displayErrorMessage": null,
+      "technicalErrorMessage": null,
+      "applicationVersion": "1.0.0",
+      "debug": true,
+      "isSuccessful": true
+   },
+   "messageBody": {"id": 29}
+}

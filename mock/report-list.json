@@ -1,0 +1,61 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "",
+		"timestamp": 1420009284814,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"pagingInfo": {
+			"totalPage": 40,
+			"pageNum": 1,
+			"perPage": 3
+		},
+		"draftDocuments": [{
+			"documentType": "Pre Visit Document",
+			"clientName": "FClient 6",
+			"documentNumber": null,
+			"updatedDate": 1418898395012,
+			"updatedBy": "rm 1",
+			"createdDate": 1418898395012,
+			"createdBy": "rm 1",
+			"clientId": 400,
+			"entityId": 2,
+			"documentId": 37,
+			"ownershipType": "SELF"
+		}, {
+			"documentType": "Pre Visit Document",
+			"clientName": "Cemil & Co",
+			"documentNumber": null,
+			"updatedDate": 1418978172724,
+			"updatedBy": "rm 1",
+			"createdDate": 1418978172724,
+			"createdBy": "rm 1",
+			"clientId": 400,
+			"entityId": 2,
+			"documentId": 37,
+			"ownershipType": "SELF"
+		}, {
+			"documentType": "Visit Document",
+			"clientName": "FClient 6",
+			"documentNumber": null,
+			"updatedDate": 1418977989330,
+			"updatedBy": "rm 1",
+			"createdDate": 1418977989330,
+			"createdBy": "rm 1",
+			"clientId": 400,
+			"entityId": 4,
+			"documentId": 37,
+			"ownershipType": "SELF"
+		}]
+
+	}
+}

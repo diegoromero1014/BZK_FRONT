@@ -1,0 +1,48 @@
+{
+	"messageHeader":    {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417689413366,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {"alertItems":    [
+		{
+			"alertType": 0,
+			"clientId": null,
+			"clientIdType": null,
+			"clientIdNumber": null,
+			"clientName": null,
+			"time": 1420604820173,
+			"parentId": null,
+			"generalMessage": "This is a system alert."
+		},
+		{
+			"alertType": 1,
+			"clientId": 436,
+			"clientIdType": "client 1 id type",
+			"clientIdNumber": "client 1 id number",
+			"clientName": "client 1 name",
+			"time": 1420604820673,
+			"parentId": null,
+			"generalMessage": "This is a alert."
+		},
+		{
+			"alertType": 2,
+			"clientId": 485,
+			"clientIdType": "client 1 id type",
+			"clientIdNumber": "client 1 id number",
+			"clientName": "client 1 name",
+			"time": 1420604820973,
+			"parentId": 2,
+			"generalMessage": "This is a alert."
+		}
+	]}
+}

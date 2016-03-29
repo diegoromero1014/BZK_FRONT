@@ -1,0 +1,134 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "lHJY85dZi5oyUBUGXwys4Ux+.undefined",
+		"timestamp": 1420445623563,
+		"service": "authenticateUser",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": null,
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": "1.0.0",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "description",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "month01amount",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": "9-2014",
+			"isVisible": true
+		}, {
+			"name": "month02amount",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": "8-2014",
+			"isVisible": true
+		}, {
+			"name": "percentageVar",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}, {
+			"name": "accum01",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": "9-2014",
+			"isVisible": true
+		}, {
+			"name": "accum02",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": "9-2013",
+			"isVisible": true
+		}, {
+			"name": "percentageVar2",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"label": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[
+				"001_DEPOSITS",
+				30228308.4,
+				38841445,
+				1,
+				37642641,
+				34922022,
+				7.8
+			],
+			[
+				"002_LOANS",
+				40492974,
+				39971124,
+				1.3,
+				38930448,
+				39522409, -1.5
+			],
+			[
+				"003_COMMERCIAL_SIZE",
+				79721282,
+				78812569,
+				1.2,
+				76573089,
+				74444431,
+				2.9
+			],
+			[
+				"004_PROFITABILITY",
+				1899,
+				2168, -12.4,
+				16000,
+				12124,
+				32
+			],
+			[
+				"005_EVA",
+				830,
+				1024, -18.9,
+				7172,
+				3851,
+				86.2
+			],
+			[
+				"006_ROE",
+				23,
+				25, -8,
+				23,
+				19,
+				21.1
+			]
+		]
+	}
+}

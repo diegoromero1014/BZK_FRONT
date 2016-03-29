@@ -1,0 +1,84 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "jc2bhPOStIymdaHuUYMICx4C",
+		"timestamp": 1417142474629,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		}, {
+			"name": "documentType",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "documentNumber",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "client",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "documentStatus",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		}, {
+			"name": "visitTime",
+			"type": "date",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "desc",
+			"isVisible": true
+		},{
+			"name": "visitId",
+			"type": "number",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "desc",
+			"isVisible": false
+		}],
+		"rows": [
+			[37, 0, "ast2v01", "client_01", 0, 1417142474629, 123],
+			[36, 1, "ast2pv01", "client_01", 0, 1426780800000, 2],
+			[32, 1, "ast1pv01", "client_01", 0, 1418041489226, null],
+			[29, 0, "adv1v01", "client_01", 0, 1426780800000, null],
+			[28, 1, "adv1pv01", "client_01", 0, 1418041489226, null],
+			[33, 0, "ast1v01", "client_01", 0, 1417142474629, 342],
+			[34, 0, "ast1v01", "client_01", 0, 1417142474629, null]
+		]
+	}
+}

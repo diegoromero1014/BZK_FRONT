@@ -1,0 +1,125 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "QIAL661vmYLjw77ejxxa0je-",
+		"timestamp": "2015-09-23 01:13:37",
+		"service": null,
+		"sessionExpiryInterval": 900000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": "1.0.0",
+		"timeZone": "+7",
+		"debug": false,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"economicGroupValueObjects": [{
+			"id": 4936343,
+			"group": "AlephGroup",
+			"nitPrincipal": "AlephGroup",
+			"relationshipManager": 2
+		}, {
+			"id": 4935795,
+			"group": "PRODUCTOS QUIMICOS PANAMERICANOS S A P Q P",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4935802,
+			"group": "SULFOQUIMICA S A",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4938340,
+			"group": "freeze testing",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 103
+		}, {
+			"id": 4936372,
+			"group": "WrongClientList",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 115
+		}, {
+			"id": 4935787,
+			"group": "GRUPO ORBIS S A",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4936488,
+			"group": "FINALSANITY",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4935805,
+			"group": "SIMEX S A S",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4936403,
+			"group": "grouping1",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4936510,
+			"group": "betatesting",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4938321,
+			"group": "sanity25aug",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 115
+		}, {
+			"id": 4935814,
+			"group": "ALMACENES FLAMINGO",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4936511,
+			"group": "zetatesting",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4935786,
+			"group": "PEGAUCHO S A S",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4938199,
+			"group": "arutest",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 115
+		}, {
+			"id": 4935792,
+			"group": "MICROPLAST ANTONIO PALACIO Y CIA  S A S",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 104
+		}, {
+			"id": 4936509,
+			"group": "alephtesting",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4935968,
+			"group": "CARVAJAL",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 2
+		}, {
+			"id": 4947149,
+			"group": "freeze testing 2",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 103
+		}, {
+			"id": 4949564,
+			"group": "freeze testing 2",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 103
+		}, {
+			"id": 4935586,
+			"group": "RM_2_GROUP",
+			"nitPrincipal": "PRODUCTOS",
+			"relationshipManager": 4935609
+		}]
+	}
+}

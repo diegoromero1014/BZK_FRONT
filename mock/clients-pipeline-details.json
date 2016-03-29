@@ -1,0 +1,37 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "XklQ80RCRKNAzWQ8O7U9bUFS",
+		"timestamp": 1417431780787,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"businessStatus": 3,
+		"businessWeek": 3,
+		"commission": 5,
+		"currency": 4,
+		"employeeResponsible": 1,
+		"endDate": "1420002000000",
+		"id": 1,
+		"indexing": 1,
+		"need": 1,
+		"observations": "none",
+		"product": 1,
+		"priority": 1,
+		"roe": 23,
+		"registeredCountry": 1,
+		"startDate": "1414814400000",
+		"documentStatus": 0,
+		"termInMonths": 12,
+		"value": 1000000,
+		"probability": 4929216
+	}
+}
