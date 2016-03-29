@@ -1,0 +1,58 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "jc2bhPOStIymdaHuUYMICx4C",
+		"timestamp": 1417142474629,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},  {
+			"name": "customerNeed",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "descriptionOfNeed",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "country",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[1, "Financion", "Long term Credit facilities", "Columbia"],
+			[2, "Inversion", "-", "-"],
+			[3, "Transaccional", "-", "-"],
+			[4, "Gestion De Riesgo", "Derivate operations to cover fx (FWDS/waps) ", "Columbia"],
+			[5, "Apoyo Estrategico", "-", "-"]
+		]
+	}
+}

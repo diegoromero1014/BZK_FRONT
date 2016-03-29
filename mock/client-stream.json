@@ -1,0 +1,49 @@
+{
+	"messageHeader": {
+		"username": "rm1",
+		"sessionToken": "",
+		"timestamp": 1420010336601,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"pagingInfo": {
+			"totalPage": 40,
+			"pageNum": 1,
+			"perPage": 3
+		},
+		"clientStreamRecords": [{
+			"date": 1420008797857,
+			"owner": "rm 1",
+			"action": 1,
+			"entity": 6,
+			"entityId": 36,
+			"clientId": 436,
+			"clientName": ""
+		}, {
+			"date": 1419925940879,
+			"owner": "rm 1",
+			"action": 1,
+			"entity": 0,
+			"entityId": 4929515,
+			"clientId": 301,
+			"clientName": ""
+
+		}, {
+			"date": 1419925773702,
+			"owner": "rm 1",
+			"action": 1,
+			"entity": 1,
+			"entityId": 4929513,
+			"clientId": 302,
+			"clientName": ""
+		}]
+	}
+}

@@ -1,0 +1,73 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "jc2bhPOStIymdaHuUYMICx4C",
+		"timestamp": 1417142474629,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"cols": [{
+			"name": "id",
+			"type": "number",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": false
+		},  {
+			"name": "visitType",
+			"type": "string",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "asc",
+			"isVisible": false
+		}, {
+			"name": "meetingType",
+			"type": "string",
+			"isDefault": false,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": "asc",
+			"isVisible": false
+		}, {
+			"name": "participantName",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}, {
+			"name": "participantPosition",
+			"type": "string",
+			"isDefault": true,
+			"filterOperator": null,
+			"filterValue": null,
+			"sort": null,
+			"isVisible": true
+		}],
+		"rows": [
+			[1, "Pre Visit", "Client", "David Rodriguez(Manager)", "Pablo Jimenes(General Manager)"],
+			[2, "Pre Visit", "Client", "Paula Munoz(Manager)", "Matthew Perez(Financial Manager)"],
+			[3, "Pre Visit", "Bancolombia", "Pre David Rodriguez(Manager)", "Rick Jimenes(General Manager)"],
+			[4, "Pre Visit", "Bancolombia", "David Rodriguez(Manager)", "Bob Jimenes(General Manager)"],
+			[5, "Pre Visit", "Other", "David Rodriguez(Manager)", "Pablo Jimenes(General Manager)"],
+			[6, "Pre Visit", "Other", "David Rodriguez(Manager)", "Nina Jimenes(General Manager)"],
+			[7, "Visit", "Client", "Eddy Rodriguez(Manager)", "Pablo Jimenes(General Manager)"],
+			[8, "Visit", "Client", "Valentina Munoz(Manager)", "Nina Perez(Financial Manager)"],
+			[9, "Visit", "Bancolombia", "Hana Rodriguez(Manager)", "Tyra Jimenes(General Manager)"],
+			[10, "Visit", "Bancolombia", "Vanessa Rodriguez(Manager)", "Jairo Jimenes(General Manager)"],
+			[11, "Visit", "Other", "Lucas Rodriguez(Manager)", "Jessica Jimenes(General Manager)"],
+			[12, "Visit", "Other", "Rodtigo Rodriguez(Manager)", "Pablo Jimenes(General Manager)"]
+		]
+	}
+}

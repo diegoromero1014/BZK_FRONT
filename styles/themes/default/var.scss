@@ -1,0 +1,156 @@
+// Webarch Default Theme
+// --------------------------------------------------
+// Copyright Reserved Revox - 2014
+// --------------------------------------------------
+
+$base-img-url: "../img";
+//Font
+$base-font-family: 'Source Sans Pro', Arial, sans-serif; //updated
+$base-font-family-two: 'HelveticaNeueLT', Helvetica, Arial, sans-serif; //updated
+$base-font-color: #4c5360; //updated
+$base-font-size: 16px; //updated
+
+// Global Color
+// --------------------------------------------------
+// Base Grey Guided Color * change only $base-light-default
+// --------------------------------------------------
+$base-light-default: #e7eced; //updated hsl(190, 14%, 92%)
+$base-light-two: lighten($base-light-default, 3%); //hsl(190, 21%, 95%)
+$base-light-three: mix($base-light-default, #fff, 50%); //e0e5e7
+$base-light-four: mix($base-light-default, #fff, 35%); //e9ecee
+$base-light-five: mix($base-light-default, #fff, 15%); //f6f7f8
+$base-blue: #0090d9; //hsl(204, 76, 86)
+$base-blue-two: lighten($base-blue, 6%);
+
+// Boostrap Color Options
+// --------------------------------------------------
+$color-primary-grey: #818282;
+$color-primary-black-overlay: #6f6f6f;
+
+$color-white: #ffffff;
+$color-dark: #1B1E24;
+$color-dark-two: #666666; //new
+$color-dark-three: lighten($base-light-default, 10%); //new
+$color-green: #1abc9c; //updated
+$color-green-dark: #1aa88c; //updated
+$color-blue: #0090d9;
+$color-yellow: #f5af2b; //updated
+$color-yellow-light: #fdfbea; //NEW
+$color-yellow-light-2: #fceac1; //NEW
+$color-yellow-dark: #cea70b; //NEW
+$color-red: #e86853; //updated
+$color-red-light: #ec5f48; //NEW
+$color-red-light-4: #e37a4d; //NEW
+$color-red-light-2: #e1c6c6; //NEW
+$color-red-light-3: #f4f4f4; //NEW
+$color-grey: $color-primary-grey; //updated
+$color-black: #1b1e24;
+$color-purple: #83648a; //updated
+$color-orange: #eb984e; //NEW
+
+$color-primary: #2671d7; //updated
+$color-primary-dark: #16498b; //updated
+$color-primary-light: #3498db; //updated
+$color-primary-darker: #1a2f4c; //NEW
+$color-primary-dark2: #34629d; //NEW
+$color-primary-light2: #a0b1c6; //NEW
+$color-primary-dark3: #66778d; //NEW
+
+$color-success: $color-green;
+$color-success-dark: $color-green-dark;
+$color-success-light: lighten($color-green, 20%);
+$color-succss-inverse: $color-primary-darker; //updated
+
+$color-danger: #e86853; //updated
+$color-danger-dark: #e76e70;
+$color-danger-light: #fff6f4;
+$color-important: $color-orange;
+
+$color-warning: $color-yellow; //updated
+$color-warning-dark: #cca91d; //updated
+$color-warning-light: #fae698; //updated
+$color-warning-luminous: $color-yellow; //updated
+
+$color-info: $color-primary-dark2; //updated
+$color-info-dark: '';
+$color-info-light: '';
+$login-background: hsla(221, 61%, 12%, 0.9); //NEW
+$border-login: #495772; //NEW
+
+$background-danger: #fbe6e3; //NEW
+
+// Layout
+// --------------------------------------------------
+// Sidebar Colors Vars
+// --------------------------------------------------
+//Sidebar top header Background
+$sidebar-header-color: $color-primary-dark;
+//Sidebar top header icon background
+$sidebar-header-iconset-background: #1B1E24;
+$sidebar-header-iconset-background-active: #0D0F12;
+//Sidebar top icon image path with Retina Option
+//$sidebar-header-iconset:url(#{$base-img-url}/icon/top-tray.png) no-repeat;
+$sidebar-header-iconset: false;
+//$sidebar-header-iconset-2x:url(#{$base-img-url}/icon/top-trayx2.png) no-repeat;
+$sidebar-header-iconset-2x: false;
+//Sidebar background Color
+$sidebar-color: $color-primary-dark;
+//Sidebar Link Font Color
+$sidebar-link-color: $color-white;
+//Sidebar Link Hight light color
+$sidebar-link-hover: $color-primary-light;
+//Sidebar Secodary menu background
+$sidebar-inner-ul-list-background: #22262E;
+//Sidebar Secodary menu link hover color
+$sidebar-inner-link-hover: $sidebar-color;
+//Sidebar Footer Background
+$sidebar-footer-color: #22262E;
+//Sidebar Size Options
+$sidebar-width-width: 250px;
+$sidebar-condensed-width: 50px;
+
+//Form Elements
+$input-active-background-color: #f4f5f7;
+$input-active-bordrer-color: #f1f1f1;
+
+//Page Global
+$page-header-color: #fff;
+$page-content-color: $base-light-default; //updated
+$default-border-color: #c2c7c9; //updated
+$page-padding: 15px;
+
+//Form Elements
+$input-active-background-color: #f4f5f7;
+$input-active-bordrer-color: #f1f1f1;
+
+//Typo Vars
+$heading-font-color-light: #505458;
+$heading-font-color-dark: #282323;
+
+//Table
+$table-body-background: #ecf0f2;
+$table-hover-background: #e2e8eb;
+$table-border: #83868c;
+$table-header-background: #f9e699;
+$table-even-row-background: #f4f5f5;
+
+//light-box
+$yellow-dark: #f8c14b;
+$yellow-light: #fbca61;
+$white-milk-dark: #dcd0b5;
+$white-milk-light: #e7e0d1;
+$light-box-background-title: #46c7ae;
+
+// --------------------------------------------------
+// Sidebar Layout Vars
+// --------------------------------------------------
+$sidebar-width: 240px;
+$mini-sidebar-width: 80px;
+$inner-menu-width: 200px;
+$header-height: 60px;
+$footer-height: 60px;
+$inherit-option-height: 0px;
+
+//Commom shape
+$border-radius: 2px;
+$modal-zindex: 1050;

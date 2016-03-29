@@ -1,0 +1,52 @@
+
+{
+	"messageHeader": {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417000708968,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody":    {
+		"id": 30,
+		"createdTimestamp": 1416399013827,
+		"updatedTimestamp": 1417588119103,
+		"createdBy": 23,
+		"updatedBy": 1,
+		"status": 0,
+		"documentType": null,
+		"documentNumber": "adv1bp01",
+		"client": 27,
+		"documentStatus": 0,
+		"executiveSummary": null,
+		"objective": null,
+		"opportunitiesAndThreats": null,
+		"clientNeedFulfillmentPlan": [      {
+			"id": 1,
+			"clientNeed": 1,
+			"clientNeedDescription": "need description",
+			"country": 1,
+			"status": null,
+			"product": 1,
+			"implementationTimeline": 3,
+			"employeeResponsible": 1,
+			"needFulfillmentStatus": 3,
+			"task": "task 1",
+			"estimatedClosingDate": 1415058640569
+		}],
+		"relatedInternalParties": [      {
+			"id": 1,
+			"relatedInternalParty": 3,
+			"actionNeeded": 1,
+			"employeeResponsible": 1,
+			"actionStatus": "no action taken"
+		}]
+	}
+}

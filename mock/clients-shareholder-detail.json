@@ -1,0 +1,29 @@
+{
+	"messageHeader":    {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417000708968,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+ 	},
+	"messageBody":    {
+		"id": 1,
+		"createdTimestamp": 1416399013827,
+		"updatedTimestamp": 1417588119103,
+		"createdBy": 23,
+		"updatedBy": 1,
+		"clientId": 1,
+		"shareHolderIdType": 4929221,
+		"shareHolderIdNumber": "s001q12",
+		"shareHolderType": 4929224,
+		"shareHolderName": "share holder 1",
+		"sharePercentage": 100
+	}
+}
