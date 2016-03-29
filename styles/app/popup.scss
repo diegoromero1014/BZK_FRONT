@@ -1,0 +1,499 @@
+
+/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////Boostrap change////////////////////////////////////
+// scss-lint:disable MergeableSelector, SelectorDepth, NestingDepth
+.modal-content {
+
+	/*changed background-color: fff*/
+	//background-color: #424242;
+	/*changed border-radius: 6px;*/
+	border-radius: 0;
+	//background: $color-white;
+
+}
+
+.modal-content .modal-body {
+
+	/*changed background-color*/
+	background-color: $color-white;
+	padding-top: 20px;
+	max-height: 450px;
+}
+
+.modal-content .modal-footer {
+	/*margin-top: 15px;*/
+	margin-top: 0;
+	/*changed background-color*/
+	//background-color: $color-white;
+	background: rgba(255, 255, 255, 0.75);
+	border-top: 1px solid $default-border-color;
+}
+
+.modal-icon-close {
+	color: $color-white;
+}
+/* add new class*/
+.modal-content .modal-button-edit {
+	min-width: 120px;
+	color: $color-white;
+	font-weight: bold;
+}
+
+.modal-title {
+	/*changed text-align color font-weight*/
+	text-align: left;
+	color: $color-white;
+	font-weight: normal;
+	font-size: 27px;
+}
+
+.close {
+	/* changed opacity: .2; */
+	opacity: 1;
+}
+
+.modal-header {
+	background-color: $color-primary-dark;
+
+	button {
+		margin-top: -5px !important;
+		margin-right: 5px;
+	}
+}
+
+.modal {
+	overflow-y: auto;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////Popup style hierarchy and team////////////////////////////
+
+.hierarchy-modal {
+	.modal-body {
+		text-align: center;
+	}
+
+	.chevron-title {
+		text-transform: uppercase;
+		padding: 10px;
+		background-color: $color-green;
+		text-align: center;
+		margin: auto;
+		font-size: 26px;
+		min-width: 300px;
+		color: $color-white;
+		border-radius: 2px;
+		display: inline-block;
+	}
+
+	.hierarchy-modal-top {
+		width: 99%;
+		margin: auto;
+
+		.chevron-img-container {
+			margin-left: 0;
+			margin-right: 0;
+			margin-top: 20px;
+		}
+	}
+
+	.hierarchy-modal-bottom {
+		overflow-x: auto;
+		overflow-y: hidden;
+		width: 99%;
+		margin: auto;
+	}
+
+	.hierarchy-modal-main-content {
+		padding-bottom: 5px;
+		height: 220px;
+		margin: auto;
+	}
+}
+
+.chevron-chart {
+	width: 740px;
+	margin: auto;
+}
+
+.team-modal {
+	.modal-lg {
+		width: 850px;
+	}
+	//.tab-content .tab-pane {
+		//max-width: 720px;
+		//margin: auto;
+	//}
+}
+
+.team-chart-top {
+	width: 255px;
+	margin: auto;
+}
+
+.chevron-img-container {
+	width: 120px;
+	height: 170px;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	text-align: center;
+	position: relative;
+	color: $color-white;
+	margin-top: 50px;
+	border-radius: 3px;
+	background-color: $white-milk-light;
+
+	&:last-child {
+		.chart-ramp {
+			border-top: 0;
+		}
+	}
+
+	.tooltip {
+		margin: 0;
+
+		.tooltip-inner {
+			background-color: $color-primary-black-overlay;
+			text-align: left;
+			max-width: 420px;
+		}
+
+		.tooltip-arrow {
+			border-right-color: $color-primary-black-overlay;
+			left: 1px;
+		}
+	}
+}
+
+.img-chart {
+	width: 60px;
+	height: 50px;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 7px;
+	background-position: center;
+}
+
+// scss-lint:disable PlaceholderInExtend
+.team-img-container {
+	@extend .chevron-img-container;
+	width: 255px;
+	height: 150px;
+	margin-left: 0;
+}
+
+.team-chart-bottom {
+	padding-bottom: 25px;
+
+	.team-img-container {
+		margin-left: 70px;
+	}
+}
+
+.chart-ramp {
+	position: absolute;
+	width: 143px;
+	top: -20px;
+	left: 50%;
+	bottom: 150px;
+	border-top: 1px dotted $default-border-color;
+	border-left: 1px dotted $default-border-color;
+}
+
+.name-position {
+	font-size: 16px;
+	font-weight: bold;
+	height: 45px;
+	border-radius: 3px;
+	border-bottom: 1px solid $base-light-three;
+	display: table;
+	width: 100%;
+
+	.name-position-text {
+		/* display: table-cell; */
+		vertical-align: middle;
+		line-height: 1;
+		background-color: $white-milk-dark;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-break: break-word;
+		white-space: nowrap;
+		width: 120px;
+		display: block;
+		height: 44px;
+		padding: 13px 2px;
+	}
+
+}
+
+.name-person {
+	line-height: 1;
+	font-size: 14px;
+	color: $table-border;
+}
+
+.chart-note {
+	text-align: center;
+	background-color: $color-white;
+	padding: 30px;
+	padding-top: 40px;
+
+	.chart-color {
+		width: 12px;
+		height: 12px;
+		display: inline-block;
+		margin-right: 12px;
+		margin-left: 35px;
+		border-radius: 3px;
+		background-color: $yellow-dark;
+
+		&:first-child {
+			background-color: $white-milk-dark;
+		}
+	}
+}
+
+.main-contact {
+	background-color: $color-yellow-light-2;
+
+	.name-position-text {
+		background-color: $yellow-dark;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-break: break-word;
+		white-space: nowrap;
+		width: 120px;
+		display: block;
+		height: 44px;
+		padding: 13px 2px;
+	}
+
+	.name-person {
+		color: $color-yellow-dark;
+	}
+
+	.rm-name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-break: break-word;
+		white-space: nowrap;
+		display: block;
+		height: 12px;
+		padding-left: 5px;
+	}
+}
+
+.name-person .line-of-business {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-word;
+	white-space: nowrap;
+	display: block;
+}
+
+.uppercase-text {
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.flag-dropdown {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+	width: 200px;
+	height: 35px;
+
+	.flag {
+		width: 30px;
+		height: 20px;
+		margin-right: 7px;
+		display: inline-block;
+		vertical-align: middle;
+		border: 1px solid $default-border-color;
+	}
+}
+
+.flag {
+	width: 30px;
+	height: 20px;
+	margin-right: 7px;
+	display: inline-block;
+	vertical-align: middle;
+	border: 1px solid $default-border-color;
+}
+
+.select2-result-label {
+	.flag {
+		width: 30px;
+		margin-right: 7px;
+		display: inline-block;
+		vertical-align: middle;
+		border: 1px solid $default-border-color;
+	}
+}
+////////password request////////////////
+.password-request-body {
+	min-height: 430px;
+
+	input {
+		width: 100%;
+	}
+
+	dl {
+		margin-bottom: 0;
+
+		dt {
+			margin-top: 20px;
+		}
+
+		dd {
+			position: relative;
+		}
+	}
+
+	h3 {
+		text-transform: uppercase;
+		margin: 0;
+	}
+
+	.password-note, .password-button {
+		padding-top: 20px;
+
+		dd {
+			position: relative;
+		}
+
+	}
+
+	.password-button {
+		text-align: right;
+
+	}
+}
+////business
+.modal-content {
+	.business-content {
+		overflow: auto;
+		padding: 0;
+		padding-bottom: 50px;
+
+		dl {
+			float: left;
+
+		}
+
+		.business-content-row {
+			margin-bottom: 0;
+
+			dt {
+				padding-top: 23px;
+			}
+		}
+
+		.business-title {
+			text-transform: uppercase;
+			border-bottom: 1px dotted $color-yellow-dark;
+			font-family: $base-font-family-two;
+			color: $color-yellow-dark;
+			padding-top: 17px;
+			padding-bottom: 17px;
+		}
+
+		dt {
+			padding-top: 15px;
+			text-transform: uppercase;
+		}
+	}
+}
+
+.prospect-modal {
+	dt {
+		font-size: 14.5px;
+		text-transform: uppercase;
+	}
+}
+///button control
+.modal-content {
+	.modal-button-save {
+		margin-right: 140px;
+
+		&.info-popup-save {
+			margin-right: 20px;
+		}
+	}
+
+	.modal-button-cancel {
+		margin-right: 280px;
+
+		&.info-popup-cancel {
+			margin-right: 20px;
+		}
+	}
+
+	.modal-button-delete {
+		margin-right: 420px;
+	}
+
+	.btn.add-item {
+		width: 100%;
+		background-color: $base-light-default;
+		border: solid 1px $color-dark-two;
+		color: $color-dark-two;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		//margin-left: 5px;
+	}
+}
+
+.modal-content .editable-form-content .section-title {
+	min-height: inherit;
+}
+
+.multiple-item-list {
+	.section-title {
+		margin-bottom: 10px;
+		border-bottom: $color-dark-two 1px solid;
+
+		h3 {
+			font-size: 16px;
+			font-weight: bold;
+		}
+	}
+}
+
+.list-item {
+	margin-bottom: 5px;
+}
+
+.section-title {
+	.delete {
+		float: right;
+		position: absolute;
+		right: 20px;
+		top: 50%;
+	}
+
+	.icon-container {
+		margin-top: -12px;
+		display: block;
+		height: 24px;
+	}
+}
+
+.modal .datepicker-control {
+	position: relative;
+}
+///eac
+.aec-title {
+	//text-transform: uppercase;
+}
+////
+
+.flag-name{
+	white-space: nowrap;
+	overflow: hidden !important;
+	text-overflow: ellipsis;
+}

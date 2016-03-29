@@ -1,0 +1,23 @@
+{
+  "messageHeader": {
+    "username": "rm1",
+    "sessionToken": "C0Kwj1w9tW6FevPqf0ozx6fq",
+    "timestamp": 1427267109277,
+    "service": null,
+    "sessionExpiryInterval": 0,
+    "status": "0",
+    "language": "es",
+    "displayErrorMessage": null,
+    "technicalErrorMessage": null,
+    "applicationVersion": null,
+    "debug": true,
+    "isSuccessful": true
+  },
+  "messageBody": {
+    "totalVisit": 4,
+    "totalClientInBusinessPlan": 2,
+    "upcomingDeals": 2,
+    "percentageOfAEC3": 1,
+    "totalFinancialClient": 16
+  }
+}

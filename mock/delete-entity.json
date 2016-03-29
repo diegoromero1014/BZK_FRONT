@@ -1,0 +1,17 @@
+{
+   "messageHeader":    {
+      "username": "rm1",
+      "sessionToken": "",
+      "timestamp": 1419926580386,
+      "service": "",
+      "sessionExpiryInterval": 6000,
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+   },
+   "messageBody": {}
+}

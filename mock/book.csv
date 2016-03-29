@@ -1,0 +1,130 @@
+id,clientId,clientName,date,lineOfBusiness,amount,status,documentStatus
+4930149,5,Cemil & Co,1424149200000,Bancolombia,0,medium,0,
+4929682,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1424149200000,Bancolombia,40000,low,1
+4930505,4930273,1,1421384400000,null,0,null,0,
+4930510,4930273,1,1421384400000,Bancolombia,11111111.11,medium,1,
+4930508,4930273,1,1421298000000,Bancolombia,8.888,medium,1,
+4930444,7,Client 7,1421211600000,Bancolombia,1.11,medium,1
+4930453,7,Client 7,1421211600000,Bancolombia,0.8,medium,1
+4930460,4930270,Ann,1421211600000,Bancolombia,0.8,won,1
+4930322,2,Client 2,1421211600000,Bancolombia,333333,medium,0
+4930439,5,Cemil & Co,1421211600000,Bancolombia,10000000000,medium,1
+4930457,7,Client 7,1421211600000,Bancolombia,1,medium,1,
+4929886,2,Client 2,1421125200000,Bancolombia,100001,high,0
+4930451,7,Client 7,1421125200000,Bancolombia,1,won,1,
+4930316,2,Client 2,1421125200000,Bancolombia,22222,low,0
+4930447,7,Client 7,1421125200000,Bancolombia,1.99,high,1
+4930314,2,Client 2,1421125200000,Bancolombia,222222,medium,0
+4930300,2,Client 2,1421038800000,Bancolombia,11111,medium,0
+4930306,4930273,1,1421038800000,Bancolombia,1212121,medium,0
+4930280,4929466,1111,1421038800000,Bancolombia,1111111,low,1
+4930294,6,FClient 6,1421038800000,Bancolombia,111111,medium,0
+4930282,4929466,1111,1421038800000,Bancolombia,8888888.8,low,1
+4930292,4930273,1,1421038800000,Bancolombia,11111,medium,0
+4930288,4930273,1,1421038800000,Bancolombia,8000,medium,1,
+4930290,4930273,1,1421038800000,Bancolombia,12000,medium,0
+4930278,4929466,1111,1421038800000,Bancolombia,11111111111111,low,1
+4930312,2,Client 2,1421038800000,Bancolombia,101111,medium,0
+4930286,4930273,1,1421038800000,Bancolombia,1000,low,1,
+4930304,4930273,1,1421038800000,Bancolombia,8933.6,medium,1,
+4930296,4930273,1,1421038800000,Bancolombia,11111,medium,0
+4930284,4929466,1111,1420952400000,Bancolombia,79999999999999.2,low,1
+4930252,4929650,alep,1420779600000,Bancolombia,1,low,1,
+4930235,4929898,AAA1111BBBB,1420779600000,Bancolombia,1,low,1,
+4930256,4929650,alep,1420779600000,null,0,medium,0,
+4930262,4929455,12,1420779600000,Bancolombia,1,low,1,
+4930222,8,Client 8,1420779600000,Bancolombia,1,low,1,
+4930228,4930014,New,1420779600000,Bancolombia,1,low,1,
+4930260,4929455,12,1420779600000,Bancolombia,0.8,medium,1
+4930254,4929650,alep,1420779600000,Bancolombia,10000,medium,0
+4930233,4929898,AAA1111BBBB,1420779600000,Bancolombia,0.8,low,1
+4930258,4929466,1111,1420779600000,Bancolombia,1,medium,1,
+4930224,8,Client 8,1420779600000,Bancolombia,1,medium,1,
+4930226,4930014,New,1420779600000,Bancolombia,1,low,1,
+4930190,8,Client 8,1420693200000,Bancolombia,8.976,medium,1
+4930182,4929337,Group 01,1420693200000,Bancolombia,11,won,1
+4930178,4929337,Group 01,1420693200000,Bancolombia,1,medium,1,
+4930180,4929337,Group 01,1420693200000,Bancolombia,2.2,medium,1
+4930154,4930039,testingtestingtestingtesting testingtestingtestingtestingtestingtestingtesting,1420606800000,Bancolombia,89.696,medium,1
+4930158,4929466,1111,1420606800000,Bancolombia,111111111111111,won,1
+4930156,4929466,1111,1420606800000,Bancolombia,111,low,1
+4930084,4929455,12,1420434000000,Bancolombia,250,low,1
+4930086,4929455,12,1420434000000,Bancolombia,1000,high,1
+4930052,4929466,1111,1420434000000,Bancolombia,800,low,1
+4930057,4929466,1111,1420434000000,Bancolombia,5000,medium,1
+4930082,4929455,12,1420434000000,Bancolombia,500,medium,1
+4930080,4929942,meow,1420434000000,Bancolombia,3000,high,1
+4930055,4929466,1111,1420434000000,Bancolombia,1500,won,1
+4930061,4929466,1111,1420434000000,Bancolombia,123456789012345,medium,1
+4930078,4929942,meow,1420434000000,Bancolombia,2000,medium,1
+4930074,4929466,1111,1420434000000,Bancolombia,10000000,low,1
+4930063,4929466,1111,1420434000000,Bancolombia,799999999999999.2,high,1
+4930088,4929455,12,1420434000000,Bancolombia,250,won,1
+4930050,4929466,1111,1420434000000,Bancolombia,1200,low,1
+4930076,4929942,meow,1420434000000,Bancolombia,1000,low,1
+4929990,2,Client 2,1420347600000,Bancolombia,10000,low,1
+4929909,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,111,medium,1
+4929919,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,111111111111111,low,1
+4929905,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,11,low,1
+4929901,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,11,medium,1
+4929903,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,11,low,1
+4929907,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,11,medium,1
+4929921,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,111111111111111,low,1
+4929913,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,9,won,1
+4929927,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,200000000000000,won,1
+4929925,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,200000000000000,high,1
+4929992,2,Client 2,1420347600000,Bancolombia,0,medium,0,
+4929911,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,111,low,1
+4929923,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420347600000,Bancolombia,200000000000000,medium,1
+4929988,2,Client 2,1420347600000,Bancolombia,20000,medium,0
+4929929,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420261200000,Bancolombia,9999999999,medium,1
+4929884,2,Client 2,1420261200000,Bancolombia,10000,medium,0
+4929893,4929774,A Blue Agave Corp.,1420261200000,Bancolombia,222333,won,1
+4929700,5,Cemil & Co,1420174800000,Bancolombia,2000,medium,1
+4929704,5,Cemil & Co,1420174800000,Bancolombia,4000,won,1
+4929702,5,Cemil & Co,1420174800000,Bancolombia,3000,high,1
+4929665,4929305,1,1420174800000,Bancolombia,111111,medium,1,
+4929670,4929305,1,1420174800000,Bancolombia,1212121,medium,1,
+4929696,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420174800000,Bancolombia,22222,low,1
+4929672,4929305,1,1420174800000,Bancolombia,10000,medium,1,
+4929692,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420174800000,Bancolombia,1212,won,1
+4929680,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420174800000,Bancolombia,8000,medium,1
+4929678,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420174800000,Bancolombia,10000,medium,1
+4929698,5,Cemil & Co,1420174800000,Bancolombia,1000,low,1
+4929694,4929642,Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine Aleph Reimagine 2015,1420174800000,Bancolombia,11111,high,1
+4929674,4929305,1,1420088400000,Bancolombia,111111111111111,low,1,
+4929624,4929305,1,1420088400000,Bancolombia,10000,medium,0
+4929431,2,Client 2,1420088400000,Bancolombia,20000,high,0
+4929676,4929305,1,1420088400000,Bancolombia,500000000000,low,1,
+4930092,4930039,testingtestingtestingtesting testingtestingtestingtestingtestingtestingtesting,1420002000000,Bancolombia,1000,medium,1
+4929706,5,Cemil & Co,1420002000000,Bancolombia,10000,low,1
+4929621,4929305,1,1420002000000,Bancolombia,1,medium,1,
+4929708,5,Cemil & Co,1420002000000,Bancolombia,12345,medium,1
+4929553,1,Client 1,1419915600000,Bancolombia,8000,medium,0
+4929891,4929774,A Blue Agave Corp.,1419829200000,Bancolombia,22222,high,1
+4929525,2,Client 2,1419829200000,Bancolombia,20000,won,0
+4929434,4929305,1,1419829200000,null,0,medium,1,
+4929429,4929305,1,1419829200000,Bancolombia,0,low,1,
+4929417,2,Client 2,1419829200000,Bancolombia,20000,medium,0
+4929487,4,Client 4,1419829200000,Bancolombia,20000,medium,0
+4929361,6,FClient 6,1419397200000,Bancolombia,1000,high,0
+4929322,6,FClient 6,1419397200000,Bancolombia,1000000,null,0
+4929357,6,FClient 6,1419397200000,null,12121221,1,1,
+4929324,6,FClient 6,1419397200000,null,1000000,null,1
+4929318,6,FClient 6,1419397200000,null,1000000,null,1
+4929326,4929310,hhhhh,1419397200000,Bancolombia,1000000,null,1
+4929359,6,FClient 6,1419397200000,null,44444444,1,1,
+4929320,6,FClient 6,1419397200000,null,1234556,null,1
+4929312,6,FClient 6,1419397200000,null,1000000,null,1
+4929272,9,ZClient 9,1419310800000,Bancolombia,1000000,null,0
+4929270,8,Client 8,1419310800000,null,1000000,null,0
+10240,6,FClient 6,1419224400000,null,1000000,null,0
+4929265,7,Client 7,1419224400000,Bancolombia,800000,won,1
+4929268,7,Client 7,1419224400000,Bancolombia,10.33,low,1
+10187,8,Client 8,1419138000000,null,1000000,null,0
+10183,6,FClient 6,1419138000000,null,1000000,null,0
+10116,6,FClient 6,1418878800000,null,1000000,null,0
+4930072,4929466,1111,1418878800000,Bancolombia,111111111111111,low,1
+4929713,5,Cemil & Co,1418792400000,Bancolombia,1,medium,1,
+4930070,4929466,1111,1418014800000,Bancolombia,100000,medium,1
+10181,8,Client 8,1415077200000,null,1000000,null,0

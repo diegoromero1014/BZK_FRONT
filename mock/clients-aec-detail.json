@@ -1,0 +1,37 @@
+{
+	"messageHeader":    {
+			"username": "",
+			"sessionToken": "",
+			"timestamp": 1417000708968,
+			"service": "",
+			"sessionExpiryInterval": 6000,
+			"status": "0",
+			"language": "es",
+			"displayErrorMessage": "",
+			"technicalErrorMessage": "",
+			"applicationVersion": "",
+			"debug": true,
+			"isSuccessful": true
+	},
+	"messageBody":    {
+			"id": 1,
+			"createdTimestamp": null,
+			"updatedTimestamp": null,
+			"createdBy": null,
+			"updatedBy": null,
+			"status": null,
+			"documentType": 3,
+			"documentNumber": "3",
+			"client": 1,
+			"documentStatus": 3,
+			"aecCommitteeMeetingTime": 1417419922982,
+			"bankRepresentative": 1,
+			"aecLevel": 3,
+			"situationDescription": "alfjla",
+			"provisionPercentage": 23,
+			"justificationForProvision": "alfjla",
+			"followupActivities": "ajb",
+			"generalRecommendation": "baljl",
+			"companyDescription": "Ipsum"
+	}
+}

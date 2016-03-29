@@ -1,0 +1,99 @@
+/* Stacked chart */
+.c3-axis-x .tick {
+	line {
+		display: none;
+	}
+
+	text {
+		text-transform: uppercase;
+	}
+}
+
+.small-size .c3-axis-x .tick {
+	text {
+		font-size: 9px;
+	}
+}
+
+/* Custom Legend */
+.legend {
+	font-size: 16px;
+}
+
+.legend-title {
+	font-family: $base-font-family-two;
+	font-size: 30px;
+	color: $color-dark;
+	text-transform: uppercase;
+	margin-bottom: 0;
+}
+
+.legend-date {
+	font-family: $base-font-family;
+	color: $color-dark-two;
+	margin-bottom: 32px;
+}
+
+.legend-list {
+	background-color: $color-white;
+	padding: 6px 0 0 12px;
+	border-radius: $border-radius;
+
+}
+
+.legend-item-bullet {
+	background-color: $color-dark;
+}
+
+.chart-container {
+	margin-top: 20px;
+}
+
+.pipeline-chart-wrapper {
+	padding-top: 20px;
+}
+
+.pipeline {
+	.legend {
+		padding-top: 0;
+	}
+
+	.legend-item {
+		padding: 0 32px 0 26px;
+	}
+
+	.chart {
+		svg {
+			float: right;
+		}
+	}
+
+	.chart-tooltip {
+		left: -10px;
+	}
+}
+
+.checkbox-container {
+	position: absolute;
+	z-index: 1;
+	right: 10px;
+	top: 20px;
+	z-index: 1;
+
+	.ios-switch {
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 10px;
+
+		/*
+		width: 50px;
+		height: 25px;
+
+		.handle{
+			width: 22px;
+			height: 22px;
+			top: 1px;
+			left: -2px;
+		}*/
+	}
+}

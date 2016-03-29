@@ -1,0 +1,236 @@
+{
+  "messageHeader": {
+    "username": "rm1",
+    "sessionToken": "C0Kwj1w9tW6FevPqf0ozx6fq",
+    "timestamp": 1427267109250,
+    "service": null,
+    "sessionExpiryInterval": 0,
+    "status": "0",
+    "language": "es",
+    "displayErrorMessage": null,
+    "technicalErrorMessage": null,
+    "applicationVersion": null,
+    "debug": true,
+    "isSuccessful": true
+  },
+  "messageBody": {
+    "cols": [
+      {
+        "name": "clientId",
+        "type": "number",
+        "isDefault": false,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": false
+      },
+      {
+        "name": "clientName",
+        "type": "string",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": "asc",
+        "label": null,
+        "isVisible": true
+      },
+      {
+        "name": "assets",
+        "type": "number",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": true
+      },
+      {
+        "name": "liabilities",
+        "type": "number",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": true
+      },
+      {
+        "name": "profitability",
+        "type": "number",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": true
+      },
+      {
+        "name": "eva",
+        "type": "number",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": true
+      },
+      {
+        "name": "roe",
+        "type": "number",
+        "isDefault": true,
+        "filterOperator": null,
+        "filterValue": null,
+        "sort": null,
+        "label": null,
+        "isVisible": true
+      }
+    ],
+    "rows": [
+      [
+        1848,
+        "INTEGRAR S A",
+        230002539,
+        6486143229,
+        31284004,
+        15475012,
+        6.53
+      ],
+      [
+        1344,
+        "SERVINTE S A",
+        4306970,
+        0,
+        6498,
+        36081,
+        5.49
+      ],
+      [
+        1448,
+        "CONTACT CENTER AMERICAS S.A.",
+        172236189,
+        4431913,
+        452867,
+        136014,
+        0.4
+      ],
+      [
+        1518,
+        "CARVAJAL PULPA y PAPEL S A",
+        7578396,
+        0,
+        144374,
+        32626,
+        0.92
+      ],
+      [
+        1460,
+        "CARGRAPHICS LOGISTIC SERVICES S A",
+        2561133,
+        17815413,
+        1498083,
+        687429,
+        15.26
+      ],
+      [
+        2037,
+        "SERVICIOS TECNOLOGICOS Y DE INGENIERIA PARA LA INDUSTRIA",
+        246239634,
+        920417944,
+        4555568,
+        1815919,
+        1.59
+      ],
+      [
+        2115,
+        "NEGOCIOS EDITORIALES S.A.S",
+        1050428000,
+        8442839,
+        2774114,
+        451057,
+        0.37
+      ],
+      [
+        1904,
+        "PROVEEDORA DE PAPELESANDINA S.A.S",
+        1472618044,
+        2312660754,
+        10067002,
+        4904614,
+        2.11
+      ],
+      [
+        2254,
+        "ASSENDA RED S A",
+        37657832,
+        305015,
+        579641,
+        400266,
+        1.02
+      ],
+      [
+        1495,
+        "CARVAJAL PROPIEDADES E INVERSIONES S A",
+        5894692280,
+        0,
+        10647589,
+        3725058,
+        0.69
+      ],
+      [
+        1472,
+        "PUBLICAR PUBLICIDAD MULTIMEDIA SAS",
+        4382248721,
+        0,
+        27212816,
+        12934185,
+        0.86
+      ],
+      [
+        1413,
+        "INVERSANTAMONICA S A",
+        44879453,
+        2485881655,
+        4403442,
+        2426039,
+        7.04
+      ],
+      [
+        2149,
+        "ST THOMAS SAS",
+        134564843,
+        2182014974,
+        6523884,
+        1520734,
+        0.73
+      ],
+      [
+        1425,
+        "CARVAJAL PULPA Y PAPEL S A S ZFPE",
+        261255,
+        842208119,
+        4228397,
+        1918713,
+        5.2
+      ],
+      [
+        1390,
+        "CARVAJAL EDUCACION S A S",
+        751,
+        0,
+        4,
+        33052,
+        4.3
+      ],
+      [
+        1367,
+        "CARVAJAL SOLUCIONES DE COMUNICACION SAS",
+        67535702,
+        2958070964,
+        6713846,
+        3497872,
+        6.2
+      ]
+    ]
+  }
+}

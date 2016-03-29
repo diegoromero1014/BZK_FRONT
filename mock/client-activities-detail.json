@@ -1,0 +1,34 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "XklQ80RCRKNAzWQ8O7U9bUFS",
+		"timestamp": 1417431780787,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody":
+		[{
+			"activitiesType": "Pre Visit",
+			"objective": {
+				"mainObjectiveOfTheMeeting":"Current financial situation and next year projects, since we detected the industry is slowing down its operations this year due to the free trade agreement. ",
+				"mainIdeaThatWeCustomer": "Propose an extension on the loan tenure and derivate operations to cover the FX exposure they have "
+			}
+		},
+		{
+			"activitiesType": "Visit",
+			"objective": {
+				"overviewOfFinancialHealthOfTheCompany": "We detected the company is passing through a difficult moment due to the free trade agreement signed with USA, though, they are optimist with the next plan years, this year is considered an stabilization year, but we have to pay close attention to the development of this issue.",
+				"developmentGeneralMeeting/Comments": "As always the meeting was developed in the better terms, we still have close relationship with them, they manifest their gratitude for all the support, So far we are still their main financial partner. ",
+				"preparedBy": "Pablo Dias, 01 Sep 2014",
+				"modifiedBy": "Richard Rodriguez, 01 Sep 2014"
+			}
+		}]
+
+}

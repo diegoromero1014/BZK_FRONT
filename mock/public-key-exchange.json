@@ -1,0 +1,18 @@
+{
+	"messageHeader": {
+		"applicationVersion": null,
+		"debug": true,
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": null,
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "hPLcQ83WgDGjtF9SqvNYsDeV",
+		"status": "0",
+		"technicalErrorMessage": null,
+		"timestamp": 1416307086962,
+		"username": null
+	},
+	"messageBody": {
+		"publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhk19zYcwdEnXLnNgzbspkqn2mh1OyxntyXXRmI66V41zXfOdlnvgAUgXv9i9X+XpJKv+J59iTMJoLSOYulr1j0TXK3SV7+m/xi2zDiiNkOGYB8p1TIVFjUQsLnHY1oVzkYDFmY3Wi50uO3mA3Yf5QuZB98A5jNgBDWJTCL5gqAT/iGks90TTWaxEXDBYhdD5RjoeoNxpgkLwA9kFCF05gN9+//Ee7TRL2ePZUPmTXC6v+RTpw7ZRWVT/g1FO40/gVktoz/MoBWHK3wUVHU8LpEPI+To+MGXooqDDZUI61FzdwvAI8jRLOT5VykC5GvN++ac4YH8MoYn/09/nvvLO/QIDAQAB"
+	}
+}

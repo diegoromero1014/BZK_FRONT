@@ -1,0 +1,66 @@
+
+{
+
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "ZacNBMGz+Wd9QHKuMGTRzavA",
+		"timestamp": 1417169106786,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody":    {
+		"cols":       [
+			{
+				"name": "id",
+				"type": "number",
+				"isDefault": false,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null,
+				"isVisible": false
+			},
+			{
+				"name": "date",
+				"type": "date",
+				"isDefault": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": "desc",
+				"isVisible": true
+			},
+			{
+				"name": "createdBy",
+				"type": "string",
+				"isDefault": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null,
+				"isVisible": true
+			},
+			{
+				"name": "status",
+				"type": "string",
+				"isDefault": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null,
+				"isVisible": true
+			}
+		],
+		"rows": [
+				[1,1417373122982,"Jose","Draft"],
+				[2,1420002000000,"David","Complete"],
+				[3,1417373122982,"Jose","Draft"],
+				[4,1417373122982,null,"Draft"],
+				[5,1417373122982,null,"Complete"],
+				[6,1417373122982,"Nina","Draft"]
+			]
+	}
+}

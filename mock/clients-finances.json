@@ -1,0 +1,118 @@
+{
+	"messageHeader": {
+		"applicationVersion": "1.0.0",
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": "clients",
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "1",
+		"status": 0,
+		"technicalErrorMessage": null,
+		"timestamp": null,
+		"username": "jose"
+	},
+	"messageBody": {
+		"cols": [
+			{
+				"name": "productId",
+				"type": "number",
+				"isDefault": false,
+				"isVisible": false,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "productName",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": "asc"
+			},
+			{
+				"name": "needId",
+				"type": "number",
+				"isDefault": false,
+				"isVisible": false,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "year01Amount",
+				"label": "Sep-14",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "year02Amount",
+				"label": "Aug-14",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "percentageVar",
+				"label": "%VAR",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "accum14",
+				"label": "Acc Sep-14",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "accum13",
+				"label": "Acc Sep-13",
+				"type": "number",
+
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "percentageVar2",
+				"label": "%VAR",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			}
+		],
+
+		"rows": [
+			[1, "Préstamos", 1, 490000, 150000, 1, 37000, 24000, 1],
+			[2, "Depósitos", 2, 510000, 160000, 1.2, 23000, 26000, 1],
+			[3, "Tamaño commercial", 3, 1000000, 3100000, 2, 60000, 50000, 1],
+			[4, "Rentabilidad", 3, 1000, 1000, 1, 16000, 50000, 1],
+			[5, "EVA", 3, 1000, 1000, 1, 2000, 3000, 50.3],
+			[6, "%ROE", 3, 1000, 1000, 1, 23, 19, 20]
+
+
+		]
+	}
+
+}
