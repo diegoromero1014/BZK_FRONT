@@ -1,0 +1,133 @@
+{
+	"messageHeader": {
+		"applicationVersion": "1.0.0",
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": "clients",
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "1",
+		"status": 0,
+		"technicalErrorMessage": null,
+		"timestamp": null,
+		"username": "jose"
+	},
+	"messageBody": {
+		"cols": [
+			{
+				"name": "id",
+				"type": "number",
+				"isDefault": false,
+				"isVisible": false,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "companyName",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": "asc"
+			},
+			{
+				"name": "group",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "lineOfBusiness",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "foundedDate",
+				"type": "date",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "numberOfStaff",
+				"type": "number",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "documentTypeNo",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "business",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "status",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "value",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			},
+			{
+				"name": "level",
+				"type": "string",
+				"isDefault": true,
+				"isVisible": true,
+				"filterOperator": null,
+				"filterValue": null,
+				"sort": null
+			}
+		],
+
+		"rows": [
+			["001", "ABC 01", "Group A", "Lorem ipsum line of business", "2013-01-01", 10, "Dolore magna aliqua & 10000100", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["002", "ABC 02", "Group B", "Lorem ipsum line of business", "2013-01-01", 10, "Dolore magna aliqua & 10000101", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["003", "ABC 03", "Group A", "Lorem ipsum line of business", "2015-01-01", 20, "Dolore magna aliqua & 10000102", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["004", "ABC 04", "Group B", "Lorem ipsum line of business", "2015-01-01", 20, "Dolore magna aliqua & 10000103", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["005", "ABC 05", "Group C", "Lorem ipsum line of business", "2013-01-01", 30, "Dolore magna aliqua & 10000104", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["006", "ABC 06", "Group C", "Lorem ipsum line of business", "2014-01-01", 20, "Dolore magna aliqua & 10000105", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["007", "ABC 07", "Group C", "Lorem ipsum line of business", "2015-01-01", 25, "Dolore magna aliqua & 10000106", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["008", "ABC 08", "Group C", "Lorem ipsum line of business", "2014-01-01", 20, "Dolore magna aliqua & 10000107", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["009", "ABC 09", "Group C", "Lorem ipsum line of business", "2014-01-01", 10, "Dolore magna aliqua & 10000108", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["010", "ABC 10", "Group C", "Lorem ipsum line of business", "2014-01-01", 20, "Dolore magna aliqua & 10000109", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["011", "ABC 11", "Group C", "Lorem ipsum line of business", "2014-01-01", 30, "Dolore magna aliqua & 10000110", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"],
+			["012", "ABC 12", "Group C", "Lorem ipsum line of business", "2014-01-01", 20, "Dolore magna aliqua & 10000111", "Nostrud", "Nostrud", "dolor sit a amet", "dolor sit a amet"]
+		]
+	}
+
+}

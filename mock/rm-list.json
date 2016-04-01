@@ -1,0 +1,155 @@
+{
+	"messageHeader": {
+		"username": "anccorre",
+		"sessionToken": "Xv0vnAtQhSekHSH6xqkndx+b.undefined",
+		"timestamp": "2015-09-17 12:55:10",
+		"service": "authenticateUser",
+		"sessionExpiryInterval": 0,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": "1.0.0",
+		"timeZone": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"frontOfficeEmployeeValueObjects": [{
+			"id": 114,
+			"name": "Herrera Uribe",
+			"position": "Otros",
+			"lineOfBusiness": 105
+		}, {
+			"id": 112,
+			"name": "Gomez",
+			"position": "Gerente Banagricola",
+			"lineOfBusiness": 103
+		}, {
+			"id": 111,
+			"name": "Lerolle Mejia",
+			"position": "Gerente Banitsmo",
+			"lineOfBusiness": 102
+		}, {
+			"id": 131,
+			"name": "Restrepo Carmona",
+			"position": "Consultor en Cash Management",
+			"lineOfBusiness": 102
+		}, {
+			"id": 117,
+			"name": "Uribe Mejia",
+			"position": "Ejecutivo de Cash Management",
+			"lineOfBusiness": 108
+		}, {
+			"id": 119,
+			"name": "Camargo Soto",
+			"position": "Gerente Mesas de Negociación",
+			"lineOfBusiness": 101
+		}, {
+			"id": 113,
+			"name": "Roldan Piedrahita",
+			"position": "Gerente BAM",
+			"lineOfBusiness": 104
+		}, {
+			"id": 106,
+			"name": "Mejia Sierra",
+			"position": "Gerente de Distribución y Ventas",
+			"lineOfBusiness": 107
+		}, {
+			"id": 130,
+			"name": "Restrepo Del Toro",
+			"position": "Gerente de Cuenta Banco",
+			"lineOfBusiness": 101
+		}, {
+			"id": 110,
+			"name": "Jaramillo Osorio",
+			"position": "Gerente Factoring Bancolombia",
+			"lineOfBusiness": 101
+		}, {
+			"id": 129,
+			"name": "Gutierrez Velilla",
+			"position": "Otros",
+			"lineOfBusiness": 101
+		}, {
+			"id": 116,
+			"name": "Cardona Ossa",
+			"position": "Consultor en Cash Management",
+			"lineOfBusiness": 107
+		}, {
+			"id": 108,
+			"name": "Gallego Ceball",
+			"position": "Gerente Leasing bancolombia",
+			"lineOfBusiness": 109
+		}, {
+			"id": 122,
+			"name": "Ospina Restrepo",
+			"position": "Gerente Banca de Inversión",
+			"lineOfBusiness": 103
+		}, {
+			"id": 128,
+			"name": "Jaramillo Palomares",
+			"position": "Gerente BAM",
+			"lineOfBusiness": 109
+		}, {
+			"id": 120,
+			"name": "Urrea Ballesteros",
+			"position": "Gerente Negocios Fiduciarios",
+			"lineOfBusiness": 101
+		}, {
+			"id": 124,
+			"name": "Gallego",
+			"position": "Gerente Renting Bancolombia",
+			"lineOfBusiness": 105
+		}, {
+			"id": 126,
+			"name": "Arias Gomez",
+			"position": "Gerente Banitsmo",
+			"lineOfBusiness": 107
+		}, {
+			"id": 103,
+			"name": "Correa Restrepo",
+			"position": "Gerente de Cuenta Banco",
+			"lineOfBusiness": 104
+		}, {
+			"id": 109,
+			"name": "Lopez Mejia",
+			"position": "Gerente Renting Bancolombia",
+			"lineOfBusiness": 101
+		}, {
+			"id": 127,
+			"name": "Builes Cano",
+			"position": "Gerente de Distribución y Ventas",
+			"lineOfBusiness": 108
+		}, {
+			"id": 125,
+			"name": "Correa Restrepo",
+			"position": "Gerente Factoring Bancolombia",
+			"lineOfBusiness": 106
+		}, {
+			"id": 107,
+			"name": "Velez",
+			"position": "Gerente Banca de Inversión",
+			"lineOfBusiness": 108
+		}, {
+			"id": 121,
+			"name": "Acevedo Moncada",
+			"position": "Gerente de Distribución y Ventas",
+			"lineOfBusiness": 102
+		}, {
+			"id": 123,
+			"name": "Maya",
+			"position": "Gerente Leasing bancolombia",
+			"lineOfBusiness": 104
+		}, {
+			"id": 104,
+			"name": "Duque Velasquez",
+			"position": "Gerente Mesas de Negociación",
+			"lineOfBusiness": 105
+		}, {
+			"id": 118,
+			"name": "Jaramillo Mari",
+			"position": "Gerente de Moneda Extranjera",
+			"lineOfBusiness": 109
+		}]
+	}
+}

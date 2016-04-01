@@ -1,0 +1,108 @@
+{
+	"messageHeader":    {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417000708968,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody":    {
+		"employeeId": 3,
+		"employeePosition": null,
+		"employeeName": "rm 1",
+		"empployeeImageUrl": null,
+		"employeeEmail": "rm1@bancolombia.com",
+		"employeePhoneNumber": "12340078",
+		"employeeType": "RM",
+		"lineOfBusinessId": -1,
+		"clients":       [
+						{
+				"id": 4929310,
+				"clientName": "hhhhh",
+				"countryCode": "pw"
+			},
+						{
+				"id": 4929422,
+				"clientName": "asdsada",
+				"countryCode": "af"
+			},
+						{
+				"id": 1,
+				"clientName": "Client 1",
+				"countryCode": "af"
+			},
+						{
+				"id": 4929419,
+				"clientName": "test test",
+				"countryCode": "ag"
+			},
+						{
+				"id": 4929461,
+				"clientName": "11",
+				"countryCode": "ar"
+			},
+						{
+				"id": 4929316,
+				"clientName": "ret",
+				"countryCode": "tl"
+			},
+						{
+				"id": 4929297,
+				"clientName": "abc",
+				"countryCode": "sg"
+			},
+						{
+				"id": 4929337,
+				"clientName": "Group 01",
+				"countryCode": "vn"
+			},
+						{
+				"id": 3,
+				"clientName": "Client 3",
+				"countryCode": "sg"
+			},
+						{
+				"id": 10,
+				"clientName": "Client 10",
+				"countryCode": "sk"
+			},
+						{
+				"id": 4929366,
+				"clientName": "123",
+				"countryCode": "tl"
+			},
+						{
+				"id": 4929301,
+				"clientName": "2",
+				"countryCode": "tl"
+			},
+						{
+				"id": 4929305,
+				"clientName": "1",
+				"countryCode": "sg"
+			},
+						{
+				"id": 10121,
+				"clientName": "abc",
+				"countryCode": "rs"
+			},
+						{
+				"id": 4929299,
+				"clientName": "abc",
+				"countryCode": "sg"
+			},
+						{
+				"id": 4929363,
+				"clientName": "bbbb",
+				"countryCode": "rs"
+			}
+		]
+	}
+}

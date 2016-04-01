@@ -1,0 +1,92 @@
+{
+	"messageHeader": {
+		"applicationVersion": "1.0.0",
+		"displayErrorMessage": null,
+		"isSuccessful": true,
+		"service": "groupDetails",
+		"sessionExpiryInterval": 1800000,
+		"sessionToken": "1",
+		"status": 0,
+		"technicalErrorMessage": null,
+		"timestamp": null,
+		"username": "jose",
+		"lang": "es"
+	},
+	"messageBody": {
+		"groupHierarchy": [
+			{
+				"name": "Kora Fuel Refinery",
+				"isGroup": true,
+				"rm": {
+					"photo": "mock/img/profiles/avatar.jpg",
+					"name": "Jose Carlino",
+					"role": "Gerente Lider",
+					"email": "jose@bancolombia.com",
+					"phone": "12345678",
+					"isCurrentUser": true
+				}
+			},
+			{
+				"name": "Conoco Technology",
+				"isGroup": false,
+				"rm": {
+					"photo": "mock/img/profiles/avatar.jpg",
+					"name": "Jose Carlino",
+					"role": "Gerente Lider",
+					"email": "jose@bancolombia.com",
+					"phone": "12345678",
+					"isCurrentUser": true
+				}
+			},
+			{
+				"name": "Cosmo Oil",
+				"isGroup": false,
+				"rm": {
+					"photo": "mock/img/profiles/avatarb.jpg",
+					"name": "Paul Restrepo",
+					"role": "Gerente Local",
+					"email": "paul@bancolombia.com",
+					"phone": "11111111",
+					"isCurrentUser": false
+				}
+			},
+			{
+				"name": "Union Mobil",
+				"isGroup": false,
+				"rm": {
+					"photo": "mock/img/profiles/avatarb.jpg",
+					"name": "Paul Restrepo",
+					"role": "Gerente Local",
+					"email": "paul@bancolombia.com",
+					"phone": "11111111",
+					"isCurrentUser": false
+				}
+			},
+			{
+				"name": "Fuel Five Labs",
+				"isGroup": false,
+				"rm": {
+					"photo": "mock/img/profiles/avatar.jpg",
+					"name": "Jose Carlino",
+					"role": "Gerente Lider",
+					"email": "jose@bancolombia.com",
+					"phone": "12345678",
+					"isCurrentUser": true
+				}
+			},
+			{
+				"name": "Kora Fuel Refinery",
+				"isGroup": false,
+				"rm": {
+					"photo": "mock/img/profiles/avatar.jpg",
+					"name": "Jose Carlino",
+					"role": "Gerente Lider",
+					"email": "jose@bancolombia.com",
+					"phone": "12345678",
+					"isCurrentUser": true
+				}
+			}
+		]
+	}
+}
+

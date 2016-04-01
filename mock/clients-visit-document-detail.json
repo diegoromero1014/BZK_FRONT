@@ -1,0 +1,45 @@
+{
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "XklQ80RCRKNAzWQ8O7U9bUFS",
+		"timestamp": 1417431780787,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody": {
+		"id": 1,
+		"createdTimestamp": null,
+		"updatedTimestamp": null,
+		"createdBy": null,
+		"updatedBy": 1,
+		"status": 0,
+		"documentType": 3,
+		"documentNumber": "adv1v01",
+		"client": 27,
+		"documentStatus": 0,
+		"visitTime": 1417431780787,
+		"visitLocation": "location",
+		"participatingContacts": [4929409, 4929983],
+		"participatingEmployees": [1, 2],
+		"relatedEmployees": [4929983],
+		"discussedClientNeeds": [{
+			"id": 1,
+			"clientNeed": 1,
+			"clientNeedDescription": "need description",
+			"country": 1,
+			"status": null,
+			"task": "some text",
+			"employeeResponsible": 21,
+			"closingDate": 1417431780787
+		}],
+		"financialHealthOverview": "some text",
+		"comments": "some text"
+	}
+}

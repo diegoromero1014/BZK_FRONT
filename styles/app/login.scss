@@ -1,0 +1,64 @@
+// scss-lint:disable MergeableSelector
+.loginform {
+	padding: 1.875rem 0 1.5625rem;
+	background-color: $login-background;
+
+	.label-edit {
+		position: absolute;
+		color: $color-white;
+		padding-top: 20px;
+		font-size: 1.125rem; //18px
+	}
+
+	.input-edit {
+		border: 1px solid transparent;
+		background-color: transparent;
+		color: $color-white;
+		margin-top: 10px;
+		font-size: 1.125rem; //18px
+		margin-left: -0.625rem;
+
+		&:focus {
+			background-color: transparent;
+			border: 1px solid transparent;
+		}
+
+		&:focus + .label-edit {
+			opacity: 0;
+		}
+
+		&:valid + .label-edit {
+			opacity: 0;
+		}
+	}
+
+	.form-item {
+		min-height: 56px;
+		margin: 0;
+		border-bottom: 1px solid $border-login;
+		color: $color-white;
+		font-size: 1.5rem; //24px
+
+		&:nth-child(4) {
+			margin-top: 20px;
+			border-bottom: 0;
+		}
+
+		.alert {
+			font-size: 1rem;
+			border: 0;
+			background: none;
+			padding: 0;
+			margin-bottom: 0.5em;
+			box-shadow: none;
+			text-shadow: none;
+		}
+	}
+
+	.forget-pass {
+		text-decoration: underline;
+		padding: 20px;
+		font-size: 1rem;
+		color: $color-primary;
+	}
+}

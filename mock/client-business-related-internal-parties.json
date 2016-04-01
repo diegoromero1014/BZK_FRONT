@@ -1,0 +1,23 @@
+{
+	"messageHeader":    {
+		"username": "",
+		"sessionToken": "",
+		"timestamp": 1417000708968,
+		"service": "",
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": "",
+		"technicalErrorMessage": "",
+		"applicationVersion": "",
+		"debug": true,
+		"isSuccessful": true
+ 	},
+	"messageBody":   [ {
+			"id": 1,
+			"relatedInternalParty": 3,
+			"actionNeeded": 1,
+			"employeeResponsible": 1,
+			"actionStatus": "no action taken"
+		}]
+}

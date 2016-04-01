@@ -1,0 +1,21 @@
+
+{
+
+	"messageHeader": {
+		"username": "user",
+		"sessionToken": "ZacNBMGz+Wd9QHKuMGTRzavA",
+		"timestamp": 1417169106786,
+		"service": null,
+		"sessionExpiryInterval": 6000,
+		"status": "0",
+		"language": "es",
+		"displayErrorMessage": null,
+		"technicalErrorMessage": null,
+		"applicationVersion": null,
+		"debug": true,
+		"isSuccessful": true
+	},
+	"messageBody":    {
+		"id": 4929493
+	}
+}
