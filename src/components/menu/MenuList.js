@@ -32,7 +32,7 @@ class MenuList extends Component {
                     {menuItems.map(this._mapMenuItems)}
                 </ul>
             </div>
-        )
+        );
     }
 }
 
