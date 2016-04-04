@@ -1,1 +1,2 @@
-module.exports = require('./main.scss');
+require('./main.scss');
+require('./biztrack/dashboard.scss');

@@ -21,16 +21,6 @@ class Dashboard extends Component {
     render() {
         return (
             <Grid>
-                <main id="dashboard" className="main dashboard">
-                    <Row id="header" className="header navbar navbar-inverse mini">
-                        <div className="header-seperation">
-                            {dateTimeComp()}
-                        </div>
-                        <div id="content-header" className="content-header">
-                            <NavBarComponent/>
-                        </div>
-                    </Row>
-                </main>
                 <MenuComponent />
             </Grid>
         );
