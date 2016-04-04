@@ -29,7 +29,7 @@ var path = require('path'),
                     include: path.join(__dirname, '../src')
                 },
                 {
-                    test: /\.scss$/,
+                    test: /\.(scss|css)$/,
                     loaders: ["style", "css", "sass"]
                 },
                 {
