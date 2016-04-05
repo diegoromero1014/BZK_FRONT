@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import {Route, IndexRoute} from 'react-router';
-
+import {Grid} from 'react-flexbox-grid';
 import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/Component';
+import DashboardComponent from './components/Dashboard/dashboardComponent';
 
 class App extends Component {
     render() {
         return (
-            <div>
+            <Grid id="app">
                 {this.props.children}
-            </div>
+            </Grid>
         );
     }
 }
@@ -19,7 +20,7 @@ export default (
     <div>
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
-            <Route path="dashboard" component={MainMenuComponent}></Route>
+            <Route path="dashboard" component={DashboardComponent}></Route>
         </Route>
     </div>
 );
