@@ -18,11 +18,11 @@ class NavBarComponent extends Component {
     render() {
         const pageTitleEl = "";
         return (
-            <div className="header-quick-nav clearfix">
+            <div className="header-quick-nav" style={{height: "60px"}}>
                 {/* BEGIN HEADER LEFT SIDE SECTION */}
                 <div className="pull-left">
                     {/* BEGIN SLIM NAVIGATION TOGGLE */}
-                    <ul className="nav quick-section">
+                    <ul className="nav">
                         <li className="quicklinks">
                             <a onClick={this.handleLayoutToggle} id="layout-condensed-toggle">
                                 <i className="icon-menu"></i>
@@ -38,7 +38,7 @@ class NavBarComponent extends Component {
                 {/* END HEADER LEFT SIDE SECTION */}
                 {/* BEGIN HEADER RIGHT SIDE SECTION */}
                 <div className="pull-right">
-                    <ul className="nav quick-section">
+                    <ul className="nav">
                         <li className="quicklinks">
                             <a href="#">
                                 <div className="iconset webfont">

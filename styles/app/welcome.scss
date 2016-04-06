@@ -1,6 +1,8 @@
 .welcome {
 	height: 100%;
+	width: 100%;
 	font-family: $base-font-family;
+	overflow: hidden !important;
 }
 
 .welcome-main {
@@ -54,6 +56,7 @@
 	display: inline-block;
 	float: right;
 	line-height: 3;
+	margin-right: 20px;
 	font-size: 0.75rem;
 
 	.footer-right-item {
