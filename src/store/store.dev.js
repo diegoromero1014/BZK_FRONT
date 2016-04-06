@@ -4,8 +4,8 @@ import ReduxPromise from 'redux-promise';
 import DevTools from '../components/DevTools/component';
 
 const finalCreateStore = compose(
-    DevTools.instrument(),
-    applyMiddleware(ReduxPromise)
+  applyMiddleware(ReduxPromise),
+  DevTools.instrument()
 )(createStore);
 
 export default function configureStore(state) {

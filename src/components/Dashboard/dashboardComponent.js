@@ -19,6 +19,7 @@ const dateTimeComp = () => {
 
 class Dashboard extends Component {
     render() {
+      //console.log("Dashboard token: " + window.localStorage.getItem('sessionToken'));
         return (
             <Grid>
                 <MenuComponent />

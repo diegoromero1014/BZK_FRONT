@@ -19,8 +19,8 @@ export function validateLogin(username, password){
         "isSuccessful": true
       },
       messageBody: {
-        "username": '"' + username + '"',
-        "password": '"' + password + '"'
+        "username": username,
+        "password": password
       }
     }
   var request = axios.post(APP_URL + "/userAuthentication", json);
