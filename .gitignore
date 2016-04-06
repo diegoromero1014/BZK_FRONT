@@ -3,6 +3,3 @@ node_modules
 webpack-assets.json
 netbeans/
 /nbproject/private/
-/nbproject/project.properties
-/nbproject/project.xml
-npm-debug.log
