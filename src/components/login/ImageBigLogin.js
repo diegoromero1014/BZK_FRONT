@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import ImageLogoApp from './LogoApplication';
+import ImageLogoApp from '../globalComponents/LogoApplication';
 import TitleLogin from './TitleLogin';
 import FormLogin from './FormLogin';
 import FooterLogin from './Footer';

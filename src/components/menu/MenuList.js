@@ -28,7 +28,7 @@ class MenuList extends Component {
     render() {
         return (
             <div className="page-sidebar-wrapper scrollbar-dynamic" id="main-menu-wrapper">
-                <ul>
+                <ul style={{width: "100%"}}>
                     {menuItems.map(this._mapMenuItems)}
                 </ul>
             </div>

@@ -1,5 +1,5 @@
 import React, {Component, propTypes} from 'react';
-import * as constants from './constants';
+import * as constants from '../login/constants';
 
 class LogoApplication extends Component{
   render(){
