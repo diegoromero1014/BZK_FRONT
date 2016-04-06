@@ -695,7 +695,7 @@
 	.celula-card-top {
 		border-bottom: 1px solid $default-border-color;
 		margin-bottom: 1px;
-		height: 85px;
+		height: 75px;
 		padding: 12px;
 		.celula-card-top-left {
 			display: inline-block;
@@ -1199,3 +1199,73 @@
 .client-submenu.has-subordinate {
 	padding-bottom: 40px;
 }
+
+/*Estilos creados por accenture*/
+.team-modal .client-card {
+	border: 1px solid #c2c7c9;
+	border-radius: 10px;
+	width: 300px;
+	height: 145px;
+	position: relative;
+	display: inline-block;
+	margin: 15px 15px 0 0;
+	background-color: white;
+}
+
+.team-modal .client-card .prospect-corner {
+	position: absolute;
+	top: 6px;
+	right: 5px;
+}
+
+.bco-input-margin-top {
+	margin-top: 15px;
+}
+
+.page-content {
+	margin-top: 0px;
+	padding: 0;
+	padding-top: 60px;
+	background-color: #E7ECED;
+	position: relative;
+	min-height: 100%;
+	-o-transition: -o-transform 0.3s ease;
+	transition: -webkit-transform 0.3s ease;
+	transition: transform 0.3s ease;
+	box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+	-webkit-transform: translate3d(160px, 0, 0);
+	transform: translate3d(160px, 0, 0)
+}
+
+.team-modal .tab-content {
+	border-top: 1px solid #c2c7c9;
+	padding-left: 25px;
+	margin: 0;
+	margin-top: 10px;
+	padding-bottom: 40px;
+	background-color: #E7ECED
+}
+
+.page-content .content {
+	position: relative;
+	height: 100%;
+	background: #e7eced;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	-o-transition: margin-left 0.5s ease;
+	transition: margin-left 0.5s ease
+}
+::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 7px;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background-color: rgba(0,0,0,.5);
+	-webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.page-sidebar.mini .footer-widget {
+	display: block;
+}
+/* Fin estilos creados por accenture*/

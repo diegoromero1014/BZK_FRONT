@@ -4,11 +4,12 @@ import {Grid} from 'react-flexbox-grid';
 import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/Component';
 import DashboardComponent from './components/Dashboard/dashboardComponent';
+import SearchBar from './components/clients/SearchBar';
 
 class App extends Component {
     render() {
         return (
-            <Grid id="app">
+            <Grid id="app" className="full-height">
                 {this.props.children}
             </Grid>
         );
@@ -17,10 +18,11 @@ class App extends Component {
 
 
 export default (
-    <div>
+    <div className="full-height">
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}></Route>
+            <Route path="dashboard/clients" component={SearchBar}></Route>
         </Route>
     </div>
 );
