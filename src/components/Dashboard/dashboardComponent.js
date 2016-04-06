@@ -20,9 +20,14 @@ const dateTimeComp = () => {
 class Dashboard extends Component {
     render() {
         return (
-            <Grid>
-                <MenuComponent />
-            </Grid>
+            <div className="main dashboard" style={{width: "100%", height: "100%"}}>
+                <div id="header" className="header navbar navbar-inverse mini">
+                    <NavBarComponent />
+                </div>
+                <div className="page-container row-fluid">
+                    <MenuComponent />
+                </div>
+            </div>
         );
     }
 }

@@ -28,13 +28,43 @@ class NavBarComponent extends Component {
                                 <i className="icon-menu"></i>
                             </a>
                         </li>
-                        {pageTitleEl}
+                        <li>
+                            {/*pageTitleEl*/}
+                            Mis clientes
+                        </li>
                     </ul>
                     {/* END SLIM NAVIGATION TOGGLE */}
                 </div>
                 {/* END HEADER LEFT SIDE SECTION */}
                 {/* BEGIN HEADER RIGHT SIDE SECTION */}
-                <div className="pull-right"></div>
+                <div className="pull-right">
+                    <ul className="nav quick-section">
+                        <li className="quicklinks">
+                            <a href="#">
+                                <div className="iconset webfont">
+                                    <i className="icon-link"></i>
+                                    Enlaces Rápidos
+                                </div>
+                            </a>
+                        </li>
+                        <li className="quicklinks">
+                            <a href="#">
+                                <div className="iconset webfont">
+                                    <i className="icon-search-sm"></i>
+                                    Búsqueda
+                                </div>
+                            </a>
+                        </li>
+                        <li className="quicklinks">
+                            <div className="iconset webfont">
+                                <a href="#">
+                                    <i className="icon-notification"></i>
+                                    Alerta
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 {/* END HEADER RIGHT SIDE SECTION */}
             </div>
         );
