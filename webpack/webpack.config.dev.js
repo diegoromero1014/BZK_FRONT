@@ -29,8 +29,13 @@ var path = require('path'),
                     include: path.join(__dirname, '../src')
                 },
                 {
-                    test: /\.(scss|css)$/,
+                    test: /\.(scss)$/,
                     loaders: ["style", "css", "sass"]
+                },
+                {
+                    test: /\.css$/,
+                    loader: 'style!css?modules',
+                    include: /flexboxgrid/,
                 },
                 {
                     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
