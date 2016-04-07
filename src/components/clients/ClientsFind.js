@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import ClientListItem from './ClientListItem';
+import SearchBarClient from './SearchBarClient';
 
 const clientItems = [
     {
@@ -47,10 +48,9 @@ const clientItems = [
     }
 ];
 
-class SearchBar extends Component {
+class ClientsFind extends Component {
 
   _mapClientItems(item, idx) {
-    console.log("item = " + item)
       return <ClientListItem
           key={idx}
           dataName={item.name}
@@ -64,19 +64,7 @@ class SearchBar extends Component {
     render() {
         return (
           <div id="page-container" className=" condensed full-height" style={{position:"absolute", width:"100%", "backgroundColor":"#E7ECED"}}>
-          <Row>
-            <Col md={4}>Primera columna</Col>
-            <Col md={4}>Segunda columna</Col>
-            <Col md={4}>Tercera columna</Col>
-          </Row>
-            <div style={{paddingBottom:"15px", borderBottom:"2px solid #D9DEDF"}}>
-              <div style={{margin:"auto", width:"80%", marginTop:"15px"}}>
-                <input id="searchExpression" type="search" className="form-control input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"93%",}} />
-                <span className="input-group-btn" style={{width:"5%",}}>
-                  <button id="searchClients" className="btn btn-default btn-large" type="button"><i className="icon-search"></i></button>
-                </span>
-              </div>
-            </div>
+            <SearchBarClient />
             <div style={{margin:"0px 0px 10px 10px"}}>
               <div className="news-page content">
                 <div className="">
@@ -91,4 +79,4 @@ class SearchBar extends Component {
     }
 }
 
-export default SearchBar;
+export default ClientsFind;
