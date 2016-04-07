@@ -12,7 +12,6 @@ class NavBarComponent extends Component {
     handleLayoutToggle(e) {
         const {toggleMenu} = this.props;
         toggleMenu();
-        console.log(e, "click");
     }
 
     render() {
@@ -23,7 +22,7 @@ class NavBarComponent extends Component {
                 <div className="pull-left">
                     {/* BEGIN SLIM NAVIGATION TOGGLE */}
                     <ul className="nav">
-                        <li className="quicklinks">
+                        <li className="quicklinks" style={{cursor: "pointer"}}>
                             <a onClick={this.handleLayoutToggle} id="layout-condensed-toggle">
                                 <i className="icon-menu"></i>
                             </a>

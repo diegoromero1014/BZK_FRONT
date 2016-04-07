@@ -1,15 +1,13 @@
+import { browserHistory } from 'react-router';
 import {APP_URL} from '../../constantsGlobal';
-import { VALIDATE_LOGIN } from './constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN } from './constants';
 import axios from 'axios';
 
 export function validateLogin(username, password){
   const json = {
       messageHeader: {
-        "username": username,
-        "sessionToken": "",
         "timestamp": new Date().getTime(),
         "service": "",
-        "sessionExpiryInterval": 180000,
         "status": "0",
         "language": "es",
         "displayErrorMessage": "",
@@ -27,5 +25,13 @@ export function validateLogin(username, password){
   return {
     type: VALIDATE_LOGIN,
     payload: request
+  }
+}
+
+export function saveSessionToken(sessionToken) {
+  window.localStorage.setItem('sessionToken', sessionToken);
+  return {
+      type: CHANGE_STATUS_LOGIN,
+      payload: ""
   }
 }

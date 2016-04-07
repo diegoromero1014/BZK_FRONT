@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {validateLogin} from './actions';
-import { browserHistory } from 'react-router';
+import {validateLogin, saveSessionToken} from './actions';
+import {redirectUrl} from '../globalComponents/actions';
 
 class FormLogin extends Component{
   constructor( props ) {
@@ -36,14 +36,16 @@ class FormLogin extends Component{
     });
   }
 
+  componentDidUpdate (){
+    const {login} = this.props;
+    if( login.get('status') === "loggedIn" ){
+      saveSessionToken(login.get('responseLogin').sessionToken);
+      redirectUrl("/dashboard");
+    }
+  }
+
   render(){
     const {login} = this.props;
-
-    if( login.get('status') === "loggedIn" ){
-      window.localStorage.setItem('sessionToken', login.get('responseLogin').sessionToken);
-      browserHistory.push('/dashboard');
-    }
-
     return(
       <div>
         <form onSubmit={this._handleValidateLogin.bind(this)}  className=" loginform" autoComplete="off">
@@ -79,7 +81,9 @@ class FormLogin extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    validateLogin
+    validateLogin,
+    saveSessionToken,
+    redirectUrl
   }, dispatch);
 }
 

@@ -8,7 +8,6 @@ import FooterLogin from './Footer';
 class ImageBigLogin extends Component{
   render(){
     const {urlImage} = this.props;
-    console.log("urlImage: " + urlImage);
     return (
       <div id="welcome" className="frame welcome"
           style={{backgroundImage: urlImage}}>
