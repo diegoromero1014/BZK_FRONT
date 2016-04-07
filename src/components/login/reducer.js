@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { VALIDATE_LOGIN } from './constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN } from './constants';
 
 const initialState = Immutable.Map({
   status: "unloggerIn",
@@ -29,8 +29,12 @@ export default (state = initialState, action) => {
             .set('error', false)
         })
       }
-      //return state.set("responseLogin",action.payload.data);
+    break;
+
+    case CHANGE_STATUS_LOGIN:
+    return state.set("status", "unloggerIn");
+
     default:
-        return state;
+        return state.set("status", "unloggerIn");
   }
 }

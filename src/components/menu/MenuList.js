@@ -14,6 +14,30 @@ const menuItems = [
     }
 ];
 
+const menuItemCerrarSesion = [
+    {
+        text: "Cerrar sesión segura",
+        icon: "icon-power",
+        link: "/login",
+        style: {
+          backgroundColor: "black"
+        }
+    }
+];
+
+const dateTimeComp = () => {
+    const currentDate = moment().locale('es');
+    return (
+        <a id="news-menu-item" className="news-menu-item menu-item" href="#dashboard/news" data-ref="news">
+            <div className="today">
+                <span className="today-month">{currentDate.format("MMM")}</span>
+                <span className="today-date">{currentDate.format("DD")}</span>
+            </div>
+            <span className="today-label">Hoy</span>
+        </a>
+    );
+};
+
 class MenuList extends Component {
 
     _mapMenuItems(item, idx) {
@@ -22,15 +46,21 @@ class MenuList extends Component {
             iconClassName={item.icon}
             labelText={item.text}
             linkUrl={item.link}
+            style={item.style}
         />
     }
 
     render() {
         return (
-            <div className="page-sidebar-wrapper scrollbar-dynamic" id="main-menu-wrapper">
+            <div style={{overflow: "hidden", overflow: "hidden", height: "100%"}}>
+              <div className="page-sidebar-wrapper" style={{width: "100%", height: "100%", overflow: "hidden"}}>
                 <ul style={{width: "100%"}}>
                     {menuItems.map(this._mapMenuItems)}
                 </ul>
+                <ul style={{width: "100%", bottom: "0", position: "absolute"}}>
+                    {menuItemCerrarSesion.map(this._mapMenuItems)}
+                </ul>
+              </div>
             </div>
         )
     }

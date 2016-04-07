@@ -50,7 +50,6 @@ const clientItems = [
 class SearchBar extends Component {
 
   _mapClientItems(item, idx) {
-    console.log("item = " + item)
       return <ClientListItem
           key={idx}
           dataName={item.name}
