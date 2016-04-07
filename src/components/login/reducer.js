@@ -11,6 +11,7 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     case VALIDATE_LOGIN:
+      console.log(action.payload.data);
       const {redirecUrl, sessionToken} = action.payload.data;
       if( redirecUrl === "/login" && sessionToken === ""){
         return state.withMutations( map => {

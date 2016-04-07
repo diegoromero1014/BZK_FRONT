@@ -17,7 +17,7 @@ const menuItems = [
 const menuItemCerrarSesion = [
     {
         text: "Cerrar sesión segura",
-        icon: "icon-power",
+        icon: "icon-log_out",
         link: "/login",
         style: {
           backgroundColor: "black"

@@ -49,7 +49,7 @@ class FormLogin extends Component{
     return(
       <div>
         <form onSubmit={this._handleValidateLogin.bind(this)}  className=" loginform" autoComplete="off">
-          <h4 className="form-item">Hola, ingrese a su cuenta.</h4>
+          <h4 className="form-item">Hola, ingrese a su cuenta:</h4>
           <div className="form-item" style={{width: "100%", marginLeft: "5px"}}>
             <input type="text" id="welcome-login-id" style={{width: "90%", heigth: "30px", marginLeft: "10px", padding: "0px 0px 0px 0px !important"}}
               placeholder="Usuario" className="input-edit"

@@ -9,9 +9,9 @@ import SearchBar from './components/clients/SearchBar';
 class App extends Component {
     render() {
         return (
-            <Grid id="app" className="full-height">
+            <div id="app" className="full-height">
                 {this.props.children}
-            </Grid>
+            </div>
         );
     }
 }

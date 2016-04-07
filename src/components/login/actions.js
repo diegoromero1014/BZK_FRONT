@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router';
 import {APP_URL} from '../../constantsGlobal';
 import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN } from './constants';
 import axios from 'axios';
@@ -21,7 +20,7 @@ export function validateLogin(username, password){
         "password": password
       }
     }
-  var request = axios.post(APP_URL + "/userAuthentication", json);
+  var request = axios.post(APP_URL + "/userAuthentication2", json);
   return {
     type: VALIDATE_LOGIN,
     payload: request
