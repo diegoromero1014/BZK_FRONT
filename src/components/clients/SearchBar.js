@@ -64,6 +64,11 @@ class SearchBar extends Component {
     render() {
         return (
           <div id="page-container" className=" condensed full-height" style={{position:"absolute", width:"100%", "backgroundColor":"#E7ECED"}}>
+          <Row>
+            <Col md={4}>Primera columna</Col>
+            <Col md={4}>Segunda columna</Col>
+            <Col md={4}>Tercera columna</Col>
+          </Row>
             <div style={{paddingBottom:"15px", borderBottom:"2px solid #D9DEDF"}}>
               <div style={{margin:"auto", width:"80%", marginTop:"15px"}}>
                 <input id="searchExpression" type="search" className="form-control input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"93%",}} />

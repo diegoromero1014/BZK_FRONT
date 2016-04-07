@@ -9,7 +9,7 @@ import SearchBar from './components/clients/SearchBar';
 class App extends Component {
     render() {
         return (
-            <Grid id="app" className="full-height">
+            <Grid>
                 {this.props.children}
             </Grid>
         );
@@ -18,7 +18,7 @@ class App extends Component {
 
 
 export default (
-    <div className="full-height">
+    <div>
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}></Route>
