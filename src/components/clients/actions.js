@@ -3,7 +3,6 @@ import {CLIENTS_FIND} from './constants';
 import axios from 'axios';
 
 export function clientsFindServer(keyword, limInf, limSup){
-  console.log('clientsFind');
   const json = {
     "messageHeader":{
       "sessionToken": window.localStorage.getItem('sessionToken'),
