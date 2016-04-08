@@ -6,6 +6,7 @@ import FormLogin from './FormLogin';
 import FooterLogin from './Footer';
 
 class ImageBigLogin extends Component{
+
   render(){
     const {urlImage} = this.props;
     return (
