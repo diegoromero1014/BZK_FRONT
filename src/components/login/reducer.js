@@ -5,13 +5,17 @@ const initialState = Immutable.Map({
   status: "unloggerIn",
   responseLogin: {},
   validateLogin: false,
-  error: false
+  error: false,
+  errorServerNoFound: false
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case VALIDATE_LOGIN:
       console.log(action.payload.data);
+      if( action.payload.data === {} || action.payload.data === undefined ){
+        return state.set("errorServerNoFound", true);
+      }
       const {redirecUrl, sessionToken} = action.payload.data;
       if( redirecUrl === "/login" && sessionToken === ""){
         return state.withMutations( map => {

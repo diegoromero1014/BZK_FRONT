@@ -63,7 +63,7 @@ class ClientsFind extends Component {
 
     render() {
         return (
-          <div id="page-container" className=" condensed full-height" style={{position:"absolute", width:"100%", "backgroundColor":"#E7ECED"}}>
+          <div id="page-container" className=" condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED"}}>
             <SearchBarClient />
             <div style={{margin:"0px 0px 10px 10px"}}>
               <div className="news-page content">

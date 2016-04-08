@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MenuComponent from '../menu/component';
 import NavBarComponent from '../navBar/navBarComponent';
+import {redirectUrl} from '../globalComponents/actions';
 import moment from 'moment';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
@@ -13,6 +14,12 @@ class Dashboard extends Component {
             widthComponent: '70px',
             widthComponentDiv: '95%'
         };
+    }
+
+    componentWillMount(){
+      if( window.localStorage.getItem('sessionToken') === "" ){
+        redirectUrl("/login");
+      }
     }
 
     componentWillReceiveProps(){
@@ -34,7 +41,8 @@ class Dashboard extends Component {
                 </div>
                 <div className="header" style={{paddingLeft: this.state.widthComponent, height: "100%", float: "left", width: this.state.widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
                     <NavBarComponent />
-                    <div style={{backgroundColor: "gray", height: "100%", width: "100% !important", float: "left", top: "60px"}}>
+                    <div style={{backgroundColor: "#ECECEC", height: "100%", width: "100%", float: "left", top: "60px"}}>
+                      {this.props.children}
                     </div>
                 </div>
             </div>

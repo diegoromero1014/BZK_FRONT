@@ -20,8 +20,9 @@ export default (
     <div className="full-height">
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
-            <Route path="dashboard" component={DashboardComponent}></Route>
-            <Route path="dashboard/clients" component={ClientsFind}></Route>
+            <Route path="dashboard" component={DashboardComponent}>
+              <Route path="clients" component={ClientsFind}></Route>
+            </Route>
         </Route>
     </div>
 );

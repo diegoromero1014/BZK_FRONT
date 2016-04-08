@@ -65,6 +65,11 @@ class FormLogin extends Component{
               <span style={{color: "#e76e70", size: "17px"}}>Usuario o contraseña incorrecto</span>
             </div>
           }
+          {login.get('errorServerNoFound')  &&
+            <div style={{marginLeft: "20px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
+              <span style={{color: "#e76e70", size: "17px"}}>Ocurrió un error en el servidor</span>
+            </div>
+          }
           <div className="button-item" style={{width: "100%"}}>
             <button type="submit" className="btn btn-primary" style={{width: "90%", marginLeft: "3%"}}>
               <span>Iniciar sesión</span>
