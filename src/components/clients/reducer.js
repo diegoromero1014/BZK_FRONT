@@ -3,7 +3,7 @@ import {CLIENTS_FIND} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
-    responseClients: {}
+    responseClients: []
 });
 
 export default (state = initialState, action) => {
