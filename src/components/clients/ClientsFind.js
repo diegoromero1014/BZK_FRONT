@@ -10,6 +10,12 @@ var clientItems = [];
 
 class ClientsFind extends Component {
 
+  componentWillMount(){
+    if( window.localStorage.getItem('sessionToken') === "" ){
+      redirectUrl("/login");
+    }
+  }
+
   _mapClientItems(item, idx) {
       return <ClientListItem
           key={idx}
