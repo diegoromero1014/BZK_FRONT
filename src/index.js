@@ -10,7 +10,6 @@ const store = configureStore();
 const reduxRouterMiddleware = syncHistoryWithStore(browserHistory, store);
 
 require("../styles/index");
-require('bootstrap/dist/css/bootstrap.css');
 
 ReactDom.render(
     <Root

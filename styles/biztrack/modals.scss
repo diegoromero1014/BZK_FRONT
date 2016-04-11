@@ -1,0 +1,161 @@
+// .modalBt4-open      - body class for killing the scroll
+// .modalBt4           - container to scroll within
+// .modalBt4-dialog    - positioning shell for the actual modalBt4
+// .modalBt4-content   - actual modalBt4 w/ bg and corners and shit
+@import "variables_bt4";
+@import "mixinsBt4";
+
+// Kill the scroll on the body
+.modalBt4-open {
+  overflow: hidden;
+}
+
+// Container that the modalBt4 scrolls within
+.modalBt4 {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  // Prevent Chrome on Windows from adding a focus outline. For details, see
+  // https://github.com/twbs/bootstrap/pull/10951.
+  outline: 0;
+  -webkit-overflow-scrolling: touch;
+
+  // When fading in the modalBt4, animate it to slide down
+  &.fade .modalBt4-dialog {
+    transition: transform .3s ease-out;
+    transform: translate(0, -25%);
+  }
+  &.in .modalBt4-dialog {
+    transform: translate(0, 0);
+  }
+}
+
+.modalBt4-open .modalBt4 {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// Shell div to position the modalBt4 with bottom padding
+.modalBt4-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+
+// Actual modalBt4
+.modalBt4-content {
+  position: relative;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
+  border: 1px solid $modal-content-border-color;
+  border-radius: $border-radius-lg;
+  @include box-shadow(0 3px 9px rgba(0, 0, 0, .5));
+  // Remove focus outline from opened modalBt4
+  outline: 0;
+}
+
+// modalBt4 background
+.modalBt4-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-modal-bg;
+  background-color: $modal-backdrop-bg;
+
+  // Fade for backdrop
+  &.fade {
+    opacity: 0;
+  }
+  &.in {
+    opacity: $modal-backdrop-opacity;
+  }
+}
+
+// modalBt4 header
+// Top section of the modalBt4 w/ title and dismiss
+.modalBt4-header {
+  padding: $modal-title-padding;
+  border-bottom: 1px solid $modal-header-border-color;
+  background-color: #16498b;
+  @include clearfix;
+}
+
+// Close icon
+.modalBt4-header .close {
+  margin-top: -2px;
+}
+
+// Title text within header
+.modalBt4-title {
+  margin: 0;
+  line-height: $modal-title-line-height;
+  color: white;
+}
+
+// modalBt4 body
+// Where all modalBt4 content resides (sibling of .modalBt4-header and .modalBt4-footer)
+.modalBt4-body {
+  position: relative;
+  padding: $modal-inner-padding;
+}
+
+// Footer (for actions)
+.modalBt4-footer {
+  padding: $modal-inner-padding;
+  text-align: right; // right align buttons
+  border-top: 1px solid $modal-footer-border-color;
+  @include clearfix(); // clear it in case folks use .pull-* classes on buttons
+
+  // Properly space out buttons
+  .btn + .btn {
+    margin-bottom: 0; // account for input[type="submit"] which gets the bottom margin like all other inputs
+    margin-left: 5px;
+  }
+  // but override that for button groups
+  .btn-group .btn + .btn {
+    margin-left: -1px;
+  }
+  // and override it for block buttons as well
+  .btn-block + .btn-block {
+    margin-left: 0;
+  }
+}
+
+// Measure scrollbar width for padding body during modalBt4 show/hide
+.modalBt4-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+// Scale up the modalBt4
+@include media-breakpoint-up(sm) {
+  // Automatically set modalBt4's width for larger viewports
+  .modalBt4-dialog {
+    width: $modal-md;
+    margin: 30px auto;
+  }
+  .modalBt4-content {
+    @include box-shadow(0 5px 15px rgba(0, 0, 0, .5));
+  }
+
+  // modalBt4 sizes
+  .modalBt4-sm {
+    width: $modal-sm;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .modalBt4-lg {
+    width: $modal-lg;
+  }
+}
