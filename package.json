@@ -46,7 +46,6 @@
   "dependencies": {
     "axios": "^0.9.1",
     "babel-polyfill": "^6.7.4",
-    "bootstrap": "^4.0.0-alpha.2",
     "classnames": "^2.2.3",
     "flexboxgrid": "^6.3.0",
     "formatjs": "^0.1.1",
