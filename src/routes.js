@@ -5,6 +5,7 @@ import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/Component';
 import DashboardComponent from './components/Dashboard/dashboardComponent';
 import ClientsFind from './components/clients/ClientsFind';
+import ContactComponent from './components/contact/component';
 
 class App extends Component {
     render() {
@@ -23,6 +24,7 @@ export default (
             <Route path="dashboard" component={DashboardComponent}>
               <Route path="clients" component={ClientsFind}></Route>
             </Route>
+            <Route path="contact" component={ContactComponent}></Route>
         </Route>
     </div>
 );

@@ -5,7 +5,7 @@ import React, {
 import _ from 'lodash';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
-
+import ButtonModalComponent from './buttonModalComponent';
 
 class GridComponent extends Component {
 
@@ -22,8 +22,14 @@ class GridComponent extends Component {
 
   _renderCell(row, headers){
       return headers.map((value, idx) => {
+        var cell;
+        if(value.key == 'actions'){
+          cell = <ButtonModalComponent key={idx} action={_.get(row, value.key)}/>
+        }else{
+          cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
+        }
           return (
-              <TdComponent key={idx} columnRow={_.get(row, value.key)} />
+            cell
           );
       });
   }

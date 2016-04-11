@@ -7,7 +7,7 @@ class HeaderComponent extends Component {
   render(){
     const titleColumn = this.props.titleColumn;
     return (
-      <th>{titleColumn}</th>
+      <th style={{textTransform:'none'}}>{titleColumn}</th>
     );
   }
 }

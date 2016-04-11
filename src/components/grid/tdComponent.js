@@ -13,7 +13,7 @@ class TdComponent extends Component {
 }
 
 TdComponent.propTypes = {
-   columnRow: PropTypes.string.isRequired
+  columnRow: PropTypes.string.isRequired
 };
 
 

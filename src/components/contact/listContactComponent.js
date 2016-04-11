@@ -31,17 +31,31 @@ const headers = [
   {
     title: "Cargo",
     key:"firstName"
+  },
+  {
+    title: "",
+    key:"actions"
   }
 ];
 
 const data = [
   {
     firstName: "1",
-    middleName:"dfdf"
+    middleName:"dfdf",
+    actions: {
+      actionView: true,
+      id: 1,
+      urlServer: "dsdsdasd"
+    }
   },
   {
     firstName: "2",
-    middleName:"fsfdsf"
+    middleName:"fsfdsf",
+    actions: {
+      actionView: true,
+      id: 2,
+      urlServer: "dsdsdasd"
+    }
   }
 ];
 

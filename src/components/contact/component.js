@@ -4,6 +4,7 @@ import React, {
 import SearchContactComponent from './searchContactComponent';
 import ListContactComponent from './listContactComponent';
 
+
 class ContactComponent extends Component {
   render() {
     return ( < div className = "tab-pane quickZoomIn animated active" >
