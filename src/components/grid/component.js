@@ -5,7 +5,7 @@ import React, {
 import _ from 'lodash';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
-import ButtonModalComponent from './buttonModalComponent';
+import ModalComponent from '../modal/component';
 
 class GridComponent extends Component {
 
@@ -20,11 +20,11 @@ class GridComponent extends Component {
       return <HeaderComponent  key={idx} titleColumn={header.title} />;
   }
 
-  _renderCell(row, headers){
+  _renderCell(row, headers,modalTitle){
       return headers.map((value, idx) => {
         var cell;
         if(value.key == 'actions'){
-          cell = <ButtonModalComponent key={idx} action={_.get(row, value.key)}/>
+          cell = <ModalComponent key={idx} modalTitle={modalTitle} actions={_.get(row, value.key)}/>
         }else{
           cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
         }
@@ -34,11 +34,11 @@ class GridComponent extends Component {
       });
   }
 
-  _renderRow(data, headers){
+  _renderRow(data, headers,modalTitle){
       return data.map((value, idx) => {
           return (
               <tr role="row" key={idx}>
-                  {this._renderCell(value, headers)}
+                  {this._renderCell(value, headers,modalTitle)}
               </tr>
           );
       });
@@ -47,6 +47,7 @@ class GridComponent extends Component {
   render() {
     const headers = this.props.headers;
     const data = this.props.data;
+    const modalTitle = this.props.modalTitle;
     return (
       <table width="100%" className="table table-striped has-column-selection dataTable no-footer" id="datagrid-container"  role="grid" aria-describedby="datagrid-container_info" >
         <thead>
@@ -55,7 +56,7 @@ class GridComponent extends Component {
           </tr>
         </thead>
         <tbody>
-            {this._renderRow(data, headers)}
+            {this._renderRow(data, headers, modalTitle)}
         </tbody>
       </table>
     );
@@ -64,7 +65,8 @@ class GridComponent extends Component {
 
 GridComponent.propTypes = {
    headers: PropTypes.array.isRequired,
-   data: PropTypes.array.isRequired
+   data: PropTypes.array.isRequired,
+   modalTitle: PropTypes.string,
 };
 
 

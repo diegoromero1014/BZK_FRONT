@@ -45,7 +45,8 @@ const data = [
     actions: {
       actionView: true,
       id: 1,
-      urlServer: "dsdsdasd"
+      urlServer: "./component",
+      component : "VIEW_CONTACT"
     }
   },
   {
@@ -54,7 +55,8 @@ const data = [
     actions: {
       actionView: true,
       id: 2,
-      urlServer: "dsdsdasd"
+      urlServer: "ddgfgf",
+      component: "component",
     }
   }
 ];
@@ -62,8 +64,9 @@ const data = [
 class ListContactComponent extends Component {
 
   render() {
+    const modalTitle = 'Contacto Detalle';
     return ( < div className = "col-xs-12 horizontal-scroll-wrapper" >
-      <GridComponent headers={headers} data={data} />
+      <GridComponent headers={headers} data={data} modalTitle={modalTitle}/>
     </div>
     );
   }

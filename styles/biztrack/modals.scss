@@ -137,6 +137,123 @@
   overflow: scroll;
 }
 
+.modalBt4.in .modalBt4-dialog {
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    transform: translate(0,0);
+}
+
+.modal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.modal-header button {
+    margin-top: 5px !important;
+}
+
+.fade.in {
+    opacity: 1;
+}
+
+.ReactModal__Overlay {
+  -webkit-perspective: 600;
+  perspective: 600;
+  opacity: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1 !important;
+  transition: opacity 150ms ease-out !important;
+}
+
+/*.ReactModal__Content {
+  -webkit-transform: scale(0.5) rotateX(-30deg) !important;
+  transform: scale(0.5) rotateX(-30deg) !important;
+}
+
+.ReactModal__Content--after-open {
+  -webkit-transform: scale(1) rotateX(0deg) !important;
+  transform: scale(1) rotateX(0deg) !important;
+  transition: all 150ms ease-in !important;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0 !important;
+}
+
+.ReactModal__Content--before-close {
+  -webkit-transform: scale(0.5) rotateX(30deg) !important;
+  transform: scale(0.5) rotateX(30deg) !important;
+  transition: all 150ms ease-in !important;
+}*/
+
+.ReactModal__Content.modal-dialog {
+  border: none;
+  background-color: transparent !important;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+.modal.in .modal-dialog {
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    transform: translate(0,0);
+}
+.modal.fade .modal-dialog {
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -moz-transition: -moz-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    -webkit-transform: translate(0,-25%);
+    -ms-transform: translate(0,-25%);
+    transform: translate(0,-25%);
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-content .modal-footer {
+    margin-top: 0;
+    background: rgba(255,255,255,0.75);
+    border-top: 1px solid #c2c7c9;
+}
+.modal-footer {
+    border-top: none;
+    box-shadow: none;
+    background-color: #F3F5F6;
+    margin-top: 0;
+    text-align: right;
+}
+.modal-footer {
+    padding: 19px 20px 20px;
+    margin-top: 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}
+
 // Scale up the modalBt4
 @include media-breakpoint-up(sm) {
   // Automatically set modalBt4's width for larger viewports
