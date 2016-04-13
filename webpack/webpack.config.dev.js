@@ -35,7 +35,7 @@ var path = require('path'),
                 {
                     test: /\.css$/,
                     loader: 'style!css?modules',
-                    include: /flexboxgrid/,
+                    include: [/flexboxgrid/, /bootstrap/],
                 },
                 {
                     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
