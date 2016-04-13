@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import ClientListItem from './ClientListItem';
-import SearchBarClient from './SearchBarClient';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsFindServer} from './actions';
-
-var clientItems = [];
+import ClientListItem from './ClientListItem';
+import SearchBarClient from './SearchBarClient';
+import Pagination from './Pagination';
 
 class ClientsFind extends Component {
 
   componentWillMount(){
-    if( window.localStorage.getItem('sessionToken') === "" ){
+    if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
       redirectUrl("/login");
     }
   }
@@ -30,24 +29,27 @@ class ClientsFind extends Component {
   }
 
     render() {
+      var clientItems = [];
       const {clientR} = this.props;
-      if( clientR.get('status') === 'processed'){
-        clientItems = clientR.get('responseClients');
-      }
-        return (
-          <div id="page-container" className=" condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED"}}>
-            <SearchBarClient />
-            <div style={{margin:"0px 0px 10px 10px"}}>
-              <div className="news-page content">
-                <div className="">
-                  <div className="team-modal">
-                    {clientItems.map(this._mapClientItems)}
-                  </div>
-                </div>
+      var countClients = clientR.get('countClients');
+      var status = clientR.get('status');
+      console.log("numero = ", countClients);
+      clientItems = clientR.get('responseClients');
+
+      return (
+        <div id="page-container" className=" condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED"}}>
+          <SearchBarClient />
+          <div style={{margin:"0px 0px 10px 10px", width:"100%", display: "inline-block"}}>
+            <div className="news-page content">
+              <div className="team-modal">
+                {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:  ''}
+                {clientItems.map(this._mapClientItems)}
               </div>
             </div>
           </div>
-        )
+          <Pagination />
+        </div>
+      )
     }
 }
 

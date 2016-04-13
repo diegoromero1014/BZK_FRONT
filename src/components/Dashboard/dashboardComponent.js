@@ -31,7 +31,6 @@ class Dashboard extends Component {
             this.setState({widthComponent: '205px'});
             this.setState({widthComponentDiv: '85%'});
         }
-        //console.log("navBar",navBar.get('status'));
     }
     render() {
         return (
@@ -41,7 +40,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="header" style={{paddingLeft: this.state.widthComponent, height: "100%", float: "left", width: this.state.widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
                     <NavBarComponent />
-                    <div style={{backgroundColor: "#ECECEC", height: "100%", width: "100%", float: "left", top: "60px"}}>
+                    <div style={{backgroundColor: "#ECECEC", height: "84%", width: "100%", float: "left", top: "60px", overflowX: "auto", paddingBottom: "70px"}}>
                       {this.props.children}
                     </div>
                 </div>

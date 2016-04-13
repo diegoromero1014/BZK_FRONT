@@ -1,23 +1,31 @@
 import Immutable from 'immutable';
-import {CLIENTS_FIND} from './constants';
+import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD} from './constants';
 
 const initialState = Immutable.Map({
-    status: "processed",
+    status: "withoutProcessing",
+    keyword: "",
+    page: 1,
+    countClients: 0,
     responseClients: []
 });
 
 export default (state = initialState, action) => {
-  console.log("antes switch: " + action.type);
   switch (action.type) {
     case CLIENTS_FIND:
-      console.log("antes");
-      const clients = action.payload.data;
-        console.log("clients", clients);
+      const response = action.payload.data;
         return state.withMutations(map => {
             map
             .set('status', 'processed')
-            .set('responseClients', clients);
+            .set('keyword', response.keyword)
+            .set('countClients', response.countClients)
+            .set('responseClients', JSON.parse(response.listClients));
         })
+      break;
+    case CHANGE_PAGE:
+      return state.set('page', action.currentPage);
+      break;
+    case CHANGE_KEYWORD:
+      return state.set('keyword', action.keyword);
       break;
     default:
     return state;
