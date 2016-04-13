@@ -15,5 +15,6 @@ export default combineReducers({
     navBar: NavBarReducer,
     clientR: ClientReducer,
     clientInformacion: ClientInformationReducer,
-    modal: modalReducer
+    modal: modalReducer,
+    contactsByClient: contactsReducer
 });

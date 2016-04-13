@@ -25,21 +25,10 @@ class ContactComponent extends Component {
     contactsList = contactsByClient.get('contacts');
     return (
       < div className = "tab-pane quickZoomIn animated" >
-        <Grid>
-            <Row end="xs">
-              <Col xs={6}>
-              <div className = "tab-content break-word" style={{zIndex :0}}>
-                <SearchContactComponent / >
-              < /div>
-              </Col>
-            </Row>
-            <Row end="xs">
-              <Col xs={12}>
-                < ListContactComponent data={contactsList}/ >
-              </Col>
-            </Row>
-        < /Grid >
-
+        <div className = "tab-content break-word" style={{zIndex :0}}>
+          <SearchContactComponent / >
+        < /div>
+          < ListContactComponent data={contactsList}/ >
        < /div>
     );
   }
