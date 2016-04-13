@@ -24,6 +24,7 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
               <Route path="clients" component={ClientsFind}></Route>
+              <Route path="clientInformation" component={ComponentClientInformation}></Route>
             </Route>
             <Route path="contact" component={modalComponent}></Route>
         </Route>

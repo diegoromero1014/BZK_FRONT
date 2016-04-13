@@ -7,6 +7,20 @@
 	border-right: 1px solid $default-border-color;
 }
 
+.button-link-url {
+     background:none!important;
+		 color: #8e9aa2;
+     border:none;
+     padding:0!important;
+     font: inherit;
+     cursor: pointer;
+}
+.button-link-url:hover,
+.button-link-url:focus {
+     background:transparent !important;
+		 color: black;
+}
+
 .clients-left-panel {
 	background-color: whitesmoke;
 	padding-top: $header-height + $inherit-option-height;
@@ -20,6 +34,11 @@
 
 	.loading {
 		margin: 1em;
+	}
+
+	.title-label-info-client {
+		color: "#4C5360";
+		font-weight: bold;
 	}
 
 	.back-to-rm-list {
