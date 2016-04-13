@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsFindServer} from './actions';
+import {redirectUrl} from '../globalComponents/actions';
 
 class SearchBarClient extends Component{
 
@@ -14,6 +15,13 @@ class SearchBarClient extends Component{
 
       this._handleClientsFind = this._handleClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+  }
+
+  componentWillMount(){
+    const {login} = this.props;
+    if( window.localStorage.getItem('sessionToken') === "" ){
+      redirectUrl("/login");
+    }
   }
 
   _handleChangeKeyword(e){

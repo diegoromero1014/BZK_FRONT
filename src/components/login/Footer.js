@@ -18,7 +18,7 @@ class Footer extends Component{
 						<ImageLogoApp style={style}/>
 						<div className="copywrite">Copyright © 2016 Grupo Bancolombia <br /> Todos los derechos reservados</div>
 					</div>
-				</footer>
+			</footer>
     );
   }
 }

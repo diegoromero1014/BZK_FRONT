@@ -1,11 +1,27 @@
 import React, {Component, PropTypes} from 'react';
+import {redirectUrl} from '../globalComponents/actions';
 
 class ClientListItem extends Component{
+  constructor(props){
+    super(props);
+    this._handleClickClientItem = this._handleClickClientItem.bind(this);
+  }
+
+  _handleClickClientItem(e){
+    const {dataId, dataIsAccess} = this.props;
+    if(dataIsAccess){
+      window.localStorage.setItem('idClientSeleted', dataId);
+      redirectUrl("/dashboard/clientInformation");
+    } else {
+      alert("Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información");
+    }
+  }
+
   render(){
-    const {dataName, dataDocumentType, dataDocument, dataAccountManager, dataEconomicGroup, dataIsProspect, dataIsAccess} = this.props;
+    const {dataId, dataName, dataDocumentType, dataDocument, dataAccountManager, dataEconomicGroup, dataIsProspect, dataIsAccess} = this.props;
     return (
       <div>
-        <div className="client-card" style={{float:"left"}}>
+        <div className="client-card" onClick={this._handleClickClientItem} style={{float:"left"}}>
         <div className="celula-card-top">
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName}</div>
@@ -30,6 +46,7 @@ class ClientListItem extends Component{
 }
 
 ClientListItem.PropTypes = {
+    dataId: PropTypes.string.isRequired,
     dataName: PropTypes.string.isRequired,
     dataDocumentType: PropTypes.string.isRequired,
     dataDocument: PropTypes.string.isRequired,

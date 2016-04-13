@@ -5,6 +5,7 @@ import SearchBarClient from './SearchBarClient';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsFindServer} from './actions';
+import {redirectUrl} from '../globalComponents/actions';
 
 var clientItems = [];
 
@@ -19,6 +20,7 @@ class ClientsFind extends Component {
   _mapClientItems(item, idx) {
       return <ClientListItem
           key={idx}
+          dataId={item.id}
           dataName={item.name}
           dataDocumentType={item.documentType}
           dataDocument={item.document}
