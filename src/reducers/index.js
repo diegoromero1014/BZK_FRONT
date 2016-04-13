@@ -6,6 +6,7 @@ import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
 import ClientInformationReducer from '../components/clientInformation/reducer';
 import modalReducer from '../components/modal/reducer';
+import contactsReducer from '../components/contact/reducer';
 
 export default combineReducers({
     routing: routerReducer,

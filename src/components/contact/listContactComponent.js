@@ -1,36 +1,37 @@
 import React, {
-  Component
+  Component,
+  PropTypes
 } from 'react';
 import GridComponent from '../grid/component';
 
 const headers = [
   {
       title: "Nombre",
-      key: "firstName"
+      key: "nameComplet"
   },
   {
     title: "Telefono",
-    key:"middleName"
+    key:"telephoneNumber"
   },
   {
     title: "Celular",
-    key:"firstName"
+    key:"mobileNumber"
   },
   {
     title: "Correo",
-    key:"firstName"
+    key:"emailAddress"
   },
   {
     title: "Ciudad",
-    key:"firstName"
+    key:"city"
   },
   {
     title: "Tipo Contacto",
-    key:"firstName"
+    key:"typeOfContact"
   },
   {
     title: "Cargo",
-    key:"firstName"
+    key:"title"
   },
   {
     title: "",
@@ -38,38 +39,35 @@ const headers = [
   }
 ];
 
-const data = [
-  {
-    firstName: "1",
-    middleName:"dfdf",
-    actions: {
-      actionView: true,
-      id: 1,
-      urlServer: "./component",
-      component : "VIEW_CONTACT"
-    }
-  },
-  {
-    firstName: "2",
-    middleName:"fsfdsf",
-    actions: {
-      actionView: true,
-      id: 2,
-      urlServer: "ddgfgf",
-      component: "component",
-    }
-  }
-];
-
 class ListContactComponent extends Component {
 
+  constructor(props){
+      super(props);
+      this._renderCellView = this._renderCellView.bind(this);
+  }
+  _renderCellView(data){
+    return  _.forOwn(data, function(value, key) {
+          _.set(value, 'actions',  {
+            actionView: true,
+            id: value.contactIdentityNumber,
+            urlServer: "./component",
+            component : "VIEW_CONTACT"
+          });
+      });
+  }
   render() {
+    const data = this.props.data;
     const modalTitle = 'Contacto Detalle';
     return ( < div className = "col-xs-12 horizontal-scroll-wrapper" >
-      <GridComponent headers={headers} data={data} modalTitle={modalTitle}/>
+      <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>
     );
   }
 }
+
+ListContactComponent.propTypes = {
+   data: PropTypes.array
+};
+
 
 export default ListContactComponent;

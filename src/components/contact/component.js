@@ -4,20 +4,57 @@ import React, {
 import SearchContactComponent from './searchContactComponent';
 import ListContactComponent from './listContactComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
-
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {contactsByClientFindServer} from './actions';
 
 class ContactComponent extends Component {
+
+  componentWillMount(){
+      const {
+          contactsByClientFindServer
+      } = this.props;
+      contactsByClientFindServer(0,"4956511",10,"",0,"");
+  }
+
   render() {
+    var contactsList = [];
+    const {
+        contactsByClient
+    } = this.props;
+    contactsList = contactsByClient.get('contacts');
     return (
-      < div className = "tab-pane quickZoomIn animated"
-          style={{width: "100%", height: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "15px"}} >
-        <div className = "tab-content break-word" style={{zIndex :0}}>
-          <SearchContactComponent / >
-        < /div>
-        < ListContactComponent / >
-     < /div>
+      < div className = "tab-pane quickZoomIn animated" >
+        <Grid>
+            <Row end="xs">
+              <Col xs={6}>
+              <div className = "tab-content break-word" style={{zIndex :0}}>
+                <SearchContactComponent / >
+              < /div>
+              </Col>
+            </Row>
+            <Row end="xs">
+              <Col xs={12}>
+                < ListContactComponent data={contactsList}/ >
+              </Col>
+            </Row>
+        < /Grid >
+
+       < /div>
     );
   }
 }
 
-export default ContactComponent;
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    contactsByClientFindServer
+  }, dispatch);
+}
+
+function mapStateToProps({contactsByClient}, ownerProps){
+    return {
+        contactsByClient
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactComponent);
