@@ -6,6 +6,7 @@ import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
 import modalReducer from '../components/modal/reducer';
 import ShareHolderReducer from '../components/shareHolder/reducer';
+import contactsReducer from '../components/contact/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
     navBar: NavBarReducer,
     clientR: ClientReducer,
     modal: modalReducer,
-    shareHolders: ShareHolderReducer
+    shareHolders: ShareHolderReducer,
+    contactsByClient: contactsReducer
 });

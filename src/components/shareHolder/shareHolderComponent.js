@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import SearchContactComponent from '../contact/searchContactComponent';
+import SearchContactComponent from './searchShareHolderComponent';
 import ShareHolderTableComponent from './shareHolderTableComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 
