@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import {toggleModal} from './action';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
+import ContactDetailsModalComponent from '../contact/contactDetailsModalComponent';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class ModalComponentDialog extends Component {
     switch (actions.component) {
         case views.VIEW_CONTACT:
             console.log("antes bu");
-                cell = "2"
+                cell =<ContactDetailsModalComponent/>
             break;
           }
               return (
@@ -50,10 +51,7 @@ class ModalComponentDialog extends Component {
                         <span className="sr-only">Close</span>
                       </button>
                             <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
-                      </div>
-                        <div className="modalBt4-body modal-body business-content contact-detail-body editable-form-content clearfix">
-                            {this._contectViewModal(actions)}
-                        </div>
+                      </div>{this._contectViewModal(actions)}
                         <div className="modalBt4-footer modal-footer">
                         <button type="button" className="btn btn-primary modal-button-edit" onClick={this.closeModal}>Guardar
                         </button>

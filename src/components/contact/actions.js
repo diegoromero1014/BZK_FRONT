@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_CONTACT_LIST_CLIENT} from './constants';
+import {GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD} from './constants';
 import axios from 'axios';
 
 export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm){
@@ -20,10 +20,17 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
        "order": order
    }
   }
-
+  
   var request = axios.post(APP_URL + "/listClientContacts", json);
   return{
     type: GET_CONTACT_LIST_CLIENT,
     payload: request
+  }
+}
+
+export function changeKeyword(keyword){
+  return{
+    type: CHANGE_KEYWORD,
+    keyword: keyword
   }
 }
