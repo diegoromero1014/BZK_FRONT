@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
 import DetailsInfoClient from '../clientDetailsInfo/DetailsInfoClient';
+import ContactInfo from '../contact/component'
 
 class TabClientInfo extends Component{
   constructor(props){
@@ -61,8 +62,9 @@ class TabClientInfo extends Component{
             <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
           </li>
   			</ul>
-        <div className="header-client-detail" style={{paddingLeft: "20px", height: "60%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
+        <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
+          {styleContacts && <ContactInfo infoClient={infoClient}/>}
         </div>
       </div>
     );
