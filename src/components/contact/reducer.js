@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { GET_CONTACT } from './constants';
+import { GET_CONTACT_LIST_CLIENT } from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -8,7 +8,7 @@ const initialState = Immutable.Map({
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case GET_CONTACT:
+        case GET_CONTACT_LIST_CLIENT:
             return state.withMutations(map => {
                 map
                 .set('status', 'processed')
