@@ -13,6 +13,8 @@
 // USE the <link> directive in index.html within the build:css plugin group instead
 @import "modules/c3";
 
+@import "biztrack/inputAddOn";
+
 // Theme config and variables
 @import "themes/default/theme";
 

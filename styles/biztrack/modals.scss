@@ -1,0 +1,278 @@
+// .modalBt4-open      - body class for killing the scroll
+// .modalBt4           - container to scroll within
+// .modalBt4-dialog    - positioning shell for the actual modalBt4
+// .modalBt4-content   - actual modalBt4 w/ bg and corners and shit
+@import "variables_bt4";
+@import "mixinsBt4";
+
+// Kill the scroll on the body
+.modalBt4-open {
+  overflow: hidden;
+}
+
+// Container that the modalBt4 scrolls within
+.modalBt4 {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  // Prevent Chrome on Windows from adding a focus outline. For details, see
+  // https://github.com/twbs/bootstrap/pull/10951.
+  outline: 0;
+  -webkit-overflow-scrolling: touch;
+
+  // When fading in the modalBt4, animate it to slide down
+  &.fade .modalBt4-dialog {
+    transition: transform .3s ease-out;
+    transform: translate(0, -25%);
+  }
+  &.in .modalBt4-dialog {
+    transform: translate(0, 0);
+  }
+}
+
+.modalBt4-open .modalBt4 {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// Shell div to position the modalBt4 with bottom padding
+.modalBt4-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+
+// Actual modalBt4
+.modalBt4-content {
+  position: relative;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
+  border: 1px solid $modal-content-border-color;
+  border-radius: $border-radius-lg;
+  @include box-shadow(0 3px 9px rgba(0, 0, 0, .5));
+  // Remove focus outline from opened modalBt4
+  outline: 0;
+}
+
+// modalBt4 background
+.modalBt4-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-modal-bg;
+  background-color: $modal-backdrop-bg;
+
+  // Fade for backdrop
+  &.fade {
+    opacity: 0;
+  }
+  &.in {
+    opacity: $modal-backdrop-opacity;
+  }
+}
+
+// modalBt4 header
+// Top section of the modalBt4 w/ title and dismiss
+.modalBt4-header {
+  padding: $modal-title-padding;
+  border-bottom: 1px solid $modal-header-border-color;
+  background-color: #16498b;
+  @include clearfix;
+}
+
+// Close icon
+.modalBt4-header .close {
+  margin-top: -2px;
+}
+
+// Title text within header
+.modalBt4-title {
+  margin: 0;
+  line-height: $modal-title-line-height;
+  color: white;
+}
+
+// modalBt4 body
+// Where all modalBt4 content resides (sibling of .modalBt4-header and .modalBt4-footer)
+.modalBt4-body {
+  position: relative;
+  padding: $modal-inner-padding;
+}
+
+// Footer (for actions)
+.modalBt4-footer {
+  padding: $modal-inner-padding;
+  text-align: right; // right align buttons
+  border-top: 1px solid $modal-footer-border-color;
+  @include clearfix(); // clear it in case folks use .pull-* classes on buttons
+
+  // Properly space out buttons
+  .btn + .btn {
+    margin-bottom: 0; // account for input[type="submit"] which gets the bottom margin like all other inputs
+    margin-left: 5px;
+  }
+  // but override that for button groups
+  .btn-group .btn + .btn {
+    margin-left: -1px;
+  }
+  // and override it for block buttons as well
+  .btn-block + .btn-block {
+    margin-left: 0;
+  }
+}
+
+// Measure scrollbar width for padding body during modalBt4 show/hide
+.modalBt4-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+.modalBt4.in .modalBt4-dialog {
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    transform: translate(0,0);
+}
+
+.modal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.modal-header button {
+    margin-top: 5px !important;
+}
+
+.fade.in {
+    opacity: 1;
+}
+
+.ReactModal__Overlay {
+  -webkit-perspective: 600;
+  perspective: 600;
+  opacity: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1 !important;
+  transition: opacity 150ms ease-out !important;
+}
+
+/*.ReactModal__Content {
+  -webkit-transform: scale(0.5) rotateX(-30deg) !important;
+  transform: scale(0.5) rotateX(-30deg) !important;
+}
+
+.ReactModal__Content--after-open {
+  -webkit-transform: scale(1) rotateX(0deg) !important;
+  transform: scale(1) rotateX(0deg) !important;
+  transition: all 150ms ease-in !important;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0 !important;
+}
+
+.ReactModal__Content--before-close {
+  -webkit-transform: scale(0.5) rotateX(30deg) !important;
+  transform: scale(0.5) rotateX(30deg) !important;
+  transition: all 150ms ease-in !important;
+}*/
+
+.ReactModal__Content.modal-dialog {
+  border: none;
+  background-color: transparent !important;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+.modal.in .modal-dialog {
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    transform: translate(0,0);
+}
+.modal.fade .modal-dialog {
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -moz-transition: -moz-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    -webkit-transform: translate(0,-25%);
+    -ms-transform: translate(0,-25%);
+    transform: translate(0,-25%);
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-content .modal-footer {
+    margin-top: 0;
+    background: rgba(255,255,255,0.75);
+    border-top: 1px solid #c2c7c9;
+}
+.modal-footer {
+    border-top: none;
+    box-shadow: none;
+    background-color: #F3F5F6;
+    margin-top: 0;
+    text-align: right;
+}
+.modal-footer {
+    padding: 19px 20px 20px;
+    margin-top: 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}
+
+// Scale up the modalBt4
+@include media-breakpoint-up(sm) {
+  // Automatically set modalBt4's width for larger viewports
+  .modalBt4-dialog {
+    width: $modal-md;
+    margin: 30px auto;
+  }
+  .modalBt4-content {
+    @include box-shadow(0 5px 15px rgba(0, 0, 0, .5));
+  }
+
+  // modalBt4 sizes
+  .modalBt4-sm {
+    width: $modal-sm;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .modalBt4-lg {
+    width: $modal-lg;
+  }
+}

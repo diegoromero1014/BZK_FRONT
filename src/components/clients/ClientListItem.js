@@ -30,7 +30,6 @@ class ClientListItem extends Component{
             <div className="celula-name" style={{marginTop: "5px", fontStyle: "italic"}}>{dataAccountManager}</div>
           </div>
         </div>
-
         <div className="celula-card-bottom" style={{backgroundColor:dataIsAccess ? "#B0E0E6" : "#DCDCDC"}}>
           <div className="celula-card-bottom-left">
             {dataIsAccess ? <a href="#"><i className="icon-expand"></i></a> : ''}
