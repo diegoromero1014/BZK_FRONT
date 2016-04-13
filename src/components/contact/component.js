@@ -9,23 +9,22 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 class ContactComponent extends Component {
   render() {
     return (
-      < div className = "tab-pane quickZoomIn animated" >
+      <div className = "tab-pane quickZoomIn animated">
         <Grid>
             <Row end="xs">
               <Col xs={6}>
               <div className = "tab-content break-word" style={{zIndex :0}}>
-                <SearchContactComponent / >
-              < /div>
+                <SearchContactComponent />
+              </div>
               </Col>
             </Row>
             <Row end="xs">
               <Col xs={12}>
-                < ListContactComponent / >
+                <ListContactComponent />
               </Col>
             </Row>
-        < /Grid >
-
-       < /div>
+        </Grid>
+       </div>
     );
   }
 }

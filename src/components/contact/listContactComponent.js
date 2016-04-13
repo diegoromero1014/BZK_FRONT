@@ -65,9 +65,10 @@ class ListContactComponent extends Component {
 
   render() {
     const modalTitle = 'Contacto Detalle';
-    return ( < div className = "col-xs-12 horizontal-scroll-wrapper" >
-      <GridComponent headers={headers} data={data} modalTitle={modalTitle}/>
-    </div>
+    return (
+      <div className="col-xs-12 horizontal-scroll-wrapper">
+        <GridComponent headers={headers} data={data} modalTitle={modalTitle} />
+      </div>
     );
   }
 }
