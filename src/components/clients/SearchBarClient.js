@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsFindServer, changePage, changeKeyword} from './actions';
 import {NUMBER_RECORDS} from './constants';
+import {redirectUrl} from '../globalComponents/actions';
 
 class SearchBarClient extends Component{
 

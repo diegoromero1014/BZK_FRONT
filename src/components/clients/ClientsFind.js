@@ -6,6 +6,7 @@ import {clientsFindServer} from './actions';
 import ClientListItem from './ClientListItem';
 import SearchBarClient from './SearchBarClient';
 import Pagination from './Pagination';
+import {redirectUrl} from '../globalComponents/actions';
 
 class ClientsFind extends Component {
 

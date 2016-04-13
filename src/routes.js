@@ -5,8 +5,7 @@ import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/Component';
 import DashboardComponent from './components/Dashboard/dashboardComponent';
 import ClientsFind from './components/clients/ClientsFind';
-import ContactComponent from './components/contact/component';
-import modalComponent from './components/modal/modalComponent';
+import ComponentClientInformation from './components/clientInformation/ComponentClientInformation';
 
 class App extends Component {
     render() {
@@ -26,7 +25,6 @@ export default (
               <Route path="clients" component={ClientsFind}></Route>
               <Route path="clientInformation" component={ComponentClientInformation}></Route>
             </Route>
-            <Route path="contact" component={modalComponent}></Route>
         </Route>
     </div>
 );

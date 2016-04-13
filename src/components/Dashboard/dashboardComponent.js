@@ -41,7 +41,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="header" style={{paddingLeft: widthComponent, height: "100%", float: "left", width: widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
                     <NavBarComponent />
-                    <div style={{backgroundColor: "#ECECEC", height: "84%", width: "100%", float: "left", top: "60px", overflowX: "auto", paddingBottom: "70px"}}>
+                    <div style={{backgroundColor: "#ECECEC", width: "100%", height: "90%", float: "left", top: "60px", overflowX: "auto"}}>
                       {this.props.children}
                     </div>
                 </div>
