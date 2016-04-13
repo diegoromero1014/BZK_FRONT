@@ -26,6 +26,7 @@ export default (
             <Route path="dashboard" component={DashboardComponent}>
               <Route path="clients" component={ClientsFind}></Route>
               <Route path="shareHolder" component={ShareHolderComponent}></Route>
+              <Route path="clientInformation" component={ComponentClientInformation}></Route>
             </Route>
             <Route path="contact" component={modalComponent}></Route>
         </Route>

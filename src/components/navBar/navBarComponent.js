@@ -10,6 +10,7 @@ class NavBarComponent extends Component {
     }
 
     handleLayoutToggle(e) {
+        e.preventDefault();
         const {toggleMenu} = this.props;
         toggleMenu();
     }
@@ -21,13 +22,13 @@ class NavBarComponent extends Component {
                 {/* BEGIN HEADER LEFT SIDE SECTION */}
                 <div className="pull-left">
                     {/* BEGIN SLIM NAVIGATION TOGGLE */}
-                    <ul className="nav">
+                    <ul className="nav" style={{paddingLeft: "0px !important"}}>
                         <li className="quicklinks" style={{cursor: "pointer"}}>
                             <a onClick={this.handleLayoutToggle} id="layout-condensed-toggle">
                                 <i className="icon-menu"></i>
                             </a>
                         </li>
-                        <li>
+                        <li style={{fontSize: "30px"}}>
                             {/*pageTitleEl*/}
                             Mis clientes
                         </li>

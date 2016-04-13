@@ -23,7 +23,7 @@ export function findShareHolder(searchTerm) {
       "pageNum": 0,
       "maxRows": 10,
       "searchTerm": searchTerm,
-      "clientId": 4938345,
+      "clientId": window.localStorage.getItem('idClientSeleted');,
       "groupId": 0
 		}
 	}

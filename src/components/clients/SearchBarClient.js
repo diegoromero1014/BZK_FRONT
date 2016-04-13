@@ -16,6 +16,13 @@ class SearchBarClient extends Component{
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
   }
 
+  componentWillMount(){
+    const {login} = this.props;
+    if( window.localStorage.getItem('sessionToken') === "" ){
+      redirectUrl("/login");
+    }
+  }
+
   _handleChangeKeyword(e){
     if(e.keyCode == 13 || e.which == 13){
       this._handleClientsFind(e);

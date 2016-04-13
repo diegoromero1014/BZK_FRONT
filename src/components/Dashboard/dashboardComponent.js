@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import MenuComponent from '../menu/component';
 import NavBarComponent from '../navBar/navBarComponent';
 import {redirectUrl} from '../globalComponents/actions';
-import moment from 'moment';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -17,28 +16,30 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
+      const {login} = this.props;
       if( window.localStorage.getItem('sessionToken') === "" ){
         redirectUrl("/login");
       }
     }
 
-    componentWillReceiveProps(){
-        const {navBar} = this.props;
-        if(this.state.widthComponent === "205px"){
-            this.setState({widthComponent: '70px'});
-            this.setState({widthComponentDiv: '95%'});
-        } else {
-            this.setState({widthComponent: '205px'});
-            this.setState({widthComponentDiv: '85%'});
-        }
-    }
     render() {
+        const {navBar} = this.props;
+        var widthComponent = '70px';
+        var widthComponentDiv = '95%';
+        if(navBar.get('status') === "closed"){
+            widthComponent = '205px';
+            widthComponentDiv = '85%';
+        } else {
+            widthComponent= '70px';
+            widthComponentDiv= '95%';
+        }
+
         return (
             <div style={{width: "100%", height: "100%", position: "absolute", overflow: "hidden"}}>
-                <div style={{float: "left", width: this.state.widthComponent, height: "100%", position: "absolute", transition: 'all 0.3s'}} >
+                <div style={{float: "left", width: widthComponent, height: "100%", position: "absolute", transition: 'all 0.3s'}} >
                     <MenuComponent />
                 </div>
-                <div className="header" style={{paddingLeft: this.state.widthComponent, height: "100%", float: "left", width: this.state.widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
+                <div className="header" style={{paddingLeft: widthComponent, height: "100%", float: "left", width: widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
                     <NavBarComponent />
                     <div style={{backgroundColor: "#ECECEC", height: "84%", width: "100%", float: "left", top: "60px", overflowX: "auto", paddingBottom: "70px"}}>
                       {this.props.children}
