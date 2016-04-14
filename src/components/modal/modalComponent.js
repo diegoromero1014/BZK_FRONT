@@ -19,17 +19,14 @@ class ModalComponentDialog extends Component {
 
     _contectViewModal(actions, idx){
       var cell;
-
-    switch (actions.component) {
+      switch (actions.component) {
         case views.VIEW_CONTACT:
-            console.log("antes bu");
-                cell =<ContactDetailsModalComponent/>
-            break;
-          }
-              return (
-                cell
-              );
+          cell =<ContactDetailsModalComponent/>
+          break;
       }
+
+      return (cell);
+    }
 
 
     render() {

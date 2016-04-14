@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
             .set('responseLogin', "")
             .set('validateLogin', false)
             .set('error', true);
-        })
+        });
       } else {
         return state.withMutations( map => {
           map
@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
             .set('responseLogin', action.payload.data)
             .set('validateLogin', false)
             .set('error', false)
-        })
+        });
       }
     break;
 

@@ -14,7 +14,7 @@ class ContactComponent extends Component {
       const {
           contactsByClientFindServer
       } = this.props;
-      contactsByClientFindServer(0,"4956511",10,"",0,"");
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"");
   }
 
   render() {
@@ -24,7 +24,8 @@ class ContactComponent extends Component {
     } = this.props;
     contactsList = contactsByClient.get('contacts');
     return (
-      < div className = "tab-pane quickZoomIn animated" >
+      < div className = "tab-pane quickZoomIn animated"
+        style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0}}>
           <SearchContactComponent / >
         < /div>

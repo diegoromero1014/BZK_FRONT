@@ -19,14 +19,11 @@ export default (state = initialState, action) => {
             .set('keyword', response.keyword)
             .set('countClients', response.countClients)
             .set('responseClients', JSON.parse(response.listClients));
-        })
-      break;
+        });
     case CHANGE_PAGE:
       return state.set('page', action.currentPage);
-      break;
     case CHANGE_KEYWORD:
       return state.set('keyword', action.keyword);
-      break;
     default:
     return state;
   }

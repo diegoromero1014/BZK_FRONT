@@ -16,11 +16,9 @@ export default (state = initialState, action) => {
                 .set('status', 'processed')
                 .set('rowCount', action.payload.data.messageBody.rowCount)
                 .set('contacts', action.payload.data.messageBody.rows);
-            })
-            break;
-            case CHANGE_KEYWORD:
-              return state.set('keyword', action.keyword);
-              break;
+            });
+          case CHANGE_KEYWORD:
+            return state.set('keyword', action.keyword);
         default:
             return state;
     }
