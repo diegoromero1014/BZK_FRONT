@@ -32,7 +32,7 @@ class SearchContactComponent extends Component {
     render() {
         return (
 			<div className="InputAddOn">
-				<input className="InputAddOn-field" placeholder="Búsqueda por número, nombre, función, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword} />
+				<input className="InputAddOn-field" placeholder="Búsqueda por tipo de documento, Tipo de accionista ó nombre" value={this.state.keyword} onChange={this._handleChangeKeyword} />
 				<button className="InputAddOn-item icon-search-sm" onClick={this._handleFindShareHolder}></button>
 			</div>
 		);
