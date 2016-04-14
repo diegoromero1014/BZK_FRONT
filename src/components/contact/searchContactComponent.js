@@ -48,7 +48,6 @@ class SearchContactComponent extends Component {
     }
 }
 
-
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     contactsByClientFindServer, changeKeyword

@@ -5,6 +5,9 @@ import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/Component';
 import DashboardComponent from './components/Dashboard/dashboardComponent';
 import ClientsFind from './components/clients/ClientsFind';
+import ContactComponent from './components/contact/component';
+import modalComponent from './components/modal/modalComponent';
+import ShareHolderComponent from './components/shareHolder/shareHolderComponent';
 import ComponentClientInformation from './components/clientInformation/ComponentClientInformation';
 
 class App extends Component {
@@ -23,6 +26,7 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
               <Route path="clients" component={ClientsFind}></Route>
+              <Route path="shareHolder" component={ShareHolderComponent}></Route>
               <Route path="clientInformation" component={ComponentClientInformation}></Route>
             </Route>
         </Route>
