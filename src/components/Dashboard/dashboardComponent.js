@@ -16,7 +16,6 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
-      const {login} = this.props;
       if( window.localStorage.getItem('sessionToken') === "" ){
         redirectUrl("/login");
       }
