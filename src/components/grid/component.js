@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import _ from 'lodash';
+import {Row, Grid, Col} from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ModalComponent from '../modal/component';
@@ -49,16 +50,16 @@ class GridComponent extends Component {
     const data = this.props.data;
     const modalTitle = this.props.modalTitle;
     return (
-      <table width="100%" className="table table-striped has-column-selection dataTable no-footer" id="datagrid-container"  role="grid" aria-describedby="datagrid-container_info" >
-        <thead>
-          <tr role="row">
-            {headers.map(this._renderHeader)}
-          </tr>
-        </thead>
-        <tbody>
-            {this._renderRow(data, headers, modalTitle)}
-        </tbody>
-      </table>
+          <table width="100%" className="table table-striped has-column-selection dataTable no-footer" id="datagrid-container"  role="grid" aria-describedby="datagrid-container_info" >
+            <thead>
+              <tr role="row">
+                {headers.map(this._renderHeader)}
+              </tr>
+            </thead>
+            <tbody>
+                {this._renderRow(data, headers, modalTitle)}
+            </tbody>
+          </table>
     );
   }
 }
