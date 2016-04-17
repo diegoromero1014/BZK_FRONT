@@ -18,8 +18,8 @@ export default (state = initialState, action) => {
 			console.log("response = ", action);
 			return state.withMutations(map => {
 				map.set('status', 'processed')
-				.set('rowCount', response.messageBody.rowCount)
-				.set('responseShareHolder',response.messageBody.rows);
+				.set('rowCount', response.rowCount)
+				.set('responseShareHolder',JSON.parse(response.rows));
 			});
 			break;
 		case KEEP_KEYWORD:

@@ -9,6 +9,7 @@ import ContactComponent from './components/contact/component';
 import modalComponent from './components/modal/modalComponent';
 import ShareHolderComponent from './components/shareHolder/shareHolderComponent';
 import ComponentClientInformation from './components/clientInformation/ComponentClientInformation';
+import CreatePropsPect from './components/propspect/CreatePropsPect';
 
 class App extends Component {
     render() {

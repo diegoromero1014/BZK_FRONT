@@ -39,8 +39,13 @@ class ClientsFind extends Component {
       clientItems = clientR.get('responseClients');
 
       return (
-        <div id="page-container" className=" condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED"}}>
-          <SearchBarClient />
+        <div id="page-container" className="condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED", display: "inline"}}>
+          <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
+            <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
+              <SearchBarClient />
+              <button className="btn btn-default btn-large" type="button" title="Crear prospecto" onClick={this._handleClientsFind} style={{backgroundColor:"blue", marginLeft:"30px"}}><i className="icon-search"></i></button>
+            </div>
+          </div>
           <div style={{margin:"0px 0px 10px 10px", width:"100%", display: "inline-block"}}>
             <div className="news-page content">
               <div className="team-modal">
