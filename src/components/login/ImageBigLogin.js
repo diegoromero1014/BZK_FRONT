@@ -22,7 +22,7 @@ class ImageBigLogin extends Component{
                       </div>
                   </Row>
                   <Row>
-                  <Col md={12} className="welcome-main" style={{width: "100%",paddingLeft: "45px"}}>
+                  <Col md={12} className="welcome-main" style={{width: "100%",paddingLeft: "45px",paddingRight: '45px'}}>
                         <Col md={8} sm={7} style={{float: "left", marginTop: "0px" }}>
                             <TitleLogin/>
                         </Col>
