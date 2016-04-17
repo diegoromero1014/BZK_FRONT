@@ -21,14 +21,16 @@ class App extends Component {
 }
 
 export default (
-    <div className="full-height">
-        <Route path="/" component={App}>
-            <Route path="login" component={LoginComponent}></Route>
-            <Route path="dashboard" component={DashboardComponent}>
-              <Route path="clients" component={ClientsFind}></Route>
-              <Route path="shareHolder" component={ShareHolderComponent}></Route>
-              <Route path="clientInformation" component={ComponentClientInformation}></Route>
-            </Route>
-        </Route>
-    </div>
+    <Grid>
+      <div className="full-height">
+          <Route path="/" component={App}>
+              <Route path="login" component={LoginComponent}></Route>
+              <Route path="dashboard" component={DashboardComponent}>
+                <Route path="clients" component={ClientsFind}></Route>
+                <Route path="shareHolder" component={ShareHolderComponent}></Route>
+                <Route path="clientInformation" component={ComponentClientInformation}></Route>
+              </Route>
+          </Route>
+      </div>
+    </Grid>
 );
