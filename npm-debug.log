@@ -1,21 +1,20 @@
 0 info it worked if it ends with ok
 1 verbose cli [ 'C:\\Program Files (x86)\\nodejs\\node.exe',
 1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'run',
-1 verbose cli   'build' ]
+1 verbose cli   'start' ]
 2 info using npm@3.3.12
 3 info using node@v5.2.0
-4 verbose run-script [ 'prebuild', 'build', 'postbuild' ]
-5 info lifecycle ayax_front@1.0.0~prebuild: ayax_front@1.0.0
-6 silly lifecycle ayax_front@1.0.0~prebuild: no script for prebuild, continuing
-7 info lifecycle ayax_front@1.0.0~build: ayax_front@1.0.0
-8 verbose lifecycle ayax_front@1.0.0~build: unsafe-perm in lifecycle true
-9 verbose lifecycle ayax_front@1.0.0~build: PATH: C:\Program Files (x86)\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\wsalazar\Documents\AYAX\FrontEnd\MS_AYAX_BANCOLOMBIA\node_modules\.bin;C:\Users\wsalazar\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\Program Files (x86)\ibm\gsk8\lib;C:\Program Files (x86)\ibm\gsk8\bin;C:\Program Files (x86)\IBM Informix Client SDK\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.7.0_75\bin;C:\apache-tomcat-7.0.61\bin;C:\Program Files\Apache Software Foundation\apache-maven-3.3.3\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5.4 & MySQL Utilities 1.5.4 1.5;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5.4 & MySQL Utilities 1.5.4 1.5\Doctrine extensions for PHP;%appdata%\npm;C:\ant\bin;C:\Users\wsalazar\AppData\Local\Android\android-sdk\platform-tools;C:\Users\wsalazar\AppData\Local\Android\android-sdk\tools;C:\Python27;C:\Program Files (x86)\nodejs;C:\Windows\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit;C:\Program Files (x86)\Skype\Phone;C:\Program Files\Docker Toolbox;C:\Users\wsalazar\AppData\Local\.meteor;C:\Users\wsalazar\AppData\Local\atom\bin;C:\Users\wsalazar\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
-10 verbose lifecycle ayax_front@1.0.0~build: CWD: C:\Users\wsalazar\Documents\AYAX\FrontEnd\MS_AYAX_BANCOLOMBIA
-11 silly lifecycle ayax_front@1.0.0~build: Args: [ '/d /s /c', ' node node_modules/.bin/better-npm-run build' ]
-12 silly lifecycle ayax_front@1.0.0~build: Returned: code: 1  signal: null
-13 info lifecycle ayax_front@1.0.0~build: Failed to exec build script
-14 verbose stack Error: ayax_front@1.0.0 build: ` node node_modules/.bin/better-npm-run build`
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info lifecycle ayax_front@1.0.0~prestart: ayax_front@1.0.0
+6 silly lifecycle ayax_front@1.0.0~prestart: no script for prestart, continuing
+7 info lifecycle ayax_front@1.0.0~start: ayax_front@1.0.0
+8 verbose lifecycle ayax_front@1.0.0~start: unsafe-perm in lifecycle true
+9 verbose lifecycle ayax_front@1.0.0~start: PATH: C:\Program Files (x86)\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\wsalazar\Documents\AYAX\FrontEnd\MS_AYAX_BANCOLOMBIA\node_modules\.bin;C:\Users\wsalazar\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\Program Files (x86)\ibm\gsk8\lib;C:\Program Files (x86)\ibm\gsk8\bin;C:\Program Files (x86)\IBM Informix Client SDK\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.7.0_75\bin;C:\apache-tomcat-7.0.61\bin;C:\Program Files\Apache Software Foundation\apache-maven-3.3.3\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5.4 & MySQL Utilities 1.5.4 1.5;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5.4 & MySQL Utilities 1.5.4 1.5\Doctrine extensions for PHP;%appdata%\npm;C:\ant\bin;C:\Users\wsalazar\AppData\Local\Android\android-sdk\platform-tools;C:\Users\wsalazar\AppData\Local\Android\android-sdk\tools;C:\Python27;C:\Program Files (x86)\nodejs;C:\Windows\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit;C:\Program Files (x86)\Skype\Phone;C:\Program Files\Docker Toolbox;C:\Users\wsalazar\AppData\Local\.meteor;C:\Users\wsalazar\AppData\Local\atom\bin;C:\Users\wsalazar\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+10 verbose lifecycle ayax_front@1.0.0~start: CWD: C:\Users\wsalazar\Documents\AYAX\FrontEnd\MS_AYAX_BANCOLOMBIA
+11 silly lifecycle ayax_front@1.0.0~start: Args: [ '/d /s /c', 'node server.js' ]
+12 silly lifecycle ayax_front@1.0.0~start: Returned: code: 1  signal: null
+13 info lifecycle ayax_front@1.0.0~start: Failed to exec start script
+14 verbose stack Error: ayax_front@1.0.0 start: `node server.js`
 14 verbose stack Exit status 1
 14 verbose stack     at EventEmitter.<anonymous> (C:\Program Files (x86)\nodejs\node_modules\npm\lib\utils\lifecycle.js:232:16)
 14 verbose stack     at emitTwo (events.js:88:13)
@@ -28,18 +27,18 @@
 15 verbose pkgid ayax_front@1.0.0
 16 verbose cwd C:\Users\wsalazar\Documents\AYAX\FrontEnd\MS_AYAX_BANCOLOMBIA
 17 error Windows_NT 6.3.9600
-18 error argv "C:\\Program Files (x86)\\nodejs\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "build"
+18 error argv "C:\\Program Files (x86)\\nodejs\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
 19 error node v5.2.0
 20 error npm  v3.3.12
 21 error code ELIFECYCLE
-22 error ayax_front@1.0.0 build: ` node node_modules/.bin/better-npm-run build`
+22 error ayax_front@1.0.0 start: `node server.js`
 22 error Exit status 1
-23 error Failed at the ayax_front@1.0.0 build script ' node node_modules/.bin/better-npm-run build'.
+23 error Failed at the ayax_front@1.0.0 start script 'node server.js'.
 23 error Make sure you have the latest version of node.js and npm installed.
 23 error If you do, this is most likely a problem with the ayax_front package,
 23 error not with npm itself.
 23 error Tell the author that this fails on your system:
-23 error      node node_modules/.bin/better-npm-run build
+23 error     node server.js
 23 error You can get their info via:
 23 error     npm owner ls ayax_front
 23 error There is likely additional logging output above.

@@ -18,7 +18,7 @@ class NavBarComponent extends Component {
     render() {
         const pageTitleEl = "";
         return (
-            <div className="header-quick-nav" style={{height: "60px"}}>
+            <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
                 {/* BEGIN HEADER LEFT SIDE SECTION */}
                 <div className="pull-left">
                     {/* BEGIN SLIM NAVIGATION TOGGLE */}
