@@ -22,6 +22,7 @@ class App extends Component {
 }
 
 export default (
+  <Grid>
     <div className="full-height">
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
@@ -33,4 +34,5 @@ export default (
             </Route>
         </Route>
     </div>
+  </Grid>
 );

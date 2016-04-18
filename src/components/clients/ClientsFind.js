@@ -50,8 +50,7 @@ class ClientsFind extends Component {
       clientItems = clientR.get('responseClients');
 
       return (
-        <Grid>
-          <Row>
+          <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={12} lg={12}>
               <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
                 <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
@@ -74,7 +73,6 @@ class ClientsFind extends Component {
               <Pagination />
             </Col>
           </Row>
-        </Grid>
       )
     }
 }

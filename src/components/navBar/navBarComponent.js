@@ -37,7 +37,7 @@ class NavBarComponent extends Component {
                 </div>
                 {/* END HEADER LEFT SIDE SECTION */}
                 {/* BEGIN HEADER RIGHT SIDE SECTION */}
-                <div className="pull-right">
+                <div className="pull-right" style={{paddingRight: "20px"}}>
                     <ul className="nav">
                         <li className="quicklinks">
                             <a href="#">
