@@ -28,18 +28,18 @@ class SearchContactComponent extends Component {
   _handleContactsByClientsFind(e){
     const {contactsByClientFindServer} = this.props;
     if(this.state.keyword === '' || this.state.keyword === undefined){
-        contactsByClientFindServer(0,"4956511",10,"",0,"");
+        contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"");
     }else{
       const {contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(0,"4956511",10,"",0,this.state.keyword);
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,this.state.keyword);
     }
   }
 
     render() {
         return (
           <div className="InputAddOn">
-          <input id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="InputAddOn-field" placeholder="Búsqueda por número, nombre, función, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword}/>
-            <button onClick={this._handleContactsByClientsFind} className="InputAddOn-item">
+          <input style={{padding: '0px 11px !important'}} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, función, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword}/>
+            <button onClick={this._handleContactsByClientsFind} className="button InputAddOn-item">
               <span className="icon icon-search">
               </span>
             </button>
