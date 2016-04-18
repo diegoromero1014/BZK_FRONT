@@ -10,6 +10,12 @@ import {redirectUrl} from '../globalComponents/actions';
 
 class ClientsFind extends Component {
 
+  constructor(props) {
+      super(props);
+
+      this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
+  }
+
   componentWillMount(){
     if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
       redirectUrl("/login");
@@ -30,6 +36,11 @@ class ClientsFind extends Component {
       />
   }
 
+  _clickButtonCreateProps(){
+    console.log("Ingrese");
+    redirectUrl("/dashboard/createPropspect");
+  }
+
     render() {
       var clientItems = [];
       const {clientR} = this.props;
@@ -39,23 +50,31 @@ class ClientsFind extends Component {
       clientItems = clientR.get('responseClients');
 
       return (
-        <div id="page-container" className="condensed full-height" style={{width:"100%", "backgroundColor":"#E7ECED", display: "inline"}}>
-          <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
-            <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
-              <SearchBarClient />
-              <button className="btn btn-default btn-large" type="button" title="Crear prospecto" onClick={this._handleClientsFind} style={{backgroundColor:"blue", marginLeft:"30px"}}><i className="icon-search"></i></button>
-            </div>
-          </div>
-          <div style={{margin:"0px 0px 10px 10px", width:"100%", display: "inline-block"}}>
-            <div className="news-page content">
-              <div className="team-modal">
-                {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:  ''}
-                {clientItems.map(this._mapClientItems)}
+        <Grid>
+          <Row>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
+                <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
+                  <SearchBarClient />
+                  <button className="btn btn-default btn-large" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{backgroundColor:"#66778d", marginLeft:"30px"}}>
+                    <i className="icon-person" style={{color: "white"}}></i>
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-          <Pagination />
-        </div>
+            </Col>
+            <Col xs={12} md={12} lg={12}>
+              <div className="news-page content">
+                <div className="team-modal">
+                  {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:  ''}
+                  {clientItems.map(this._mapClientItems)}
+                </div>
+              </div>
+            </Col>
+            <Col xs={12} md={12} lg={12}>
+              <Pagination />
+            </Col>
+          </Row>
+        </Grid>
       )
     }
 }
