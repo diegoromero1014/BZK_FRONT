@@ -38,7 +38,7 @@ class SearchContactComponent extends Component {
     render() {
         return (
           <div className="InputAddOn">
-          <input style={{padding: '0px 11px !important'}} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, función, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword}/>
+          <input style={{padding: '0px 11px !important'}} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword}/>
             <button onClick={this._handleContactsByClientsFind} className="button InputAddOn-item">
               <span className="icon icon-search">
               </span>

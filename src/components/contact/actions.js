@@ -25,7 +25,8 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
        "columnOrder": columnOrder,
        "order": order,
        "functionId" : "",
-       "lobId" : ""
+       "lobId" : "",
+       "typeOfContactId": "",
    }
   }
 
