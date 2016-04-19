@@ -1,5 +1,4 @@
 import {APP_URL} from '../../constantsGlobal';
-import { CLIENT_ID_TYPE } from './constants';
 import axios from 'axios';
 
 export function consultDataSelect(field){
@@ -22,7 +21,7 @@ export function consultDataSelect(field){
     }
   var request = axios.post(APP_URL + "/masterDataByField", json);
   return {
-    type: CLIENT_ID_TYPE,
+    type: field,
     payload: request
   }
 }
