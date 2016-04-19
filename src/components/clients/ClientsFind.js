@@ -55,7 +55,7 @@ class ClientsFind extends Component {
               <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
                 <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
                   <SearchBarClient />
-                  <button className="btn btn-default btn-large" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{backgroundColor:"#66778d", marginLeft:"30px"}}>
+                  <button className="btn" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{backgroundColor:"#66778d", marginLeft:"30px"}}>
                     <i className="icon-person" style={{color: "white"}}></i>
                   </button>
                 </div>
