@@ -37,7 +37,7 @@ class CreatePropspect extends Component{
   render(){
     const { fields: { idType, idNumber }, error, handleSubmit} = this.props
     const {propspectReducer} = this.props;
-    const {satus, validateLogin, prospectExist} = propspectReducer;
+    const {status, validateLogin, prospectExist} = propspectReducer;
     if( !validateLogin ){
       //redirectUrl("/login");
     }
