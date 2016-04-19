@@ -6,9 +6,9 @@ import {Combobox} from 'react-widgets';
 import {CLIENT_ID_TYPE} from '../constants';
 
 var typeDocument = [
-  { id: 0, name: 'TI'},
-  { id: 1, name: 'CC'},
-  { id: 2, name: 'NIT'}
+  { id: 0, name: 'TI', value: "sadsad"},
+  { id: 1, name: 'CC', value: "sadsad"},
+  { id: 2, name: 'NIT', value: "sadsad"}
 ];
 
 class ComponentTypeDocument extends Component{
@@ -19,15 +19,17 @@ class ComponentTypeDocument extends Component{
 
   render(){
     const {selectsReducer, onChange, store} = this.props;
-    const {dataTypeDocument} = selectsReducer;
+    console.log("selectsReducer", selectsReducer);
+    const dataTypeDocument = selectsReducer.get('dataTypeDocument');
+    console.log("dataTypeDocument",dataTypeDocument);
     return(
       <div>
         <Combobox
           value={store}
           onChange={onChange}
           valueField='id'
-          textField='name'
-          data={typeDocument} />
+          textField='value'
+          data={dataTypeDocument} />
       </div>
     );
   }

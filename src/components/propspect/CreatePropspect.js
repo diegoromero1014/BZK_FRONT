@@ -11,9 +11,6 @@ const fields = ["idType", "idNumber"];
 class CreatePropspect extends Component{
   constructor( props ) {
     super(props);
-    this.state = {
-      namePropspect: null
-    };
 
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
   }
@@ -63,7 +60,7 @@ class CreatePropspect extends Component{
               <input
                 type="text"
                 className="form-control"
-                style={{height: "22px !important", minHeight: "22px !important"}}
+                style={{height: "22px !important", minHeight: "26px !important"}}
                 required
                 placeholder="Ingrese el número de documento del usuario"
                 {...idNumber}
@@ -71,7 +68,7 @@ class CreatePropspect extends Component{
           </Col>
           <Col xs={2} md={4} lg={2}>
             <button className="btn btn-default" type="submit" title="Crear prospecto"
-              style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "20px", paddingTop: "4px !important"}}>
+              style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "25px", paddingTop: "4px !important"}}>
               <i className="icon-search" style={{color: "white"}}></i>
             </button>
           </Col>
