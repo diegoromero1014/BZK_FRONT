@@ -11,12 +11,14 @@ import ShareHolderComponent from './components/shareHolder/shareHolderComponent'
 import ComponentClientInformation from './components/clientInformation/ComponentClientInformation';
 import CreatePropspect from './components/propspect/CreatePropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
+import MessageComponent from './components/messages/component';
 
 class App extends Component {
     render() {
         return (
           <div style={{width: "100%"}}>
               {this.props.children}
+              <MessageComponent />
           </div>
         );
     }
