@@ -35,7 +35,6 @@ class ClientsFind extends Component {
       const {clientR} = this.props;
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
-      console.log("numero = ", countClients);
       clientItems = clientR.get('responseClients');
 
       return (
@@ -44,7 +43,7 @@ class ClientsFind extends Component {
           <div style={{margin:"0px 0px 10px 10px", width:"100%", display: "inline-block"}}>
             <div className="news-page content">
               <div className="team-modal">
-                {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:  ''}
+                {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes que cumplan el criterio de búsqueda.</h4> </div>:  ''}
                 {clientItems.map(this._mapClientItems)}
               </div>
             </div>

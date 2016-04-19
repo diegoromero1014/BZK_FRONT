@@ -10,12 +10,10 @@ const initialState = Immutable.Map({
 });
 
 export default (state = initialState, action) => {
-	console.log('action', action.type);
 	switch(action.type) {
 
 		case FIND_SHAREHOLDER:
 			const response = action.payload.data;
-			console.log("response = ", action);
 			return state.withMutations(map => {
 				map.set('status', 'processed')
 				.set('rowCount', response.messageBody.rowCount)

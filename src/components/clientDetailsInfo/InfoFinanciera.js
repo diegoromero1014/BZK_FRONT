@@ -21,7 +21,6 @@ class InfoFinanciera extends Component{
     if( infoClient !== null && infoClient !== undefined ){
       if( infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== "" &&
           infoClient.salesUpadateDate !== undefined ){
-          console.log("infoClient", infoClient);
           var salesActualizationDate = moment(infoClient.salesUpadateDate).locale('es');
           salesActualizationDateString = salesActualizationDate.format("DD") + " " + salesActualizationDate.format("MMM") + " " + salesActualizationDate.format("YYYY");
       }

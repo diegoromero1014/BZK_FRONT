@@ -379,17 +379,17 @@
 	.button-custom {
 		//float: right;
 		min-width: 106px;
-		background-color: $color-primary-light;
+		background-color: #3498db;
 		line-height: 25px;
 		text-align: center;
 		margin-right: 20px;
-		color: $color-white;
+		color: #3498db;
 		font-weight: bold;
 		float: right;
 		position: relative;
 		bottom: -10px;
 		&:hover {
-			background-color: $color-primary-dark3;
+			background-color: #3498db;
 		}
 
 	}
