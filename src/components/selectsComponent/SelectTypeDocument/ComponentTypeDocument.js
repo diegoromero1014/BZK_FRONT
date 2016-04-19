@@ -5,12 +5,6 @@ import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
 import {CLIENT_ID_TYPE} from '../constants';
 
-var typeDocument = [
-  { id: 0, name: 'TI'},
-  { id: 1, name: 'CC'},
-  { id: 2, name: 'NIT'}
-];
-
 class ComponentTypeDocument extends Component{
   componentWillMount(){
     const {consultDataSelect} = this.props;
@@ -27,7 +21,8 @@ class ComponentTypeDocument extends Component{
           onChange={onChange}
           valueField='id'
           textField='value'
-          data={dataTypeDocument} />
+          data={dataTypeDocument}
+          style={{borderColor: "red"}}/>
       </div>
     );
   }

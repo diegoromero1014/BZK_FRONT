@@ -38,7 +38,6 @@ class CreatePropspect extends Component{
     if( !validateLogin ){
       //redirectUrl("/login");
     }
-    console.log("prospectExist", prospectExist);
     if( status === "Error" ){
       //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
       clearState();
@@ -51,34 +50,39 @@ class CreatePropspect extends Component{
     }
 
     return(
-      <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
-        <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
-          <Col xs={12} md={4} lg={5}>
-            <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
-            <SelectTypeDocument
-              onChange={val => idType.onChange(val.id)}
-              store={idType.id}
-            />
-          </Col>
-          <Col xs={10} md={4} lg={5}>
-            <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
-              <input
-                type="text"
-                className="form-control"
-                style={{height: "22px !important", minHeight: "26px !important"}}
-                required
-                placeholder="Ingrese el número de documento del usuario"
-                {...idNumber}
+      <div>
+        <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
+          <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
+            <Col xs={12} md={4} lg={5}>
+              <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+              <SelectTypeDocument
+                onChange={val => idType.onChange(val.id)}
+                store={idType.id}
               />
-          </Col>
-          <Col xs={2} md={4} lg={2}>
-            <button className="btn btn-default" type="submit" title="Crear prospecto"
-              style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "25px", paddingTop: "4px !important"}}>
-              <i className="icon-search" style={{color: "white"}}></i>
-            </button>
-          </Col>
-        </Row>
-      </form>
+            </Col>
+            <Col xs={10} md={4} lg={5}>
+              <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                <input
+                  type="text"
+                  className="form-control"
+                  style={{height: "22px !important", minHeight: "26px !important"}}
+                  required
+                  placeholder="Ingrese el número de documento del usuario"
+                  {...idNumber}
+                />
+            </Col>
+            <Col xs={2} md={4} lg={2}>
+              <button className="btn btn-default" type="submit" title="Buscar prospecto"
+                style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "25px", paddingTop: "4px !important"}}>
+                <i className="icon-search" style={{color: "white"}}></i>
+              </button>
+            </Col>
+          </Row>
+        </form>
+        {!prospectExist &&
+          <div><p>Holaaaa</p></div>
+        }
+      </div>
     );
   }
 
