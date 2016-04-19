@@ -8,6 +8,9 @@ import ClientInformationReducer from '../components/clientInformation/reducer';
 import modalReducer from '../components/modal/reducer';
 import ShareHolderReducer from '../components/shareHolder/reducer';
 import contactsReducer from '../components/contact/reducer';
+import propspectReducer from '../components/propspect/reducer';
+import selectsReducer from '../components/selectsComponent/reducer';
+import {reducer as formReducer} from 'redux-form';
 
 export default combineReducers({
     routing: routerReducer,
@@ -18,5 +21,8 @@ export default combineReducers({
     clientInformacion: ClientInformationReducer,
     modal: modalReducer,
     shareHolders: ShareHolderReducer,
-    contactsByClient: contactsReducer
+    contactsByClient: contactsReducer,
+    propspectReducer: propspectReducer,
+    selectsReducer: selectsReducer,
+    form: formReducer
 });

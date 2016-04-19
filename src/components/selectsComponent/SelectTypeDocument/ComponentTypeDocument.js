@@ -1,0 +1,54 @@
+import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {consultDataSelect} from '../actions';
+import {Combobox} from 'react-widgets';
+import {CLIENT_ID_TYPE} from '../constants';
+
+var typeDocument = [
+  { id: 0, name: 'TI'},
+  { id: 1, name: 'CC'},
+  { id: 2, name: 'NIT'}
+];
+
+class ComponentTypeDocument extends Component{
+  componentWillMount(){
+    const {consultDataSelect} = this.props;
+    consultDataSelect(CLIENT_ID_TYPE);
+  }
+
+  render(){
+    const {selectsReducer, onChange, store} = this.props;
+    const {dataTypeDocument} = selectsReducer;
+    return(
+      <div>
+        <Combobox
+          value={store}
+          onChange={onChange}
+          valueField='id'
+          textField='name'
+          data={typeDocument} />
+      </div>
+    );
+  }
+
+}
+
+ComponentTypeDocument.PropTypes = {
+    onChange: PropTypes.func,
+    store: PropTypes.object
+};
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    consultDataSelect
+  }, dispatch);
+}
+
+function mapStateToProps({selectsReducer}, ownerProps) {
+  return {
+    selectsReducer
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentTypeDocument);

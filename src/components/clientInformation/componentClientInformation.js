@@ -43,7 +43,7 @@ class ComponentClientInformation extends Component{
                     className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
                 }
   						</div>
-              <div style={{width: "100%%"}}>
+              <div style={{width: "100%"}}>
                 <table style={{width: "100%"}}>
                   <thead>
                     <tr>
