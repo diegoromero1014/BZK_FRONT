@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
-import {validateProspectExists} from './actions';
+import {validateProspectExists, clearState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
+import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/SelectTypeDocument/ComponentTypeDocument';
 
 const fields = ["idType", "idNumber"];
@@ -21,28 +22,32 @@ class CreatePropspect extends Component{
     }
   }
 
-  _handleChangeName(){
-    this.setState({
-      namePropspect: e.target.value
-    })
-  }
-
   _clickButtonCreateProps(formData){
-    console.log(JSON.stringify(formData, null, 2));
-    const {id} = formData.idType;
+    const {idType} = formData;
     const {idNumber} = formData;
-    validateProspectExists(id, idNumber);
+    const {validateProspectExists} = this.props;
+    validateProspectExists(idType, idNumber);
   }
 
   render(){
-    const { fields: { idType, idNumber }, error, handleSubmit} = this.props
+    const { fields: { idType, idNumber }, error, handleSubmit, clearState} = this.props
     const {propspectReducer} = this.props;
-    const {status, validateLogin, prospectExist} = propspectReducer;
+    const status = propspectReducer.get('status');
+    const validateLogin = propspectReducer.get('validateLogin');
+    const prospectExist =  propspectReducer.get('prospectExist');
     if( !validateLogin ){
       //redirectUrl("/login");
     }
-    if( prospectExist ){
-      alert("El prospecto ya se encuentra registrado en el sistema, por tal motivo no lo puede crear.");
+    console.log("prospectExist", prospectExist);
+    if( status === "Error" ){
+      //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
+      clearState();
+      alert("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo.");
+    }
+     if(status === "Exists" ){
+       clearState();
+       //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
+       alert("Señor usuario, el prospecto que desea registrar, ya se encuentra creado en la aplicación.");
     }
 
     return(
@@ -51,8 +56,8 @@ class CreatePropspect extends Component{
           <Col xs={12} md={4} lg={5}>
             <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
             <SelectTypeDocument
-              onChange={value => idType.onChange(value)}
-              store={idType.value}
+              onChange={val => idType.onChange(val.id)}
+              store={idType.id}
             />
           </Col>
           <Col xs={10} md={4} lg={5}>
@@ -81,7 +86,9 @@ class CreatePropspect extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    validateProspectExists
+    validateProspectExists,
+    toggleMessage,
+    clearState
   }, dispatch);
 }
 
