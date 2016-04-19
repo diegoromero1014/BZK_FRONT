@@ -10,7 +10,6 @@ const store = configureStore();
 const reduxRouterMiddleware = syncHistoryWithStore(browserHistory, store);
 
 require("../styles/index");
-//require("react-widgets/lib/less/react-widgets.less");
 
 ReactDom.render(
     <Root

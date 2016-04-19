@@ -14,7 +14,7 @@ import CreatePropspect from './components/propspect/CreatePropspect';
 class App extends Component {
     render() {
         return (
-          <div className="full-height" style={{width: "100%"}}>
+          <div style={{width: "100%"}}>
               {this.props.children}
           </div>
         );
@@ -23,7 +23,6 @@ class App extends Component {
 
 export default (
   <Grid>
-    <div className="full-height">
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
@@ -33,6 +32,5 @@ export default (
               <Route path="createPropspect" component={CreatePropspect}></Route>
             </Route>
         </Route>
-    </div>
   </Grid>
 );

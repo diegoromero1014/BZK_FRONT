@@ -2,11 +2,12 @@
 	height: 100%;
 	width: 100%;
 	font-family: $base-font-family;
-	overflow: hidden !important;
+	overflow-y: scroll;
 }
 
 .welcome-main {
 	padding-right: 3.3475rem;
+	overflow: auto;
 }
 
 .welcome-title {
