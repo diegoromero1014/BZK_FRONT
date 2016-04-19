@@ -6,11 +6,15 @@ import GridComponent from '../grid/component';
 
 const headers = [
   {
+    title: "",
+    key:"actions"
+  },
+  {
       title: "Nombre",
       key: "nameComplet"
   },
   {
-    title: "Telefono",
+    title: "Teléfono",
     key:"telephoneNumber"
   },
   {
@@ -26,16 +30,12 @@ const headers = [
     key:"city"
   },
   {
-    title: "Tipo Contacto",
+    title: "Tipo de Contacto",
     key:"typeOfContact"
   },
   {
     title: "Cargo",
     key:"title"
-  },
-  {
-    title: "",
-    key:"actions"
   }
 ];
 
@@ -58,7 +58,7 @@ class ListContactComponent extends Component {
   render() {
     const data = this.props.data;
     const modalTitle = 'Contacto Detalle';
-    return ( < div className = "col-xs-12 horizontal-scroll-wrapper" >
+    return ( < div className = "horizontal-scroll-wrapper" >
       <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>
     );
