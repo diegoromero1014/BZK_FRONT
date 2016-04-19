@@ -13,7 +13,7 @@ export default(state = initialState, action) => {
       const {status, validateLogin, clientInformation} = action.payload.data;
       return state.withMutations(map => {
           map
-          .set('status', satus)
+          .set('status', status)
           .set('validateLogin', validateLogin)
           .set('responseClientInfo', JSON.parse(clientInformation));
       })

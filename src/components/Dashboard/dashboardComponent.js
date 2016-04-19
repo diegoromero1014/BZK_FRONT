@@ -22,7 +22,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        console.log("Width pantalla", window.innerWidth);
         const {navBar} = this.props;
         var widthComponent = '70px';
         var widthComponentDiv = (window.innerWidth - 70) + "px";
