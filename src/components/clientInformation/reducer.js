@@ -10,10 +10,10 @@ const initialState = Immutable.Map({
 export default(state = initialState, action) => {
   switch (action.type) {
     case CONSULT_INFO_CLIENT:
-      const {satus, validateLogin, clientInformation} = action.payload.data;
+      const {status, validateLogin, clientInformation} = action.payload.data;
       return state.withMutations(map => {
           map
-          .set('status', satus)
+          .set('status', status)
           .set('validateLogin', validateLogin)
           .set('responseClientInfo', JSON.parse(clientInformation));
       })

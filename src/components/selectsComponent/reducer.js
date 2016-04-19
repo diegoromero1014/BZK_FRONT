@@ -9,7 +9,6 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     case CLIENT_ID_TYPE:
-    const {redirecUrl, sessionToken} = action.payload.data;
     return state.set("dataTypeDocument", action.payload.data);
     default:
         return state;

@@ -6,7 +6,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 class ShareHolderComponent extends Component {
 	render() {
 		return (
-			<Grid>
+			<div>
       			<Row>
       				<Col xs={3} md={3}>
       					<SearchContactComponent />
@@ -17,7 +17,7 @@ class ShareHolderComponent extends Component {
         				<ShareHolderTableComponent />
         			</Col>
       			</Row>
-      		</Grid>
+						</div>
 		);
 	}
 }

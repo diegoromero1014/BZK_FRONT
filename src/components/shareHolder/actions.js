@@ -3,7 +3,6 @@ import {FIND_SHAREHOLDER, KEEP_KEYWORD} from './constants';
 import axios from 'axios';
 
 export function findShareHolder(searchTerm) {
-  console.log('findHolder = ', searchTerm);
 	const json = {
 		"messageHeader": {
 			"sessionToken": window.localStorage.getItem('sessionToken'),
@@ -29,7 +28,6 @@ export function findShareHolder(searchTerm) {
 	}
 
 	var request = axios.post(APP_URL + "/shareholderList", json);
-  	console.log('request = ' , request);
   	return {
     	type: FIND_SHAREHOLDER,
     	payload: request
