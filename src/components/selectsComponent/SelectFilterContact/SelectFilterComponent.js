@@ -15,7 +15,6 @@ class SelectFilterComponent extends Component{
   render(){
     const {selectsReducer, idTypeFilter} = this.props;
     var data =[];
-          console.log(selectsReducer.get('dataTypeFunction'));
     if(idTypeFilter == FILTER_FUNCTION_ID){
       data = selectsReducer.get('dataTypeFunction');
     }else if(idTypeFilter == FILTER_TYPE_CONTACT_ID) {
@@ -27,7 +26,7 @@ class SelectFilterComponent extends Component{
         <Combobox
           valueField='id'
           textField='value'
-          data={data} />
+          data={data} minLength={3} filter='contains' />
     );
   }
 

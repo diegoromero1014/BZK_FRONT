@@ -29,7 +29,7 @@ class ComponentTypeDocument extends Component{
           onChange={onChange}
           valueField='id'
           textField='value'
-          data={dataTypeDocument} />
+          data={dataTypeDocument} minLength={3} filter='contains' />
       </div>
     );
   }
