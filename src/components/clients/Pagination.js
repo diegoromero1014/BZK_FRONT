@@ -11,7 +11,6 @@ class Pagination extends Component{
     const {changePage} = this.props;
     const {clientR} = this.props;
     var keyword = clientR.get('keyword');
-    console.log("keyword",keyword);
     if (keyword === '' || keyword === undefined){
      alert('Por favor ingrese un criterio de búsqueda');
     }else{

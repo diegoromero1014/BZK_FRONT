@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
 import DetailsInfoClient from '../clientDetailsInfo/DetailsInfoClient';
 import ContactInfo from '../contact/component'
+import {Grid, Row, Col} from 'react-flexbox-grid';
 
 class TabClientInfo extends Component{
   constructor(props){
@@ -66,9 +67,19 @@ class TabClientInfo extends Component{
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
           {styleContacts && <ContactInfo infoClient={infoClient}/>}
         </div>
+        <Row>
+          <Col xs={12} sm={12} lg={12}>
+            <div className="footer" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", marginBottom: "0", width: "90%", backgroundColor: "#F8F8F8", height:"50px"}}>
+              <button className="button-custom btn" style={{backgroundColor:"#2671d7"}}>
+                <span>Editar</span>
+              </button>
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   }
 }
+
 
 export default TabClientInfo;

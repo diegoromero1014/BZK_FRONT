@@ -24,7 +24,6 @@ export function clientsFindServer(keyword, limInf, limSup){
   }
 
   var request = axios.post(APP_URL + "/clientListForEmployee", json);
-  console.log("request = ", request);
   return{
     type: CLIENTS_FIND,
     payload: request

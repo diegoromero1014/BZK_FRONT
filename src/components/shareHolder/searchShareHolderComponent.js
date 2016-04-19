@@ -18,7 +18,6 @@ class SearchContactComponent extends Component {
 	}
 
 	_handleFindShareHolder(e) {
-		console.log('palabra', this.state.keyword);
 		const {findShareHolder} = this.props;
 		findShareHolder(this.state.keyword);
 	}

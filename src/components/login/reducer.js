@@ -12,7 +12,6 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     case VALIDATE_LOGIN:
-      console.log(action.payload.data);
       if( action.payload.data === {} || action.payload.data === undefined ){
         return state.set("errorServerNoFound", true);
       }

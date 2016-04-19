@@ -6,7 +6,6 @@ class MenuListItem extends Component {
 
   _handleClickMenuItem(e){
     const {linkUrl} = this.props;
-    console.log("linkUrl: " + linkUrl);
     if( linkUrl === "/login" ){
       window.localStorage.setItem('sessionToken', '');
     }

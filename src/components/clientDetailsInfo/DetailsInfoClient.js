@@ -3,7 +3,9 @@ import ActividadEconomica from './ActividadEconomica';
 import UbicationCorrespondence from './UbicationCorrespondence';
 import InfoFinanciera from './InfoFinanciera';
 import DataComercial from './DataComercial';
+import {Grid, Row, Col} from 'react-flexbox-grid';
 import Notas from './Notas';
+import {connect} from 'react-redux';
 import moment from 'moment';
 
 class DetailsInfoClient extends Component{
@@ -27,7 +29,7 @@ class DetailsInfoClient extends Component{
   }
 
   render(){
-    const {infoClient} = this.props;
+    const {infoClient, menuState} = this.props;
     var actualizationDate = moment(infoClient.actualizationDate).locale('es');
     var actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
     var {notes} = infoClient;
@@ -98,7 +100,6 @@ class DetailsInfoClient extends Component{
           </table>
         </div>
         {notes.map(this._mapNoteItems)}
-
       </div>
     );
   }
@@ -108,4 +109,11 @@ DetailsInfoClient.PropTypes = {
   infoClient: PropTypes.object.isRequired
 }
 
-export default DetailsInfoClient;
+
+function mapStateToProps({navBar}){
+  return {
+    menuState: navBar.get('status')
+  };
+}
+
+export default connect(mapStateToProps)(DetailsInfoClient);
