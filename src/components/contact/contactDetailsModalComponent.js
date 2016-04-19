@@ -12,27 +12,27 @@ class ContactDetailsModalComponent extends Component {
         </Row>
         <Row>
           <Col xs={12} sm={12} md={4} lg={4}>
-            <dt><span>Tratamiento</span><span> (*)</span></dt>
-            <dd className="input-with-icon right success-control">
-              <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
-            </dd>
-          </Col>
-          <Col xs={12} sm={12} md={4} lg={4}>
-            <dt><span>Genero</span><span> (*)</span></dt>
-            <dd className="input-with-icon right success-control">
-              <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
-            </dd>
-          </Col>
-          <Col xs={12} sm={12} md={4} lg={4}>
             <dt><span>Tipo de documento</span><span> (*)</span></dt>
+            <dd className="input-with-icon right success-control">
+              <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+            </dd>
+          </Col>
+          <Col xs={12} sm={12} md={6} lg={4}>
+            <dt><span>Número de documento</span><span> (*)</span></dt>
+            <dd className="input-with-icon right success-control">
+              <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+            </dd>
+          </Col>
+          <Col xs={12} sm={12} md={4} lg={4}>
+            <dt><span>Tratamiento</span><span> (*)</span></dt>
             <dd className="input-with-icon right success-control">
               <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
             </dd>
           </Col>
         </Row>
         <Row>
-          <Col xs={12} sm={12} md={6} lg={4}>
-            <dt><span>Número de documento</span><span> (*)</span></dt>
+          <Col xs={12} sm={12} md={4} lg={4}>
+            <dt><span>Genero</span><span> (*)</span></dt>
             <dd className="input-with-icon right success-control">
               <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
             </dd>
@@ -81,6 +81,20 @@ class ContactDetailsModalComponent extends Component {
               <dt>Fecha de nacimiento</dt>
               <dd className="input-with-icon right success-control">
                 <input type="text" className="form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+              </dd>
+            </Col>
+            <Col xs={12} sm={12} md={4} lg={4}>
+              <dt>Estilo social</dt>
+              <dd className="input-with-icon fight success-control">
+                <input type="text" className="form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" />
+              </dd>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} sm={12} md={4} lg={4}>
+              <dt>Actitud frente al grupo</dt>
+              <dd className="input-with-icon fight success-control">
+                <input type="text" className="form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" />
               </dd>
             </Col>
           </Row>
