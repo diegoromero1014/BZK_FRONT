@@ -79,13 +79,13 @@ class DetailsInfoClient extends Component{
                 </td>
               </tr>
               <tr>
-                <td>
+                <td style={{paddingTop:"15px"}}>
                   <dl className="company-detail">
                     <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Fecha de actualización</span></dt>
                     <dd style={{marginLeft: "0px"}}>{actualizationDateString}</dd>
                   </dl>
                 </td>
-                <td>
+                <td style={{paddingTop:"15px"}}>
                   <dl className="company-detail">
                     <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Estado</span></dt>
                     <dd style={{marginLeft: "0px"}}>{infoClient.clientStatusKey}</dd>

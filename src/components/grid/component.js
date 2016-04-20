@@ -6,6 +6,7 @@ import _ from 'lodash';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
+import ButtonDeleteComponent from './buttonDeleteComponent';
 import ModalComponent from '../modal/component';
 
 class GridComponent extends Component {
@@ -23,12 +24,14 @@ class GridComponent extends Component {
 
   _renderCell(row, headers,modalTitle){
       return headers.map((value, idx) => {
-        var cell;
-        if(value.key == 'actions'){
-          cell = <ModalComponent key={idx} modalTitle={modalTitle} actions={_.get(row, value.key)}/>
-        }else{
-          cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
-        }
+            var cell;
+            if(value.key == 'actions'){
+              cell = <ModalComponent key={idx} modalTitle={modalTitle} actions={_.get(row, value.key)}/>
+            }else if(value.key == 'delete'){
+              cell = <ButtonDeleteComponent key={idx}/>
+            }else{
+              cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
+            }
           return (
             cell
           );

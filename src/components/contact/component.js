@@ -13,34 +13,81 @@ import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID} from './
 
 class ContactComponent extends Component {
 
-  componentWillMount(){
-      const {
-          contactsByClientFindServer
-      } = this.props;
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"");
+  constructor(props){
+     super(props);
+     this.state= {
+        value1: "",
+        value2: "",
+        value3: ""
+     };
   }
+
+  componentWillMount(){
+      const {contactsByClientFindServer, selectsReducer} = this.props;
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"",this.state.value1,
+      this.state.value2,
+      this.state.value3);
+  }
+
 
   render() {
     var contactsList = [];
     const {
         contactsByClient
     } = this.props;
+
     contactsList = contactsByClient.get('contacts');
+    var visibleTable = 'none';
+    var visibleMessage = 'block';
+    if(contactsList.length != 0 ){
+      visibleTable = 'block';
+      visibleMessage = 'none';
+    }
     return (
       < div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         <Grid style={{paddingRight: "16px", width: "100%"}}>
-          <Row><Col xs={12} sm={8} md={12} lg={12}><SearchContactComponent/></Col></Row>
+          <Row><Col xs={12} sm={8} md={12} lg={12}>
+          <SearchContactComponent
+              value1={this.state.value1}
+              value2={this.state.value2}
+              value3={this.state.value3}
+          /></Col></Row>
           <Row>
-            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Función</span><SelectFilterContact key={1} idTypeFilter={FILTER_FUNCTION_ID}/></Col>
-            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Entidad/Línea de negocio</span><SelectFilterContact key={2} idTypeFilter={FILTER_TYPE_LBO_ID}/></Col>
-            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de contacto</span><SelectFilterContact key={3} idTypeFilter={FILTER_TYPE_CONTACT_ID}/></Col>
+            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Función:</span>
+                <SelectFilterContact config={{
+                    onChange: (value) => this.setState({value1: value.id})
+                }}
+                idTypeFilter={FILTER_FUNCTION_ID}/>
+            </Col>
+            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Entidad/Línea de negocio:</span>
+                <SelectFilterContact config={{
+                    onChange: (value) => this.setState({value2: value.id})
+                }}
+                idTypeFilter={FILTER_TYPE_LBO_ID}/>
+            </Col>
+            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de contacto:</span>
+                <SelectFilterContact config={{
+                    onChange: (value) => this.setState({value3: value.id})
+                }}
+                idTypeFilter={FILTER_TYPE_CONTACT_ID}/>
+            </Col>
           </Row>
         </Grid>
-        < /div>
-          < ListContactComponent data={contactsList}/ >
-       < /div>
+        </div>
+          <Grid style= {{display:visibleTable, paddingRight: "16px", width: "100%"}}>
+            <Row>
+              <Col xs={12} sm={8} md={12} lg={12}> <ListContactComponent
+                data={contactsList}/ ></Col>
+            </Row>
+          </Grid>
+          <Grid style= {{display:visibleMessage, paddingRight: "16px", width: "100%"}}>
+            <Row center="xs">
+            <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
+            </Row>
+          </Grid>
+       </div>
     );
   }
 }
@@ -51,9 +98,9 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient}, ownerProps){
+function mapStateToProps({contactsByClient,selectsReducer}, ownerProps){
     return {
-        contactsByClient
+        contactsByClient,selectsReducer
     };
 }
 

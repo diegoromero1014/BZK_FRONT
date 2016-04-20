@@ -2,7 +2,8 @@ import {APP_URL} from '../../constantsGlobal';
 import {GET_CONTACT_LIST_CLIENT, CHANGE_KEYWORD} from './constants';
 import axios from 'axios';
 
-export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm){
+export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId){
+  console.log("serverr" + typeOfContactId);
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -24,9 +25,9 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
        "searchTerm" : searchTerm,
        "columnOrder": columnOrder,
        "order": order,
-       "functionId" : "",
-       "lobId" : "",
-       "typeOfContactId": "",
+       "functionId" : functionId,
+       "lobId" : lobId,
+       "typeOfContactId": typeOfContactId,
    }
   }
 
@@ -38,7 +39,7 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
 }
 
 export function changeKeyword(keyword){
-  return{
+  return {
     type: CHANGE_KEYWORD,
     keyword: keyword
   }

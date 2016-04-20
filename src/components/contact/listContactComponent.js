@@ -10,6 +10,10 @@ const headers = [
     key:"actions"
   },
   {
+    title: "Tratamiento",
+    key:"title"
+  },
+  {
       title: "Nombre",
       key: "nameComplet"
   },
@@ -35,8 +39,12 @@ const headers = [
   },
   {
     title: "Cargo",
-    key:"title"
-  }
+    key:"contactPosition"
+  },
+  {
+    title: "",
+    key:"delete"
+  },
 ];
 
 class ListContactComponent extends Component {
@@ -52,6 +60,12 @@ class ListContactComponent extends Component {
             id: value.contactIdentityNumber,
             urlServer: "./component",
             component : "VIEW_CONTACT"
+          });
+          _.set(value, 'delete',  {
+            actionDelete: true,
+            id: value.contactIdentityNumber,
+            urlServer: "./component",
+            component : "DELETE_CONTACT"
           });
       });
   }
