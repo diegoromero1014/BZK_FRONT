@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD} from './constants';
+import {GET_CONTACT_LIST_CLIENT, CHANGE_KEYWORD} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -18,7 +18,7 @@ export default (state = initialState, action) => {
                 .set('rowCount', response.rowCount)
                 .set('contacts', JSON.parse(response.contacts));
             });
-          case CHANGE_KEYWORD:
+        case CHANGE_KEYWORD:
             return state.set('keyword', action.keyword);
         default:
             return state;
