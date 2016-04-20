@@ -25,3 +25,27 @@ export function consultDataSelect(field){
     payload: request
   }
 }
+
+export function consultList(field){
+  const json = {
+      messageHeader: {
+        "timestamp": new Date().getTime(),
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+      messageBody: {
+      }
+    }
+  var request = axios.post(APP_URL + "/" + field, json);
+  return {
+    type: field,
+    payload: request
+  }
+}

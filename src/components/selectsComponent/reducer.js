@@ -1,29 +1,33 @@
 import Immutable from 'immutable';
-import {CLIENT_ID_TYPE,FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID} from './constants';
+import * as constants from './constants';
 
 
 const initialState = Immutable.Map({
   dataTypeDocument: [],
   dataTypeFunction: [],
   dataTypeContact: [],
-  dataTypeLBO:[]
+  dataTypeLBO:[],
+  dataCIIU: []
 });
 
 
 export default (state = initialState, action) => {
   switch (action.type) {
-        case CLIENT_ID_TYPE:
-            var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set("dataTypeDocument", masterDataDetailEntries);
-        case FILTER_FUNCTION_ID:
-            var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set("dataTypeFunction", masterDataDetailEntries);
-        case FILTER_TYPE_CONTACT_ID:
-            var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set("dataTypeContact", masterDataDetailEntries);
-        case FILTER_TYPE_LBO_ID:
-                var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-                return state.set("dataTypeLBO", masterDataDetailEntries);
+        case constants.CLIENT_ID_TYPE:
+          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set("dataTypeDocument", masterDataDetailEntries);
+        case constants.FILTER_FUNCTION_ID:
+          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set("dataTypeFunction", masterDataDetailEntries);
+        case constants.FILTER_TYPE_CONTACT_ID:
+          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set("dataTypeContact", masterDataDetailEntries);
+        case constants.FILTER_TYPE_LBO_ID:
+          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set("dataTypeLBO", masterDataDetailEntries);
+        case constants.CIIU:
+          var ciiuValueObjects =  action.payload.data.messageBody.ciiuValueObjects;
+          return state.set("dataCIIU", ciiuValueObjects);
         default:
             return state;
   }
