@@ -10,12 +10,15 @@ import modalComponent from './components/modal/modalComponent';
 import ShareHolderComponent from './components/shareHolder/shareHolderComponent';
 import ComponentClientInformation from './components/clientInformation/ComponentClientInformation';
 import CreatePropspect from './components/propspect/CreatePropspect';
+import ClientEdit from './components/clientEdit/clientEdit';
+import MessageComponent from './components/messages/component';
 
 class App extends Component {
     render() {
         return (
           <div style={{width: "100%"}}>
               {this.props.children}
+              <MessageComponent />
           </div>
         );
     }
@@ -23,14 +26,15 @@ class App extends Component {
 
 export default (
   <Grid>
-        <Route path="/" component={App}>
-            <Route path="login" component={LoginComponent}></Route>
-            <Route path="dashboard" component={DashboardComponent}>
-              <Route path="clients" component={ClientsFind}></Route>
-              <Route path="shareHolder" component={ShareHolderComponent}></Route>
-              <Route path="clientInformation" component={ComponentClientInformation}></Route>
-              <Route path="createPropspect" component={CreatePropspect}></Route>
-            </Route>
-        </Route>
+    <Route path="/" component={App}>
+      <Route path="login" component={LoginComponent}></Route>
+      <Route path="dashboard" component={DashboardComponent}>
+        <Route path="clients" component={ClientsFind}></Route>
+        <Route path="shareHolder" component={ShareHolderComponent}></Route>
+        <Route path="clientInformation" component={ComponentClientInformation}></Route>
+        <Route path="createPropspect" component={CreatePropspect}></Route>
+        <Route path="clientEdit" component={ClientEdit}></Route>
+      </Route>
+    </Route>
   </Grid>
 );

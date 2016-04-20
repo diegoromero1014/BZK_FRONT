@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import { VAIDATE_PROSPECT_EXISTS } from './constants';
+import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT } from './constants';
 import axios from 'axios';
 
 export function validateProspectExists(typeDocument, numberDocument){
@@ -26,4 +26,10 @@ export function validateProspectExists(typeDocument, numberDocument){
     type: VAIDATE_PROSPECT_EXISTS,
     payload: request
   }
+}
+
+export function clearState(){
+  return {
+    type: CLEAR_STATE_PROSPECT
+  };
 }

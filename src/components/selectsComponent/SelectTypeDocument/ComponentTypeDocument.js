@@ -5,12 +5,6 @@ import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
 import {CLIENT_ID_TYPE} from '../constants';
 
-var typeDocument = [
-  { id: 0, name: 'TI'},
-  { id: 1, name: 'CC'},
-  { id: 2, name: 'NIT'}
-];
-
 class ComponentTypeDocument extends Component{
   componentWillMount(){
     const {consultDataSelect} = this.props;
@@ -19,15 +13,15 @@ class ComponentTypeDocument extends Component{
 
   render(){
     const {selectsReducer, onChange, store} = this.props;
-    const {dataTypeDocument} = selectsReducer;
+    const dataTypeDocument = selectsReducer.get('dataTypeDocument');
     return(
       <div>
         <Combobox
           value={store}
           onChange={onChange}
           valueField='id'
-          textField='name'
-          data={typeDocument} />
+          textField='value'
+          data={dataTypeDocument} minLength={3} filter='contains' />
       </div>
     );
   }
