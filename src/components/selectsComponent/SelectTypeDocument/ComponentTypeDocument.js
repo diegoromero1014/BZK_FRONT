@@ -5,12 +5,6 @@ import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
 import {CLIENT_ID_TYPE} from '../constants';
 
-var typeDocument = [
-  { id: 0, name: 'TI', value: "sadsad"},
-  { id: 1, name: 'CC', value: "sadsad"},
-  { id: 2, name: 'NIT', value: "sadsad"}
-];
-
 class ComponentTypeDocument extends Component{
   componentWillMount(){
     const {consultDataSelect} = this.props;
@@ -18,10 +12,8 @@ class ComponentTypeDocument extends Component{
   }
 
   render(){
-    const {selectsReducer, onChange, store} = this.props;
-    console.log("selectsReducer", selectsReducer);
+    const {selectsReducer, onChange, store, styles} = this.props;
     const dataTypeDocument = selectsReducer.get('dataTypeDocument');
-    console.log("dataTypeDocument",dataTypeDocument);
     return(
       <div>
         <Combobox
@@ -29,7 +21,8 @@ class ComponentTypeDocument extends Component{
           onChange={onChange}
           valueField='id'
           textField='value'
-          data={dataTypeDocument} minLength={3} filter='contains' />
+          data={dataTypeDocument} minLength={3} filter='contains'
+          style={styles}/>
       </div>
     );
   }
@@ -38,7 +31,8 @@ class ComponentTypeDocument extends Component{
 
 ComponentTypeDocument.PropTypes = {
     onChange: PropTypes.func,
-    store: PropTypes.object
+    store: PropTypes.object,
+    styles: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

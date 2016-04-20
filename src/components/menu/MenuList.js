@@ -3,11 +3,13 @@ import moment from 'moment';
 import MenuListItem from './MenuListItem';
 
 const menuItems = [
+    /*
+    Se comenta porque la funcionalidad no esta activa, no hace nada
     {
         text: "Mi portafolio",
         icon: "icon-suitcase",
         link: "/dashboard/portafolio"
-    },
+    },*/
     {
         text: "Mis clientes",
         icon: "icon-office",

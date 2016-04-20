@@ -9,7 +9,7 @@
 	text-align: center;
 	vertical-align: middle;
 	cursor: pointer;
-	background-color: $color-primary-grey;
+	background-color: #2671d7;
 	-webkit-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -30,7 +30,7 @@
 	}
 }
 .btn:hover, .btn:focus, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
-	background-color: mix(#c1cace,$color-primary-black-overlay);
+	background-color: #66778d;
 }
 .btn-cons {
 	margin-right: 5px;

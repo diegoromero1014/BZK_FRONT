@@ -11,6 +11,7 @@ import contactsReducer from '../components/contact/reducer';
 import propspectReducer from '../components/propspect/reducer';
 import selectsReducer from '../components/selectsComponent/reducer';
 import {reducer as formReducer} from 'redux-form';
+import messageReducer from '../components/messages/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
     contactsByClient: contactsReducer,
     propspectReducer: propspectReducer,
     selectsReducer: selectsReducer,
-    form: formReducer
+    form: formReducer,
+    message: messageReducer
 });
