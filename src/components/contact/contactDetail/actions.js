@@ -21,7 +21,7 @@ export function getContactDetails(contactId) {
       isSuccessful: true
     },
     messageBody: {
-      contactId: window.localStorage.getItem('contactId')
+      contactId: contactId
     }
   }
 

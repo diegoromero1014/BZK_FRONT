@@ -24,7 +24,7 @@ class ModalComponentDialog extends Component {
           {/* Listas */}
 
           {/* /Listas */}
-          cell = <ContactDetailsModalComponent />
+          cell = <ContactDetailsModalComponent contactId={actions.id} />
           break;
       }
 
