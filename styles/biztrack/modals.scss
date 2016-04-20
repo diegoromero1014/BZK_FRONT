@@ -6,6 +6,20 @@
 @import "mixinsBt4";
 
 // Kill the scroll on the body
+.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
 .modalBt4-open {
   overflow: hidden;
 }

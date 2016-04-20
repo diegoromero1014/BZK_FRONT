@@ -35,7 +35,14 @@ class ContactComponent extends Component {
     const {
         contactsByClient
     } = this.props;
+
     contactsList = contactsByClient.get('contacts');
+    var visibleTable = 'none';
+    var visibleMessage = 'block';
+    if(contactsList.length != 0 ){
+      visibleTable = 'block';
+      visibleMessage = 'none';
+    }
     return (
       < div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
@@ -69,8 +76,17 @@ class ContactComponent extends Component {
           </Row>
         </Grid>
         </div>
-          <ListContactComponent
-          data={contactsList}/ >
+          <Grid style= {{display:visibleTable, paddingRight: "16px", width: "100%"}}>
+            <Row>
+              <Col xs={12} sm={8} md={12} lg={12}> <ListContactComponent
+                data={contactsList}/ ></Col>
+            </Row>
+          </Grid>
+          <Grid style= {{display:visibleMessage, paddingRight: "16px", width: "100%"}}>
+            <Row center="xs">
+            <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
+            </Row>
+          </Grid>
        </div>
     );
   }
