@@ -2,21 +2,28 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
-import {validateProspectExists, clearState} from './actions';
+import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
 import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/SelectTypeDocument/ComponentTypeDocument';
+import FormCreateProspect from './formCreateProspect';
 
 const fields = ["idType", "idNumber"];
 
 class CreatePropspect extends Component{
   constructor( props ) {
     super(props);
+    this.state = {
+      styleTypeDocument: {},
+      styleDocumentNumber: {},
+    }
 
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
   }
 
   componentWillMount(){
+    const {clearAllState} = this.props;
+    clearAllState();
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }
@@ -50,7 +57,8 @@ class CreatePropspect extends Component{
     }
 
     return(
-      <div>
+      <div style={{marginTop: "10px"}}>
+        <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
           <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
             <Col xs={12} md={4} lg={5}>
@@ -80,7 +88,7 @@ class CreatePropspect extends Component{
           </Row>
         </form>
         {!prospectExist &&
-          <div><p>Holaaaa</p></div>
+          <FormCreateProspect />
         }
       </div>
     );
@@ -92,7 +100,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     validateProspectExists,
     toggleMessage,
-    clearState
+    clearState,
+    clearAllState
   }, dispatch);
 }
 

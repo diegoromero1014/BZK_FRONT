@@ -37,7 +37,6 @@ class ClientsFind extends Component {
   }
 
   _clickButtonCreateProps(){
-    console.log("Ingrese");
     redirectUrl("/dashboard/createPropspect");
   }
 
