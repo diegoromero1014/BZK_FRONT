@@ -7,27 +7,40 @@ import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID} from '../
 
 
 class SelectFilterComponent extends Component{
+
+  constructor(props){
+      super(props);
+  }
+
   componentWillMount(){
     const {consultDataSelect,idTypeFilter} = this.props;
     consultDataSelect(idTypeFilter);
   }
 
   render(){
-    const {selectsReducer, idTypeFilter} = this.props;
-    var data =[];
-    if(idTypeFilter == FILTER_FUNCTION_ID){
-      data = selectsReducer.get('dataTypeFunction');
-    }else if(idTypeFilter == FILTER_TYPE_CONTACT_ID) {
-      data = selectsReducer.get('dataTypeContact');
-    }else if(idTypeFilter == FILTER_TYPE_LBO_ID) {
-      data = selectsReducer.get('dataTypeLBO');
-    }
-    return(
-        <Combobox
-          valueField='id'
-          textField='value'
-          data={data} minLength={3} filter='contains' />
-    );
+      const {
+          selectsReducer,
+          idTypeFilter,
+          config
+      } = this.props;
+      var data =[];
+      if(idTypeFilter === FILTER_FUNCTION_ID){
+          data = selectsReducer.get('dataTypeFunction');
+      }else if(idTypeFilter === FILTER_TYPE_CONTACT_ID) {
+          data = selectsReducer.get('dataTypeContact');
+      }else if(idTypeFilter === FILTER_TYPE_LBO_ID) {
+          data = selectsReducer.get('dataTypeLBO');
+      }
+      return(
+          <Combobox
+              valueField='id'
+              textField='value'
+              data={data}
+              minLength={3}
+              filter='contains'
+              {...config}
+          />
+      );
   }
 
 }
@@ -35,6 +48,7 @@ class SelectFilterComponent extends Component{
 SelectFilterComponent.PropTypes = {
     idTypeFilter:PropTypes.string
 };
+
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
