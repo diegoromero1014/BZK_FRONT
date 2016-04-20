@@ -12,7 +12,7 @@ class ComponentTypeDocument extends Component{
   }
 
   render(){
-    const {selectsReducer, onChange, store} = this.props;
+    const {selectsReducer, onChange, store, styles} = this.props;
     const dataTypeDocument = selectsReducer.get('dataTypeDocument');
     return(
       <div>
@@ -21,7 +21,8 @@ class ComponentTypeDocument extends Component{
           onChange={onChange}
           valueField='id'
           textField='value'
-          data={dataTypeDocument} minLength={3} filter='contains' />
+          data={dataTypeDocument} minLength={3} filter='contains'
+          style={styles}/>
       </div>
     );
   }
@@ -30,7 +31,8 @@ class ComponentTypeDocument extends Component{
 
 ComponentTypeDocument.PropTypes = {
     onChange: PropTypes.func,
-    store: PropTypes.object
+    store: PropTypes.object,
+    styles: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

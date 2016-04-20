@@ -37,13 +37,13 @@ class NavBarComponent extends Component {
                 </div>
                 {/* END HEADER LEFT SIDE SECTION */}
                 {/* BEGIN HEADER RIGHT SIDE SECTION */}
-                <div className="pull-right" style={{paddingRight: "20px"}}>
+                <div className="pull-right" style={{paddingRight: "20px", display:"none"}}>
                     <ul className="nav">
                         <li className="quicklinks">
                             <a href="#">
                                 <div className="iconset webfont">
                                     <i className="icon-link"></i>
-                                    Enlaces Rápidos
+                                    Enlaces rápidos
                                 </div>
                             </a>
                         </li>
