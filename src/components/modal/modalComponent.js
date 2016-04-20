@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import {toggleModal} from './action';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
-import ContactDetailsModalComponent from '../contact/contactDetailsModalComponent';
+import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -21,7 +21,10 @@ class ModalComponentDialog extends Component {
       var cell;
       switch (actions.component) {
         case views.VIEW_CONTACT:
-          cell =<ContactDetailsModalComponent/>
+          {/* Listas */}
+
+          {/* /Listas */}
+          cell = <ContactDetailsModalComponent />
           break;
       }
 
