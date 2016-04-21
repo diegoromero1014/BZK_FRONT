@@ -3,7 +3,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import SelectCIIU from '../selectsComponent/SelectCIIU/SelectCIIU';
+import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 
 var notasProspect = [];
 

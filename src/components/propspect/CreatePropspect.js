@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
 import {toggleMessage} from '../messages/actions';
-import SelectTypeDocument from '../selectsComponent/SelectTypeDocument/ComponentTypeDocument';
+import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import FormCreateProspect from './formCreateProspect';
 
 const fields = ["idType", "idNumber"];

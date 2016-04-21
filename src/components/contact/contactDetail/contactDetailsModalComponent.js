@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
-import SelectOption from '../../selectsComponent/SelectFilterContact/SelectFilterComponent';
+import SelectOption from '../../selectsComponent/selectFilterContact/selectFilterComponent';
 import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_SPORTS} from '../../selectsComponent/constants';
 
 const dataValues = ['orange', 'red', 'blue'];

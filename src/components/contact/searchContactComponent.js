@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer,changeKeyword} from './actions';
+import {NUMBER_RECORDS} from './constants';
 import _ from 'lodash';
 
 let v1 = "";
 let v2 = "";
 let v3 = "";
+let limInf1 = 0;
 
 class SearchContactComponent extends Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class SearchContactComponent extends Component {
       }
   }
 
+
   _handleChangeKeyword(e){
     if(e.keyCode == 13 || e.which == 13){
       this._handleContactsByClientsFind(e);
@@ -40,20 +43,21 @@ class SearchContactComponent extends Component {
       this.setState({
         keyword: e.target.value
       });
+      console.log(e.target.value);
       const {changeKeyword} = this.props;
       changeKeyword(e.target.value);
     }
   }
 
   _handleContactsByClientsFind(){
-      const {contactsByClientFindServer,selectsReducer} = this.props;
+      const {contactsByClientFindServer,contactsByClient} = this.props;
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"",
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
           v1,
           v2,
           v3);
       }else{
-          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,this.state.keyword,
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,this.state.keyword,
           v1,
           v2,
           v3);

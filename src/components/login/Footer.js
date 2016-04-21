@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ImageLogoApp from '../globalComponents/LogoApplication';
+import ImageLogoApp from '../globalComponents/logoApplication';
 
 
 //<div className="footer-right">

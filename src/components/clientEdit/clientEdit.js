@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import {consultInfoClient} from '../clientInformation/actions';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
-import SelectTypeDocument from '../selectsComponent/SelectTypeDocument/ComponentTypeDocument';
-import SelectCIIU from '../selectsComponent/SelectCIIU/SelectCIIU';
+import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
+import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 import {reduxForm} from 'redux-form';
 
 const style = {

@@ -8,8 +8,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer} from './actions';
 import {Combobox} from 'react-widgets';
-import SelectFilterContact from '../selectsComponent/SelectFilterContact/SelectFilterComponent';
-import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID} from './constants';
+import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
+import PaginationContactComponent from './paginationContactComponent';
+import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RECORDS} from './constants';
 
 class ContactComponent extends Component {
 
@@ -23,8 +24,8 @@ class ContactComponent extends Component {
   }
 
   componentWillMount(){
-      const {contactsByClientFindServer, selectsReducer} = this.props;
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"",this.state.value1,
+      const {contactsByClientFindServer, selectsReducer,contactsByClient} = this.props;
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",this.state.value1,
       this.state.value2,
       this.state.value3);
   }
@@ -32,14 +33,16 @@ class ContactComponent extends Component {
 
   render() {
     var contactsList = [];
+    var rowsContact = 0;
     const {
         contactsByClient
     } = this.props;
 
     contactsList = contactsByClient.get('contacts');
+    rowsContact = contactsByClient.get('rowCount');
     var visibleTable = 'none';
     var visibleMessage = 'block';
-    if(contactsList.length != 0 ){
+    if(rowsContact !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
     }
@@ -79,7 +82,8 @@ class ContactComponent extends Component {
           <Grid style= {{display:visibleTable, paddingRight: "16px", width: "100%"}}>
             <Row>
               <Col xs={12} sm={8} md={12} lg={12}> <ListContactComponent
-                data={contactsList}/ ></Col>
+                data={contactsList}/ >
+              </Col>
             </Row>
           </Grid>
           <Grid style= {{display:visibleMessage, paddingRight: "16px", width: "100%"}}>

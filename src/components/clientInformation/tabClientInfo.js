@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
-import DetailsInfoClient from '../clientDetailsInfo/DetailsInfoClient';
+import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component'
 import {Grid, Row, Col} from 'react-flexbox-grid';
 

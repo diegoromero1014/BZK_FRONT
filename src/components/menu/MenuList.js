@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import moment from 'moment';
-import MenuListItem from './MenuListItem';
+import MenuListItem from './menuListItem';
 
 const menuItems = [
     /*

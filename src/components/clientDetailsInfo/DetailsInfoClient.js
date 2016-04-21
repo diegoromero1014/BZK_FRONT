@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react';
-import ActividadEconomica from './ActividadEconomica';
-import UbicationCorrespondence from './UbicationCorrespondence';
-import InfoFinanciera from './InfoFinanciera';
-import DataComercial from './DataComercial';
+import ActividadEconomica from './actividadEconomica';
+import UbicationCorrespondence from './ubicationCorrespondence';
+import InfoFinanciera from './infoFinanciera';
+import DataComercial from './dataComercial';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import Notas from './Notas';
+import Notas from './notas';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
