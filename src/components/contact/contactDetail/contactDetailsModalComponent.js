@@ -2,9 +2,9 @@ import React, {Component, PropTypes} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import SelectOption from '../../selectsComponent/selectFilterContact/selectFilterComponent';
-import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_SPORTS} from '../../selectsComponent/constants';
+import MultiSelectComponent from '../../selectsComponent/multiSelectContact/multiSelectComponent';
+import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS} from '../../selectsComponent/constants';
 
-const dataValues = ['orange', 'red', 'blue'];
 
 class ContactDetailsModalComponent extends Component {
 
@@ -50,6 +50,7 @@ class ContactDetailsModalComponent extends Component {
   render() {
     return (
       <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+        {/*
         <Row>
           <Col md={12} lg={12}>
             <dt className="business-title" style={{fontSize: '17px'}}>Información básica contacto</dt>
@@ -59,7 +60,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={4} lg={4}>
             <dt><span>Tipo de documento</span><span> (*)</span></dt>
             <dd>
-              {/* Tipo de documento */}
+              {/* Tipo de documento 
               <SelectOption key={1} idTypeFilter={CLIENT_ID_TYPE} />
             </dd>
           </Col>
@@ -237,13 +238,13 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Entidad / Línea de negocio</span><span> (*)</span></dt>
             <dd>
-              <Multiselect />
+              <MultiSelectComponent key={10} idTypeFilter={FILTER_TYPE_LOB_ID} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Función</span><span> (*)</span></dt>
             <dd>
-              <Multiselect />
+              <MultiSelectComponent key={11} idTypeFilter={FILTER_FUNCTION_ID} />
             </dd>
           </Col>
         </Row>
@@ -256,17 +257,18 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={6}>
             <dt><span>Hobbie</span></dt>
             <dd>
-              <Multiselect data={dataValues} />
+              <MultiSelectComponent key={12} idTypeFilter={FILTER_HOBBIES} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={6}>
             <dt><span>Deporte</span></dt>
             <dd>
-              {/* <Multiselect /> */}
-              <SelectOption key={1} idTypeFilter={FILTER_SPORTS} />
+              {/* <Multiselect /> 
+              <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} />
             </dd>
           </Col>
         </Row>
+        */}
       </div>
     );
   }
