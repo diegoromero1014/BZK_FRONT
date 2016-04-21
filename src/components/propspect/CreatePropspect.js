@@ -19,6 +19,7 @@ class CreatePropspect extends Component{
     }
 
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
+    this._onchangeValue = this._onchangeValue.bind(this);
   }
 
   componentWillMount(){
@@ -29,11 +30,43 @@ class CreatePropspect extends Component{
     }
   }
 
+  _onchangeValue(e){
+    this.setState({
+      styleDocumentNumber: {}
+    });
+  }
+
+  _onChangeTypeDocument(val){
+    var {fields: {idType}} = this.props
+    idType.onChange(val);
+    this.setState({
+      styleTypeDocument: {}
+    });
+  };
+
   _clickButtonCreateProps(formData){
     const {idType} = formData;
     const {idNumber} = formData;
-    const {validateProspectExists} = this.props;
-    validateProspectExists(idType, idNumber);
+    var styleError = {borderColor: "red"};
+    var error = false;
+    if( idType === null || idType === undefined ){
+      error = true;
+      this.setState({
+        styleTypeDocument: styleError
+      })
+    }
+    if( idNumber === null || idNumber === undefined || idNumber === "" ){
+      error = true;
+      this.setState({
+        styleDocumentNumber: styleError
+      })
+    }
+    if( !error ){
+      const {validateProspectExists} = this.props;
+      validateProspectExists(idType, idNumber);
+    } else {
+      alert("Señor usuario, por favor ingrese todos los campos obligatorios(*).");
+    }
   }
 
   render(){
@@ -55,7 +88,6 @@ class CreatePropspect extends Component{
        //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
        alert("Señor usuario, el prospecto que desea registrar, ya se encuentra creado en la aplicación.");
     }
-
     return(
       <div style={{marginTop: "10px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
@@ -64,18 +96,19 @@ class CreatePropspect extends Component{
             <Col xs={12} md={4} lg={5}>
               <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
               <SelectTypeDocument
-                onChange={val => idType.onChange(val.id)}
+                onChange={val => this._onChangeTypeDocument(val.id)}
                 store={idType.id}
+                styles={this.state.styleTypeDocument}
               />
             </Col>
             <Col xs={10} md={4} lg={5}>
               <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
                 <input
                   type="text"
-                  className="form-control"
-                  style={{height: "22px !important", minHeight: "26px !important"}}
-                  required
+                  className="form-control inputDataValue"
+                  style={this.state.styleDocumentNumber}
                   placeholder="Ingrese el número de documento del usuario"
+                  onKeyPress={this._onchangeValue}
                   {...idNumber}
                 />
             </Col>
