@@ -45,7 +45,6 @@ class ClientsFind extends Component {
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
       clientItems = clientR.get('responseClients');
-
       return (
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={12} lg={12}>
@@ -61,8 +60,8 @@ class ClientsFind extends Component {
             <Col xs={12} md={12} lg={12}>
               <div className="news-page content">
                 <div className="team-modal">
-                  {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}} > <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:  ''}
-                  {clientItems.map(this._mapClientItems)}
+                  {countClients === 0 && status === 'processed' ? <div style={{textAlign:"center"}}> <h4 className="form-item">No se encontraron clientes, que cumplan el criterio de búsqueda.</h4> </div>:
+                  clientItems.map(this._mapClientItems)}
                 </div>
               </div>
             </Col>
