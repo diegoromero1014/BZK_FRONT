@@ -7,6 +7,7 @@ const initialState = Immutable.Map({
   dataTypeContact: [],
   dataTypeLBO:[],
   dataCIIU: [],
+  dataSubCIIU: [],
   dataTypeGender: [],
   dataTypeTitle: [],
   dataTypeDependency: [],
@@ -36,6 +37,9 @@ export default (state = initialState, action) => {
         case constants.CIIU:
           var ciiuValueObjects =  action.payload.data.messageBody.ciiuValueObjects;
           return state.set("dataCIIU", ciiuValueObjects);
+        case constants.SUB_CIIU:
+          var subCiiuValueObjects =  action.payload.data.messageBody.subCiiuValueObjects;
+          return state.set("dataSubCIIU", subCiiuValueObjects);
         case constants.FILTER_GENDER:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeGender', masterDataDetailEntries);

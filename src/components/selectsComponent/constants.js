@@ -3,6 +3,7 @@ export const FILTER_FUNCTION_ID = "function";
 export const FILTER_TYPE_CONTACT_ID = "typeOfContact";
 export const FILTER_TYPE_LBO_ID = "lineOfBusiness";
 export const CIIU = "ciiuList";
+export const SUB_CIIU = "subCiiuList";
 export const FILTER_GENDER = 'gender';
 export const FILTER_TITLE = 'title';
 export const FILTER_DEPENDENCY = 'position';

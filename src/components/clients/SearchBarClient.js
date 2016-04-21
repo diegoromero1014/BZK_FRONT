@@ -9,9 +9,6 @@ class SearchBarClient extends Component{
 
   constructor(props) {
       super(props);
-      this.state = {
-        keyword: '',
-      };
 
       this._handleClientsFind = this._handleClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
@@ -25,40 +22,40 @@ class SearchBarClient extends Component{
   }
 
   _handleChangeKeyword(e){
+    const {changeKeyword} = this.props;
+    changeKeyword(e.target.value);
     if(e.keyCode == 13 || e.which == 13){
       this._handleClientsFind(e);
-    }else{
-      this.setState({
-        keyword: e.target.value
-      });
-      const {changeKeyword} = this.props;
-      changeKeyword(e.target.value);
     }
   }
 
   _handleClientsFind(e){
-    if(this.state.keyword === '' || this.state.keyword === undefined){
+    const {clientsFindServer} = this.props;
+    const {clientR} = this.props;
+    var keyword = clientR.get('keyword');
+    if(keyword === '' || keyword === undefined){
       alert('Por favor ingrese un criterio de búsqueda');
     }else{
       const {changePage} = this.props;
-      const {clientsFindServer} = this.props;
       var limInf = (1 - 1) * NUMBER_RECORDS;
-      clientsFindServer(this.state.keyword, limInf, NUMBER_RECORDS);
+      clientsFindServer(keyword, limInf, NUMBER_RECORDS);
       changePage(1);
     }
   }
 
   render(){
-   return(
-     <div style={{paddingBottom:"15px", display: "inline", width:"100%", margin: "auto"}}>
+    const {clientR} = this.props;
+    var keyword = clientR.get('keyword');
+    return(
+      <div style={{paddingBottom:"15px", display: "inline", width:"100%", margin: "auto"}}>
        <div style={{display: "inline", margin: "auto"}}>
-         <input id="searchExpression" type="search" onKeyPress={this._handleChangeKeyword} className="input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"80%", display: "inline"}} value={this.state.keyword} onChange={this._handleChangeKeyword}/>
+         <input id="searchExpression" type="search" onKeyPress={this._handleChangeKeyword} className="input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"80%", display: "inline"}} value={keyword} onChange={this._handleChangeKeyword}/>
          <span className="input-group-btn" style={{width:"5%",}}>
            <button id="searchClients" className="btn btn-default btn-large" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2"}}><i className="icon-search"></i></button>
          </span>
        </div>
-     </div>
-   )
+      </div>
+    )
  }
 }
 

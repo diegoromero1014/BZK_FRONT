@@ -6,6 +6,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/SelectTypeDocument/ComponentTypeDocument';
 import SelectCIIU from '../selectsComponent/SelectCIIU/SelectCIIU';
+import SelectSubCIIU from '../selectsComponent/SelectSubCIIU/SelectSubCIIU';
 import {reduxForm} from 'redux-form';
 
 const style = {
@@ -38,7 +39,11 @@ class clientEdit extends Component{
   _onChangeCIIU(val){
     var {fields: {idCIIU}} = this.props
     idCIIU.onChange(val);
+  };
 
+  _onChangeSubCIIU(val){
+    var {fields: {idSubCIIU}} = this.props
+    idSubCIIU.onChange(val);
   };
 
   render(){
@@ -153,7 +158,12 @@ class clientEdit extends Component{
                 <span>SUBCIIU</span>
               </dt>
               <dt>
-                <SelectTypeDocument styles={style}/>
+                <SelectSubCIIU
+                  onChange={val => this._onChangeSubCIIU(val)}
+                  store={idSubCIIU.id}
+                  defaultValue={infoClient.ciiu}
+                  styles={style}
+                  parentId={infoClient.ciiu}/>
               </dt>
             </Col>
             <Col xs={12} md={6} lg={3}>
