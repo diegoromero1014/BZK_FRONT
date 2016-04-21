@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer} from './actions';
 import {Combobox} from 'react-widgets';
-import SelectFilterContact from '../selectsComponent/SelectFilterContact/SelectFilterComponent';
+import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationContactComponent from './paginationContactComponent';
 import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RECORDS} from './constants';
 

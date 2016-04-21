@@ -3,9 +3,9 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsFindServer} from './actions';
-import ClientListItem from './ClientListItem';
-import SearchBarClient from './SearchBarClient';
-import Pagination from './Pagination';
+import ClientListItem from './clientListItem';
+import SearchBarClient from './searchBarClient';
+import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
 
 class ClientsFind extends Component {

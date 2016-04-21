@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from '../reducers';
 import ReduxPromise from 'redux-promise';
-import DevTools from '../components/DevTools/component';
+import DevTools from '../components/devTools/component';
 
 const finalCreateStore = compose(
   applyMiddleware(ReduxPromise),

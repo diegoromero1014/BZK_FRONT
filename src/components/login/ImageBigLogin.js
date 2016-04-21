@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 
-import ImageLogoApp from '../globalComponents/LogoApplication';
-import TitleLogin from './TitleLogin';
-import FormLogin from './FormLogin';
-import FooterLogin from './Footer';
+import ImageLogoApp from '../globalComponents/logoApplication';
+import TitleLogin from './titleLogin';
+import FormLogin from './formLogin';
+import FooterLogin from './footer';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import ImageLogin from '../../../img/bg-login2.jpg';
 
