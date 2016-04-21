@@ -10,6 +10,10 @@ const headers = [
     key:"actions"
   },
   {
+    title: "Tratamiento",
+    key:"title"
+  },
+  {
       title: "Nombre",
       key: "nameComplet"
   },
@@ -35,8 +39,12 @@ const headers = [
   },
   {
     title: "Cargo",
-    key:"title"
-  }
+    key:"contactPosition"
+  },
+  {
+    title: "",
+    key:"delete"
+  },
 ];
 
 class ListContactComponent extends Component {
@@ -49,9 +57,15 @@ class ListContactComponent extends Component {
     return  _.forOwn(data, function(value, key) {
           _.set(value, 'actions',  {
             actionView: true,
-            id: value.contactIdentityNumber,
+            id: value.id,
             urlServer: "./component",
             component : "VIEW_CONTACT"
+          });
+          _.set(value, 'delete',  {
+            actionDelete: true,
+            id: value.id,
+            urlServer: "./component",
+            component : "DELETE_CONTACT"
           });
       });
   }

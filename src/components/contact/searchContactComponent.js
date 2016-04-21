@@ -2,15 +2,35 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer,changeKeyword} from './actions';
+import _ from 'lodash';
+
+let v1 = "";
+let v2 = "";
+let v3 = "";
 
 class SearchContactComponent extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        keyword: '',
+        keyword: ''
       };
       this._handleContactsByClientsFind = this._handleContactsByClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps){
+      const {
+          value1,
+          value2,
+          value3
+      } = nextProps;
+      if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
+          (v3 !== nextProps.value3)) {
+      v1 = nextProps.value1;
+      v2 = nextProps.value2;
+      v3 = nextProps.value3;
+      this._handleContactsByClientsFind();
+      }
   }
 
   _handleChangeKeyword(e){
@@ -25,14 +45,19 @@ class SearchContactComponent extends Component {
     }
   }
 
-  _handleContactsByClientsFind(e){
-    const {contactsByClientFindServer} = this.props;
-    if(this.state.keyword === '' || this.state.keyword === undefined){
-        contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"");
-    }else{
-      const {contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,this.state.keyword);
-    }
+  _handleContactsByClientsFind(){
+      const {contactsByClientFindServer,selectsReducer} = this.props;
+      if(this.state.keyword === '' || this.state.keyword === undefined){
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,"",
+          v1,
+          v2,
+          v3);
+      }else{
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),10,"",0,this.state.keyword,
+          v1,
+          v2,
+          v3);
+      }
   }
 
     render() {

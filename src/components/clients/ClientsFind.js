@@ -9,11 +9,10 @@ import Pagination from './Pagination';
 import {redirectUrl} from '../globalComponents/actions';
 
 class ClientsFind extends Component {
-
   constructor(props) {
-      super(props);
+    super(props);
 
-      this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
+    this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
   }
 
   componentWillMount(){
