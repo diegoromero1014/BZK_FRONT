@@ -7,9 +7,7 @@ import ImageBigLogin from './ImageBigLogin';
 class LoginComponent extends Component {
     render() {
         return (
-          <ImageBigLogin
-            urlImage = {constants.URL_IMG_BIG_LOGIN}
-          />
+          <ImageBigLogin />
         );
     }
 }

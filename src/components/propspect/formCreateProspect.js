@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
-import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo'
+import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
+import SelectCIIU from '../selectsComponent/SelectCIIU/SelectCIIU';
 
 var notasProspect = [];
 
-const fields = ["idEntityLineBusiness", "segmento", "reportVirtual", "extractsVirtual",
-                "marcGeren", "necesitaLME"];
+const fields = ["reportVirtual", "extractsVirtual",
+                "marcGeren", "necesitaLME", "idCIIU"];
 
 class FormCreateProspect extends Component{
   constructor( props ) {
@@ -15,17 +16,37 @@ class FormCreateProspect extends Component{
     this.state = {
       styleTypeDocument: {},
       styleDocumentNumber: {},
+      styleMarcGeren: {},
+      stylenecesitaLME: {},
+      styleCIIU: {}
     }
   }
-  _submitFormCreateProspect(){
+
+  _onChangeValueList(type, val){
+    switch (type) {
+      case "ciiu":
+        var {fields: {idCIIU}} = this.props
+        idCIIU.onChange(val);
+        break;
+
+      case "reporteVirtual":
+        var {fields: {reportVirtual}} = this.props
+        reportVirtual.onChange(val);
+        break;
+      default:
+        break;
+    }
+  };
+
+  _submitFormCreateProspect(formData){
+    const {reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU} = formData;
 
   };
 
 
   render(){
     const {
-      fields: { idEntityLineBusiness, idSegmento, reportVirtual, extractsVirtual,
-          marcGeren, necesitaLME
+      fields: { reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU
       },
       error, handleSubmit} = this.props;
 
@@ -45,17 +66,16 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>CIIU(</span><span style={{color: "red"}}>*</span>)</dt>
-              <input
-                className="inputDataValue"
-                type="text"
-                style={{}}
-              />
+              <SelectCIIU
+                onChange={val => this._onChangeValueList("ciiu", val)}
+                store={idCIIU.id}
+                styles={this.state.styleCIIU}/>
             </div>
           </Col>
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Sector(</span><span style={{color: "red"}}>*</span>)</dt>
-              <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>Sector</span>
+              <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>{idCIIU.value === undefined ? "" : idCIIU.value.economicSector}</span>
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
@@ -128,7 +148,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>¿Desea recibir su reporte de costos consolidado de forma virtual?(</span><span style={{color: "red"}}>*</span>)</dt>
               <SelectYesNo
-                onChange={val => reportVirtual.onChange(val.id)}
+                onChange={val => this._onChangeValueList("reporteVirtual", val.id)}
                 store={reportVirtual.id}
               />
             </div>
@@ -252,6 +272,7 @@ class FormCreateProspect extends Component{
               <SelectYesNo
                 onChange={val => marcGeren.onChange(val.id)}
                 store={marcGeren.id}
+                styles={this.state.styleMarcGeren}
               />
             </div>
           </Col>
@@ -261,6 +282,7 @@ class FormCreateProspect extends Component{
               <SelectYesNo
                 onChange={val => necesitaLME.onChange(val.id)}
                 store={necesitaLME.id}
+                styles={this.state.stylenecesitaLME}
               />
             </div>
           </Col>
@@ -323,6 +345,13 @@ class FormCreateProspect extends Component{
                 type="text"
                 style={{}}
               />
+            </div>
+          </Col>
+          <Col xs={12} md={12} lg={12}>
+            <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", width:"100%", marginBottom: "0", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+              <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
+                <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
+              </button>
             </div>
           </Col>
       </Row>

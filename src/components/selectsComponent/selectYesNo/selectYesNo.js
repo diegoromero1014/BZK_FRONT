@@ -9,7 +9,7 @@ const valores = [
 class SelectYesNo extends Component{
 
   render(){
-    const {onChange, store} = this.props;
+    const {onChange, store, styles} = this.props;
     return(
       <div>
         <Combobox
@@ -17,6 +17,7 @@ class SelectYesNo extends Component{
           onChange={onChange}
           valueField='id'
           textField='value'
+          style={styles}
           data={valores} minLength={3} filter='contains' />
       </div>
     );
@@ -26,7 +27,8 @@ class SelectYesNo extends Component{
 
 SelectYesNo.PropTypes = {
     onChange: PropTypes.func,
-    store: PropTypes.object
+    store: PropTypes.object,
+    styles: PropTypes.object,
 };
 
 export default SelectYesNo;
