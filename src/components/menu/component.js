@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import MenuList from './MenuList';
+import MenuList from './menuList';
 
 class MenuComponent extends Component {
     render() {

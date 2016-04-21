@@ -35,6 +35,7 @@ class SearchContactComponent extends Component {
       }
   }
 
+
   _handleChangeKeyword(e){
     if(e.keyCode == 13 || e.which == 13){
       this._handleContactsByClientsFind(e);
@@ -42,6 +43,7 @@ class SearchContactComponent extends Component {
       this.setState({
         keyword: e.target.value
       });
+      console.log(e.target.value);
       const {changeKeyword} = this.props;
       changeKeyword(e.target.value);
     }

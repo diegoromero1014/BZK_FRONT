@@ -3,22 +3,59 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import SelectCIIU from '../selectsComponent/SelectCIIU/SelectCIIU';
+import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 
 var notasProspect = [];
 
-const fields = ["reportVirtual", "extractsVirtual",
-                "marcGeren", "necesitaLME", "idCIIU"];
+const fields = ["reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
+                "idSubCIIU", "address", "telephone", "district", "annualSales", "assets",
+                "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
 
 class FormCreateProspect extends Component{
   constructor( props ) {
     super(props);
+
+    this._submitFormCreateProspect = this._submitFormCreateProspect.bind(this);
+    this._onchangeValue = this._onchangeValue.bind(this);
+
     this.state = {
-      styleTypeDocument: {},
-      styleDocumentNumber: {},
-      styleMarcGeren: {},
-      stylenecesitaLME: {},
-      styleCIIU: {}
+      styleCIIU: {},
+      styleSubCIIU: {},
+      styleReportVirtual: {},
+      styleExtractVirtual: {},
+      styleAdress: {},
+      styleTelephone: {},
+      styleDistrict: {},
+      styleAnnualSales: {},
+      styleAssets: {},
+      styleHabilities: {},
+      styleOperationIncome: {},
+      styleNonOperationIncome: {},
+      styleExpenses: {},
+      styleDateSalesAnnuals: {}
+    }
+  }
+
+  _onchangeValue(type, val){
+    switch (type) {
+      case "adress":
+        var {fields: {address}} = this.props
+        address.onChange(val);
+        this.setState({ styleAdress: {} });
+        break;
+
+      case "telephone":
+        var {fields: {telephone}} = this.props
+        telephone.onChange(val);
+        this.setState({ styleTelephone: {} });
+        break;
+
+      case "district":
+        var {fields: {district}} = this.props
+        district.onChange(val);
+        this.setState({ styleDistrict: {} });
+        break;
+
     }
   }
 
@@ -27,31 +64,131 @@ class FormCreateProspect extends Component{
       case "ciiu":
         var {fields: {idCIIU}} = this.props
         idCIIU.onChange(val);
+        this.setState({ styleCIIU: {} });
         break;
+
+      case "subCiiu":
+          var {fields: {idSubCIIU}} = this.props
+          idSubCIIU.onChange(val);
+          this.setState({ styleSubCIIU: {} });
+          break;
 
       case "reporteVirtual":
         var {fields: {reportVirtual}} = this.props
         reportVirtual.onChange(val);
+        this.setState({ styleReportVirtual: {} });
         break;
+
+      case "extractosVirtuales":
+        var {fields: {extractsVirtual}} = this.props
+        extractsVirtual.onChange(val);
+        this.setState({ styleExtractVirtual: {} });
+        break;
+
       default:
         break;
     }
   };
 
   _submitFormCreateProspect(formData){
-    const {reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU} = formData;
-
+    const {reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
+             address, telephone, district, annualSales, assets, liabilities, operatingIncome,
+           nonOperatingIncome, expenses, dateSalesAnnuals} = formData;
+    var styleError = {borderColor: "red"};
+    var error = false;
+    if( reportVirtual === null || reportVirtual === undefined ){
+      error = true;
+      this.setState({
+        styleReportVirtual: styleError
+      })
+    }
+    if( extractsVirtual === null || extractsVirtual === undefined ){
+      error = true;
+      this.setState({
+        styleExtractVirtual: styleError
+      })
+    }
+    if( idCIIU === null || idCIIU === undefined ){
+      error = true;
+      this.setState({
+        styleCIIU: styleError
+      })
+    }
+    if( idSubCIIU === null || idSubCIIU === undefined ){
+      error = true;
+      this.setState({
+        styleSubCIIU: styleError
+      })
+    }
+    if( address === null || address === undefined ){
+      error = true;
+      this.setState({
+        styleAdress: styleError
+      })
+    }
+    if( telephone === null || telephone === undefined ){
+      error = true;
+      this.setState({
+        styleTelephone: styleError
+      })
+    }
+    if( district === null || district === undefined ){
+      error = true;
+      this.setState({
+        styleDistrict: styleError
+      })
+    }
+    if( annualSales === null || annualSales === undefined ){
+      error = true;
+      this.setState({
+        styleAnnualSales: styleError
+      })
+    }
+    if( assets === null || assets === undefined ){
+      error = true;
+      this.setState({
+        styleAssets: styleError
+      })
+    }
+    if( liabilities === null || liabilities === undefined ){
+      error = true;
+      this.setState({
+        styleLiabilities: styleError
+      })
+    }
+    if( operatingIncome === null || operatingIncome === undefined ){
+      error = true;
+      this.setState({
+        styleOperatingIncome: styleError
+      })
+    }
+    if( nonOperatingIncome === null || nonOperatingIncome === undefined ){
+      error = true;
+      this.setState({
+        styleNonOperatingIncome: styleError
+      })
+    }
+    if( expenses === null || expenses === undefined ){
+      error = true;
+      this.setState({
+        styleExpenses: styleError
+      })
+    }
+    if( dateSalesAnnuals === null || dateSalesAnnuals === undefined ){
+      error = true;
+      this.setState({
+        styleDateSalesAnnuals: styleError
+      })
+    }
   };
 
 
   render(){
     const {
-      fields: { reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU
-      },
+      fields: {reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
+         address, telephone, district, annualSales, assets, liabilities, operatingIncome,
+         nonOperatingIncome, expenses, dateSalesAnnuals},
       error, handleSubmit} = this.props;
-
-    console.log("marcGeren", marcGeren);
-    console.log("necesitaLME", necesitaLME);
 
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
@@ -110,7 +247,9 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={address.value}
+                onChange={val => this._onchangeValue('adress', val)}
+                style={this.state.styleAdress}
               />
             </div>
           </Col>
@@ -150,6 +289,7 @@ class FormCreateProspect extends Component{
               <SelectYesNo
                 onChange={val => this._onChangeValueList("reporteVirtual", val.id)}
                 store={reportVirtual.id}
+                styles={this.state.styleReportVirtual}
               />
             </div>
           </Col>
@@ -159,7 +299,9 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                onChange={val => this._onchangeValue('telephone', val)}
+                value={telephone.value}
+                style={this.state.styleTelephone}
               />
             </div>
           </Col>
@@ -169,7 +311,9 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                onChange={val => this._onchangeValue('district', val)}
+                value={district.value}
+                style={this.state.styleDistrict}
               />
             </div>
           </Col>
@@ -177,8 +321,9 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>¿Desea consultar sus extractos de forma virtual?(</span><span style={{color: "red"}}>*</span>)</dt>
               <SelectYesNo
-                onChange={val => reportVirtual.onChange(val.id)}
+                onChange={val => this._onChangeValueList("extractosVirtuales", val.id)}
                 store={extractsVirtual.id}
+                styles={this.state.styleExtractVirtual}
               />
             </div>
           </Col>
@@ -195,7 +340,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={annualSales.value}
+                style={this.state.styleAnnualSales}
               />
             </div>
           </Col>
@@ -205,7 +351,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={assets.value}
+                style={this.state.styleAssets}
               />
             </div>
           </Col>
@@ -215,7 +362,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={liabilities.value}
+                style={this.state.styleLiabilities}
               />
             </div>
           </Col>
@@ -225,7 +373,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={operatingIncome.value}
+                style={this.state.styleOperatingIncome}
               />
             </div>
           </Col>
@@ -235,7 +384,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={nonOperatingIncome.value}
+                style={this.state.styleNonOperatingIncome}
               />
             </div>
           </Col>
@@ -245,7 +395,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={expenses.value}
+                style={this.state.styleExpenses}
               />
             </div>
           </Col>
@@ -255,7 +406,8 @@ class FormCreateProspect extends Component{
               <input
                 className="inputDataValue"
                 type="text"
-                style={{}}
+                value={dateSalesAnnuals.value}
+                style={this.state.styleDateSalesAnnuals}
               />
             </div>
           </Col>
@@ -272,7 +424,6 @@ class FormCreateProspect extends Component{
               <SelectYesNo
                 onChange={val => marcGeren.onChange(val.id)}
                 store={marcGeren.id}
-                styles={this.state.styleMarcGeren}
               />
             </div>
           </Col>
@@ -282,7 +433,6 @@ class FormCreateProspect extends Component{
               <SelectYesNo
                 onChange={val => necesitaLME.onChange(val.id)}
                 store={necesitaLME.id}
-                styles={this.state.stylenecesitaLME}
               />
             </div>
           </Col>
@@ -347,7 +497,7 @@ class FormCreateProspect extends Component{
               />
             </div>
           </Col>
-          <Col xs={12} md={12} lg={12}>
+          <Col xs={12} md={12} lg={12} style={{paddingTop: "60px"}}>
             <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", width:"100%", marginBottom: "0", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
               <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
                 <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>

@@ -52,7 +52,7 @@ class FormLogin extends Component{
           <div className="form-item" style={{marginLeft: "0px",paddingLeft: '28px',paddingRight: '28px'}}>
             <input type="text" id="welcome-login-id" style={{width: "100%", heigth: "30px", marginLeft: "0px",marginBottom: "10px" ,padding: "0px 0px 0px 0px !important"}}
               placeholder="Usuario" className="input-edit"
-              required value={this.state.id} onChange={this._handleChangeId.bind(this)}></input>
+              required value={this.state.usuario} onChange={this._handleChangeId.bind(this)}></input>
           </div>
           <div className="form-item" style={{marginLeft: "0px",paddingLeft: '28px',paddingRight: '28px'}}>
             <input type="password" id="welcome-login-password" style={{width: "100%", heigth: "30px", marginLeft: "0px",marginBottom: "10px",padding: "0px 0px 0px 0px !important"}}
