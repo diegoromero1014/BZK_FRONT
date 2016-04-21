@@ -27,7 +27,7 @@ class DetailsInfoClient extends Component{
     return <Notas
         typeOfNoteKey={item.typeOfNoteKey}
         note={item.note}
-        index={idx+1}
+        key={idx+1}
     />
   }
 
