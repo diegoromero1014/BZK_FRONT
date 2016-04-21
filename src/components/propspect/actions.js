@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT } from './constants';
+import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT } from './constants';
 import axios from 'axios';
 
 export function validateProspectExists(typeDocument, numberDocument){
@@ -31,5 +31,11 @@ export function validateProspectExists(typeDocument, numberDocument){
 export function clearState(){
   return {
     type: CLEAR_STATE_PROSPECT
+  };
+}
+
+export function clearAllState(){
+  return {
+    type: CLEAR_ALL_PROSPECT
   };
 }

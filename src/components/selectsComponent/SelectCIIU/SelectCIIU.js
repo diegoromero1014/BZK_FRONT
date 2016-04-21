@@ -1,27 +1,27 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {consultDataSelect} from '../actions';
+import {consultList} from '../actions';
 import {Combobox} from 'react-widgets';
-import {CLIENT_ID_TYPE} from '../constants';
+import {CIIU} from '../constants';
 
-class ComponentTypeDocument extends Component{
+class SelectCIIU extends Component{
   componentWillMount(){
-    const {consultDataSelect} = this.props;
-    consultDataSelect(CLIENT_ID_TYPE);
+    const {consultList} = this.props;
+    consultList(CIIU);
   }
 
   render(){
     const {selectsReducer, onChange, store, styles, defaultValue} = this.props;
-    const dataTypeDocument = selectsReducer.get('dataTypeDocument');
+    const dataCIIU = selectsReducer.get('dataCIIU');
     return(
       <div>
         <Combobox
           value={store}
           onChange={onChange}
           valueField='id'
-          textField='value'
-          data={dataTypeDocument} minLength={3} filter='contains'
+          textField='ciiu'
+          data={dataCIIU} minLength={3} filter='contains'
           style={styles}
           defaultValue={defaultValue}/>
       </div>
@@ -30,7 +30,7 @@ class ComponentTypeDocument extends Component{
 
 }
 
-ComponentTypeDocument.PropTypes = {
+SelectCIIU.PropTypes = {
     onChange: PropTypes.func,
     store: PropTypes.object,
     styles: PropTypes.object,
@@ -39,7 +39,7 @@ ComponentTypeDocument.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    consultDataSelect
+    consultList
   }, dispatch);
 }
 
@@ -49,4 +49,4 @@ function mapStateToProps({selectsReducer}, ownerProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentTypeDocument);
+export default connect(mapStateToProps, mapDispatchToProps)(SelectCIIU);

@@ -12,6 +12,7 @@ import propspectReducer from '../components/propspect/reducer';
 import selectsReducer from '../components/selectsComponent/reducer';
 import {reducer as formReducer} from 'redux-form';
 import messageReducer from '../components/messages/reducer';
+import notesReducer from '../components/notes/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -26,5 +27,6 @@ export default combineReducers({
     propspectReducer: propspectReducer,
     selectsReducer: selectsReducer,
     form: formReducer,
-    message: messageReducer
+    message: messageReducer,
+    notes: notesReducer
 });

@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
                 .set('rowCount', response.rowCount)
                 .set('contacts', JSON.parse(response.contacts));
             });
-          case CHANGE_KEYWORD:
+        case CHANGE_KEYWORD:
             return state.set('keyword', action.keyword);
           case CHANGE_PAGE:
               return state.set('page', action.currentPage);

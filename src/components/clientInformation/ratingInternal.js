@@ -10,9 +10,9 @@ class RaitingInternal extends Component {
 
   _mapSpanRaiting(item, idx){
       if( item <= raitingReceive ){
-        return <span className="risk-rating-level risk-rating-active"></span>
+        return <span className="risk-rating-level risk-rating-active" key={idx+1}></span>
       } else {
-        return <span className="risk-rating-level"></span>
+        return <span className="risk-rating-level" key={idx+1}></span>
       }
   }
 

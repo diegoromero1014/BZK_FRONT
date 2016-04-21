@@ -1,11 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import * as constants from '../login/constants';
+import ImageLogoApp from '../../../img/svg/logo_bancolombia.svg';
 
 class LogoApplication extends Component{
   render(){
     const {style} = this.props;
     return(
-        <img src={constants.IMG_LOGO_APP} style={style} />
+        <img src={ImageLogoApp} style={style} />
     );
   }
 }
