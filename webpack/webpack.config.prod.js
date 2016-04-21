@@ -23,7 +23,7 @@ var webpack = require('webpack'),
             path: assetsPath,
             filename: '[name]-[chunkhash].js',
             chunkFilename: '[name]-[chunkhash].js',
-            publicPath: '/dist/',
+            publicPath: '/',
         },
         progress: true,
         resolve: {
@@ -39,23 +39,38 @@ var webpack = require('webpack'),
                 {test: /\.json$/, loader: 'json-loader'},
                 {
                     test: /\.less$/,
-                    loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
+                    loader: ExtractTextPlugin.extract('style', 'css!less'),
+                    include: /react\-widgets/
                 },
                 {
                     test: /(\.scss)$/,
-                    loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!sass?sourceMap')
+                    loader: ExtractTextPlugin.extract('style', 'css!sass')
                 },
                 {
                     test: /\.css$/,
                     include: [/flexboxgrid/, /bootstrap/],
-                    loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]?sourceMap')
+                    loader: ExtractTextPlugin.extract('style', 'css')
                 },
-                {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff"},
-                {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff"},
-                {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream"},
-                {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file"},
-                {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml"},
-                {test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240'}
+                {
+                    test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
+                    loader: "url-loader?mimetype=application/font-woff"
+                },
+                {
+                    test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                    loader: "url?limit=10000&mimetype=application/octet-stream"
+                },
+                {
+                    test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+                    loader: "file"
+                },
+                {
+                    test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                    loader: "url?limit=10000&mimetype=image/svg+xml"
+                },
+                {
+                    test: webpackIsomorphicToolsPlugin.regular_expression('images'),
+                    loader: 'url-loader?limit=10240'
+                }
             ]
         },
         plugins: [
