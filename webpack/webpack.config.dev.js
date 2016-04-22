@@ -34,6 +34,11 @@ var path = require('path'),
                 },
                 {
                     test: /\.css$/,
+                    loader: 'style!css',
+                    include: /sweetalert/,
+                },
+                {
+                    test: /\.css$/,
                     loader: 'style!css?modules',
                     include: [/flexboxgrid/, /bootstrap/],
                 },

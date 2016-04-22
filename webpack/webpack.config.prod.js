@@ -49,6 +49,11 @@ var webpack = require('webpack'),
                 {
                     test: /\.css$/,
                     include: [/flexboxgrid/, /bootstrap/],
+                    loader: ExtractTextPlugin.extract('style', 'css?modules')
+                },
+                {
+                    test: /\.css$/,
+                    include: /sweetalert/,
                     loader: ExtractTextPlugin.extract('style', 'css')
                 },
                 {

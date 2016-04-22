@@ -6,9 +6,14 @@ import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
 import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
+import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
+import {consultDataSelect} from '../selectsComponent/actions';
+import * as constants from '../selectsComponent/constants';
+import {ReactSelectize} from 'react-selectize';
 
-const fields = ["idType", "idNumber"];
+const fields = ["idType", "idNumber", "idCelula"];
+var prospectInApplication = true;
 
 class CreatePropspect extends Component{
   constructor( props ) {
@@ -16,8 +21,9 @@ class CreatePropspect extends Component{
     this.state = {
       styleTypeDocument: {},
       styleDocumentNumber: {},
+      styleCelula: {}
     }
-
+    console.log("selectize", ReactSelectize);
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
   }
@@ -28,12 +34,33 @@ class CreatePropspect extends Component{
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }
+    const {consultDataSelect} = this.props;
+    consultDataSelect(constants.CLIENT_ID_TYPE);
   }
 
-  _onchangeValue(e){
-    this.setState({
-      styleDocumentNumber: {}
-    });
+  _onchangeValue(type, val){
+    switch (type) {
+      case "celula":
+        var {fields: {idCelula}} = this.props;
+        idCelula.onChange(val);
+        this.setState({
+          styleCelula: {}
+        });
+      break;
+        break;
+      case "idNumber":
+        var {fields: {idNumber}} = this.props;
+        idNumber.onChange(val);
+        this.setState({
+          styleDocumentNumber: {}
+        });
+        break;
+      default:
+        break;
+    }
+
+    const {clearState} = this.props;
+    clearState();
   }
 
   _onChangeTypeDocument(val){
@@ -42,11 +69,12 @@ class CreatePropspect extends Component{
     this.setState({
       styleTypeDocument: {}
     });
+    const {clearState} = this.props;
+    clearState();
   };
 
   _clickButtonCreateProps(formData){
-    const {idType} = formData;
-    const {idNumber} = formData;
+    const {idType, idNumber, idCelula} = formData;
     var styleError = {borderColor: "red"};
     var error = false;
     if( idType === null || idType === undefined ){
@@ -61,6 +89,12 @@ class CreatePropspect extends Component{
         styleDocumentNumber: styleError
       })
     }
+    if( idCelula === null || idCelula === undefined || idCelula === "" ){
+      error = true;
+      this.setState({
+        styleCelula: styleError
+      })
+    }
     if( !error ){
       const {validateProspectExists} = this.props;
       validateProspectExists(idType, idNumber);
@@ -70,11 +104,17 @@ class CreatePropspect extends Component{
   }
 
   render(){
-    const { fields: { idType, idNumber }, error, handleSubmit, clearState} = this.props
+    const { fields: { idType, idNumber, idCelula }, error, handleSubmit, clearState} = this.props
     const {propspectReducer} = this.props;
+    const {selectsReducer} = this.props;
     const status = propspectReducer.get('status');
     const validateLogin = propspectReducer.get('validateLogin');
     const prospectExist =  propspectReducer.get('prospectExist');
+    if( status !== "OK" ){
+      prospectInApplication = prospectExist;
+    } else {
+      prospectInApplication = true;
+    }
     if( !validateLogin ){
       //redirectUrl("/login");
     }
@@ -93,23 +133,40 @@ class CreatePropspect extends Component{
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
           <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
-            <Col xs={12} md={4} lg={5}>
+            <Col xs={12} md={3} lg={3}>
               <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
               <SelectTypeDocument
                 onChange={val => this._onChangeTypeDocument(val.id)}
                 store={idType.id}
                 styles={this.state.styleTypeDocument}
               />
+              <SelectGeneric
+                onChange={val => this._onChangeTypeDocument(val.id)}
+                store={idType.id}
+                valueField={'id'}
+                textField={'value'}
+                data={selectsReducer.get('dataTypeDocument')}
+              />
             </Col>
-            <Col xs={10} md={4} lg={5}>
+            <Col xs={12} md={3} lg={3} style={{paddingRight: "30px"}}>
               <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
                 <input
                   type="text"
                   className="form-control inputDataValue"
                   style={this.state.styleDocumentNumber}
                   placeholder="Ingrese el número de documento del usuario"
-                  onKeyPress={this._onchangeValue}
+                  onKeyPress={val => this._onchangeValue("idNumber", val)}
                   {...idNumber}
+                />
+            </Col>
+            <Col xs={10} md={4} lg={4}>
+              <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
+                <input
+                  type="text"
+                  className="form-control inputDataValue"
+                  style={this.state.styleCelula}
+                  onKeyPress={val => this._onchangeValue("celula", val)}
+                  {...idCelula}
                 />
             </Col>
             <Col xs={2} md={4} lg={2}>
@@ -120,9 +177,10 @@ class CreatePropspect extends Component{
             </Col>
           </Row>
         </form>
-        {!prospectExist &&
+        { !prospectInApplication &&
           <FormCreateProspect />
         }
+
       </div>
     );
   }
@@ -134,13 +192,14 @@ function mapDispatchToProps(dispatch) {
     validateProspectExists,
     toggleMessage,
     clearState,
-    clearAllState
+    clearAllState,
+    consultDataSelect
   }, dispatch);
 }
 
-function mapStateToProps({propspectReducer},ownerProps) {
+function mapStateToProps({propspectReducer, selectsReducer},ownerProps) {
   return {
-    propspectReducer
+    propspectReducer, selectsReducer
   };
 }
 
