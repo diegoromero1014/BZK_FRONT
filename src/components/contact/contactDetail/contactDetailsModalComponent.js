@@ -29,7 +29,6 @@ class ContactDetailsModalComponent extends Component {
     console.log('contact ...');
     console.log(contact);
     return (
-        <div>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <Row>
             <Col md={12} lg={12}>
