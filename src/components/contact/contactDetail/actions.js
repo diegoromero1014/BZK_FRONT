@@ -8,20 +8,20 @@ import axios from 'axios';
  */
 export function getContactDetails(contactId) {
   const json = {
-    messageHeader: {
-      sessionToken: window.localStorage.getItem('sessionToken'),
-      timestamp: new Date().getTime(),
-      service: '',
-      status: 0,
-      language: 'es',
-      displayErrorMessage: '',
-      technicalErrorMessage: '',
-      applicationVersion: '',
-      debug: true,
-      isSuccessful: true
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": '',
+      "status": 0,
+      "language": 'es',
+      "displayErrorMessage": '',
+      "technicalErrorMessage": '',
+      "applicationVersion": '',
+      "debug": true,
+      "isSuccessful": true
     },
-    messageBody: {
-      id: contactId
+    "messageBody": {
+      "id": contactId
     }
   }
 
