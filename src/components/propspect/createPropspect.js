@@ -10,7 +10,7 @@ import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import {ReactSelectize} from 'react-selectize';
+import {SimpleSelect} from 'react-selectize';
 
 const fields = ["idType", "idNumber", "idCelula"];
 var prospectInApplication = true;
@@ -23,7 +23,6 @@ class CreatePropspect extends Component{
       styleDocumentNumber: {},
       styleCelula: {}
     }
-    console.log("selectize", ReactSelectize);
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
   }
@@ -128,6 +127,9 @@ class CreatePropspect extends Component{
        //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
        alert("Señor usuario, el prospecto que desea registrar, ya se encuentra creado en la aplicación.");
     }
+    var options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
+                return {label: fruit, value: fruit}
+            });
     return(
       <div style={{marginTop: "10px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
@@ -140,6 +142,12 @@ class CreatePropspect extends Component{
                 store={idType.id}
                 styles={this.state.styleTypeDocument}
               />
+              <SimpleSelect
+            options = {options}
+            placeholder = "Select a fruit"
+            theme = "default" // can be one of "default" | "bootstrap3" | "material" | ...
+            transitionEnter = {true}
+        />
               <SelectGeneric
                 onChange={val => this._onChangeTypeDocument(val.id)}
                 store={idType.id}
