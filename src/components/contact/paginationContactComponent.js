@@ -12,22 +12,23 @@ let limInf1 = 0;
 class PaginationContactComponent extends Component{
 
   constructor(props){
-     super(props);
+     super(props)
+     this.state = {
+       limInf: 0
+     };
   }
 
   componentWillReceiveProps(nextProps){
       const {
           value1,
           value2,
-          value3,
-          limInf
+          value3
       } = nextProps;
       if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
-          (v3 !== nextProps.value3) || (limInf1 !== nextProps.limInf)) {
+          (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
-      limInf1 = nextProps.limInf;
       this._handleContactsByClientsFind();
       }
   }
@@ -35,16 +36,19 @@ class PaginationContactComponent extends Component{
 
   _handlePaginar(page){
     const {changePage,limitiInf} = this.props;
-    var limInf = (page - 1) * NUMBER_RECORDS;
-    //limitiInf(limInf);
-    console.log(limInf);
+    var limInf = (page - 1);
+    this.setState({
+      limInf: limInf
+    });
+    console.log('limi' + limInf);
+    limitiInf(limInf);
     changePage(page);
     this._handleContactsByClientsFind();
   }
 
   _handleContactsByClientsFind(){
       const {contactsByClient,contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(limInf1,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
+      contactsByClientFindServer(this.state.limInf,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
     v2,
     v3);
   }
@@ -61,33 +65,33 @@ class PaginationContactComponent extends Component{
     return (
       <div>
         {rowCount > NUMBER_RECORDS ?
-          <div style={{borderTop:"2px solid #D9DEDF", width:"100%", marginTop:"15px", paddingTop: "15px", paddingBottom:"15px"}}>
+          <div style={{borderTop:"2px solid #D9DEDF", width:"100%", marginTop:"15px", paddingTop: "15px"}}>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
-                {page != 1 ? <li {...config} onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
+                {page != 1 ? <li onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
                 {firstPage <= lastPage ?
-                  <li><a className={page === firstPage ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage)}}>{firstPage}</a></li>
+                  <li><a className={page === firstPage ? "active" :"" } onClick={() => {this._handlePaginar(firstPage)}}>{firstPage}</a></li>
                 : ''}
                 {firstPage + 1 <= lastPage ?
-                  <li><a className={page === firstPage + 1 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 1)}}>{firstPage + 1}</a></li>
+                  <li><a className={page === firstPage + 1 ? "active" :"" }  onClick={() => {this._handlePaginar(firstPage + 1)}}>{firstPage + 1}</a></li>
                 : ''}
                 {firstPage + 2 <= lastPage ?
-                  <li><a className={page === firstPage + 2 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 2)}}>{firstPage + 2}</a></li>
+                  <li><a className={page === firstPage + 2 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 2)}}>{firstPage + 2}</a></li>
                 : ''}
                 {firstPage + 3 <= lastPage ?
-                  <li><a className={page === firstPage + 3 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 3)}}>{firstPage + 3}</a></li>
+                  <li><a className={page === firstPage + 3 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 3)}}>{firstPage + 3}</a></li>
                 : ''}
                 {firstPage + 4 <= lastPage ?
-                  <li><a className={page === firstPage + 4 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 4)}}>{firstPage + 4}</a></li>
+                  <li><a className={page === firstPage + 4 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 4)}}>{firstPage + 4}</a></li>
                 : ''}
                 {firstPage + 5 <= lastPage ?
-                  <li><a className={page === firstPage + 5 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 5)}}>{firstPage + 5}</a></li>
+                  <li><a className={page === firstPage + 5 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 5)}}>{firstPage + 5}</a></li>
                 : ''}
                 {firstPage + 6 <= lastPage ?
-                  <li><a className={page === firstPage + 6 ? "active" :"" } {...config} onClick={() => {this._handlePaginar(firstPage + 6)}}>{firstPage + 6}</a></li>
+                  <li><a className={page === firstPage + 6 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 6)}}>{firstPage + 6}</a></li>
                 : ''}
                 {page != lastPage ?
-                  <li {...config} onClick={() => {this._handlePaginar(page + 1)}}><a>»</a></li>
+                  <li onClick={() => {this._handlePaginar(page + 1)}}><a>»</a></li>
                 : ''}
               </ul>
             </div>

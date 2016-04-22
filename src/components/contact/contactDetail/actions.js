@@ -8,25 +8,24 @@ import axios from 'axios';
  */
 export function getContactDetails(contactId) {
   const json = {
-    messageHeader: {
-      sessionToken: window.localStorage.getItem('sessionToken'),
-      timestamp: new Date().getTime(),
-      service: '',
-      status: 0,
-      language: 'es',
-      displayErrorMessage: '',
-      technicalErrorMessage: '',
-      applicationVersion: '',
-      debug: true,
-      isSuccessful: true
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": '',
+      "status": 0,
+      "language": 'es',
+      "displayErrorMessage": '',
+      "technicalErrorMessage": '',
+      "applicationVersion": '',
+      "debug": true,
+      "isSuccessful": true
     },
-    messageBody: {
-      contactId: contactId
+    "messageBody": {
+      "id": contactId
     }
   }
 
-  var request = axios.post(APP_URL, '/getContactDetails', json);
-
+  var request = axios.post(APP_URL + '/getContactDetails', json);
   return {
     type: GET_CONTACT_DETAILS,
     payload: request
