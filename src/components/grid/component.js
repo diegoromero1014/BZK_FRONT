@@ -28,7 +28,7 @@ class GridComponent extends Component {
             if(value.key == 'actions'){
               cell = <ModalComponent key={idx} modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key == 'delete'){
-              cell = <ButtonDeleteComponent key={idx}/>
+              cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
             }
