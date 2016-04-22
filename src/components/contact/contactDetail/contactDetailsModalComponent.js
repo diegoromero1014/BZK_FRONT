@@ -4,7 +4,9 @@ import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import SelectOption from '../../selectsComponent/selectFilterContact/selectFilterComponent';
 import MultiSelectComponent from '../../selectsComponent/multiSelectContact/multiSelectComponent';
 import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS} from '../../selectsComponent/constants';
-
+import {getContactDetails} from './actions';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 class ContactDetailsModalComponent extends Component {
 
@@ -13,44 +15,20 @@ class ContactDetailsModalComponent extends Component {
     super(props)
   }
 
-  /*  */
-  getInitialState() {
-    return {
-        id: '',
-        contactType: '',
-        contactIdentityNumber: '',
-        firstName: '',
-        middleName: '',
-        firstLastName: '',
-        secondLastName: '',
-        socialStyle: '',
-        attitudeOverGroup: '',
-
-        dateOfBirth: '',
-        country: '',
-        province: '',
-        city: '',
-        address: '',
-        neighborhood: '',
-        postalCode: '',
-        telephoneNumber: '',
-        extension: '',
-        mobileNumber: '',
-        emailAddress: '',
-
-        typeOfContact: '',
-        lineOfBusinesses: [],
-        functions: [],
-
-        hobbies: [],
-        sports: []
-    }
+  /* Carga la información del contacto */
+  componentWillMount() {
+    const {getContactDetails, contactId} = this.props;
+    console.log('contact id -> ' + contactId);
+    getContactDetails(contactId);
   }
 
   render() {
+    const {contactDetail} = this.props;
+    const contact = contactDetail.get('contactDetail');
+    console.log('contact ...');
+    console.log(contact);
     return (
       <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
-        {/*
         <Row>
           <Col md={12} lg={12}>
             <dt className="business-title" style={{fontSize: '17px'}}>Información básica contacto</dt>
@@ -60,7 +38,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={4} lg={4}>
             <dt><span>Tipo de documento</span><span> (*)</span></dt>
             <dd>
-              {/* Tipo de documento 
+              {/* Tipo de documento */}
               <SelectOption key={1} idTypeFilter={CLIENT_ID_TYPE} />
             </dd>
           </Col>
@@ -92,7 +70,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Primer nombre</span><span> (*)</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" value={contact.firstName} />
             </dd>
           </Col>
         </Row>
@@ -100,19 +78,19 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Segundo nombre</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" value={contact.middleName} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Primer apellido</span><span> (*)</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" value={contact.fisrtLastName} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Segundo apellido</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_middleName" name="form_middleName" maxLength="15" value={contact.secondLastName} />
             </dd>
           </Col>
         </Row>
@@ -132,7 +110,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt>Fecha de nacimiento</dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" value={contact.dateOfBirth} />
             </dd>
           </Col>
         </Row>
@@ -146,7 +124,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={4} lg={4}>
             <dt>Actitud frente al Grupo</dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" />
+              <Combobox />
             </dd>
           </Col>
         </Row>
@@ -179,7 +157,7 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={12} lg={12}>
             <dt><span>Dirección</span><span> (*)</span></dt>
             <dd className="rw-widget">
-              <textarea className="form-control need-input" id="form_address" name="form_address"></textarea>
+              <textarea className="form-control need-input" id="form_address" name="form_address">{contact.address}</textarea>
             </dd>
           </Col>
         </Row>
@@ -187,19 +165,19 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Barrio</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.neighborhood} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Código postal</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.postalCode} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Teléfono</span><span> (*)</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.telephoneNumber} />
             </dd>
           </Col>
         </Row>
@@ -207,19 +185,19 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Extensión</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.extension} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Celular</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.mobileNumber} />
             </dd>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4}>
             <dt><span>Correo electrónico</span><span> (*)</span></dt>
             <dd className="rw-widget">
-              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" />
+              <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.emailAddress} />
             </dd>
           </Col>
         </Row>
@@ -263,46 +241,30 @@ class ContactDetailsModalComponent extends Component {
           <Col xs={12} sm={12} md={6} lg={6}>
             <dt><span>Deporte</span></dt>
             <dd>
-              {/* <Multiselect /> 
+              {/* <Multiselect /> */}
               <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} />
             </dd>
           </Col>
         </Row>
-        */}
       </div>
     );
   }
 }
 
 ContactDetailsModalComponent.PropTypes = {
-  id: PropTypes.number,
-  contactType: PropTypes.number,
-  contactIdentityNumber: PropTypes.string,
-  firstName: PropTypes.string,
-  middleName: PropTypes.string,
-  firstLastName: PropTypes.string,
-  secondLastName: PropTypes.string,
-  socialStyle: PropTypes.number,
-  attitudeOverGroup: PropTypes.number,
-
-  dateOfBirth: PropTypes.string,
-  country: PropTypes.number,
-  province: PropTypes.number,
-  city: PropTypes.number,
-  address: PropTypes.string,
-  neighborhood: PropTypes.string,
-  postalCode: PropTypes.string,
-  telephoneNumber: PropTypes.string,
-  extension: PropTypes.string,
-  mobileNumber: PropTypes.string,
-  emailAddress: PropTypes.string,
-
-  typeOfContact: PropTypes.number,
-  lineOfBusinesses: PropTypes.array,
-  functions: PropTypes.array,
-
-  hobbies: PropTypes.array,
-  sports: PropTypes.array
+  id: PropTypes.number
 };
 
-export default ContactDetailsModalComponent;
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    getContactDetails
+  }, dispatch);
+}
+
+function mapStateToProps({contactDetail}, ownerProps){
+    return {
+      contactDetail  
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);
