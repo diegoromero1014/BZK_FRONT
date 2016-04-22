@@ -13,6 +13,7 @@ import selectsReducer from '../components/selectsComponent/reducer';
 import {reducer as formReducer} from 'redux-form';
 import messageReducer from '../components/messages/reducer';
 import notesReducer from '../components/notes/reducer';
+import contactDetail from '../components/contact/contactDetail/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -28,5 +29,6 @@ export default combineReducers({
     selectsReducer: selectsReducer,
     form: formReducer,
     message: messageReducer,
-    notes: notesReducer
+    notes: notesReducer,
+    contactDetail: contactDetail
 });

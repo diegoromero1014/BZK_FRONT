@@ -21,12 +21,11 @@ export function getContactDetails(contactId) {
       isSuccessful: true
     },
     messageBody: {
-      contactId: contactId
+      id: contactId
     }
   }
 
-  var request = axios.post(APP_URL, '/getContactDetails', json);
-
+  var request = axios.post(APP_URL + '/getContactDetails', json);
   return {
     type: GET_CONTACT_DETAILS,
     payload: request
