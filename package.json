@@ -69,6 +69,7 @@
     "redux-form": "^4.2.2",
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.9.5",
-    "redux-thunk": "^2.0.1"
+    "redux-thunk": "^2.0.1",
+    "sweetalert-react": "^0.4.4"
   }
 }
