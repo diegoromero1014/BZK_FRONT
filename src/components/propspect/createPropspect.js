@@ -8,7 +8,7 @@ import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
-import {consultDataSelect} from '../selectsComponent/actions';
+import {consultDataSelect, consultList} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 
 const fields = ["idType", "idNumber", "idCelula"];
@@ -32,8 +32,9 @@ class CreatePropspect extends Component{
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }
-    const {consultDataSelect} = this.props;
+    const {consultDataSelect, consultList} = this.props;
     consultDataSelect(constants.CLIENT_ID_TYPE);
+    consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
   _onchangeValue(type, val){
@@ -198,7 +199,8 @@ function mapDispatchToProps(dispatch) {
     toggleMessage,
     clearState,
     clearAllState,
-    consultDataSelect
+    consultDataSelect,
+    consultList
   }, dispatch);
 }
 
