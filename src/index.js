@@ -10,6 +10,8 @@ const store = configureStore();
 const reduxRouterMiddleware = syncHistoryWithStore(browserHistory, store);
 
 require("../styles/index");
+require('jquery');
+require('semantic-ui/dist/semantic');
 
 ReactDom.render(
     <Root

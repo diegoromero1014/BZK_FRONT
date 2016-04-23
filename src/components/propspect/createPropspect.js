@@ -4,12 +4,12 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
-import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect, consultList} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
+import {SimpleSelect} from 'react-selectize';
 
 const fields = ["idType", "idNumber", "idCelula"];
 var prospectInApplication = true;
@@ -67,16 +67,6 @@ class CreatePropspect extends Component{
     idType.onChange(val);
     this.setState({
       styleTypeDocument: {}
-    });
-    const {clearState} = this.props;
-    clearState();
-  };
-
-  _onChangeCelula(val){
-    var {fields: {idCelula}} = this.props
-    idCelula.onChange(val);
-    this.setState({
-      styleCelula: {}
     });
     const {clearState} = this.props;
     clearState();
@@ -152,6 +142,26 @@ class CreatePropspect extends Component{
                 store={idType.id}
                 styles={this.state.styleTypeDocument}
               />
+              <SimpleSelect
+            options = {options}
+            placeholder = "Select a fruit"
+            theme = "default" // can be one of "default" | "bootstrap3" | "material" | ...
+            transitionEnter = {true}
+        />
+              <SelectGeneric
+                onChange={val => this._onChangeTypeDocument(val.id)}
+                store={idType.id}
+                valueField={'id'}
+                textField={'value'}
+                data={selectsReducer.get('dataTypeDocument')}
+              />
+                    <SelectGeneric
+                      onChange={val => this._onChangeTypeDocument(val.id)}
+                      store={idType.id}
+                      valueField={'id'}
+                      textField={'description'}
+                      data={selectsReducer.get('teamValueObjects')}
+                    />
             </Col>
             <Col xs={12} md={3} lg={3} style={{paddingRight: "30px"}}>
               <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
@@ -166,13 +176,12 @@ class CreatePropspect extends Component{
             </Col>
             <Col xs={10} md={4} lg={4}>
               <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
-                <SelectGeneric
-                  onChange={val => this._onChangeCelula(val.id)}
-                  store={idType.id}
-                  valueField={'id'}
-                  textField={'value'}
+                <input
+                  type="text"
+                  className="form-control inputDataValue"
                   style={this.state.styleCelula}
-                  data={selectsReducer.get('dataTypeDocument')}
+                  onKeyPress={val => this._onchangeValue("celula", val)}
+                  {...idCelula}
                 />
             </Col>
             <Col xs={2} md={4} lg={2}>
@@ -196,7 +205,6 @@ class CreatePropspect extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     validateProspectExists,
-    toggleMessage,
     clearState,
     clearAllState,
     consultDataSelect,
