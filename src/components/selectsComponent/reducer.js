@@ -16,7 +16,8 @@ const initialState = Immutable.Map({
   dataTypeProvince: [],
   dataTypeCity: [],
   dataTypeHobbies: [],
-  dataTypeSports: []
+  dataTypeSports: [],
+  teamValueObjects: []
 });
 
 
@@ -75,6 +76,10 @@ export default (state = initialState, action) => {
         case constants.FILTER_SPORTS:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSports', masterDataDetailEntries);
+          break;
+        case constants.TEAM_FOR_EMPLOYEE:
+          var teamValueObjects = action.payload.data.teamValueObjects;
+          return state.set('teamValueObjects', teamValueObjects);
           break;
         default:
             return state;
