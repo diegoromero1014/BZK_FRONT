@@ -239,7 +239,8 @@ class FormCreateProspect extends Component{
               <dt><span>Ventas anuales</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
+                min={0}
                 {...annualSales}
                 style={this.state.styleAnnualSales}
               />
@@ -250,7 +251,8 @@ class FormCreateProspect extends Component{
               <dt><span>Activos</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
+                min={0}
                 {...assets}
                 style={this.state.styleAssets}
               />
@@ -261,7 +263,8 @@ class FormCreateProspect extends Component{
               <dt><span>Pasivos</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
+                min={0}
                 {...liabilities}
                 style={this.state.styleLiabilities}
               />
@@ -272,7 +275,7 @@ class FormCreateProspect extends Component{
               <dt><span>Ingresos operacionales</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
                 {...operatingIncome}
                 style={this.state.styleOperationIncome}
               />
@@ -283,7 +286,7 @@ class FormCreateProspect extends Component{
               <dt><span>Ingresos no operacionales</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
                 {...nonOperatingIncome}
                 style={this.state.styleNonOperationgIncome}
               />
@@ -294,7 +297,8 @@ class FormCreateProspect extends Component{
               <dt><span>Egresos</span></dt>
               <input
                 className="inputDataValue"
-                type="text"
+                type="number"
+                min="0"
                 {...expenses}
                 style={this.state.styleExpenses}
               />

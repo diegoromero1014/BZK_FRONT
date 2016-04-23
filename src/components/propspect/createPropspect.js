@@ -10,7 +10,6 @@ import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import {SimpleSelect} from 'react-selectize';
 
 const fields = ["idType", "idNumber", "idCelula"];
 var prospectInApplication = true;
@@ -67,6 +66,16 @@ class CreatePropspect extends Component{
     idType.onChange(val);
     this.setState({
       styleTypeDocument: {}
+    });
+    const {clearState} = this.props;
+    clearState();
+  };
+
+  _onChangeCelula(val){
+    var {fields: {idCelula}} = this.props
+    idCelula.onChange(val);
+    this.setState({
+      styleCelula: {}
     });
     const {clearState} = this.props;
     clearState();
@@ -142,19 +151,6 @@ class CreatePropspect extends Component{
                 store={idType.id}
                 styles={this.state.styleTypeDocument}
               />
-              <SimpleSelect
-            options = {options}
-            placeholder = "Select a fruit"
-            theme = "default" // can be one of "default" | "bootstrap3" | "material" | ...
-            transitionEnter = {true}
-        />
-              <SelectGeneric
-                onChange={val => this._onChangeTypeDocument(val.id)}
-                store={idType.id}
-                valueField={'id'}
-                textField={'value'}
-                data={selectsReducer.get('dataTypeDocument')}
-              />
             </Col>
             <Col xs={12} md={3} lg={3} style={{paddingRight: "30px"}}>
               <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
@@ -169,12 +165,13 @@ class CreatePropspect extends Component{
             </Col>
             <Col xs={10} md={4} lg={4}>
               <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
-                <input
-                  type="text"
-                  className="form-control inputDataValue"
+                <SelectGeneric
+                  onChange={val => this._onChangeCelula(val.id)}
+                  store={idType.id}
+                  valueField={'id'}
+                  textField={'value'}
                   style={this.state.styleCelula}
-                  onKeyPress={val => this._onchangeValue("celula", val)}
-                  {...idCelula}
+                  data={selectsReducer.get('dataTypeDocument')}
                 />
             </Col>
             <Col xs={2} md={4} lg={2}>
