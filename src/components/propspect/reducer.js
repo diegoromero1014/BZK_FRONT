@@ -1,23 +1,32 @@
 import Immutable from 'immutable';
-import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT } from './constants';
+import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
 
 
 const initialState = Immutable.Map({
   status: "OK",
   validateLogin: true,
-  prospectExist: true
+  prospectExist: true,
+  createProspect: 0
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case VAIDATE_PROSPECT_EXISTS:
-    const {status, validateLogin, prospectExist} = action.payload.data;
-    return state.withMutations( map => {
-      map
-        .set('validateLogin', validateLogin)
-        .set('prospectExist', prospectExist)
-        .set('status', status);
-    });
+      const {status, validateLogin, prospectExist} = action.payload.data;
+      return state.withMutations( map => {
+        map
+          .set('validateLogin', validateLogin)
+          .set('prospectExist', prospectExist)
+          .set('status', status);
+      });
+
+    case CREATE_PROSPECT:
+      //const {status, validateLogin, prospectExist} = action.payload.data;
+      if( status === "create" ){
+        return state.set("createProspect", 1);
+      } else {
+        return state.set("createProspect", 2);
+      }
 
     case CLEAR_STATE_PROSPECT:
       return state.set("status", "OK");

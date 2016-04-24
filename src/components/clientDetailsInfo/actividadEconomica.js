@@ -15,7 +15,7 @@ class ActividadEconomica extends Component{
           <tr>
             <td>
               <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                <i className="icon-segmen" style={{fontSize: "25px"}}></i>
+                <i className="payment icon" style={{fontSize: "25px"}}></i>
                 <span className="title-middle"> Actividad económica</span>
               </dl>
             </td>

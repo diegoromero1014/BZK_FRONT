@@ -31,9 +31,7 @@ class ClientListItem extends Component{
           </div>
         </div>
         <div className="celula-card-bottom" style={{backgroundColor:dataIsAccess ? "#B0E0E6" : "#DCDCDC"}}>
-          <div className="celula-card-bottom-left">
-            {dataIsAccess ? <a href="#"><i className="icon-expand"></i></a> : ''}
-          </div>
+          {dataIsAccess ? <i className="chevron circle right icon blue" style={{marginTop:"-15px"}}></i> : ''}
         </div>
         {dataIsProspect &&
         <div className="prospect-corner prospect badge badge-important animated bounceIn" style={{borderRadius:"10px"}}>P</div>

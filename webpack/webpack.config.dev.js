@@ -2,6 +2,7 @@ var path = require('path'),
     autoprefixer = require('autoprefixer'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     webpack = require('webpack'),
+    ProvidePlugin = webpack.ProvidePlugin,
     config = {
         entry: [
             './src/index.js',
@@ -35,12 +36,12 @@ var path = require('path'),
                 {
                     test: /\.css$/,
                     loader: 'style!css',
-                    include: /sweetalert/,
+                    include: [/sweetalert/, /semantic\-ui/],
                 },
                 {
                     test: /\.css$/,
                     loader: 'style!css?modules',
-                    include: [/flexboxgrid/, /bootstrap/],
+                    include: [/flexboxgrid/, /bootstrap/, /react-selectize/],
                 },
                 {
                     test: /\.less$/,
@@ -65,6 +66,9 @@ var path = require('path'),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"development"'
+            }),
+            new ProvidePlugin({
+                'jQuery': 'jquery'
             })
         ]
     };

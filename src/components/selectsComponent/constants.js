@@ -13,3 +13,4 @@ export const FILTER_PROVINCE = 'province';
 export const FILTER_CITY = 'city';
 export const FILTER_HOBBIES = 'hobbies';
 export const FILTER_SPORTS = 'sports';
+export const TEAM_FOR_EMPLOYEE = 'teamsByEmployee';

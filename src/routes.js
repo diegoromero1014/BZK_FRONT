@@ -11,14 +11,13 @@ import ShareHolderComponent from './components/shareHolder/shareHolderComponent'
 import ComponentClientInformation from './components/clientInformation/componentClientInformation';
 import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
-import MessageComponent from './components/messages/component';
+import uiTester from './ui/uiTester';
 
 class App extends Component {
     render() {
         return (
             <div style={{width: "100%"}}>
                 {this.props.children}
-                <MessageComponent />
             </div>
         );
     }
@@ -36,6 +35,7 @@ export default (
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
             </Route>
+            <Route path="ui" component={uiTester}></Route>
         </Route>
     </Grid>
 );

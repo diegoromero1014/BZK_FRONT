@@ -51,8 +51,8 @@ class DetailsInfoClient extends Component{
     }
     return(
       <div style={{width: "100%", marginTop: "10px", marginBottom: "70px"}}>
-        <div style={{paddingBottom:paddingDivEdit}}>
-          <table style={{width: "100%", paddingTop: "10px"}}>
+        <div style={{paddingBottom: paddingDivEdit, paddingTop: "10px"}}>
+          <table style={{width: "100%"}}>
             <thead>
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Entidad/Línea de negocio</span></th>
@@ -104,7 +104,7 @@ class DetailsInfoClient extends Component{
                 <tr>
                   <td>
                     <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                      <i className="icon-address" style={{fontSize: "25px"}}></i>
+                      <i className="file outline icon" style={{fontSize: "25px"}}></i>
                       <span className="title-middle"> Notas</span>
                     </dl>
                   </td>

@@ -1,30 +1,45 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {consultListWithParameter } from '../actions';
-import {Combobox} from 'react-widgets';
+import {consultListWithParameter} from '../actions';
+import {DropdownList} from 'react-widgets';
 import {SUB_CIIU} from '../constants';
+
+var parentIdOld = null;
 
 class SelectSubCIIU extends Component{
   componentWillMount(){
     const {consultListWithParameter, parentId} = this.props;
+    parentIdOld = parentId;
     consultListWithParameter(SUB_CIIU, parentId);
   }
 
+    _mapClientItems(item, idx) {
+      return <option value={item.id}>{item.subCiiu}</option>;
+    }
+
   render(){
-    const {selectsReducer, onChange, store, styles, defaultValue} = this.props;
+    const {consultListWithParameter, selectsReducer, onChange, store, styles, defaultValue, parentId} = this.props;
+    if(parentId !== parentIdOld){
+      parentIdOld = parentId;
+      consultListWithParameter(SUB_CIIU, parentId);
+    }
     const dataSubCIIU = selectsReducer.get('dataSubCIIU');
     return(
       <div>
-        <Combobox
-          value={store}
-          onChange={onChange}
+
+      <select>
+        <option value='' selected></option>
+        {dataSubCIIU.map(this._mapClientItems)}
+      </select>
+        <DropdownList
           valueField='id'
           textField='subCiiu'
-          data={dataSubCIIU} minLength={3} filter='contains'
-          style={styles}
-          defaultValue={defaultValue}/>
+          data={dataSubCIIU}
+          defaultValue={defaultValue}
+        />
       </div>
+
     );
   }
 
