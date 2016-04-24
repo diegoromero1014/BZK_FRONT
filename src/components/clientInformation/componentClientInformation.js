@@ -69,8 +69,8 @@ class ComponentClientInformation extends Component{
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan="4" >
-                        <dl className="company-detail">
+                      <td colSpan="4">
+                        <dl className="company-detail" style={{paddingTop: "15px"}}>
                           <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Breve descripción de la empresa</span></dt>
                           <dd style={{marginLeft: "0px"}}>{infoClient.description}</dd>
                         </dl>

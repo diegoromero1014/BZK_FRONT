@@ -48,7 +48,7 @@ class UbicationCorrespondence extends Component{
             </tbody>
           </table>
 
-          <table style={{width: "100%", paddingTop: "15px"}}>
+          <table style={{width: "100%", marginTop: "15px"}}>
             <thead>
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>¿Desea recibir su reporte de costos consolidado de forma virtual?</span></th>
@@ -63,7 +63,7 @@ class UbicationCorrespondence extends Component{
             </tbody>
           </table>
 
-          <table style={{width: "100%", paddingTop: "15px"}}>
+          <table style={{width: "100%", margin  Top: "15px"}}>
             <thead>
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>¿Desea consultar sus extractos de forma virtual?</span></th>

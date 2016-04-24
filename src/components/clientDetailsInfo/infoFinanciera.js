@@ -58,7 +58,7 @@ class InfoFinanciera extends Component{
           </tbody>
         </table>
 
-        <table style={{width: "100%", paddingTop: "15px"}}>
+        <table style={{width: "100%", marginTop: "15px"}}>
           <thead>
           <tr>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ingresos no operacionales</span></th>
