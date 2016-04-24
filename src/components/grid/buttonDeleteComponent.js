@@ -50,8 +50,7 @@ class ButtonDeleteComponent extends Component{
       return (
       <td style={{padding: '10px', textAlign: 'center'}}>
       <button onClick={() => this.setState({ show: true })} className="btn btn-sm  btn-danger">
-          <span className="icon icon-delete">
-          </span>
+          <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
         </button>
             <SweetAlert
             type= "warning"

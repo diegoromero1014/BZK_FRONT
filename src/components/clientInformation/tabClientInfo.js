@@ -36,17 +36,17 @@ class TabClientInfo extends Component{
       styleContacts = true;
       styleShareholders = false;
 
-      backgroundInfo = {height: "57px", borderBottomStyle: "none", width: "70px"};
-      backgroundContacts = {height: "57px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
-      backgroundShareholders = {height: "57px", borderBottomStyle: "none", width: "70px"};
+      backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundContacts = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
     } else if( tabActive === 3 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = true;
 
-      backgroundInfo = {height: "57px", borderBottomStyle: "none", width: "70px"};
-      backgroundContacts = {height: "57px", borderBottomStyle: "none", width: "70px"};
-      backgroundShareholders = {height: "57px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     }
     return (
       <div className="my-custom-tab" style={{marginTop: "2px"}}>
