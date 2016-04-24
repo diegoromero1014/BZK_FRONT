@@ -19,24 +19,18 @@ class NavBarComponent extends Component {
         const pageTitleEl = "";
         return (
             <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
-                {/* BEGIN HEADER LEFT SIDE SECTION */}
-                <div className="pull-left">
-                    {/* BEGIN SLIM NAVIGATION TOGGLE */}
-                    <ul className="nav" style={{paddingLeft: "0px !important"}}>
-                        <li className="quicklinks" style={{cursor: "pointer"}}>
-                            <a onClick={this.handleLayoutToggle} id="layout-condensed-toggle">
-                                <i className="icon-menu"></i>
+                <div className="pull-left" style={{paddingLeft: "5px !important"}}>
+                    <ul className="nav" style={{paddingLeft: "5px !important"}}>
+                        <li style={{cursor: "pointer", paddingLeft:"0"}}>
+                            <a onClick={this.handleLayoutToggle}>
+                              <i className="big sidebar icon"></i>
                             </a>
                         </li>
                         <li style={{fontSize: "30px"}}>
-                            {/*pageTitleEl*/}
                             Mis clientes
                         </li>
                     </ul>
-                    {/* END SLIM NAVIGATION TOGGLE */}
                 </div>
-                {/* END HEADER LEFT SIDE SECTION */}
-                {/* BEGIN HEADER RIGHT SIDE SECTION */}
                 <div className="pull-right" style={{paddingRight: "20px", display:"none"}}>
                     <ul className="nav">
                         <li className="quicklinks">
@@ -65,7 +59,6 @@ class NavBarComponent extends Component {
                         </li>
                     </ul>
                 </div>
-                {/* END HEADER RIGHT SIDE SECTION */}
             </div>
         );
     }

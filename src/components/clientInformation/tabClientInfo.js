@@ -24,9 +24,9 @@ class TabClientInfo extends Component{
     var styleContacts = false;
     var styleShareholders = false;
 
-    var backgroundInfo = {height: "57px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
-    var backgroundContacts = {height: "57px", borderBottomStyle: "none", width: "70px"};
-    var backgroundShareholders = {height: "57px", borderBottomStyle: "none", width: "70px"};
+    var backgroundInfo = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+    var backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
+    var backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
 
     const {tabActive} = this.state;
     if( tabActive === 1 ){

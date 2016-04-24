@@ -714,7 +714,7 @@
 	.celula-card-top {
 		border-bottom: 1px solid $default-border-color;
 		margin-bottom: 1px;
-		height: 82px;
+		height: 116px;
 		padding: 12px;
 		.celula-card-top-left {
 			display: inline-block;
@@ -746,13 +746,6 @@
 		border-radius: 0px 0px 7px 7px;
     height: 26px;
 
-		.celula-card-bottom-left {
-			display: inline-block;
-			i {
-				margin-left: 5px;
-				margin-right: 10px;
-			}
-		}
 		.celula-card-bottom-right {
 			position: absolute;
 			right: 0;

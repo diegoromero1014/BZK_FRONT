@@ -49,9 +49,9 @@ class SearchBarClient extends Component{
     return(
       <div style={{paddingBottom:"15px", display: "inline", width:"100%", margin: "auto"}}>
        <div style={{display: "inline", margin: "auto"}}>
-         <input id="searchExpression" type="search" onKeyPress={this._handleChangeKeyword} className="input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"80%", display: "inline"}} value={keyword} onChange={this._handleChangeKeyword}/>
-         <span className="input-group-btn" style={{width:"5%",}}>
-           <button id="searchClients" className="btn btn-default btn-large" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2"}}><i className="icon-search"></i></button>
+         <input type="search" onKeyPress={this._handleChangeKeyword} className="input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"80%", display: "inline"}} value={keyword} onChange={this._handleChangeKeyword}/>
+         <span style={{width:"5%"}}>
+           <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2", width:"50px", height:"50px"}}><i className="search icon"></i></button>
          </span>
        </div>
       </div>

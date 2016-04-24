@@ -15,7 +15,7 @@ class DataComercial extends Component{
           <tr>
             <td>
               <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                <i className="icon-address" style={{fontSize: "25px"}}></i>
+                <i className="book icon" style={{fontSize: "25px"}}></i>
                 <span className="title-middle"> Datos de conocimiento comercial</span>
               </dl>
             </td>

@@ -31,15 +31,15 @@ class ComponentClientInformation extends Component{
   								{infoClient.clientName}
   							</h3>
                 {infoClient.isProspect &&
-                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px !important"}}
+                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px"}}
                     className="label label-important bounceIn animated prospect" >Prospecto</span>
                 }
                 {showAECNivel &&
-                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px !important", backgroundColor: "#ec5f48"}}
+                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#ec5f48"}}
                     className="label label-important bounceIn animated aec-status" >Nivel: {aecStatus}</span>
                 }
                 {showAECNoAplica &&
-                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px !important", backgroundColor: "#3498db"}}
+                  <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
                     className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
                 }
   						</div>
