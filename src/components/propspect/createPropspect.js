@@ -54,7 +54,7 @@ class CreatePropspect extends Component{
     consultDataSelect(constants.CLIENT_ID_TYPE);
     consultList(constants.TEAM_FOR_EMPLOYEE);
   }
-  
+
   _onchangeValue(type, val){
 
     switch (type) {
@@ -152,7 +152,7 @@ class CreatePropspect extends Component{
           <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "20px", borderRadius: "5px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Tipo de documento</span></dt>
-              <dl><span>{_.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
+              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={3}>
               <dt><span>Número de documento</span></dt>

@@ -11,11 +11,15 @@ class inputComponent extends Component {
   }
 
   render() {
-      const {nameInput, type, placeholder, touched, error, name, onChange} = this.props;
+      const {nameInput, type, placeholder, touched, error, name, onChange, min} = this.props;
       return (
           <div >
               <div className={`styleWidthCompoentns ui input ${name}`}>
-                  <input type={type} name={nameInput} onChange={onChange} placeholder={placeholder} />
+                  <input type={type} 
+                    name={nameInput}
+                    min={min}
+                    onChange={onChange}
+                    placeholder={placeholder} />
               </div>
               {
                   touched && error &&
@@ -34,7 +38,8 @@ inputComponent.PropTypes = {
     nameInput: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    min: PropTypes.string
 };
 
 export default inputComponent;

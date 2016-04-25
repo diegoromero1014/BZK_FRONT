@@ -74,3 +74,28 @@ export function consultListWithParameter(field, parentId){
     payload: request
   }
 }
+
+export function consultListWithParameterUbication(field, parentId){
+  const json = {
+      messageHeader: {
+        "timestamp": new Date().getTime(),
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+      messageBody: {
+        "parentId": parentId
+      }
+    }
+  var request = axios.post(APP_URL + "/masterDataByParentId", json);
+  return {
+    type: field,
+    payload: request
+  }
+}

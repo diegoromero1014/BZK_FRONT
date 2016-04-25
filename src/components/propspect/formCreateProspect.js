@@ -5,14 +5,20 @@ import {bindActionCreators} from 'redux';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 import {createProspect} from './actions';
-import {consultList, consultListWithParameter} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
+  from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import _ from 'lodash';
 
+const valuesYesNo = [
+  {'id': true, 'value': "Si"},
+  {'id': false, 'value': "No"}
+]
 var notasProspect = [];
 var ciiuOld = null;
+var countryOld = null;
 
 const validate = values => {
     const errors = {}
@@ -30,7 +36,7 @@ const validate = values => {
 };
 
 const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-      "idSubCIIU", "address", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
+      "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
       "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
 
 class FormCreateProspect extends Component{
@@ -38,6 +44,9 @@ class FormCreateProspect extends Component{
     super(props);
 
     this._submitFormCreateProspect = this._submitFormCreateProspect.bind(this);
+    this._onChangeCIIU = this._onChangeCIIU.bind(this);
+    this._onChangeCountry = this._onChangeCountry.bind(this);
+    this._onChangeProvince = this._onChangeProvince.bind(this);
 
     this.state = {
       styleRazonSocial: {},
@@ -46,9 +55,35 @@ class FormCreateProspect extends Component{
   }
 
   componentWillMount(){
-    const {consultList} = this.props;
+    const {consultList, consultDataSelect} = this.props;
     consultList(constants.TEAM_FOR_EMPLOYEE);
     consultList(constants.CIIU);
+    consultDataSelect(constants.FILTER_COUNTRY);
+  }
+
+  _onChangeCIIU(val){
+    const {fields: {idCIIU, idSubCIIU}} = this.props;
+    idCIIU.onChange(val);
+    const {consultListWithParameter} = this.props;
+    consultListWithParameter(constants.SUB_CIIU, val);
+    idSubCIIU.onChange('');
+  }
+
+  _onChangeCountry(val){
+    const {fields: {country, province, city}} = this.props;
+    country.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
+    province.onChange('');
+    city.onChange('');
+  }
+
+  _onChangeProvince(val){
+    const {fields: {country, province, city}} = this.props;
+    province.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(constants.FILTER_CITY, province.value);
+    city.onChange('');
   }
 
   _submitFormCreateProspect(formData){
@@ -59,16 +94,16 @@ class FormCreateProspect extends Component{
   render(){
     const {
       fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-         address, telephone, district, annualSales, assets, centroDecision, liabilities, operatingIncome,
+         address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
       error, handleSubmit, selectsReducer} = this.props;
 
-    if( idCIIU != undefined && ciiuOld != idCIIU ){
-      ciiuOld = idCIIU;
-      const {consultListWithParameter} = this.props;
-      consultListWithParameter(constants.SUB_CIIU, idCIIU.value);
+    if( country != undefined && countryOld != country ){
+      countryOld = country;
+      const {consultListWithParameterUbication} = this.props;
+      consultListWithParameterUbication(constants.FILTER_PROVINCE,country.value);
       setTimeout(function(){
-         idSubCIIU.onChange('');
+         province.onChange('');
       }, 50);
     }
     return(
@@ -124,7 +159,9 @@ class FormCreateProspect extends Component{
               <ComboBox
                 name="ciiu"
                 labelInput="CIIU"
-                {...idCIIU}
+                onChange={val => this._onChangeCIIU(val)}
+                value={idCIIU.value}
+                onBlur={idCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'ciiu'}
                 data={selectsReducer.get('dataCIIU')}
@@ -155,7 +192,9 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
-              <span style={{width: "25%", verticalAlign: "initial"}}>Subsector</span>
+              <span style={{width: "25%", verticalAlign: "initial"}}>
+                {idSubCIIU.value && _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)] )[0].economicSubSector}
+              </span>
             </div>
           </Col>
 
@@ -173,9 +212,10 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Dirección</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="address"
                 type="text"
+                placeholder="Ingrese la dirección del cliente"
                 {...address}
               />
             </div>
@@ -183,72 +223,91 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>País</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
-                style={{}}
-              />
+              <ComboBox
+                name="country"
+                labelInput="Pais"
+                onChange={val => this._onChangeCountry(val)}
+                value={country.value}
+                onBlur={country.onBlur}
+                valueProp={'id'}
+                textProp={'value'}
+                data={selectsReducer.get('dataTypeCountry')}
+                />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Departamento</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
-                style={{}}
-              />
+              <ComboBox
+                name="province"
+                labelInput="departamento"
+                onChange={val => this._onChangeProvince(val)}
+                value={province.value}
+                onBlur={province.onBlur}
+                valueProp={'id'}
+                textProp={'value'}
+                data={selectsReducer.get('dataTypeProvince')}
+                />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt><span>Ciudad</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
-                style={{}}
-              />
+              <ComboBox
+                name="city"
+                labelInput="ciudad"
+                {...city}
+                valueProp={'id'}
+                textProp={'value'}
+                data={selectsReducer.get('dataTypeCity')}
+                />
             </div>
           </Col>
           <Col xs={12} md={6} lg={6}>
             <div style={{paddingLeft: "20px", paddingTop: "15px"}}>
               <dt><span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span></dt>
-              <SelectYesNo
-                onChange={val => reportVirtual.onChange(val.id)}
-                store={reportVirtual.id}
-                styles={this.state.styleReportVirtual}
+              <ComboBox
+                name="reportVirtual"
+                labelInput="Reporte virtual"
+                valueProp={'id'}
+                textProp={'value'}
+                data={valuesYesNo}
+                {...reportVirtual}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Teléfono</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
+              <Input
+                name="telephone"
+                type="number"
+                placeholder="Ingrese el teléfono del cliente"
                 {...telephone}
-                style={this.state.styleTelephone}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px", paddingTop: "15px"}}>
               <dt><span>Barrio</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
+              <Input
+                name="district"
+                type="number"
+                placeholder="Ingrese el barrio del cliente"
                 {...district}
-                style={this.state.styleDistrict}
               />
             </div>
           </Col>
           <Col xs={12} md={6} lg={6}>
             <div style={{paddingLeft: "20px", paddingTop: "15px"}}>
               <dt><span>¿Desea consultar sus extractos de forma virtual?</span></dt>
-              <SelectYesNo
-                onChange={val => extractsVirtual.onChangeValueList(val.id)}
-                store={extractsVirtual.id}
-                styles={this.state.styleExtractVirtual}
+              <ComboBox
+                name="extractVirtual"
+                labelInput="Extracto virtual"
+                valueProp={'id'}
+                textProp={'value'}
+                data={valuesYesNo}
+                {...extractsVirtual}
               />
             </div>
           </Col>
@@ -264,70 +323,70 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Ventas anuales</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="annualSales"
                 type="number"
-                min={0}
+                min="0"
+                placeholder="Ingrese las ventas anuales"
                 {...annualSales}
-                style={this.state.styleAnnualSales}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Activos</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="assets"
                 type="number"
-                min={0}
+                min="0"
+                placeholder="Ingrese los activos"
                 {...assets}
-                style={this.state.styleAssets}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Pasivos</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="liabilities"
                 type="number"
-                min={0}
+                min="0"
+                placeholder="Ingrese los pasivos"
                 {...liabilities}
-                style={this.state.styleLiabilities}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
               <dt><span>Ingresos operacionales</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="operatingIncome"
                 type="number"
+                placeholder="Ingrese los ingresos operacionales"
                 {...operatingIncome}
-                style={this.state.styleOperationIncome}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Ingresos no operacionales</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="nonOperatingIncome"
                 type="number"
+                placeholder="Ingrese los ingresos no operacionales"
                 {...nonOperatingIncome}
-                style={this.state.styleNonOperationgIncome}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Egresos</span></dt>
-              <input
-                className="inputDataValue"
+              <Input
+                name="expenses"
                 type="number"
                 min="0"
+                placeholder="Ingrese los egresos"
                 {...expenses}
-                style={this.state.styleExpenses}
               />
             </div>
           </Col>
@@ -359,8 +418,10 @@ class FormCreateProspect extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     createProspect,
+    consultDataSelect,
     consultList,
-    consultListWithParameter
+    consultListWithParameter,
+    consultListWithParameterUbication
   }, dispatch);
 }
 
