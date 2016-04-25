@@ -24,13 +24,10 @@ class Dashboard extends Component {
     render() {
         const {navBar} = this.props;
         var widthComponent = '70px';
-        var widthComponentDiv = (window.innerWidth - 70) + "px";
         if(navBar.get('status') === "closed"){
             widthComponent = '205px';
-            var widthComponentDiv = (window.innerWidth - 205) + "px";
         } else {
             widthComponent= '70px';
-            var widthComponentDiv = (window.innerWidth - 70) + "px";
         }
 
         return (
@@ -38,7 +35,7 @@ class Dashboard extends Component {
                 <div style={{float: "left", width: widthComponent, height: "100%", position: "absolute", transition: 'all 0.3s'}} >
                     <MenuComponent />
                 </div>
-                <div className="header" style={{paddingLeft: widthComponent, height: "100%", float: "left", width: widthComponentDiv, overflow: "hidden", transition: 'all 0.3s'}}>
+                <div className="header" style={{paddingLeft: widthComponent, height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s'}}>
                     <NavBarComponent />
                     <div style={{backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden", marginTop: "3px"}}>
                       {this.props.children}

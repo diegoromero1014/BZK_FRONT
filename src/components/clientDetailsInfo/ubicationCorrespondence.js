@@ -15,20 +15,20 @@ class UbicationCorrespondence extends Component{
       addresses = addresses[0];
     }
     return(
-      <div className="tab-content-row" style={{marginTop: "30px",borderTop: "1px dotted #cea70b"}}>
+      <div className="tab-content-row" style={{marginTop: "40px",borderTop: "1px dotted #cea70b"}}>
         <table>
           <tbody>
             <tr>
               <td>
-                <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                  <i className="icon-top-chart-risk" style={{fontSize: "25px"}}></i>
+                <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "10px", marginBottom: "5px"}}>
+                  <i className="browser icon" style={{fontSize: "25px"}}></i>
                   <span className="title-middle"> Información de ubicación y correspondencia</span>
                 </dl>
               </td>
             </tr>
           </tbody>
         </table>
-        <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Dirección sede principal</h3>
+        <h3 style={{borderBottom: "solid 1px", marginTop: "10px"}}>Dirección sede principal</h3>
         <table style={{width: "100%"}}>
             <thead>
               <tr>
@@ -48,7 +48,7 @@ class UbicationCorrespondence extends Component{
             </tbody>
           </table>
 
-          <table style={{width: "100%", paddingTop: "15px"}}>
+          <table style={{width: "100%", marginTop: "15px"}}>
             <thead>
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>¿Desea recibir su reporte de costos consolidado de forma virtual?</span></th>
@@ -63,7 +63,7 @@ class UbicationCorrespondence extends Component{
             </tbody>
           </table>
 
-          <table style={{width: "100%", paddingTop: "15px"}}>
+          <table style={{width: "100%", marginTop: "15px"}}>
             <thead>
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>¿Desea consultar sus extractos de forma virtual?</span></th>

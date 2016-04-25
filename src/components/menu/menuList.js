@@ -12,7 +12,7 @@ const menuItems = [
     },*/
     {
         text: "Mis clientes",
-        icon: "icon-office",
+        icon: "building icon",
         link: "/dashboard/clients"
     }
 ];
@@ -20,7 +20,7 @@ const menuItems = [
 const menuItemCerrarSesion = [
     {
         text: "Cerrar sesión segura",
-        icon: "icon-log_out",
+        icon: "big power icon",
         link: "/login",
         style: {
           backgroundColor: "black"

@@ -4,12 +4,12 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
-import {toggleMessage} from '../messages/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect, consultList} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
+import {SimpleSelect} from 'react-selectize';
 
 const fields = ["idType", "idNumber"];
 var prospectInApplication = true;
@@ -207,7 +207,6 @@ class CreatePropspect extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     validateProspectExists,
-    toggleMessage,
     clearState,
     clearAllState,
     consultDataSelect,

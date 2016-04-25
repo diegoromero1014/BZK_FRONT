@@ -26,8 +26,8 @@ class ContactComponent extends Component {
   render() {
     var rowsContact = 0;
     const {contactsByClient} = this.props;
-    var visibleTable = 'block';
-    var visibleMessage = 'none';
+    var visibleTable = 'none';
+    var visibleMessage = 'block';
     if(contactsByClient.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';

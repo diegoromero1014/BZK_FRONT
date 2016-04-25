@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer} from './actions';
 import GridComponent from '../grid/component';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
 const headers = [
   {
@@ -71,9 +71,31 @@ class ListContactComponent extends Component {
       "");
   }
 
+
+
   _renderCellView(data){
     const mensaje = "¿Seguro que deseas eliminar el contacto: ";
+    var json = {
+      "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "username":"lmejias",
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+      }
+    }
     return  _.forOwn(data, function(value, key) {
+            _.set(json, 'messageBody', {
+              clientId: window.localStorage.getItem('idClientSeleted'),
+              contactId: value.id,
+              clientContactId: value.idClientContact
+            });
           _.set(value, 'actions',  {
             actionView: true,
             id: value.id,
@@ -82,10 +104,10 @@ class ListContactComponent extends Component {
           });
           _.set(value, 'delete',  {
             actionDelete: true,
-            id: value.id,
-            urlServer: "./component",
-            component : "DELETE_CONTACT",
-            mensaje: mensaje + value.nameComplet + "?"
+            urlServer: "/deleteContactForClient",
+            typeDelete : DELETE_TYPE_CONTACT,
+            mensaje: mensaje + value.nameComplet + "?",
+            json: json
           });
       });
   }

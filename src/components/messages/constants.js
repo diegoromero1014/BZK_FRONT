@@ -1,1 +1,0 @@
-export const TOGGLE_MESSAGE_BOX = "TOGGLE_MESSAGE_BOX";
