@@ -1285,8 +1285,8 @@
 }
 
 .inputDataValue {
-	height: 22px !important;
-	min-height: 26px !important;
+	height: 40px !important;
+	min-height: 35px !important;
 	width: 100%;
 }
 
@@ -1299,5 +1299,10 @@
 .textAreaDataValue {
 	height: 30px !important;
 	min-height: 26px !important;
+}
+
+.styleWidthCompoentns {
+	width: 100%;
+	margin-right: 10px;
 }
 /* Fin estilos creados por accenture*/

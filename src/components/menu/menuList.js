@@ -55,7 +55,7 @@ class MenuList extends Component {
                     </a>
                     {menuItems.map(this._mapMenuItems)}
                 </ul>
-                <ul style={{width: "100%", bottom: "0", position: "absolute"}}>
+                <ul style={{width: "100%", bottom: "0px", position: "absolute"}}>
                     {menuItemCerrarSesion.map(this._mapMenuItems)}
                 </ul>
               </div>

@@ -5,11 +5,29 @@ import {bindActionCreators} from 'redux';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 import {createProspect} from './actions';
-import {consultList} from '../selectsComponent/actions';
-import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
+import {consultList, consultListWithParameter} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import Input from '../../ui/input/inputComponent';
+import _ from 'lodash';
 
 var notasProspect = [];
+var ciiuOld = null;
+
+const validate = values => {
+    const errors = {}
+    if (!values.razonSocial) {
+        errors.razonSocial = "Debe seleccionar un valor";
+    } else {
+      errors.razonSocial = null;
+    }
+    if (!values.idCelula) {
+        errors.idCelula = "Debe ingresar un valor";
+    } else {
+      errors.idCelula = null;
+    }
+    return errors;
+};
 
 const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
       "idSubCIIU", "address", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
@@ -20,7 +38,6 @@ class FormCreateProspect extends Component{
     super(props);
 
     this._submitFormCreateProspect = this._submitFormCreateProspect.bind(this);
-    this._onchangeValue = this._onchangeValue.bind(this);
 
     this.state = {
       styleRazonSocial: {},
@@ -31,57 +48,11 @@ class FormCreateProspect extends Component{
   componentWillMount(){
     const {consultList} = this.props;
     consultList(constants.TEAM_FOR_EMPLOYEE);
+    consultList(constants.CIIU);
   }
-
-  _onchangeValue(type, val){
-    switch (type) {
-      case "razonSocial":
-      var {fields: {razonSocial}} = this.props
-        razonSocial.onChange(val);
-        this.setState({ styleRazonSocial: {} });
-        break;
-
-      case "idCelula":
-        var {fields: {idCelula}} = this.props
-        idCelula.onChange(val);
-        this.setState({
-          styleCelula: {}
-        });
-    }
-  }
-
-  _onChangeValueList(type, val){
-    switch (type) {
-      case "razonSocial":
-        var {fields: {razonSocial}} = this.props
-        razonSocial.onChange(val);
-        this.setState({ styleRazonSocial: {} });
-        break;
-
-      default:
-        break;
-    }
-  };
 
   _submitFormCreateProspect(formData){
-    const {razonSocial, idCelula} = formData;
-    var styleError = {borderColor: "red"};
-    var error = false;
-    if( razonSocial === null || razonSocial === undefined ){
-      error = true;
-      this.setState({
-        styleRazonSocial: styleError
-      })
-    }
-    if( idCelula === null || idCelula === undefined ){
-      error = true;
-      this.setState({
-        styleCelula: styleError
-      })
-    }
-    if( error ){
-      alert("Señor usuario, debe de ingresar los todos los campos obligatorios (*).");
-    }
+
   };
 
 
@@ -92,31 +63,39 @@ class FormCreateProspect extends Component{
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
       error, handleSubmit, selectsReducer} = this.props;
 
+    if( idCIIU != undefined && ciiuOld != idCIIU ){
+      ciiuOld = idCIIU;
+      const {consultListWithParameter} = this.props;
+      consultListWithParameter(constants.SUB_CIIU, idCIIU.value);
+      setTimeout(function(){
+         idSubCIIU.onChange('');
+      }, 50);
+    }
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
         <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
-              <input
-                className="inputDataValue"
-                value={razonSocial.value}
-                onChange={val => this._onchangeValue("razonSocial", val)}
+              <Input
+                name="razonSocial"
                 type="text"
-                style={this.state.styleRazonSocial}
+                placeholder="Ingrese la razón social del cliente"
+                onChange={val => this._onchangeValue("razonSocial", val)}
+                {...razonSocial}
               />
             </div>
           </Col>
 
           <Col xs={10} md={4} lg={4} style={{marginTop: "20px", paddingRight: "20px"}}>
             <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
-              <SelectGeneric
-                onChange={val => this._onchangeValue("idCelula", val)}
-                store={idCelula.id}
-                valueField={'id'}
-                textField={'description'}
-                styles={this.state.styleCelula}
+              <ComboBox
+                name="celula"
+                labelInput="Célula"
+                valueProp={'id'}
+                textProp={'description'}
                 data={selectsReducer.get('teamValueObjects')}
+                {...idCelula}
               />
           </Col>
 
@@ -133,36 +112,48 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={12} lg={12} style={{marginTop: "20px", marginLeft: "20px"}}>
             <dl style={{fontSize: "25px", color: "#CEA70B", margin: "5px 30px 5px 0", borderTop: "1px dotted #cea70b"}}>
-              <i className="icon-segmen" style={{fontSize: "25px"}}></i>
-              <span className="title-middle"> Actividad económica</span>
+              <div style={{marginTop: "10px"}}>
+                <i className="payment icon" style={{fontSize: "25px"}}></i>
+                <span className="title-middle"> Actividad económica</span>
+              </div>
             </dl>
           </Col>
           <Col xs={12} md={3} lg={3} >
-            <div style={{paddingLeft: "20px"}}>
+            <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>CIIU</span></dt>
-              <SelectCIIU
-                onChange={val => idCIIU.onChange(val)}
-                store={idCIIU.id}
+              <ComboBox
+                name="ciiu"
+                labelInput="CIIU"
+                {...idCIIU}
+                valueProp={'id'}
+                textProp={'ciiu'}
+                data={selectsReducer.get('dataCIIU')}
                 />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3} >
-            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Sector</span></dt>
-              <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>{idCIIU.value === undefined ? "" : idCIIU.value.economicSector}</span>
+              <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
+                {idCIIU.value && _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)] )[0].economicSector}
+              </span>
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>SubCIIU</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
-              />
+              <ComboBox
+                name="subCiiu"
+                labelInput="SubCIIU"
+                {...idSubCIIU}
+                valueProp={'id'}
+                textProp={'subCiiu'}
+                data={selectsReducer.get('dataSubCIIU')}
+                />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>Subsector</span>
             </div>
@@ -170,15 +161,17 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={12} lg={12} style={{marginTop: "30px", marginLeft: "20px"}}>
             <dl style={{fontSize: "25px", color: "#CEA70B", margin: "5px 30px 5px 0", borderTop: "1px dotted #cea70b"}}>
-              <i className="icon-top-chart-risk" style={{fontSize: "25px"}}></i>
-              <span className="title-middle"> Información de ubicación y correspondencia</span>
+              <div style={{marginTop: "10px"}}>
+                <i className="browser icon" style={{fontSize: "25px"}}></i>
+                <span className="title-middle"> Información de ubicación y correspondencia</span>
+              </div>
             </dl>
           </Col>
-          <Col xs={12} md={12} lg={12} style={{marginLeft: "20px"}}>
+          <Col xs={12} md={12} lg={12} style={{marginLeft: "20px", marginTop: "10px"}}>
             <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Dirección sede principal</h3>
           </Col>
           <Col xs={12} md={3} lg={3} >
-            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Dirección</span></dt>
               <input
                 className="inputDataValue"
@@ -188,7 +181,7 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
           <Col xs={12} md={3} lg={3} >
-            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>País</span></dt>
               <input
                 className="inputDataValue"
@@ -198,7 +191,7 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Departamento</span></dt>
               <input
                 className="inputDataValue"
@@ -208,7 +201,7 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt><span>Ciudad</span></dt>
               <input
                 className="inputDataValue"
@@ -262,8 +255,10 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={12} lg={12} style={{marginTop: "30px", marginLeft: "20px"}}>
             <dl style={{fontSize: "25px", color: "#CEA70B", margin: "5px 30px 5px 0", borderTop: "1px dotted #cea70b"}}>
-              <i className="icon-address" style={{fontSize: "25px"}}></i>
-              <span className="title-middle"> Información financiera</span>
+              <div style={{marginTop: "10px"}}>
+                <i className="suitcase icon" style={{fontSize: "25px"}}></i>
+                <span className="title-middle"> Información financiera</span>
+              </div>
             </dl>
           </Col>
           <Col xs={12} md={3} lg={3}>
@@ -349,7 +344,7 @@ class FormCreateProspect extends Component{
           </Col>
 
           <Col xs={12} md={12} lg={12} style={{paddingTop: "60px"}}>
-            <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", width:"100%", marginBottom: "0", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+            <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
               <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
                 <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
               </button>
@@ -364,7 +359,8 @@ class FormCreateProspect extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     createProspect,
-    consultList
+    consultList,
+    consultListWithParameter
   }, dispatch);
 }
 
@@ -377,5 +373,6 @@ function mapStateToProps({propspectReducer, selectsReducer},ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields
+  fields,
+  validate
 }, mapStateToProps, mapDispatchToProps)(FormCreateProspect);

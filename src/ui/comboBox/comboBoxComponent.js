@@ -45,9 +45,10 @@ class comboBoxComponent extends Component {
 
     render() {
         const {nameInput, labelInput, data, touched, error, name} = this.props;
+
         return (
-            <div>
-                <div className={`ui selection dropdown ${name}`}>
+            <div >
+                <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
