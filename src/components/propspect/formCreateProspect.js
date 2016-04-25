@@ -5,12 +5,15 @@ import {bindActionCreators} from 'redux';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 import {createProspect} from './actions';
+import {consultList} from '../selectsComponent/actions';
+import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
+import * as constants from '../selectsComponent/constants';
 
 var notasProspect = [];
 
 const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-                "idSubCIIU", "address", "telephone", "district", "annualSales", "assets", "centroDecision",
-                "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
+      "idSubCIIU", "address", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
+      "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
 
 class FormCreateProspect extends Component{
   constructor( props ) {
@@ -21,17 +24,29 @@ class FormCreateProspect extends Component{
 
     this.state = {
       styleRazonSocial: {},
+      styleCelula: {}
     }
+  }
+
+  componentWillMount(){
+    const {consultList} = this.props;
+    consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
   _onchangeValue(type, val){
     switch (type) {
       case "razonSocial":
-        var {fields: {razonSocial}} = this.props
+      var {fields: {razonSocial}} = this.props
         razonSocial.onChange(val);
         this.setState({ styleRazonSocial: {} });
         break;
 
+      case "idCelula":
+        var {fields: {idCelula}} = this.props
+        idCelula.onChange(val);
+        this.setState({
+          styleCelula: {}
+        });
     }
   }
 
@@ -49,13 +64,19 @@ class FormCreateProspect extends Component{
   };
 
   _submitFormCreateProspect(formData){
-    const {razonSocial} = formData;
+    const {razonSocial, idCelula} = formData;
     var styleError = {borderColor: "red"};
     var error = false;
     if( razonSocial === null || razonSocial === undefined ){
       error = true;
       this.setState({
         styleRazonSocial: styleError
+      })
+    }
+    if( idCelula === null || idCelula === undefined ){
+      error = true;
+      this.setState({
+        styleCelula: styleError
       })
     }
     if( error ){
@@ -68,25 +89,36 @@ class FormCreateProspect extends Component{
     const {
       fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
          address, telephone, district, annualSales, assets, centroDecision, liabilities, operatingIncome,
-         nonOperatingIncome, expenses, dateSalesAnnuals},
-      error, handleSubmit} = this.props;
+         nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
+      error, handleSubmit, selectsReducer} = this.props;
 
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
-      <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
+        <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
+          <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+              <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
+              <input
+                className="inputDataValue"
+                value={razonSocial.value}
+                onChange={val => this._onchangeValue("razonSocial", val)}
+                type="text"
+                style={this.state.styleRazonSocial}
+              />
+            </div>
+          </Col>
 
-        <Col xs={12} md={6} lg={6} style={{marginTop: "20px", paddingRight: "35px"}}>
-          <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
-            <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
-            <input
-              className="inputDataValue"
-              value={razonSocial.value}
-              onChange={val => this._onchangeValue("razonSocial", val)}
-              type="text"
-              style={this.state.styleRazonSocial}
-            />
-          </div>
-        </Col>
+          <Col xs={10} md={4} lg={4} style={{marginTop: "20px", paddingRight: "20px"}}>
+            <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
+              <SelectGeneric
+                onChange={val => this._onchangeValue("idCelula", val)}
+                store={idCelula.id}
+                valueField={'id'}
+                textField={'description'}
+                styles={this.state.styleCelula}
+                data={selectsReducer.get('teamValueObjects')}
+              />
+          </Col>
 
           <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
@@ -331,13 +363,15 @@ class FormCreateProspect extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    createProspect
+    createProspect,
+    consultList
   }, dispatch);
 }
 
-function mapStateToProps({propspectReducer, notes},ownerProps) {
+function mapStateToProps({propspectReducer, selectsReducer},ownerProps) {
   return {
     propspectReducer,
+    selectsReducer
   };
 }
 
