@@ -8,6 +8,7 @@ import SelectTypeDocument from '../selectsComponent/selectTypeDocument/component
 import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
 import SelectSubCIIU from '../selectsComponent/selectSubCIIU/selectSubCIIU';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import {reduxForm} from 'redux-form';
 
 const style = {
@@ -18,6 +19,25 @@ const fields = ["reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", 
                 "idSubCIIU", "adress", "telephone", "district", "annualSales", "assets", "marcGeren",
                 "justifyNonGeren", "centroDecision", "necesitaLME", "justifyNonLME", "justifyExClient",
                 "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
+
+
+                const propsComboBox = {
+                    nameInput: 'Pagina',
+                    labelInput: 'Página',
+                    data: [
+                        {
+                            id: 1,
+                            value: 't'
+                        },
+                        {
+                            id: 2,
+                            value: 'x'
+                        }
+                    ],
+                    textProp: 'value',
+                    valueProp: 'id'
+                };
+
 
 class clientEdit extends Component{
   constructor(props) {
@@ -272,7 +292,7 @@ class clientEdit extends Component{
   };
 
   render(){
-    var { fields: {reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU, justifyNonLME,
+    var { fields: {combo, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU, justifyNonLME,
              adress, telephone, district, annualSales, assets, liabilities, operatingIncome, justifyExClient,
            nonOperatingIncome, expenses, dateSalesAnnuals},
            error, handleSubmit, clientInformacion} = this.props
@@ -328,23 +348,11 @@ class clientEdit extends Component{
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={12} lg={12}>
-            <table style={{width:"100%"}}>
-              <tbody>
-                <tr>
-                  <td>
-                    <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                      <i className="icon-segmen" style={{fontSize: "25px"}}></i>
-                      <span className="title-middle"> Actividad económica</span>
-                    </dl>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%"}}></div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+                <i className="payment icon" style={{fontSize: "25px"}}/>
+                <span className="title-middle"> Actividad económica</span>
+              </div>
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
@@ -353,11 +361,7 @@ class clientEdit extends Component{
                 <span>CIIU (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectCIIU
-                  onChange={val => this._onChangeCIIU(val)}
-                  store={idCIIU.id}
-                  defaultValue={infoClient.ciiu}
-                  styles={this.state.styleCIIU}/>
+                <ComboBox {...propsComboBox} {...combo}/>
               </dt>
             </Col>
             <Col xs={12} md={6} lg={3}>
@@ -396,23 +400,11 @@ class clientEdit extends Component{
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <table style={{width:"100%"}}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                        <i className="icon-top-chart-risk" style={{fontSize: "25px"}}></i>
-                        <span className="title-middle"> Información de ubicación y correspondencia</span>
-                      </dl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%"}}></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+                <i className="browser icon" style={{fontSize: "25px"}}/>
+                <span className="title-middle"> Información de ubicación y correspondencia</span>
+              </div>
             </Col>
           </Row>
           <Row style={{padding: "0px 5px 20px 20px"}}>
@@ -529,23 +521,11 @@ class clientEdit extends Component{
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <table style={{width:"100%"}}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                        <i className="icon-adress" style={{fontSize: "25px"}}></i>
-                        <span className="title-middle"> Información financiera</span>
-                      </dl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%"}}></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+                <i className="suitcase icon" style={{fontSize: "25px"}}/>
+                <span className="title-middle"> Información financiera</span>
+              </div>
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
@@ -660,23 +640,11 @@ class clientEdit extends Component{
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <table style={{width:"100%"}}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                        <i className="icon-adress" style={{fontSize: "25px"}}></i>
-                        <span className="title-middle"> Datos de conocimiento comercial</span>
-                      </dl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%"}}></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+                <i className="book icon" style={{fontSize: "25px"}}/>
+                <span className="title-middle"> Datos de conocimiento comercial</span>
+              </div>
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
@@ -774,23 +742,11 @@ class clientEdit extends Component{
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <table style={{width:"100%"}}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                        <i className="icon-adress" style={{fontSize: "25px"}}></i>
-                        <span className="title-middle"> Notas</span>
-                      </dl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%"}}></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+                <i className="file outline icon" style={{fontSize: "25px"}}/>
+                <span className="title-middle"> Notas</span>
+              </div>
             </Col>
           </Row>
           <Row style={{padding: "0px 5px 20px 20px"}}>
