@@ -40,8 +40,23 @@ export function clearAllState(){
   };
 }
 
-export function createProspect(formData){
-  var request = axios.post(APP_URL + "/validatePropspectExists", json);
+export function createProspect(jsonCreateProspect){
+  const jsonComplete = {
+      messageHeader: {
+        "timestamp": new Date().getTime(),
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+      messageBody: jsonCreateProspect
+    }
+  var request = axios.post(APP_URL + "/saveClient", jsonComplete);
   return {
     type: CREATE_PROSPECT,
     payload: request

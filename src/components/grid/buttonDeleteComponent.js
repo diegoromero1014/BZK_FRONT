@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer} from '../contact/actions';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
 class ButtonDeleteComponent extends Component{
 
@@ -20,10 +20,9 @@ class ButtonDeleteComponent extends Component{
   }
 
     _onConfirmDelete(){
-      const {actionsDelete,deleteServer,contactsByClientFindServer} = this.props;
-      this.setState({show: false});
+      const {actionsDelete,deleteServer} = this.props;
       deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
-        if((_.get(data, 'payload.messageBody.id') !== null)){
+        if((_.get(data, 'payload.status') === 200)){
             this.setState({showEx: true});
           } else {
             this.setState({showEr: true});
@@ -34,15 +33,16 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer} = this.props;
+        const {contactsByClientFindServer,actionsDelete} = this.props;
         if(this.state.showEx == true){
-          contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
-          "",
-          "",
-          "");
+          if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
+            contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+            "",
+            "",
+            "");
+          }
         }
         this.setState({showEx:false, showEr: false,show: false});
-
     }
 
     render(){

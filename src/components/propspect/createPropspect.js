@@ -9,27 +9,10 @@ import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect, consultList} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import Input from '../../ui/input/inputComponent';
-import _ from 'lodash';
+import {SimpleSelect} from 'react-selectize';
 
+const fields = ["idType", "idNumber", "idCelula"];
 var prospectInApplication = true;
-var nameTipeDocument = "";
-
-const validate = values => {
-    const errors = {}
-    if (!values.idType) {
-        errors.idType = "Debe seleccionar un valor";
-    } else {
-      errors.idType = null;
-    }
-    if (!values.idNumber) {
-        errors.idNumber = "Debe ingresar un valor";
-    } else {
-      errors.idNumber = null;
-    }
-    return errors
-};
 
 class CreatePropspect extends Component{
   constructor( props ) {
@@ -40,7 +23,6 @@ class CreatePropspect extends Component{
       styleCelula: {}
     }
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
-    this._onClickButtonChange = this._onClickButtonChange.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
   }
 
@@ -56,8 +38,15 @@ class CreatePropspect extends Component{
   }
 
   _onchangeValue(type, val){
-
     switch (type) {
+      case "celula":
+        var {fields: {idCelula}} = this.props;
+        idCelula.onChange(val);
+        this.setState({
+          styleCelula: {}
+        });
+      break;
+        break;
       case "idNumber":
         var {fields: {idNumber}} = this.props;
         idNumber.onChange(val);
@@ -73,20 +62,48 @@ class CreatePropspect extends Component{
     clearState();
   }
 
-  _onClickButtonChange(){
-    prospectInApplication = true;
-    const {clearAllState} = this.props;
-    clearAllState();
+  _onChangeTypeDocument(val){
+    var {fields: {idType}} = this.props
+    idType.onChange(val);
+    this.setState({
+      styleTypeDocument: {}
+    });
+    const {clearState} = this.props;
+    clearState();
   };
 
   _clickButtonCreateProps(formData){
-    const {idType, idNumber} = formData;
-    const {validateProspectExists} = this.props;
-    validateProspectExists(idType, idNumber);
+    const {idType, idNumber, idCelula} = formData;
+    var styleError = {borderColor: "red"};
+    var error = false;
+    if( idType === null || idType === undefined ){
+      error = true;
+      this.setState({
+        styleTypeDocument: styleError
+      })
+    }
+    if( idNumber === null || idNumber === undefined || idNumber === "" ){
+      error = true;
+      this.setState({
+        styleDocumentNumber: styleError
+      })
+    }
+    if( idCelula === null || idCelula === undefined || idCelula === "" ){
+      error = true;
+      this.setState({
+        styleCelula: styleError
+      })
+    }
+    if( !error ){
+      const {validateProspectExists} = this.props;
+      validateProspectExists(idType, idNumber);
+    } else {
+      alert("Señor usuario, por favor ingrese todos los campos obligatorios(*).");
+    }
   }
 
   render(){
-    const { fields: { idType, idNumber }, error, handleSubmit, clearState} = this.props
+    const { fields: { idType, idNumber, idCelula }, error, handleSubmit, clearState} = this.props
     const {propspectReducer} = this.props;
     const {selectsReducer} = this.props;
     const status = propspectReducer.get('status');
@@ -110,64 +127,72 @@ class CreatePropspect extends Component{
        //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
        alert("Señor usuario, el prospecto que desea registrar, ya se encuentra creado en la aplicación.");
     }
-
+    var options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
+                return {label: fruit, value: fruit}
+            });
     return(
       <div style={{marginTop: "10px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
-          {prospectInApplication &&
-          <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
-            <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
-              <Col xs={12} md={5} lg={5}>
-                <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
-                <ComboBox
-                  name="tipoDocumento"
-                  labelInput="Tipo de documento"
-                  {...idType}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeDocument')}
-                />
-              </Col>
-              <Col xs={12} md={5} lg={5} style={{paddingRight: "30px"}}>
-                <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <Input
-                    name="documento"
-                    type="text"
-                    placeholder="Ingrese el número de documento del usuario"
-                    onChange={val => this._onchangeValue("idNumber",val)}
-                    {...idNumber}
-                  />
-              </Col>
-              <Col xs={2} md={4} lg={2}>
-                <button className="btn btn-default" type="submit" title="Buscar prospecto"
-                  style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "20px", paddingTop: "4px !important"}}>
-                  <i className="search icon" style={{color: "white"}}></i>
-                </button>
-              </Col>
-            </Row>
-          </form>
-        }
-
-        {!prospectInApplication &&
-          <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "20px", borderRadius: "5px"}}>
-            <Col xs={12} md={4} lg={4}>
-              <dt><span>Tipo de documento</span></dt>
-              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
-            </Col>
+        <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
+          <Row style={{padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)"  }}>
             <Col xs={12} md={3} lg={3}>
-              <dt><span>Número de documento</span></dt>
-              <dl><span>{idNumber.value}</span></dl>
+              <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+              <SelectTypeDocument
+                onChange={val => this._onChangeTypeDocument(val.id)}
+                store={idType.id}
+                styles={this.state.styleTypeDocument}
+              />
+              <SimpleSelect
+            options = {options}
+            placeholder = "Select a fruit"
+            theme = "default" // can be one of "default" | "bootstrap3" | "material" | ...
+            transitionEnter = {true}
+        />
+              <SelectGeneric
+                onChange={val => this._onChangeTypeDocument(val.id)}
+                store={idType.id}
+                valueField={'id'}
+                textField={'value'}
+                data={selectsReducer.get('dataTypeDocument')}
+              />
+                    <SelectGeneric
+                      onChange={val => this._onChangeTypeDocument(val.id)}
+                      store={idType.id}
+                      valueField={'id'}
+                      textField={'description'}
+                      data={selectsReducer.get('teamValueObjects')}
+                    />
             </Col>
-            <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
+            <Col xs={12} md={3} lg={3} style={{paddingRight: "30px"}}>
+              <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                <input
+                  type="text"
+                  className="form-control inputDataValue"
+                  style={this.state.styleDocumentNumber}
+                  placeholder="Ingrese el número de documento del usuario"
+                  onKeyPress={val => this._onchangeValue("idNumber", val)}
+                  {...idNumber}
+                />
+            </Col>
+            <Col xs={10} md={4} lg={4}>
+              <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
+                <input
+                  type="text"
+                  className="form-control inputDataValue"
+                  style={this.state.styleCelula}
+                  onKeyPress={val => this._onchangeValue("celula", val)}
+                  {...idCelula}
+                />
+            </Col>
+            <Col xs={2} md={4} lg={2}>
               <button className="btn btn-default" type="submit" title="Buscar prospecto"
-                style={{backgroundColor:"#66778d", marginTop: "10px", color: "white"}}
-                onClick={this._onClickButtonChange}
-              >Cambiar</button>
+                style={{backgroundColor:"#66778d", marginLeft:"30px", marginTop: "25px", paddingTop: "4px !important"}}>
+                <i className="icon-search" style={{color: "white"}}></i>
+              </button>
             </Col>
           </Row>
-        }
-
-        {!prospectInApplication &&
+        </form>
+        { !prospectInApplication &&
           <FormCreateProspect />
         }
 
@@ -195,6 +220,5 @@ function mapStateToProps({propspectReducer, selectsReducer},ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idType", "idNumber"],
-  validate
+  fields
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);

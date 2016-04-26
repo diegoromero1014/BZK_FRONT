@@ -18,7 +18,6 @@ class comboBoxComponent extends Component {
       }
       const {defaultValue} = this.props;
       if(defaultValue !== undefined && defaultValue !== '' && defaultValue !== null){
-        console.log("defaultValue = " + defaultValue);
         selector.dropdown('set selected', defaultValue);
       }
     }
@@ -51,7 +50,6 @@ class comboBoxComponent extends Component {
 
     render() {
         const {nameInput, labelInput, data, touched, error, name} = this.props;
-
         return (
             <div >
                 <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>

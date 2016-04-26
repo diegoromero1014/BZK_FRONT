@@ -11,6 +11,7 @@ import {Combobox} from 'react-widgets';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationContactComponent from './paginationContactComponent';
 import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID} from './constants';
+import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
 
 class ContactComponent extends Component {
 
@@ -36,13 +37,15 @@ class ContactComponent extends Component {
       < div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
-        <Grid style={{paddingRight: "16px", width: "100%"}}>
-          <Row><Col xs={12} sm={8} md={12} lg={12}>
+        <Grid style={{ width: "100%"}}>
+          <Row><Col xs={10} sm={10} md={11} lg={11}>
           <SearchContactComponent
               value1={this.state.value1}
               value2={this.state.value2}
               value3={this.state.value3}
-          /></Col></Row>
+          /></Col>
+          <BotonCreateContactComponent/>
+          </Row>
           <Row>
             <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Función:</span>
                 <SelectFilterContact config={{
@@ -65,7 +68,7 @@ class ContactComponent extends Component {
           </Row>
         </Grid>
         </div>
-          <Grid style= {{display:visibleTable, paddingRight: "16px", width: "100%"}}>
+          <Grid style= {{display:visibleTable, width: "100%"}}>
             <Row>
               <Col xs={12} sm={8} md={12} lg={12}> <ListContactComponent
                 value1={this.state.value1}
@@ -78,7 +81,7 @@ class ContactComponent extends Component {
               </Col>
             </Row>
           </Grid>
-          <Grid style= {{display:visibleMessage, paddingRight: "16px", width: "100%"}}>
+          <Grid style= {{display:visibleMessage, width: "100%"}}>
             <Row center="xs">
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
