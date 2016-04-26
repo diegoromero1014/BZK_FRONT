@@ -53,16 +53,16 @@ class ButtonDeleteComponent extends Component{
           <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
         </button>
             <SweetAlert
-            type= "warning"
-            show={this.state.show}
-            title="Confirmación eliminación"
-            confirmButtonColor= '#DD6B55'
-            confirmButtonText= 'Sí, estoy seguro!'
-            cancelButtonText = "Cancelar"
-            text={actionsDelete.mensaje}
-            showCancelButton= {true}
-            onCancel= {() => this.setState({show: false })}
-            onConfirm={() => this._onConfirmDelete()}/>
+              type= "warning"
+              show={this.state.show}
+              title="Confirmación eliminación"
+              confirmButtonColor= '#DD6B55'
+              confirmButtonText= 'Sí, estoy seguro!'
+              cancelButtonText = "Cancelar"
+              text={actionsDelete.mensaje}
+              showCancelButton= {true}
+              onCancel= {() => this.setState({show: false })}
+              onConfirm={() => this._onConfirmDelete()}/>
             <SweetAlert
              type= "success"
              show={this.state.showEx}

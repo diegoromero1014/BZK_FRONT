@@ -52,11 +52,11 @@ class CreatePropspect extends Component{
     }
     const {consultDataSelect, consultList} = this.props;
     consultDataSelect(constants.CLIENT_ID_TYPE);
-    consultList(constants.TEAM_FOR_EMPLOYEE);
+    //consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
   _closeError(){
-      this.setState({showEx:false, showEr: false});
+    this.setState({showEx:false, showEr: false});
   }
 
   _onClickButtonChange(){
@@ -169,7 +169,7 @@ class CreatePropspect extends Component{
          />
          <SweetAlert
           type= "error"
-          show={this.state.showEr}
+          show={this.state.showEx}
           title="Error"
           text="Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación."
           onConfirm={() => this._closeError()}

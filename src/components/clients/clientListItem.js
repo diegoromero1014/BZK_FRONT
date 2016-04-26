@@ -1,10 +1,15 @@
 import React, {Component, PropTypes} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
+import SweetAlert from 'sweetalert-react';
 
 class ClientListItem extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      showEr: false
+    }
     this._handleClickClientItem = this._handleClickClientItem.bind(this);
+    this._closeError = this._closeError.bind(this);
   }
 
   _handleClickClientItem(e){
@@ -13,8 +18,12 @@ class ClientListItem extends Component{
       window.localStorage.setItem('idClientSeleted', dataId);
       redirectUrl("/dashboard/clientInformation");
     } else {
-      alert("Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información");
+      this.setState({showEr: true});
     }
+  }
+
+  _closeError(){
+    this.setState({showEr: false});
   }
 
   render(){
@@ -37,6 +46,13 @@ class ClientListItem extends Component{
         <div className="prospect-corner prospect badge badge-important animated bounceIn" style={{borderRadius:"10px"}}>P</div>
         }
         </div>
+        <SweetAlert
+         type= "warning"
+         show={this.state.showEr}
+         title="Acceso denegado"
+         text="Usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información."
+         onConfirm={() => this._closeError()}
+         />
       </div>
     )
   }

@@ -40,7 +40,7 @@ class FormLogin extends Component{
     const {login} = this.props;
     if( login.get('status') === "loggedIn" ){
       saveSessionToken(login.get('responseLogin').sessionToken);
-      redirectUrl("/dashboard");
+      redirectUrl("/dashboard/clients");
     }
   }
 

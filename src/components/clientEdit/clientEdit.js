@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {consultInfoClient} from '../clientInformation/actions';
@@ -22,10 +23,24 @@ const fields = ["idCIIU", "idSubCIIU", "address", "country", "city", "province",
 class clientEdit extends Component{
   constructor(props) {
     super(props);
+    this.state = {
+      show: false
+    }
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
+    this._closeWindow = this._closeWindow.bind(this);
+    this._onConfirmExit = this._onConfirmExit.bind(this);
+  }
+
+  _closeWindow(){
+    this.setState({show: true});
+  }
+
+  _onConfirmExit(){
+    this.setState({show: false });
+    redirectUrl("/dashboard/clientInformation");
   }
 
   componentWillMount(){
@@ -606,9 +621,26 @@ class clientEdit extends Component{
                     type="submit">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
                 </button>
+                <button className="btn btn-secondary modal-button-edit"
+                  onClick={this._closeWindow}
+                  style={{float:"right", margin:"8px 0px 0px 150px", position:"fixed", backgroundColor: "#C1C1C1"}}
+                  type="button">
+                  <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+                </button>
               </div>
             </Col>
           </Row>
+          <SweetAlert
+            type= "warning"
+            show={this.state.show}
+            title="Confirmación salida"
+            confirmButtonColor= '#DD6B55'
+            confirmButtonText= 'Sí, estoy seguro!'
+            cancelButtonText = "Cancelar"
+            text="¿Está seguro que desea salir de la vista de edición de un cliente?"
+            showCancelButton= {true}
+            onCancel= {() => this.setState({show: false })}
+            onConfirm={() => this._onConfirmExit()}/>
         </form>
     );
   }
