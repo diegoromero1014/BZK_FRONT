@@ -7,16 +7,20 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
-  from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import _ from 'lodash';
 import {reduxForm} from 'redux-form';
 
+const valuesYesNo = [
+  {'id': true, 'value': "Si"},
+  {'id': false, 'value': "No"}
+]
+
 const fields = ["idCIIU", "idSubCIIU", "address", "country", "city", "province",
-    "district", "telephone", "retortVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
+    "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
       "centroDecision", "necesitaLME", "groupEconomic", "justifyNonGeren", "justifyNonLME", "justifyExClient"];
 
@@ -51,11 +55,17 @@ class clientEdit extends Component{
     }else{
       if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
+      }else{
+        const {consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication} = this.props;
+        var infoClient = clientInformacion.get('responseClientInfo');
+        consultList(constants.TEAM_FOR_EMPLOYEE);
+        consultList(constants.CIIU);
+        consultDataSelect(constants.FILTER_COUNTRY);
+        if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
+          consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+          consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
+        }
       }
-      const {consultList, consultDataSelect} = this.props;
-      consultList(constants.TEAM_FOR_EMPLOYEE);
-      consultList(constants.CIIU);
-      consultDataSelect(constants.FILTER_COUNTRY);
     }
   }
 
@@ -89,13 +99,13 @@ class clientEdit extends Component{
 
   render(){
     const {
-      fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
-        district, telephone, retortVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-        liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-        centroDecision, necesitaLME, groupEconomic, justifyNonGeren, justifyNonLME, justifyExClient},
-        error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+    fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
+      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+      liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+      centroDecision, necesitaLME, groupEconomic, justifyNonGeren, justifyNonLME, justifyExClient},
+      error, handleSubmit, selectsReducer, clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
-    console.log("infoClient", infoClient);
+    console.log(infoClient);
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
           <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
@@ -164,10 +174,10 @@ class clientEdit extends Component{
                 onChange={val => this._onChangeCIIU(val)}
                 value={idCIIU.value}
                 onBlur={idCIIU.onBlur}
-                defaultValue={infoClient.ciiu}
                 valueProp={'id'}
                 textProp={'ciiu'}
                 data={selectsReducer.get('dataCIIU')}
+                defaultValue={infoClient.ciiu}
                 />
             </div>
           </Col>
@@ -189,6 +199,7 @@ class clientEdit extends Component{
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
+                defaultValue={infoClient.subCiiu}
                 />
             </div>
           </Col>
@@ -240,6 +251,7 @@ class clientEdit extends Component{
                   style={{height: "30px !important", minHeight: "30px !important", width:"97%"}}
                   onChange={val => this._onchangeValue("adress", val)}
                   placeholder="Ingrese la dirección"
+                  value={infoClient.addresses === undefined ? '' : infoClient.addresses[0].address}
                   />
               </dt>
             </Col>
@@ -250,13 +262,14 @@ class clientEdit extends Component{
                 <dt><span>País</span></dt>
                 <ComboBox
                   name="country"
-                  labelInput="Pais"
+                  labelInput="País"
                   onChange={val => this._onChangeCountry(val)}
                   value={country.value}
                   onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeCountry')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].country}
                   />
               </div>
             </Col>
@@ -272,52 +285,47 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeProvince')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].province}
                   />
               </div>
             </Col>
             <Col xs={12} md={4} lg={4}>
-              <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
+              <div style={{paddingLeft: "20px", paddingRight: "15px", marginTop: "10px"}}>
                 <dt><span>Ciudad</span></dt>
                 <ComboBox
                   name="city"
-                  labelInput="ciudad"
+                  labelInput="Ciudad"
                   {...city}
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeCity')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].city}
                   />
               </div>
             </Col>
           </Row>
-          <Row style={{padding: "10px 10px 10px 20px"}}>
+          <Row style={{padding: "10px 30px 10px 20px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Barrio</span></dt>
-              <dt>
-              <Input
-                name="expenses"
-                type="number"
-                min="0"
-                placeholder="Ingrese los egresos"
-                {...expenses}
-              />
-              <input
-                type="text"
-                className="form-control"
-                style={{height: "22px !important", minHeight: "26px !important", width:"90%"}}
-                placeholder="Ingrese el barrio"
-              /></dt>
+              <dt style={{marginRight:"10px"}}>
+                <Input
+                  name="txtBarrio"
+                  type="text"
+                  placeholder="Ingrese el barrio"
+                  defaultValue={infoClient.neighborhood}
+                />
+              </dt>
             </Col>
-            <Col xs={10} md={4} lg={4} style={{paddingRight: "50px"}}>
+            <Col xs={10} md={4} lg={4} style={{marginLeft:"10px"}}>
               <dt>
                 <span>Teléfono (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
-                  type="text"
-                  className="form-control inputEditClient"
-                  onChange={val => this._onChangeValue("telephone", val)}
-                  styleTelephone
+                <Input
+                  name="txtTelefono"
+                  type="number"
                   placeholder="Ingrese el teléfono"
+                  defaultValue={infoClient.phoneNumber}
                 />
               </dt>
             </Col>
@@ -328,8 +336,14 @@ class clientEdit extends Component{
                 <span>¿Desea recibir su reporte de costos consolidado de forma virtual? (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectYesNo
-                  onChange={val => this._onChangeValueList("reporteVirtual", val)}
+                <ComboBox
+                  name="reportVirtual"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  {...reportVirtual}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].isPrincipalAddress}
                 />
               </dt>
             </Col>
@@ -338,8 +352,14 @@ class clientEdit extends Component{
                 <span>¿Desea consultar sus extractos de forma virtual? (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectYesNo
-                  onChange={val => this._onChangeValueList("extractsVirtual", val)}
+                <ComboBox
+                  name="extractsVirtual"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  {...extractsVirtual}
+                  defaultValue={infoClient.isVirtualStatement === undefined ? '' : infoClient.isVirtualStatement}
                 />
               </dt>
             </Col>
@@ -359,12 +379,11 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
-                  type="text"
-                  className="form-control inputEditClient"
+                <Input
+                  type="number"
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
-                  value={infoClient.annualSales}
+                  defaultValue={infoClient.annualSales}
                 />
               </dt>
             </Col>
@@ -373,9 +392,8 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("dateSalesAnnuals", val)}
                   placeholder="Ingrese el nit principal"
                 />
@@ -386,12 +404,11 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
-                  value={infoClient.assets}
+                  defaultValue={infoClient.assets}
                 />
               </dt>
             </Col>
@@ -402,11 +419,10 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("liabilities", val)}
-                  value={infoClient.liabilities}
+                  defaultValue={infoClient.liabilities}
                   placeholder="Ingrese los pasivos"
                 />
               </dt>
@@ -416,11 +432,10 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
-                  value={infoClient.operatingIncome}
+                  defaultValue={infoClient.operatingIncome}
                   placeholder="Ingrese los ingresos operacionales"
                 />
               </dt>
@@ -430,11 +445,10 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                  value={infoClient.nonOperatingIncome}
+                  defaultValue={infoClient.nonOperatingIncome}
                   placeholder="Ingrese los ingresos no operacionales"
                 />
               </dt>
@@ -446,11 +460,10 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("expenses", val)}
-                  value={infoClient.expenses}
+                  defaultValue={infoClient.expenses}
                   placeholder="Ingrese los egresos"
                 />
               </dt>
@@ -471,8 +484,14 @@ class clientEdit extends Component{
                 <span>Marca gerenciamiento (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectYesNo
-                  onChange={val => this._onChangeValueList("marcGeren", val.id)}
+                <ComboBox
+                  name="marcGeren"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  {...marcGeren}
+                  defaultValue={infoClient.isManagedByRm === undefined ? '' : infoClient.isManagedByRm}
                 />
               </dt>
             </Col>
@@ -481,8 +500,14 @@ class clientEdit extends Component{
                 <span>Centro de decisión (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectYesNo
-                  onChange={val => this._onChangeValueList("centroDecision", val.id)}
+                <ComboBox
+                  name="centroDecision"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  {...centroDecision}
+                  defaultValue={infoClient.isDecisionCenter === undefined ? '' : infoClient.isDecisionCenter}
                 />
               </dt>
             </Col>
@@ -491,8 +516,14 @@ class clientEdit extends Component{
                 <span>¿Necesita LME? (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <SelectYesNo
-                  onChange={val => this._onChangeValueList("necesitaLME", val.id)}
+                <ComboBox
+                  name="necesitaLME"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  {...necesitaLME}
+                  defaultValue={infoClient.isCreditNeeded === undefined ? '' : infoClient.isCreditNeeded}
                 />
               </dt>
             </Col>
@@ -521,7 +552,7 @@ class clientEdit extends Component{
             {!marcGeren.value &&
               <Col xs={12} md={4} lg={4}>
                 <dt>
-                  <span>Justificación no gerenciamiento</span>
+                  <span>Justificación no gerenciamiento </span>
                 </dt>
                 <dt>
                   <SelectTypeDocument
