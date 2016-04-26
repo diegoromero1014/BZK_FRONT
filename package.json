@@ -55,7 +55,7 @@
     "classnames": "^2.2.3",
     "flexboxgrid": "^6.3.0",
     "formatjs": "^0.1.1",
-    "globalize": "^1.1.1",
+    "history": "^2.1.0",
     "immutable": "^3.7.6",
     "jquery": "^2.2.3",
     "lodash": "^4.6.1",
