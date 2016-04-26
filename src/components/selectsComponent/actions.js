@@ -1,5 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
+import {FILTER_MULTISELECT_FIELDS} from './constants';
 
 export function consultDataSelect(field){
   const json = {
@@ -96,6 +97,36 @@ export function consultListWithParameterUbication(field, parentId){
   var request = axios.post(APP_URL + "/masterDataByParentId", json);
   return {
     type: field,
+    payload: request
+  }
+}
+
+/**
+ * @param fields lista de nombres de las listas que se quieren consultar
+ */
+export function getMasterDataFields(fields) {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "fields": fields
+    }
+  }
+
+  var request = axios.post(APP_URL + "/masterDataFields", json);
+
+  return {
+    type: FILTER_MULTISELECT_FIELDS,
     payload: request
   }
 }
