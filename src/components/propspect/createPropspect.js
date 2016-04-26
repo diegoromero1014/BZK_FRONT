@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import SweetAlert from 'sweetalert-react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
@@ -35,11 +36,11 @@ class CreatePropspect extends Component{
   constructor( props ) {
     super(props);
     this.state = {
-      showEr:false
+      showEr: false,
+      showEx:false
     }
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onClickButtonChange = this._onClickButtonChange.bind(this);
-    this._onchangeValue = this._onchangeValue.bind(this);
     this._closeError = this._closeError.bind(this);
   }
 
@@ -52,24 +53,6 @@ class CreatePropspect extends Component{
     const {consultDataSelect, consultList} = this.props;
     consultDataSelect(constants.CLIENT_ID_TYPE);
     consultList(constants.TEAM_FOR_EMPLOYEE);
-  }
-
-  _onchangeValue(type, val){
-
-    switch (type) {
-      case "idNumber":
-        var {fields: {idNumber}} = this.props;
-        idNumber.onChange(val);
-        this.setState({
-          styleDocumentNumber: {}
-        });
-        break;
-      default:
-        break;
-    }
-
-    const {clearState} = this.props;
-    clearState();
   }
 
   _closeError(){
@@ -89,11 +72,11 @@ class CreatePropspect extends Component{
     .then((data) => {
       if((_.get(data, 'payload.data.status') === "Exists")){
           this.setState({showEr: true});
-        } else {
-          //this.setState({showEr: true});
+        } else if(_.get(data, 'payload.data.status') === "Error") {
+          this.setState({showEx: true});
         }
       }, (reason) => {
-        this.setState({showEr: true});
+        this.setState({showEx: true});
     });
   }
 
@@ -116,11 +99,6 @@ class CreatePropspect extends Component{
       //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
       clearState();
       alert("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo.");
-    }
-     if(status === "Exists" ){
-       clearState();
-       //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
-       alert("Señor usuario, el prospecto que desea registrar, ya se encuentra creado en la aplicación.");
     }
 
     return(
@@ -176,20 +154,26 @@ class CreatePropspect extends Component{
                 onClick={this._onClickButtonChange}
               >Cambiar</button>
             </Col>
-            <SweetAlert
-             type= "error"
-             show={this.state.showEr}
-             title="Creación de prospecto"
-             text="El prospecto ya se encuentra registrado en la aplicación."
-             onConfirm={() => this._closeError()}
-             />
           </Row>
         }
 
         {!prospectInApplication &&
           <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
-
+        <SweetAlert
+         type= "warning"
+         show={this.state.showEr}
+         title="Prospecto existente"
+         text="El prospecto ya se encuentra registrado en la aplicación."
+         onConfirm={() => this._closeError()}
+         />
+         <SweetAlert
+          type= "error"
+          show={this.state.showEr}
+          title="Error"
+          text="Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación."
+          onConfirm={() => this._closeError()}
+          />
       </div>
     );
   }

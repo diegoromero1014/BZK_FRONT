@@ -4,13 +4,15 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import SweetAlert from 'sweetalert-react';
 import {createProspect} from './actions';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
-  from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import {redirectUrl} from '../globalComponents/actions';
+import NumberInput from 'react-number-input';
 import _ from 'lodash';
+import numeral from 'numeral';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
+  from '../selectsComponent/actions';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -18,9 +20,6 @@ const valuesYesNo = [
 ]
 const stylepaddingRigth = {paddingRight: "25px"}
 const stylepaddingRigth2 = {paddingRight: "10px"}
-var notasProspect = [];
-var ciiuOld = null;
-var countryOld = null;
 
 const validate = values => {
     const errors = {}
@@ -59,6 +58,7 @@ class FormCreateProspect extends Component{
   }
 
   _closeError(){
+      errorValidacionCampos = false;
       this.setState({showEx:false, showEr: false});
   }
 
@@ -131,13 +131,13 @@ class FormCreateProspect extends Component{
        "typeOfClient":"",
        "status":0,
        "isCreditNeeded":null,
-       "annualSales":annualSales.value,
+       "annualSales": numeral(annualSales.value).format('0'),
        "salesUpadateDate":"2016-04-25 17:22:34",
-       "assets": assets.value,
-       "liabilities": liabilities.value,
-       "operatingIncome": operatingIncome.value,
-       "nonOperatingIncome": nonOperatingIncome.value,
-       "expenses": expenses.value,
+       "assets": numeral(assets.value).format('0'),
+       "liabilities": numeral(liabilities.value).format('0'),
+       "operatingIncome": numeral(operatingIncome.value).format('0'),
+       "nonOperatingIncome": numeral(nonOperatingIncome.value).format('0'),
+       "expenses": numeral(expenses.value).format('0'),
        "localMarket":"",
        "marketLeader":"",
        "territory":"",
@@ -406,11 +406,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Ventas anuales</span></dt>
-              <Input
-                name="annualSales"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese las ventas anuales"
+                min={0}
+                format="0,000"
                 {...annualSales}
               />
             </div>
@@ -418,11 +418,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Activos</span></dt>
-              <Input
-                name="assets"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los activos"
+                min={0}
+                format="0,000"
                 {...assets}
               />
             </div>
@@ -430,11 +430,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Pasivos</span></dt>
-              <Input
-                name="liabilities"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los pasivos"
+                min={0}
+                format="0,000"
                 {...liabilities}
               />
             </div>
@@ -442,10 +442,10 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
               <dt><span>Ingresos operacionales</span></dt>
-              <Input
-                name="operatingIncome"
-                type="number"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los ingresos operacionales"
+                format="0,000"
                 {...operatingIncome}
               />
             </div>
@@ -453,10 +453,10 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Ingresos no operacionales</span></dt>
-              <Input
-                name="nonOperatingIncome"
-                type="number"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los ingresos no operacionales"
+                format="0,000"
                 {...nonOperatingIncome}
               />
             </div>
@@ -464,11 +464,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Egresos</span></dt>
-              <Input
-                name="expenses"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los egresos"
+                min={0}
+                format="0,000"
                 {...expenses}
               />
             </div>
