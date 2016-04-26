@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 
+var focusInFiled = false;
 class comboBoxComponent extends Component {
     constructor(props) {
         super(props);
@@ -28,6 +29,7 @@ class comboBoxComponent extends Component {
       const self = this;
       selector.dropdown({
           onChange: function (id, text) {
+              focusInFiled = false;
               self.touched = true;
               self.setState({
                   value: id
@@ -35,8 +37,7 @@ class comboBoxComponent extends Component {
               onBlur(id, text);
               onChange(id, text);
           }
-      })
-      .dropdown('set selected', defaultValue);
+      });
     }
 
     mapValuesToDropDown(item, idx) {
@@ -50,9 +51,13 @@ class comboBoxComponent extends Component {
 
     render() {
         const {nameInput, labelInput, data, touched, error, name} = this.props;
+        if( touched && error && !focusInFiled ){
+          $(`.ui.selection.dropdown.${name}`).focus();
+          focusInFiled = true;
+        }
         return (
             <div >
-                <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>
+                <div className={`styleWidthComponents ui selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
