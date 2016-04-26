@@ -1,21 +1,23 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
-import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import SelectCIIU from '../selectsComponent/selectCIIU/selectCIIU';
+import SweetAlert from 'sweetalert-react';
 import {createProspect} from './actions';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
   from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ]
+const stylepaddingRigth = {paddingRight: "25px"}
+const stylepaddingRigth2 = {paddingRight: "10px"}
 var notasProspect = [];
 var ciiuOld = null;
 var countryOld = null;
@@ -42,16 +44,27 @@ const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVi
 class FormCreateProspect extends Component{
   constructor( props ) {
     super(props);
-
+    this.state = {
+       showEx:false,
+       showEr:false
+     };
     this._submitFormCreateProspect = this._submitFormCreateProspect.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
 
-    this.state = {
-      styleRazonSocial: {},
-      styleCelula: {}
-    }
+    this._closeError = this._closeError.bind(this);
+    this._closeSuccess = this._closeSuccess.bind(this);
+
+  }
+
+  _closeError(){
+      this.setState({showEx:false, showEr: false});
+  }
+
+  _closeSuccess(){
+    this.setState({showEx:false, showEr: false});
+    redirectUrl("/dashboard/clients");
   }
 
   componentWillMount(){
@@ -87,7 +100,81 @@ class FormCreateProspect extends Component{
   }
 
   _submitFormCreateProspect(formData){
-
+    const {fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
+       address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+       nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
+     } = this.props;
+     console.log("idCelula", idCelula);
+     var jsonCreateProspect= {
+       "clientIdNumber": numberDocument,
+       "clientName": razonSocial.value,
+       "clientStatus": "",
+       "riskRating": null,
+       "isProspect": true,
+       "ciiu": idCIIU.value,
+       "celulaId": idCelula.value,
+       "commercialRelationshipType": "",
+       "countryOfOrigin": "",
+       "isDecisionCenter": null,
+       "economicGroup": null,
+       "internalRating": "",
+       "isic": "",
+       "ratingHistory": "",
+       "registrationKey": null,
+       "riskGroup": "",
+       "segment": "",
+       "subCiiu": idSubCIIU.value,
+       "subSegment": "",
+       "countryOfFirstLevelManagement": "",
+       "countryOfMainMarket": "",
+       "relationshipStatus": "",
+       "typeOfClient":"",
+       "status":0,
+       "isCreditNeeded":null,
+       "annualSales":annualSales.value,
+       "salesUpadateDate":"2016-04-25 17:22:34",
+       "assets": assets.value,
+       "liabilities": liabilities.value,
+       "operatingIncome": operatingIncome.value,
+       "nonOperatingIncome": nonOperatingIncome.value,
+       "expenses": expenses.value,
+       "localMarket":"",
+       "marketLeader":"",
+       "territory":"",
+       "actualizationDate":"2016-04-25 17:22:34",
+       "justificationForNoRM":"",
+       "justificationForLostClient":"",
+       "justificationForCreditNeed":"",
+       "isVirtualStatement": extractsVirtual.value,
+       "lineOfBusiness":[],
+       "isManagedByRm":null,
+       "addresses":[
+         {
+           "typeOfAddress": 41,
+           "address":address.value,
+           "country":country.value,
+           "province":province.value,
+           "city":city.value,
+           "neighborhood":district.value,
+           "isPrincipalAddress": reportVirtual.value,
+           "phoneNumber":telephone.value,
+           "postalCode":"",
+         }],
+       "notes":[],
+       "description": descriptionCompany.value,
+       "clientIdType": idTupeDocument
+    }
+    const {createProspect} = this.props;
+    createProspect(jsonCreateProspect)
+    .then((data) => {
+      if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+          this.setState({showEx: true});
+        } else {
+          this.setState({showEr: true});
+      }
+      }, (reason) => {
+        this.setState({showEr: true});
+    });
   };
 
 
@@ -97,15 +184,7 @@ class FormCreateProspect extends Component{
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
       error, handleSubmit, selectsReducer} = this.props;
-
-    if( country != undefined && countryOld != country ){
-      countryOld = country;
-      const {consultListWithParameterUbication} = this.props;
-      consultListWithParameterUbication(constants.FILTER_PROVINCE,country.value);
-      setTimeout(function(){
-         province.onChange('');
-      }, 50);
-    }
+    const {propspectReducer} = this.props
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
         <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
@@ -115,7 +194,7 @@ class FormCreateProspect extends Component{
               <Input
                 name="razonSocial"
                 type="text"
-                placeholder="Ingrese la razón social del cliente"
+                placeholder="Ingrese la razón social del prospecto"
                 onChange={val => this._onchangeValue("razonSocial", val)}
                 {...razonSocial}
               />
@@ -129,6 +208,7 @@ class FormCreateProspect extends Component{
                 labelInput="Célula"
                 valueProp={'id'}
                 textProp={'description'}
+                style={stylepaddingRigth}
                 data={selectsReducer.get('teamValueObjects')}
                 {...idCelula}
               />
@@ -164,6 +244,7 @@ class FormCreateProspect extends Component{
                 onBlur={idCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'ciiu'}
+                style={stylepaddingRigth2}
                 data={selectsReducer.get('dataCIIU')}
                 />
             </div>
@@ -209,13 +290,13 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={12} lg={12} style={{marginLeft: "20px", marginTop: "10px"}}>
             <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Dirección sede principal</h3>
           </Col>
-          <Col xs={12} md={3} lg={3} >
-            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
+          <Col xs={12} md={12} lg={12} style={{paddingRight: "43px"}} >
+            <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>Dirección</span></dt>
               <Input
                 name="address"
                 type="text"
-                placeholder="Ingrese la dirección del cliente"
+                placeholder="Ingrese la dirección del prospecto"
                 {...address}
               />
             </div>
@@ -240,7 +321,7 @@ class FormCreateProspect extends Component{
               <dt><span>Departamento</span></dt>
               <ComboBox
                 name="province"
-                labelInput="departamento"
+                labelInput="Departamento"
                 onChange={val => this._onChangeProvince(val)}
                 value={province.value}
                 onBlur={province.onBlur}
@@ -251,11 +332,11 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Ciudad</span></dt>
               <ComboBox
                 name="city"
-                labelInput="ciudad"
+                labelInput="Ciudad"
                 {...city}
                 valueProp={'id'}
                 textProp={'value'}
@@ -263,14 +344,26 @@ class FormCreateProspect extends Component{
                 />
             </div>
           </Col>
+          <Col xs={12} md={3} lg={3}>
+            <div style={{paddingLeft: "20px", paddingRight: "35px", paddingTop: "10px"}}>
+              <dt><span>Barrio</span></dt>
+              <Input
+                name="district"
+                type="number"
+                placeholder="Ingrese el barrio del prospecto"
+                {...district}
+              />
+            </div>
+          </Col>
           <Col xs={12} md={6} lg={6}>
             <div style={{paddingLeft: "20px", paddingTop: "15px"}}>
               <dt><span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span></dt>
               <ComboBox
                 name="reportVirtual"
-                labelInput="Reporte virtual"
+                labelInput="Seleccione una opción"
                 valueProp={'id'}
                 textProp={'value'}
+                style={stylepaddingRigth2}
                 data={valuesYesNo}
                 {...reportVirtual}
               />
@@ -282,19 +375,8 @@ class FormCreateProspect extends Component{
               <Input
                 name="telephone"
                 type="number"
-                placeholder="Ingrese el teléfono del cliente"
+                placeholder="Ingrese el teléfono del prospecto"
                 {...telephone}
-              />
-            </div>
-          </Col>
-          <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "35px", paddingTop: "15px"}}>
-              <dt><span>Barrio</span></dt>
-              <Input
-                name="district"
-                type="number"
-                placeholder="Ingrese el barrio del cliente"
-                {...district}
               />
             </div>
           </Col>
@@ -303,10 +385,11 @@ class FormCreateProspect extends Component{
               <dt><span>¿Desea consultar sus extractos de forma virtual?</span></dt>
               <ComboBox
                 name="extractVirtual"
-                labelInput="Extracto virtual"
+                labelInput="Seleccione una opción"
                 valueProp={'id'}
                 textProp={'value'}
                 data={valuesYesNo}
+                style={stylepaddingRigth2}
                 {...extractsVirtual}
               />
             </div>
@@ -409,10 +492,29 @@ class FormCreateProspect extends Component{
               </button>
             </div>
           </Col>
+          <SweetAlert
+           type= "success"
+           show={this.state.showEx}
+           title="Prospecto creado"
+           text="El prospecto se creó correctamente."
+           onConfirm={() => this._closeSuccess()}
+           />
+           <SweetAlert
+            type= "error"
+            show={this.state.showEr}
+            title="Error"
+            text="Se presento un error al realizar la creación del prospecto."
+            onConfirm={() => this._closeError()}
+            />
       </Row>
       </form>
     );
   }
+}
+
+FormCreateProspect.PropTypes = {
+  idTupeDocument: PropTypes.string.isRequired,
+  numberDocument: PropTypes.string.isRequired
 }
 
 function mapDispatchToProps(dispatch) {
@@ -421,7 +523,7 @@ function mapDispatchToProps(dispatch) {
     consultDataSelect,
     consultList,
     consultListWithParameter,
-    consultListWithParameterUbication
+    consultListWithParameterUbication,
   }, dispatch);
 }
 

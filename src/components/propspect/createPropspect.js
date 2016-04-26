@@ -35,13 +35,12 @@ class CreatePropspect extends Component{
   constructor( props ) {
     super(props);
     this.state = {
-      styleTypeDocument: {},
-      styleDocumentNumber: {},
-      styleCelula: {}
+      showEr:false
     }
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onClickButtonChange = this._onClickButtonChange.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this._closeError = this._closeError.bind(this);
   }
 
   componentWillMount(){
@@ -73,6 +72,10 @@ class CreatePropspect extends Component{
     clearState();
   }
 
+  _closeError(){
+      this.setState({showEx:false, showEr: false});
+  }
+
   _onClickButtonChange(){
     prospectInApplication = true;
     const {clearAllState} = this.props;
@@ -82,7 +85,16 @@ class CreatePropspect extends Component{
   _clickButtonCreateProps(formData){
     const {idType, idNumber} = formData;
     const {validateProspectExists} = this.props;
-    validateProspectExists(idType, idNumber);
+    validateProspectExists(idType, idNumber)
+    .then((data) => {
+      if((_.get(data, 'payload.data.status') === "Exists")){
+          this.setState({showEr: true});
+        } else {
+          //this.setState({showEr: true});
+        }
+      }, (reason) => {
+        this.setState({showEr: true});
+    });
   }
 
   render(){
@@ -121,7 +133,7 @@ class CreatePropspect extends Component{
                 <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
-                  labelInput="Tipo de documento"
+                  labelInput="Ingrese el número de documento del prospecto"
                   {...idType}
                   valueProp={'id'}
                   textProp={'value'}
@@ -133,7 +145,7 @@ class CreatePropspect extends Component{
                   <Input
                     name="documento"
                     type="text"
-                    placeholder="Ingrese el número de documento del usuario"
+                    placeholder="Ingrese el número de documento del prospecto"
                     onChange={val => this._onchangeValue("idNumber",val)}
                     {...idNumber}
                   />
@@ -159,16 +171,23 @@ class CreatePropspect extends Component{
               <dl><span>{idNumber.value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
-              <button className="btn btn-default" type="submit" title="Buscar prospecto"
-                style={{backgroundColor:"#66778d", marginTop: "10px", color: "white"}}
+              <button className="btn" type="submit" title="Buscar prospecto"
+                style={{marginTop: "10px", color: "white"}}
                 onClick={this._onClickButtonChange}
               >Cambiar</button>
             </Col>
+            <SweetAlert
+             type= "error"
+             show={this.state.showEr}
+             title="Creación de prospecto"
+             text="El prospecto ya se encuentra registrado en la aplicación."
+             onConfirm={() => this._closeError()}
+             />
           </Row>
         }
 
         {!prospectInApplication &&
-          <FormCreateProspect />
+          <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
 
       </div>

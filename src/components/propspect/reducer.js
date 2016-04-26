@@ -21,8 +21,8 @@ export default (state = initialState, action) => {
       });
 
     case CREATE_PROSPECT:
-      //const {status, validateLogin, prospectExist} = action.payload.data;
-      if( status === "create" ){
+    const {responseCreateProspect} = action.payload.data;
+      if( responseCreateProspect === "create" ){
         return state.set("createProspect", 1);
       } else {
         return state.set("createProspect", 2);
