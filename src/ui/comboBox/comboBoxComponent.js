@@ -12,33 +12,32 @@ class comboBoxComponent extends Component {
     }
 
     componentWillReceiveProps({value, name}) {
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        if (_.isEqual(value, '')) {
-            selector.dropdown('clear');
-        }
-      }
-
-    componentWillMount(){
-      const {onChange, onBlur, name, defaultValue} = this.props;
       const selector = $(`.ui.selection.dropdown.${name}`);
-      selector.dropdown('set selected', defaultValue);
+      if (_.isEqual(value, '')) {
+          selector.dropdown('clear');
+      }
+      const {defaultValue} = this.props;
+      if(defaultValue !== undefined && defaultValue !== '' && defaultValue !== null){
+        console.log("defaultValue = " + defaultValue);
+        selector.dropdown('set selected', defaultValue);
+      }
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name, defaultValue} = this.props;
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        const self = this;
-        selector.dropdown({
-            onChange: function (id, text) {
-                self.touched = true;
-                self.setState({
-                    value: id
-                });
-                onBlur(id, text);
-                onChange(id, text);
-            }
-        });
-        selector.dropdown('set selected', defaultValue);
+      const {onChange, onBlur, name, defaultValue} = this.props;
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      const self = this;
+      selector.dropdown({
+          onChange: function (id, text) {
+              self.touched = true;
+              self.setState({
+                  value: id
+              });
+              onBlur(id, text);
+              onChange(id, text);
+          }
+      })
+      .dropdown('set selected', defaultValue);
     }
 
     mapValuesToDropDown(item, idx) {
