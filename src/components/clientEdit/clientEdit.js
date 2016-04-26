@@ -42,8 +42,8 @@ class clientEdit extends Component{
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
         if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
-          /*consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
-          consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);*/
+          consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+          consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
         }
       }
     }
