@@ -38,7 +38,7 @@ const headers = [
     key:"city"
   },
   {
-    title: "Tipo de Contacto",
+    title: "Tipo de contacto",
     key:"typeOfContact"
   },
   {
@@ -71,44 +71,42 @@ class ListContactComponent extends Component {
       "");
   }
 
-
-
   _renderCellView(data){
-    const mensaje = "¿Seguro que deseas eliminar el contacto: ";
-    var json = {
-      "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionToken'),
-            "timestamp": new Date().getTime(),
-            "username":"lmejias",
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-      }
-    }
-    return  _.forOwn(data, function(value, key) {
-            _.set(json, 'messageBody', {
-              clientId: window.localStorage.getItem('idClientSeleted'),
-              contactId: value.id,
-              clientContactId: value.idClientContact
+    const mensaje = "Señor usuario ¿está seguro que desea eliminar el contacto ";
+    return _.forOwn(data, function(value, key) {
+              var json1 = {
+                "messageHeader": {
+                  "sessionToken": window.localStorage.getItem('sessionToken'),
+                      "timestamp": new Date().getTime(),
+                      "username":"lmejias",
+                      "service": "",
+                      "status": "0",
+                      "language": "es",
+                      "displayErrorMessage": "",
+                      "technicalErrorMessage": "",
+                      "applicationVersion": "",
+                      "debug": true,
+                      "isSuccessful": true
+                },
+                "messageBody": {
+                "clientId":window.localStorage.getItem('idClientSeleted'),
+                "contactId":value.id,
+                "clientContactId": value.idClientContact
+              }
+              }
+            _.set(value, 'actions',  {
+              actionView: true,
+              id: value.id,
+              urlServer: "./component",
+              component : "VIEW_CONTACT"
             });
-          _.set(value, 'actions',  {
-            actionView: true,
-            id: value.id,
-            urlServer: "./component",
-            component : "VIEW_CONTACT"
-          });
-          _.set(value, 'delete',  {
-            actionDelete: true,
-            urlServer: "/deleteContactForClient",
-            typeDelete : DELETE_TYPE_CONTACT,
-            mensaje: mensaje + value.nameComplet + "?",
-            json: json
-          });
+            _.set(value, 'delete',  {
+              actionDelete: true,
+              urlServer: "/deleteContactForClient",
+              typeDelete : DELETE_TYPE_CONTACT,
+              mensaje: mensaje + value.nameComplet + "?",
+              json: json1
+            });
       });
   }
 

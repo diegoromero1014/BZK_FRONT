@@ -13,8 +13,8 @@ export default (state = initialState, action) => {
           const response = action.payload.data;
           return state.withMutations( map => {
             map
-              .set('statusDeleteContact', response.messageBody.id)
-              .set('status', "OK");
+              .set('response',  JSON.parse(response.response))
+              .set('status', response.status);
             });
         default:
             return state;

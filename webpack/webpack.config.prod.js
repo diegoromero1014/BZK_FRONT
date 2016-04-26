@@ -23,7 +23,7 @@ var webpack = require('webpack'),
             path: assetsPath,
             filename: '[name]-[chunkhash].js',
             chunkFilename: '[name]-[chunkhash].js',
-            publicPath: '/',
+            publicPath: '/biztrack/',
         },
         progress: true,
         resolve: {
@@ -53,7 +53,7 @@ var webpack = require('webpack'),
                 },
                 {
                     test: /\.css$/,
-                    include: /sweetalert/,
+                    include: [/sweetalert/, /sematic\-ui/],
                     loader: ExtractTextPlugin.extract('style', 'css')
                 },
                 {
@@ -105,7 +105,9 @@ var webpack = require('webpack'),
                     warnings: false
                 }
             }),
-
+            new webpack.ProvidePlugin({
+                'jQuery': 'jquery'
+            }),
             webpackIsomorphicToolsPlugin
         ]
     };

@@ -14,6 +14,7 @@ import {reducer as formReducer} from 'redux-form';
 import notesReducer from '../components/notes/reducer';
 import contactDetail from '../components/contact/contactDetail/reducer';
 import deleteGridReducer from '../components/grid/reducer';
+import createContactReducer from '../components/contact/createContact/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -30,5 +31,6 @@ export default combineReducers({
     form: formReducer,
     notes: notesReducer,
     contactDetail: contactDetail,
-    deleteGridReducer:deleteGridReducer
+    deleteGridReducer:deleteGridReducer,
+    createContactReducer:createContactReducer
 });
