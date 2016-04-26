@@ -65,7 +65,7 @@ var path = require('path'),
             new ExtractTextPlugin('styles.css', {allChunks: true}),  // compiled css (single file only)
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': '"production"'
+                'process.env.NODE_ENV': '"development"'
             }),
             new ProvidePlugin({
                 'jQuery': 'jquery'

@@ -12,26 +12,31 @@ class comboBoxComponent extends Component {
     }
 
     componentWillReceiveProps({value, name}) {
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        if (_.isEqual(value, '')) {
-            selector.dropdown('clear');
-        }
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      if (_.isEqual(value, '')) {
+          selector.dropdown('clear');
+      }
+      const {defaultValue} = this.props;
+      if(defaultValue !== undefined && defaultValue !== '' && defaultValue !== null){
+        selector.dropdown('set selected', defaultValue);
+      }
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name} = this.props;
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        const self = this;
-        selector.dropdown({
-            onChange: function (id, text) {
-                self.touched = true;
-                self.setState({
-                    value: id
-                });
-                onBlur(id, text);
-                onChange(id, text);
-            }
-        });
+      const {onChange, onBlur, name, defaultValue} = this.props;
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      const self = this;
+      selector.dropdown({
+          onChange: function (id, text) {
+              self.touched = true;
+              self.setState({
+                  value: id
+              });
+              onBlur(id, text);
+              onChange(id, text);
+          }
+      })
+      .dropdown('set selected', defaultValue);
     }
 
     mapValuesToDropDown(item, idx) {
@@ -46,8 +51,8 @@ class comboBoxComponent extends Component {
     render() {
         const {nameInput, labelInput, data, touched, error, name} = this.props;
         return (
-            <div>
-                <div className={`ui selection dropdown ${name}`}>
+            <div >
+                <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
@@ -75,7 +80,8 @@ comboBoxComponent.PropTypes = {
     textProp: PropTypes.string.isRequired,
     valueProp: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    defaultValue: PropTypes.string
 };
 
 export default comboBoxComponent;
