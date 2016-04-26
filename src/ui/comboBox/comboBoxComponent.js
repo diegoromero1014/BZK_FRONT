@@ -19,7 +19,7 @@ class comboBoxComponent extends Component {
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name} = this.props;
+        const {onChange, onBlur, name, defaultValue} = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
@@ -32,6 +32,7 @@ class comboBoxComponent extends Component {
                 onChange(id, text);
             }
         });
+        selector.dropdown('set selected', defaultValue);
     }
 
     mapValuesToDropDown(item, idx) {
@@ -44,10 +45,10 @@ class comboBoxComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, data, touched, error, name} = this.props;
+        const {nameInput, labelInput, style, data, touched, error, name} = this.props;
 
         return (
-            <div >
+            <div style={style}>
                 <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
@@ -76,7 +77,8 @@ comboBoxComponent.PropTypes = {
     textProp: PropTypes.string.isRequired,
     valueProp: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    style: PropTypes.object
 };
 
 export default comboBoxComponent;
