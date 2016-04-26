@@ -19,7 +19,7 @@ class comboBoxComponent extends Component {
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name} = this.props;
+        const {onChange, onBlur, name, defaultValue} = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
@@ -32,6 +32,7 @@ class comboBoxComponent extends Component {
                 onChange(id, text);
             }
         });
+        selector.dropdown('set selected', defaultValue);
     }
 
     mapValuesToDropDown(item, idx) {
