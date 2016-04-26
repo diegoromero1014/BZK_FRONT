@@ -6,8 +6,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
-  from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -36,11 +35,17 @@ class clientEdit extends Component{
     }else{
       if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
+      }else{
+        const {consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication} = this.props;
+        var infoClient = clientInformacion.get('responseClientInfo');
+        consultList(constants.TEAM_FOR_EMPLOYEE);
+        consultList(constants.CIIU);
+        consultDataSelect(constants.FILTER_COUNTRY);
+        if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
+          /*consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+          consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);*/
+        }
       }
-      const {consultList, consultDataSelect} = this.props;
-      consultList(constants.TEAM_FOR_EMPLOYEE);
-      consultList(constants.CIIU);
-      consultDataSelect(constants.FILTER_COUNTRY);
     }
   }
 
@@ -143,17 +148,19 @@ class clientEdit extends Component{
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>CIIU</span></dt>
+              {selectsReducer.get('dataCIIU') && infoClient.ciiu &&
               <ComboBox
                 name="ciiu"
                 labelInput="CIIU"
                 onChange={val => this._onChangeCIIU(val)}
                 value={idCIIU.value}
                 onBlur={idCIIU.onBlur}
-                defaultValue={infoClient.ciiu}
                 valueProp={'id'}
                 textProp={'ciiu'}
                 data={selectsReducer.get('dataCIIU')}
+                defaultValue={infoClient.ciiu}
                 />
+              }
             </div>
           </Col>
           <Col xs={12} md={3} lg={3} >
@@ -174,6 +181,7 @@ class clientEdit extends Component{
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
+                defaultValue={infoClient.subCiiu}
                 />
             </div>
           </Col>
@@ -225,6 +233,7 @@ class clientEdit extends Component{
                   style={{height: "30px !important", minHeight: "30px !important", width:"97%"}}
                   onChange={val => this._onchangeValue("adress", val)}
                   placeholder="Ingrese la dirección"
+                  value={infoClient.addresses === undefined ? '' : infoClient.addresses[0].address}
                   />
               </dt>
             </Col>
@@ -235,13 +244,14 @@ class clientEdit extends Component{
                 <dt><span>País</span></dt>
                 <ComboBox
                   name="country"
-                  labelInput="Pais"
+                  labelInput="País"
                   onChange={val => this._onChangeCountry(val)}
                   value={country.value}
                   onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeCountry')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].country}
                   />
               </div>
             </Col>
@@ -257,19 +267,21 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeProvince')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].province}
                   />
               </div>
             </Col>
             <Col xs={12} md={4} lg={4}>
-              <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
+              <div style={{paddingLeft: "20px", paddingRight: "15px", marginTop: "10px"}}>
                 <dt><span>Ciudad</span></dt>
                 <ComboBox
                   name="city"
-                  labelInput="ciudad"
+                  labelInput="Ciudad"
                   {...city}
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeCity')}
+                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].city}
                   />
               </div>
             </Col>
@@ -278,31 +290,24 @@ class clientEdit extends Component{
             <Col xs={12} md={4} lg={4}>
               <dt><span>Barrio</span></dt>
               <dt>
-              <Input
-                name="expenses"
-                type="number"
-                min="0"
-                placeholder="Ingrese los egresos"
-                {...expenses}
-              />
-              <input
-                type="text"
-                className="form-control"
-                style={{height: "22px !important", minHeight: "26px !important", width:"90%"}}
-                placeholder="Ingrese el barrio"
-              /></dt>
+                <Input
+                  name="txtBarrio"
+                  type="text"
+                  placeholder="Ingrese el barrio"
+                  value={infoClient.neighborhood}
+                />
+              </dt>
             </Col>
             <Col xs={10} md={4} lg={4} style={{paddingRight: "50px"}}>
               <dt>
                 <span>Teléfono (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
-                  type="text"
-                  className="form-control inputEditClient"
-                  onChange={val => this._onChangeValue("telephone", val)}
-                  styleTelephone
+                <Input
+                  name="txtTelefono"
+                  type="number"
                   placeholder="Ingrese el teléfono"
+                  value={infoClient.phoneNumber}
                 />
               </dt>
             </Col>
@@ -344,9 +349,8 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   value={infoClient.annualSales}
@@ -358,9 +362,8 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("dateSalesAnnuals", val)}
                   placeholder="Ingrese el nit principal"
                 />
@@ -371,9 +374,8 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   value={infoClient.assets}
@@ -387,9 +389,8 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("liabilities", val)}
                   value={infoClient.liabilities}
                   placeholder="Ingrese los pasivos"
@@ -401,9 +402,8 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   value={infoClient.operatingIncome}
                   placeholder="Ingrese los ingresos operacionales"
@@ -415,9 +415,8 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   type="text"
-                  className="form-control inputEditClient"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   value={infoClient.nonOperatingIncome}
                   placeholder="Ingrese los ingresos no operacionales"

@@ -16,6 +16,12 @@ class comboBoxComponent extends Component {
         if (_.isEqual(value, '')) {
             selector.dropdown('clear');
         }
+      }
+
+    componentWillMount(){
+      const {onChange, onBlur, name, defaultValue} = this.props;
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      selector.dropdown('set selected', defaultValue);
     }
 
     componentDidMount() {
@@ -77,7 +83,8 @@ comboBoxComponent.PropTypes = {
     textProp: PropTypes.string.isRequired,
     valueProp: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    defaultValue: PropTypes.string
 };
 
 export default comboBoxComponent;
