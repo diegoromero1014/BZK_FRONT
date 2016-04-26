@@ -8,3 +8,4 @@ export const NUMBER_RECORDS = 3;
 export const CHANGE_PAGE = "CHANGE_PAGE";
 export const LIMITE_INF = "LIMITE_INF";
 export const DELETE_TYPE_CONTACT = "DELETE_TYPE_CONTACT";
+export const SAVE_CONTACT = 'SAVE_CONTACT';

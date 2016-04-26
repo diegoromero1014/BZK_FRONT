@@ -23,7 +23,8 @@ class ComponentTypeDocument extends Component{
           textField='value'
           data={dataTypeDocument} minLength={3} filter='contains'
           style={styles}
-          defaultValue={defaultValue}/>
+          defaultValue={defaultValue}
+          {...config} />
       </div>
     );
   }

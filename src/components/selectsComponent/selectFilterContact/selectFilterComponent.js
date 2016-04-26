@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
-import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
+import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
 
 
 class SelectFilterComponent extends Component{
@@ -13,7 +13,7 @@ class SelectFilterComponent extends Component{
   }
 
   componentWillMount(){
-    const {consultDataSelect,idTypeFilter} = this.props;
+    const {consultDataSelect, idTypeFilter} = this.props;
     consultDataSelect(idTypeFilter);
   }
 
@@ -21,10 +21,14 @@ class SelectFilterComponent extends Component{
       const {
           selectsReducer,
           idTypeFilter,
+          defaultValue,
+          onChange,
           config
       } = this.props;
       var data =[];
-      if(idTypeFilter === FILTER_FUNCTION_ID){
+      if (idTypeFilter === CLIENT_ID_TYPE) {
+        data = selectsReducer.get('dataTypeDocument');
+      } else if (idTypeFilter === FILTER_FUNCTION_ID){
           data = selectsReducer.get('dataTypeFunction');
       }else if(idTypeFilter === FILTER_TYPE_CONTACT_ID) {
           data = selectsReducer.get('dataTypeContact');
@@ -34,6 +38,8 @@ class SelectFilterComponent extends Component{
         data = selectsReducer.get('dataTypeGender');
       } else if (idTypeFilter == FILTER_TITLE) {
         data = selectsReducer.get('dataTypeTitle');
+      } else if (idTypeFilter == FILTER_CONTACT_POSITION) {
+        data = selectsReducer.get('dataTypeContactPosition');
       } else if (idTypeFilter == FILTER_DEPENDENCY) {
         data = selectsReducer.get('dataTypeDependency');
       } else if (idTypeFilter == FILTER_SOCIAL_STYLE) {
@@ -45,6 +51,10 @@ class SelectFilterComponent extends Component{
       } else if (idTypeFilter == FILTER_CITY) {
         data = selectsReducer.get('dataTypeCity');
       }
+      // console.log('Datos de la lista');
+      // console.log(data);
+      // console.log('...config -> ');
+      // console.log(config);
       return(
           <Combobox
               valueField='id'
@@ -52,6 +62,8 @@ class SelectFilterComponent extends Component{
               data={data}
               minLength={3}
               filter='contains'
+              onChange={onChange}
+              defaultValue={defaultValue}
               {...config}
           />
       );
@@ -60,7 +72,9 @@ class SelectFilterComponent extends Component{
 }
 
 SelectFilterComponent.PropTypes = {
-    idTypeFilter:PropTypes.string
+    idTypeFilter:PropTypes.string,
+    defaultValue: PropTypes.number,
+    onChange: PropTypes.func
 };
 
 
