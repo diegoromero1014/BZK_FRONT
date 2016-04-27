@@ -12,8 +12,11 @@ import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import NumberInput from 'react-number-input';
-import _ from 'lodash';
 import {reduxForm} from 'redux-form';
+import {DateTimePicker} from 'react-widgets';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import _ from 'lodash';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -28,6 +31,7 @@ const fields = ["idCIIU", "idSubCIIU", "address", "country", "city", "province",
 class clientEdit extends Component{
   constructor(props) {
     super(props);
+    momentLocalizer(moment);
     this.state = {
       show: false
     }
@@ -392,13 +396,15 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "40px"}}>
               <dt>
-                <span>Fecha de ventas anuales (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
-                  onChange={val => this._onChangeValue("dateSalesAnnuals", val)}
-                  placeholder="Ingrese el nit principal"
+                <DateTimePicker
+                  {...dateSalesAnnuals}
+                  defaultValue={new Date(infoClient.salesUpadateDate)}
+                  time={false}
+                  placeholder="Seleccione una fecha"
+                  culture='es'
                 />
               </dt>
             </Col>
@@ -518,7 +524,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...centroDecision}
-                  defaultValue={infoClient.isDecisionCenter === undefined ? '' : infoClient.isDecisionCenter}
+                  defaultValue={centroDecision.value === '' ? infoClient.isDecisionCenter : centroDecision.value}
                 />
               </dt>
             </Col>
@@ -534,7 +540,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...necesitaLME}
-                  defaultValue={infoClient.isCreditNeeded === undefined ? '' : infoClient.isCreditNeeded}
+                  defaultValue={necesitaLME.value === '' ? infoClient.isCreditNeeded : necesitaLME.value}
                 />
               </dt>
             </Col>
