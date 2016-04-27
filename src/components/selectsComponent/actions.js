@@ -123,7 +123,7 @@ export function getMasterDataFields(fields) {
     }
   }
 
-  var request = axios.post(APP_URL + "/masterDataFields", json);
+  var request = axios.post(APP_URL + "/masterDataByFields", json);
 
   return {
     type: FILTER_MULTISELECT_FIELDS,
