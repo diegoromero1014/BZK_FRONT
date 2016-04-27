@@ -47,80 +47,51 @@ export default (state = initialState, action) => {
         case constants.FILTER_GENDER:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeGender', masterDataDetailEntries);
-          break;
         case constants.FILTER_TITLE:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeTitle', masterDataDetailEntries);
-          break;
         case constants.FILTER_DEPENDENCY:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeDependency', masterDataDetailEntries);
-          break;
         case constants.FILTER_CONTACT_POSITION:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeContactPosition', masterDataDetailEntries);
         case constants.FILTER_SOCIAL_STYLE:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSocialStyle', masterDataDetailEntries);
-          break;
         case constants.FILTER_COUNTRY:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeCountry', masterDataDetailEntries);
-          break;
         case constants.FILTER_PROVINCE:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeProvince', masterDataDetailEntries);
-          break;
         case constants.FILTER_CITY:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeCity', masterDataDetailEntries);
-          break;
         case constants.FILTER_HOBBIES:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeHobbies', masterDataDetailEntries);
-          break;
         case constants.FILTER_SPORTS:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSports', masterDataDetailEntries);
-          break;
         case constants.FILTER_ATTITUDE_OVER_GROUP:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeAttitudeOverGroup', masterDataDetailEntries);
-          break;
         case constants.TEAM_FOR_EMPLOYEE:
           var teamValueObjects = action.payload.data.teamValueObjects;
           return state.set('teamValueObjects', teamValueObjects);
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
           const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          const lineOfBussiness = [];
-          const hobbies = [];
-          const sports = [];
-          const functions = [];
-          _.map(masterDataDetailEntries, function(data, idx) {
 
-            switch(data.field) {
-              case constants.FIELTER_HOBBIES:
-                hobbies.push(data);
-                break;
-              case constants.FILTER_SPORTS:
-                sports.push(data);
-              case constants.FILTER_TYPE_LBO_ID:
-                lineOfBussiness.push(data);
-              case constants.FILTER_FUNCTION_ID:
-                functions.push(data);
-              default:
-                break;
-            }
+          const lists = _.groupBy(masterDataDetailEntries, 'field');
+          const keys = _.keys(lists);
+          return state.withMutations(map => {
+            _.map(keys, key => {
+              const values = _.get(lists, key);
+              map.set(key, values);
+            });
           });
-
-          state.set('dataTypeSports', sports)
-            .set('dataTypeHobbies', hobbies)
-            .set('dataTypeFunction', functions)
-            .set('dataTypeLBO', lineOfBussiness);
-
-          return state;
-          break;
         default:
-            return state;
+          return state;
   }
 }
