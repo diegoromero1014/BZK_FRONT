@@ -12,8 +12,11 @@ import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import NumberInput from 'react-number-input';
-import _ from 'lodash';
 import {reduxForm} from 'redux-form';
+import {DateTimePicker} from 'react-widgets';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import _ from 'lodash';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -28,6 +31,7 @@ const fields = ["idCIIU", "idSubCIIU", "address", "country", "city", "province",
 class clientEdit extends Component{
   constructor(props) {
     super(props);
+    momentLocalizer(moment);
     this.state = {
       show: false
     }
@@ -59,7 +63,6 @@ class clientEdit extends Component{
       }else{
         const {consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
         if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
@@ -386,19 +389,21 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   value={parseInt(infoClient.annualSales)}
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "40px"}}>
               <dt>
-                <span>Fecha de ventas anuales (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
-                  onChange={val => this._onChangeValue("dateSalesAnnuals", val)}
-                  placeholder="Ingrese el nit principal"
+                <DateTimePicker
+                  {...dateSalesAnnuals}
+                  defaultValue={new Date(infoClient.salesUpadateDate)}
+                  time={false}
+                  placeholder="Seleccione una fecha"
+                  culture='es'
                 />
               </dt>
             </Col>
@@ -413,7 +418,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   value={parseInt(infoClient.assets)}
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -430,7 +435,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("liabilities", val)}
                   value={parseInt(infoClient.liabilities)}
                   placeholder="Ingrese los pasivos"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -444,7 +449,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   value={parseInt(infoClient.operatingIncome)}
                   placeholder="Ingrese los ingresos operacionales"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -458,7 +463,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   value={parseInt(infoClient.nonOperatingIncome)}
                   placeholder="Ingrese los ingresos no operacionales"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -475,7 +480,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("expenses", val)}
                   value={parseInt(infoClient.expenses)}
                   placeholder="Ingrese los egresos"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -518,7 +523,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...centroDecision}
-                  defaultValue={infoClient.isDecisionCenter === undefined ? '' : infoClient.isDecisionCenter}
+                  defaultValue={centroDecision.value === '' ? infoClient.isDecisionCenter : centroDecision.value}
                 />
               </dt>
             </Col>
@@ -534,7 +539,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...necesitaLME}
-                  defaultValue={infoClient.isCreditNeeded === undefined ? '' : infoClient.isCreditNeeded}
+                  defaultValue={necesitaLME.value === '' ? infoClient.isCreditNeeded : necesitaLME.value}
                 />
               </dt>
             </Col>
