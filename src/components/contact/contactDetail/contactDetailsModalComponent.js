@@ -5,9 +5,9 @@ import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import SelectFilterComponent from '../../selectsComponent/selectFilterContact/selectFilterComponent';
 import MultiSelectComponent from '../../selectsComponent/multiSelectContact/multiSelectComponent';
-import {consultDataSelect, consultList} from '../../selectsComponent/actions';
+import {consultDataSelect, getMasterDataFields, consultList} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
-import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS} from '../../selectsComponent/constants';
+import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails} from './actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -15,22 +15,22 @@ import {connect} from 'react-redux';
 const validate = values => {
     const errors = {}
     if (!values.contactType) {
-        errors.contactType = "Debe seleccionar un tipo de documento";
+        errors.contactType = "Debe seleccionar el tipo de documento";
     } else {
       errors.contactType = null;
     }
     if (!values.title) {
-      errors.title = "Debe seleccionar un tratamiento";
+      errors.title = "Debe seleccionar el tratamiento";
     } else {
       errors.title = null;
     }
     if (!values.gender) {
-      errors.gender = "Debe seleccionar un genero";
+      errors.gender = "Debe seleccionar el genero";
     } else {
       errors.gender = null;
     }
     if (!values.typeOfContact) {
-      errors.typeOfContact = "Debe seleccionar un tipo de contacto";
+      errors.typeOfContact = "Debe seleccionar el tipo de contacto";
     } else {
       errors.typeOfContact = null;
     }
@@ -60,7 +60,7 @@ const validate = values => {
       errors.emailAddress = null;
     }
     if (!values.telephoneNumber) {
-      errors.telephoneNumber = "Debe ingresar un número de telefono";
+      errors.telephoneNumber = "Debe ingresar el número de telefono";
     } else {
       errors.telephoneNumber = null;
     }
@@ -68,6 +68,11 @@ const validate = values => {
       errors.lineOfBusiness = "Debe seleccionar al menos una linea de negocio";
     } else {
       errors.lineOfBusiness = null;
+    }
+    if (!values.function) {
+      errors.functions = "Debe seleccionar al menos una función";
+    } else {
+      errors.functions = null;
     }
     return errors;
 };
@@ -88,17 +93,20 @@ class ContactDetailsModalComponent extends Component {
 
   /* Carga la información del contacto */
   componentWillMount() {
-    const {getContactDetails, contactId} = this.props;
-    getContactDetails(contactId);
-
-    const {consultDataSelect, consultList} = this.props;
-    consultDataSelect(CLIENT_ID_TYPE);
+    const {consultDataSelect, getMasterDataFields, consultList, getContactDetails, contactId} = this.props;
+    /* consultDataSelect(CLIENT_ID_TYPE);
     consultDataSelect(FILTER_TITLE);
     consultDataSelect(FILTER_GENDER);
     consultDataSelect(FILTER_TYPE_CONTACT_ID);
     consultDataSelect(FILTER_COUNTRY);
     consultDataSelect(FILTER_DEPENDENCY);
-    consultDataSelect(FILTER_CONTACT_POSITION);
+    consultDataSelect(FILTER_CONTACT_POSITION); */
+
+    getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+    // getMasterDataFields([CLIENT_ID_TYPE]);
+
+    getContactDetails(contactId);
+
   }
 
   /* Cambio en los valores */
@@ -185,9 +193,10 @@ class ContactDetailsModalComponent extends Component {
   }
 
   render() {
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness}, error, handleSubmit, selectsReducer} = this.props;
+    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup }, error, handleSubmit, selectsReducer} = this.props;
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
+    console.log('Tipos de documentos, -> ', selectsReducer.get('dataTypeDocument'));
     // const {} = contact;
     return (
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
@@ -213,7 +222,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactType}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeDocument')}
+                      data={selectsReducer.get(CLIENT_ID_TYPE) || []}
                     />
                   </dd>
                 </Col>
@@ -245,7 +254,7 @@ class ContactDetailsModalComponent extends Component {
                       {...title}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeTitle')}
+                      data={selectsReducer.get(FILTER_TITLE) || []}
                     />
                   </dd>
                 </Col>
@@ -258,7 +267,7 @@ class ContactDetailsModalComponent extends Component {
                       {...gender}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeGender')}
+                      data={selectsReducer.get(FILTER_GENDER) || []}
                     />
                   </dd>
                 </Col>
@@ -323,7 +332,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactPosition}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeContactPosition')}
+                      data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                     />
                   </dd>
                 </Col>
@@ -336,7 +345,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactDependency}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeDependency')}
+                      data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                     />
                   </dd>
                 </Col>
@@ -352,13 +361,27 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={4} lg={4}>
                   <dt>{'Estilo social'}</dt>
                   <dd>
-                    <Combobox />
+                    <ComboBox
+                      name="contactSocialStyle"
+                      labelInput="Seleccione el estilo social"
+                      {...contactSocialStyle}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
+                    />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>
                   <dt>{'Actitud frente al Grupo'}</dt>
                   <dd>
-                    <SelectFilterComponent key={6} idTypeFilter={FILTER_ATTITUDE_OVER_GROUP} />
+                    <ComboBox
+                      name="contactAttitudeOverGroup"
+                      labelInput="Seleccione la actitud frente al Grupo"
+                      {...contactAttitudeOverGroup}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -377,7 +400,7 @@ class ContactDetailsModalComponent extends Component {
                       {...country}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeCountry')}
+                      data={selectsReducer.get(FILTER_COUNTRY) || []}
                     />
                   </dd>
                 </Col>
@@ -504,7 +527,7 @@ class ContactDetailsModalComponent extends Component {
                       {...typeOfContact}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get('dataTypeContact')}
+                      data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                     />
                   </dd>
                 </Col>
@@ -512,12 +535,28 @@ class ContactDetailsModalComponent extends Component {
                   <dt><span>{'Entidad / Línea de negocio ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     {/* <MultiSelectComponent key={10} idTypeFilter={FILTER_TYPE_LOB_ID} /> */}
+                    <ComboBox
+                      name="lineOfBusiness"
+                      labelInput="Seleccione al menos una línea de negocio"
+                      {...lineOfBusiness}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
+                    />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     {/* <MultiSelectComponent key={11} idTypeFilter={FILTER_FUNCTION_ID} /> */}
+                    <ComboBox
+                      name="functions"
+                      labelInput="Seleccione al menos una función"
+                      {...functions}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -530,6 +569,14 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={6} lg={6}>
                   <dt><span>{'Hobbies'}</span></dt>
                   <dd>
+                    <ComboBox
+                      name="hobbies"
+                      labelInput="Seleccione al menos un hobby"
+                      {...hobbies}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_HOBBIES) || []}
+                    />
                     {/* <MultiSelectComponent key={12} idTypeFilter={FILTER_HOBBIES} /> */}
                   </dd>
                 </Col>
@@ -538,6 +585,14 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     {/* <Multiselect /> */}
                     {/* <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} /> */}
+                    <ComboBox
+                      name="sports"
+                      labelInput="Seleccione al menos un deporte"
+                      {...sports}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_SPORTS) || []}
+                    />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={12}>
@@ -559,6 +614,7 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     getContactDetails,
     consultDataSelect,
+    getMasterDataFields,
     consultList
   }, dispatch);
 }
@@ -572,6 +628,6 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps){
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness"],
+  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

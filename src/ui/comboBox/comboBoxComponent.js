@@ -56,8 +56,8 @@ class comboBoxComponent extends Component {
           focusInFiled = true;
         }
         return (
-            <div >
-                <div className={`styleWidthComponents ui selection dropdown ${name}`}>
+            <div>
+                <div className={`styleWidthComponents ui search selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
