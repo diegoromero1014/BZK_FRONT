@@ -38,8 +38,11 @@ class DetailsInfoClient extends Component{
   render(){
     const {infoClient, menuState} = this.props;
 
-    var actualizationDate = moment(infoClient.actualizationDate).locale('es');
-    var actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
+    var actualizationDateString = "";
+    if( actualizationDate != null && actualizationDate != undefined ){
+      var actualizationDate = moment(infoClient.actualizationDate).locale('es');
+      actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
+    }
     var {notes} = infoClient;
     if( notes === undefined || notes === null ){
       notes = [];
