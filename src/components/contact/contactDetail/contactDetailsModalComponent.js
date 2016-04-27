@@ -192,353 +192,360 @@ class ContactDetailsModalComponent extends Component {
     return (
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
-          <Row>
-            <Col md={12} lg={12}>
-              <dt className="business-title" style={{fontSize: '17px'}}>{'Información básica contacto'}</dt>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={4} lg={4}>
-              <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                {/* Tipo de documento */}
-                <ComboBox
-                  name="contactType"
-                  labelInput="Seleccione el tipo de documento"
-                  {...contactType}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeDocument')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Número de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="contactIdentityNumber"
-                    type="text"
-                    placeholder="Ingrese el número de documento del usuario"
-                    onChange={val => this._onchangeValue("contactIdentityNumber", val)}
-                    {...contactIdentityNumber}
-                  />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dd className="rw-input">
-                <button className="btn btn-primary" onClick={this._handleCheckIfExist}><span className="icon icon-search"></span></button>
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={4} lg={4}>
-              <dt><span>{'Tratamiento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="title"
-                  labelInput="Seleccione el tratamiento"
-                  {...title}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeTitle')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={4} lg={4}>
-              <dt><span>{'Género ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="gender"
-                  labelInput="Seleccione el genero"
-                  {...gender}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeGender')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Primer nombre ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="firstName"
-                    type="text"
-                    placeholder="Ingrese el primer nombre"
-                    onChange={val => this._onchangeValue("firstName", val)}
-                    {...firstName}
-                  />
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Segundo nombre'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="middleName"
-                    type="text"
-                    placeholder="Ingrese el segundo nombre"
-                    onChange={val => this._onchangeValue("middleName", val)}
-                    {...middleName}
-                  />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Primer apellido ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="firstLastName"
-                    type="text"
-                    placeholder="Ingrese el primer apellido"
-                    onChange={val => this._onchangeValue("firstLastName", val)}
-                    {...firstLastName}
-                  />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Segundo apellido'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="secondLastName"
-                    type="text"
-                    placeholder="Ingrese el segundo apellido"
-                    onChange={val => this._onchangeValue("secondLastName", val)}
-                    {...secondLastName}
-                  />
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Cargo'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="contactPosition"
-                  labelInput="Seleccione el cargo"
-                  {...contactPosition}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeContactPosition')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Area dependencia'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="contactDependency"
-                  labelInput="Seleccione la dependencia"
-                  {...contactDependency}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeDependency')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt>{'Fecha de nacimiento'}</dt>
-              <dd className="rw-widget">
-                <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" value={contact.dateOfBirth} />
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={4} lg={4}>
-              <dt>{'Estilo social'}</dt>
-              <dd>
-                <Combobox />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={4} lg={4}>
-              <dt>{'Actitud frente al Grupo'}</dt>
-              <dd className="rw-widget">
-                <SelectFilterComponent key={6} idTypeFilter={FILTER_ATTITUDE_OVER_GROUP} />
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={12}>
-              <dt className="business-title" style={{fontSize: '17px'}}>{'Información de ubicación y correspondencia'}</dt>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'País ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="country"
-                  labelInput="Seleccione el país"
-                  {...country}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeCountry')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                {/* <SelectFilterComponent key={7} idTypeFilter={FILTER_PROVINCE} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-              <dd>
-                {/* <SelectFilterComponent key={8} idTypeFilter={FILTER_CITY} /> */}
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={12} lg={12}>
-              <dt><span>{'Dirección ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <textarea className="form-control need-input"
-                  name="address"
-                  placeholder="Ingrese la dirección"
-                  onChange={val => this._onchangeValue("address", val)}
-                  {...address}
-                />
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Barrio'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="neighborhood"
-                    type="text"
-                    placeholder="Ingrese el barrio"
-                    onChange={val => this._onchangeValue("neighborhood", val)}
-                    {...neighborhood}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.neighborhood} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Código postal'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="postalCode"
-                    type="text"
-                    placeholder="Ingrese el código postal"
-                    onChange={val => this._onchangeValue("postalCode", val)}
-                    {...postalCode}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.postalCode} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Teléfono ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="telephoneNumber"
-                    type="text"
-                    placeholder="Ingrese el número de telefono"
-                    onChange={val => this._onchangeValue("telephoneNumber", val)}
-                    {...telephoneNumber}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.telephoneNumber} /> */}
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Extensión'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="extension"
-                    type="text"
-                    placeholder="Ingrese la extensión"
-                    onChange={val => this._onchangeValue("extension", val)}
-                    {...extension}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.extension} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Celular'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="mobileNumber"
-                    type="text"
-                    placeholder="Ingrese el celular"
-                    onChange={val => this._onchangeValue("mobileNumber", val)}
-                    {...mobileNumber}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.mobileNumber} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Correo electrónico ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd className="rw-widget">
-                <Input
-                    name="emailAddress"
-                    type="text"
-                    placeholder="Ingrese el correo electrónico"
-                    onChange={val => this._onchangeValue("emailAddress", val)}
-                    {...emailAddress}
-                  />
-                {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.emailAddress} /> */}
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <dt className="business-title" style={{fontSize: '17px'}}>{'Clasificación del contacto'}</dt>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                <ComboBox
-                  name="typeOfContact"
-                  labelInput="Seleccione el tipo de contacto"
-                  {...typeOfContact}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('dataTypeContact')}
-                />
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Entidad / Línea de negocio ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                {/* <MultiSelectComponent key={10} idTypeFilter={FILTER_TYPE_LOB_ID} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={4}>
-              <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-              <dd>
-                {/* <MultiSelectComponent key={11} idTypeFilter={FILTER_FUNCTION_ID} /> */}
-              </dd>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <dt className="business-title" style={{fontSize: '17px'}}>{'Hobbies y deportes'}</dt>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={12} md={6} lg={6}>
-              <dt><span>{'Hobbies'}</span></dt>
-              <dd>
-                {/* <MultiSelectComponent key={12} idTypeFilter={FILTER_HOBBIES} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={6} lg={6}>
-              <dt><span>{'Deportes'}</span></dt>
-              <dd>
-                {/* <Multiselect /> */}
-                {/* <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} /> */}
-              </dd>
-            </Col>
-            <Col xs={12} sm={12} md={12} lg={12}>
-              <button type="submit" className="btn btn-primary modal-button-edit">Guardar</button>
-            </Col>
-          </Row>
-        </form>
+            <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
+              <Row>
+                <Col md={12} lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>
+                    <span style={{paddingLeft: '20px'}}>
+                      {'Información básica contacto'}
+                    </span>
+                  </dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    {/* Tipo de documento */}
+                    <ComboBox
+                      name="contactType"
+                      labelInput="Seleccione el tipo de documento"
+                      {...contactType}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeDocument')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Número de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactIdentityNumber"
+                      type="text"
+                      placeholder="Ingrese el número de documento del usuario"
+                      onChange={val => this._onchangeValue("contactIdentityNumber", val)}
+                      {...contactIdentityNumber}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dl style={{width: '100%'}}>
+                    <button className="btn btn-primary" style={{marginTop: '35px'}} onClick={this._handleCheckIfExist}><i style={{color: 'white', margin: '0em', fontSize: '1.2em'}} className="search icon"></i></button>
+                  </dl>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Tratamiento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="title"
+                      labelInput="Seleccione el tratamiento"
+                      {...title}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeTitle')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Género ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="gender"
+                      labelInput="Seleccione el genero"
+                      {...gender}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeGender')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Primer nombre ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="firstName"
+                      type="text"
+                      placeholder="Ingrese el primer nombre"
+                      onChange={val => this._onchangeValue("firstName", val)}
+                      {...firstName}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Segundo nombre'}</span></dt>
+                  <dd>
+                    <Input
+                        name="middleName"
+                        type="text"
+                        placeholder="Ingrese el segundo nombre"
+                        onChange={val => this._onchangeValue("middleName", val)}
+                        {...middleName}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Primer apellido ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                        name="firstLastName"
+                        type="text"
+                        placeholder="Ingrese el primer apellido"
+                        onChange={val => this._onchangeValue("firstLastName", val)}
+                        {...firstLastName}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Segundo apellido'}</span></dt>
+                  <dd>
+                    <Input
+                        name="secondLastName"
+                        type="text"
+                        placeholder="Ingrese el segundo apellido"
+                        onChange={val => this._onchangeValue("secondLastName", val)}
+                        {...secondLastName}
+                      />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Cargo'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactPosition"
+                      labelInput="Seleccione el cargo"
+                      {...contactPosition}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeContactPosition')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Area dependencia'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactDependency"
+                      labelInput="Seleccione la dependencia"
+                      {...contactDependency}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeDependency')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt>{'Fecha de nacimiento'}</dt>
+                  <dd>
+                    <DateTimePicker time={false} />
+                    {/* <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" value={contact.dateOfBirth} /> */}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt>{'Estilo social'}</dt>
+                  <dd>
+                    <Combobox />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt>{'Actitud frente al Grupo'}</dt>
+                  <dd>
+                    <SelectFilterComponent key={6} idTypeFilter={FILTER_ATTITUDE_OVER_GROUP} />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Información de ubicación y correspondencia'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'País ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="country"
+                      labelInput="Seleccione el país"
+                      {...country}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeCountry')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    {/* <SelectFilterComponent key={7} idTypeFilter={FILTER_PROVINCE} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
+                  <dd>
+                    {/* <SelectFilterComponent key={8} idTypeFilter={FILTER_CITY} /> */}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={12} lg={12}>
+                  <dt><span>{'Dirección ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
+                  <dd>
+                    <textarea className="form-control need-input"
+                      name="address"
+                      placeholder="Ingrese la dirección"
+                      onChange={val => this._onchangeValue("address", val)}
+                      {...address}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Barrio'}</span></dt>
+                  <dd>
+                    <Input
+                        name="neighborhood"
+                        type="text"
+                        placeholder="Ingrese el barrio"
+                        onChange={val => this._onchangeValue("neighborhood", val)}
+                        {...neighborhood}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.neighborhood} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Código postal'}</span></dt>
+                  <dd>
+                    <Input
+                        name="postalCode"
+                        type="text"
+                        placeholder="Ingrese el código postal"
+                        onChange={val => this._onchangeValue("postalCode", val)}
+                        {...postalCode}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.postalCode} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Teléfono ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                        name="telephoneNumber"
+                        type="text"
+                        placeholder="Ingrese el número de telefono"
+                        onChange={val => this._onchangeValue("telephoneNumber", val)}
+                        {...telephoneNumber}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.telephoneNumber} /> */}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Extensión'}</span></dt>
+                  <dd>
+                    <Input
+                        name="extension"
+                        type="text"
+                        placeholder="Ingrese la extensión"
+                        onChange={val => this._onchangeValue("extension", val)}
+                        {...extension}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.extension} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Celular'}</span></dt>
+                  <dd>
+                    <Input
+                        name="mobileNumber"
+                        type="text"
+                        placeholder="Ingrese el celular"
+                        onChange={val => this._onchangeValue("mobileNumber", val)}
+                        {...mobileNumber}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.mobileNumber} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Correo electrónico ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                        name="emailAddress"
+                        type="text"
+                        placeholder="Ingrese el correo electrónico"
+                        onChange={val => this._onchangeValue("emailAddress", val)}
+                        {...emailAddress}
+                      />
+                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.emailAddress} /> */}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Clasificación del contacto'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="typeOfContact"
+                      labelInput="Seleccione el tipo de contacto"
+                      {...typeOfContact}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeContact')}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Entidad / Línea de negocio ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    {/* <MultiSelectComponent key={10} idTypeFilter={FILTER_TYPE_LOB_ID} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    {/* <MultiSelectComponent key={11} idTypeFilter={FILTER_FUNCTION_ID} /> */}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Hobbies y deportes'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={6}>
+                  <dt><span>{'Hobbies'}</span></dt>
+                  <dd>
+                    {/* <MultiSelectComponent key={12} idTypeFilter={FILTER_HOBBIES} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={6}>
+                  <dt><span>{'Deportes'}</span></dt>
+                  <dd>
+                    {/* <Multiselect /> */}
+                    {/* <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} /> */}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={12} lg={12}>
+                  <button type="submit" className="btn btn-primary modal-button-edit">Guardar</button>
+                </Col>
+              </Row>
+            </div>
+          </form>
       </div>
     );
   }
