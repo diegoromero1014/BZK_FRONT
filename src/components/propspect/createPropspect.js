@@ -5,7 +5,6 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {validateProspectExists, clearState, clearAllState} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
-import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect, consultList} from '../selectsComponent/actions';
@@ -100,6 +99,8 @@ class CreatePropspect extends Component{
       clearState();
       alert("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo.");
     }
+
+    console.log("tipoDocumento= ", selectsReducer.get('dataTypeDocument'));
 
     return(
       <div style={{marginTop: "10px"}}>
