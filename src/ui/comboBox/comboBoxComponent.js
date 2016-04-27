@@ -49,7 +49,7 @@ class comboBoxComponent extends Component {
 
         return (
             <div style={style}>
-                <div className={`styleWidthCompoentns ui selection dropdown ${name}`}>
+                <div className={`styleWidthCompoentns ui search selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>

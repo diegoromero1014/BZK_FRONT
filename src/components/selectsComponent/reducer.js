@@ -17,7 +17,8 @@ const initialState = Immutable.Map({
   dataTypeCity: [],
   dataTypeHobbies: [],
   dataTypeSports: [],
-  teamValueObjects: []
+  teamValueObjects: [],
+  dataTypeAttitude:[]
 });
 
 
@@ -56,6 +57,10 @@ export default (state = initialState, action) => {
         case constants.FILTER_SOCIAL_STYLE:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSocialStyle', masterDataDetailEntries);
+          break;
+        case constants.FILTER_TYPE_ATTITUDE:
+          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set('dataTypeAttitude', masterDataDetailEntries);
           break;
         case constants.FILTER_COUNTRY:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
