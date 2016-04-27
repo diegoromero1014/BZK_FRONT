@@ -21,6 +21,10 @@ const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ]
+var messageConfirm = "Recuerde que al crear el prospecto, no podrá modificarlo déspues. ¿Está seguro de guardar la información?";
+var titleConfirm = "Confirmación creación";
+var typeConfirm = "create";
+
 const stylepaddingRigth = {paddingRight: "25px"}
 const stylepaddingRigth2 = {paddingRight: "10px"}
 
@@ -65,12 +69,17 @@ class FormCreateProspect extends Component{
   }
 
   _closeWindow(){
-    //e.preventDefault();
+    messageConfirm = "¿Está seguro que desea salir de la pantalla de creación de prospecto?";
+    titleConfirm = "Confirmación salida";
+    typeConfirm = "close";
+    this.setState({show: true});
+  }
+
+  _redirectClients(){
     redirectUrl("/dashboard/clients");
   }
 
   _closeError(){
-    errorValidacionCampos = false;
     this.setState({show: false, showEx:false, showEr: false});
   }
 
@@ -81,81 +90,85 @@ class FormCreateProspect extends Component{
 
   _onConfirmCreate(){
     this.setState({show: false});
-    const {fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-       address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-       nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
-     } = this.props;
-     console.log("idCelula", idCelula);
-     var jsonCreateProspect= {
-       "clientIdNumber": numberDocument,
-       "clientName": razonSocial.value,
-       "clientStatus": "",
-       "riskRating": null,
-       "isProspect": true,
-       "ciiu": idCIIU.value,
-       "celulaId": idCelula.value,
-       "commercialRelationshipType": "",
-       "countryOfOrigin": "",
-       "isDecisionCenter": null,
-       "economicGroup": null,
-       "internalRating": "",
-       "isic": "",
-       "ratingHistory": "",
-       "registrationKey": null,
-       "riskGroup": "",
-       "segment": "",
-       "subCiiu": idSubCIIU.value,
-       "subSegment": "",
-       "countryOfFirstLevelManagement": "",
-       "countryOfMainMarket": "",
-       "relationshipStatus": "",
-       "typeOfClient":"",
-       "status":0,
-       "isCreditNeeded":null,
-       "annualSales": numeral(annualSales.value).format('0'),
-       "salesUpadateDate": moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
-       "assets": numeral(assets.value).format('0'),
-       "liabilities": numeral(liabilities.value).format('0'),
-       "operatingIncome": numeral(operatingIncome.value).format('0'),
-       "nonOperatingIncome": numeral(nonOperatingIncome.value).format('0'),
-       "expenses": numeral(expenses.value).format('0'),
-       "localMarket":"",
-       "marketLeader":"",
-       "territory":"",
-       "actualizationDate":"2016-04-25 17:22:34",
-       "justificationForNoRM":"",
-       "justificationForLostClient":"",
-       "justificationForCreditNeed":"",
-       "isVirtualStatement": extractsVirtual.value,
-       "lineOfBusiness":[],
-       "isManagedByRm":null,
-       "addresses":[
-         {
-           "typeOfAddress": 41,
-           "address":address.value,
-           "country":country.value,
-           "province":province.value,
-           "city":city.value,
-           "neighborhood":district.value,
-           "isPrincipalAddress": reportVirtual.value,
-           "phoneNumber":telephone.value,
-           "postalCode":"",
-         }],
-       "notes":[],
-       "description": descriptionCompany.value,
-       "clientIdType": idTupeDocument
-    }
-    const {createProspect} = this.props;
-    createProspect(jsonCreateProspect)
-    .then((data) => {
-      if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-          this.setState({showEx: true});
-        } else {
-          this.setState({showEr: true});
+    if( typeConfirm === "create" ){
+      const {fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
+         address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+         nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
+       } = this.props;
+       console.log("idCelula", idCelula);
+       var jsonCreateProspect= {
+         "clientIdNumber": numberDocument,
+         "clientName": razonSocial.value,
+         "clientStatus": "",
+         "riskRating": null,
+         "isProspect": true,
+         "ciiu": idCIIU.value,
+         "celulaId": idCelula.value,
+         "commercialRelationshipType": "",
+         "countryOfOrigin": "",
+         "isDecisionCenter": null,
+         "economicGroup": null,
+         "internalRating": "",
+         "isic": "",
+         "ratingHistory": "",
+         "registrationKey": null,
+         "riskGroup": "",
+         "segment": "",
+         "subCiiu": idSubCIIU.value,
+         "subSegment": "",
+         "countryOfFirstLevelManagement": "",
+         "countryOfMainMarket": "",
+         "relationshipStatus": "",
+         "typeOfClient":"",
+         "status":0,
+         "isCreditNeeded":null,
+         "annualSales": numeral(annualSales.value).format('0'),
+         "salesUpadateDate": moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+         "assets": numeral(assets.value).format('0'),
+         "liabilities": numeral(liabilities.value).format('0'),
+         "operatingIncome": numeral(operatingIncome.value).format('0'),
+         "nonOperatingIncome": numeral(nonOperatingIncome.value).format('0'),
+         "expenses": numeral(expenses.value).format('0'),
+         "localMarket":"",
+         "marketLeader":"",
+         "territory":"",
+         "actualizationDate":"2016-04-25 17:22:34",
+         "justificationForNoRM":"",
+         "justificationForLostClient":"",
+         "justificationForCreditNeed":"",
+         "isVirtualStatement": extractsVirtual.value,
+         "lineOfBusiness":[],
+         "isManagedByRm":null,
+         "addresses":[
+           {
+             "typeOfAddress": 41,
+             "address":address.value,
+             "country":country.value,
+             "province":province.value,
+             "city":city.value,
+             "neighborhood":district.value,
+             "isPrincipalAddress": reportVirtual.value,
+             "phoneNumber":telephone.value,
+             "postalCode":"",
+           }],
+         "notes":[],
+         "description": descriptionCompany.value,
+         "clientIdType": idTupeDocument
       }
-      }, (reason) => {
-        this.setState({showEr: true});
-    });
+      const {createProspect} = this.props;
+      createProspect(jsonCreateProspect)
+      .then((data) => {
+        if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+            this.setState({showEx: true});
+          } else {
+            this.setState({showEr: true});
+        }
+        }, (reason) => {
+          this.setState({showEr: true});
+      });
+    } else {
+      this._redirectClients();
+    }
   }
 
   componentWillMount(){
@@ -423,7 +436,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Ventas anuales</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese las ventas anuales"
                 min={0}
                 format="0,000"
@@ -435,7 +448,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Activos</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los activos"
                 min={0}
                 format="0,000"
@@ -447,7 +460,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Pasivos</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los pasivos"
                 min={0}
                 format="0,000"
@@ -459,7 +472,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
               <dt><span>Ingresos operacionales</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos operacionales"
                 format="0,000"
                 {...operatingIncome}
@@ -470,7 +483,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Ingresos no operacionales</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos no operacionales"
                 format="0,000"
                 {...nonOperatingIncome}
@@ -481,7 +494,7 @@ class FormCreateProspect extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Egresos</span></dt>
               <NumberInput
-                style={{width: "100%"}}
+                style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los egresos"
                 min={0}
                 format="0,000"
@@ -517,8 +530,8 @@ class FormCreateProspect extends Component{
           <SweetAlert
             type= "warning"
             show={this.state.show}
-            title="Confirmación creación"
-            text="Recuerde que al crear el prospecto, no podrá modificarlo déspues. ¿Está seguro de guardar la información?"
+            title={titleConfirm}
+            text={messageConfirm}
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"

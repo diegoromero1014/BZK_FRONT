@@ -94,13 +94,6 @@ class CreatePropspect extends Component{
     if( !validateLogin ){
       //redirectUrl("/login");
     }
-    if( status === "Error" ){
-      //toggleMessage("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo .");
-      clearState();
-      alert("Señor usuario, ocurrió en error tratando de validar si el prospecto existe, por favor intentelo.");
-    }
-
-    console.log("tipoDocumento= ", selectsReducer.get('dataTypeDocument'));
 
     return(
       <div style={{marginTop: "10px"}}>
@@ -170,7 +163,7 @@ class CreatePropspect extends Component{
          />
          <SweetAlert
           type= "error"
-          show={this.state.showEr}
+          show={this.state.showEx}
           title="Error"
           text="Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación."
           onConfirm={() => this._closeError()}
