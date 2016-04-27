@@ -59,7 +59,6 @@ class clientEdit extends Component{
       }else{
         const {consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
         if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
@@ -386,7 +385,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   value={parseInt(infoClient.annualSales)}
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -413,7 +412,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   value={parseInt(infoClient.assets)}
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -430,7 +429,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("liabilities", val)}
                   value={parseInt(infoClient.liabilities)}
                   placeholder="Ingrese los pasivos"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -444,7 +443,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   value={parseInt(infoClient.operatingIncome)}
                   placeholder="Ingrese los ingresos operacionales"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -458,7 +457,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   value={parseInt(infoClient.nonOperatingIncome)}
                   placeholder="Ingrese los ingresos no operacionales"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
@@ -475,7 +474,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("expenses", val)}
                   value={parseInt(infoClient.expenses)}
                   placeholder="Ingrese los egresos"
-                  style={{width: "100%"}}
+                  style={{width: "100%", textAlign:"right"}}
                 />
               </dt>
             </Col>
