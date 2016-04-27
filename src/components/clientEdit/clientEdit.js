@@ -11,6 +11,7 @@ import {consultDataSelect, consultList, consultListWithParameter, consultListWit
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import NumberInput from 'react-number-input';
 import _ from 'lodash';
 import {reduxForm} from 'redux-form';
 
@@ -379,11 +380,13 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="number"
+                <NumberInput
+                  format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
-                  defaultValue={infoClient.annualSales}
+                  value={parseInt(infoClient.annualSales)}
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
@@ -404,11 +407,13 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
+                <NumberInput
+                  format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
-                  defaultValue={infoClient.assets}
+                  value={parseInt(infoClient.assets)}
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
@@ -419,11 +424,13 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
+                <NumberInput
+                  format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("liabilities", val)}
-                  defaultValue={infoClient.liabilities}
+                  value={parseInt(infoClient.liabilities)}
                   placeholder="Ingrese los pasivos"
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
@@ -432,11 +439,12 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
+                <NumberInput
+                  format="0,000"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
-                  defaultValue={infoClient.operatingIncome}
+                  value={parseInt(infoClient.operatingIncome)}
                   placeholder="Ingrese los ingresos operacionales"
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
@@ -445,11 +453,12 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
+                <NumberInput
+                  format="0,000"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                  defaultValue={infoClient.nonOperatingIncome}
+                  value={parseInt(infoClient.nonOperatingIncome)}
                   placeholder="Ingrese los ingresos no operacionales"
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
@@ -460,11 +469,13 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <Input
-                  type="text"
+                <NumberInput
+                  format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("expenses", val)}
-                  defaultValue={infoClient.expenses}
+                  value={parseInt(infoClient.expenses)}
                   placeholder="Ingrese los egresos"
+                  style={{width: "100%"}}
                 />
               </dt>
             </Col>
