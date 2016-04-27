@@ -539,7 +539,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...necesitaLME}
-                  defaultValue={necesitaLME.value === '' ? infoClient.isCreditNeeded : necesitaLME.value}
+                  defaultValue={necesitaLME.value === undefined ? infoClient.isCreditNeeded : necesitaLME.value}
                 />
               </dt>
             </Col>
