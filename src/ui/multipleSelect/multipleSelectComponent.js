@@ -49,7 +49,7 @@ class MultipleSelectComponent extends Component {
 
         return (
             <div style={style}>
-                <div className={`styleWidthCompoentns ui multiple search selection dropdown ${name}`}>
+                <div className={`styleWidthComponents ui multiple search selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>

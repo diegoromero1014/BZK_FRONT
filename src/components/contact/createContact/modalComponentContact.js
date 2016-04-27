@@ -101,7 +101,7 @@ class ModalComponentContact extends Component {
       consultDataSelect(constants.FILTER_GENDER);
       consultDataSelect(constants.FILTER_DEPENDENCY);
       consultDataSelect(constants.FILTER_SOCIAL_STYLE);
-      consultDataSelect(constants.FILTER_TYPE_ATTITUDE);
+      consultDataSelect(constants.FILTER_ATTITUDE_OVER_GROUP);
       consultDataSelect(constants.FILTER_COUNTRY);
       consultDataSelect(constants.FILTER_TYPE_CONTACT_ID);
       consultDataSelect(constants.FILTER_TYPE_LBO_ID);
@@ -281,7 +281,7 @@ class ModalComponentContact extends Component {
                                 {...tipoActitud}
                                 valueProp={'id'}
                                 textProp = {'value'}
-                                data={selectsReducer.get('dataTypeAttitude')}
+                                data={selectsReducer.get('dataTypeAttitudeOverGroup')}
                                 /></dd>
                               </dl>
                               </Col>
