@@ -7,7 +7,7 @@ import SelectFilterComponent from '../../selectsComponent/selectFilterContact/se
 import MultiSelectComponent from '../../selectsComponent/multiSelectContact/multiSelectComponent';
 import {consultDataSelect, getMasterDataFields, consultList} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
-import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS} from '../../selectsComponent/constants';
+import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails} from './actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -102,7 +102,7 @@ class ContactDetailsModalComponent extends Component {
     consultDataSelect(FILTER_DEPENDENCY);
     consultDataSelect(FILTER_CONTACT_POSITION); */
 
-    getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS]);
+    getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     // getMasterDataFields([CLIENT_ID_TYPE]);
 
     getContactDetails(contactId);
@@ -193,7 +193,7 @@ class ContactDetailsModalComponent extends Component {
   }
 
   render() {
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports }, error, handleSubmit, selectsReducer} = this.props;
+    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup }, error, handleSubmit, selectsReducer} = this.props;
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
     console.log('Tipos de documentos, -> ', selectsReducer.get('dataTypeDocument'));
@@ -361,13 +361,27 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={4} lg={4}>
                   <dt>{'Estilo social'}</dt>
                   <dd>
-                    <Combobox />
+                    <ComboBox
+                      name="contactSocialStyle"
+                      labelInput="Seleccione el estilo social"
+                      {...contactSocialStyle}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
+                    />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>
                   <dt>{'Actitud frente al Grupo'}</dt>
                   <dd>
-                    <SelectFilterComponent key={6} idTypeFilter={FILTER_ATTITUDE_OVER_GROUP} />
+                    <ComboBox
+                      name="contactAttitudeOverGroup"
+                      labelInput="Seleccione la actitud frente al Grupo"
+                      {...contactAttitudeOverGroup}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -614,6 +628,6 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps){
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports"],
+  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);
