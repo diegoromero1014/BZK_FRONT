@@ -15,7 +15,7 @@ class TextareaComponent extends Component {
       const {nameInput, style,type, placeholder, touched, error, name, onChange, min} = this.props;
       return (
           <div >
-              <div className={`styleWidthCompoentns ui input ${name}`}>
+              <div className={`styleWidthComponents ui input ${name}`}>
                   <textarea
                     name={nameInput}
                     onChange={onChange}
