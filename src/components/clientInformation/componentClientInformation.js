@@ -7,9 +7,9 @@ import TabClientInfo from './tabClientInfo';
 
 class ComponentClientInformation extends Component{
   constructor(props) {
-      super(props);
-      const {consultInfoClient} = this.props;
-      consultInfoClient();
+     super(props);
+     const {consultInfoClient} = this.props;
+     consultInfoClient();
   }
 
   render(){

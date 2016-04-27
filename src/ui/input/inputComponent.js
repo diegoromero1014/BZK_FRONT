@@ -11,15 +11,19 @@ class inputComponent extends Component {
   }
 
   render() {
-      const {nameInput, type, placeholder, touched, error, name, onChange, min} = this.props;
+      const {nameInput, type, placeholder, touched, error, name, onChange, min, defaultValue} = this.props;
+      if( touched && error ){
+        $(`.ui.input.${name} [type=text]`).focus();
+      }
       return (
           <div >
-              <div className={`styleWidthCompoentns ui input ${name}`}>
-                  <input type={type} 
+              <div className={`styleWidthComponents ui input ${name}`}>
+                  <input type={type}
                     name={nameInput}
                     min={min}
                     onChange={onChange}
-                    placeholder={placeholder} />
+                    placeholder={placeholder}
+                    value={defaultValue} />
               </div>
               {
                   touched && error &&

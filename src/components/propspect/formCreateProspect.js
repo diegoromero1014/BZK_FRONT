@@ -4,13 +4,18 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import SweetAlert from 'sweetalert-react';
 import {createProspect} from './actions';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
-  from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import {redirectUrl} from '../globalComponents/actions';
+import {DateTimePicker} from 'react-widgets';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import NumberInput from 'react-number-input';
 import _ from 'lodash';
+import numeral from 'numeral';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
+  from '../selectsComponent/actions';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -18,9 +23,10 @@ const valuesYesNo = [
 ]
 const stylepaddingRigth = {paddingRight: "25px"}
 const stylepaddingRigth2 = {paddingRight: "10px"}
-var notasProspect = [];
-var ciiuOld = null;
-var countryOld = null;
+
+const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
+      "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
+      "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
 
 const validate = values => {
     const errors = {}
@@ -37,14 +43,12 @@ const validate = values => {
     return errors;
 };
 
-const fields = ["razonSocial", "descriptionCompany","reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-      "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
-      "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals"];
-
 class FormCreateProspect extends Component{
   constructor( props ) {
     super(props);
+    momentLocalizer(moment);
     this.state = {
+       show: false,
        showEx:false,
        showEr:false
      };
@@ -52,54 +56,31 @@ class FormCreateProspect extends Component{
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
+    this._closeWindow = this._closeWindow.bind(this);
 
     this._closeError = this._closeError.bind(this);
     this._closeSuccess = this._closeSuccess.bind(this);
+    this._onConfirmCreate = this._onConfirmCreate.bind(this);
 
   }
 
-  _closeError(){
-      this.setState({showEx:false, showEr: false});
-  }
-
-  _closeSuccess(){
-    this.setState({showEx:false, showEr: false});
+  _closeWindow(){
+    //e.preventDefault();
     redirectUrl("/dashboard/clients");
   }
 
-  componentWillMount(){
-    const {consultList, consultDataSelect} = this.props;
-    consultList(constants.TEAM_FOR_EMPLOYEE);
-    consultList(constants.CIIU);
-    consultDataSelect(constants.FILTER_COUNTRY);
+  _closeError(){
+    errorValidacionCampos = false;
+    this.setState({show: false, showEx:false, showEr: false});
   }
 
-  _onChangeCIIU(val){
-    const {fields: {idCIIU, idSubCIIU}} = this.props;
-    idCIIU.onChange(val);
-    const {consultListWithParameter} = this.props;
-    consultListWithParameter(constants.SUB_CIIU, val);
-    idSubCIIU.onChange('');
+  _closeSuccess(){
+    this.setState({show: false, showEx:false, showEr: false});
+    redirectUrl("/dashboard/clients");
   }
 
-  _onChangeCountry(val){
-    const {fields: {country, province, city}} = this.props;
-    country.onChange(val);
-    const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-    province.onChange('');
-    city.onChange('');
-  }
-
-  _onChangeProvince(val){
-    const {fields: {country, province, city}} = this.props;
-    province.onChange(val);
-    const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-    city.onChange('');
-  }
-
-  _submitFormCreateProspect(formData){
+  _onConfirmCreate(){
+    this.setState({show: false});
     const {fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
        address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
        nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
@@ -131,13 +112,13 @@ class FormCreateProspect extends Component{
        "typeOfClient":"",
        "status":0,
        "isCreditNeeded":null,
-       "annualSales":annualSales.value,
-       "salesUpadateDate":"2016-04-25 17:22:34",
-       "assets": assets.value,
-       "liabilities": liabilities.value,
-       "operatingIncome": operatingIncome.value,
-       "nonOperatingIncome": nonOperatingIncome.value,
-       "expenses": expenses.value,
+       "annualSales": numeral(annualSales.value).format('0'),
+       "salesUpadateDate": moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+       "assets": numeral(assets.value).format('0'),
+       "liabilities": numeral(liabilities.value).format('0'),
+       "operatingIncome": numeral(operatingIncome.value).format('0'),
+       "nonOperatingIncome": numeral(nonOperatingIncome.value).format('0'),
+       "expenses": numeral(expenses.value).format('0'),
        "localMarket":"",
        "marketLeader":"",
        "territory":"",
@@ -175,6 +156,42 @@ class FormCreateProspect extends Component{
       }, (reason) => {
         this.setState({showEr: true});
     });
+  }
+
+  componentWillMount(){
+    const {consultList, consultDataSelect} = this.props;
+    consultList(constants.TEAM_FOR_EMPLOYEE);
+    consultList(constants.CIIU);
+    consultDataSelect(constants.FILTER_COUNTRY);
+  }
+
+  _onChangeCIIU(val){
+    const {fields: {idCIIU, idSubCIIU}} = this.props;
+    idCIIU.onChange(val);
+    const {consultListWithParameter} = this.props;
+    consultListWithParameter(constants.SUB_CIIU, val);
+    idSubCIIU.onChange('');
+  }
+
+  _onChangeCountry(val){
+    const {fields: {country, province, city}} = this.props;
+    country.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
+    province.onChange('');
+    city.onChange('');
+  }
+
+  _onChangeProvince(val){
+    const {fields: {country, province, city}} = this.props;
+    province.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(constants.FILTER_CITY, province.value);
+    city.onChange('');
+  }
+
+  _submitFormCreateProspect(formData){
+    this.setState({show: true});
   };
 
 
@@ -195,7 +212,6 @@ class FormCreateProspect extends Component{
                 name="razonSocial"
                 type="text"
                 placeholder="Ingrese la razón social del prospecto"
-                onChange={val => this._onchangeValue("razonSocial", val)}
                 {...razonSocial}
               />
             </div>
@@ -406,11 +422,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Ventas anuales</span></dt>
-              <Input
-                name="annualSales"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese las ventas anuales"
+                min={0}
+                format="0,000"
                 {...annualSales}
               />
             </div>
@@ -418,11 +434,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Activos</span></dt>
-              <Input
-                name="assets"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los activos"
+                min={0}
+                format="0,000"
                 {...assets}
               />
             </div>
@@ -430,11 +446,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Pasivos</span></dt>
-              <Input
-                name="liabilities"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los pasivos"
+                min={0}
+                format="0,000"
                 {...liabilities}
               />
             </div>
@@ -442,10 +458,10 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
               <dt><span>Ingresos operacionales</span></dt>
-              <Input
-                name="operatingIncome"
-                type="number"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los ingresos operacionales"
+                format="0,000"
                 {...operatingIncome}
               />
             </div>
@@ -453,10 +469,10 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Ingresos no operacionales</span></dt>
-              <Input
-                name="nonOperatingIncome"
-                type="number"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los ingresos no operacionales"
+                format="0,000"
                 {...nonOperatingIncome}
               />
             </div>
@@ -464,11 +480,11 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Egresos</span></dt>
-              <Input
-                name="expenses"
-                type="number"
-                min="0"
+              <NumberInput
+                style={{width: "100%"}}
                 placeholder="Ingrese los egresos"
+                min={0}
+                format="0,000"
                 {...expenses}
               />
             </div>
@@ -476,22 +492,39 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Fecha de ventas anuales</span></dt>
-              <input
-                className="inputDataValue"
-                type="text"
+              <DateTimePicker
                 {...dateSalesAnnuals}
-                style={this.state.styleDateSalesAnnuals}
+                time={false}
+                placeholder="Seleccione una fecha"
+                culture='es'
               />
             </div>
           </Col>
 
           <Col xs={12} md={12} lg={12} style={{paddingTop: "60px"}}>
-            <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+            <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
               <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
                 <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
               </button>
+              <button className="btn btn-secondary modal-button-edit"
+                onClick={this._closeWindow}
+                style={{float:"right", margin:"8px 0px 0px 190px", position:"fixed", backgroundColor: "#C1C1C1"}}
+                type="button">
+                <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+              </button>
             </div>
           </Col>
+          <SweetAlert
+            type= "warning"
+            show={this.state.show}
+            title="Confirmación creación"
+            text="Recuerde que al crear el prospecto, no podrá modificarlo déspues. ¿Está seguro de guardar la información?"
+            confirmButtonColor= '#DD6B55'
+            confirmButtonText= 'Sí, estoy seguro!'
+            cancelButtonText = "Cancelar"
+            showCancelButton= {true}
+            onCancel= {() => this.setState({show: false })}
+            onConfirm={() => this._onConfirmCreate()}/>
           <SweetAlert
            type= "success"
            show={this.state.showEx}

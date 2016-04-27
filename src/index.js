@@ -3,11 +3,11 @@ import ReactDom from 'react-dom';
 import Root from './components/root/root';
 import configureStore from './store/store';
 import Routes from './routes';
-import {browserHistory} from 'react-router';
+import Router from './historyRouter';
 import {syncHistoryWithStore} from 'react-router-redux';
 const store = configureStore();
 
-const reduxRouterMiddleware = syncHistoryWithStore(browserHistory, store);
+const reduxRouterMiddleware = syncHistoryWithStore(Router, store);
 
 require("../styles/index");
 require('jquery');

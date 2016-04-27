@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
+import _ from 'lodash';
 
 const initialState = Immutable.Map({
   dataTypeDocument: [],
@@ -18,7 +19,8 @@ const initialState = Immutable.Map({
   dataTypeHobbies: [],
   dataTypeSports: [],
   teamValueObjects: [],
-  dataTypeAttitude:[]
+  dataTypeContactPosition: [],
+  dataTypeAttitudeOverGroup: []
 });
 
 
@@ -54,13 +56,12 @@ export default (state = initialState, action) => {
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeDependency', masterDataDetailEntries);
           break;
+        case constants.FILTER_CONTACT_POSITION:
+          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set('dataTypeContactPosition', masterDataDetailEntries);
         case constants.FILTER_SOCIAL_STYLE:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSocialStyle', masterDataDetailEntries);
-          break;
-        case constants.FILTER_TYPE_ATTITUDE:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeAttitude', masterDataDetailEntries);
           break;
         case constants.FILTER_COUNTRY:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
@@ -82,9 +83,42 @@ export default (state = initialState, action) => {
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeSports', masterDataDetailEntries);
           break;
+        case constants.FILTER_ATTITUDE_OVER_GROUP:
+          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set('dataTypeAttitudeOverGroup', masterDataDetailEntries);
+          break;
         case constants.TEAM_FOR_EMPLOYEE:
           var teamValueObjects = action.payload.data.teamValueObjects;
           return state.set('teamValueObjects', teamValueObjects);
+        case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
+          const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          const lineOfBussiness = [];
+          const hobbies = [];
+          const sports = [];
+          const functions = [];
+          _.map(masterDataDetailEntries, function(data, idx) {
+
+            switch(data.field) {
+              case constants.FIELTER_HOBBIES:
+                hobbies.push(data);
+                break;
+              case constants.FILTER_SPORTS:
+                sports.push(data);
+              case constants.FILTER_TYPE_LBO_ID:
+                lineOfBussiness.push(data);
+              case constants.FILTER_FUNCTION_ID:
+                functions.push(data);
+              default:
+                break;
+            }
+          });
+
+          state.set('dataTypeSports', sports)
+            .set('dataTypeHobbies', hobbies)
+            .set('dataTypeFunction', functions)
+            .set('dataTypeLBO', lineOfBussiness);
+
+          return state;
           break;
         default:
             return state;

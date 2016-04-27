@@ -4,14 +4,22 @@ import {bindActionCreators} from 'redux';
 import {clientsFindServer, changePage, changeKeyword} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
+import SweetAlert from 'sweetalert-react';
 
 class SearchBarClient extends Component{
 
   constructor(props) {
       super(props);
-
+      this.state = {
+        showEr: false,
+      }
       this._handleClientsFind = this._handleClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+      this._closeError = this._closeError.bind(this);
+  }
+
+  _closeError(){
+    this.setState({showEr: false});
   }
 
   componentWillMount(){
@@ -34,7 +42,7 @@ class SearchBarClient extends Component{
     const {clientR} = this.props;
     var keyword = clientR.get('keyword');
     if(keyword === '' || keyword === undefined){
-      alert('Por favor ingrese un criterio de búsqueda');
+      this.setState({showEr: true});
     }else{
       const {changePage} = this.props;
       var limInf = (1 - 1) * NUMBER_RECORDS;
@@ -54,6 +62,13 @@ class SearchBarClient extends Component{
            <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2", width:"50px", height:"50px"}}><i className="search icon" style={{margin:'0em', fontSize : '1.2em'}}></i></button>
          </span>
        </div>
+       <SweetAlert
+          type= "error"
+          show={this.state.showEr}
+          title="Error de búsqueda"
+          text="Por favor ingrese un criterio de búsqueda."
+          onConfirm={() => this._closeError()}
+        />
       </div>
     )
  }

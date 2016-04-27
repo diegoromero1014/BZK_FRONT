@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 
+var focusInFiled = false;
 class comboBoxComponent extends Component {
     constructor(props) {
         super(props);
@@ -12,27 +13,31 @@ class comboBoxComponent extends Component {
     }
 
     componentWillReceiveProps({value, name}) {
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        if (_.isEqual(value, '')) {
-            selector.dropdown('clear');
-        }
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      if (_.isEqual(value, '')) {
+          selector.dropdown('clear');
+      }
+      const {defaultValue} = this.props;
+      if(defaultValue !== undefined && defaultValue !== '' && defaultValue !== null){
+        selector.dropdown('set selected', defaultValue);
+      }
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name, defaultValue} = this.props;
-        const selector = $(`.ui.selection.dropdown.${name}`);
-        const self = this;
-        selector.dropdown({
-            onChange: function (id, text) {
-                self.touched = true;
-                self.setState({
-                    value: id
-                });
-                onBlur(id, text);
-                onChange(id, text);
-            }
-        });
-        selector.dropdown('set selected', defaultValue);
+      const {onChange, onBlur, name, defaultValue} = this.props;
+      const selector = $(`.ui.selection.dropdown.${name}`);
+      const self = this;
+      selector.dropdown({
+          onChange: function (id, text) {
+              focusInFiled = false;
+              self.touched = true;
+              self.setState({
+                  value: id
+              });
+              onBlur(id, text);
+              onChange(id, text);
+          }
+      });
     }
 
     mapValuesToDropDown(item, idx) {
@@ -45,11 +50,14 @@ class comboBoxComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, style, data, touched, error, name} = this.props;
-
+        const {nameInput, labelInput, data, touched, error, name} = this.props;
+        if( touched && error && !focusInFiled ){
+          $(`.ui.selection.dropdown.${name}`).focus();
+          focusInFiled = true;
+        }
         return (
-            <div style={style}>
-                <div className={`styleWidthCompoentns ui search selection dropdown ${name}`}>
+            <div>
+                <div className={`styleWidthComponents ui search selection dropdown ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
@@ -78,7 +86,7 @@ comboBoxComponent.PropTypes = {
     valueProp: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    style: PropTypes.object
+    defaultValue: PropTypes.string
 };
 
 export default comboBoxComponent;
