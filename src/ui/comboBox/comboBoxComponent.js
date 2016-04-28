@@ -18,8 +18,10 @@ class comboBoxComponent extends Component {
           selector.dropdown('clear');
       }
       const {defaultValue} = this.props;
-      if(defaultValue !== undefined && defaultValue !== '' && defaultValue !== null){
+      if(value === undefined || value === '' || value === null){
         selector.dropdown('set selected', defaultValue);
+      }else{
+        selector.dropdown('set selected', value);
       }
     }
 

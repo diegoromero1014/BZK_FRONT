@@ -20,7 +20,8 @@ const initialState = Immutable.Map({
   dataTypeSports: [],
   teamValueObjects: [],
   dataTypeContactPosition: [],
-  dataTypeAttitudeOverGroup: []
+  dataTypeAttitudeOverGroup: [],
+  dataEconomicGroup: []
 });
 
 
@@ -41,6 +42,9 @@ export default (state = initialState, action) => {
         case constants.CIIU:
           var ciiuValueObjects =  action.payload.data.messageBody.ciiuValueObjects;
           return state.set("dataCIIU", ciiuValueObjects);
+        case constants.ECONOMIC_GROUP:
+          var economicGroupValues =  action.payload.data.messageBody.economicGroupValueObjects;
+          return state.set("dataEconomicGroup", economicGroupValues);
         case constants.SUB_CIIU:
           var subCiiuValueObjects =  action.payload.data.messageBody.subCiiuValueObjects;
           return state.set("dataSubCIIU", subCiiuValueObjects);
