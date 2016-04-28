@@ -9,6 +9,8 @@ var webpack = require('webpack'),
     assetsPath = path.join(__dirname, '../dist'),
     strip = require('strip-loader'),
     projectRootPath = path.resolve(__dirname, '../'),
+    precss = require('precss'),
+    cssFixLoader = require('./css-fix-loader'),
     WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin'),
     webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools')),
     config = {
@@ -40,7 +42,7 @@ var webpack = require('webpack'),
                 {
                     test: /\.less$/,
                     loader: ExtractTextPlugin.extract('style', 'css!less'),
-                    include: /react\-widgets/
+                    include: [/react\-widgets/, path.resolve(__dirname, '..', 'semantic', 'src')]
                 },
                 {
                     test: /(\.scss)$/,
@@ -53,8 +55,13 @@ var webpack = require('webpack'),
                 },
                 {
                     test: /\.css$/,
-                    include: [/sweetalert/, /sematic\-ui/],
+                    include: [/sweetalert/],
                     loader: ExtractTextPlugin.extract('style', 'css')
+                },
+                {
+                    test: /\.css$/,
+                    include: [/semantic/],
+                    loader: ExtractTextPlugin.extract('style', 'css', cssFixLoader, 'postcss-loader')
                 },
                 {
                     test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
@@ -76,7 +83,10 @@ var webpack = require('webpack'),
                     test: webpackIsomorphicToolsPlugin.regular_expression('images'),
                     loader: 'url-loader?limit=10240'
                 }
-            ]
+            ],
+            postcss: function () {
+                return [precss, autoprefixer];
+            }
         },
         plugins: [
             new CleanPlugin([assetsPath], {root: projectRootPath}),

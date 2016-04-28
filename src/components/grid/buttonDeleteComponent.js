@@ -36,7 +36,7 @@ class ButtonDeleteComponent extends Component{
         const {contactsByClientFindServer,actionsDelete} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
-            contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+            contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
             "",
             "",
             "");

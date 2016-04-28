@@ -17,7 +17,7 @@ export function consultInfoClient(){
       "isSuccessful": true
     },
     "messageBody":{
-      "clientId": window.localStorage.getItem('idClientSeleted')
+      "clientId": window.localStorage.getItem('idClientSelected')
     }
   }
 
