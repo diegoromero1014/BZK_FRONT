@@ -10,12 +10,20 @@ class ModalComponentDialog extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this.state = {
+          modalIsOpen: false  
+        };
           this._contectViewModal = this._contectViewModal.bind(this);
+        }
+  
+    openModal(){
+    this.setState({modalIsOpen: true});
     }
 
-    closeModal() {
-        this.props.toggleModal();
-    }
+    closeModal(){
+    this.setState({modalIsOpen: false});
+    } 
 
     _contectViewModal(actions, idx){
       var cell;
@@ -33,13 +41,14 @@ class ModalComponentDialog extends Component {
 
 
     render() {
-        const {modalStatus} = this.props;
-        const status = modalStatus ? "Verdadero" : "Falso";
         const modalTitle = this.props.modalTitle;
         const actions = this.props.actions;
         return (
+        <td style={{padding: '10px', textAlign: 'center'}}><button className="btn btn-primary btn-sm" onClick={this.openModal}>
+          <i className="zoom icon" style={{margin:'0em', fontSize : '1.2em'}} />
+        </button>
           <Modal
-              isOpen={modalStatus}
+              isOpen={this.state.modalIsOpen}
               onRequestClose={this.closeModal}
               className="modalBt4-fade modal fade contact-detail-modal in"
           >
@@ -63,11 +72,12 @@ class ModalComponentDialog extends Component {
                   </div>
               </div>
           </Modal>
+          </td>
         );
     }
 }
 
-function mapStateToProps({modal}) {
+function mapStateToProps({modal},{idModal}) {
     return {
         modalStatus: modal.get('modalState')
     };

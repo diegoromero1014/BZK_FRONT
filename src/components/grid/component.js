@@ -7,7 +7,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
-import ModalComponent from '../modal/component';
+import ModalComponent from '../modal/modalComponent';
 
 class GridComponent extends Component {
 
@@ -26,7 +26,7 @@ class GridComponent extends Component {
       return headers.map((value, idx) => {
             var cell;
             if(value.key == 'actions'){
-              cell = <ModalComponent key={idx} modalTitle={modalTitle} actions={_.get(row, value.key)}/>
+              cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key == 'delete'){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else{

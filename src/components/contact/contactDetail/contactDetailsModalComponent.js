@@ -3,18 +3,20 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import {consultDataSelect, getMasterDataFields, consultList} from '../../selectsComponent/actions';
+import {consultDataSelect, getMasterDataFields, consultList,  consultListWithParameterUbication} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails} from './actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 const validate = values => {
-    const errors = {}
+    const errors = {};
     if (!values.contactType) {
-        errors.contactType = "Debe seleccionar el tipo de documento";
+      errors.contactType = "Debe seleccionar el tipo de documento";
     } else {
       errors.contactType = null;
     }
@@ -64,7 +66,7 @@ const validate = values => {
       errors.telephoneNumber = null;
     }
     if (!values.lineOfBusiness) {
-      errors.lineOfBusiness = "Debe seleccionar al menos una linea de negocio";
+      errors.lineOfBusiness = "Debe seleccionar al menos una línea de negocio";
     } else {
       errors.lineOfBusiness = null;
     }
@@ -81,31 +83,18 @@ class ContactDetailsModalComponent extends Component {
   /* Constructor de la clase ContactDetailModalComponent */
   constructor(props) {
     super(props);
-    this.state = {
-      selectContactType: 0
-    };
-    this._handleCheckIfExist = this._handleCheckIfExist.bind(this);
-    this._handleChangeOption = this._handleChangeOption.bind(this);
     this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this._onChangeCountry = this._onChangeCountry.bind(this);
+    this._onChangeProvince = this._onChangeProvince.bind(this);
+    momentLocalizer(moment);
   }
 
   /* Carga la información del contacto */
   componentWillMount() {
-    const {consultDataSelect, getMasterDataFields, consultList, getContactDetails, contactId} = this.props;
-    /* consultDataSelect(CONTACT_ID_TYPE);
-    consultDataSelect(FILTER_TITLE);
-    consultDataSelect(FILTER_GENDER);
-    consultDataSelect(FILTER_TYPE_CONTACT_ID);
-    consultDataSelect(FILTER_COUNTRY);
-    consultDataSelect(FILTER_DEPENDENCY);
-    consultDataSelect(FILTER_CONTACT_POSITION); */
-
+    const {getMasterDataFields, getContactDetails, contactId} = this.props;
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
-    // getMasterDataFields([CONTACT_ID_TYPE]);
-    console.log('id cliente', window.localStorage.getItem('idClientSelected'));
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'));
-
   }
 
   /* Cambio en los valores */
@@ -155,6 +144,19 @@ class ContactDetailsModalComponent extends Component {
       case "address":
         var {fields: {address}} = this.props;
         address.onChange(val);
+        break;
+      case "country":
+        var {fields: {country}} = this.props;
+        country.onChange(val);
+        break;
+      case "province":
+        var {fields: {province}} = this.props;
+        province.onChange(val);
+        break;
+      case "city":
+        var {fields: {city}} = this.props;
+        city.onChange(val);
+        break;
       default:
         break;
     }
@@ -162,28 +164,22 @@ class ContactDetailsModalComponent extends Component {
     clearState();
   }
 
-  /* funcion para identificar sí el contacto existe */
-  _handleCheckIfExist(e) {
-    /* Logica */
-    const {contactDetail} = this.props;
-    const contact = contactDetail.get('contactDetailList');
-
-    // console.log('Valida sí existe');
-    // console.log('Tipo -> ' + contact.contactType);
-    // console.log('Numero -> ' + contact.contactIdentityNumber);
+  
+  _onChangeCountry(val) {
+    const {fields: {country, province, city}} = this.props;
+    country.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(FILTER_PROVINCE, country.value);
+    province.onChange('');
+    city.onChange('');
   }
 
-  /* Se actualiza el object contact con la nueva opcion seleccionada */
-  _handleChangeOption(optionType, optionValue) {
-    // console.log('optionValue ->');
-    // console.log(optionValue);
-    const {contactDetail} = this.props;
-    const contact = contactDetail.get('contactDetailList');
-    if (optionType === CONTACT_ID_TYPE) {
-      contact.contactType = optionValue;
-    }
-    contactDetail.set('contactDetailList ->', contact);
-    // console.log('Se hizo cambio');
+  _onChangeProvince(val) {
+    const {fields: {country, province, city}} = this.props;
+    province.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(FILTER_CITY, province.value);
+    city.onChange('');
   }
 
   /* metodo para enviar el formulario */
@@ -192,10 +188,9 @@ class ContactDetailsModalComponent extends Component {
   }
 
   render() {
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup, dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
+    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, province, city, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup, dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
-    // const {} = contact;
     return (
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
@@ -213,7 +208,6 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={4} lg={4}>
                   <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    {/* Tipo de documento */}
                     <ComboBox
                       name="contactType"
                       labelInput="Seleccione el tipo de documento"
@@ -237,11 +231,6 @@ class ContactDetailsModalComponent extends Component {
                       defaultValue={contactIdentityNumber.value === undefined ? contact.contactIdentityNumber : contactIdentityNumber.value}
                     />
                   </dd>
-                </Col>
-                <Col xs={12} sm={12} md={6} lg={4}>
-                  <dl style={{width: '100%'}}>
-                    <button className="btn btn-primary" style={{marginTop: '35px'}} onClick={this._handleCheckIfExist}><i style={{color: 'white', margin: '0em', fontSize: '1.2em'}} className="search icon"></i></button>
-                  </dl>
                 </Col>
               </Row>
               <Row>
@@ -360,8 +349,10 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt>{'Fecha de nacimiento'}</dt>
                   <dd>
-                    <DateTimePicker time={false}
-                      defaultValue={dateOfBirth.value === undefined ? contact.dateOfBirth : dateOfBirth.value}
+                    <DateTimePicker
+                      culture='es'
+                      {...dateOfBirth}
+                      //defaultValue={dateOfBirth.value === undefined ? contact.dateOfBirth : dateOfBirth.value}
                     />
                   </dd>
                 </Col>
@@ -408,24 +399,46 @@ class ContactDetailsModalComponent extends Component {
                     <ComboBox
                       name="country"
                       labelInput="Seleccione el país"
+                      onChange={val => this._onChangeCountry(val)}
+                      value={country.value}
+                      onBlur={country.onBlur}
                       {...country}
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_COUNTRY) || []}
-                      defaultValue={country.value === undefined ? contact.country : country.value}
+                      //defaultValue={country.value === undefined ? contact.country : country.value}
                     />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    {/* Departamento */}
+                    <ComboBox
+                      name="province"
+                      labelInput="Seleccione el departamento"
+                      onChange={val => this._onChangeProvince(val)}
+                      value={province.value}
+                      onBlur={province.onBlur}
+                      {...province}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeProvince') || []}
+                      defaultValue={province.value === undefined ? contact.province : province.value}
+                    />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
                   <dd>
-                    {/* Departamento */}
+                    <ComboBox
+                      name="city"
+                      labelInput="Seleccine la ciudad"
+                      {...city}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeCity') || []}
+                      defaultValue={city.value === undefined ? contact.city : city.value}
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -628,7 +641,8 @@ function mapDispatchToProps(dispatch){
     getContactDetails,
     consultDataSelect,
     getMasterDataFields,
-    consultList
+    consultList,
+    consultListWithParameterUbication
   }, dispatch);
 }
 
@@ -641,6 +655,6 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps){
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup", "dateOfBirth"],
+  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "province", "city", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup", "dateOfBirth"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

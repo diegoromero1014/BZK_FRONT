@@ -14,9 +14,7 @@ class ModalComponentButton extends Component{
       const {toggleModal} = this.props;
       const modalTitle = this.props.modalTitle;
       const actions = this.props.actions;
-      return (<td style={{padding: '10px', textAlign: 'center'}}><button className="btn btn-primary btn-sm" onClick={toggleModal}>
-          <i className="zoom icon" style={{margin:'0em', fontSize : '1.2em'}} />
-        </button><ModalComponentDialog modalTitle={modalTitle} actions={actions}/></td>);
+      return (<ModalComponentDialog modalTitle={modalTitle} actions={actions}/>);
     }
 }
 
