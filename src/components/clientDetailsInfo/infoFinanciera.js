@@ -9,7 +9,7 @@ class InfoFinanciera extends Component{
   }
 
   formatCurrency(value) {
-    if (isNaN(value)) {
+    if (value === null || value === undefined || isNaN(value)) {
     return '';
     }
     return numeral(value).format('0,000');

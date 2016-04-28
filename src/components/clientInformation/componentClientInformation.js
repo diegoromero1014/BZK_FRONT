@@ -4,12 +4,18 @@ import {connect} from 'react-redux';
 import {consultInfoClient} from './actions';
 import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
+import $ from 'jquery';
 
 class ComponentClientInformation extends Component{
   constructor(props) {
      super(props);
      const {consultInfoClient} = this.props;
      consultInfoClient();
+  }
+
+  componentWillMount(){
+    $(window).scrollTop(0);
+    console.log("Golaaaa");
   }
 
   render(){

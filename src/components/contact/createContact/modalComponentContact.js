@@ -13,52 +13,51 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
-import {consultDataSelect,consultList} from '../../selectsComponent/actions';
-import * as constants from '../../selectsComponent/constants';
+import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
+import {FILTER_CITY,FILTER_PROVINCE,CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
-
-const fields =["tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoActitud","tipoPais", "tipoContacto",
+const fields =["tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoActitud", "tipoContacto",
 "numeroDocumento","primerNombre","segundoNombre","primerApellido", "segundoApellido","fechaNacimiento","direccion","barrio",
-"codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte"];
+"codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
+const errors = {};
 const validate = values => {
-  const errors = {}
   if(!values.tipoDocumento){
     errors.tipoDocumento = "Seleccione un tipo de documento";
   }else{
     errors.tipoDocumento = null;
   }
   if(!values.tipoFuncion){
-    errors.tipoFuncion = "Seleccione un tipo de documento";
+    errors.tipoFuncion = "Seleccione una función";
   }else{
     errors.tipoFuncion = null;
   }
   if(!values.numeroDocumento){
-    errors.numeroDocumento = "Seleccione un tipo de documento";
+    errors.numeroDocumento = "Ingrese el número de documento";
   }else{
     errors.numeroDocumento = null;
   }
   if(!values.primerNombre){
-    errors.primerNombre = "Seleccione un tipo de documento";
+    errors.primerNombre = "Ingrese el primer nombre";
   }else{
     errors.primerNombre = null;
   }
   if(!values.primerApellido){
-    errors.primerApellido = "Seleccione un tipo de documento";
+    errors.primerApellido = "Ingrese el primer apellido";
   }else{
     errors.primerApellido = null;
   }
   if(!values.direccion){
-    errors.direccion = "Seleccione un tipo de documento";
+    errors.direccion = "Ingrese la dirección";
   }else{
     errors.direccion = null;
   }
   if(!values.telefono){
-    errors.telefono = "Seleccione un tipo de documento";
+    errors.telefono = "Ingrese el teléfono";
   }else{
     errors.telefono = null;
   }
   if(!values.correo){
-    errors.correo = "Seleccione un tipo de documento";
+    errors.correo = "Ingrese el correo electrónico";
   }else{
     errors.correo = null;
   }
@@ -68,50 +67,67 @@ const validate = values => {
     errors.tipoTratamiendo = null;
   }
   if(!values.tipoGenero){
-    errors.tipoGenero = "Seleccione un genero";
+    errors.tipoGenero = "Seleccione un género";
   }else{
     errors.tipoGenero = null;
-  }
-  if(!values.tipoPais){
-    errors.tipoPais = "Seleccione un pais";
-  }else{
-    errors.tipoPais = null;
   }
   if(!values.tipoContacto){
     errors.tipoContacto = "Seleccione un tipo de contacto";
   }else{
     errors.tipoContacto = null;
   }
+  if(!values.pais){
+    errors.pais = "Seleccione un país";
+  }else{
+    errors.pais = null;
+  }
+  if(!values.departamento){
+    errors.departamento = "Seleccione un departamento";
+  }else{
+    errors.departamento = null;
+  }
+  if(!values.ciudad){
+    errors.ciudad = "Seleccione una ciudad";
+  }else{
+    errors.ciudad = null;
+  }
   return errors;
 };
-
 class ModalComponentContact extends Component {
 
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
         this._handleCreateContact = this._handleCreateContact.bind(this);
+        this._onChangeCountry = this._onChangeCountry.bind(this);
+        this._onChangeProvince = this._onChangeProvince.bind(this);
         momentLocalizer(moment);
     }
 
     componentWillMount(){
-      const{consultDataSelect,consultList} = this.props;
-      consultDataSelect(constants.CLIENT_ID_TYPE);
-      consultDataSelect(constants.FILTER_TITLE);
-      consultDataSelect(constants.FILTER_GENDER);
-      consultDataSelect(constants.FILTER_DEPENDENCY);
-      consultDataSelect(constants.FILTER_SOCIAL_STYLE);
-      consultDataSelect(constants.FILTER_ATTITUDE_OVER_GROUP);
-      consultDataSelect(constants.FILTER_COUNTRY);
-      consultDataSelect(constants.FILTER_TYPE_CONTACT_ID);
-      consultDataSelect(constants.FILTER_TYPE_LBO_ID);
-      consultDataSelect(constants.FILTER_FUNCTION_ID);
-      consultDataSelect(constants.FILTER_HOBBIES);
-      consultDataSelect(constants.FILTER_SPORTS);
+      const{getMasterDataFields} = this.props;
+      getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
     closeModal() {
         this.props.toggleModalContact();
+    }
+
+    _onChangeCountry(val){
+      const {fields: {pais, departamento, ciudad}} = this.props;
+      pais.onChange(val);
+      const {consultListWithParameterUbication} = this.props;
+      consultListWithParameterUbication(FILTER_PROVINCE, pais.value);
+      departamento.onChange('');
+      ciudad.onChange('');
+    }
+
+    _onChangeProvince(val){
+      const {fields: {pais, departamento, ciudad}} = this.props;
+      departamento.onChange(val);
+      const {consultListWithParameterUbication} = this.props;
+      consultListWithParameterUbication(FILTER_CITY, departamento.value);
+      ciudad.onChange('');
     }
 
     _handleCreateContact(){
@@ -119,11 +135,10 @@ class ModalComponentContact extends Component {
     }
 
     render() {
-
         const {modalStatus,selectsReducer} = this.props;
         const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
         numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
-        codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte},handleSubmit,error}= this.props;
+        codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
         return (
           <Modal
@@ -151,7 +166,7 @@ class ModalComponentContact extends Component {
                                   {...tipoDocumento}
                                   valueProp={'id'}
                                   textProp = {'value'}
-                                  data={selectsReducer.get('dataTypeDocument')}
+                                  data={selectsReducer.get(CLIENT_ID_TYPE) || []}
                                   /></dd>
                                 </dl>
                                 </Col>
@@ -175,11 +190,11 @@ class ModalComponentContact extends Component {
                                 <Col xs>
                                 <dl style={{width: '100%'}}>
                                   <dt><span>Tratamiento (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                  <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
+                                  <dd><ComboBox name="tipoTratamiendo" labelInput="Seleccione"
                                   {...tipoTratamiendo}
                                   valueProp={'id'}
                                   textProp = {'value'}
-                                  data={selectsReducer.get('dataTypeTitle')}
+                                  data={selectsReducer.get(FILTER_TITLE) || []}
                                   /></dd>
                                 </dl>
                                 </Col>
@@ -190,7 +205,7 @@ class ModalComponentContact extends Component {
                                   {...tipoGenero}
                                   valueProp={'id'}
                                   textProp = {'value'}
-                                  data={selectsReducer.get('dataTypeGender')}
+                                  data={selectsReducer.get(FILTER_GENDER) || []}
                                   /></dd>
                                 </dl>
                                 </Col>
@@ -251,7 +266,7 @@ class ModalComponentContact extends Component {
                                 {...tipoDependencia}
                                 valueProp={'id'}
                                 textProp = {'value'}
-                                data={selectsReducer.get('dataTypeDependency')}
+                                data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                                 /></dd>
                               </dl>
                               </Col>
@@ -270,7 +285,7 @@ class ModalComponentContact extends Component {
                                 {...tipoEstiloSocial}
                                 valueProp={'id'}
                                 textProp = {'value'}
-                                data={selectsReducer.get('dataTypeSocialStyle')}
+                                data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                                 /></dd>
                               </dl>
                               </Col>
@@ -281,7 +296,7 @@ class ModalComponentContact extends Component {
                                 {...tipoActitud}
                                 valueProp={'id'}
                                 textProp = {'value'}
-                                data={selectsReducer.get('dataTypeAttitudeOverGroup')}
+                                data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                                 /></dd>
                               </dl>
                               </Col>
@@ -293,24 +308,44 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>País (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoPais" labelInput="Seleccione"
-                                {...tipoPais}
-                                valueProp={'id'}
-                                textProp = {'value'}
-                                data={selectsReducer.get('dataTypeCountry')}
-                                /></dd>
+                                <dd><ComboBox
+                                  name="pais"
+                                  labelInput="Pais"
+                                  onChange={val => this._onChangeCountry(val)}
+                                  value={pais.value}
+                                  onBlur={pais.onBlur}
+                                  valueProp={'id'}
+                                  textProp={'value'}
+                                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                                  /></dd>
                               </dl>
                               </Col>
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Departamento (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                <dd><div className="ui input" style={{width: '100%'}}><input type="text"/></div></dd>
+                                <dd><ComboBox
+                                    name="departamento"
+                                    labelInput="Departamento"
+                                    onChange={val => this._onChangeProvince(val)}
+                                    value={departamento.value}
+                                    onBlur={departamento.onBlur}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    data={selectsReducer.get('dataTypeProvince')}
+                                    /></dd>
                               </dl>
                               </Col>
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Ciudad (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                <dd><div className="ui input" style={{width: '100%'}}><input type="text"/></div></dd>
+                                <dd> <ComboBox
+                                    name="ciudad"
+                                    labelInput="Ciudad"
+                                    {...ciudad}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    data={selectsReducer.get('dataTypeCity')}
+                                    /></dd>
                               </dl>
                               </Col>
                             </Row>
@@ -402,7 +437,7 @@ class ModalComponentContact extends Component {
                             {...tipoContacto}
                             valueProp={'id'}
                             textProp = {'value'}
-                            data={selectsReducer.get('dataTypeContact')}
+                            data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                             /></dd>
                           </dl>
                           </Col>
@@ -415,7 +450,7 @@ class ModalComponentContact extends Component {
                             {...tipoEntidad}
                             valueProp={'id'}
                             textProp = {'value'}
-                            data={selectsReducer.get('dataTypeLBO')}
+                            data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
                             /></dd>
                           </dl>
                           </Col>
@@ -428,7 +463,7 @@ class ModalComponentContact extends Component {
                             {...tipoFuncion}
                             valueProp={'id'}
                             textProp = {'value'}
-                            data={selectsReducer.get('dataTypeFunction')}
+                            data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
                             /></dd>
                           </dl>
                           </Col>
@@ -444,7 +479,7 @@ class ModalComponentContact extends Component {
                             {...tipoHobbie}
                             valueProp={'id'}
                             textProp = {'value'}
-                            data={selectsReducer.get('dataTypeHobbies')}
+                            data={selectsReducer.get(FILTER_HOBBIES) || []}
                             /></dd>
                           </dl>
                           </Col>
@@ -455,7 +490,7 @@ class ModalComponentContact extends Component {
                             {...tipoDeporte}
                             valueProp={'id'}
                             textProp = {'value'}
-                            data={selectsReducer.get('dataTypeSports')}
+                            data={selectsReducer.get(FILTER_SPORTS) || []}
                             /></dd>
                           </dl>
                           </Col>
@@ -485,6 +520,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         toggleModalContact,
         consultDataSelect,
+        consultListWithParameterUbication,
+        getMasterDataFields,
         consultList
     }, dispatch);
 }
