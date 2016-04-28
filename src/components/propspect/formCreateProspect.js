@@ -132,7 +132,7 @@ class FormCreateProspect extends Component{
          "localMarket":"",
          "marketLeader":"",
          "territory":"",
-         "actualizationDate":"2016-04-25 17:22:34",
+         "actualizationDate": null,
          "justificationForNoRM":"",
          "justificationForLostClient":"",
          "justificationForCreditNeed":"",

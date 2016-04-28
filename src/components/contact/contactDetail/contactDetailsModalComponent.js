@@ -3,11 +3,10 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import SelectFilterComponent from '../../selectsComponent/selectFilterContact/selectFilterComponent';
-import MultiSelectComponent from '../../selectsComponent/multiSelectContact/multiSelectComponent';
 import {consultDataSelect, getMasterDataFields, consultList} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
-import {CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails} from './actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -94,7 +93,7 @@ class ContactDetailsModalComponent extends Component {
   /* Carga la información del contacto */
   componentWillMount() {
     const {consultDataSelect, getMasterDataFields, consultList, getContactDetails, contactId} = this.props;
-    /* consultDataSelect(CLIENT_ID_TYPE);
+    /* consultDataSelect(CONTACT_ID_TYPE);
     consultDataSelect(FILTER_TITLE);
     consultDataSelect(FILTER_GENDER);
     consultDataSelect(FILTER_TYPE_CONTACT_ID);
@@ -102,10 +101,10 @@ class ContactDetailsModalComponent extends Component {
     consultDataSelect(FILTER_DEPENDENCY);
     consultDataSelect(FILTER_CONTACT_POSITION); */
 
-    getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
-    // getMasterDataFields([CLIENT_ID_TYPE]);
-
-    getContactDetails(contactId);
+    getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+    // getMasterDataFields([CONTACT_ID_TYPE]);
+    console.log('id cliente', window.localStorage.getItem('idClientSelected'));
+    getContactDetails(contactId, window.localStorage.getItem('idClientSelected'));
 
   }
 
@@ -180,7 +179,7 @@ class ContactDetailsModalComponent extends Component {
     // console.log(optionValue);
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
-    if (optionType === CLIENT_ID_TYPE) {
+    if (optionType === CONTACT_ID_TYPE) {
       contact.contactType = optionValue;
     }
     contactDetail.set('contactDetailList ->', contact);
@@ -193,10 +192,9 @@ class ContactDetailsModalComponent extends Component {
   }
 
   render() {
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup }, error, handleSubmit, selectsReducer} = this.props;
+    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup, dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
-    console.log('Tipos de documentos, -> ', selectsReducer.get('dataTypeDocument'));
     // const {} = contact;
     return (
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
@@ -222,7 +220,8 @@ class ContactDetailsModalComponent extends Component {
                       {...contactType}
                       valueProp={'id'}
                       textProp={'value'}
-                      data={selectsReducer.get(CLIENT_ID_TYPE) || []}
+                      data={selectsReducer.get(CONTACT_ID_TYPE) || []}
+                      defaultValue={contactType.value === undefined ? contact.contactType : contactType.value}
                     />
                   </dd>
                 </Col>
@@ -235,6 +234,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el número de documento del usuario"
                       onChange={val => this._onchangeValue("contactIdentityNumber", val)}
                       {...contactIdentityNumber}
+                      defaultValue={contactIdentityNumber.value === undefined ? contact.contactIdentityNumber : contactIdentityNumber.value}
                     />
                   </dd>
                 </Col>
@@ -255,6 +255,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_TITLE) || []}
+                      defaultValue={title.value === undefined ? contact.title : title.value}
                     />
                   </dd>
                 </Col>
@@ -268,6 +269,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_GENDER) || []}
+                      defaultValue={gender.value === undefined ? contact.gender : gender.value}
                     />
                   </dd>
                 </Col>
@@ -280,6 +282,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el primer nombre"
                       onChange={val => this._onchangeValue("firstName", val)}
                       {...firstName}
+                      defaultValue={firstName.value === undefined ? contact.firstName : firstName.value}
                     />
                   </dd>
                 </Col>
@@ -294,6 +297,7 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el segundo nombre"
                         onChange={val => this._onchangeValue("middleName", val)}
                         {...middleName}
+                        defaultValue={middleName.value === undefined ? contact.middleName : middleName.value}
                       />
                   </dd>
                 </Col>
@@ -306,6 +310,7 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el primer apellido"
                         onChange={val => this._onchangeValue("firstLastName", val)}
                         {...firstLastName}
+                        defaultValue={firstLastName.value === undefined ? contact.firstLastName : firstLastName.value}
                       />
                   </dd>
                 </Col>
@@ -318,6 +323,7 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el segundo apellido"
                         onChange={val => this._onchangeValue("secondLastName", val)}
                         {...secondLastName}
+                        defaultValue={secondLastName.value === undefined ? contact.secondLastName : secondLastName.value}
                       />
                   </dd>
                 </Col>
@@ -333,6 +339,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
+                      defaultValue={contactPosition.value === undefined ? contact.contactPosition : contactPosition.value}
                     />
                   </dd>
                 </Col>
@@ -346,14 +353,16 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_DEPENDENCY) || []}
+                      defaultValue={contactDependency.value === undefined ? contact.unit : contactDependency.value}
                     />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt>{'Fecha de nacimiento'}</dt>
                   <dd>
-                    <DateTimePicker time={false} />
-                    {/* <input type="text" className="rw-input form-control" id="form_socialStyle" name="form_socialStyle" maxLength="15" value={contact.dateOfBirth} /> */}
+                    <DateTimePicker time={false}
+                      defaultValue={dateOfBirth.value === undefined ? contact.dateOfBirth : dateOfBirth.value}
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -368,6 +377,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
+                      defaultValue={contactSocialStyle.value === undefined ? contact.socialStyle : contactSocialStyle.value}
                     />
                   </dd>
                 </Col>
@@ -381,6 +391,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
+                      defaultValue={contactAttitudeOverGroup.value === undefined ? contact.attitudeOverGroup : contactAttitudeOverGroup.value}
                     />
                   </dd>
                 </Col>
@@ -401,19 +412,20 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_COUNTRY) || []}
+                      defaultValue={country.value === undefined ? contact.country : country.value}
                     />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    {/* <SelectFilterComponent key={7} idTypeFilter={FILTER_PROVINCE} /> */}
+                    {/* Departamento */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
                   <dd>
-                    {/* <SelectFilterComponent key={8} idTypeFilter={FILTER_CITY} /> */}
+                    {/* Departamento */}
                   </dd>
                 </Col>
               </Row>
@@ -426,7 +438,8 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese la dirección"
                       onChange={val => this._onchangeValue("address", val)}
                       {...address}
-                    />
+                      value={address.value === undefined ? contact.address : address.value}
+                    ></textarea>
                   </dd>
                 </Col>
               </Row>
@@ -440,8 +453,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el barrio"
                         onChange={val => this._onchangeValue("neighborhood", val)}
                         {...neighborhood}
+                        defaultValue={neighborhood.value === undefined ? contact.neighborhood : neighborhood.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.neighborhood} /> */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
@@ -453,8 +466,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el código postal"
                         onChange={val => this._onchangeValue("postalCode", val)}
                         {...postalCode}
+                        defaultValue={postalCode.value === undefined ? contact.postalCode : postalCode.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.postalCode} /> */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
@@ -466,8 +479,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el número de telefono"
                         onChange={val => this._onchangeValue("telephoneNumber", val)}
                         {...telephoneNumber}
+                        defaultValue={telephoneNumber.value === undefined ? contact.telephoneNumber : telephoneNumber.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.telephoneNumber} /> */}
                   </dd>
                 </Col>
               </Row>
@@ -481,8 +494,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese la extensión"
                         onChange={val => this._onchangeValue("extension", val)}
                         {...extension}
+                        defaultValue={extension.value === undefined ? contact.extension : extension.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.extension} /> */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
@@ -494,8 +507,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el celular"
                         onChange={val => this._onchangeValue("mobileNumber", val)}
                         {...mobileNumber}
+                        defaultValue={mobileNumber.value === undefined ? contact.mobileNumber : mobileNumber.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.mobileNumber} /> */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
@@ -507,8 +520,8 @@ class ContactDetailsModalComponent extends Component {
                         placeholder="Ingrese el correo electrónico"
                         onChange={val => this._onchangeValue("emailAddress", val)}
                         {...emailAddress}
+                        defaultValue={emailAddress.value === undefined ? contact.emailAddress : emailAddress.value}
                       />
-                    {/* <input type="text" className="rw-input form-control" id="form_city" name="form_city" maxLength="15" value={contact.emailAddress} /> */}
                   </dd>
                 </Col>
               </Row>
@@ -528,34 +541,35 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
+                      defaultValue={typeOfContact.value === undefined ? contact.typeOfContact : typeOfContact.value}
                     />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Entidad / Línea de negocio ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    {/* <MultiSelectComponent key={10} idTypeFilter={FILTER_TYPE_LOB_ID} /> */}
-                    <ComboBox
+                    <MultipleSelect
                       name="lineOfBusiness"
                       labelInput="Seleccione al menos una línea de negocio"
                       {...lineOfBusiness}
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
+                      defaultValue={lineOfBusiness.value === undefined ? contact.lineOfBusiness : lineOfBusiness.value}
                     />
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    {/* <MultiSelectComponent key={11} idTypeFilter={FILTER_FUNCTION_ID} /> */}
-                    <ComboBox
+                    <MultipleSelect
                       name="functions"
                       labelInput="Seleccione al menos una función"
                       {...functions}
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                      defaultValue={functions.value === undefined ? contact['function'] : functions.value}
                     />
                   </dd>
                 </Col>
@@ -569,29 +583,28 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={6} lg={6}>
                   <dt><span>{'Hobbies'}</span></dt>
                   <dd>
-                    <ComboBox
+                    <MultipleSelect
                       name="hobbies"
                       labelInput="Seleccione al menos un hobby"
                       {...hobbies}
                       valueProp={'id'}
                       textProp={'value'}
                       data={selectsReducer.get(FILTER_HOBBIES) || []}
+                      defaultValue={hobbies.value === undefined ? contact.hobbies : hobbies.value}
                     />
-                    {/* <MultiSelectComponent key={12} idTypeFilter={FILTER_HOBBIES} /> */}
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={6}>
                   <dt><span>{'Deportes'}</span></dt>
                   <dd>
-                    {/* <Multiselect /> */}
-                    {/* <MultiSelectComponent key={13} idTypeFilter={FILTER_SPORTS} /> */}
-                    <ComboBox
+                    <MultipleSelect
                       name="sports"
                       labelInput="Seleccione al menos un deporte"
                       {...sports}
                       valueProp={'id'}
-                      textProp={'value'}
+                      textProp = {'value'}
                       data={selectsReducer.get(FILTER_SPORTS) || []}
+                      defaultValue={sports.value === undefined ? contact.sports : sports.value}
                     />
                   </dd>
                 </Col>
@@ -628,6 +641,6 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps){
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup"],
+  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup", "dateOfBirth"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

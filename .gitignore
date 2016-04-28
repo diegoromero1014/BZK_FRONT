@@ -4,3 +4,4 @@ webpack-assets.json
 netbeans/
 /nbproject/private/
 npm-debug.log
+dist/

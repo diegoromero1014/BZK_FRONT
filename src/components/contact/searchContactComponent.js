@@ -51,12 +51,12 @@ class SearchContactComponent extends Component {
   _handleContactsByClientsFind(){
       const {contactsByClientFindServer,contactsByClient} = this.props;
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
           v1,
           v2,
           v3);
       }else{
-          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,this.state.keyword,
+          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keyword,
           v1,
           v2,
           v3);

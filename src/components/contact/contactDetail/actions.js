@@ -6,7 +6,7 @@ import axios from 'axios';
  * Metodo para llamar al servicio y traer la informacion del contacto por su identficacion
  * @param contactId
  */
-export function getContactDetails(contactId) {
+export function getContactDetails(contactId, clientId) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -21,7 +21,8 @@ export function getContactDetails(contactId) {
       "isSuccessful": true
     },
     "messageBody": {
-      "id": contactId
+      "id": contactId,
+      "clientId": clientId
     }
   }
 

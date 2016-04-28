@@ -21,7 +21,7 @@ export function validateProspectExists(typeDocument, numberDocument){
         "numberDocument": numberDocument
       }
     }
-  var request = axios.post(APP_URL + "/validatePropspectExists", json);
+  var request = axios.post(APP_URL + "/validateProspectExists", json);
   return {
     type: VAIDATE_PROSPECT_EXISTS,
     payload: request
