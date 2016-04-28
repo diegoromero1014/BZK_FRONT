@@ -65,7 +65,7 @@ class ListContactComponent extends Component {
 
   componentWillMount(){
       const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3} = this.props;
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
       "",
       "",
       "");
@@ -89,7 +89,7 @@ class ListContactComponent extends Component {
                       "isSuccessful": true
                 },
                 "messageBody": {
-                "clientId":window.localStorage.getItem('idClientSeleted'),
+                "clientId":window.localStorage.getItem('idClientSelected'),
                 "contactId":value.id,
                 "clientContactId": value.idClientContact
               }
@@ -114,6 +114,7 @@ class ListContactComponent extends Component {
     const {contactsByClient} = this.props;
     const modalTitle = 'Contacto Detalle';
     const data = contactsByClient.get('contacts');
+    console.log('contact datas -> ', data);
     return ( < div className = "horizontal-scroll-wrapper" >
       <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>

@@ -15,7 +15,7 @@ class ClientListItem extends Component{
   _handleClickClientItem(e){
     const {dataId, dataIsAccess} = this.props;
     if(dataIsAccess){
-      window.localStorage.setItem('idClientSeleted', dataId);
+      window.localStorage.setItem('idClientSelected', dataId);
       redirectUrl("/dashboard/clientInformation");
     } else {
       this.setState({showEr: true});

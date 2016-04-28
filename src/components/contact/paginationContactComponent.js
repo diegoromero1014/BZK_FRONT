@@ -48,7 +48,7 @@ class PaginationContactComponent extends Component{
 
   _handleContactsByClientsFind(){
       const {contactsByClient,contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(this.state.limInf,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
+      contactsByClientFindServer(this.state.limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
     v2,
     v3);
   }
