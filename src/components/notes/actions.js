@@ -22,3 +22,17 @@ export function addNote(uid){
       uid
     };
 }
+
+export function setNotes(notes){
+  console.log("infoClient.notes", notes);
+  return {
+      type: constants.SET_NOTES,
+      notes
+    };
+}
+
+export function crearNotes(){
+  return {
+      type: constants.CLEAR_NOTES,
+    };
+}

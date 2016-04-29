@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {UPDATE_NOTE, CREATE_NOTE, DELETE_NOTE} from './constants';
+import {UPDATE_NOTE, CREATE_NOTE, DELETE_NOTE, SET_NOTES, CLEAR_NOTES} from './constants';
 import _ from 'lodash';
 
 
@@ -15,6 +15,20 @@ export default (state = initialState, action) => {
         return state.set(action.uid, {body: '', combo: ''});
     case DELETE_NOTE:
         return state.delete(action.index);
+    case SET_NOTES:
+        const notes = action.notes;
+        notes.map(map => {
+          const uid = _.uniqueId('note_');
+          state.set(uid, {body: map.note, combo: map.typeOfNote});
+        });
+        return state.withMutations(map => {
+          notes.forEach(map2 => {
+            const uid = _.uniqueId('note_');
+            map.set(uid, {body: map2.note, combo: map2.typeOfNote});
+          });
+        });
+    case CLEAR_NOTES:
+        return state.clear();
     default:
         return state;
     }

@@ -44,6 +44,7 @@ class NotesClient extends Component {
 
     _mapNotesItems(note) {
         const {selectsReducer} = this.props;
+        console.log("selectsReducer.get('dataTypeNotes')", selectsReducer.get("dataTypeNotes"));
         return <Note
             index={ note[0]}
             key={ note[0]}
@@ -60,17 +61,17 @@ class NotesClient extends Component {
     render() {
         const {notes} = this.props;
         return (
-            <Row>
-                <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
+            <Row style={{padding: "0px 10px 20px 20px"}}>
+              <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
+                  <button className="btn" style={{margin:"12px 0px 0px 12px", fontSize : '1.5em'}}
+                          type="button"
+                          onClick={this._addNote}
+                  >
+                      <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
+                  </button>
+              </Col>
+                <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
                     {notes.entrySeq().map(this._mapNotesItems)}
-                </Col>
-                <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
-                    <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
-                            type="button"
-                            onClick={this._addNote}
-                    >
-                        <span style={{color: "#FFFFFF", padding:"10px"}}>Add note</span>
-                    </button>
                 </Col>
             </Row>
         );

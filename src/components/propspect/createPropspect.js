@@ -125,7 +125,7 @@ class CreatePropspect extends Component{
               <Col xs={2} md={4} lg={2}>
                 <button className="btn btn-primary" type="submit" title="Buscar prospecto"
                   style={{marginLeft:"30px", marginTop: "20px", fontSize : '1.2em', paddingTop: "4px !important"}}>
-                  <i className="search icon" style={{color: "white"}}></i>
+                  <i className="<search icon" style={{color: "white"}}></i>
                 </button>
               </Col>
             </Row>
