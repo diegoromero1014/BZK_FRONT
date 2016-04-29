@@ -88,6 +88,12 @@ export default (state = initialState, action) => {
         case constants.TYPE_NOTES:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeNotes', masterDataDetailEntries);
+        case constants.CLEAR_VALUES_COUNTRY:
+          return state.withMutations( map => {
+            map
+              .set('dataTypeProvince', [])
+              .set('dataTypeCity', [])
+          });
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
           const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           const lists = _.groupBy(masterDataDetailEntries, 'field');

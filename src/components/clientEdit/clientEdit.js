@@ -7,7 +7,8 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication, getMasterDataFields} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter,
+    consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -199,7 +200,9 @@ class clientEdit extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, setNotes, crearNotes} = this.props;
+
+    const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
+    clearValuesAdressess();
     crearNotes();
     var infoClient = clientInformacion.get('responseClientInfo');
     if( infoClient !== null && infoClient.notes !== null && infoClient.notes.length > 0 ){
@@ -911,7 +914,8 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     setNotes,
     crearNotes,
-    createProspect
+    createProspect,
+    clearValuesAdressess
   }, dispatch);
 }
 

@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {FILTER_MULTISELECT_FIELDS} from './constants';
+import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY} from './constants';
 
 export function consultDataSelect(field){
   const json = {
@@ -128,5 +128,11 @@ export function getMasterDataFields(fields) {
   return {
     type: FILTER_MULTISELECT_FIELDS,
     payload: request
+  }
+}
+
+export function clearValuesAdressess(){
+  return {
+    type: CLEAR_VALUES_COUNTRY
   }
 }
