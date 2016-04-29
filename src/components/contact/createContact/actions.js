@@ -19,6 +19,7 @@ export function createContactNew(jsonCreateContact){
       },
       messageBody: jsonCreateContact
     }
+    console.log(json);
   var request = axios.post(APP_URL + "/saveContact", json);
   return {
     type: actions.CREATE_CONTACT,
@@ -27,7 +28,7 @@ export function createContactNew(jsonCreateContact){
 }
 
 
-export function searchContact(typeDocument,numberDocument){
+export function searchContact(typeDocument,numberDocument,clientId){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
@@ -44,7 +45,8 @@ export function searchContact(typeDocument,numberDocument){
       },
       "messageBody": {
         "typeDocument": typeDocument,
-        "numberDocument":numberDocument
+        "numberDocument":numberDocument,
+        "clientId": clientId
       }
     }
   var request = axios.post(APP_URL + "/getContactByDocument", json);
@@ -57,5 +59,11 @@ export function searchContact(typeDocument,numberDocument){
 export function toggleModalContact(){
     return {
         type: actions.TOGGLE_MODAL_CONTACT
+    };
+}
+
+export function clearSearchContact(){
+    return {
+        type: actions.CLEAR_SEARCH_CONTACT
     };
 }

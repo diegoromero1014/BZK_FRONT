@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import {toggleModalContact,createContactNew,searchContact} from './actions';
+import {toggleModalContact,createContactNew,searchContact,clearSearchContact} from './actions';
 import {contactsByClientFindServer} from '../actions';
 import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
@@ -16,10 +16,11 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
-import {FILTER_CITY,FILTER_PROVINCE,CLIENT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
+import {FILTER_CITY,FILTER_PROVINCE,CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
-const fields =["tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
+const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
 "numeroDocumento","primerNombre","segundoNombre","primerApellido", "segundoApellido","fechaNacimiento","direccion","barrio",
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
@@ -106,22 +107,25 @@ class ModalComponentContact extends Component {
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
         this._searchContact = this._searchContact.bind(this);
-        this._onchangeValue = this._onchangeValue.bind(this);
         this.state = {
            showEx:false,
            showEr:false,
-           contactDetail: {}
+           showErrorYa: false,
+           showErrorNo: false
          }
         momentLocalizer(moment);
     }
 
     componentWillMount(){
       const{getMasterDataFields} = this.props;
-      getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+      getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
     closeModal() {
-        this.props.toggleModalContact();
+      const{clearSearchContact} = this.props;
+      clearSearchContact();
+      this.props.resetForm();
+      this.props.toggleModalContact();
     }
 
     _onChangeCountry(val){
@@ -142,40 +146,35 @@ class ModalComponentContact extends Component {
     }
 
     _closeCreate(){
-        this.setState({showEx:false, showEr: false});
+        this.setState({showEx:false, showEr: false,showErrorYa:false, showErrorNo:false});
     }
 
     _searchContact(){
-      const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
+      const {fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
       const {searchContact} = this.props;
-      searchContact(tipoDocumento.value,numeroDocumento.value).then((data) => {
-          this.setState({contactDetail : JSON.parse(_.get(data, 'payload.data.contactDetail'))});
+      searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
+          if((_.get(data, 'payload.data.isClientContact'))){
+              this.props.resetForm();
+              this.setState({showErrorYa: true});
+            }else if(!(_.get(data, 'payload.data.findContact'))){
+              this.setState({showErrorNo: true});
+            }
           }, (reason) => {
-            console.log("presento un error");
+            this.setState({showEr: true});
         });
     }
 
-    _onchangeValue(type, val) {
-      console.log(type,val);
-      switch (type) {
-        case "firstName":
-          const {fields: {primerNombre}} = this.props;
-          primerNombre.onChange(val);
-          break;
-        default:
-          break;
-      }
-    }
 
     _handleCreateContact(){
       const {createContactNew,contactsByClientFindServer,createContactReducer} = this.props;
-      const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
+      const {fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
       var messageBody = {
-        "client": window.localStorage.getItem('idClientSeleted'),
+        "id" :id.value,
+        "client": window.localStorage.getItem('idClientSelected'),
         "title": tipoTratamiendo.value,
         "gender" : tipoGenero.value ,
         "contactType" : tipoDocumento.value,
@@ -187,7 +186,7 @@ class ModalComponentContact extends Component {
         "contactPosition" : tipoCargo.value,
         "unit" : tipoDependencia.value,
         "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : null,
+        "dateOfBirth" : moment(fechaNacimiento.value).format('x'),
         "address" : direccion.value,
         "country" : pais.value,
         "province" : departamento.value,
@@ -209,7 +208,7 @@ class ModalComponentContact extends Component {
           if((_.get(data, 'payload.status') === 200)){
               this.setState({showEx: true});
               this.closeModal();
-              contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+              contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
               "",
               "",
               "");
@@ -223,11 +222,10 @@ class ModalComponentContact extends Component {
 
     render() {
         const {modalStatus,selectsReducer,createContactReducer} = this.props;
-        const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
+        const {initialValues, fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
         numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
-        var contactDetail = createContactReducer.get('responseSearchContactData');
         return (
           <div>
           <Modal
@@ -255,7 +253,7 @@ class ModalComponentContact extends Component {
                                   {...tipoDocumento}
                                   valueProp={'id'}
                                   textProp = {'value'}
-                                  data={selectsReducer.get(CLIENT_ID_TYPE) || []}
+                                  data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                   /></dd>
                                 </dl>
                                 </Col>
@@ -305,10 +303,8 @@ class ModalComponentContact extends Component {
                                   <InputComponent
                                     name="primerNombre"
                                     type="text"
-                                    onChange={val => this._onchangeValue("firstName", val)}
-                                    defaultValue={contactDetail.firstName}
                                     {...primerNombre}
-                                  /></dd>
+                                    /></dd>
                                 </dl>
                                 </Col>
                             </Row>
@@ -370,7 +366,7 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Fecha nacimiento</span></dt>
-                                <dd><DateTimePicker format ={"DD-MM-YYYY"} culture='es' {...fechaNacimiento}/></dd>
+                                <dd><DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...fechaNacimiento}/></dd>
                               </dl>
                               </Col>
                             </Row>
@@ -407,7 +403,7 @@ class ModalComponentContact extends Component {
                                 <dt><span>País (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd><ComboBox
                                   name="pais"
-                                  labelInput="Pais"
+                                  labelInput="Seleccione"
                                   onChange={val => this._onChangeCountry(val)}
                                   value={pais.value}
                                   onBlur={pais.onBlur}
@@ -422,7 +418,7 @@ class ModalComponentContact extends Component {
                                 <dt><span>Departamento (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd><ComboBox
                                     name="departamento"
-                                    labelInput="Departamento"
+                                    labelInput="Seleccione"
                                     onChange={val => this._onChangeProvince(val)}
                                     value={departamento.value}
                                     onBlur={departamento.onBlur}
@@ -437,7 +433,7 @@ class ModalComponentContact extends Component {
                                 <dt><span>Ciudad (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd> <ComboBox
                                     name="ciudad"
-                                    labelInput="Ciudad"
+                                    labelInput="Seleccione"
                                     {...ciudad}
                                     valueProp={'id'}
                                     textProp={'value'}
@@ -450,7 +446,8 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Dirección (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                <dd><TextareaComponent
+                                <dd>
+                                <InputComponent
                                   name="direccion"
                                   type="text"
                                   style={{width: '100%', height: '100%'}}
@@ -611,27 +608,80 @@ class ModalComponentContact extends Component {
            />
            <SweetAlert
             type= "error"
-            show={this.state.showEr}
             title="Error"
-            text="Se presento un error al realizar la creación del contacto."
+            show={this.state.showErrorYa}
+            text="El cliente ya presenta una relación con el contacto buscado"
             onConfirm={() => this._closeCreate()}
             />
+            <SweetAlert
+             type= "error"
+             show={this.state.showEr}
+             title="Error"
+             text="Se presento un error"
+             onConfirm={() => this._closeCreate()}
+             />
+             <SweetAlert
+              type= "error"
+              show={this.state.showErrorNo}
+              title="Error"
+              text="El contacto no existe"
+              onConfirm={() => this._closeCreate()}
+              />
             </div>
         );
     }
 }
 
-function mapStateToProps({createContactReducer,selectsReducer}) {
+function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
+  const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
+  if(contactDetail){
     return {
-        modalStatus: createContactReducer.get('modalState'),
-        selectsReducer,
-        createContactReducer
+      modalStatus: createContactReducer.get('modalState'),
+      selectsReducer,
+      initialValues: {
+        id: contactDetail.id,
+        tipoDocumento:contactDetail.contactType,
+        numeroDocumento: contactDetail.contactIdentityNumber,
+        tipoTratamiendo:contactDetail.title,
+        tipoGenero:contactDetail.gender,
+        primerNombre: contactDetail.firstName,
+        segundoNombre:contactDetail.middleName,
+        primerApellido:contactDetail.firstLastName,
+        segundoApellido:contactDetail.secondLastName,
+        tipoCargo:contactDetail.contactPosition,
+        tipoDependencia:contactDetail.unit,
+        fechaNacimiento:contactDetail.dateOfBirth,
+        tipoEstiloSocial:contactDetail.socialStyle,
+        tipoActitud:contactDetail.attitudeOverGroup,
+        pais:contactDetail.country,
+        departamento:contactDetail.province,
+        ciudad:contactDetail.city,
+        direccion:contactDetail.address,
+        barrio:contactDetail.neighborhood,
+        codigoPostal:contactDetail.postalCode,
+        telefono:contactDetail.telephoneNumber,
+        extension:contactDetail.extension,
+        celular:contactDetail.mobileNumber,
+        correo:contactDetail.emailAddress,
+        tipoHobbie: _.join(contactDetail.hobbies, ','),
+        tipoContacto:contactDetail.typeOfContact,
+        tipoEntidad:_.join(contactDetail.lineOfBusiness, ','),
+        tipoFuncion:_.join(contactDetail.function, ','),
+        tipoDeporte:_.join(contactDetail.sports, ',')
+      }
     };
+  }else{
+    return {
+      modalStatus: createContactReducer.get('modalState'),
+      selectsReducer
+    };
+  }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         toggleModalContact,
+        clearSearchContact,
         searchContact,
         createContactNew,
         consultDataSelect,
@@ -642,4 +692,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-export default reduxForm({form : 'submitValidation', fields, validate}, mapStateToProps,mapDispatchToProps)(ModalComponentContact);
+export default reduxForm({form : 'submitValidation', fields, validate }, mapStateToProps, mapDispatchToProps)(ModalComponentContact);
