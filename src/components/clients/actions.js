@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD} from './constants';
+import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS} from './constants';
 import axios from 'axios';
 
 export function clientsFindServer(keyword, limInf, limSup){
@@ -41,5 +41,11 @@ export function changeKeyword(keyword){
   return{
     type: CHANGE_KEYWORD,
     keyword: keyword
+  }
+}
+
+export function clearClients(){
+  return {
+    type: CLEAR_CLIENTS
   }
 }

@@ -20,7 +20,8 @@ const initialState = Immutable.Map({
   dataTypeSports: [],
   teamValueObjects: [],
   dataTypeContactPosition: [],
-  dataTypeAttitudeOverGroup: []
+  dataTypeAttitudeOverGroup: [],
+  dataTypeNotes: []
 });
 
 
@@ -80,9 +81,11 @@ export default (state = initialState, action) => {
         case constants.TEAM_FOR_EMPLOYEE:
           var teamValueObjects = action.payload.data.teamValueObjects;
           return state.set('teamValueObjects', teamValueObjects);
+        case constants.TYPE_NOTES:
+          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set('dataTypeNotes', masterDataDetailEntries);
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
           const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-
           const lists = _.groupBy(masterDataDetailEntries, 'field');
           const keys = _.keys(lists);
           return state.withMutations(map => {

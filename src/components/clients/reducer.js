@@ -24,6 +24,13 @@ export default (state = initialState, action) => {
       return state.set('page', action.currentPage);
     case CHANGE_KEYWORD:
       return state.set('keyword', action.keyword);
+    case CLEAR_CLIENTS:
+      return state.withMutations(map => {
+          map
+          .set('status', 'withoutProcessing')
+          .set('keyword', '')
+          .set('responseClients', []);
+      });
     default:
     return state;
   }

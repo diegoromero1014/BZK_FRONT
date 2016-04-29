@@ -18,3 +18,4 @@ export const FILTER_SPORTS = 'sports';
 export const TEAM_FOR_EMPLOYEE = 'teamsByEmployee';
 export const FILTER_MULTISELECT_FIELDS = 'multiselect_fields';
 export const FILTER_ATTITUDE_OVER_GROUP = 'attitudeOverGroup';
+export const TYPE_NOTES = 'typeOfNotes';

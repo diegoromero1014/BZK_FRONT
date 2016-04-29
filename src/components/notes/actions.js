@@ -9,6 +9,13 @@ export function updateNote(index, prop, value){
     };
 }
 
+export function deleteNote(index){
+  return {
+      type: constants.DELETE_NOTE,
+      index
+    };
+}
+
 export function addNote(){
   return {
       type: constants.CREATE_NOTE

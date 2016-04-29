@@ -1,40 +1,57 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {consultDataSelect} from '../selectsComponent/actions';
+import {CLIENT_ID_TYPE, TYPE_NOTES} from '../selectsComponent/constants';
+import Note from './noteItem';
 
 class NotesClient extends Component{
+  constructor( props ) {
+    super(props);
+    this.state = {
+       data: []
+     };
+     this._mapNotesItems = this._mapNotesItems.bind(this);
+  }
+
+  componentWillMount(){
+    const {consultDataSelect} = this.props;
+    consultDataSelect(TYPE_NOTES);
+  }
+
+  _mapNotesItems(item, idx) {
+    const {selectsReducer} = this.props;
+    console.log("Valor", item, idx);
+    return <Note
+        index={idx}
+        defaultCombo={item.combo}
+        defaultBody={item.body}
+        data={selectsReducer.get("dataTypeNotes")}
+      />
+  }
+
   render(){
+    const {notes} = this.props;
+    console.log("notes", notes);
     return(
-      {notes.map((note, index) =>
-        <Col xs={12} md={12} lg={12} style={{marginLeft: "10px"}}>
-          <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Dirección sede principal</h3>
-        </Col>
-        <Col xs={12} md={3} lg={3} style={{marginTop: "15px"}}>
-          <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
-            <dt><span>Tipo de notesAdd(</span><span style={{color: "red"}}>*</span>)</dt>
-            <input
-              type="text"
-              style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
-            />
-          </div>
-        </Col>
-        <Col xs={12} md={9} lg={9} style={{marginTop: "15px"}}>
-          <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
-            <dt><span>Descripción de la nota(</span><span style={{color: "red"}}>*</span>)</dt>
-            <input
-              type="text"
-              style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
-            />
-          </div>
-        </Col>
-        //<Note
-          //updateValue={this.updateValue.bind(this, index, 'body')}
-          //body={note.body}
-          //combo={note.combo}
-          //key={index}
-          //index={index}
-          ///>)
-      }
+      <div>
+        {notes.map(this._mapNotesItems)}
+      </div>
     );
   }
 }
 
-export default NotesClient;
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    consultDataSelect
+  }, dispatch);
+}
+
+function mapStateToProps({notes, selectsReducer},ownerProps) {
+  return {
+    notes,
+    selectsReducer
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotesClient);

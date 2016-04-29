@@ -14,7 +14,7 @@
   },
   "betterScripts": {
     "build": {
-      "command": "node node_modules/.bin/webpack --verbose --colors --display-error-details --config webpack/webpack.config.prod.js",
+      "command": "node node_modules/.bin/webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.prod.js",
       "env": {
         "NODE_ENV": "production"
       }
