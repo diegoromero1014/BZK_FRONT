@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
           map
           .set('status', 'withoutProcessing')
           .set('keyword', '')
+          .set('countClients', 0)
           .set('responseClients', []);
       });
     default:
