@@ -153,9 +153,10 @@ class ModalComponentContact extends Component {
       const {fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
-      const {searchContact} = this.props;
+      const {searchContact,clearSearchContact} = this.props;
       searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
           if((_.get(data, 'payload.data.isClientContact'))){
+              clearSearchContact();
               this.props.resetForm();
               this.setState({showErrorYa: true});
             }else if(!(_.get(data, 'payload.data.findContact'))){
