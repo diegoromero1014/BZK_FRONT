@@ -6,6 +6,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {consultDataSelect, getMasterDataFields,  consultListWithParameterUbication} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
@@ -65,11 +66,11 @@ const validate = values => {
     } else {
       errors.telephoneNumber = null;
     }
-    if (!values.lineOfBusiness) {
+    /*if (!values.lineOfBusiness) {
       errors.lineOfBusiness = "Debe seleccionar al menos una línea de negocio";
     } else {
       errors.lineOfBusiness = null;
-    }
+    }*/
     if (!values.functions) {
       errors.functions = "Debe seleccionar al menos una función";
     } else {
@@ -99,7 +100,8 @@ class ContactDetailsModalComponent extends Component {
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
     .then(function(data) {
-      const contact = JSON.parse(data.payload.data.contactDetail);
+      console.log(_.get(data, 'payload.data.contactDetail'));
+      const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
 
       console.log('Datos del contacto -> ', contact);
       console.log('this ', that);
@@ -245,7 +247,7 @@ class ContactDetailsModalComponent extends Component {
       "contactPosition": contactPosition.value !== undefined ? contactPosition.value : null,
       "unit": contactDependency.value !== undefined ? contactDependency.value : null,
       "function": functions.value !== undefined ? _.split(functions.value, ',') : null,
-      "dateOfBirth": dateOfBirth.value !== undefined ? dateOfBirth.value : null,
+      "dateOfBirth": dateOfBirth.value !== undefined ? moment(dateOfBirth.value).format('x') : null,
       "address": address.value !== undefined ? address.value : null,
       "country": country.value !== undefined ? country.value : null,
       "province": province.value !== undefined ? province.value : null,
@@ -313,7 +315,7 @@ class ContactDetailsModalComponent extends Component {
                     placeholder="Ingrese el número de documento del usuario"
                     onChange={val => this._onchangeValue("contactIdentityNumber", val)}
                     {...contactIdentityNumber}
-                    defaultValue={contactIdentityNumber.value === undefined ? contact.contactIdentityNumber : contactIdentityNumber.value}
+                    value={contactIdentityNumber.value === undefined ? contact.contactIdentityNumber : contactIdentityNumber.value}
                   />
                 </dd>
               </Col>
@@ -356,7 +358,7 @@ class ContactDetailsModalComponent extends Component {
                     placeholder="Ingrese el primer nombre"
                     onChange={val => this._onchangeValue("firstName", val)}
                     {...firstName}
-                    defaultValue={firstName.value === undefined ? contact.firstName : firstName.value}
+                    value={firstName.value === undefined ? contact.firstName : firstName.value}
                   />
                 </dd>
               </Col>
@@ -371,7 +373,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el segundo nombre"
                       onChange={val => this._onchangeValue("middleName", val)}
                       {...middleName}
-                      defaultValue={middleName.value === undefined ? contact.middleName : middleName.value}
+                      value={middleName.value === undefined ? contact.middleName : middleName.value}
                     />
                 </dd>
               </Col>
@@ -384,7 +386,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el primer apellido"
                       onChange={val => this._onchangeValue("firstLastName", val)}
                       {...firstLastName}
-                      defaultValue={firstLastName.value === undefined ? contact.firstLastName : firstLastName.value}
+                      value={firstLastName.value === undefined ? contact.firstLastName : firstLastName.value}
                     />
                 </dd>
               </Col>
@@ -397,7 +399,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el segundo apellido"
                       onChange={val => this._onchangeValue("secondLastName", val)}
                       {...secondLastName}
-                      defaultValue={secondLastName.value === undefined ? contact.secondLastName : secondLastName.value}
+                      value={secondLastName.value === undefined ? contact.secondLastName : secondLastName.value}
                     />
                 </dd>
               </Col>
@@ -434,11 +436,13 @@ class ContactDetailsModalComponent extends Component {
               <Col xs={12} sm={12} md={6} lg={4}>
                 <dt>{'Fecha de nacimiento'}</dt>
                 <dd>
-                  <DateTimePicker
+                  <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateOfBirth} />
+                  
+                  {/* <DateTimePicker
                     culture='es'
                     {...dateOfBirth}
                     //defaultValue={dateOfBirth.value === undefined ? contact.dateOfBirth : dateOfBirth.value}
-                  />
+                  /> */}
                 </dd>
               </Col>
             </Row>
@@ -555,7 +559,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el barrio"
                       onChange={val => this._onchangeValue("neighborhood", val)}
                       {...neighborhood}
-                      defaultValue={neighborhood.value === undefined ? contact.neighborhood : neighborhood.value}
+                      value={neighborhood.value === undefined ? contact.neighborhood : neighborhood.value}
                     />
                 </dd>
               </Col>
@@ -568,7 +572,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el código postal"
                       onChange={val => this._onchangeValue("postalCode", val)}
                       {...postalCode}
-                      defaultValue={postalCode.value === undefined ? contact.postalCode : postalCode.value}
+                      value={postalCode.value === undefined ? contact.postalCode : postalCode.value}
                     />
                 </dd>
               </Col>
@@ -581,7 +585,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el número de telefono"
                       onChange={val => this._onchangeValue("telephoneNumber", val)}
                       {...telephoneNumber}
-                      defaultValue={telephoneNumber.value === undefined ? contact.telephoneNumber : telephoneNumber.value}
+                      value={telephoneNumber.value === undefined ? contact.telephoneNumber : telephoneNumber.value}
                     />
                 </dd>
               </Col>
@@ -596,7 +600,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese la extensión"
                       onChange={val => this._onchangeValue("extension", val)}
                       {...extension}
-                      defaultValue={extension.value === undefined ? contact.extension : extension.value}
+                      value={extension.value === undefined ? contact.extension : extension.value}
                     />
                 </dd>
               </Col>
@@ -609,7 +613,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el celular"
                       onChange={val => this._onchangeValue("mobileNumber", val)}
                       {...mobileNumber}
-                      defaultValue={mobileNumber.value === undefined ? contact.mobileNumber : mobileNumber.value}
+                      value={mobileNumber.value === undefined ? contact.mobileNumber : mobileNumber.value}
                     />
                 </dd>
               </Col>
@@ -622,7 +626,7 @@ class ContactDetailsModalComponent extends Component {
                       placeholder="Ingrese el correo electrónico"
                       onChange={val => this._onchangeValue("emailAddress", val)}
                       {...emailAddress}
-                      defaultValue={emailAddress.value === undefined ? contact.emailAddress : emailAddress.value}
+                      value={emailAddress.value === undefined ? contact.emailAddress : emailAddress.value}
                     />
                 </dd>
               </Col>
@@ -648,7 +652,7 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
               <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Entidad / Línea de negocio ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                <dt><span>{'Entidad / Línea de negocio'}</span></dt>
                 <dd>
                   <MultipleSelect
                     name="lineOfBusiness"
