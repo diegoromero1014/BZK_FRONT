@@ -19,7 +19,7 @@ export function consultDataSelect(field){
       messageBody: {
         "field": field
       }
-    }
+    };
   var request = axios.post(APP_URL + "/masterDataByField", json);
   return {
     type: field,

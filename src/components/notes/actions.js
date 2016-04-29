@@ -16,8 +16,9 @@ export function deleteNote(index){
     };
 }
 
-export function addNote(){
+export function addNote(uid){
   return {
-      type: constants.CREATE_NOTE
+      type: constants.CREATE_NOTE,
+      uid
     };
 }

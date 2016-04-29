@@ -116,7 +116,8 @@ var webpack = require('webpack'),
                 }
             }),
             new webpack.ProvidePlugin({
-                'jQuery': 'jquery'
+                jQuery: 'jquery',
+                $: 'jquery'
             }),
             webpackIsomorphicToolsPlugin
         ]
