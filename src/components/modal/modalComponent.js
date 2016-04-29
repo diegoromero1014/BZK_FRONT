@@ -50,30 +50,23 @@ class ModalComponentDialog extends Component {
           <Modal
               isOpen={this.state.modalIsOpen}
               onRequestClose={this.closeModal}
-              className="modalBt4-fade modal fade contact-detail-modal in"
-          >
-              <div className="modalBt4-dialog modalBt4-lg">
-                  <div className="modalBt4-content modal-content">
-                      <div className="modalBt4-header modal-header">
-                      <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
-                        <span className="modal-title" aria-hidden="true" role="close"><i className="icon-cross modal-icon-close" role="close"></i></span>
-                        <span className="sr-only">Close</span>
-                      </button>
-                            <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
-                      </div>{this._contectViewModal(actions)}
-                        <div className="modalBt4-footer modal-footer">
-                        <button type="button" className="btn btn-primary modal-button-edit" onClick={this.closeModal}>Guardar
-                        </button>
-                            <button type="button" className="btn btn-secondary modal-button-edit" data-dismiss="modal"
-                                    onClick={this.closeModal}>Cancelar
-                            </button>
+              className="modalBt4-fade modal fade contact-detail-modal in">
 
-                        </div>
-                  </div>
+            <div className="modalBt4-dialog modalBt4-lg">
+              <div className="modalBt4-content modal-content">
+                <div className="modalBt4-header modal-header">
+                  <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
+                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                    <span className="sr-only">Close</span>
+                  </button>
+                  <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
+                </div>
+                {this._contectViewModal(actions)}
               </div>
+            </div>
           </Modal>
-          </td>
-        );
+        </td>
+      );
     }
 }
 
