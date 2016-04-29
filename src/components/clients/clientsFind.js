@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {clientsFindServer} from './actions';
+import {clientsFindServer, clearClients} from './actions';
 import ClientListItem from './clientListItem';
 import SearchBarClient from './searchBarClient';
 import Pagination from './pagination';
@@ -18,6 +18,9 @@ class ClientsFind extends Component {
   componentWillMount(){
     if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
       redirectUrl("/login");
+    } else {
+      const {clearClients} = this.props;
+      clearClients();
     }
   }
 
@@ -45,6 +48,7 @@ class ClientsFind extends Component {
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
       clientItems = clientR.get('responseClients');
+      console.log("clientItems: ", clientItems);
       return (
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={12} lg={12}>
@@ -75,7 +79,8 @@ class ClientsFind extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    clientsFindServer
+    clientsFindServer,
+    clearClients
   }, dispatch);
 }
 

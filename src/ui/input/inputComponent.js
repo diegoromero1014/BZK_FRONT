@@ -52,6 +52,7 @@ inputComponent.PropTypes = {
     placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
+    defaultValue: PropTypes.string,
     min: PropTypes.string
 };
 

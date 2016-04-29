@@ -8,6 +8,7 @@ import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import {redirectUrl} from '../globalComponents/actions';
+import {addNote} from '../notes/actions';
 import {DateTimePicker} from 'react-widgets';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -16,6 +17,7 @@ import _ from 'lodash';
 import numeral from 'numeral';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
   from '../selectsComponent/actions';
+import NotesClient from '../notes/notesClient';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -66,6 +68,8 @@ class FormCreateProspect extends Component{
     this._closeSuccess = this._closeSuccess.bind(this);
     this._onConfirmCreate = this._onConfirmCreate.bind(this);
 
+    this._addNote = this._addNote.bind(this);
+
   }
 
   _closeWindow(){
@@ -86,6 +90,11 @@ class FormCreateProspect extends Component{
   _closeSuccess(){
     this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clients");
+  }
+
+  _addNote(){
+    const {addNote} = this.props;
+    addNote();
   }
 
   _onConfirmCreate(){
@@ -218,6 +227,19 @@ class FormCreateProspect extends Component{
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
         <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
+
+          <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
+            <NotesClient />
+          </Col>
+          <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
+            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
+              type="button"
+              onClick={this._addNote}
+            >
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Add note</span>
+            </button>
+          </Col>
+
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
@@ -570,13 +592,15 @@ function mapDispatchToProps(dispatch) {
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication,
+    addNote
   }, dispatch);
 }
 
-function mapStateToProps({propspectReducer, selectsReducer},ownerProps) {
+function mapStateToProps({propspectReducer, selectsReducer, notes},ownerProps) {
   return {
     propspectReducer,
-    selectsReducer
+    selectsReducer,
+    notes
   };
 }
 

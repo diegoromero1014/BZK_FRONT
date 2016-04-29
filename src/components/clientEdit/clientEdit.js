@@ -11,11 +11,15 @@ import {consultDataSelect, consultList, consultListWithParameter, consultListWit
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import NumberInput from 'react-number-input';
+import NumberInput from '../../ui/numberInput/numberInputComponent';
+import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
 import {DateTimePicker} from 'react-widgets';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import NotesClient from '../notes/notesClient';
+import {setNotes, crearNotes} from '../notes/actions';
+import {createProspect} from '../propspect/actions';
 import _ from 'lodash';
 
 const valuesYesNo = [
@@ -23,10 +27,128 @@ const valuesYesNo = [
   {'id': false, 'value': "No"}
 ];
 
-const fields = ["idCIIU", "idSubCIIU", "address", "country", "city", "province",
+const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
-      "centroDecision", "necesitaLME", "groupEconomic", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
+    "centroDecision", "necesitaLME", "groupEconomic", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
+
+var isProspect = false;
+
+const validate = values => {
+    const errors = {}
+
+    if (!values.idCIIU) {
+      errors.idCIIU = "Debe seleccionar una opción";
+    } else {
+      errors.idCIIU = null;
+    }
+    if (!values.idSubCIIU) {
+      errors.idSubCIIU = "Debe seleccionar una opción";
+    } else {
+      errors.idSubCIIU = null;
+    }
+    if (!values.address) {
+      errors.address = "Debe ingresar un valor";
+    } else {
+      errors.address = null;
+    }
+    if (!values.telephone) {
+      errors.telephone = "Debe ingresar un valor";
+    } else {
+      errors.telephone = null;
+    }
+    if (!values.annualSales) {
+      errors.annualSales = "Debe ingresar un valor";
+    } else {
+      errors.annualSales = null;
+    }
+    if (!values.country) {
+      errors.country = "Debe seleccionar un valor";
+    } else {
+      errors.country = null;
+    }
+    if (!values.province) {
+      errors.province = "Debe seleccionar un valor";
+    } else {
+      errors.province = null;
+    }
+    if (!values.city) {
+      errors.city = "Debe ingresar un valor";
+    } else {
+      errors.city = null;
+    }
+    if (!values.dateSalesAnnuals) {
+      errors.dateSalesAnnuals = "Debe seleccionar un día";
+    } else {
+      errors.dateSalesAnnuals = null;
+    }
+    if (!values.liabilities) {
+      errors.liabilities = "Debe ingresar un valor";
+    } else {
+      errors.liabilities = null;
+    }
+    if (!values.assets) {
+      errors.assets = "Debe ingresar un valor";
+    } else {
+      errors.assets = null;
+    }
+    if (!values.operatingIncome) {
+      errors.operatingIncome = "Debe ingresar un valor";
+    } else {
+      errors.operatingIncome = null;
+    }
+    if (!values.nonOperatingIncome) {
+      errors.nonOperatingIncome = "Debe ingresar un valor";
+    } else {
+      errors.nonOperatingIncome = null;
+    }
+    if (!values.expenses) {
+      errors.expenses = "Debe ingresar un valor";
+    } else {
+      errors.expenses = null;
+    }
+    if (!values.marcGeren && !isProspect) {
+      errors.marcGeren = "Debe seleccionar un valor";
+    } else {
+      errors.marcGeren = null;
+    }
+    if (values.marcGeren && !values.justifyNoGeren) {
+      errors.justifyNoGeren = "Debe seleccionar un valor";
+    } else {
+      errors.justifyNoGeren = null;
+    }
+    if (!values.centroDecision && !isProspect) {
+      errors.centroDecision = "Debe seleccionar un valor";
+    } else {
+      errors.centroDecision = null;
+    }
+    if (values.centroDecision && !values.justifyExClient) {
+      errors.justifyExClient = "Debe seleccionar un valor";
+    } else {
+      errors.justifyExClient = null;
+    }
+    if (!values.necesitaLME && !isProspect) {
+      errors.necesitaLME = "Debe seleccionar un valor";
+    } else {
+      errors.necesitaLME = null;
+    }
+    if (values.necesitaLME && !values.justifyNoLME) {
+      errors.justifyNoLME = "Debe seleccionar un valor";
+    } else {
+      errors.justifyNoLME = null;
+    }
+    if (!values.reportVirtual) {
+      errors.reportVirtual = "Debe seleccionar un valor";
+    } else {
+      errors.reportVirtual = null;
+    }
+    if (!values.extractsVirtual) {
+      errors.extractsVirtual = "Debe seleccionar un valor";
+    } else {
+      errors.extractsVirtual = null;
+    }
+    return errors
+};
 
 function SelectsJustificacion(props) {
   if(props.visible === "false"){
@@ -77,8 +199,13 @@ class clientEdit extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion} = this.props;
+    const {clientInformacion, setNotes, crearNotes} = this.props;
+    crearNotes();
     var infoClient = clientInformacion.get('responseClientInfo');
+    if( infoClient !== null && infoClient.notes !== null && infoClient.notes.length > 0 ){
+      const {setNotes} = this.props;
+      setNotes(infoClient.notes);
+    }
     if(window.localStorage.getItem('sessionToken') === ""){
       redirectUrl("/login");
     }else{
@@ -87,14 +214,17 @@ class clientEdit extends Component{
       }else{
         const {selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        //necesitaLME.onChange(infoClient.isCreditNeeded);
-        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM]);
+        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
+        .then((data) => {
+          if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
+            consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+            consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
+          }
+          }, (reason) => {
+            this.setState({showEx: true});
+        });
         consultList(constants.CIIU);
-        consultList(constants.ECONOMIC_GROUP);
-        if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
-          consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
-          consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
-        }
+        //consultList(constants.ECONOMIC_GROUP);
       }
     }
   }
@@ -124,17 +254,94 @@ class clientEdit extends Component{
     city.onChange('');
   }
 
-  _submitEditClient(formData){
+  _submitEditClient(){
+    const {fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
+       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+       centroDecision, necesitaLME, groupEconomic, justifyNonGeren, justifyNoLME, justifyExClient}
+    } = this.props;
+    var jsonCreateProspect= {
+      "id": infoClient.id,
+      "clientIdNumber": infoClient.clientIdNumber,
+      "clientName": infoClient.clientName,
+      "clientStatus": infoClient.clientStatus,
+      "riskRating": null,
+      "isProspect": infoClient.isProspect,
+      "ciiu": idCIIU.value,
+      "commercialRelationshipType": "",
+      "countryOfOrigin": "",
+      "isDecisionCenter": centroDecision.value,
+      "economicGroup": groupEconomic.value,
+      "internalRating": "",
+      "isic": "",
+      "ratingHistory": "",
+      "registrationKey": null,
+      "riskGroup": "",
+      "segment": infoClient.segment,
+      "subCiiu": idSubCIIU.value,
+      "subSegment": "",
+      "countryOfFirstLevelManagement": "",
+      "countryOfMainMarket": "",
+      "relationshipStatus": infoClient.relationshipStatus,
+      "typeOfClient":"",
+      "status":infoClient.status,
+      "isCreditNeeded":necesitaLME.value,
+      "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+      "salesUpadateDate": dateSalesAnnuals.value === undefined ? infoClient.salesUpadateDate : moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+      "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
+      "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
+      "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
+      "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
+      "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+      "localMarket":"",
+      "marketLeader":"",
+      "territory":"",
+      "actualizationDate": null,
+      "justificationForNoRM": justifyNonGeren.value,
+      "justificationForLostClient": justifyExClient.value,
+      "justificationForCreditNeed": justifyNoLME.value,
+      "isVirtualStatement": extractsVirtual.value,
+      "lineOfBusiness": infoClient.lineOfBusiness,
+      "isManagedByRm": marcGeren.value,
+      "addresses":[
+        {
+          "typeOfAddress": 41,
+          "address":address.value,
+          "country":country.value,
+          "province":province.value,
+          "city":city.value,
+          "neighborhood":district.value,
+          "isPrincipalAddress": reportVirtual.value,
+          "phoneNumber":telephone.value,
+          "postalCode":"",
+        }],
+      "notes":infoClient.notes,
+      "description": descriptionCompany.value,
+      "clientIdType": idTupeDocument
+   }
+   const {createProspect} = this.props;
+   createProspect(jsonCreateProspect)
+   .then((data) => {
+     if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+         this.setState({showEx: true});
+       } else {
+         this.setState({showEr: true});
+     }
+     }, (reason) => {
+       this.setState({showEr: true});
+   });
   };
 
   render(){
     const {
-    fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
+    fields: {description, idCIIU, idSubCIIU, address, country, city, province,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
       centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
       error, handleSubmit, selectsReducer, clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
+    isProspect = infoClient.isProspect;
+    console.log("isProspect render", isProspect);
     console.log(infoClient);
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
@@ -175,13 +382,15 @@ class clientEdit extends Component{
                 <span>Breve descripción de la empresa</span>
               </dt>
               <dt>
-                <textarea
+                <Textarea
+                  name="descripcion"
                   type="text"
-                  className="form-control"
-                  style={{height: "60px !important", minHeight: "26px !important", width:"99%"}}
+                  style={{width: '100%', height: '100%'}}
+                  onChange={val => this._onchangeValue("descripcion", val)}
                   placeholder="Ingrese la descripción"
-                  value={infoClient.description}
-                  />
+                  defaultValue={description.value === undefined ? infoClient.description : description.value}
+                  {...description}
+                />
               </dt>
             </Col>
           </Row>
@@ -197,10 +406,11 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 0px"}}>
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
-              <dt><span>CIIU</span></dt>
+              <dt><span>CIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
                 name="ciiu"
                 labelInput="Seleccione CIIU..."
+                {...idCIIU}
                 onChange={val => this._onChangeCIIU(val)}
                 value={idCIIU.value}
                 onBlur={idCIIU.onBlur}
@@ -221,15 +431,16 @@ class clientEdit extends Component{
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-              <dt><span>SubCIIU</span></dt>
+              <dt><span>SubCIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
                 name="subCiiu"
                 labelInput="Seleccione subCIIU..."
                 {...idSubCIIU}
+                value={idSubCIIU.value}
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
-                defaultValue={infoClient.subCiiu}
+                defaultValue={idSubCIIU.value === undefined ? infoClient.subCiiu : idSubCIIU.value}
                 />
             </div>
           </Col>
@@ -277,22 +488,26 @@ class clientEdit extends Component{
                 <span>Dirección (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <textarea type="text"
-                  style={{height: "30px !important", minHeight: "30px !important", width:"100%"}}
-                  onChange={val => this._onchangeValue("adress", val)}
+                <Textarea
+                  name="direccion"
+                  type="text"
+                  style={{width: '100%', height: '100%'}}
+                  {...address}
+                  onChange={val => this._onchangeValue("address", val)}
                   placeholder="Ingrese la dirección"
-                  value={infoClient.addresses === undefined ? '' : infoClient.addresses[0].address}
-                  />
+                  defaultValue={address.value === undefined ? infoClient.addresses[0].address : address.value}
+                />
               </dt>
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 0px"}}>
             <Col xs={12} md={4} lg={4} >
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-                <dt><span>País</span></dt>
+                <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
                   name="country"
                   labelInput="Seleccione país..."
+                  {...country}
                   onChange={val => this._onChangeCountry(val)}
                   value={country.value}
                   onBlur={country.onBlur}
@@ -305,32 +520,31 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4}>
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-                <dt><span>Departamento</span></dt>
+                <dt><span>Departamento (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
                   name="province"
                   labelInput="Seleccione departamento..."
+                  {...province}
                   onChange={val => this._onChangeProvince(val)}
-                  value={province.value}
-                  onBlur={province.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
-                  data={selectsReducer.get('dataTypeProvince')}
+                  data={selectsReducer.get('dataTypeProvince') || []}
                   defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].province}
-                  />
+                />
               </div>
             </Col>
             <Col xs={12} md={4} lg={4}>
               <div style={{paddingLeft: "20px", paddingRight: "15px", marginTop: "10px"}}>
-                <dt><span>Ciudad</span></dt>
+                <dt><span>Ciudad (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
                   name="city"
                   labelInput="Seleccione ciudad..."
                   {...city}
                   valueProp={'id'}
                   textProp={'value'}
-                  data={selectsReducer.get('dataTypeCity')}
+                  data={selectsReducer.get('dataTypeCity') || []}
                   defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].city}
-                  />
+                />
               </div>
             </Col>
           </Row>
@@ -356,6 +570,7 @@ class clientEdit extends Component{
                   type="number"
                   placeholder="Ingrese el teléfono"
                   defaultValue={infoClient.phoneNumber}
+                  {...telephone}
                 />
               </dt>
             </Col>
@@ -369,11 +584,11 @@ class clientEdit extends Component{
                 <ComboBox
                   name="reportVirtual"
                   labelInput="Seleccione..."
+                  {...reportVirtual}
                   valueProp={'id'}
                   textProp={'value'}
                   data={valuesYesNo}
-                  {...reportVirtual}
-                  defaultValue={reportVirtual.value}
+                  defaultValue={reportVirtual.value === undefined ? infoClient.addresses[0].isPrincipalAddress : reportVirtual.value}
                 />
               </dt>
             </Col>
@@ -416,6 +631,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese las ventas anuales"
                   value={parseInt(infoClient.annualSales)}
                   style={{width: "100%", textAlign:"right"}}
+                  {...annualSales}
                 />
               </dt>
             </Col>
@@ -444,7 +660,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   value={parseInt(infoClient.assets)}
-                  style={{width: "100%", textAlign:"right"}}
+                  {...assets}
                 />
               </dt>
             </Col>
@@ -461,7 +677,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("liabilities", val)}
                   value={parseInt(infoClient.liabilities)}
                   placeholder="Ingrese los pasivos"
-                  style={{width: "100%", textAlign:"right"}}
+                  {...liabilities}
                 />
               </dt>
             </Col>
@@ -472,10 +688,11 @@ class clientEdit extends Component{
               <dt>
                 <NumberInput
                   format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   value={parseInt(infoClient.operatingIncome)}
                   placeholder="Ingrese los ingresos operacionales"
-                  style={{width: "100%", textAlign:"right"}}
+                  {...operatingIncome}
                 />
               </dt>
             </Col>
@@ -486,10 +703,11 @@ class clientEdit extends Component{
               <dt>
                 <NumberInput
                   format="0,000"
+                  min={0}
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   value={parseInt(infoClient.nonOperatingIncome)}
                   placeholder="Ingrese los ingresos no operacionales"
-                  style={{width: "100%", textAlign:"right"}}
+                  {...nonOperatingIncome}
                 />
               </dt>
             </Col>
@@ -506,7 +724,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("expenses", val)}
                   value={parseInt(infoClient.expenses)}
                   placeholder="Ingrese los egresos"
-                  style={{width: "100%", textAlign:"right"}}
+                  {...expenses}
                 />
               </dt>
             </Col>
@@ -523,10 +741,9 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "10px"}}>
               <dt>
-                <span>Marca gerenciamiento (</span><span style={{color: "red"}}>*</span>)
+                <span>Marca gerenciamiento </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
               </dt>
               <dt>
-
                 <ComboBox
                   name="marcGeren"
                   labelInput="Seleccione marca..."
@@ -540,7 +757,7 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4}>
               <dt>
-                <span>Centro de decisión (</span><span style={{color: "red"}}>*</span>)
+                <span>Centro de decisión </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
               </dt>
               <dt>
                 <ComboBox
@@ -550,14 +767,13 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...centroDecision}
-                  defaultValue={infoClient.isManagedByRm === undefined ? '' : infoClient.isManagedByRm}
                   defaultValue={centroDecision.value === undefined ? infoClient.isDecisionCenter : centroDecision.value}
                 />
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "25px"}}>
               <dt>
-                <span>¿Necesita LME? (</span><span style={{color: "red"}}>*</span>)
+                <span>¿Necesita LME? </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
               </dt>
               <dt>
                 <ComboBox
@@ -573,7 +789,7 @@ class clientEdit extends Component{
               </dt>
             </Col>
           </Row>
-          <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Row style={{padding: "0px 10px 20px 20px", display:"none"}}>
             <Col xs={12} md={4} lg={4}>
               <dt>
                 <span>Grupo económico/relación</span>
@@ -649,57 +865,7 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <Row style={{padding: "0px 5px 20px 20px"}}>
-            <Col xs={12} md={12} lg={12}>
-              <table style={{width:"100%"}}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-                        <span className="section-title">Nota 1</span>
-                      </dl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%"}}></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </Col>
-          </Row>
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs={12} md={4} lg={4}>
-              <dt>
-                <span>Tipo de nota</span>
-              </dt>
-              <dt>
-                <SelectTypeDocument/>
-              </dt>
-            </Col>
-            <Col xs={12} md={8} lg={8}>
-              <dt>
-                <span>Descripción de la nota</span>
-              </dt>
-              <dt>
-                <textarea
-                  type="text"
-                  className="form-control"
-                  style={{height: "60px !important", minHeight: "26px !important", width:"98%"}}
-                  placeholder="Ingrese la descripción de la nota"
-                  />
-              </dt>
-            </Col>
-          </Row>
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs={12} md={12} lg={12}>
-              <dt>
-                <button type="button" style={{padding: "8px", border: "1px solid", width: "98.5%", backgroundColor: "#E7ECED",
-                color: "#6E6E6E", fontWeight: "bold", borderRadius: "4px"}}>Añadir Nota</button>
-              </dt>
-            </Col>
-          </Row>
+          <NotesClient />
           <Row>
             <Col xs={12} md={12} lg={12} style={{paddingTop: "50px"}}>
               <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", width:"100%", marginBottom: "0", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
@@ -740,17 +906,23 @@ function mapDispatchToProps(dispatch) {
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication,
-    getMasterDataFields
+    getMasterDataFields,
+    setNotes,
+    crearNotes,
+    createProspect
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer},ownerProps) {
+function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) {
   return {
     clientInformacion,
-    selectsReducer
+    selectsReducer,
+    notes
   };
 }
 export default reduxForm({
   form: 'submitValidation',
-  fields
+  fields,
+  validate,
+  //initialValues: {province: 10262}
 }, mapStateToProps, mapDispatchToProps)(clientEdit);
