@@ -1,20 +1,21 @@
 import Immutable from 'immutable';
-import {UPDATE_NOTE, CREATE_NOTE} from './constants';
+import {UPDATE_NOTE, CREATE_NOTE, DELETE_NOTE} from './constants';
+import _ from 'lodash';
 
-const initialState = Immutable.List();
+
+const initialState = Immutable.OrderedMap();
 
 export default (state = initialState, action) => {
-  switch(action.type){
-     case UPDATE_NOTE:
-       const note = state.get(action.index);
-       const newNote = note.withMutations(map => {
-         map.set(action.prop, action.value);
-       });
-       return state.set(action.index, newNote);
-     case CREATE_NOTE:
-     console.log("Add note", state);
-       return state.push(Immutable.Map({body: '', combo: {}}));
-     default:
-       return state;
-   }
+    switch (action.type) {
+    case UPDATE_NOTE:
+        const note = state.get(action.index);
+        _.set(note, action.prop, action.value);
+        return state.set(action.index, note);
+    case CREATE_NOTE:
+        return state.set(action.uid, {body: '', combo: ''});
+    case DELETE_NOTE:
+        return state.delete(action.index);
+    default:
+        return state;
+    }
 }

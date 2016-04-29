@@ -9,8 +9,16 @@ export function updateNote(index, prop, value){
     };
 }
 
-export function addNote(){
+export function deleteNote(index){
   return {
-      type: constants.CREATE_NOTE
+      type: constants.DELETE_NOTE,
+      index
+    };
+}
+
+export function addNote(uid){
+  return {
+      type: constants.CREATE_NOTE,
+      uid
     };
 }

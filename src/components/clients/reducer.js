@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD} from './constants';
+import * as actions from './constants';
 
 const initialState = Immutable.Map({
     status: "withoutProcessing",
@@ -11,7 +11,7 @@ const initialState = Immutable.Map({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case CLIENTS_FIND:
+    case actions.CLIENTS_FIND:
       const response = action.payload.data;
         return state.withMutations(map => {
             map
@@ -20,10 +20,17 @@ export default (state = initialState, action) => {
             .set('countClients', response.countClients)
             .set('responseClients', JSON.parse(response.listClients));
         });
-    case CHANGE_PAGE:
+    case actions.CHANGE_PAGE:
       return state.set('page', action.currentPage);
-    case CHANGE_KEYWORD:
+    case actions.CHANGE_KEYWORD:
       return state.set('keyword', action.keyword);
+    case actions.CLEAR_CLIENTS:
+      return state.withMutations(map => {
+          map
+          .set('status', 'withoutProcessing')
+          .set('keyword', '')
+          .set('responseClients', []);
+      });
     default:
     return state;
   }

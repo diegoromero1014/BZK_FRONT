@@ -2,10 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import {toggleModalContact} from './actions';
+import {toggleModalContact,createContactNew,searchContact} from './actions';
+import {contactsByClientFindServer} from '../actions';
+import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
 import {DateTimePicker} from 'react-widgets';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {reduxForm} from 'redux-form';
@@ -14,9 +17,9 @@ import InputComponent from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
-import {FILTER_CITY,FILTER_PROVINCE,CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
+import {FILTER_CITY,FILTER_PROVINCE,CLIENT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
-const fields =["tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoActitud", "tipoContacto",
+const fields =["tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
 "numeroDocumento","primerNombre","segundoNombre","primerApellido", "segundoApellido","fechaNacimiento","direccion","barrio",
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
@@ -98,15 +101,23 @@ class ModalComponentContact extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
+        this._closeCreate = this._closeCreate.bind(this);
         this._handleCreateContact = this._handleCreateContact.bind(this);
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
+        this._searchContact = this._searchContact.bind(this);
+        this._onchangeValue = this._onchangeValue.bind(this);
+        this.state = {
+           showEx:false,
+           showEr:false,
+           contactDetail: {}
+         }
         momentLocalizer(moment);
     }
 
     componentWillMount(){
       const{getMasterDataFields} = this.props;
-      getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+      getMasterDataFields([CLIENT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
     closeModal() {
@@ -130,17 +141,95 @@ class ModalComponentContact extends Component {
       ciudad.onChange('');
     }
 
-    _handleCreateContact(){
+    _closeCreate(){
+        this.setState({showEx:false, showEr: false});
+    }
 
+    _searchContact(){
+      const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
+      numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
+      codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
+      const {searchContact} = this.props;
+      searchContact(tipoDocumento.value,numeroDocumento.value).then((data) => {
+          this.setState({contactDetail : JSON.parse(_.get(data, 'payload.data.contactDetail'))});
+          }, (reason) => {
+            console.log("presento un error");
+        });
+    }
+
+    _onchangeValue(type, val) {
+      console.log(type,val);
+      switch (type) {
+        case "firstName":
+          const {fields: {primerNombre}} = this.props;
+          primerNombre.onChange(val);
+          break;
+        default:
+          break;
+      }
+    }
+
+    _handleCreateContact(){
+      const {createContactNew,contactsByClientFindServer,createContactReducer} = this.props;
+      const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
+      numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
+      codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
+      var messageBody = {
+        "client": window.localStorage.getItem('idClientSeleted'),
+        "title": tipoTratamiendo.value,
+        "gender" : tipoGenero.value ,
+        "contactType" : tipoDocumento.value,
+        "contactIdentityNumber": numeroDocumento.value,
+        "firstName":primerNombre.value,
+        "middleName" : segundoNombre.value,
+        "firstLastName" : primerApellido.value,
+        "secondLastName" : segundoApellido.value,
+        "contactPosition" : tipoCargo.value,
+        "unit" : tipoDependencia.value,
+        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
+        "dateOfBirth" : null,
+        "address" : direccion.value,
+        "country" : pais.value,
+        "province" : departamento.value,
+        "city" : ciudad.value,
+        "neighborhood" : barrio.value,
+        "postalCode" : codigoPostal.value,
+        "telephoneNumber" : telefono.value,
+        "extension" : extension.value,
+        "mobileNumber" : celular.value,
+        "emailAddress" : correo.value,
+        "hobbies" : JSON.parse('[' + ((tipoHobbie.value)?tipoHobbie.value:"") +']'),
+        "sports" : JSON.parse('[' + ((tipoDeporte.value)?tipoDeporte.value:"") +']'),
+        "typeOfContact" : tipoContacto.value,
+        "lineOfBusiness" : JSON.parse('[' + ((tipoEntidad.value)?tipoEntidad.value:"") +']'),
+        "socialStyle" : tipoEstiloSocial.value,
+        "attitudeOverGroup" : tipoActitud.value
+      }
+      createContactNew(messageBody).then((data) => {
+          if((_.get(data, 'payload.status') === 200)){
+              this.setState({showEx: true});
+              this.closeModal();
+              contactsByClientFindServer(0,window.localStorage.getItem('idClientSeleted'),NUMBER_RECORDS,"",0,"",
+              "",
+              "",
+              "");
+            } else {
+              this.setState({showEr: true});
+          }
+          }, (reason) => {
+            this.setState({showEr: true});
+        });
     }
 
     render() {
-        const {modalStatus,selectsReducer} = this.props;
-        const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
+        const {modalStatus,selectsReducer,createContactReducer} = this.props;
+        const {fields:{tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
         numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
+        var contactDetail = createContactReducer.get('responseSearchContactData');
         return (
+          <div>
           <Modal
               isOpen={modalStatus}
               onRequestClose={this.closeModal}
@@ -182,7 +271,7 @@ class ModalComponentContact extends Component {
                                 </Col>
                                 <Col xs>
                                 <dl style={{width: '100%'}}>
-                                <button className="btn btn-primary" style={{marginTop: '35px'}}><i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="search  icon" ></i></button>
+                                <button type="button" className="btn btn-primary" style={{marginTop: '35px'}} onClick={this._searchContact}><i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="search  icon" ></i></button>
                                 </dl>
                                 </Col>
                             </Row>
@@ -212,9 +301,12 @@ class ModalComponentContact extends Component {
                                 <Col xs>
                                 <dl style={{width: '100%'}}>
                                   <dt><span>Primer nombre (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                  <dd><InputComponent
+                                  <dd>
+                                  <InputComponent
                                     name="primerNombre"
                                     type="text"
+                                    onChange={val => this._onchangeValue("firstName", val)}
+                                    defaultValue={contactDetail.firstName}
                                     {...primerNombre}
                                   /></dd>
                                 </dl>
@@ -256,7 +348,12 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Cargo</span></dt>
-                                <dd><div className="ui input" style={{width: '100%'}}><input type="text"/></div></dd>
+                                <dd><ComboBox name="tipoCargo" labelInput="Seleccione"
+                                {...tipoCargo}
+                                valueProp={'id'}
+                                textProp = {'value'}
+                                data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
+                                /></dd>
                               </dl>
                               </Col>
                               <Col xs>
@@ -273,7 +370,7 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Fecha nacimiento</span></dt>
-                                <dd><DateTimePicker time={false} culture='es' {...fechaNacimiento}/></dd>
+                                <dd><DateTimePicker format ={"DD-MM-YYYY"} culture='es' {...fechaNacimiento}/></dd>
                               </dl>
                               </Col>
                             </Row>
@@ -505,6 +602,21 @@ class ModalComponentContact extends Component {
               </div>
               </form>
           </Modal>
+          <SweetAlert
+           type= "success"
+           show={this.state.showEx}
+           title="Contacto creado"
+           text="El contacto se creó correctamente."
+           onConfirm={() => this._closeCreate()}
+           />
+           <SweetAlert
+            type= "error"
+            show={this.state.showEr}
+            title="Error"
+            text="Se presento un error al realizar la creación del contacto."
+            onConfirm={() => this._closeCreate()}
+            />
+            </div>
         );
     }
 }
@@ -512,16 +624,20 @@ class ModalComponentContact extends Component {
 function mapStateToProps({createContactReducer,selectsReducer}) {
     return {
         modalStatus: createContactReducer.get('modalState'),
-        selectsReducer
+        selectsReducer,
+        createContactReducer
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         toggleModalContact,
+        searchContact,
+        createContactNew,
         consultDataSelect,
         consultListWithParameterUbication,
         getMasterDataFields,
+        contactsByClientFindServer,
         consultList
     }, dispatch);
 }
