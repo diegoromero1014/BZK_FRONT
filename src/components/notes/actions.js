@@ -9,8 +9,30 @@ export function updateNote(index, prop, value){
     };
 }
 
-export function addNote(){
+export function deleteNote(index){
   return {
-      type: constants.CREATE_NOTE
+      type: constants.DELETE_NOTE,
+      index
+    };
+}
+
+export function addNote(uid){
+  return {
+      type: constants.CREATE_NOTE,
+      uid
+    };
+}
+
+export function setNotes(notes){
+  console.log("infoClient.notes", notes);
+  return {
+      type: constants.SET_NOTES,
+      notes
+    };
+}
+
+export function crearNotes(){
+  return {
+      type: constants.CLEAR_NOTES,
     };
 }

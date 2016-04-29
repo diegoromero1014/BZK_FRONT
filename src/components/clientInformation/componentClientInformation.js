@@ -15,7 +15,6 @@ class ComponentClientInformation extends Component{
 
   componentWillMount(){
     $(window).scrollTop(0);
-    console.log("Golaaaa");
   }
 
   render(){
