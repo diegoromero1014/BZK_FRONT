@@ -21,7 +21,8 @@ const initialState = Immutable.Map({
   teamValueObjects: [],
   dataTypeContactPosition: [],
   dataTypeAttitudeOverGroup: [],
-  dataEconomicGroup: []
+  dataEconomicGroup: [],
+  dataTypeNotes: []
 });
 
 
