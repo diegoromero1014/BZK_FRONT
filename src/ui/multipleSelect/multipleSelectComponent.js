@@ -16,6 +16,9 @@ class MultipleSelectComponent extends Component {
         if (_.isEqual(value, '')) {
             selector.dropdown('clear');
         }
+        if(!_.isEqual(this.state.value, value)){
+          selector.dropdown('set selected', value);
+        }
     }
 
     componentDidMount() {
@@ -32,7 +35,6 @@ class MultipleSelectComponent extends Component {
                 onChange(id, text);
             }
         });
-        selector.dropdown('set selected', defaultValue);
     }
 
     mapValuesToDropDown(item, idx) {
