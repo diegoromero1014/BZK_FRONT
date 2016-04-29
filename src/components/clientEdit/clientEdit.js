@@ -47,11 +47,11 @@ const validate = values => {
     } else {
       errors.idSubCIIU = null;
     }
-    if (!values.address) {
+    /*if (!values.address) {
       errors.address = "Debe ingresar un valor";
     } else {
       errors.address = null;
-    }
+    }*/
     if (!values.telephone) {
       errors.telephone = "Debe ingresar un valor";
     } else {
@@ -77,11 +77,11 @@ const validate = values => {
     } else {
       errors.city = null;
     }
-    if (!values.dateSalesAnnuals) {
+    /*if (!values.dateSalesAnnuals) {
       errors.dateSalesAnnuals = "Debe seleccionar un día";
     } else {
       errors.dateSalesAnnuals = null;
-    }
+    }*/
     if (!values.liabilities) {
       errors.liabilities = "Debe ingresar un valor";
     } else {
@@ -255,11 +255,13 @@ class clientEdit extends Component{
   }
 
   _submitEditClient(){
-    const {fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
-       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-       centroDecision, necesitaLME, groupEconomic, justifyNonGeren, justifyNoLME, justifyExClient}
-    } = this.props;
+    const {
+    fields: {description, idCIIU, idSubCIIU, address, country, city, province,
+      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+      liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+      centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
+      error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     var jsonCreateProspect= {
       "id": infoClient.id,
       "clientIdNumber": infoClient.clientIdNumber,
@@ -287,7 +289,7 @@ class clientEdit extends Component{
       "status":infoClient.status,
       "isCreditNeeded":necesitaLME.value,
       "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-      "salesUpadateDate": dateSalesAnnuals.value === undefined ? infoClient.salesUpadateDate : moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+      "salesUpadateDate": null,
       "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
       "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
       "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
@@ -297,7 +299,7 @@ class clientEdit extends Component{
       "marketLeader":"",
       "territory":"",
       "actualizationDate": null,
-      "justificationForNoRM": justifyNonGeren.value,
+      "justificationForNoRM": justifyNoGeren.value,
       "justificationForLostClient": justifyExClient.value,
       "justificationForCreditNeed": justifyNoLME.value,
       "isVirtualStatement": extractsVirtual.value,
@@ -316,8 +318,8 @@ class clientEdit extends Component{
           "postalCode":"",
         }],
       "notes":infoClient.notes,
-      "description": descriptionCompany.value,
-      "clientIdType": idTupeDocument
+      "description": description.value,
+      "clientIdType": infoClient.clientIdType
    }
    const {createProspect} = this.props;
    createProspect(jsonCreateProspect)
