@@ -23,3 +23,4 @@ export const JUSTIFICATION_CREDIT_NEED = 'justificationForCreditNeed';
 export const JUSTIFICATION_LOST_CLIENT = 'justificationForLostClient';
 export const JUSTIFICATION_NO_RM = 'justificationForNoRM';
 export const ECONOMIC_GROUP = 'economicGroupList';
+export const TIPOS_NOTAS = 'typeOfNotes';

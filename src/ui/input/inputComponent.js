@@ -22,8 +22,7 @@ class inputComponent extends Component {
                     name={nameInput}
                     min={min}
                     onChange={onChange}
-                    placeholder={placeholder}
-                    value={defaultValue} />
+                    placeholder={placeholder}/>
               </div>
               {
                   touched && error &&
@@ -43,6 +42,7 @@ inputComponent.PropTypes = {
     placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
+    defaultValue: PropTypes.string,
     min: PropTypes.string
 };
 
