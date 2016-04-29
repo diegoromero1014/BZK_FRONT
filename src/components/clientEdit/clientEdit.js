@@ -209,7 +209,7 @@ class clientEdit extends Component{
       }else{
         const {selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TIPOS_NOTAS])
+        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
         .then((data) => {
           if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -821,7 +821,7 @@ class clientEdit extends Component{
                   onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
-                  data={selectsReducer.get(constants.TIPOS_NOTAS) || []}
+                  data={selectsReducer.get(constants.TYPE_NOTES) || []}
                 />
               </dt>
             </Col>
