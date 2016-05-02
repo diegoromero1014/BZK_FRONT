@@ -125,7 +125,7 @@ class CreatePropspect extends Component{
               <Col xs={2} md={4} lg={2}>
                 <button className="btn btn-primary" type="submit" title="Buscar prospecto"
                   style={{marginLeft:"30px", marginTop: "20px", fontSize : '1.2em', paddingTop: "4px !important"}}>
-                  <i className="<search icon" style={{color: "white"}}></i>
+                  <i className="search icon" style={{color: "white"}}></i>
                 </button>
               </Col>
             </Row>
@@ -133,7 +133,7 @@ class CreatePropspect extends Component{
         }
 
         {!prospectInApplication &&
-          <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "20px", borderRadius: "5px"}}>
+          <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Tipo de documento</span></dt>
               <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
@@ -157,8 +157,8 @@ class CreatePropspect extends Component{
         <SweetAlert
          type= "warning"
          show={this.state.showEr}
-         title="Prospecto existente"
-         text="El prospecto ya se encuentra registrado en la aplicación."
+         title="Prospecto/cliente existente"
+         text="El prospecto/cliente ya se encuentra registrado en la aplicación."
          onConfirm={() => this._closeError()}
          />
          <SweetAlert
