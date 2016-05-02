@@ -532,8 +532,8 @@ class FormCreateProspect extends Component{
           <SweetAlert
             type= "warning"
             show={this.state.show}
-            title={titleConfirm}
-            text={messageConfirm}
+            title="Título prueba"
+            text="Mensaje prueba"
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"
