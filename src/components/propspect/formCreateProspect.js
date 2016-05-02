@@ -8,7 +8,6 @@ import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import {redirectUrl} from '../globalComponents/actions';
-import {addNote} from '../notes/actions';
 import {DateTimePicker} from 'react-widgets';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -68,8 +67,6 @@ class FormCreateProspect extends Component{
     this._closeSuccess = this._closeSuccess.bind(this);
     this._onConfirmCreate = this._onConfirmCreate.bind(this);
 
-    this._addNote = this._addNote.bind(this);
-
   }
 
   _closeWindow(){
@@ -90,11 +87,6 @@ class FormCreateProspect extends Component{
   _closeSuccess(){
     this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clients");
-  }
-
-  _addNote(){
-    const {addNote} = this.props;
-    addNote();
   }
 
   _onConfirmCreate(){
@@ -228,18 +220,6 @@ class FormCreateProspect extends Component{
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
         <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
 
-          <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
-            <NotesClient />
-          </Col>
-          <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
-            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
-              type="button"
-              onClick={this._addNote}
-            >
-              <span style={{color: "#FFFFFF", padding:"10px"}}>Add note</span>
-            </button>
-          </Col>
-
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
@@ -252,7 +232,7 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
 
-          <Col xs={10} md={4} lg={4} style={{marginTop: "20px", paddingRight: "20px"}}>
+          <Col xs={10} md={4} lg={4} style={{marginTop: "20px", paddingRight: "45px"}}>
             <dt><span>Célula (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
                 name="celula"
@@ -552,8 +532,8 @@ class FormCreateProspect extends Component{
           <SweetAlert
             type= "warning"
             show={this.state.show}
-            title={titleConfirm}
-            text={messageConfirm}
+            title="Título prueba"
+            text="Mensaje prueba"
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"
@@ -591,8 +571,7 @@ function mapDispatchToProps(dispatch) {
     consultDataSelect,
     consultList,
     consultListWithParameter,
-    consultListWithParameterUbication,
-    addNote
+    consultListWithParameterUbication
   }, dispatch);
 }
 

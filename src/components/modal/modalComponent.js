@@ -10,12 +10,20 @@ class ModalComponentDialog extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this.state = {
+          modalIsOpen: false  
+        };
           this._contectViewModal = this._contectViewModal.bind(this);
+        }
+  
+    openModal(){
+    this.setState({modalIsOpen: true});
     }
 
-    closeModal() {
-        this.props.toggleModal();
-    }
+    closeModal(){
+    this.setState({modalIsOpen: false});
+    } 
 
     _contectViewModal(actions, idx){
       var cell;
@@ -33,41 +41,36 @@ class ModalComponentDialog extends Component {
 
 
     render() {
-        const {modalStatus} = this.props;
-        const status = modalStatus ? "Verdadero" : "Falso";
         const modalTitle = this.props.modalTitle;
         const actions = this.props.actions;
         return (
+        <td style={{padding: '10px', textAlign: 'center'}}><button className="btn btn-primary btn-sm" onClick={this.openModal}>
+          <i className="zoom icon" style={{margin:'0em', fontSize : '1.2em'}} />
+        </button>
           <Modal
-              isOpen={modalStatus}
+              isOpen={this.state.modalIsOpen}
               onRequestClose={this.closeModal}
-              className="modalBt4-fade modal fade contact-detail-modal in"
-          >
-              <div className="modalBt4-dialog modalBt4-lg">
-                  <div className="modalBt4-content modal-content">
-                      <div className="modalBt4-header modal-header">
-                      <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
-                        <span className="modal-title" aria-hidden="true" role="close"><i className="icon-cross modal-icon-close" role="close"></i></span>
-                        <span className="sr-only">Close</span>
-                      </button>
-                            <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
-                      </div>{this._contectViewModal(actions)}
-                        <div className="modalBt4-footer modal-footer">
-                        <button type="button" className="btn btn-primary modal-button-edit" onClick={this.closeModal}>Guardar
-                        </button>
-                            <button type="button" className="btn btn-secondary modal-button-edit" data-dismiss="modal"
-                                    onClick={this.closeModal}>Cancelar
-                            </button>
+              className="modalBt4-fade modal fade contact-detail-modal in">
 
-                        </div>
-                  </div>
+            <div className="modalBt4-dialog modalBt4-lg">
+              <div className="modalBt4-content modal-content">
+                <div className="modalBt4-header modal-header">
+                  <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
+                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                    <span className="sr-only">Close</span>
+                  </button>
+                  <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
+                </div>
+                {this._contectViewModal(actions)}
               </div>
+            </div>
           </Modal>
-        );
+        </td>
+      );
     }
 }
 
-function mapStateToProps({modal}) {
+function mapStateToProps({modal},{idModal}) {
     return {
         modalStatus: modal.get('modalState')
     };

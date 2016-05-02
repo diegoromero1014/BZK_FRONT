@@ -15,7 +15,7 @@ import Input from '../../ui/input/inputComponent';
 import NumberInput from '../../ui/numberInput/numberInputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
-import {DateTimePicker} from 'react-widgets';
+import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import NotesClient from '../notes/notesClient';
@@ -28,7 +28,7 @@ const valuesYesNo = [
   {'id': false, 'value': "No"}
 ];
 
-const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province",
+const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province", "neighborhood",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
     "centroDecision", "necesitaLME", "groupEconomic", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
@@ -48,11 +48,11 @@ const validate = values => {
     } else {
       errors.idSubCIIU = null;
     }
-    if (!values.address) {
+    /*if (!values.address) {
       errors.address = "Debe ingresar un valor";
     } else {
       errors.address = null;
-    }
+    }*/
     if (!values.telephone) {
       errors.telephone = "Debe ingresar un valor";
     } else {
@@ -78,11 +78,11 @@ const validate = values => {
     } else {
       errors.city = null;
     }
-    if (!values.dateSalesAnnuals) {
+    /*if (!values.dateSalesAnnuals) {
       errors.dateSalesAnnuals = "Debe seleccionar un día";
     } else {
       errors.dateSalesAnnuals = null;
-    }
+    }*/
     if (!values.liabilities) {
       errors.liabilities = "Debe ingresar un valor";
     } else {
@@ -148,6 +148,7 @@ const validate = values => {
     } else {
       errors.extractsVirtual = null;
     }
+    console.log("errors", errors);
     return errors
 };
 
@@ -160,13 +161,11 @@ function SelectsJustificacion(props) {
       <dt>
         <ComboBox
           labelInput={props.labelInput}
-          value={props.value}
           onBlur={props.onBlur}
           valueProp={props.valueProp}
           textProp={props.textProp}
           {...props.justify}
           data={props.data}
-          defaultValue={props.defaultValue}
         />
       </dt>
     </Col>;
@@ -180,14 +179,18 @@ class clientEdit extends Component{
     super(props);
     momentLocalizer(moment);
     this.state = {
-      show: false
-    }
+      show: false,
+      showEx:false,
+      showEr:false
+    };
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
     this._closeWindow = this._closeWindow.bind(this);
     this._onConfirmExit = this._onConfirmExit.bind(this);
+    this._closeError = this._closeError.bind(this);
+    this._closeSuccess = this._closeSuccess.bind(this);
   }
 
   _closeWindow(){
@@ -196,6 +199,15 @@ class clientEdit extends Component{
 
   _onConfirmExit(){
     this.setState({show: false });
+    redirectUrl("/dashboard/clientInformation");
+  }
+
+  _closeError(){
+    this.setState({show: false, showEx:false, showEr: false});
+  }
+
+  _closeSuccess(){
+    this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clientInformation");
   }
 
@@ -258,11 +270,16 @@ class clientEdit extends Component{
   }
 
   _submitEditClient(){
-    const {fields: {descriptionCompany, idCIIU, idSubCIIU, address, country, city, province,
-       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-       centroDecision, necesitaLME, groupEconomic, justifyNonGeren, justifyNoLME, justifyExClient}
-    } = this.props;
+    const {
+    fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
+      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+      liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+      centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
+      error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
+      console.log("address.value", address.value);
+        console.log("fecha", dateSalesAnnuals.value);
+        console.log("date", moment(dateSalesAnnuals.value).format('x'));
     var jsonCreateProspect= {
       "id": infoClient.id,
       "clientIdNumber": infoClient.clientIdNumber,
@@ -290,7 +307,7 @@ class clientEdit extends Component{
       "status":infoClient.status,
       "isCreditNeeded":necesitaLME.value,
       "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-      "salesUpadateDate": dateSalesAnnuals.value === undefined ? infoClient.salesUpadateDate : moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+      "salesUpadateDate": moment(dateSalesAnnuals.value).format('x'),
       "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
       "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
       "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
@@ -300,7 +317,7 @@ class clientEdit extends Component{
       "marketLeader":"",
       "territory":"",
       "actualizationDate": null,
-      "justificationForNoRM": justifyNonGeren.value,
+      "justificationForNoRM": justifyNoGeren.value,
       "justificationForLostClient": justifyExClient.value,
       "justificationForCreditNeed": justifyNoLME.value,
       "isVirtualStatement": extractsVirtual.value,
@@ -313,14 +330,14 @@ class clientEdit extends Component{
           "country":country.value,
           "province":province.value,
           "city":city.value,
-          "neighborhood":district.value,
+          "neighborhood":neighborhood.value,
           "isPrincipalAddress": reportVirtual.value,
           "phoneNumber":telephone.value,
           "postalCode":"",
         }],
       "notes":infoClient.notes,
-      "description": descriptionCompany.value,
-      "clientIdType": idTupeDocument
+      "description": description.value,
+      "clientIdType": infoClient.clientIdType
    }
    const {createProspect} = this.props;
    createProspect(jsonCreateProspect)
@@ -337,7 +354,7 @@ class clientEdit extends Component{
 
   render(){
     const {
-    fields: {description, idCIIU, idSubCIIU, address, country, city, province,
+    fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
       centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
@@ -385,15 +402,14 @@ class clientEdit extends Component{
                 <span>Breve descripción de la empresa</span>
               </dt>
               <dt>
-                <Textarea
-                  name="descripcion"
-                  type="text"
-                  style={{width: '100%', height: '100%'}}
-                  onChange={val => this._onchangeValue("descripcion", val)}
-                  placeholder="Ingrese la descripción"
-                  defaultValue={description.value === undefined ? infoClient.description : description.value}
-                  {...description}
-                />
+              <Input
+                name="description"
+                type="text"
+                style={{width: '100%', height: '100%'}}
+                placeholder="Ingrese la descripción"
+                //onChange={val => this._onchangeValue("description", val)}
+                {...description}
+              />
               </dt>
             </Col>
           </Row>
@@ -415,12 +431,10 @@ class clientEdit extends Component{
                 labelInput="Seleccione CIIU..."
                 {...idCIIU}
                 onChange={val => this._onChangeCIIU(val)}
-                value={idCIIU.value}
                 onBlur={idCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'ciiu'}
                 data={selectsReducer.get('dataCIIU')}
-                defaultValue={infoClient.ciiu}
                 />
             </div>
           </Col>
@@ -428,7 +442,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Sector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
-                {idCIIU.value && _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)] )[0].economicSector}
+
               </span>
             </div>
           </Col>
@@ -439,11 +453,9 @@ class clientEdit extends Component{
                 name="subCiiu"
                 labelInput="Seleccione subCIIU..."
                 {...idSubCIIU}
-                value={idSubCIIU.value}
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
-                defaultValue={idSubCIIU.value === undefined ? infoClient.subCiiu : idSubCIIU.value}
                 />
             </div>
           </Col>
@@ -451,7 +463,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>
-                {idSubCIIU.value && _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)] )[0].economicSubSector}
+
               </span>
             </div>
           </Col>
@@ -492,13 +504,12 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <Textarea
-                  name="direccion"
+                  name="address"
                   type="text"
                   style={{width: '100%', height: '100%'}}
-                  {...address}
                   onChange={val => this._onchangeValue("address", val)}
                   placeholder="Ingrese la dirección"
-                  defaultValue={address.value === undefined ? infoClient.addresses[0].address : address.value}
+                  {...address}
                 />
               </dt>
             </Col>
@@ -517,7 +528,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
-                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].country}
                   />
               </div>
             </Col>
@@ -532,7 +542,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeProvince') || []}
-                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].province}
                 />
               </div>
             </Col>
@@ -546,7 +555,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeCity') || []}
-                  defaultValue={infoClient.addresses === undefined ? '' : infoClient.addresses[0].city}
                 />
               </div>
             </Col>
@@ -559,7 +567,7 @@ class clientEdit extends Component{
                   name="txtBarrio"
                   type="text"
                   placeholder="Ingrese el barrio"
-                  defaultValue={infoClient.neighborhood}
+                  {...neighborhood}
                 />
               </dt>
             </Col>
@@ -572,7 +580,6 @@ class clientEdit extends Component{
                   name="txtTelefono"
                   type="number"
                   placeholder="Ingrese el teléfono"
-                  defaultValue={infoClient.phoneNumber}
                   {...telephone}
                 />
               </dt>
@@ -591,7 +598,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={valuesYesNo}
-                  defaultValue={reportVirtual.value === undefined ? infoClient.addresses[0].isPrincipalAddress : reportVirtual.value}
                 />
               </dt>
             </Col>
@@ -607,7 +613,6 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...extractsVirtual}
-                  defaultValue={infoClient.isVirtualStatement === undefined ? '' : infoClient.isVirtualStatement}
                 />
               </dt>
             </Col>
@@ -632,7 +637,6 @@ class clientEdit extends Component{
                   min={0}
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
-                  value={parseInt(infoClient.annualSales)}
                   style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
                 />
@@ -643,13 +647,7 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <DateTimePicker
-                  {...dateSalesAnnuals}
-                  defaultValue={new Date(infoClient.salesUpadateDate)}
-                  time={false}
-                  placeholder="Seleccione una fecha"
-                  culture='es'
-                />
+              <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -662,7 +660,6 @@ class clientEdit extends Component{
                   min={0}
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
-                  value={parseInt(infoClient.assets)}
                   {...assets}
                 />
               </dt>
@@ -678,7 +675,6 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   onChange={val => this._onChangeValue("liabilities", val)}
-                  value={parseInt(infoClient.liabilities)}
                   placeholder="Ingrese los pasivos"
                   {...liabilities}
                 />
@@ -693,7 +689,6 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   onChange={val => this._onChangeValue("operatingIncome", val)}
-                  value={parseInt(infoClient.operatingIncome)}
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
                 />
@@ -708,7 +703,6 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                  value={parseInt(infoClient.nonOperatingIncome)}
                   placeholder="Ingrese los ingresos no operacionales"
                   {...nonOperatingIncome}
                 />
@@ -725,7 +719,6 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   onChange={val => this._onChangeValue("expenses", val)}
-                  value={parseInt(infoClient.expenses)}
                   placeholder="Ingrese los egresos"
                   {...expenses}
                 />
@@ -754,7 +747,6 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...marcGeren}
-                  defaultValue={infoClient.isManagedByRm === undefined ? '' : infoClient.isManagedByRm}
                 />
               </dt>
             </Col>
@@ -770,7 +762,6 @@ class clientEdit extends Component{
                   textProp={'value'}
                   data={valuesYesNo}
                   {...centroDecision}
-                  defaultValue={centroDecision.value === undefined ? infoClient.isDecisionCenter : centroDecision.value}
                 />
               </dt>
             </Col>
@@ -787,7 +778,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={valuesYesNo}
-                  defaultValue={infoClient.isCreditNeeded}
                 />
               </dt>
             </Col>
@@ -806,7 +796,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'group'}
                   data={selectsReducer.get('dataEconomicGroup')}
-                  defaultValue={infoClient.economicGroup}
                 />
               </dt>
             </Col>
@@ -832,7 +821,6 @@ class clientEdit extends Component{
               textProp={"value"}
               justify={justifyNoGeren}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
-              defaultValue={justifyNoGeren.value === undefined ? '' : infoClient.justificationForNoRM}
             />
             <SelectsJustificacion
               visible={centroDecision.value}
@@ -844,7 +832,6 @@ class clientEdit extends Component{
               textProp={"value"}
               justify={justifyExClient}
               data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
-              defaultValue={justifyExClient.value === undefined ? '' : infoClient.justificationForLostClient}
             />
             <SelectsJustificacion
               visible={necesitaLME.value}
@@ -856,7 +843,6 @@ class clientEdit extends Component{
               textProp={"value"}
               justify={justifyNoLME}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
-              defaultValue={justifyNoLME.value === undefined ? '' : infoClient.justificationForCreditNeed}
             />
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
@@ -897,6 +883,20 @@ class clientEdit extends Component{
             showCancelButton= {true}
             onCancel= {() => this.setState({show: false })}
             onConfirm={() => this._onConfirmExit()}/>
+          <SweetAlert
+           type= "success"
+           show={this.state.showEx}
+           title="Cliente editado"
+           text="El cliente se editó correctamente."
+           onConfirm={() => this._closeSuccess()}
+         />
+           <SweetAlert
+            type= "error"
+            show={this.state.showEr}
+            title="Error"
+            text="Se presento un error al realizar la edición del cliente."
+            onConfirm={() => this._closeError()}
+          />
         </form>
     );
   }
@@ -918,10 +918,39 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) {
+  const infoClient = clientInformacion.get('responseClientInfo');
+  console.log("infoClient", infoClient);
   return {
     clientInformacion,
     selectsReducer,
-    notes
+    notes,
+    initialValues:{
+      description: infoClient.description,
+      idCIIU: infoClient.ciiu,
+      idSubCIIU: infoClient.subCiiu,
+      address: infoClient.addresses[0].address,
+      country: infoClient.addresses[0].country,
+      province: infoClient.addresses[0].province,
+      city: infoClient.addresses[0].city,
+      neighborhood: infoClient.addresses[0].neighborhood,
+      telephone: infoClient.addresses[0].phoneNumber,
+      reportVirtual: infoClient.addresses[0].isPrincipalAddress,
+      extractsVirtual: infoClient.isVirtualStatement,
+      annualSales: infoClient.annualSales,
+      dateSalesAnnuals: infoClient.salesUpadateDate,
+      assets: infoClient.assets,
+      liabilities: infoClient.liabilities,
+      operatingIncome: infoClient.operatingIncome,
+      nonOperatingIncome: infoClient.nonOperatingIncome,
+      expenses: infoClient.expenses,
+      marcGeren: infoClient.isManagedByRm,
+      centroDecision: infoClient.isDecisionCenter,
+      necesitaLME: infoClient.isCreditNeeded,
+      justifyNoGeren: infoClient.justificationForNoRM,
+      justifyExClient: infoClient.justificationForLostClient,
+      justifyNoLME: infoClient.justificationForCreditNeed,
+      groupEconomic: infoClient.economicGroup
+    }
   };
 }
 export default reduxForm({
