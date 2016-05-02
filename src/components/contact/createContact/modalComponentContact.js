@@ -608,8 +608,8 @@ class ModalComponentContact extends Component {
            onConfirm={() => this._closeCreate()}
            />
            <SweetAlert
-            type= "error"
-            title="Error"
+            type= "warning"
+            title="Advertencia"
             show={this.state.showErrorYa}
             text="El cliente ya presenta una relación con el contacto buscado"
             onConfirm={() => this._closeCreate()}
@@ -622,9 +622,9 @@ class ModalComponentContact extends Component {
              onConfirm={() => this._closeCreate()}
              />
              <SweetAlert
-              type= "error"
+              type= "warning"
               show={this.state.showErrorNo}
-              title="Error"
+              title="Advertencia"
               text="El contacto no existe"
               onConfirm={() => this._closeCreate()}
               />
