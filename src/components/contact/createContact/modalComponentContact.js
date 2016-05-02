@@ -17,7 +17,7 @@ import InputComponent from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields,clearValuesAdressess} from '../../selectsComponent/actions';
+import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
 import {FILTER_CITY,FILTER_PROVINCE,CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
 const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
@@ -117,8 +117,7 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount(){
-      const{getMasterDataFields, clearValuesAdressess} = this.props;
-      clearValuesAdressess();
+      const{getMasterDataFields} = this.props;
       getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
@@ -609,8 +608,8 @@ class ModalComponentContact extends Component {
            onConfirm={() => this._closeCreate()}
            />
            <SweetAlert
-            type= "error"
-            title="Error"
+            type= "warning"
+            title="Advertencia"
             show={this.state.showErrorYa}
             text="El cliente ya presenta una relación con el contacto buscado"
             onConfirm={() => this._closeCreate()}
@@ -623,9 +622,9 @@ class ModalComponentContact extends Component {
              onConfirm={() => this._closeCreate()}
              />
              <SweetAlert
-              type= "error"
+              type= "warning"
               show={this.state.showErrorNo}
-              title="Error"
+              title="Advertencia"
               text="El contacto no existe"
               onConfirm={() => this._closeCreate()}
               />
@@ -690,8 +689,7 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         getMasterDataFields,
         contactsByClientFindServer,
-        consultList,
-        clearValuesAdressess
+        consultList
     }, dispatch);
 }
 
