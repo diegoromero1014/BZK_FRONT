@@ -62,7 +62,8 @@ class CreatePropspect extends Component{
       this.setState({showEx:false, showEr: false});
   }
 
-  _onClickButtonChange(){
+  _onClickButtonChange(e){
+    e.preventDefault();
     console.log("Chaneg 1");
     prospectInApplication = true;
     console.log("Chaneg 2 ");
@@ -94,6 +95,7 @@ class CreatePropspect extends Component{
   }
 
   render(){
+    console.log("Update code create prospect");
     const { fields: { idType, idNumber }, error, handleSubmit, clearState} = this.props
     const {propspectReducer} = this.props;
     const {selectsReducer} = this.props;
@@ -147,22 +149,23 @@ class CreatePropspect extends Component{
         }
 
         {!prospectInApplication &&
-          <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
-            <Col xs={12} md={4} lg={4}>
-              <dt><span>Tipo de documento</span></dt>
-              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
-            </Col>
-            <Col xs={12} md={3} lg={3}>
-              <dt><span>Número de documento</span></dt>
-              <dl><span>{idNumber.value}</span></dl>
-            </Col>
-            <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
-              <button className="btn" type="button" title="cambiar tipo y número documento"
-                style={{marginTop: "10px", color: "white"}}
-                onClick={this._onClickButtonChange}
-              >Cambiar</button>
-            </Col>
-          </Row>
+          <form onSubmit={this._onClickButtonChange}>
+            <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
+              <Col xs={12} md={4} lg={4}>
+                <dt><span>Tipo de documento</span></dt>
+                <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
+              </Col>
+              <Col xs={12} md={3} lg={3}>
+                <dt><span>Número de documento</span></dt>
+                <dl><span>{idNumber.value}</span></dl>
+              </Col>
+              <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
+                <button className="btn" type="submit" title="cambiar tipo y número documento"
+                  style={{marginTop: "10px", color: "white"}}
+                >Cambiar</button>
+              </Col>
+            </Row>
+          </form>
         }
 
         {!prospectInApplication &&
