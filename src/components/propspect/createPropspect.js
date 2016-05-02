@@ -16,6 +16,10 @@ import _ from 'lodash';
 var prospectInApplication = true;
 var nameTipeDocument = "";
 
+var typeMessage = "warning";
+var titleMessage = "Prospecto/cliente existente";
+var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
+
 const validate = values => {
     const errors = {}
     if (!values.idType) {
@@ -70,8 +74,14 @@ class CreatePropspect extends Component{
     validateProspectExists(idType, idNumber)
     .then((data) => {
       if((_.get(data, 'payload.data.status') === "Exists")){
+          typeMessage = "warning";
+          titleMessage = "Prospecto/cliente existente";
+          message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
           this.setState({showEr: true});
         } else if(_.get(data, 'payload.data.status') === "Error") {
+          typeMessage = "error";
+          titleMessage = "Error";
+          message = "Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación.";
           this.setState({showEx: true});
         }
       }, (reason) => {
@@ -125,7 +135,7 @@ class CreatePropspect extends Component{
               <Col xs={2} md={4} lg={2}>
                 <button className="btn btn-primary" type="submit" title="Buscar prospecto"
                   style={{marginLeft:"30px", marginTop: "20px", fontSize : '1.2em', paddingTop: "4px !important"}}>
-                  <i className="search icon" style={{color: "white"}}></i>
+                  <i className="<search icon" style={{color: "white"}}></i>
                 </button>
               </Col>
             </Row>
@@ -155,19 +165,12 @@ class CreatePropspect extends Component{
           <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
         <SweetAlert
-         type= "warning"
+         type={typeMessage}
          show={this.state.showEr}
-         title="Prospecto/cliente existente"
-         text="El prospecto/cliente ya se encuentra registrado en la aplicación."
+         title={titleMessage}
+         text={message}
          onConfirm={() => this._closeError()}
          />
-         <SweetAlert
-          type= "error"
-          show={this.state.showEx}
-          title="Error"
-          text="Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación."
-          onConfirm={() => this._closeError()}
-          />
       </div>
     );
   }
