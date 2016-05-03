@@ -128,7 +128,6 @@ class CreatePropspect extends Component{
                     name="documento"
                     type="text"
                     placeholder="Ingrese el número de documento del prospecto"
-                    onChange={val => this._onchangeValue("idNumber",val)}
                     {...idNumber}
                   />
               </Col>

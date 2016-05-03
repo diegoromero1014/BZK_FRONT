@@ -443,6 +443,7 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...annualSales}
+                value={annualSales.value || undefined}
               />
             </div>
           </Col>
@@ -455,6 +456,7 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...assets}
+                value={assets.value || undefined}
               />
             </div>
           </Col>
@@ -467,6 +469,7 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...liabilities}
+                value={liabilities.value || undefined}
               />
             </div>
           </Col>
@@ -478,6 +481,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los ingresos operacionales"
                 format="0,000"
                 {...operatingIncome}
+                value={operatingIncome.value || undefined}
               />
             </div>
           </Col>
@@ -489,6 +493,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los ingresos no operacionales"
                 format="0,000"
                 {...nonOperatingIncome}
+                value={nonOperatingIncome.value || undefined}
               />
             </div>
           </Col>
@@ -501,6 +506,7 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...expenses}
+                value={expenses.value || undefined}
               />
             </div>
           </Col>
