@@ -20,8 +20,6 @@ var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
 
-var styleDivProspect = {display: "none"};
-
 const validate = values => {
     const errors = {}
     if (!values.idType) {
@@ -50,9 +48,7 @@ class CreatePropspect extends Component{
   }
 
   componentWillMount(){
-    const {fields: { idType, idNumber },clearAllState} = this.props;
-    idType.touched= false;
-    idNumber.touched= false;
+    const {clearAllState} = this.props;
     clearAllState();
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
@@ -67,13 +63,9 @@ class CreatePropspect extends Component{
   }
 
   _onClickButtonChange(){
-    const { fields: { idType, idNumber }, clearAllState} = this.props
-    idType.onChange('');
-    idNumber.onChange('');
     prospectInApplication = true;
+    const {clearAllState} = this.props;
     clearAllState();
-    idType.touched= false;
-    idNumber.touched= false;
   };
 
   _clickButtonCreateProps(formData){
@@ -108,12 +100,6 @@ class CreatePropspect extends Component{
       prospectInApplication = prospectExist;
     } else {
       prospectInApplication = true;
-    }
-
-    if( !prospectInApplication ){
-      styleDivProspect = {display: "inline"};
-    } else {
-      styleDivProspect = {display: "none"};
     }
     if( !validateLogin ){
       //redirectUrl("/login");
@@ -156,7 +142,7 @@ class CreatePropspect extends Component{
           </form>
         }
 
-        <div style={styleDivProspect}>
+        {!prospectInApplication &&
           <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Tipo de documento</span></dt>
@@ -169,14 +155,15 @@ class CreatePropspect extends Component{
             <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
               <button className="btn" type="button" title="cambiar tipo y número documento"
                 style={{marginTop: "10px", color: "white"}}
-                onClick={this._onClickButtonChange}>Cambiar
-              </button>
+                onClick={this._onClickButtonChange}
+              >Cambiar</button>
             </Col>
           </Row>
+        }
 
+        {!prospectInApplication &&
           <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
-        </div>
-
+        }
         <SweetAlert
          type={typeMessage}
          show={this.state.showEr}
