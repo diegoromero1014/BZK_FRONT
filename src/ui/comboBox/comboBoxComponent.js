@@ -16,10 +16,6 @@ class comboBoxComponent extends Component {
      const selector = $(`.ui.selection.dropdown.${name}`);
      if (_.isEqual(value, '')) {
          selector.dropdown('clear');
-     }
-     const {defaultValue} = this.props;
-     if(value === undefined || value === '' || value === null){
-       selector.dropdown('set selected', defaultValue);
      }else{
        selector.dropdown('set selected', value);
      }

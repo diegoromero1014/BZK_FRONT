@@ -44,7 +44,7 @@ class NotesClient extends Component {
 
     _mapNotesItems(note) {
         const {selectsReducer} = this.props;
-        console.log("selectsReducer.get('dataTypeNotes')", selectsReducer.get("dataTypeNotes"));
+        console.log('note', note);
         return <Note
             index={ note[0]}
             key={ note[0]}
@@ -60,9 +60,10 @@ class NotesClient extends Component {
 
     render() {
         const {notes} = this.props;
+        console.log(notes);
         return (
             <Row style={{padding: "0px 10px 20px 20px"}}>
-              <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
+              <Col xs={12} md={12} lg={12} style={{marginTop: "50px", paddingRight: "35px", textAlign: "right"}}>
                   <button className="btn" style={{margin:"12px 0px 0px 12px", fontSize : '1.5em'}}
                           type="button"
                           onClick={this._addNote}

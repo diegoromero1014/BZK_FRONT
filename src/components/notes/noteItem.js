@@ -11,9 +11,17 @@ class NoteItem extends Component {
         super(props);
     }
 
+    _updateValue(e){
+      console.log("update", e);
+    }
+
     render() {
         const {
-            combo, body, data, index, _updateValue,
+            combo,
+            body,
+            data,
+            index,
+            _updateValue,
             _updateValueList,
             _onBlurField,
             _deleteNote,
@@ -43,7 +51,7 @@ class NoteItem extends Component {
                                 type="text"
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
                                 value={body}
-                                onChange={_updateValue}
+                                onChange={this._updateValue}
                                 onBlur={_onBlurField}
                             />
                         </div>

@@ -9,8 +9,8 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case UPDATE_NOTE:
         const note = state.get(action.index);
-        _.set(note, action.prop, action.value);
-        return state.set(action.index, note);
+        const newNote = _.set(note, action.prop, action.value);
+        return state.set(action.index, newNote);
     case CREATE_NOTE:
         return state.set(action.uid, {body: '', combo: ''});
     case DELETE_NOTE:

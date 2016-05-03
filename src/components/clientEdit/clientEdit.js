@@ -212,7 +212,6 @@ class clientEdit extends Component{
   }
 
   componentWillMount(){
-
     const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
     clearValuesAdressess();
     crearNotes();
@@ -247,26 +246,42 @@ class clientEdit extends Component{
   _onChangeCIIU(val){
     const {fields: {idCIIU, idSubCIIU}} = this.props;
     idCIIU.onChange(val);
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {consultListWithParameter} = this.props;
     consultListWithParameter(constants.SUB_CIIU, val);
-    idSubCIIU.onChange('');
+    console.log("idCIIU.value = ", idCIIU.value);
+    console.log("infoClient.ciiu = ", infoClient.ciiu);
+    if(!_.isEqual(infoClient.ciiu, idCIIU.value)){
+      console.log("cambio subciiu!!!");
+      idSubCIIU.onChange('');
+    }
   }
 
   _onChangeCountry(val){
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {fields: {country, province, city}} = this.props;
     country.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-    province.onChange('');
-    city.onChange('');
+    if(!_.isEqual(infoClient.addresses[0].country, country.value)){
+      province.onChange('');
+      city.onChange('');
+    }
   }
 
   _onChangeProvince(val){
+    console.log('***_onChangeProvince');
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {fields: {country, province, city}} = this.props;
     province.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-    city.onChange('');
+    if(!_.isEqual(infoClient.addresses[0].province, province.value)){
+      city.onChange('');
+    }
   }
 
   _submitEditClient(){
@@ -353,6 +368,8 @@ class clientEdit extends Component{
   };
 
   render(){
+    const {notes} = this.props;
+    console.log("notas!! = ", notes);
     const {
     fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
@@ -427,7 +444,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>CIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
-                name="ciiu"
+                name="idCIIU"
                 labelInput="Seleccione CIIU..."
                 {...idCIIU}
                 onChange={val => this._onChangeCIIU(val)}
@@ -440,9 +457,9 @@ class clientEdit extends Component{
           </Col>
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-              <dt style={{paddingBottom: "10px"}}><span>Sector</span></dt>
+              <dt style={{paddingBottom: "10px"}}><span>Sector</span> </dt>
               <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
-
+                {(!_.isEmpty(idCIIU.value) && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].economicSector : ''}
               </span>
             </div>
           </Col>
@@ -450,9 +467,10 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>SubCIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
-                name="subCiiu"
+                name="idSubCIIU"
                 labelInput="Seleccione subCIIU..."
                 {...idSubCIIU}
+                onBlur={idSubCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
@@ -461,9 +479,9 @@ class clientEdit extends Component{
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
-              <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
+              <dt style={{paddingBottom: "10px"}}><span>Subsector</span> {idSubCIIU.value}</dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>
-
+                {(!_.isEmpty(idSubCIIU.value) && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)])[0].economicSubSector : ''}
               </span>
             </div>
           </Col>
@@ -647,7 +665,7 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateSalesAnnuals}/>
+              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -805,7 +823,7 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <p style={{fontWeight: "normal", marginTop: "8px"}}>
-                  {groupEconomic.value && _.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)] )[0].nitPrincipal}
+
                 </p>
               </dt>
             </Col>
@@ -890,12 +908,12 @@ class clientEdit extends Component{
            text="El cliente se editó correctamente."
            onConfirm={() => this._closeSuccess()}
          />
-           <SweetAlert
-            type= "error"
-            show={this.state.showEr}
-            title="Error"
-            text="Se presento un error al realizar la edición del cliente."
-            onConfirm={() => this._closeError()}
+         <SweetAlert
+          type= "error"
+          show={this.state.showEr}
+          title="Error"
+          text="Se presento un error al realizar la edición del cliente."
+          onConfirm={() => this._closeError()}
           />
         </form>
     );
@@ -919,7 +937,6 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) {
   const infoClient = clientInformacion.get('responseClientInfo');
-  console.log("infoClient", infoClient);
   return {
     clientInformacion,
     selectsReducer,
@@ -956,6 +973,5 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
 export default reduxForm({
   form: 'submitValidation',
   fields,
-  validate,
-  //initialValues: {province: 10262}
+  validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);
