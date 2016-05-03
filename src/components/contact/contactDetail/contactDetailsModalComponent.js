@@ -8,11 +8,20 @@ import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
+import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact} from './actions';
+import {contactsByClientFindServer} from '../actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {NUMBER_RECORDS} from '../constants';
+
+
+const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
+              "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
+              "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
+              "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth"];
 
 const validate = values => {
     const errors = {};
@@ -21,60 +30,60 @@ const validate = values => {
     } else {
       errors.contactType = null;
     }
-    if (!values.title) {
-      errors.title = "Debe seleccionar el tratamiento";
+    if (!values.contactTitle) {
+      errors.contactTitle = "Debe seleccionar el tratamiento";
     } else {
-      errors.title = null;
+      errors.contactTitle = null;
     }
-    if (!values.gender) {
-      errors.gender = "Debe seleccionar el genero";
+    if (!values.contactGender) {
+      errors.contactGender = "Debe seleccionar el genero";
     } else {
-      errors.gender = null;
+      errors.contactGender = null;
     }
-    if (!values.typeOfContact) {
-      errors.typeOfContact = "Debe seleccionar el tipo de contacto";
+    if (!values.contactTypeOfContact) {
+      errors.contactTypeOfContact = "Debe seleccionar el tipo de contacto";
     } else {
-      errors.typeOfContact = null;
+      errors.contactTypeOfContact = null;
     }
-    if (!values.country) {
-      errors.country = "Debe seleccionar el país";
+    if (!values.contactCountry) {
+      errors.contactCountry = "Debe seleccionar el país";
     } else {
-      errors.country = null;
+      errors.contactCountry = null;
     }
     if (!values.contactIdentityNumber) {
       errors.contactIdentityNumber = "Debe ingresar el número del documento";
     } else {
       errors.contactIdentityNumber = null;
     }
-    if (!values.firstName) {
-      errors.firstName = "Debe ingresar el primer nombre";
+    if (!values.contactFirstName) {
+      errors.contactFirstName = "Debe ingresar el primer nombre";
     } else {
-      errors.firstName = null;
+      errors.contactFirstName = null;
     }
-    if (!values.firstLastName) {
-      errors.firstLastName = "Debe ingresar el primer apellido";
+    if (!values.contactFirstLastName) {
+      errors.contactFirstLastName = "Debe ingresar el primer apellido";
     } else {
-      errors.firstLastName = null;
+      errors.contactFirstLastName = null;
     }
-    if (!values.emailAddress) {
-      errors.emailAddress = "Debe ingresar el correo electrónico";
+    if (!values.contactEmailAddress) {
+      errors.contactEmailAddress = "Debe ingresar el correo electrónico";
     } else {
-      errors.emailAddress = null;
+      errors.contactEmailAddress = null;
     }
-    if (!values.telephoneNumber) {
-      errors.telephoneNumber = "Debe ingresar el número de telefono";
+    if (!values.contactTelephoneNumber) {
+      errors.contactTelephoneNumber = "Debe ingresar el número de telefono";
     } else {
-      errors.telephoneNumber = null;
+      errors.contactTelephoneNumber = null;
     }
-    /*if (!values.lineOfBusiness) {
-      errors.lineOfBusiness = "Debe seleccionar al menos una línea de negocio";
+    if (!values.contactFunctions) {
+      errors.contactFunctions = "Debe seleccionar al menos una función";
     } else {
-      errors.lineOfBusiness = null;
-    }*/
-    if (!values.functions) {
-      errors.functions = "Debe seleccionar al menos una función";
+      errors.contactFunctions = null;
+    }
+    if (!values.contactAddress) {
+      errors.contactAddress = "Debe ingresar la dirección";
     } else {
-      errors.functions = null;
+      errors.contactAddress = null;
     }
     return errors;
 };
@@ -88,8 +97,14 @@ class ContactDetailsModalComponent extends Component {
     this._onchangeValue = this._onchangeValue.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
-    this._uploadProvinces = this._uploadProvinces.bind(this);
-    this._uploadCities = this._uploadCities.bind(this);
+    this._uploadProvincesByCountryId = this._uploadProvincesByCountryId.bind(this);
+    this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
+    this._editContact = this._editContact.bind(this);
+    this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
+    this.state = {
+      contactEdited: false,
+      isEditable: false
+    };
     momentLocalizer(moment);
   }
 
@@ -97,23 +112,25 @@ class ContactDetailsModalComponent extends Component {
   componentWillMount() {
     const {getMasterDataFields, getContactDetails, contactId, _uploadProvinces, _uploadCities} = this.props;
     const that = this;
-    getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+    getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
+                        FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
     .then(function(data) {
-      console.log(_.get(data, 'payload.data.contactDetail'));
+      //console.log(_.get(data, 'payload.data.contactDetail'));
       const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
 
-      console.log('Datos del contacto -> ', contact);
-      console.log('this ', that);
+      //console.log('Datos del contacto -> ', contact);
+      //console.log('this ', that);
 
       const {_uploadProvinces, _uploadCities} = that.props;
 
       
-      if (contact.country != null) {
-        that._uploadProvinces(contact.country);
+      if (contact.country !== undefined && contact.country !== null) {
+        that._uploadProvincesByCountryId(contact.country);
       }
-      if (contact.city != null) {
-        that._uploadCities(contact.city);
+      if (contact.province !== undefined && contact.province !== null) {
+        that._uploadCitiesByProvinceId(contact.province);
       }
     });
   }
@@ -126,57 +143,57 @@ class ContactDetailsModalComponent extends Component {
         var {fields: {contactIdentityNumber}} = this.props;
         contactIdentityNumber.onChange(val);
         break;
-      case "firstName":
-        var {fields: {firstName}} = this.props;
-        firstName.onChange(val);
+      case "contactFirstName":
+        var {fields: {contactFirstName}} = this.props;
+        contactFirstName.onChange(val);
         break;
-      case "firstLastName":
-        var {fields: {firstLastName}} = this.props;
-        firstLastName.onChange(val);
+      case "contactFirstLastName":
+        var {fields: {contactFirstLastName}} = this.props;
+        contactFirstLastName.onChange(val);
         break;
-      case "middleName":
-        var {fields: {middleName}} = this.props;
-        middleName.onChange(val);
+      case "contactMiddleName":
+        var {fields: {contactMiddleName}} = this.props;
+        contactMiddleName.onChange(val);
         break;
-      case "secondLastName":
-        var {fields: {secondLastName}} = this.props;
-        secondLastName.onChange(val);
+      case "contactSecondLastName":
+        var {fields: {contactSecondLastName}} = this.props;
+        contactSecondLastName.onChange(val);
         break;
-      case "postalCode":
-        var {fields: {postalCode}} = this.props;
-        postalCode.onChange(val);
+      case "contactPostalCode":
+        var {fields: {contactPostalCode}} = this.props;
+        contactPostalCode.onChange(val);
         break;
-      case "telephoneNumber":
-        var {fields: {telephoneNumber}} = this.props;
-        telephoneNumber.onChange(val);
+      case "contactTelephoneNumber":
+        var {fields: {contactTelephoneNumber}} = this.props;
+        contactTelephoneNumber.onChange(val);
         break;
-      case "extension":
-        var {fields: {extension}} = this.props;
-        extension.onChange(val);
+      case "contactExtension":
+        var {fields: {contactExtension}} = this.props;
+        contactExtension.onChange(val);
         break;
-      case "mobileNumber":
-        var {fields: {mobileNumber}} = this.props;
-        mobileNumber.onChange(val);
+      case "contactMobileNumber":
+        var {fields: {contactMobileNumber}} = this.props;
+        contactMobileNumber.onChange(val);
         break;
-      case "emailAddress":
-        var {fields: {emailAddress}} = this.props;
-        emailAddress.onChange(val);
+      case "contactEmailAddress":
+        var {fields: {contactEmailAddress}} = this.props;
+        contactEmailAddress.onChange(val);
         break;
-      case "address":
-        var {fields: {address}} = this.props;
-        address.onChange(val);
+      case "contactAddress":
+        var {fields: {contactAddress}} = this.props;
+        contactAddress.onChange(val);
         break;
-      case "country":
-        var {fields: {country}} = this.props;
-        country.onChange(val);
+      case "contactCountry":
+        var {fields: {contactCountry}} = this.props;
+        contactCountry.onChange(val);
         break;
-      case "province":
-        var {fields: {province}} = this.props;
-        province.onChange(val);
+      case "contactProvince":
+        var {fields: {contactProvince}} = this.props;
+        contactProvince.onChange(val);
         break;
-      case "city":
-        var {fields: {city}} = this.props;
-        city.onChange(val);
+      case "contactCity":
+        var {fields: {contactCity}} = this.props;
+        contactCity.onChange(val);
         break;
       default:
         break;
@@ -185,545 +202,589 @@ class ContactDetailsModalComponent extends Component {
     clearState();
   }
 
-  
   _onChangeCountry(val) {
-    const {fields: {country, province, city}} = this.props;
-    country.onChange(val);
-    const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(FILTER_PROVINCE, country.value);
-    province.onChange('');
-    city.onChange('');
+    //console.log('Entering on _onChangeCountry with val -> ', val);
+    const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
+    if (val !== undefined && val !== null) {
+      contactCountry.onChange(val);
+      const {consultListWithParameterUbication} = this.props;
+      consultListWithParameterUbication(FILTER_PROVINCE, val);
+    }
+    contactProvince.onChange('');
+    contactCity.onChange('');
   }
 
   _onChangeProvince(val) {
-    const {fields: {country, province, city}} = this.props;
-    province.onChange(val);
-    const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(FILTER_CITY, province.value);
-    city.onChange('');
+    //console.log('Entering on _onChangeProvince with val ->, ', val);
+    const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
+    if (val !== undefined && val !== null) {
+      contactProvince.onChange(val);
+      const {consultListWithParameterUbication} = this.props;
+      consultListWithParameterUbication(FILTER_CITY, val);
+    }
+    contactCity.onChange('');
   }
 
-  _uploadProvinces(countryId) {
-    console.log('Cargo los departamentos -> ', countryId);
-    const {fields: {country, province, city}} = this.props;
+  _uploadProvincesByCountryId(countryId) {
+    //console.log('Entering on _uploadProvinces with countryId -> ', countryId);
+    const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(FILTER_PROVINCE, countryId);
-    province.onChange(countryId);
-    //city.onChange('');
+    if (countryId !== undefined && countryId !== null) {
+      consultListWithParameterUbication(FILTER_PROVINCE, countryId);
+    }
   }
 
-  _uploadCities(provinceId) {
-    console.log('Cargo las ciudades -> ', provinceId);
-    const {fields: {country, province, city}} = this.props;
+  _uploadCitiesByProvinceId(provinceId) {
+    //console.log('Entering on _uploadCities with provinceId -> ', provinceId);
+    const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(FILTER_CITY, provinceId);
-    //city.onChange(provinceId);
+    if (provinceId !== undefined && provinceId !== null) {
+      consultListWithParameterUbication(FILTER_CITY, provinceId);
+    }
+  }
+
+  _editContact() {
+    this.setState({
+      isEditable: !this.state.isEditable
+    });
+    //console.log('Habilitar campos y botón para editar');
+  }
+
+  _closeViewOrEditContact() {
+    const {isOpen} = this.props;
+    this.setState({contactEdited: false, isEditable: false});
+    isOpen();
+    //console.log('Cerrar ventana modal de ver o editar contacto');
   }
 
   /* metodo para enviar el formulario */
   _handlerSubmitContact() {
-    // console.log('Se envió la información');
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition,
-                      contactDependency, address, country, province, city, neighborhood, postalCode, telephoneNumber, extension, mobileNumber,
-                      emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup,
-                      dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
+    //console.log('Se envió la información');
+    const { fields: { contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
+      contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+      contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
+      contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+    }, error, handleSubmit, selectsReducer} = this.props;
     
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
-
     const {saveContact} = this.props;
 
     const jsonUpdateContact = {
       "client": window.localStorage.getItem('idClientSelected'),
       "id": contact.id,
-      "title": title.value !== undefined ? title.value : null,
-      "gender": gender.value !== undefined ? gender.value : null,
+      "title": contactTitle.value !== undefined ? contactTitle.value : null,
+      "gender": contactGender.value !== undefined ? contactGender.value : null,
       "contactType": contactType.value !== undefined ? contactType.value : null,
       "contactIdentityNumber": contactIdentityNumber.value !== undefined ? contactIdentityNumber.value : null,
-      "firstName": firstName.value !== undefined ? firstName.value : null,
-      "middleName": middleName.value !== undefined ? middleName.value : null,
-      "firstLastName": firstLastName.value !== undefined ? firstLastName.value : null,
-      "secondLastName": secondLastName.value !== undefined ? secondLastName.value : null,
+      "firstName": contactFirstName.value !== undefined ? contactFirstName.value : null,
+      "middleName": contactMiddleName.value !== undefined ? contactMiddleName.value : null,
+      "firstLastName": contactFirstLastName.value !== undefined ? contactFirstLastName.value : null,
+      "secondLastName": contactSecondLastName.value !== undefined ? contactSecondLastName.value : null,
       "contactPosition": contactPosition.value !== undefined ? contactPosition.value : null,
       "unit": contactDependency.value !== undefined ? contactDependency.value : null,
-      "function": functions.value !== undefined ? _.split(functions.value, ',') : null,
-      "dateOfBirth": dateOfBirth.value !== undefined ? moment(dateOfBirth.value).format('x') : null,
-      "address": address.value !== undefined ? address.value : null,
-      "country": country.value !== undefined ? country.value : null,
-      "province": province.value !== undefined ? province.value : null,
-      "city": city.value !== undefined ? city.value : null,
-      "neighborhood": neighborhood.value !== undefined ? neighborhood.value : null,
-      "postalCode": postalCode.value !== undefined ? postalCode.value : null,
+      "function": contactFunctions.value !== undefined ? _.split(contactFunctions.value, ',') : null,
+      "dateOfBirth": contactDateOfBirth.value !== undefined ? moment(contactDateOfBirth.value).format('x') : null,
+      "address": contactAddress.value !== undefined ? contactAddress.value : null,
+      "country": contactCountry.value !== undefined ? contactCountry.value : null,
+      "province": contactProvince.value !== undefined ? contactProvince.value : null,
+      "city": contactCity.value !== undefined ? contactCity.value : null,
+      "neighborhood": contactNeighborhood.value !== undefined ? contactNeighborhood.value : null,
+      "postalCode": contactPostalCode.value !== undefined ? contactPostalCode.value : null,
       "typeOfAddress": null,
-      "telephoneNumber": telephoneNumber.value !== undefined ? telephoneNumber.value : null,
-      "extension": extension.value !== undefined ? extension.value : null,
-      "mobileNumber": mobileNumber.value !== undefined ? mobileNumber.value : null,
-      "emailAddress": emailAddress.value !== undefined ? emailAddress.value : null,
-      "hobbies": hobbies.value !== undefined ? _.split(hobbies.value, ',') : null,
-      "sports": sports.value !== undefined ? _.split(sports.value, ',') : null,
+      "telephoneNumber": contactTelephoneNumber.value !== undefined ? contactTelephoneNumber.value : null,
+      "extension": contactExtension.value !== undefined ? contactExtension.value : null,
+      "mobileNumber": contactMobileNumber.value !== undefined ? contactMobileNumber.value : null,
+      "emailAddress": contactEmailAddress.value !== undefined ? contactEmailAddress.value : null,
+      "hobbies": contactHobbies.value !== undefined ? _.split(contactHobbies.value, ',') : null,
+      "sports": contactSports.value !== undefined ? _.split(contactSports.value, ',') : null,
       "modeOfContact": null,
       "registryKey": null,
       "notes": null,
-      "typeOfContact": typeOfContact.value !== undefined ? typeOfContact.value : null,
+      "typeOfContact": contactTypeOfContact.value !== undefined ? contactTypeOfContact.value : null,
       "shippingInformation": null,
-      "lineOfBusiness": lineOfBusiness.value !== undefined ? _.split(lineOfBusiness.value, ',') : null,
+      "lineOfBusiness": contactLineOfBusiness.value !== undefined ? _.split(contactLineOfBusiness.value, ',') : null,
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
       "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
     }
-    console.log('El objecto a guardar -> ', jsonUpdateContact);
-    saveContact(jsonUpdateContact);
+
+    //console.log('El objecto a guardar -> ', jsonUpdateContact);
+    saveContact(jsonUpdateContact).then((data) => {
+      if (_.get(data, 'payload.status') === 200) {
+        this.setState({contactEdited: true});
+        contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
+              "",
+              "",
+              "");
+        this.closeModal();
+        //console.log('Se guardó correctamente');
+      } else {
+        //console.log('Se produjo un error');
+      }
+    });
   }
 
   render() {
-    const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition, contactDependency, address, country, province, city, neighborhood, postalCode, telephoneNumber, extension, mobileNumber, emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup, dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
-    const {contactDetail} = this.props;
-    const contact = contactDetail.get('contactDetailList');
+    const { initialValues, fields: {
+      contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
+      contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
+      contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
+      contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+    }, error, handleSubmit, selectsReducer} = this.props;
+
     return (
-       <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
-      <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
-          <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
-            <Row>
-              <Col md={12} lg={12}>
-                <dt className="business-title" style={{fontSize: '17px'}}>
-                  <span style={{paddingLeft: '20px'}}>
-                    {'Información básica contacto'}
-                  </span>
-                </dt>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={4} lg={4}>
-                <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="contactType"
-                    labelInput="Seleccione el tipo de documento"
-                    {...contactType}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(CONTACT_ID_TYPE) || []}
-                    defaultValue={contactType.value === undefined ? contact.contactType : contactType.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Número de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <Input
-                    name="contactIdentityNumber"
-                    type="text"
-                    placeholder="Ingrese el número de documento del usuario"
-                    onChange={val => this._onchangeValue("contactIdentityNumber", val)}
-                    {...contactIdentityNumber}
-                    value={contactIdentityNumber.value === undefined ? contact.contactIdentityNumber : contactIdentityNumber.value}
-                  />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={4} lg={4}>
-                <dt><span>{'Tratamiento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="title"
-                    labelInput="Seleccione el tratamiento"
-                    {...title}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_TITLE) || []}
-                    defaultValue={title.value === undefined ? contact.title : title.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={4} lg={4}>
-                <dt><span>{'Género ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="gender"
-                    labelInput="Seleccione el genero"
-                    {...gender}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_GENDER) || []}
-                    defaultValue={gender.value === undefined ? contact.gender : gender.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Primer nombre ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <Input
-                    name="firstName"
-                    type="text"
-                    placeholder="Ingrese el primer nombre"
-                    onChange={val => this._onchangeValue("firstName", val)}
-                    {...firstName}
-                    value={firstName.value === undefined ? contact.firstName : firstName.value}
-                  />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Segundo nombre'}</span></dt>
-                <dd>
-                  <Input
-                      name="middleName"
-                      type="text"
-                      placeholder="Ingrese el segundo nombre"
-                      onChange={val => this._onchangeValue("middleName", val)}
-                      {...middleName}
-                      value={middleName.value === undefined ? contact.middleName : middleName.value}
+      <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
+        <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+            <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
+              <Row>
+                <Col md={12} lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>
+                    <span style={{paddingLeft: '20px'}}>
+                      {'Información básica contacto'}
+                    </span>
+                  </dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactType"
+                      labelInput="Seleccione el tipo de documento"
+                      {...contactType}
+                      disabled={'disabled'}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                     />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Primer apellido ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <Input
-                      name="firstLastName"
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Número de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactIdentityNumber"
                       type="text"
-                      placeholder="Ingrese el primer apellido"
-                      onChange={val => this._onchangeValue("firstLastName", val)}
-                      {...firstLastName}
-                      value={firstLastName.value === undefined ? contact.firstLastName : firstLastName.value}
+                      disabled={'disabled'}
+                      placeholder="Ingrese el número de documento del usuario"
+                      onChange={val => this._onchangeValue("contactIdentityNumber", val)}
+                      {...contactIdentityNumber}
                     />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Segundo apellido'}</span></dt>
-                <dd>
-                  <Input
-                      name="secondLastName"
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <button type="button" onClick={this._editContact} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Tratamiento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactTitle"
+                      labelInput="Seleccione el tratamiento"
+                      {...contactTitle}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_TITLE) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>{'Género ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactGender"
+                      labelInput="Seleccione el genero"
+                      {...contactGender}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_GENDER) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Primer nombre ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactFirstName"
                       type="text"
-                      placeholder="Ingrese el segundo apellido"
-                      onChange={val => this._onchangeValue("secondLastName", val)}
-                      {...secondLastName}
-                      value={secondLastName.value === undefined ? contact.secondLastName : secondLastName.value}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      placeholder="Ingrese el primer nombre"
+                      //onChange={val => this._onchangeValue("firstName", val)}
+                      {...contactFirstName}
                     />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Cargo'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="contactPosition"
-                    labelInput="Seleccione el cargo"
-                    {...contactPosition}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
-                    defaultValue={contactPosition.value === undefined ? contact.contactPosition : contactPosition.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Area dependencia'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="contactDependency"
-                    labelInput="Seleccione la dependencia"
-                    {...contactDependency}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_DEPENDENCY) || []}
-                    defaultValue={contactDependency.value === undefined ? contact.unit : contactDependency.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt>{'Fecha de nacimiento'}</dt>
-                <dd>
-                  <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateOfBirth} />
-                  
-                  {/* <DateTimePicker
-                    culture='es'
-                    {...dateOfBirth}
-                    //defaultValue={dateOfBirth.value === undefined ? contact.dateOfBirth : dateOfBirth.value}
-                  /> */}
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={4} lg={4}>
-                <dt>{'Estilo social'}</dt>
-                <dd>
-                  <ComboBox
-                    name="contactSocialStyle"
-                    labelInput="Seleccione el estilo social"
-                    {...contactSocialStyle}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
-                    defaultValue={contactSocialStyle.value === undefined ? contact.socialStyle : contactSocialStyle.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={4} lg={4}>
-                <dt>{'Actitud frente al Grupo'}</dt>
-                <dd>
-                  <ComboBox
-                    name="contactAttitudeOverGroup"
-                    labelInput="Seleccione la actitud frente al Grupo"
-                    {...contactAttitudeOverGroup}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
-                    defaultValue={contactAttitudeOverGroup.value === undefined ? contact.attitudeOverGroup : contactAttitudeOverGroup.value}
-                  />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12}>
-                <dt className="business-title" style={{fontSize: '17px'}}>{'Información de ubicación y correspondencia'}</dt>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'País ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="country"
-                    labelInput="Seleccione el país"
-                    onChange={val => this._onChangeCountry(val)}
-                    //value={country.value}
-                    value={country.value === undefined ? contact.country : country.value}
-                    onBlur={country.onBlur}
-                    //{...country}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_COUNTRY) || []}
-                    defaultValue={country.value === undefined ? contact.country : country.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="province"
-                    labelInput="Seleccione el departamento"
-                    onChange={val => this._onChangeProvince(val)}
-                    //value={province.value}
-                    value={province.value === undefined ? contact.province : province.value}
-                    onBlur={province.onBlur}
-                    //{...province}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get('dataTypeProvince') || []}
-                    defaultValue={province.value === undefined ? contact.province : province.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="city"
-                    labelInput="Seleccine la ciudad"
-                    value={city.value === undefined ? contact.city : city.value}
-                    //{...city}
-                    onBlur={city.onBlur}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get('dataTypeCity') || []}
-                    defaultValue={city.value === undefined ? contact.city : city.value}
-                  />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={12}>
-                <dt><span>{'Dirección ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-                <dd>
-                  <textarea className="form-control need-input"
-                    name="address"
-                    placeholder="Ingrese la dirección"
-                    onChange={val => this._onchangeValue("address", val)}
-                    {...address}
-                    value={address.value === undefined ? contact.address : address.value}
-                  ></textarea>
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Barrio'}</span></dt>
-                <dd>
-                  <Input
-                      name="neighborhood"
-                      type="text"
-                      placeholder="Ingrese el barrio"
-                      onChange={val => this._onchangeValue("neighborhood", val)}
-                      {...neighborhood}
-                      value={neighborhood.value === undefined ? contact.neighborhood : neighborhood.value}
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Segundo nombre'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactMiddleName"
+                        type="text"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        placeholder="Ingrese el segundo nombre"
+                        //onChange={val => this._onchangeValue("middleName", val)}
+                        {...contactMiddleName}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Primer apellido ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactFirstLastName"
+                        type="text"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        placeholder="Ingrese el primer apellido"
+                        //onChange={val => this._onchangeValue("firstLastName", val)}
+                        {...contactFirstLastName}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Segundo apellido'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactSecondLastName"
+                        type="text"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        placeholder="Ingrese el segundo apellido"
+                        //onChange={val => this._onchangeValue("secondLastName", val)}
+                        {...contactSecondLastName}
+                      />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Cargo'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactPosition"
+                      labelInput="Seleccione el cargo"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactPosition}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                     />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Código postal'}</span></dt>
-                <dd>
-                  <Input
-                      name="postalCode"
-                      type="text"
-                      placeholder="Ingrese el código postal"
-                      onChange={val => this._onchangeValue("postalCode", val)}
-                      {...postalCode}
-                      value={postalCode.value === undefined ? contact.postalCode : postalCode.value}
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Area dependencia'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactDependency"
+                      labelInput="Seleccione la dependencia"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactDependency}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                     />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Teléfono ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
-                <dd>
-                  <Input
-                      name="telephoneNumber"
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt>{'Fecha de nacimiento'}</dt>
+                  <dd>
+                    <DateTimePickerUi
+                      culture='es'
+                      format={"DD-MM-YYYY"}
+                      time={false}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactDateOfBirth}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt>{'Estilo social'}</dt>
+                  <dd>
+                    <ComboBox
+                      name="contactSocialStyle"
+                      labelInput="Seleccione el estilo social"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactSocialStyle}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt>{'Actitud frente al Grupo'}</dt>
+                  <dd>
+                    <ComboBox
+                      name="contactAttitudeOverGroup"
+                      labelInput="Seleccione la actitud frente al Grupo"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactAttitudeOverGroup}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Información de ubicación y correspondencia'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'País ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactCountry"
+                      labelInput="Seleccione el país"
+                      onChange={val => this._onChangeCountry(val)}
+                      value={contactCountry.value}
+                      onBlur={contactCountry.onBlur}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactCountry}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_COUNTRY) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Departamento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactProvince"
+                      labelInput="Seleccione el departamento"
+                      onChange={val => this._onChangeProvince(val)}
+                      value={contactProvince.value}
+                      onBlur={contactProvince.onBlur}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactProvince}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeProvince') || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactCity"
+                      labelInput="Seleccine la ciudad"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactCity}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get('dataTypeCity') || []}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={12} lg={12}>
+                  <dt><span>{'Dirección ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <textarea className="form-control need-input"
+                      name="contactAddress"
+                      placeholder="Ingrese la dirección"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      //onChange={val => this._onchangeValue("address", val)}
+                      {...contactAddress}
+                    ></textarea>
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Barrio'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactNeighborhood"
+                        type="text"
+                        placeholder="Ingrese el barrio"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        //onChange={val => this._onchangeValue("neighborhood", val)}
+                        {...contactNeighborhood}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Código postal'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactPostalCode"
+                        type="text"
+                        placeholder="Ingrese el código postal"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        //onChange={val => this._onchangeValue("postalCode", val)}
+                        {...contactPostalCode}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Teléfono ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactTelephoneNumber"
                       type="text"
                       placeholder="Ingrese el número de telefono"
-                      onChange={val => this._onchangeValue("telephoneNumber", val)}
-                      {...telephoneNumber}
-                      value={telephoneNumber.value === undefined ? contact.telephoneNumber : telephoneNumber.value}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      //onChange={val => this._onchangeValue("telephoneNumber", val)}
+                      {...contactTelephoneNumber}
                     />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Extensión'}</span></dt>
-                <dd>
-                  <Input
-                      name="extension"
-                      type="text"
-                      placeholder="Ingrese la extensión"
-                      onChange={val => this._onchangeValue("extension", val)}
-                      {...extension}
-                      value={extension.value === undefined ? contact.extension : extension.value}
-                    />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Celular'}</span></dt>
-                <dd>
-                  <Input
-                      name="mobileNumber"
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Extensión'}</span></dt>
+                  <dd>
+                    <Input
+                        name="contactExtension"
+                        type="text"
+                        placeholder="Ingrese la extensión"
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        //onChange={val => this._onchangeValue("extension", val)}
+                        {...contactExtension}
+                      />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Celular'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactMobileNumber"
                       type="text"
                       placeholder="Ingrese el celular"
-                      onChange={val => this._onchangeValue("mobileNumber", val)}
-                      {...mobileNumber}
-                      value={mobileNumber.value === undefined ? contact.mobileNumber : mobileNumber.value}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      //onChange={val => this._onchangeValue("mobileNumber", val)}
+                      {...contactMobileNumber}
                     />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Correo electrónico ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <Input
-                      name="emailAddress"
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Correo electrónico ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <Input
+                      name="contactEmailAddress"
                       type="text"
                       placeholder="Ingrese el correo electrónico"
-                      onChange={val => this._onchangeValue("emailAddress", val)}
-                      {...emailAddress}
-                      value={emailAddress.value === undefined ? contact.emailAddress : emailAddress.value}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      //onChange={val => this._onchangeValue("emailAddress", val)}
+                      {...contactEmailAddress}
                     />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12}>
-                <dt className="business-title" style={{fontSize: '17px'}}>{'Clasificación del contacto'}</dt>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <ComboBox
-                    name="typeOfContact"
-                    labelInput="Seleccione el tipo de contacto"
-                    {...typeOfContact}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
-                    defaultValue={typeOfContact.value === undefined ? contact.typeOfContact : typeOfContact.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Entidad / Línea de negocio'}</span></dt>
-                <dd>
-                  <MultipleSelect
-                    name="lineOfBusiness"
-                    labelInput="Seleccione al menos una línea de negocio"
-                    {...lineOfBusiness}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
-                    defaultValue={lineOfBusiness.value === undefined ? contact.lineOfBusiness : lineOfBusiness.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                <dd>
-                  <MultipleSelect
-                    name="functions"
-                    labelInput="Seleccione al menos una función"
-                    {...functions}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
-                    defaultValue={functions.value === undefined ? contact['function'] : functions.value}
-                  />
-                </dd>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12}>
-                <dt className="business-title" style={{fontSize: '17px'}}>{'Hobbies y deportes'}</dt>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={6} lg={6}>
-                <dt><span>{'Hobbies'}</span></dt>
-                <dd>
-                  <MultipleSelect
-                    name="hobbies"
-                    labelInput="Seleccione al menos un hobby"
-                    {...hobbies}
-                    valueProp={'id'}
-                    textProp={'value'}
-                    data={selectsReducer.get(FILTER_HOBBIES) || []}
-                    defaultValue={hobbies.value === undefined ? contact.hobbies : hobbies.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={6}>
-                <dt><span>{'Deportes'}</span></dt>
-                <dd>
-                  <MultipleSelect
-                    name="sports"
-                    labelInput="Seleccione al menos un deporte"
-                    {...sports}
-                    valueProp={'id'}
-                    textProp = {'value'}
-                    data={selectsReducer.get(FILTER_SPORTS) || []}
-                    defaultValue={sports.value === undefined ? contact.sports : sports.value}
-                  />
-                </dd>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={12}>
-                {/* <button type="submit" className="btn btn-primary modal-button-edit">Guardar</button> */}
-              </Col>
-            </Row>
-          </div>
-      </div>
-      <div className="modalBt4-footer modal-footer">
-            <button type="submit" className="btn btn-primary modal-button-edit" onClick={this.closeModal}>Guardar</button>
-          </div>
-       </form>
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Clasificación del contacto'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <ComboBox
+                      name="contactTypeOfContact"
+                      labelInput="Seleccione el tipo de contacto"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactTypeOfContact}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Entidad / Línea de negocio'}</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      name="contactLineOfBusiness"
+                      labelInput="Seleccione al menos una línea de negocio"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactLineOfBusiness}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={4}>
+                  <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      name="contactFunctions"
+                      labelInput="Seleccione al menos una función"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactFunctions}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <dt className="business-title" style={{fontSize: '17px'}}>{'Hobbies y deportes'}</dt>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={6} lg={6}>
+                  <dt><span>{'Hobbies'}</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      name="contactHobbies"
+                      labelInput="Seleccione al menos un hobby"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactHobbies}
+                      valueProp={'id'}
+                      textProp={'value'}
+                      data={selectsReducer.get(FILTER_HOBBIES) || []}
+                    />
+                  </dd>
+                </Col>
+                <Col xs={12} sm={12} md={6} lg={6}>
+                  <dt><span>{'Deportes'}</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      name="contactSports"
+                      labelInput="Seleccione al menos un deporte"
+                      disabled={this.state.isEditable ? '' : 'disabled'}
+                      {...contactSports}
+                      valueProp={'id'}
+                      textProp = {'value'}
+                      data={selectsReducer.get(FILTER_SPORTS) || []}
+                    />
+                  </dd>
+                </Col>
+              </Row>
+            </div>
+        </div>
+        <div className="modalBt4-footer modal-footer">
+          <button
+            type="submit"
+            className="btn btn-primary modal-button-edit"
+            disabled={this.state.isEditable ? '' : 'disabled'}
+            >{'Guardar'}</button>
+        </div>
+        <SweetAlert
+          type= "success"
+          show={this.state.contactEdited}
+          title="Contacto editado"
+          text="El contacto se editó correctamente"
+          onConfirm={() => this._closeViewOrEditContact()}
+        />
+      </form>
     );
   }
 }
@@ -732,76 +793,65 @@ ContactDetailsModalComponent.PropTypes = {
   contactId: PropTypes.number
 };
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getContactDetails,
     saveContact,
     consultDataSelect,
     getMasterDataFields,
-    consultListWithParameterUbication
+    consultListWithParameterUbication,
+    contactsByClientFindServer
   }, dispatch);
 }
 
-function mapStateToProps({contactDetail, selectsReducer}, ownerProps){
-    return {
-      contactDetail,
-      selectsReducer
-    };
-}
-
-/*
-function mapStateToProps({createContactReducer,selectsReducer}) {
- var contactDetail = createContactReducer.get('responseSearchContactData');
- if(contactDetail){
+function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
+ const contact = contactDetail.get('contactDetailList');
+ if(contact) {
    return {
-     modalStatus: createContactReducer.get('modalState'),
+     contactDetail,
      selectsReducer,
      initialValues: {
-       tipoDocumento:contactDetail.contactType,
-       numeroDocumento: contactDetail.contactIdentityNumber,
-       tipoTratamiendo:contactDetail.title,
-       tipoGenero:contactDetail.gender,
-       primerNombre: contactDetail.firstName,
-       segundoNombre:contactDetail.middleName,
-       primerApellido:contactDetail.firstLastName,
-       segundoApellido:contactDetail.secondLastName,
-       tipoCargo:contactDetail.contactPosition,
-       tipoDependencia:contactDetail.unit,
-       fechaNacimiento:contactDetail.dateOfBirth,
-       tipoEstiloSocial:contactDetail.socialStyle,
-       tipoActitud:contactDetail.attitudeOverGroup,
-       pais:contactDetail.country,
-       departamento:contactDetail.province,
-       ciudad:contactDetail.city,
-       //direccion:contactDetail.address,
-       barrio:contactDetail.neighborhood,
-       codigoPostal:contactDetail.postalCode,
-       telefono:contactDetail.telephoneNumber,
-       extension:contactDetail.extension,
-       celular:contactDetail.mobileNumber,
-       correo:contactDetail.emailAddress,
-       tipoContacto:contactDetail.typeOfContact,
-       tipoEntidad:contactDetail.lineOfBusiness,
-       tipoFuncion:contactDetail.function,
-       tipoHobbie:contactDetail.hobbies,
-       tipoDeporte:contactDetail.sports
+      id: contact.id,
+       contactType:contact.contactType,
+       contactIdentityNumber: contact.contactIdentityNumber,
+       contactTitle:contact.title,
+       contactGender:contact.gender,
+       contactFirstName: contact.firstName,
+       contactMiddleName:contact.middleName,
+       contactFirstLastName:contact.firstLastName,
+       contactSecondLastName:contact.secondLastName,
+       contactPosition:contact.contactPosition,
+       contactDependency:contact.unit,
+       contactDateOfBirth:contact.dateOfBirth,
+       contactSocialStyle:contact.socialStyle,
+       contactAttitudeOverGroup:contact.attitudeOverGroup,
+       contactCountry:contact.country,
+       contactProvince:contact.province,
+       contactCity:contact.city,
+       contactAddress:contact.address,
+       contactNeighborhood:contact.neighborhood,
+       contactPostalCode:contact.postalCode,
+       contactTelephoneNumber:contact.telephoneNumber,
+       contactExtension:contact.extension,
+       contactNombileNumber:contact.mobileNumber,
+       contactEmailAddress:contact.emailAddress,
+       contactTypeOfContact:contact.typeOfContact,
+       contactLineOfBusiness:_.join(contact.lineOfBusiness, ','),
+       contactFunctions:_.join(contact.function, ','),
+       contactHobbies:_.join(contact.hobbies, ','),
+       contactSports:_.join(contact.sports, ',')
      }
    };
- }else{
-   return {
-     modalStatus: createContactReducer.get('modalState'),
-     selectsReducer,
-     initialValues: {
-       primerNombre: '',
-       tipoDocumento: '',
-       tipoTratamiendo: ''
-     }
-   };
+ } else {
+  return {
+    contactDetail,
+    selectsReducer
+  };
  }
-}*/
+}
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["contactType", "title", "gender", "typeOfContact", "contactPosition", "contactDependency", "address", "country", "province", "city", "neighborhood", "postalCode", "telephoneNumber", "extension", "mobileNumber", "emailAddress", "contactIdentityNumber", "firstName", "middleName", "firstLastName", "secondLastName", "lineOfBusiness", "functions", "hobbies", "sports", "contactSocialStyle", "contactAttitudeOverGroup", "dateOfBirth"],
+  fields,
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);
