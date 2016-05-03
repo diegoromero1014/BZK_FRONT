@@ -663,6 +663,7 @@ class clientEdit extends Component{
                   min={0}
                   type="text"
                   placeholder="Ingrese los activos"
+                  style={{width: "100%", textAlign:"right"}}
                   {...assets}
                   value={assets.value ?
                         (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
@@ -682,6 +683,7 @@ class clientEdit extends Component{
                   min={0}
                   type="text"
                   placeholder="Ingrese los pasivos"
+                  style={{width: "100%", textAlign:"right"}}
                   {...liabilities}
                   value={liabilities.value ?
                         (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
@@ -698,6 +700,7 @@ class clientEdit extends Component{
                   format="0,000"
                   type="text"
                   placeholder="Ingrese los ingresos operacionales"
+                  style={{width: "100%", textAlign:"right"}}
                   {...operatingIncome}
                   value={operatingIncome.value ? numeral(operatingIncome.value).format('0,000') : ''}
                 />
@@ -712,6 +715,7 @@ class clientEdit extends Component{
                   format="0,000"
                   type="text"
                   placeholder="Ingrese los ingresos no operacionales"
+                  style={{width: "100%", textAlign:"right"}}
                   {...nonOperatingIncome}
                   value={nonOperatingIncome.value ? numeral(nonOperatingIncome.value).format('0,000') : ''}
                 />
@@ -729,6 +733,7 @@ class clientEdit extends Component{
                   min={0}
                   type="text"
                   placeholder="Ingrese los egresos"
+                  style={{width: "100%", textAlign:"right"}}
                   {...expenses}
                   value={expenses.value ?
                         (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
