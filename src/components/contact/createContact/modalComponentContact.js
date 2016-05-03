@@ -20,81 +20,82 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
 import {FILTER_CITY,FILTER_PROVINCE,CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
+
 const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
 "numeroDocumento","primerNombre","segundoNombre","primerApellido", "segundoApellido","fechaNacimiento","direccion","barrio",
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
-const validate = values => {
+const validate = (values) => {
   if(!values.tipoDocumento){
-    errors.tipoDocumento = "Seleccione un tipo de documento";
+    errors.tipoDocumento = "Seleccione un documento";
   }else{
     errors.tipoDocumento = null;
   }
-  if(!values.tipoFuncion){
-    errors.tipoFuncion = "Seleccione una función";
-  }else{
-    errors.tipoFuncion = null;
-  }
   if(!values.numeroDocumento){
-    errors.numeroDocumento = "Ingrese el número de documento";
+    errors.numeroDocumento = "Ingrese un número de documento";
   }else{
     errors.numeroDocumento = null;
   }
-  if(!values.primerNombre){
-    errors.primerNombre = "Ingrese el primer nombre";
-  }else{
-    errors.primerNombre = null;
-  }
-  if(!values.primerApellido){
-    errors.primerApellido = "Ingrese el primer apellido";
-  }else{
-    errors.primerApellido = null;
-  }
-  if(!values.direccion){
-    errors.direccion = "Ingrese la dirección";
-  }else{
-    errors.direccion = null;
-  }
-  if(!values.telefono){
-    errors.telefono = "Ingrese el teléfono";
-  }else{
-    errors.telefono = null;
-  }
-  if(!values.correo){
-    errors.correo = "Ingrese el correo electrónico";
-  }else{
-    errors.correo = null;
-  }
-  if(!values.tipoTratamiendo){
-    errors.tipoTratamiendo = "Seleccione un tipo de tratamiendo";
-  }else{
-    errors.tipoTratamiendo = null;
-  }
-  if(!values.tipoGenero){
-    errors.tipoGenero = "Seleccione un género";
-  }else{
-    errors.tipoGenero = null;
-  }
-  if(!values.tipoContacto){
-    errors.tipoContacto = "Seleccione un tipo de contacto";
-  }else{
-    errors.tipoContacto = null;
-  }
-  if(!values.pais){
-    errors.pais = "Seleccione un país";
-  }else{
-    errors.pais = null;
-  }
-  if(!values.departamento){
-    errors.departamento = "Seleccione un departamento";
-  }else{
-    errors.departamento = null;
-  }
-  if(!values.ciudad){
-    errors.ciudad = "Seleccione una ciudad";
-  }else{
-    errors.ciudad = null;
-  }
+    if(!values.tipoFuncion){
+      errors.tipoFuncion = "Seleccione una función";
+    }else{
+      errors.tipoFuncion = null;
+    }
+    if(!values.primerNombre){
+      errors.primerNombre = "Ingrese el primer nombre";
+    }else{
+      errors.primerNombre = null;
+    }
+    if(!values.primerApellido){
+      errors.primerApellido = "Ingrese el primer apellido";
+    }else{
+      errors.primerApellido = null;
+    }
+    if(!values.direccion){
+      errors.direccion = "Ingrese la dirección";
+    }else{
+      errors.direccion = null;
+    }
+    if(!values.telefono){
+      errors.telefono = "Ingrese el teléfono";
+    }else{
+      errors.telefono = null;
+    }
+    if(!values.correo){
+      errors.correo = "Ingrese el correo electrónico";
+    }else{
+      errors.correo = null;
+    }
+    if(!values.tipoTratamiendo){
+      errors.tipoTratamiendo = "Seleccione un tipo de tratamiendo";
+    }else{
+      errors.tipoTratamiendo = null;
+    }
+    if(!values.tipoGenero){
+      errors.tipoGenero = "Seleccione un género";
+    }else{
+      errors.tipoGenero = null;
+    }
+    if(!values.tipoContacto){
+      errors.tipoContacto = "Seleccione un tipo de contacto";
+    }else{
+      errors.tipoContacto = null;
+    }
+    if(!values.pais){
+      errors.pais = "Seleccione un país";
+    }else{
+      errors.pais = null;
+    }
+    if(!values.departamento){
+      errors.departamento = "Seleccione un departamento";
+    }else{
+      errors.departamento = null;
+    }
+    if(!values.ciudad){
+      errors.ciudad = "Seleccione una ciudad";
+    }else{
+      errors.ciudad = null;
+    }
   return errors;
 };
 class ModalComponentContact extends Component {
@@ -107,11 +108,15 @@ class ModalComponentContact extends Component {
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
         this._searchContact = this._searchContact.bind(this);
+        this._onClickLimpiar = this._onClickLimpiar.bind(this);
         this.state = {
            showEx:false,
            showEr:false,
            showErrorYa: false,
-           showErrorNo: false
+           showErrorNo: false,
+           noExiste : 'hidden',
+           disabled : '',
+           botonBus : 'block'
          }
         momentLocalizer(moment);
     }
@@ -126,6 +131,7 @@ class ModalComponentContact extends Component {
       clearSearchContact();
       this.props.resetForm();
       this.props.toggleModalContact();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
     }
 
     _onChangeCountry(val){
@@ -146,7 +152,14 @@ class ModalComponentContact extends Component {
     }
 
     _closeCreate(){
-        this.setState({showEx:false, showEr: false,showErrorYa:false, showErrorNo:false});
+      this.setState({showEx:false, showEr: false,showErrorYa:false, showErrorNo:false});
+    }
+
+    _onClickLimpiar(){
+      const{clearSearchContact} = this.props;
+      clearSearchContact();
+      this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
     }
 
     _searchContact(){
@@ -154,17 +167,26 @@ class ModalComponentContact extends Component {
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
       const {searchContact,clearSearchContact} = this.props;
-      searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
-          if((_.get(data, 'payload.data.isClientContact'))){
-              clearSearchContact();
-              this.props.resetForm();
-              this.setState({showErrorYa: true});
-            }else if(!(_.get(data, 'payload.data.findContact'))){
-              this.setState({showErrorNo: true});
-            }
-          }, (reason) => {
-            this.setState({showEr: true});
-        });
+      if(tipoDocumento.value && numeroDocumento.value){
+        searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
+            if((_.get(data, 'payload.data.isClientContact'))){
+                clearSearchContact();
+                this.props.resetForm();
+                this.setState({showErrorYa: true});
+              }else if(!(_.get(data, 'payload.data.findContact'))){
+                this.setState({showErrorNo: true});
+                this.setState({disabled : 'disabled'});
+                this.setState({noExiste : 'visible'});
+                this.setState({botonBus : 'none'});
+              } else if ((_.get(data, 'payload.data.findContact'))){
+                this.setState({disabled : 'disabled'});
+                this.setState({noExiste : 'visible'});
+                this.setState({botonBus : 'none'});
+              }
+            }, (reason) => {
+              this.setState({showEr: true});
+          });
+      }
     }
 
 
@@ -223,8 +245,8 @@ class ModalComponentContact extends Component {
 
     render() {
         const {modalStatus,selectsReducer,createContactReducer} = this.props;
-        const {initialValues, fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
-        numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
+        const {initialValues, fields:{id,tipoDocumento,numeroDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
+        primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
         return (
@@ -252,6 +274,7 @@ class ModalComponentContact extends Component {
                                   <dt><span>Tipo de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                                   <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
                                   {...tipoDocumento}
+                                  disabled = {this.state.disabled}
                                   valueProp={'id'}
                                   textProp = {'value'}
                                   data={selectsReducer.get(CONTACT_ID_TYPE) || []}
@@ -264,17 +287,19 @@ class ModalComponentContact extends Component {
                                   <dd><InputComponent
                                     name="numeroDocumento"
                                     type="text"
+                                    disabled = {this.state.disabled}
                                     {...numeroDocumento}
                                   /></dd>
                                 </dl>
                                 </Col>
                                 <Col xs>
                                 <dl style={{width: '100%'}}>
-                                <button type="button" className="btn btn-primary" style={{marginTop: '35px'}} onClick={this._searchContact}><i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="search  icon" ></i></button>
+                                  <button type="button" className="btn btn-primary" style={{marginTop: '35px',display: this.state.botonBus}} onClick={this._searchContact}><i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="search icon" ></i></button>
+                                  <button type="button" className="btn btn-primary" style={{marginTop: '35px',visibility: this.state.noExiste}}  onClick={this._onClickLimpiar}><i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="erase icon" ></i></button>
                                 </dl>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row style={{visibility: this.state.noExiste}}>
                                 <Col xs>
                                 <dl style={{width: '100%'}}>
                                   <dt><span>Tratamiento (<span style={{color: 'red'}}>*</span>)</span></dt>
@@ -309,7 +334,7 @@ class ModalComponentContact extends Component {
                                 </dl>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row style={{visibility: this.state.noExiste}}>
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Segundo nombre</span></dt>
@@ -341,7 +366,7 @@ class ModalComponentContact extends Component {
                               </dl>
                               </Col>
                             </Row>
-                            <Row>
+                            <Row style={{visibility: this.state.noExiste}}>
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Cargo</span></dt>
@@ -367,11 +392,11 @@ class ModalComponentContact extends Component {
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Fecha nacimiento</span></dt>
-                                <dd><DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...fechaNacimiento}/></dd>
+                                <dd><DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...fechaNacimiento}/></dd>
                               </dl>
                               </Col>
                             </Row>
-                            <Row>
+                            <Row style={{visibility: this.state.noExiste}}>
                               <Col xs>
                               <dl style={{width: '100%'}}>
                                 <dt><span>Estilo social</span></dt>
@@ -396,8 +421,8 @@ class ModalComponentContact extends Component {
                               </Col>
                             </Row>
                       </div>
-                      <dt className="col-md-12 business-title">Información de ubicación y correspondencia</dt>
-                      <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+                      <dt style={{visibility: this.state.noExiste}} className="col-md-12 business-title">Información de ubicación y correspondencia</dt>
+                      <div style={{paddingLeft:'20px',paddingRight:'20px',visibility: this.state.noExiste}}>
                             <Row>
                               <Col xs>
                               <dl style={{width: '100%'}}>
@@ -522,8 +547,8 @@ class ModalComponentContact extends Component {
                               </Col>
                             </Row>
                       </div>
-                      <dt className="col-md-12 business-title">Clasificación de contacto</dt>
-                      <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+                      <dt style={{visibility: this.state.noExiste}} className="col-md-12 business-title">Clasificación de contacto</dt>
+                      <div style={{paddingLeft:'20px',paddingRight:'20px',visibility: this.state.noExiste}}>
                         <Row>
                           <Col xs>
                           <dl style={{width: '100%'}}>
@@ -564,8 +589,8 @@ class ModalComponentContact extends Component {
                           </Col>
                         </Row>
                       </div>
-                      <dt className="col-md-12 business-title">Hobbies y Deportes</dt>
-                      <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+                      <dt style={{visibility: this.state.noExiste}} className="col-md-12 business-title">Hobbies y Deportes</dt>
+                      <div style={{paddingLeft:'20px',paddingRight:'20px',visibility: this.state.noExiste}}>
                         <Row>
                           <Col xs>
                           <dl style={{width: '100%'}}>
@@ -593,7 +618,7 @@ class ModalComponentContact extends Component {
                       </div>
                       </div>
                         <div className="modalBt4-footer modal-footer">
-                        <button type="submit" className="btn btn-primary modal-button-edit">Guardar
+                        <button type="submit" style={{visibility: this.state.noExiste}} className="btn btn-primary modal-button-edit">Guardar
                         </button>
                         </div>
                   </div>
@@ -635,7 +660,7 @@ class ModalComponentContact extends Component {
 
 function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
   const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
-  if(contactDetail){
+    if(contactDetail && contactDetail.contactIdentityNumber){
     return {
       modalStatus: createContactReducer.get('modalState'),
       selectsReducer,
@@ -674,7 +699,38 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
   }else{
     return {
       modalStatus: createContactReducer.get('modalState'),
-      selectsReducer
+      selectsReducer,
+      initialValues: {
+        id:'',
+        tipoDocumento:'',
+        numeroDocumento: '',
+        tipoTratamiendo:'',
+        tipoGenero:'',
+        primerNombre: '',
+        segundoNombre:'',
+        primerApellido:'',
+        segundoApellido:'',
+        tipoCargo:'',
+        tipoDependencia:'',
+        fechaNacimiento:'',
+        tipoEstiloSocial:'',
+        tipoActitud:'',
+        pais:'',
+        departamento:'',
+        ciudad:'',
+        direccion:'',
+        barrio:'',
+        codigoPostal:'',
+        telefono:'',
+        extension:'',
+        celular:'',
+        correo:'',
+        tipoHobbie: '',
+        tipoContacto:'',
+        tipoEntidad:'',
+        tipoFuncion:'',
+        tipoDeporte:''
+      }
     };
   }
 }
@@ -693,4 +749,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-export default reduxForm({form : 'submitValidation', fields, validate }, mapStateToProps, mapDispatchToProps)(ModalComponentContact);
+export default reduxForm({form : 'submitValidation', fields, validate}, mapStateToProps, mapDispatchToProps)(ModalComponentContact);

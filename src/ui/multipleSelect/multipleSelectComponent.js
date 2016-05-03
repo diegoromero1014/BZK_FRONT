@@ -47,11 +47,11 @@ class MultipleSelectComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, style, data, touched, error, name} = this.props;
+        const {nameInput, labelInput, style, data, touched, error, name, disabled} = this.props;
 
         return (
             <div style={style}>
-                <div className={`styleWidthComponents ui multiple search selection dropdown ${name}`}>
+                <div className={`styleWidthComponents ui multiple search selection dropdown ${disabled} ${name}`}>
                     <input type="hidden" name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>

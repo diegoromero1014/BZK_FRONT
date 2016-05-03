@@ -1,1 +1,2 @@
 export const DELETE_TYPE_CONTACT = "DELETE_TYPE_CONTACT";
+export const NUMBER_RECORDS = "10";
