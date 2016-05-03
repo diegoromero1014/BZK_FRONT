@@ -20,13 +20,13 @@ class inputComponent extends Component {
   }
 
   render() {
-      const {nameInput, type, placeholder, touched, error, name, onChange, min, defaultValue, value} = this.props;
+      const {nameInput, type, placeholder, disabled, touched, error, name, onChange, min, defaultValue, value} = this.props;
       if( touched && error ){
         $(`.ui.input.${name} [type=text]`).focus();
       }
       return (
           <div >
-              <div className={`styleWidthComponents ui input ${name}`}>
+              <div className={`styleWidthComponents ui input ${disabled} ${name}`}>
                   <input type={type}
                     name={nameInput}
                     min={min}

@@ -12,6 +12,7 @@ class comboBoxComponent extends Component {
        this.mapValuesToDropDown = this.mapValuesToDropDown.bind(this);
    }
 
+
    componentWillReceiveProps({value, name}) {
      const selector = $(`.ui.selection.dropdown.${name}`);
      if (_.isEqual(value, '')) {
@@ -52,14 +53,14 @@ class comboBoxComponent extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, error, name} = this.props;
+       const {nameInput, labelInput, data, touched, error, name, disabled} = this.props;
        if( touched && error && !focusInFiled ){
          $(`.ui.selection.dropdown.${name}`).focus();
          focusInFiled = true;
        }
        return (
            <div>
-               <div className={`styleWidthComponents ui search selection dropdown ${name}`}>
+               <div className={`styleWidthComponents ui search selection dropdown ${disabled} ${name}`}>
                    <input type="hidden" name={nameInput}/>
                    <i className="dropdown icon"/>
                    <div className="default text">{labelInput}</div>
