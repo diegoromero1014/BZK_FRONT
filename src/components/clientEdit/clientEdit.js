@@ -12,7 +12,6 @@ import {consultDataSelect, consultList, consultListWithParameter,
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import NumberInput from '../../ui/numberInput/numberInputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
@@ -22,6 +21,7 @@ import NotesClient from '../notes/notesClient';
 import {setNotes, crearNotes} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
 import _ from 'lodash';
+import numeral from 'numeral';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -632,13 +632,16 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
                   min={0}
-                  onChange={val => this._onChangeValue("annualSales", val)}
+                  type="text"
                   placeholder="Ingrese las ventas anuales"
                   style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
+                  value={annualSales.value ?
+                        (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -655,12 +658,15 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
                   min={0}
-                  onChange={val => this._onChangeValue("assets", val)}
+                  type="text"
                   placeholder="Ingrese los activos"
                   {...assets}
+                  value={assets.value ?
+                        (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -671,12 +677,15 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
                   min={0}
-                  onChange={val => this._onChangeValue("liabilities", val)}
+                  type="text"
                   placeholder="Ingrese los pasivos"
                   {...liabilities}
+                  value={liabilities.value ?
+                        (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -685,12 +694,12 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
-                  min={0}
-                  onChange={val => this._onChangeValue("operatingIncome", val)}
+                  type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
+                  value={operatingIncome.value ? numeral(operatingIncome.value).format('0,000') : ''}
                 />
               </dt>
             </Col>
@@ -699,12 +708,12 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
-                  min={0}
-                  onChange={val => this._onChangeValue("nonOperatingIncome", val)}
+                  type="text"
                   placeholder="Ingrese los ingresos no operacionales"
                   {...nonOperatingIncome}
+                  value={nonOperatingIncome.value ? numeral(nonOperatingIncome.value).format('0,000') : ''}
                 />
               </dt>
             </Col>
@@ -715,12 +724,15 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
                   format="0,000"
                   min={0}
-                  onChange={val => this._onChangeValue("expenses", val)}
+                  type="text"
                   placeholder="Ingrese los egresos"
                   {...expenses}
+                  value={expenses.value ?
+                        (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
