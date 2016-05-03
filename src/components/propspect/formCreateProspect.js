@@ -443,7 +443,9 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...annualSales}
-                value={annualSales.value ? numeral(annualSales.value).format('0,000') : ''}
+                value={annualSales.value ?
+                      (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000')  )
+                      : ''}
               />
             </div>
           </Col>
@@ -457,7 +459,9 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...assets}
-                value={assets.value ? numeral(assets.value).format('0,000') : ''}
+                value={assets.value ?
+                      (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
+                      : ''}
               />
             </div>
           </Col>
@@ -471,7 +475,9 @@ class FormCreateProspect extends Component{
                 min={0}
                 format="0,000"
                 {...liabilities}
-                value={liabilities.value ? numeral(liabilities.value).format('0,000') : ''}
+                value={liabilities.value ?
+                      (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
+                      : ''}
               />
             </div>
           </Col>
@@ -511,7 +517,9 @@ class FormCreateProspect extends Component{
                 format="0,000"
                 type="text"
                 {...expenses}
-                value={expenses.value ? numeral(expenses.value).format('0,000') : ''}
+                value={expenses.value ?
+                      (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
+                      : ''}
               />
             </div>
           </Col>
