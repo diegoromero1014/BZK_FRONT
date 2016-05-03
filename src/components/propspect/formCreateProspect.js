@@ -11,7 +11,6 @@ import {redirectUrl} from '../globalComponents/actions';
 import {DateTimePicker} from 'react-widgets';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import NumberInput from 'react-number-input';
 import _ from 'lodash';
 import numeral from 'numeral';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
@@ -380,7 +379,7 @@ class FormCreateProspect extends Component{
               <dt><span>Barrio</span></dt>
               <Input
                 name="district"
-                type="number"
+                type="text"
                 placeholder="Ingrese el barrio del prospecto"
                 {...district}
               />
@@ -437,70 +436,82 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Ventas anuales</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese las ventas anuales"
+                type="text"
                 min={0}
                 format="0,000"
                 {...annualSales}
+                value={annualSales.value ? numeral(annualSales.value).format('0,000') : ''}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Activos</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los activos"
+                type="text"
                 min={0}
                 format="0,000"
                 {...assets}
+                value={assets.value ? numeral(assets.value).format('0,000') : ''}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Pasivos</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los pasivos"
+                type="text"
                 min={0}
                 format="0,000"
                 {...liabilities}
+                value={liabilities.value ? numeral(liabilities.value).format('0,000') : ''}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px"}}>
               <dt><span>Ingresos operacionales</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos operacionales"
                 format="0,000"
+                type="text"
                 {...operatingIncome}
+                value={operatingIncome.value ? numeral(operatingIncome.value).format('0,000') : ''}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Ingresos no operacionales</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos no operacionales"
+                type="text"
                 format="0,000"
                 {...nonOperatingIncome}
+                value={nonOperatingIncome.value ? numeral(nonOperatingIncome.value).format('0,000') : ''}
               />
             </div>
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>Egresos</span></dt>
-              <NumberInput
+              <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los egresos"
                 min={0}
                 format="0,000"
+                type="text"
                 {...expenses}
+                value={expenses.value ? numeral(expenses.value).format('0,000') : ''}
               />
             </div>
           </Col>
@@ -532,8 +543,8 @@ class FormCreateProspect extends Component{
           <SweetAlert
             type= "warning"
             show={this.state.show}
-            title="Título prueba"
-            text="Mensaje prueba"
+            title={titleConfirm}
+            text={messageConfirm}
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"

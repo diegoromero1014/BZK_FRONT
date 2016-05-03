@@ -32,7 +32,7 @@ class inputComponent extends Component {
                     min={min}
                     onChange={this._onChange}
                     placeholder={placeholder}
-                    value={value} />
+                    value={value || ''} />
               </div>
               {
                   touched && error &&

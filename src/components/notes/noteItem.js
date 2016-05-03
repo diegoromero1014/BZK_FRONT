@@ -1,22 +1,40 @@
 import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import {Row, Col} from 'react-flexbox-grid';
-import {deleteNote, updateNote} from '../notes/actions';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import {bindActionCreators} from 'redux';
+import {deleteNote, updateNote} from './actions';
+import {connect} from 'react-redux';
+import _ from 'lodash';
 
 class NoteItem extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            body: '',
+            combo: ''
+        };
+        this.updateValue = this.updateValue.bind(this);
+        this._deleteNote = this._deleteNote.bind(this);
+    }
+
+    updateValue(prop, value) {
+        const {updateNote, index} = this.props;
+        this.setState(_.set({}, prop, value));
+        updateNote(index, prop, value);
+    }
+
+    _deleteNote() {
+        const {index, deleteNote} = this.props;
+        deleteNote(index);
     }
 
     render() {
         const {
-            combo, body, data, index, _updateValue,
-            _updateValueList,
-            _onBlurField,
-            _deleteNote,
+            combo,
+            data,
+            index,
+            _onBlurField
         } = this.props;
         return (
             <div>
@@ -27,8 +45,8 @@ class NoteItem extends Component {
                             <ComboBox
                                 name={`typeNote${index}`}
                                 labelInput="Seleccione el tipo de nota"
-                                value={combo}
-                                onChange={val => _updateValueList(val)}
+                                value={this.state.combo}
+                                onChange={val => this.updateValue('combo', val)}
                                 onBlur={_onBlurField}
                                 valueProp={'id'}
                                 textProp={'value'}
@@ -42,14 +60,14 @@ class NoteItem extends Component {
                             <Input
                                 type="text"
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
-                                value={body}
-                                onChange={_updateValue}
-                                onBlur={_onBlurField}
+                                value={this.state.body}
+                                onChange={this.updateValue.bind(this, 'body')}
+                                onBlur={() => console.log}
                             />
                         </div>
                     </Col>
                     <Col xs={1} md={1} lg={1} style={{marginTop: "37px"}}>
-                        <button onClick={_deleteNote}
+                        <button onClick={this._deleteNote}
                                 className="btn btn-sm  btn-danger"
                                 type="button">
                             <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
@@ -61,4 +79,11 @@ class NoteItem extends Component {
     }
 }
 
-export default NoteItem;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        deleteNote,
+        updateNote
+    }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(NoteItem);
