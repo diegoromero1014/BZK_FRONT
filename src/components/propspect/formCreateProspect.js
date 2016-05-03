@@ -70,13 +70,10 @@ class FormCreateProspect extends Component{
   }
 
   _closeWindow(){
-    console.log("event _closeWindow before");
     messageConfirm = "¿Está seguro que desea salir de la pantalla de creación de prospecto?";
     titleConfirm = "Confirmación salida";
     typeConfirm = "close";
-    console.log("event _closeWindow medium");
     this.setState({show: true});
-    console.log("event _closeWindow after");
   }
 
   _redirectClients(){
@@ -176,7 +173,9 @@ class FormCreateProspect extends Component{
   }
 
   componentWillMount(){
-    const {consultList, consultDataSelect} = this.props;
+    const {fields: {razonSocial, idCelula}, consultList, consultDataSelect} = this.props;
+    razonSocial.touched = false;
+    idCelula.touched = false;
     consultList(constants.TEAM_FOR_EMPLOYEE);
     consultList(constants.CIIU);
     consultDataSelect(constants.FILTER_COUNTRY);
@@ -528,7 +527,7 @@ class FormCreateProspect extends Component{
                 <button className="btn btn-secondary modal-button-edit"
                   onClick={this._closeWindow}
                   style={{float:"right", margin:"8px 0px 0px 190px", position:"fixed", backgroundColor: "#C1C1C1"}}
-                  type="reset">
+                  type="button">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
                 </button>
               </div>

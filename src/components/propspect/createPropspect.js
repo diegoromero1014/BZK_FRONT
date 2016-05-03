@@ -20,6 +20,8 @@ var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
 
+var styleDivProspect = {display: "none"};
+
 const validate = values => {
     const errors = {}
     if (!values.idType) {
@@ -48,7 +50,9 @@ class CreatePropspect extends Component{
   }
 
   componentWillMount(){
-    const {clearAllState} = this.props;
+    const {fields: { idType, idNumber },clearAllState} = this.props;
+    idType.touched= false;
+    idNumber.touched= false;
     clearAllState();
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
@@ -62,15 +66,14 @@ class CreatePropspect extends Component{
       this.setState({showEx:false, showEr: false});
   }
 
-  _onClickButtonChange(e){
-    e.preventDefault();
-    console.log("Chaneg 1");
+  _onClickButtonChange(){
+    const { fields: { idType, idNumber }, clearAllState} = this.props
+    idType.onChange('');
+    idNumber.onChange('');
     prospectInApplication = true;
-    console.log("Chaneg 2 ");
-    const {clearAllState} = this.props;
-    console.log("Chaneg 3 ");
     clearAllState();
-    console.log("Chaneg 3 ");
+    idType.touched= false;
+    idNumber.touched= false;
   };
 
   _clickButtonCreateProps(formData){
@@ -95,7 +98,6 @@ class CreatePropspect extends Component{
   }
 
   render(){
-    console.log("Update code create prospect");
     const { fields: { idType, idNumber }, error, handleSubmit, clearState} = this.props
     const {propspectReducer} = this.props;
     const {selectsReducer} = this.props;
@@ -106,6 +108,12 @@ class CreatePropspect extends Component{
       prospectInApplication = prospectExist;
     } else {
       prospectInApplication = true;
+    }
+
+    if( !prospectInApplication ){
+      styleDivProspect = {display: "inline"};
+    } else {
+      styleDivProspect = {display: "none"};
     }
     if( !validateLogin ){
       //redirectUrl("/login");
@@ -148,29 +156,27 @@ class CreatePropspect extends Component{
           </form>
         }
 
-        {!prospectInApplication &&
-          <form onSubmit={this._onClickButtonChange}>
-            <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Tipo de documento</span></dt>
-                <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
-              </Col>
-              <Col xs={12} md={3} lg={3}>
-                <dt><span>Número de documento</span></dt>
-                <dl><span>{idNumber.value}</span></dl>
-              </Col>
-              <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
-                <button className="btn" type="submit" title="cambiar tipo y número documento"
-                  style={{marginTop: "10px", color: "white"}}
-                >Cambiar</button>
-              </Col>
-            </Row>
-          </form>
-        }
+        <div style={styleDivProspect}>
+          <Row style={{marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px"}}>
+            <Col xs={12} md={4} lg={4}>
+              <dt><span>Tipo de documento</span></dt>
+              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)] )[0].value}</span></dl>
+            </Col>
+            <Col xs={12} md={3} lg={3}>
+              <dt><span>Número de documento</span></dt>
+              <dl><span>{idNumber.value}</span></dl>
+            </Col>
+            <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
+              <button className="btn" type="button" title="cambiar tipo y número documento"
+                style={{marginTop: "10px", color: "white"}}
+                onClick={this._onClickButtonChange}>Cambiar
+              </button>
+            </Col>
+          </Row>
 
-        {!prospectInApplication &&
           <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
-        }
+        </div>
+
         <SweetAlert
          type={typeMessage}
          show={this.state.showEr}
