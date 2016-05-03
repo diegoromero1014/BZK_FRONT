@@ -16,6 +16,10 @@ import _ from 'lodash';
 var prospectInApplication = true;
 var nameTipeDocument = "";
 
+var typeMessage = "warning";
+var titleMessage = "Prospecto/cliente existente";
+var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
+
 const validate = values => {
     const errors = {}
     if (!values.idType) {
@@ -70,8 +74,14 @@ class CreatePropspect extends Component{
     validateProspectExists(idType, idNumber)
     .then((data) => {
       if((_.get(data, 'payload.data.status') === "Exists")){
+          typeMessage = "warning";
+          titleMessage = "Prospecto/cliente existente";
+          message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
           this.setState({showEr: true});
         } else if(_.get(data, 'payload.data.status') === "Error") {
+          typeMessage = "error";
+          titleMessage = "Error";
+          message = "Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación.";
           this.setState({showEx: true});
         }
       }, (reason) => {
@@ -118,7 +128,6 @@ class CreatePropspect extends Component{
                     name="documento"
                     type="text"
                     placeholder="Ingrese el número de documento del prospecto"
-                    onChange={val => this._onchangeValue("idNumber",val)}
                     {...idNumber}
                   />
               </Col>
@@ -143,7 +152,7 @@ class CreatePropspect extends Component{
               <dl><span>{idNumber.value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
-              <button className="btn" type="submit" title="Buscar prospecto"
+              <button className="btn" type="button" title="cambiar tipo y número documento"
                 style={{marginTop: "10px", color: "white"}}
                 onClick={this._onClickButtonChange}
               >Cambiar</button>
@@ -155,19 +164,12 @@ class CreatePropspect extends Component{
           <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
         <SweetAlert
-         type= "warning"
+         type={typeMessage}
          show={this.state.showEr}
-         title="Prospecto/cliente existente"
-         text="El prospecto/cliente ya se encuentra registrado en la aplicación."
+         title={titleMessage}
+         text={message}
          onConfirm={() => this._closeError()}
          />
-         <SweetAlert
-          type= "error"
-          show={this.state.showEx}
-          title="Error"
-          text="Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación."
-          onConfirm={() => this._closeError()}
-          />
       </div>
     );
   }

@@ -20,7 +20,7 @@ class NavBarComponent extends Component {
         return (
             <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
                 <div className="pull-left" style={{paddingLeft: "5px !important"}}>
-                    <ul className="nav" style={{paddingLeft: "5px !important"}}>
+                    <ul className="nav" style={{paddingLeft: "0px"}}>
                         <li style={{cursor: "pointer"}}>
                             <a onClick={this.handleLayoutToggle}>
                               <i className="big sidebar icon"></i>

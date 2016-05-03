@@ -23,7 +23,7 @@ class NotesClient extends Component {
 
     _updateValue(index, e) {
         const {updateNote} = this.props;
-        updateNote(index, "body", e.target.value);
+        updateNote(index, "body", e);
     }
 
     _updateValueList(index, value) {
@@ -46,15 +46,8 @@ class NotesClient extends Component {
         const {selectsReducer} = this.props;
         console.log('note', note);
         return <Note
-            index={ note[0]}
-            key={ note[0]}
-            combo={note[1].combo}
-            body={note[1].body}
-            _updateValueList={this._updateValueList.bind(this, note[0])}
-            _updateValue={this._updateValue.bind(this, note[0])}
-            _onBlurField={() => console.log.bind(console)}
-            _deleteNote={this._deleteNote.bind(this, note[0])}
-            data={selectsReducer.get("dataTypeNotes")}
+            index={note.uid}
+            key={note.uid}
         />
     }
 
@@ -72,7 +65,7 @@ class NotesClient extends Component {
                   </button>
               </Col>
                 <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
-                    {notes.entrySeq().map(this._mapNotesItems)}
+                    {notes.map(this._mapNotesItems)}
                 </Col>
             </Row>
         );
