@@ -562,14 +562,14 @@ class FormCreateProspect extends Component{
            type= "success"
            show={this.state.showEx}
            title="Prospecto creado"
-           text="El prospecto se creó correctamente."
+           text="Señor usuario, el prospecto se creó correctamente."
            onConfirm={() => this._closeSuccess()}
            />
            <SweetAlert
             type= "error"
             show={this.state.showEr}
             title="Error"
-            text="Se presento un error al realizar la creación del prospecto."
+            text="Señor usuario, se presento un error al realizar la creación del prospecto."
             onConfirm={() => this._closeError()}
             />
       </Row>

@@ -125,7 +125,7 @@ class ContactDetailsModalComponent extends Component {
 
       const {_uploadProvinces, _uploadCities} = that.props;
 
-      
+
       if (contact.country !== undefined && contact.country !== null) {
         that._uploadProvincesByCountryId(contact.country);
       }
@@ -265,7 +265,7 @@ class ContactDetailsModalComponent extends Component {
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
       contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
     }, error, handleSubmit, selectsReducer} = this.props;
-    
+
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
     const {saveContact} = this.props;
@@ -781,7 +781,7 @@ class ContactDetailsModalComponent extends Component {
           type= "success"
           show={this.state.contactEdited}
           title="Contacto editado"
-          text="El contacto se editó correctamente"
+          text="Señor usuario, el contacto se editó correctamente"
           onConfirm={() => this._closeViewOrEditContact()}
         />
       </form>

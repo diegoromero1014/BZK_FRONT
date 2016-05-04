@@ -10,7 +10,6 @@ class TextareaComponent extends Component {
       };
   }
 
-
   render() {
       const {nameInput, style,type, placeholder, touched, error, name, onChange, min, defaultValue} = this.props;
       return (
@@ -20,8 +19,7 @@ class TextareaComponent extends Component {
                     name={nameInput}
                     onChange={onChange}
                     placeholder={placeholder}
-                    style={style}
-                    value={defaultValue}/>
+                    style={style}>{defaultValue}</textarea>
               </div>
               {
                   touched && error &&

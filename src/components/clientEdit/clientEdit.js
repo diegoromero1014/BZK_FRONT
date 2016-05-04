@@ -12,6 +12,7 @@ import {consultDataSelect, consultList, consultListWithParameter,
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import NumberInput from '../../ui/numberInput/numberInputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
@@ -21,7 +22,6 @@ import NotesClient from '../notes/notesClient';
 import {setNotes, crearNotes} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
 import _ from 'lodash';
-import numeral from 'numeral';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
@@ -659,16 +659,13 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
                   min={0}
-                  type="text"
+                  onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
-                  value={annualSales.value ?
-                        (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000')  )
-                        : ''}
                 />
               </dt>
             </Col>
@@ -685,16 +682,12 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
                   min={0}
-                  type="text"
+                  onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
-                  style={{width: "100%", textAlign:"right"}}
                   {...assets}
-                  value={assets.value ?
-                        (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
-                        : ''}
                 />
               </dt>
             </Col>
@@ -705,16 +698,12 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
                   min={0}
-                  type="text"
+                  onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
-                  style={{width: "100%", textAlign:"right"}}
                   {...liabilities}
-                  value={liabilities.value ?
-                        (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
-                        : ''}
                 />
               </dt>
             </Col>
@@ -723,13 +712,12 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
-                  type="text"
+                  min={0}
+                  onChange={val => this._onChangeValue("operatingIncome", val)}
                   placeholder="Ingrese los ingresos operacionales"
-                  style={{width: "100%", textAlign:"right"}}
                   {...operatingIncome}
-                  value={operatingIncome.value ? numeral(operatingIncome.value).format('0,000') : ''}
                 />
               </dt>
             </Col>
@@ -738,13 +726,12 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
-                  type="text"
+                  min={0}
+                  onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
-                  style={{width: "100%", textAlign:"right"}}
                   {...nonOperatingIncome}
-                  value={nonOperatingIncome.value ? numeral(nonOperatingIncome.value).format('0,000') : ''}
                 />
               </dt>
             </Col>
@@ -755,16 +742,12 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <NumberInput
                   format="0,000"
                   min={0}
-                  type="text"
+                  onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
-                  style={{width: "100%", textAlign:"right"}}
                   {...expenses}
-                  value={expenses.value ?
-                        (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
-                        : ''}
                 />
               </dt>
             </Col>
@@ -923,7 +906,7 @@ class clientEdit extends Component{
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"
-            text="¿Está seguro que desea salir de la vista de edición de un cliente?"
+            text="Señor usuario, ¿Está seguro que desea salir de la vista de edición de un cliente?"
             showCancelButton= {true}
             onCancel= {() => this.setState({show: false })}
             onConfirm={() => this._onConfirmExit()}/>
@@ -931,14 +914,14 @@ class clientEdit extends Component{
            type= "success"
            show={this.state.showEx}
            title="Cliente editado"
-           text="El cliente se editó correctamente."
+           text="Señor usuario, el cliente se editó correctamente."
            onConfirm={() => this._closeSuccess()}
          />
          <SweetAlert
           type= "error"
           show={this.state.showEr}
           title="Error"
-          text="Se presento un error al realizar la edición del cliente."
+          text="Señor usuario, se presento un error al realizar la edición del cliente."
           onConfirm={() => this._closeError()}
           />
         </form>
