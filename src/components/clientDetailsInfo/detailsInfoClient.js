@@ -81,22 +81,33 @@ class DetailsInfoClient extends Component{
                   <span style={{marginLeft: "0px"}}>{infoClient.riskGroup}</span>
                 </td>
               </tr>
+            </tbody>
+          </table>
+
+          <table style={{width: "100%", marginTop: "20px", marginBottom: "30px"}}>
+            <thead>
+              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Fecha de actualización</span></th>
+              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado</span></th>
+              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado de certificación</span></th>
+              <th><span style={{fontWeight: "bold", color: "#4C5360"}}></span></th>
+            </thead>
+            <tbody>
               <tr>
-                <td style={{paddingTop:"15px"}}>
-                  <dl className="company-detail">
-                    <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Fecha de actualización</span></dt>
-                    <dd style={{marginLeft: "0px"}}>{actualizationDateString}</dd>
-                  </dl>
+                <td style={{width: "25%", verticalAlign: "initial"}}>
+                  <span style={{marginLeft: "0px"}}>{actualizationDateString}</span>
                 </td>
-                <td style={{paddingTop:"15px"}}>
-                  <dl className="company-detail">
-                    <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Estado</span></dt>
-                    <dd style={{marginLeft: "0px"}}>{infoClient.clientStatusKey}</dd>
-                  </dl>
+                <td style={{width: "25%", verticalAlign: "initial"}}>
+                  <span style={{marginLeft: "0px"}}>{infoClient.clientStatusKey}</span>
+                </td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>
+                  <span style={{marginLeft: "0px"}}>{infoClient.certificationStatusKey}</span>
+                </td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>
                 </td>
               </tr>
             </tbody>
           </table>
+
           <ActividadEconomica infoClient={infoClient}/>
           <UbicationCorrespondence infoClient={infoClient}/>
           <InfoFinanciera infoClient={infoClient}/>

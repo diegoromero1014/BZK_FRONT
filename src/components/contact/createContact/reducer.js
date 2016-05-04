@@ -7,6 +7,7 @@ const initialState = Immutable.Map({
     responseCreateContact : {},
     validateLogin: false,
     isClientContact: false,
+    findContact:false,
     responseSearchContactData:{}
 });
 
@@ -25,6 +26,7 @@ export default function(state = initialState, action){
                 map
                 .set('status', response.status)
                 .set('isClientContact', response.isClientContact)
+                .set('findContact', response.findContact)
                 .set('validateLogin', response.validateLogin)
                 .set('responseSearchContactData', JSON.parse(response.contactDetail));
 

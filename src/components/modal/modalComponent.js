@@ -32,7 +32,8 @@ class ModalComponentDialog extends Component {
           {/* Listas */}
 
           {/* /Listas */}
-          cell = <ContactDetailsModalComponent contactId={actions.id} />
+          const {closeModal} = this.props;
+          cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} />
           break;
       }
 

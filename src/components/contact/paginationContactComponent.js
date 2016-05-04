@@ -65,6 +65,7 @@ class PaginationContactComponent extends Component{
       <div>
         {rowCount > NUMBER_RECORDS ?
           <div style={{borderTop:"2px solid #D9DEDF", width:"100%", marginTop:"15px", paddingTop: "15px"}}>
+            <span style={{fontWeight: 'bold'}}>Pág. {page} de {lastPage}</span>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
                 {page != 1 ? <li onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
