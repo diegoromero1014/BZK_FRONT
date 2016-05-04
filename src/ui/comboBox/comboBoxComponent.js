@@ -14,15 +14,17 @@ class comboBoxComponent extends Component {
 
    componentWillReceiveProps({value, name}) {
      const selector = $(`.ui.selection.dropdown.${name}`);
+     selector.dropdown('refresh');
      if (_.isEqual(value, '')) {
          selector.dropdown('clear');
      }else{
        selector.dropdown('set selected', value);
+       selector.dropdown('set value', value);
      }
    }
 
    componentDidMount() {
-     const {onChange, onBlur, name, defaultValue} = this.props;
+     const {onChange, onBlur, name, defaultValue, value, data} = this.props;
      const selector = $(`.ui.selection.dropdown.${name}`);
      const self = this;
      selector.dropdown({

@@ -44,19 +44,20 @@ class NotesClient extends Component {
 
     _mapNotesItems(note) {
         const {selectsReducer} = this.props;
-        console.log('note', note);
         return <Note
             index={note.uid}
             key={note.uid}
+            body={note.body}
+            combo={note.combo}
+            data={selectsReducer.get('dataTypeNotes')}
         />
     }
 
     render() {
-        const {notes} = this.props;
-        console.log(notes);
+        const {notes, error} = this.props;
         return (
             <Row style={{padding: "0px 10px 20px 20px"}}>
-              <Col xs={12} md={12} lg={12} style={{marginTop: "50px", paddingRight: "35px", textAlign: "right"}}>
+              <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
                   <button className="btn" style={{margin:"12px 0px 0px 12px", fontSize : '1.5em'}}
                           type="button"
                           onClick={this._addNote}
@@ -65,7 +66,16 @@ class NotesClient extends Component {
                   </button>
               </Col>
                 <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
+                  {error &&
+                    <div>
+                      <div className="ui pointing below red basic label">
+                        Debe ingresar todos los campos
+                      </div>
+                    </div>
+                  }
+                  <div style={error ? {paddingBottom:"20px", border:"1px solid red", borderRadius:"5px"} : {}}>
                     {notes.map(this._mapNotesItems)}
+                  </div>
                 </Col>
             </Row>
         );

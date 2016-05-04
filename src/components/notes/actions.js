@@ -24,7 +24,6 @@ export function addNote(uid){
 }
 
 export function setNotes(notes){
-  console.log("infoClient.notes", notes);
   return {
       type: constants.SET_NOTES,
       notes

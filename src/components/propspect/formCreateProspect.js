@@ -96,7 +96,6 @@ class FormCreateProspect extends Component{
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
        } = this.props;
-       console.log("idCelula", idCelula);
        var jsonCreateProspect= {
          "clientIdNumber": numberDocument,
          "clientName": razonSocial.value,

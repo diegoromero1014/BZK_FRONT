@@ -100,15 +100,9 @@ class ContactDetailsModalComponent extends Component {
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
     .then(function(data) {
-      console.log(_.get(data, 'payload.data.contactDetail'));
       const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-
-      console.log('Datos del contacto -> ', contact);
-      console.log('this ', that);
-
       const {_uploadProvinces, _uploadCities} = that.props;
 
-      
       if (contact.country != null) {
         that._uploadProvinces(contact.country);
       }
@@ -185,7 +179,7 @@ class ContactDetailsModalComponent extends Component {
     clearState();
   }
 
-  
+
   _onChangeCountry(val) {
     const {fields: {country, province, city}} = this.props;
     country.onChange(val);
@@ -204,7 +198,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _uploadProvinces(countryId) {
-    console.log('Cargo los departamentos -> ', countryId);
     const {fields: {country, province, city}} = this.props;
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(FILTER_PROVINCE, countryId);
@@ -213,7 +206,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _uploadCities(provinceId) {
-    console.log('Cargo las ciudades -> ', provinceId);
     const {fields: {country, province, city}} = this.props;
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(FILTER_CITY, provinceId);
@@ -222,12 +214,11 @@ class ContactDetailsModalComponent extends Component {
 
   /* metodo para enviar el formulario */
   _handlerSubmitContact() {
-    // console.log('Se envió la información');
     const { fields: { title, gender, contactType, contactIdentityNumber, firstName, middleName, firstLastName, secondLastName, contactPosition,
                       contactDependency, address, country, province, city, neighborhood, postalCode, telephoneNumber, extension, mobileNumber,
                       emailAddress, typeOfContact, lineOfBusiness, functions, hobbies, sports, contactSocialStyle, contactAttitudeOverGroup,
                       dateOfBirth }, error, handleSubmit, selectsReducer} = this.props;
-    
+
     const {contactDetail} = this.props;
     const contact = contactDetail.get('contactDetailList');
 
@@ -270,7 +261,6 @@ class ContactDetailsModalComponent extends Component {
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
       "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
     }
-    console.log('El objecto a guardar -> ', jsonUpdateContact);
     saveContact(jsonUpdateContact);
   }
 
@@ -437,7 +427,7 @@ class ContactDetailsModalComponent extends Component {
                 <dt>{'Fecha de nacimiento'}</dt>
                 <dd>
                   <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateOfBirth} />
-                  
+
                   {/* <DateTimePicker
                     culture='es'
                     {...dateOfBirth}
