@@ -19,8 +19,10 @@ class comboBoxComponent extends Component {
      if (_.isEqual(value, '')) {
          selector.dropdown('clear');
      }else{
-       selector.dropdown('set selected', value);
-       selector.dropdown('set value', value);
+       if( value !== null && value !== undefined && value !== "" ){
+         selector.dropdown('set selected', value);
+         selector.dropdown('set value', value);
+       }
      }
    }
 
