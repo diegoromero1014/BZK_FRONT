@@ -1,2 +1,0 @@
-export const FIND_SHAREHOLDER = 'FIND_SHAREHOLDER';
-export const KEEP_KEYWORD = 'KEEP_KEYWORD';
