@@ -19,7 +19,6 @@ export function createContactNew(jsonCreateContact){
       },
       messageBody: jsonCreateContact
     }
-    console.log(json);
   var request = axios.post(APP_URL + "/saveContact", json);
   return {
     type: actions.CREATE_CONTACT,

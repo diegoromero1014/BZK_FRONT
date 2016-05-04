@@ -34,6 +34,7 @@ const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "cit
     "centroDecision", "necesitaLME", "groupEconomic", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
 
 var isProspect = false;
+var errorNote = false;
 
 const validate = values => {
     const errors = {}
@@ -48,11 +49,11 @@ const validate = values => {
     } else {
       errors.idSubCIIU = null;
     }
-    /*if (!values.address) {
+    if (!values.address) {
       errors.address = "Debe ingresar un valor";
     } else {
       errors.address = null;
-    }*/
+    }
     if (!values.telephone) {
       errors.telephone = "Debe ingresar un valor";
     } else {
@@ -78,11 +79,11 @@ const validate = values => {
     } else {
       errors.city = null;
     }
-    /*if (!values.dateSalesAnnuals) {
+    if (!values.dateSalesAnnuals) {
       errors.dateSalesAnnuals = "Debe seleccionar un día";
     } else {
       errors.dateSalesAnnuals = null;
-    }*/
+    }
     if (!values.liabilities) {
       errors.liabilities = "Debe ingresar un valor";
     } else {
@@ -148,7 +149,6 @@ const validate = values => {
     } else {
       errors.extractsVirtual = null;
     }
-    console.log("errors", errors);
     return errors
 };
 
@@ -212,7 +212,7 @@ class clientEdit extends Component{
   }
 
   componentWillMount(){
-
+    errorNote = false;
     const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
     clearValuesAdressess();
     crearNotes();
@@ -247,109 +247,137 @@ class clientEdit extends Component{
   _onChangeCIIU(val){
     const {fields: {idCIIU, idSubCIIU}} = this.props;
     idCIIU.onChange(val);
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {consultListWithParameter} = this.props;
     consultListWithParameter(constants.SUB_CIIU, val);
-    idSubCIIU.onChange('');
+    if(!_.isEqual(infoClient.ciiu, idCIIU.value)){
+      idSubCIIU.onChange('');
+    }
   }
 
   _onChangeCountry(val){
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {fields: {country, province, city}} = this.props;
     country.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-    province.onChange('');
-    city.onChange('');
+    if(!_.isEqual(infoClient.addresses[0].country, country.value)){
+      province.onChange('');
+      city.onChange('');
+    }
   }
 
   _onChangeProvince(val){
+    const {clientInformacion} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
     const {fields: {country, province, city}} = this.props;
     province.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-    city.onChange('');
+    if(!_.isEqual(infoClient.addresses[0].province, province.value)){
+      city.onChange('');
+    }
   }
 
   _submitEditClient(){
-    const {
-    fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
-      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-      liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-      centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
-      error, handleSubmit, selectsReducer, clientInformacion} = this.props;
-    var infoClient = clientInformacion.get('responseClientInfo');
-      console.log("address.value", address.value);
-        console.log("fecha", dateSalesAnnuals.value);
-        console.log("date", moment(dateSalesAnnuals.value).format('x'));
-    var jsonCreateProspect= {
-      "id": infoClient.id,
-      "clientIdNumber": infoClient.clientIdNumber,
-      "clientName": infoClient.clientName,
-      "clientStatus": infoClient.clientStatus,
-      "riskRating": null,
-      "isProspect": infoClient.isProspect,
-      "ciiu": idCIIU.value,
-      "commercialRelationshipType": "",
-      "countryOfOrigin": "",
-      "isDecisionCenter": centroDecision.value,
-      "economicGroup": groupEconomic.value,
-      "internalRating": "",
-      "isic": "",
-      "ratingHistory": "",
-      "registrationKey": null,
-      "riskGroup": "",
-      "segment": infoClient.segment,
-      "subCiiu": idSubCIIU.value,
-      "subSegment": "",
-      "countryOfFirstLevelManagement": "",
-      "countryOfMainMarket": "",
-      "relationshipStatus": infoClient.relationshipStatus,
-      "typeOfClient":"",
-      "status":infoClient.status,
-      "isCreditNeeded":necesitaLME.value,
-      "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-      "salesUpadateDate": moment(dateSalesAnnuals.value).format('x'),
-      "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-      "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-      "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-      "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-      "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
-      "localMarket":"",
-      "marketLeader":"",
-      "territory":"",
-      "actualizationDate": null,
-      "justificationForNoRM": justifyNoGeren.value,
-      "justificationForLostClient": justifyExClient.value,
-      "justificationForCreditNeed": justifyNoLME.value,
-      "isVirtualStatement": extractsVirtual.value,
-      "lineOfBusiness": infoClient.lineOfBusiness,
-      "isManagedByRm": marcGeren.value,
-      "addresses":[
-        {
-          "typeOfAddress": 41,
-          "address":address.value,
-          "country":country.value,
-          "province":province.value,
-          "city":city.value,
-          "neighborhood":neighborhood.value,
-          "isPrincipalAddress": reportVirtual.value,
-          "phoneNumber":telephone.value,
-          "postalCode":"",
-        }],
-      "notes":infoClient.notes,
-      "description": description.value,
-      "clientIdType": infoClient.clientIdType
-   }
-   const {createProspect} = this.props;
-   createProspect(jsonCreateProspect)
-   .then((data) => {
-     if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-         this.setState({showEx: true});
-       } else {
-         this.setState({showEr: true});
+    errorNote = false;
+    const {notes} = this.props;
+    var notesArray = [];
+    notes.map(map => {
+      var noteItem = {
+        "typeOfNote": map.combo,
+        "note": map.body
+      }
+      notesArray.push(noteItem);
+    });
+
+    notesArray.forEach(function(note){
+      if(_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)){
+        errorNote = true;
+      }
+    });
+
+    if(!errorNote){
+      const {
+      fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
+        district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+        liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+        centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
+        error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+      var infoClient = clientInformacion.get('responseClientInfo');
+      var jsonCreateProspect= {
+        "id": infoClient.id,
+        "clientIdNumber": infoClient.clientIdNumber,
+        "clientName": infoClient.clientName,
+        "clientStatus": infoClient.clientStatus,
+        "riskRating": null,
+        "isProspect": infoClient.isProspect,
+        "ciiu": idCIIU.value,
+        "commercialRelationshipType": "",
+        "countryOfOrigin": "",
+        "isDecisionCenter": centroDecision.value,
+        "economicGroup": groupEconomic.value,
+        "internalRating": "",
+        "isic": "",
+        "ratingHistory": "",
+        "registrationKey": null,
+        "riskGroup": "",
+        "segment": infoClient.segment,
+        "subCiiu": idSubCIIU.value,
+        "subSegment": "",
+        "countryOfFirstLevelManagement": "",
+        "countryOfMainMarket": "",
+        "relationshipStatus": infoClient.relationshipStatus,
+        "typeOfClient":"",
+        "status":infoClient.status,
+        "isCreditNeeded":necesitaLME.value,
+        "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+        "salesUpadateDate": moment(dateSalesAnnuals.value).format('x'),
+        "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
+        "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
+        "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
+        "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
+        "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+        "localMarket":"",
+        "marketLeader":"",
+        "territory":"",
+        "actualizationDate": null,
+        "justificationForNoRM": justifyNoGeren.value,
+        "justificationForLostClient": justifyExClient.value,
+        "justificationForCreditNeed": justifyNoLME.value,
+        "isVirtualStatement": extractsVirtual.value,
+        "lineOfBusiness": infoClient.lineOfBusiness,
+        "isManagedByRm": marcGeren.value,
+        "addresses":[
+          {
+            "typeOfAddress": 41,
+            "address":address.value,
+            "country":country.value,
+            "province":province.value,
+            "city":city.value,
+            "neighborhood":neighborhood.value,
+            "isPrincipalAddress": reportVirtual.value,
+            "phoneNumber":telephone.value,
+            "postalCode":"",
+          }],
+        "notes":notesArray,
+        "description": description.value,
+        "clientIdType": infoClient.clientIdType
      }
-     }, (reason) => {
-       this.setState({showEr: true});
-   });
+     const {createProspect} = this.props;
+     createProspect(jsonCreateProspect)
+     .then((data) => {
+       if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+           this.setState({showEx: true});
+         } else {
+           this.setState({showEr: true});
+       }
+       }, (reason) => {
+         this.setState({showEr: true});
+     });
+    }
   };
 
   render(){
@@ -361,8 +389,6 @@ class clientEdit extends Component{
       error, handleSubmit, selectsReducer, clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
-    console.log("isProspect render", isProspect);
-    console.log(infoClient);
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
           <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
@@ -427,7 +453,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>CIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
-                name="ciiu"
+                name="idCIIU"
                 labelInput="Seleccione CIIU..."
                 {...idCIIU}
                 onChange={val => this._onChangeCIIU(val)}
@@ -440,9 +466,9 @@ class clientEdit extends Component{
           </Col>
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-              <dt style={{paddingBottom: "10px"}}><span>Sector</span></dt>
+              <dt style={{paddingBottom: "10px"}}><span>Sector</span> </dt>
               <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
-
+                {(!_.isEmpty(idCIIU.value) && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].economicSector : ''}
               </span>
             </div>
           </Col>
@@ -450,9 +476,10 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>SubCIIU (</span><span style={{color: "red"}}>*</span>)</dt>
               <ComboBox
-                name="subCiiu"
+                name="idSubCIIU"
                 labelInput="Seleccione subCIIU..."
                 {...idSubCIIU}
+                onBlur={idSubCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 data={selectsReducer.get('dataSubCIIU')}
@@ -463,7 +490,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>
-
+                {(!_.isEmpty(idSubCIIU.value) && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)])[0].economicSubSector : ''}
               </span>
             </div>
           </Col>
@@ -650,7 +677,7 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD-MM-YYYY"} time={false} {...dateSalesAnnuals}/>
+              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -822,12 +849,23 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <p style={{fontWeight: "normal", marginTop: "8px"}}>
-                  {groupEconomic.value && _.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)] )[0].nitPrincipal}
+
                 </p>
               </dt>
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
+            <SelectsJustificacion
+              visible={'false'}
+              title="Justificación excliente"
+              labelInput="Seleccione..."
+              value={justifyExClient.value}
+              onBlur={justifyExClient.onBlur}
+              valueProp={"id"}
+              textProp={"value"}
+              justify={justifyExClient}
+              data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
+            />
             <SelectsJustificacion
               visible={marcGeren.value}
               title="Justificación no gerenciamiento"
@@ -838,17 +876,6 @@ class clientEdit extends Component{
               textProp={"value"}
               justify={justifyNoGeren}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
-            />
-            <SelectsJustificacion
-              visible={centroDecision.value}
-              title="Justificación excliente"
-              labelInput="Seleccione..."
-              value={justifyExClient.value}
-              onBlur={justifyExClient.onBlur}
-              valueProp={"id"}
-              textProp={"value"}
-              justify={justifyExClient}
-              data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
             />
             <SelectsJustificacion
               visible={necesitaLME.value}
@@ -871,10 +898,10 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <NotesClient />
+          <NotesClient error={errorNote}/>
           <Row>
             <Col xs={12} md={12} lg={12} style={{paddingTop: "50px"}}>
-              <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0", width:"100%", marginBottom: "0", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+              <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
                 <button className="btn"
                     style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
                     type="submit">
@@ -907,12 +934,12 @@ class clientEdit extends Component{
            text="El cliente se editó correctamente."
            onConfirm={() => this._closeSuccess()}
          />
-           <SweetAlert
-            type= "error"
-            show={this.state.showEr}
-            title="Error"
-            text="Se presento un error al realizar la edición del cliente."
-            onConfirm={() => this._closeError()}
+         <SweetAlert
+          type= "error"
+          show={this.state.showEr}
+          title="Error"
+          text="Se presento un error al realizar la edición del cliente."
+          onConfirm={() => this._closeError()}
           />
         </form>
     );
@@ -936,7 +963,6 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) {
   const infoClient = clientInformacion.get('responseClientInfo');
-  console.log("infoClient", infoClient);
   return {
     clientInformacion,
     selectsReducer,
@@ -973,6 +999,5 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
 export default reduxForm({
   form: 'submitValidation',
   fields,
-  validate,
-  //initialValues: {province: 10262}
+  validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

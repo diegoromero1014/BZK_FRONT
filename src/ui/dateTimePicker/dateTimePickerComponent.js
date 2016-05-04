@@ -17,9 +17,19 @@ class dateTimePickerComponent extends Component {
   }
 
   render(){
-    const {value} = this.props;
+    const {touched, error, value} = this.props;
     return (
-      <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null: moment(value).toDate()} />
+      <div>
+        <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null: moment(value).toDate()} />
+        {
+          touched && error &&
+          <div>
+              <div className="ui pointing red basic label">
+                  {error}
+              </div>
+          </div>
+        }
+      </div>
     );
   }
 }

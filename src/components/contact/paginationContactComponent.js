@@ -40,7 +40,6 @@ class PaginationContactComponent extends Component{
     this.setState({
       limInf: limInf
     });
-    console.log('limi' + limInf);
     limitiInf(limInf);
     changePage(page);
     this._handleContactsByClientsFind();

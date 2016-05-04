@@ -114,7 +114,6 @@ class ListContactComponent extends Component {
     const {contactsByClient} = this.props;
     const modalTitle = 'Contacto Detalle';
     const data = contactsByClient.get('contacts');
-    console.log('contact datas -> ', data);
     return ( < div className = "horizontal-scroll-wrapper" >
       <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>

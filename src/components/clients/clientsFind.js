@@ -48,7 +48,6 @@ class ClientsFind extends Component {
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
       clientItems = clientR.get('responseClients');
-      console.log("clientItems: ", clientItems);
       return (
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={12} lg={12}>
