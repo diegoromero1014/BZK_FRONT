@@ -26,16 +26,6 @@ const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependen
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
 const validate = (values) => {
-  if(!values.tipoDocumento){
-    errors.tipoDocumento = "Seleccione un documento";
-  }else{
-    errors.tipoDocumento = null;
-  }
-  if(!values.numeroDocumento){
-    errors.numeroDocumento = "Ingrese un número de documento";
-  }else{
-    errors.numeroDocumento = null;
-  }
     if(!values.tipoFuncion){
       errors.tipoFuncion = "Seleccione una función";
     }else{
@@ -209,7 +199,7 @@ class ModalComponentContact extends Component {
         "contactPosition" : tipoCargo.value,
         "unit" : tipoDependencia.value,
         "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : moment(fechaNacimiento.value).format('x'),
+        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value).format('x') : null,
         "address" : direccion.value,
         "country" : pais.value,
         "province" : departamento.value,
