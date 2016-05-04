@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
+import ListShareholderComponent from './listShareholderComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 
 class ShareholderComponent extends Component {
@@ -12,8 +13,8 @@ class ShareholderComponent extends Component {
   }
 
   render() {
-    var visibleTable = 'none';
-    var visibleMessage = 'block';
+    var visibleTable = 'block';
+    var visibleMessage = 'none';
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
@@ -33,6 +34,7 @@ class ShareholderComponent extends Component {
           <Grid style= {{display:visibleTable, width: "100%"}}>
             <Row>
               <Col xs={12} sm={8} md={12} lg={12}>
+              <ListShareholderComponent/>
               </Col>
             </Row>
           </Grid>
