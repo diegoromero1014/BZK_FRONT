@@ -7,7 +7,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter,
+import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword,
     consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
@@ -23,6 +23,7 @@ import {setNotes, crearNotes} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
 import _ from 'lodash';
 
+//Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
@@ -31,9 +32,11 @@ const valuesYesNo = [
 const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province", "neighborhood",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
-    "centroDecision", "necesitaLME", "groupEconomic", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
+    "centroDecision", "necesitaLME", "groupEconomic", "keywordFindEconomicGroup", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
 
+//Establece si el cliente a editar es prospecto o no, para controlar las validaciones de campos
 var isProspect = false;
+//Controla la validación en las notas
 var errorNote = false;
 
 const validate = values => {
@@ -124,11 +127,6 @@ const validate = values => {
     } else {
       errors.centroDecision = null;
     }
-    if (values.centroDecision && !values.justifyExClient) {
-      errors.justifyExClient = "Debe seleccionar un valor";
-    } else {
-      errors.justifyExClient = null;
-    }
     if (!values.necesitaLME && !isProspect) {
       errors.necesitaLME = "Debe seleccionar un valor";
     } else {
@@ -152,11 +150,18 @@ const validate = values => {
     return errors
 };
 
+//Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
+  var obligatory;
+  if (props.obligatory) {
+    obligatory = <span>{props.title} (<span style={{color: "red"}}>*</span>)</span>;
+  } else {
+    obligatory = <span>{props.title}</span>;
+  }
   if(props.visible === "false"){
     return <Col xs={12} md={4} lg={4}>
       <dt>
-        <span>{props.title} (</span><span style={{color: "red"}}>*</span>)
+        {obligatory}
       </dt>
       <dt>
         <ComboBox
@@ -191,6 +196,7 @@ class clientEdit extends Component{
     this._onConfirmExit = this._onConfirmExit.bind(this);
     this._closeError = this._closeError.bind(this);
     this._closeSuccess = this._closeSuccess.bind(this);
+    this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
   }
 
   _closeWindow(){
@@ -211,6 +217,11 @@ class clientEdit extends Component{
     redirectUrl("/dashboard/clientInformation");
   }
 
+  _handleGroupEconomicFind(){
+    const {fields: {keywordFindEconomicGroup, economicGroup}, economicGroupsByKeyword} = this.props;
+    economicGroupsByKeyword(keywordFindEconomicGroup.value);
+  }
+
   componentWillMount(){
     errorNote = false;
     const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
@@ -227,7 +238,7 @@ class clientEdit extends Component{
       if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
       }else{
-        const {selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
+        const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
         .then((data) => {
@@ -239,11 +250,14 @@ class clientEdit extends Component{
             this.setState({showEx: true});
         });
         consultList(constants.CIIU);
-        //consultList(constants.ECONOMIC_GROUP);
+        if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
+          economicGroupsByKeyword(infoClient.economicGroupKey);
+        }
       }
     }
   }
 
+  //Detecta el cambio en el select de ciiu para ejecutar la consulta de subciiu
   _onChangeCIIU(val){
     const {fields: {idCIIU, idSubCIIU}} = this.props;
     idCIIU.onChange(val);
@@ -256,6 +270,7 @@ class clientEdit extends Component{
     }
   }
 
+  //Detecta el cambio en el select de country para ejecutar la consulta de province
   _onChangeCountry(val){
     const {clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
@@ -269,6 +284,7 @@ class clientEdit extends Component{
     }
   }
 
+    //Detecta el cambio en el select de province para ejecutar la consulta de city
   _onChangeProvince(val){
     const {clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
@@ -281,6 +297,7 @@ class clientEdit extends Component{
     }
   }
 
+  //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
     const {notes} = this.props;
@@ -304,7 +321,7 @@ class clientEdit extends Component{
       fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
         district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
         liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-        centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
+        centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
         error, handleSubmit, selectsReducer, clientInformacion} = this.props;
       var infoClient = clientInformacion.get('responseClientInfo');
       var jsonCreateProspect= {
@@ -385,7 +402,7 @@ class clientEdit extends Component{
     fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-      centroDecision, necesitaLME, groupEconomic, justifyNoGeren, justifyNoLME, justifyExClient},
+      centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
       error, handleSubmit, selectsReducer, clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
@@ -762,6 +779,53 @@ class clientEdit extends Component{
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
+            <Col xs={12} md={4} lg={4}>
+              <dt>
+                <span>Buscar grupo económico</span>
+              </dt>
+              <dt>
+                <div style={{display:"inline-block", width:"85%"}}>
+                  <Input
+                    name="txtGrupoEconomico"
+                    placeholder="Ingrese el grupo económico a buscar"
+                    {...keywordFindEconomicGroup}
+                  />
+                </div>
+                <button id="searchGrupoEconomico" className="btn" title="Buscar grupo económico"
+                  type="button" onClick={this._handleGroupEconomicFind}
+                  style={{backgroundColor:"#E0E2E2", width:"40px", height:"40px", display:"inline", marginLeft:"8px"}}>
+                  <i className="search icon" style={{margin:'0em', fontSize : '1.2em'}}></i>
+                </button>
+              </dt>
+            </Col>
+            <Col xs={12} md={4} lg={4}>
+              <dt>
+                <span>Grupo económico/relación (<span style={{color: "red"}}>*</span>)</span>
+              </dt>
+              <dt>
+                <ComboBox
+                  labelInput="Seleccione..."
+                  {...groupEconomic}
+                  value={groupEconomic.value}
+                  onBlur={groupEconomic.onBlur}
+                  valueProp={'id'}
+                  textProp={'group'}
+                  data={selectsReducer.get('dataEconomicGroup')}
+                />
+              </dt>
+            </Col>
+            <Col xs={12} md={4} lg={4}>
+              <dt>
+                <span>Nit principal</span>
+              </dt>
+              <dt>
+                <p style={{fontWeight: "normal", marginTop: "8px"}}>
+                  {(!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)])[0].nitPrincipal : ''}
+                </p>
+              </dt>
+            </Col>
+          </Row>
+          <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "10px"}}>
               <dt>
                 <span>Marca gerenciamiento </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
@@ -809,34 +873,6 @@ class clientEdit extends Component{
               </dt>
             </Col>
           </Row>
-          <Row style={{padding: "0px 10px 20px 20px", display:"none"}}>
-            <Col xs={12} md={4} lg={4}>
-              <dt>
-                <span>Grupo económico/relación</span>
-              </dt>
-              <dt>
-                <ComboBox
-                  labelInput="Seleccione..."
-                  {...groupEconomic}
-                  value={groupEconomic.value}
-                  onBlur={groupEconomic.onBlur}
-                  valueProp={'id'}
-                  textProp={'group'}
-                  data={selectsReducer.get('dataEconomicGroup')}
-                />
-              </dt>
-            </Col>
-            <Col xs={12} md={4} lg={4}>
-              <dt>
-                <span>Nit principal</span>
-              </dt>
-              <dt>
-                <p style={{fontWeight: "normal", marginTop: "8px"}}>
-
-                </p>
-              </dt>
-            </Col>
-          </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <SelectsJustificacion
               visible={'false'}
@@ -847,6 +883,7 @@ class clientEdit extends Component{
               valueProp={"id"}
               textProp={"value"}
               justify={justifyExClient}
+              obligatory={false}
               data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
             />
             <SelectsJustificacion
@@ -858,6 +895,7 @@ class clientEdit extends Component{
               valueProp={"id"}
               textProp={"value"}
               justify={justifyNoGeren}
+              obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
             />
             <SelectsJustificacion
@@ -869,6 +907,7 @@ class clientEdit extends Component{
               valueProp={"id"}
               textProp={"value"}
               justify={justifyNoLME}
+              obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
             />
           </Row>
@@ -906,7 +945,7 @@ class clientEdit extends Component{
             confirmButtonColor= '#DD6B55'
             confirmButtonText= 'Sí, estoy seguro!'
             cancelButtonText = "Cancelar"
-            text="Señor usuario, ¿Está seguro que desea salir de la vista de edición de un cliente?"
+            text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir de la vista de edición?"
             showCancelButton= {true}
             onCancel= {() => this.setState({show: false })}
             onConfirm={() => this._onConfirmExit()}/>
@@ -936,6 +975,7 @@ function mapDispatchToProps(dispatch) {
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication,
+    economicGroupsByKeyword,
     getMasterDataFields,
     setNotes,
     crearNotes,
