@@ -66,7 +66,7 @@ class SearchBarClient extends Component{
           type= "error"
           show={this.state.showEr}
           title="Error de búsqueda"
-          text="Por favor ingrese un criterio de búsqueda."
+          text="Señor usuario, por favor ingrese un criterio de búsqueda."
           onConfirm={() => this._closeError()}
         />
       </div>

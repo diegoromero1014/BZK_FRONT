@@ -619,28 +619,28 @@ class ModalComponentContact extends Component {
            type= "success"
            show={this.state.showEx}
            title="Contacto creado"
-           text="El contacto se creó correctamente."
+           text="Señor usuario, el contacto se creó correctamente."
            onConfirm={() => this._closeCreate()}
            />
            <SweetAlert
             type= "warning"
             title="Advertencia"
             show={this.state.showErrorYa}
-            text="El cliente ya presenta una relación con el contacto buscado"
+            text="Señor usuario, el cliente ya presenta una relación con el contacto buscado"
             onConfirm={() => this._closeCreate()}
             />
             <SweetAlert
              type= "error"
              show={this.state.showEr}
              title="Error"
-             text="Se presento un error"
+             text="Señor usuario, se presento un error"
              onConfirm={() => this._closeCreate()}
              />
              <SweetAlert
               type= "warning"
               show={this.state.showErrorNo}
               title="Advertencia"
-              text="El contacto no existe"
+              text="Señor usuario, el contacto no existe"
               onConfirm={() => this._closeCreate()}
               />
             </div>
