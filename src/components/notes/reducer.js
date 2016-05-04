@@ -17,23 +17,38 @@ export default (state = initialState, action) => {
             combo: '',
             uid: action.uid
         });
-        console.log(state.push(newNote));
         return state.push(newNote);
     case DELETE_NOTE:
         const index = state.findIndex(item => item.uid === action.index);
         return state.delete(index);
     case SET_NOTES:
         const notes = action.notes;
-        notes.map(map => {
+        const list = Immutable.List(notes);
+        return state.withMutations(list => {
+
+          notes.map(item => {
             const uid = _.uniqueId('note_');
-            state.set(uid, {body: map.note, combo: map.typeOfNote});
+            list.push(
+              {
+                uid,
+                body: item.note,
+                combo: String(item.typeOfNote)
+              }
+            )
+          });
+      });
+
+        /*notes.map(map => {
+          console.log("reducer notas");
+          const uid = _.uniqueId('note_');
+          state.set(uid, {body: map.note, combo: map.typeOfNote});
         });
         return state.withMutations(map => {
             notes.forEach(map2 => {
                 const uid = _.uniqueId('note_');
                 map.set(uid, {body: map2.note, combo: map2.typeOfNote});
             });
-        });
+        });*/
     case CLEAR_NOTES:
         return state.clear();
     default:

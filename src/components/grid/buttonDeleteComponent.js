@@ -66,7 +66,7 @@ class ButtonDeleteComponent extends Component{
             <SweetAlert
              type= "success"
              show={this.state.showEx}
-             title="Elimininado"
+             title="Eliminado"
              onConfirm={() => this._closeDelete()}
              />
              <SweetAlert

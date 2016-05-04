@@ -153,9 +153,11 @@ class CreatePropspect extends Component{
             </Col>
             <Col xs={12} md={3} lg={2}  style={{margingLeft: "30px"}}>
               <button className="btn" type="button" title="cambiar tipo y número documento"
-                style={{marginTop: "10px", color: "white"}}
+                style={{marginTop: "5px", color: "white"}}
                 onClick={this._onClickButtonChange}
-              >Cambiar</button>
+              >
+              <i style={{color: "white",margin:'0em', fontSize : '1.2em'}} className="erase icon" ></i>
+              </button>
             </Col>
           </Row>
         }
