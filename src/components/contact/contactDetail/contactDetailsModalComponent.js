@@ -495,7 +495,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <DateTimePickerUi
                       culture='es'
-                      format={"DD-MM-YYYY"}
+                      format={"DD/MM/YYYY"}
                       time={false}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactDateOfBirth}
