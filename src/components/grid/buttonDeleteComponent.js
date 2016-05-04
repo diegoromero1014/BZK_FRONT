@@ -73,7 +73,7 @@ class ButtonDeleteComponent extends Component{
               type= "error"
               show={this.state.showEr}
               title="Error"
-              text="Se presento un error al realizar la eliminación"
+              text="Señor usuario, se presento un error al realizar la eliminación"
               onConfirm={() => this._closeDelete()}
               />
         </td>);

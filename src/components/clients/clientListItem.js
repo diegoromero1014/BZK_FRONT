@@ -50,7 +50,7 @@ class ClientListItem extends Component{
          type= "warning"
          show={this.state.showEr}
          title="Acceso denegado"
-         text="Usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información."
+         text="Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información."
          onConfirm={() => this._closeError()}
          />
       </div>

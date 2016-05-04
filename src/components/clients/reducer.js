@@ -16,7 +16,6 @@ export default (state = initialState, action) => {
         return state.withMutations(map => {
             map
             .set('status', 'processed')
-            .set('keyword', response.keyword)
             .set('countClients', response.countClients)
             .set('responseClients', JSON.parse(response.listClients));
         });
