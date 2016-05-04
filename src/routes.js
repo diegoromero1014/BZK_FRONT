@@ -7,7 +7,7 @@ import DashboardComponent from './components/dashboard/dashboardComponent';
 import ClientsFind from './components/clients/clientsFind';
 import ContactComponent from './components/contact/component';
 import modalComponent from './components/modal/modalComponent';
-import ShareHolderComponent from './components/shareHolder/component';
+import ShareholderComponent from './components/shareholder/component';
 import ComponentClientInformation from './components/clientInformation/componentClientInformation';
 import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
@@ -30,7 +30,7 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
-                <Route path="shareHolder" component={ShareHolderComponent}></Route>
+                <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
