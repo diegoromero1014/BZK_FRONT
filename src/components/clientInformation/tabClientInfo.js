@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
-import ContactInfo from '../contact/component'
+import ContactInfo from '../contact/component';
+import ShareholderInfo from '../shareholder/component';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 
 class TabClientInfo extends Component{
@@ -65,6 +66,7 @@ class TabClientInfo extends Component{
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
           {styleContacts && <ContactInfo infoClient={infoClient}/>}
+          {styleShareholders && <ShareholderInfo infoClient={infoClient}/>}
         </div>
       </div>
     );
