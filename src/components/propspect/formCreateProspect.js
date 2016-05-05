@@ -21,7 +21,7 @@ const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ]
-var messageConfirm = "Recuerde que después de crear el prospecto solo podrá ser editado por el gerente de cuenta y su asistente. ¿Está seguro de guardar la información?";
+var messageConfirm = "Recuerde que una vez creado el prospecto solo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿esta seguro de guardar la información?";
 var titleConfirm = "Confirmación creación";
 var typeConfirm = "create";
 

@@ -4,4 +4,8 @@ webpack-assets.json
 netbeans/
 /nbproject/private/
 npm-debug.log
+/node_modules/
+/semantic
+semantic.json
 dist/
+.gitignore

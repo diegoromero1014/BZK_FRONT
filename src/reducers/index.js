@@ -15,6 +15,7 @@ import notesReducer from '../components/notes/reducer';
 import contactDetail from '../components/contact/contactDetail/reducer';
 import deleteGridReducer from '../components/grid/reducer';
 import createContactReducer from '../components/contact/createContact/reducer';
+import createShareholderReducer from '../components/shareholder/createShareholder/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -32,5 +33,6 @@ export default combineReducers({
     notes: notesReducer,
     contactDetail: contactDetail,
     deleteGridReducer:deleteGridReducer,
-    createContactReducer:createContactReducer
+    createContactReducer:createContactReducer,
+    createShareholder: createShareholderReducer
 });

@@ -24,4 +24,5 @@ export const JUSTIFICATION_LOST_CLIENT = 'justificationForLostClient';
 export const JUSTIFICATION_NO_RM = 'justificationForNoRM';
 export const ECONOMIC_GROUP = 'economicGroupList';
 export const TYPE_NOTES = 'typeOfNotes';
+export const SHAREHOLDER_TYPE = 'shareHolderType';
 export const CLEAR_VALUES_COUNTRY = "CLEAR_VALUES_COUNTRY";
