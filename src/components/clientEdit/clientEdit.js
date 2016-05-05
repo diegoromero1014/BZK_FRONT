@@ -12,7 +12,6 @@ import {consultDataSelect, consultList, consultListWithParameter, economicGroups
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import NumberInput from '../../ui/numberInput/numberInputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
@@ -21,6 +20,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import NotesClient from '../notes/notesClient';
 import {setNotes, crearNotes} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
+import numeral from 'numeral';
 import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
@@ -218,8 +218,9 @@ class clientEdit extends Component{
   }
 
   _handleGroupEconomicFind(){
-    const {fields: {keywordFindEconomicGroup, economicGroup}, economicGroupsByKeyword} = this.props;
+    const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
     economicGroupsByKeyword(keywordFindEconomicGroup.value);
+    groupEconomic.onChange('')
   }
 
   componentWillMount(){
@@ -228,7 +229,7 @@ class clientEdit extends Component{
     clearValuesAdressess();
     crearNotes();
     var infoClient = clientInformacion.get('responseClientInfo');
-    if( infoClient !== null && infoClient.notes !== null && infoClient.notes.length > 0 ){
+    if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
       const {setNotes} = this.props;
       setNotes(infoClient.notes);
     }
@@ -250,6 +251,7 @@ class clientEdit extends Component{
             this.setState({showEx: true});
         });
         consultList(constants.CIIU);
+
         if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
           economicGroupsByKeyword(infoClient.economicGroupKey);
         }
@@ -485,7 +487,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Sector</span> </dt>
               <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
-                {(!_.isEmpty(idCIIU.value) && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].economicSector : ''}
+                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
               </span>
             </div>
           </Col>
@@ -507,7 +509,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>
-                {(!_.isEmpty(idSubCIIU.value) && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)])[0].economicSubSector : ''}
+                {(idSubCIIU.value !== "" && idSubCIIU.value !== null && idSubCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector') : ''}
               </span>
             </div>
           </Col>
@@ -676,13 +678,18 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
+                  type="text"
                   min={0}
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
+                  value={annualSales.value ?
+                        (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000'))
+                        : ''}
                 />
               </dt>
             </Col>
@@ -699,12 +706,17 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  type="text"
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   {...assets}
+                  value={assets.value ?
+                        (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -715,12 +727,17 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  type="text"
                   onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
                   {...liabilities}
+                  value={liabilities.value ?
+                        (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -729,12 +746,17 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
-                  min={0}
                   onChange={val => this._onChangeValue("operatingIncome", val)}
+                  min={0}
+                  type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
+                  value={operatingIncome.value ?
+                        (numeral(operatingIncome.value).format('0') < 0 ? 0: numeral(operatingIncome.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -743,12 +765,17 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  type="text"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
                   {...nonOperatingIncome}
+                  value={nonOperatingIncome.value ?
+                        (numeral(nonOperatingIncome.value).format('0') < 0 ? 0: numeral(nonOperatingIncome.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -759,12 +786,17 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <NumberInput
+                <input
+                  style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  type="text"
                   onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
                   {...expenses}
+                  value={expenses.value ?
+                        (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
+                        : ''}
                 />
               </dt>
             </Col>
@@ -820,7 +852,7 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <p style={{fontWeight: "normal", marginTop: "8px"}}>
-                  {(!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)])[0].nitPrincipal : ''}
+                  {(!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : ''}
                 </p>
               </dt>
             </Col>
@@ -994,13 +1026,13 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       description: infoClient.description,
       idCIIU: infoClient.ciiu,
       idSubCIIU: infoClient.subCiiu,
-      address: infoClient.addresses[0].address,
-      country: infoClient.addresses[0].country,
-      province: infoClient.addresses[0].province,
-      city: infoClient.addresses[0].city,
-      neighborhood: infoClient.addresses[0].neighborhood,
-      telephone: infoClient.addresses[0].phoneNumber,
-      reportVirtual: infoClient.addresses[0].isPrincipalAddress,
+      address: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
+      country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
+      province: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].province : '',
+      neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
+      city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
+      telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
+      reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
       annualSales: infoClient.annualSales,
       dateSalesAnnuals: infoClient.salesUpadateDate,
