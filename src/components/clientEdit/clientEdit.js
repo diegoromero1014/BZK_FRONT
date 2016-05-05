@@ -505,6 +505,8 @@ class clientEdit extends Component{
                 />
             </div>
           </Col>
+
+          
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
