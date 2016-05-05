@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY} from './constants';
+import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS} from './constants';
 
 export function consultDataSelect(field){
   const json = {
@@ -134,5 +134,30 @@ export function getMasterDataFields(fields) {
 export function clearValuesAdressess(){
   return {
     type: CLEAR_VALUES_COUNTRY
+  }
+}
+
+export function economicGroupsByKeyword(keyword){
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "keyword": keyword
+    }
+  }
+  var request = axios.post(APP_URL + "/economicGroupsByKeyword", json);
+  return {
+    type: ECONOMIC_GROUPS,
+    payload: request
   }
 }

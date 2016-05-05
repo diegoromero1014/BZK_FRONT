@@ -25,7 +25,7 @@ class inputComponent extends Component {
         $(`.ui.input.${name} [type=text]`).focus();
       }
       return (
-          <div >
+          <div>
               <div className={`styleWidthComponents ui input ${disabled} ${name}`}>
                   <input type={type}
                     name={nameInput}

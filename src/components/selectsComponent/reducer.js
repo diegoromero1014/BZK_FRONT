@@ -23,7 +23,7 @@ const initialState = Immutable.Map({
   dataTypeAttitudeOverGroup: [],
   dataEconomicGroup: [],
   dataTypeNotes: [],
-  dataTypeShareholders: []
+  dataEconomicGroup: []
 });
 
 
@@ -44,9 +44,6 @@ export default (state = initialState, action) => {
         case constants.CIIU:
           var ciiuValueObjects =  action.payload.data.messageBody.ciiuValueObjects;
           return state.set("dataCIIU", ciiuValueObjects);
-        case constants.ECONOMIC_GROUP:
-          var economicGroupValues =  action.payload.data.messageBody.economicGroupValueObjects;
-          return state.set("dataEconomicGroup", economicGroupValues);
         case constants.SUB_CIIU:
           var subCiiuValueObjects =  action.payload.data.messageBody.subCiiuValueObjects;
           return state.set("dataSubCIIU", subCiiuValueObjects);
@@ -89,14 +86,15 @@ export default (state = initialState, action) => {
         case constants.TYPE_NOTES:
           var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           return state.set('dataTypeNotes', masterDataDetailEntries);
-        case constants.SHAREHOLDER_TYPE:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeShareholders', masterDataDetailEntries);
+        case constants.ECONOMIC_GROUPS:
+          var masterDataEconomicGroups = action.payload.data.messageBody.economicGroupValueObjects;
+          return state.set('dataEconomicGroup', masterDataEconomicGroups);
         case constants.CLEAR_VALUES_COUNTRY:
           return state.withMutations( map => {
             map
               .set('dataTypeProvince', [])
               .set('dataTypeCity', [])
+              .set('dataEconomicGroup', [])
           });
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
           const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
