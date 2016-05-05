@@ -228,7 +228,7 @@ class clientEdit extends Component{
     clearValuesAdressess();
     crearNotes();
     var infoClient = clientInformacion.get('responseClientInfo');
-    if( infoClient !== null && infoClient.notes !== null && infoClient.notes.length > 0 ){
+    if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
       const {setNotes} = this.props;
       setNotes(infoClient.notes);
     }
@@ -1024,13 +1024,13 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       description: infoClient.description,
       idCIIU: infoClient.ciiu,
       idSubCIIU: infoClient.subCiiu,
-      address: infoClient.addresses[0].address,
-      country: infoClient.addresses[0].country,
-      province: infoClient.addresses[0].province,
-      city: infoClient.addresses[0].city,
-      neighborhood: infoClient.addresses[0].neighborhood,
-      telephone: infoClient.addresses[0].phoneNumber,
-      reportVirtual: infoClient.addresses[0].isPrincipalAddress,
+      address: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
+      country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
+      province: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].province : '',
+      neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
+      city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
+      telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
+      reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
       annualSales: infoClient.annualSales,
       dateSalesAnnuals: infoClient.salesUpadateDate,
