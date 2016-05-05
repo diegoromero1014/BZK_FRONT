@@ -78,7 +78,7 @@
     "react-selectize": "^2.0.1",
     "react-widgets": "^3.2.4",
     "redux": "^3.3.1",
-    "redux-form": "^4.2.2",
+    "redux-form": "^5.2.3",
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.9.5",
     "redux-thunk": "^2.0.1",
