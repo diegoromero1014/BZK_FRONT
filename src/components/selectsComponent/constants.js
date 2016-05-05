@@ -23,5 +23,6 @@ export const JUSTIFICATION_CREDIT_NEED = 'justificationForCreditNeed';
 export const JUSTIFICATION_LOST_CLIENT = 'justificationForLostClient';
 export const JUSTIFICATION_NO_RM = 'justificationForNoRM';
 export const TYPE_NOTES = 'typeOfNotes';
+export const SHAREHOLDER_TYPE = 'shareHolderType';
 export const CLEAR_VALUES_COUNTRY = "CLEAR_VALUES_COUNTRY";
 export const ECONOMIC_GROUPS = "economicGroupsByKeyword";
