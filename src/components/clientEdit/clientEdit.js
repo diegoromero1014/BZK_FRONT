@@ -250,6 +250,7 @@ class clientEdit extends Component{
             this.setState({showEx: true});
         });
         consultList(constants.CIIU);
+
         if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
           economicGroupsByKeyword(infoClient.economicGroupKey);
         }
