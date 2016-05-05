@@ -218,7 +218,7 @@ class clientEdit extends Component{
   }
 
   _handleGroupEconomicFind(){
-    const {fields: {keywordFindEconomicGroup, economicGroup}, economicGroupsByKeyword} = this.props;
+    const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
     economicGroupsByKeyword(keywordFindEconomicGroup.value);
     groupEconomic.onChange()
   }
@@ -487,7 +487,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Sector</span> </dt>
               <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
-                {(!_.isEmpty(idCIIU.value) && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].economicSector : ''}
+                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].economicSector : ''}
               </span>
             </div>
           </Col>
@@ -509,7 +509,7 @@ class clientEdit extends Component{
             <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
               <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
               <span style={{width: "25%", verticalAlign: "initial"}}>
-                {(!_.isEmpty(idSubCIIU.value) && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)])[0].economicSubSector : ''}
+                {(idSubCIIU.value !== "" && idSubCIIU.value !== null && idSubCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)])[0].economicSubSector : ''}
               </span>
             </div>
           </Col>
