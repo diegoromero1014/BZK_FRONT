@@ -1,64 +1,46 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer, changePage, limitiInf,clearContact} from './actions';
+import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
-let v1 = "";
-let v2 = "";
-let v3 = "";
 
-class PaginationContactComponent extends Component{
+class PaginationShareholderComponent extends Component{
 
   constructor(props){
      super(props)
-    this._handleContactsByClientsFind = this._handleContactsByClientsFind.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps){
-      const {
-          value1,
-          value2,
-          value3
-      } = nextProps;
-      if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
-          (v3 !== nextProps.value3)) {
-      v1 = nextProps.value1;
-      v2 = nextProps.value2;
-      v3 = nextProps.value3;
-      this._handleContactsByClientsFind(0);
-      }
+    this._handleShareholdersByClientsFind = this._handleShareholdersByClientsFind.bind(this);
   }
 
   componentWillMount(){
-    const{clearContact} = this.props;
-    clearContact();
+    const{clearShareholder} = this.props;
+    clearShareholder();
   }
 
   _handlePaginar(page){
-    const {changePage,limitiInf,contactsByClient} = this.props;
+    const {changePage,limitiInf} = this.props;
     var limInf = (page - 1);
     limitiInf(limInf);
-    this._handleContactsByClientsFind(limInf);
+    console.log(limitiInf);
+    this._handleShareholdersByClientsFind(limInf);
+    console.log(page);
     changePage(page);
   }
 
-  _handleContactsByClientsFind(limInf){
-      const {contactsByClient,contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
-    v2,
-    v3);
+  _handleShareholdersByClientsFind(limInf){
+      const {shareholdersReducer,shareholdersByClientFindServer} = this.props;
+      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,shareholdersReducer.get('keyword'));
   }
 
   render(){
-    const {contactsByClient, config} = this.props;
-    var page = contactsByClient.get('page');
-    var limInf = contactsByClient.get('limInf');
+    const {shareholdersReducer, config} = this.props;
+    var page = shareholdersReducer.get('page');
+    var limInf = shareholdersReducer.get('limInf');
     var firstPage = 1;
     if(page > 7){
       firstPage = page - 6;
     }
-    var rowCount = contactsByClient.get('rowCount');
+    var rowCount = shareholdersReducer.get('rowCount');
     var lastPage = Math.ceil(rowCount / NUMBER_RECORDS);
     return (
       <div>
@@ -103,14 +85,14 @@ class PaginationContactComponent extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer, changePage, limitiInf,clearContact
+    shareholdersByClientFindServer, changePage, limitiInf, clearShareholder
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient}, ownerProps){
+function mapStateToProps({shareholdersReducer}, ownerProps){
   return {
-    contactsByClient
+    shareholdersReducer
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaginationContactComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(PaginationShareholderComponent);

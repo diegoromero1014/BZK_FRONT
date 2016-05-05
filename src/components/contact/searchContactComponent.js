@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer,changeKeyword} from './actions';
+import {contactsByClientFindServer,changeKeyword,clearContact} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import _ from 'lodash';
 
@@ -49,14 +49,16 @@ class SearchContactComponent extends Component {
   }
 
   _handleContactsByClientsFind(){
-      const {contactsByClientFindServer,contactsByClient} = this.props;
+      const {contactsByClientFindServer,contactsByClient,clearContact} = this.props;
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
+          clearContact();
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
           v1,
           v2,
           v3);
       }else{
-          contactsByClientFindServer(contactsByClient.get('limInf'),window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keyword,
+          clearContact();
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keyword,
           v1,
           v2,
           v3);
@@ -77,7 +79,7 @@ class SearchContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer, changeKeyword
+    contactsByClientFindServer, changeKeyword,clearContact
   }, dispatch);
 }
 

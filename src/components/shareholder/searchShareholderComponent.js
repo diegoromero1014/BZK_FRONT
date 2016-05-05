@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,changeKeyword} from './actions';
+import {shareholdersByClientFindServer,changeKeyword,clearShareholder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
 class SearchShareholderComponent extends Component {
@@ -27,10 +27,12 @@ class SearchShareholderComponent extends Component {
   }
 
   _handleShareholderByClientsFind(){
-      const {shareholdersByClientFindServer} = this.props;
+      const {shareholdersByClientFindServer,clearShareholder} = this.props;
       if(this.state.keyword === '' || this.state.keyword === undefined){
+          clearShareholder();
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"");
       }else{
+          clearShareholder();
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword);
       }
   }
@@ -49,7 +51,7 @@ class SearchShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer, changeKeyword
+    shareholdersByClientFindServer, changeKeyword,clearShareholder
   }, dispatch);
 }
 

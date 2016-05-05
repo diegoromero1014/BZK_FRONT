@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE} from './constants';
 import axios from 'axios';
 
 export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm){
@@ -39,4 +39,24 @@ export function changeKeyword(keyword){
     type: CHANGE_KEYWORD,
     keyword: keyword
   }
+}
+
+export function changePage(page){
+  return{
+    type: CHANGE_PAGE,
+    currentPage: page
+  }
+}
+
+export function limitiInf(limInf){
+  return {
+    type: LIMITE_INF,
+    limInfe: limInf
+  }
+}
+
+export function clearShareholder(){
+    return {
+        type: CLEAR_SHAREHOLDERS
+    };
 }
