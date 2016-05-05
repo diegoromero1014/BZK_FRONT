@@ -220,6 +220,7 @@ class clientEdit extends Component{
   _handleGroupEconomicFind(){
     const {fields: {keywordFindEconomicGroup, economicGroup}, economicGroupsByKeyword} = this.props;
     economicGroupsByKeyword(keywordFindEconomicGroup.value);
+    groupEconomic.onChange()
   }
 
   componentWillMount(){
