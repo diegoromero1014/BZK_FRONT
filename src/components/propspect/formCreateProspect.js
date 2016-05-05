@@ -122,7 +122,7 @@ class FormCreateProspect extends Component{
          "status":0,
          "isCreditNeeded":null,
          "annualSales": annualSales.value === undefined ? null : numeral(annualSales.value).format('0'),
-         "salesUpadateDate": dateSalesAnnuals.value === undefined ? null : moment(dateSalesAnnuals.value).format("YYYY-MM-DD HH:mm:ss"),
+         "salesUpadateDate": dateSalesAnnuals.value === undefined ? null : moment(dateSalesAnnuals.value).format('x'),
          "assets": assets.value === undefined ? null : numeral(assets.value).format('0'),
          "liabilities": liabilities.value === undefined ? null : numeral(liabilities.value).format('0'),
          "operatingIncome": operatingIncome.value === undefined ? null : numeral(operatingIncome.value).format('0'),
@@ -203,6 +203,9 @@ class FormCreateProspect extends Component{
   }
 
   _submitFormCreateProspect(formData){
+    messageConfirm = "Recuerde que una vez creado el prospecto solo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿esta seguro de guardar la información?";
+    titleConfirm = "Confirmación creación";
+    typeConfirm = "create";
     this.setState({show: true});
   };
 
