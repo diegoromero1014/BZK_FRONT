@@ -800,7 +800,7 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4}>
               <dt>
-                <span>Grupo económico/relación (<span style={{color: "red"}}>*</span>)</span>
+                <span>Grupo económico/relación</span>
               </dt>
               <dt>
                 <ComboBox
