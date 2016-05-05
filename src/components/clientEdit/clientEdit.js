@@ -117,7 +117,7 @@ const validate = values => {
     } else {
       errors.marcGeren = null;
     }
-    if (values.marcGeren && !values.justifyNoGeren) {
+    if (values.marcGeren === 'false' && !values.justifyNoGeren) {
       errors.justifyNoGeren = "Debe seleccionar un valor";
     } else {
       errors.justifyNoGeren = null;
@@ -132,7 +132,7 @@ const validate = values => {
     } else {
       errors.necesitaLME = null;
     }
-    if (values.necesitaLME && !values.justifyNoLME) {
+    if (values.necesitaLME === 'false' && !values.justifyNoLME) {
       errors.justifyNoLME = "Debe seleccionar un valor";
     } else {
       errors.justifyNoLME = null;
@@ -695,10 +695,10 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - MM/DD/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
+              <DateTimePickerUi culture='es' format={"MM/DD/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
