@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {validateLogin, saveSessionToken} from './actions';
+import {validateLogin, saveSessionToken, clearStateLogin} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
+import _ from 'lodash';
+
 
 class FormLogin extends Component{
   constructor( props ) {
     super(props);
     this.state = {
       usuario: "",
-      password: ""
+      password: "",
+      messageErrorServidor: false,
+      messageUsuarioIncorrecto: false
     }
   }
 
@@ -31,17 +35,46 @@ class FormLogin extends Component{
     const {validateLogin} = this.props;
     validateLogin(usuario, password)
     .then( response => {
+      console.log("response");
+      if( _.get(response, 'payload.data') !== {} && _.get(response, 'payload.data') !== undefined ){
+        if( _.get(response, 'payload.data.redirecUrl') === "/login" &&
+            _.get(response, 'payload.data.sessionToken') === "" ){
+          console.log("response 1");
+          this.setState({
+            messageUsuarioIncorrecto: true,
+            messageErrorServidor: false
+          });
+        } else {
+          console.log("response 2");
+          const {saveSessionToken, redirectUrl} = this.props;
+          saveSessionToken(_.get(response, 'payload.data.sessionToken'));
+          redirectUrl("/dashboard/clients");
+        }
+      } else {
+        console.log("response 3");
+        this.setState({
+          messageErrorServidor: true,
+          messageUsuarioIncorrecto: false
+        });
+      }
     })
     .catch(err => {
     });
   }
 
-  componentDidUpdate (){
+  /*componentDidUpdate (){
     const {login} = this.props;
     if( login.get('status') === "loggedIn" ){
       saveSessionToken(login.get('responseLogin').sessionToken);
       redirectUrl("/dashboard/clients");
     }
+  }*/
+
+  componenWillMount(){
+    this.state.messageErrorServidor = false;
+    this.state.messageUsuarioIncorrecto = false;
+    const {clearStateLogin} = this.props;
+    clearStateLogin();
   }
 
   render(){
@@ -59,14 +92,14 @@ class FormLogin extends Component{
               placeholder="Contraseña" className="input-edit"
               required value={this.state.password} onChange={this._handleChangePassword.bind(this)}></input>
           </div>
-          {login.get('error')  &&
-            <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
-              <span style={{color: "#e76e70", size: "17px"}}>Usuario o contraseña incorrecto</span>
-            </div>
-          }
-          {login.get('errorServerNoFound')  &&
+          {this.state.messageErrorServidor  &&
             <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
               <span style={{color: "#e76e70", size: "17px"}}>Ocurrió un error en el servidor</span>
+            </div>
+          }
+          {this.state.messageUsuarioIncorrecto &&
+            <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
+              <span style={{color: "#e76e70", size: "17px"}}>Usuario o contraseña incorrecto</span>
             </div>
           }
           <div className="button-item" style={{marginLeft: "0px",paddingLeft: '28px',paddingRight: '28px'}}>
@@ -86,6 +119,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     validateLogin,
     saveSessionToken,
+    clearStateLogin,
     redirectUrl
   }, dispatch);
 }

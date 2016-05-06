@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN } from './constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
 import axios from 'axios';
 
 export function validateLogin(username, password){
@@ -31,6 +31,13 @@ export function saveSessionToken(sessionToken) {
   window.localStorage.setItem('sessionToken', sessionToken);
   return {
       type: CHANGE_STATUS_LOGIN,
+      payload: ""
+  }
+}
+
+export function clearStateLogin(){
+  return {
+      type: CLEAR_STATE,
       payload: ""
   }
 }
