@@ -624,7 +624,7 @@ class clientEdit extends Component{
               <dt style={{marginRight:"15px"}}>
                 <Input
                   name="txtTelefono"
-                  type="number"
+                  type="text"
                   placeholder="Ingrese el teléfono"
                   {...telephone}
                 />

@@ -55,6 +55,7 @@ class NoteItem extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={data}
+                                deployUp={true}
                             />
                         </div>
                     </Col>

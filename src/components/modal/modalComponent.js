@@ -5,6 +5,7 @@ import {toggleModal} from './action';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
+import ComponentShareHolderDetail from '../shareholder/shareholderDetail/componentShareHolderDetail';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -12,28 +13,28 @@ class ModalComponentDialog extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
         this.state = {
-          modalIsOpen: false  
+          modalIsOpen: false
         };
           this._contectViewModal = this._contectViewModal.bind(this);
         }
-  
+
     openModal(){
     this.setState({modalIsOpen: true});
     }
 
     closeModal(){
     this.setState({modalIsOpen: false});
-    } 
+    }
 
     _contectViewModal(actions, idx){
       var cell;
+      const {closeModal} = this.props;
       switch (actions.component) {
         case views.VIEW_CONTACT:
-          {/* Listas */}
-
-          {/* /Listas */}
-          const {closeModal} = this.props;
           cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} />
+          break;
+        case views.VIEW_SHAREHOLDER:
+          cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal}/>
           break;
       }
 
