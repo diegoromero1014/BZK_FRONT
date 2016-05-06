@@ -416,7 +416,8 @@ class clientEdit extends Component{
           }],
         "notes":notesArray,
         "description": description.value,
-        "clientIdType": infoClient.clientIdType
+        "clientIdType": infoClient.clientIdType,
+        "celulaId": infoClient.celulaId
      }
      const {createProspect} = this.props;
      createProspect(jsonCreateProspect)
