@@ -61,6 +61,7 @@ class FormCreateProspect extends Component{
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
     this._closeWindow = this._closeWindow.bind(this);
+    this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
 
     this._closeError = this._closeError.bind(this);
     this._closeSuccess = this._closeSuccess.bind(this);
@@ -86,6 +87,39 @@ class FormCreateProspect extends Component{
   _closeSuccess(){
     this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clients");
+  }
+
+
+  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i=0, output='', validos="-0123456789"; i< val.length; i++){
+     if (validos.indexOf(val.charAt(i)) != -1){
+        output += val.charAt(i)
+      }
+    }
+    val = output;
+
+    /* Si typeValidation = 2 es por que el valor puede ser negativo
+       Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+    */
+    if( typeValidation === 2 ){ //Realizo simplemente el formateo
+      var pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(val)){
+        val = val.replace(pattern, "$1,$2");
+      }
+      valuReduxForm.onChange(val);
+    } else { //Valido si el valor es negativo o positivo
+      var value = numeral(valuReduxForm.value).format('0');
+      if( value > 0 ){
+        var pattern = /(-?\d+)(\d{3})/;
+        while (pattern.test(val)){
+          val = val.replace(pattern, "$1,$2");
+        }
+        valuReduxForm.onChange(val);
+      } else {
+        valuReduxForm.onChange("");
+      }
+    }
   }
 
   _onConfirmCreate(){
@@ -223,7 +257,7 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
-              <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
+              <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
               <Input
                 name="razonSocial"
                 type="text"
@@ -443,11 +477,9 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese las ventas anuales"
                 type="text"
                 min={0}
-                format="0,000"
                 {...annualSales}
-                value={annualSales.value ?
-                      (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000')  )
-                      : ''}
+                value={annualSales.value}
+                onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
               />
             </div>
           </Col>
@@ -459,11 +491,9 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los activos"
                 type="text"
                 min={0}
-                format="0,000"
                 {...assets}
-                value={assets.value ?
-                      (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
-                      : ''}
+                value={assets.value}
+                onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
               />
             </div>
           </Col>
@@ -475,11 +505,9 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los pasivos"
                 type="text"
                 min={0}
-                format="0,000"
                 {...liabilities}
-                value={liabilities.value ?
-                      (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
-                      : ''}
+                value={liabilities.value}
+                onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
               />
             </div>
           </Col>
@@ -489,10 +517,10 @@ class FormCreateProspect extends Component{
               <input
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos operacionales"
-                format="0,000"
                 type="text"
                 {...operatingIncome}
-                value={operatingIncome.value ? numeral(operatingIncome.value).format('0,000') : ''}
+                value={operatingIncome.value}
+                onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
               />
             </div>
           </Col>
@@ -503,9 +531,9 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos no operacionales"
                 type="text"
-                format="0,000"
                 {...nonOperatingIncome}
-                value={nonOperatingIncome.value ? numeral(nonOperatingIncome.value).format('0,000') : ''}
+                value={nonOperatingIncome.value}
+                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
               />
             </div>
           </Col>
@@ -516,12 +544,10 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los egresos"
                 min={0}
-                format="0,000"
                 type="text"
                 {...expenses}
-                value={expenses.value ?
-                      (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
-                      : ''}
+                value={expenses.value}
+                onBlur={val => this._handleBlurValueNumber(1, expenses ,expenses.value)}
               />
             </div>
           </Col>

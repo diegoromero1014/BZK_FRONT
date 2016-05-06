@@ -38,6 +38,13 @@ export default (state = initialState, action) => {
     case CHANGE_STATUS_LOGIN:
     return state.set("status", "unloggerIn");
 
+    case CHANGE_STATUS_LOGIN:
+    return state.withMutations( map => {
+      map
+        .set('errorServerNoFound', false)
+        .set('error', false)
+    });
+
     default:
         return state.set("status", "unloggerIn");
   }

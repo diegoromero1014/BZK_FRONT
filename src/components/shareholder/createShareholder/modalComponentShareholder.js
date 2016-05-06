@@ -11,6 +11,7 @@ import {toggleModalShareholder, clearSearchShareholder, searchShareholder} from 
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE} from '../../selectsComponent/constants';
 import numeral from 'numeral';
+import _ from 'lodash';
 
 const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -212,56 +213,51 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
 
-                      {this.state.valueTypeShareholder === 451 ?
-                        <div>
-                          <Col xs={12} md={4} lg={4}>
-                            <dt><span>Primer nombre(</span><span style={{color: "red"}}>*</span>)</dt>
-                            <InputComponent
-                              name="primerNombre"
-                              placeholder="Ingrese el primer nombre del accionista"
-                              type="text"
-                              {...primerNombre}
-                            />
-                          </Col>
-                          <Col xs={12} md={4} lg={4}>
-                            <dt><span>Segundo nombre</span></dt>
-                            <InputComponent
-                              name="segundoNombre"
-                              placeholder="Ingrese el segundo nombre del accionista"
-                              type="text"
-                              {...segundoNombre}
-                            />
-                          </Col>
-                          <Col xs={12} md={4} lg={4}>
-                            <dt><span>Primer apellido(</span><span style={{color: "red"}}>*</span>)</dt>
-                            <InputComponent
-                              name="primerApellido"
-                              placeholder="Ingrese el primer apellido del accionista"
-                              type="text"
-                              {...primerApellido}
-                            />
-                          </Col>
-                          <Col xs={12} md={4} lg={4}>
-                            <dt><span>Segundo apellido(</span><span style={{color: "red"}}>*</span>)</dt>
-                            <InputComponent
-                              name="segundoApellido"
-                              placeholder="Ingrese el segundo apellido del accionista"
-                              type="text"
-                              {...segundoApellido}
-                            />
-                          </Col>
-                        </div>
-                        :
-                        <Col xs={12} md={8} lg={8}>
-                          <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
-                          <InputComponent
-                            name="razonSocial"
-                            placeholder="Ingrese la razón social del accionista"
-                            type="text"
-                            {...razonSocial}
-                          />
-                        </Col>
-                      }
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === 451 ?{ visible: "" }: {}}>
+                        <dt><span>Primer nombre(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <InputComponent
+                          name="primerNombre"
+                          placeholder="Ingrese el primer nombre del accionista"
+                          type="text"
+                          {...primerNombre}
+                        />
+                      </Col>
+                      <Col xs={12} md={4} lg={4}>
+                        <dt><span>Segundo nombre</span></dt>
+                        <InputComponent
+                          name="segundoNombre"
+                          placeholder="Ingrese el segundo nombre del accionista"
+                          type="text"
+                          {...segundoNombre}
+                        />
+                      </Col>
+                      <Col xs={12} md={4} lg={4}>
+                        <dt><span>Primer apellido(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <InputComponent
+                          name="primerApellido"
+                          placeholder="Ingrese el primer apellido del accionista"
+                          type="text"
+                          {...primerApellido}
+                        />
+                      </Col>
+                      <Col xs={12} md={4} lg={4}>
+                        <dt><span>Segundo apellido(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <InputComponent
+                          name="segundoApellido"
+                          placeholder="Ingrese el segundo apellido del accionista"
+                          type="text"
+                          {...segundoApellido}
+                        />
+                      </Col>
+                      <Col xs={12} md={8} lg={8}>
+                        <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <InputComponent
+                          name="razonSocial"
+                          placeholder="Ingrese la razón social del accionista"
+                          type="text"
+                          {...razonSocial}
+                        />
+                      </Col>
                       <Col xs={12} md={8} lg={8}>
                         <dt><span>Dirección sede principal(</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent

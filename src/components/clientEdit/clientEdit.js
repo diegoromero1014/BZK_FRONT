@@ -223,6 +223,38 @@ class clientEdit extends Component{
     groupEconomic.onChange('')
   }
 
+  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i=0, output='', validos="-0123456789"; i< val.toString().length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    val = output;
+
+    /* Si typeValidation = 2 es por que el valor puede ser negativo
+       Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+    */
+    if( typeValidation === 2 ){ //Realizo simplemente el formateo
+      var pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(val)){
+        val = val.replace(pattern, "$1,$2");
+      }
+      valuReduxForm.onChange(val);
+    } else { //Valido si el valor es negativo o positivo
+      var value = numeral(valuReduxForm.value).format('0');
+      if( value > 0 ){
+        var pattern = /(-?\d+)(\d{3})/;
+        while (pattern.test(val)){
+          val = val.replace(pattern, "$1,$2");
+        }
+        valuReduxForm.onChange(val);
+      } else {
+        valuReduxForm.onChange("");
+      }
+    }
+  }
+
   componentWillMount(){
     errorNote = false;
     const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
@@ -233,6 +265,7 @@ class clientEdit extends Component{
       const {setNotes} = this.props;
       setNotes(infoClient.notes);
     }
+
     if(window.localStorage.getItem('sessionToken') === ""){
       redirectUrl("/login");
     }else{
@@ -441,18 +474,16 @@ class clientEdit extends Component{
               </dt>
             </Col>
           </Row>
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs={12} md={12} lg={12}>
+          <Row style={{padding: "0px 25px 20px 20px"}}>
+            <Col xs={12} md={12} lg={12} >
               <dt>
                 <span>Breve descripción de la empresa</span>
               </dt>
               <dt>
-              <Input
-                name="description"
-                type="text"
-                style={{width: '100%', height: '100%'}}
+              <textarea
+                style={{width: "100%"}}
+                rows="4"
                 placeholder="Ingrese la descripción"
-                //onChange={val => this._onchangeValue("description", val)}
                 {...description}
               />
               </dt>
@@ -624,7 +655,7 @@ class clientEdit extends Component{
               <dt style={{marginRight:"15px"}}>
                 <Input
                   name="txtTelefono"
-                  type="number"
+                  type="text"
                   placeholder="Ingrese el teléfono"
                   {...telephone}
                 />
@@ -687,9 +718,8 @@ class clientEdit extends Component{
                   placeholder="Ingrese las ventas anuales"
                   style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
-                  value={annualSales.value ?
-                        (numeral(annualSales.value).format('0') < 0 ? 0: numeral(annualSales.value).format('0,000'))
-                        : ''}
+                  value={annualSales.value}
+                  onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
                 />
               </dt>
             </Col>
@@ -714,9 +744,8 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   {...assets}
-                  value={assets.value ?
-                        (numeral(assets.value).format('0') < 0 ? 0: numeral(assets.value).format('0,000')  )
-                        : ''}
+                  value={assets.value}
+                  onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
                 />
               </dt>
             </Col>
@@ -735,9 +764,8 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
                   {...liabilities}
-                  value={liabilities.value ?
-                        (numeral(liabilities.value).format('0') < 0 ? 0: numeral(liabilities.value).format('0,000')  )
-                        : ''}
+                  value={liabilities.value}
+                  onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
                 />
               </dt>
             </Col>
@@ -754,9 +782,8 @@ class clientEdit extends Component{
                   type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
-                  value={operatingIncome.value ?
-                        (numeral(operatingIncome.value).format('0') < 0 ? 0: numeral(operatingIncome.value).format('0,000')  )
-                        : ''}
+                  value={operatingIncome.value}
+                  onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
                 />
               </dt>
             </Col>
@@ -773,9 +800,8 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
                   {...nonOperatingIncome}
-                  value={nonOperatingIncome.value ?
-                        (numeral(nonOperatingIncome.value).format('0') < 0 ? 0: numeral(nonOperatingIncome.value).format('0,000')  )
-                        : ''}
+                  value={nonOperatingIncome.value}
+                  onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
                 />
               </dt>
             </Col>
@@ -794,9 +820,8 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
                   {...expenses}
-                  value={expenses.value ?
-                        (numeral(expenses.value).format('0') < 0 ? 0: numeral(expenses.value).format('0,000')  )
-                        : ''}
+                  value={expenses.value}
+                  onBlur={val => this._handleBlurValueNumber(1, expenses ,expenses.value)}
                 />
               </dt>
             </Col>
@@ -1034,13 +1059,13 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
       reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
-      annualSales: infoClient.annualSales,
+      annualSales: fomatInitialStateNumber(infoClient.annualSales),
       dateSalesAnnuals: infoClient.salesUpadateDate,
-      assets: infoClient.assets,
-      liabilities: infoClient.liabilities,
-      operatingIncome: infoClient.operatingIncome,
-      nonOperatingIncome: infoClient.nonOperatingIncome,
-      expenses: infoClient.expenses,
+      assets: fomatInitialStateNumber(infoClient.assets),
+      liabilities: fomatInitialStateNumber(infoClient.liabilities),
+      operatingIncome: fomatInitialStateNumber(infoClient.operatingIncome),
+      nonOperatingIncome: fomatInitialStateNumber(infoClient.nonOperatingIncome),
+      expenses: fomatInitialStateNumber(infoClient.expenses),
       marcGeren: infoClient.isManagedByRm,
       centroDecision: infoClient.isDecisionCenter,
       necesitaLME: infoClient.isCreditNeeded,
@@ -1051,6 +1076,15 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
     }
   };
 }
+
+function fomatInitialStateNumber(val){
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(val.toString())){
+      val = val.toString().replace(pattern, "$1,$2");
+    }
+    return val;
+}
+
 export default reduxForm({
   form: 'submitValidation',
   fields,
