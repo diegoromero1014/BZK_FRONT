@@ -1079,7 +1079,7 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
 
 function fomatInitialStateNumber(val){
     var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(val.toString())){
+    while (pattern.test(val + "")){
       val = val.toString().replace(pattern, "$1,$2");
     }
     return val;
