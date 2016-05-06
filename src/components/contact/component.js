@@ -6,7 +6,7 @@ import ListContactComponent from './listContactComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer} from './actions';
+import {contactsByClientFindServer,clearContact} from './actions';
 import {Combobox} from 'react-widgets';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationContactComponent from './paginationContactComponent';
@@ -23,6 +23,11 @@ class ContactComponent extends Component {
         value3: ""
      };
   }
+
+    componentWillMount(){
+        const {clearContact} = this.props;
+        clearContact();
+    }
 
   render() {
     var rowsContact = 0;
@@ -93,7 +98,7 @@ class ContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer
+    contactsByClientFindServer,clearContact
   }, dispatch);
 }
 

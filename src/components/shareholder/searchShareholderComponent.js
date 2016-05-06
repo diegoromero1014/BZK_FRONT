@@ -28,11 +28,10 @@ class SearchShareholderComponent extends Component {
 
   _handleShareholderByClientsFind(){
       const {shareholdersByClientFindServer,clearShareholder} = this.props;
+      clearShareholder();
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          clearShareholder();
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"");
       }else{
-          clearShareholder();
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword);
       }
   }

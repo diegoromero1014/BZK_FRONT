@@ -8,7 +8,7 @@ import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import {redirectUrl} from '../globalComponents/actions';
-import {DateTimePicker} from 'react-widgets';
+import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import _ from 'lodash';
@@ -223,7 +223,7 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
-              <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
+              <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
               <Input
                 name="razonSocial"
                 type="text"
@@ -322,7 +322,7 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={12} lg={12} style={{marginLeft: "20px", marginTop: "10px"}}>
             <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Dirección sede principal</h3>
           </Col>
-          <Col xs={12} md={12} lg={12} style={{paddingRight: "43px"}} >
+          <Col xs={12} md={12} lg={12}  style={{paddingRight: "43px"}} >
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
               <dt><span>Dirección</span></dt>
               <Input
@@ -333,7 +333,8 @@ class FormCreateProspect extends Component{
               />
             </div>
           </Col>
-          <Col xs={12} md={3} lg={3} >
+          <Row style={{width: '100%', marginLeft: '0px', marginRight: '26px'}}>
+          <Col xs>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>País</span></dt>
               <ComboBox
@@ -348,7 +349,7 @@ class FormCreateProspect extends Component{
                 />
             </div>
           </Col>
-          <Col xs={12} md={3} lg={3}>
+          <Col xs>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Departamento</span></dt>
               <ComboBox
@@ -363,7 +364,7 @@ class FormCreateProspect extends Component{
                 />
             </div>
           </Col>
-          <Col xs={12} md={3} lg={3}>
+          <Col xs>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
               <dt><span>Ciudad</span></dt>
               <ComboBox
@@ -376,19 +377,48 @@ class FormCreateProspect extends Component{
                 />
             </div>
           </Col>
-          <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "35px", paddingTop: "10px"}}>
-              <dt><span>Barrio</span></dt>
-              <Input
-                name="district"
-                type="text"
-                placeholder="Ingrese el barrio del prospecto"
-                {...district}
-              />
+          </Row>
+          <Row style={{width: '100%', marginLeft: '0px', marginRight: '26px'}}>
+          <Col xs={12} md={8} lg={8}>
+                <div style={{paddingLeft: "20px", paddingRight: "11px", paddingTop: "10px"}}>
+                  <dt><span>Barrio</span></dt>
+                  <Input
+                    name="district"
+                    type="text"
+                    placeholder="Ingrese el barrio del prospecto"
+                    {...district}
+                  />
+                </div>
+              </Col>
+          <Col xs>
+                <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "10px"}}>
+                  <dt><span>Teléfono</span></dt>
+                  <Input
+                    name="telephone"
+                    type="text"
+                    placeholder="Ingrese el teléfono del prospecto"
+                    {...telephone}
+                  />
+                </div>
+              </Col>
+          </Row>
+          <Row style={{width: '100%', marginLeft:'11px', marginRight: '26px'}}>
+          <Col xs>
+            <div style={{paddingLeft: "10px",  paddingRight: "10px", paddingTop: "15px"}}>
+              <dt><span>¿Desea consultar sus extractos de forma virtual?</span></dt>
+            <ComboBox
+                  name="extractVirtual"
+                  labelInput="Seleccione una opción"
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={valuesYesNo}
+                  style={stylepaddingRigth2}
+                  {...extractsVirtual}
+                />
             </div>
           </Col>
-          <Col xs={12} md={6} lg={6}>
-            <div style={{paddingLeft: "20px", paddingTop: "15px"}}>
+          <Col xs>
+            <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
               <dt><span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span></dt>
               <ComboBox
                 name="reportVirtual"
@@ -401,32 +431,7 @@ class FormCreateProspect extends Component{
               />
             </div>
           </Col>
-          <Col xs={12} md={3} lg={3}>
-            <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
-              <dt><span>Teléfono</span></dt>
-              <Input
-                name="telephone"
-                type="number"
-                placeholder="Ingrese el teléfono del prospecto"
-                {...telephone}
-              />
-            </div>
-          </Col>
-          <Col xs={12} md={6} lg={6}>
-            <div style={{paddingLeft: "20px", paddingTop: "15px"}}>
-              <dt><span>¿Desea consultar sus extractos de forma virtual?</span></dt>
-              <ComboBox
-                name="extractVirtual"
-                labelInput="Seleccione una opción"
-                valueProp={'id'}
-                textProp={'value'}
-                data={valuesYesNo}
-                style={stylepaddingRigth2}
-                {...extractsVirtual}
-              />
-            </div>
-          </Col>
-
+          </Row>
           <Col xs={12} md={12} lg={12} style={{marginTop: "30px", marginLeft: "20px"}}>
             <dl style={{fontSize: "25px", color: "#CEA70B", margin: "5px 30px 5px 0", borderTop: "1px dotted #cea70b"}}>
               <div style={{marginTop: "10px"}}>
@@ -527,9 +532,10 @@ class FormCreateProspect extends Component{
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
-              <dt><span>Fecha de ventas anuales</span></dt>
-              <DateTimePicker
+              <dt><span>Fecha de ventas anuales - MM/DD/YYYY</span></dt>
+              <DateTimePickerUi
                 {...dateSalesAnnuals}
+                format={"MM/DD/YYYY"}
                 time={false}
                 placeholder="Seleccione una fecha"
                 culture='es'

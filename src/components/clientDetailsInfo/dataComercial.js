@@ -28,7 +28,7 @@ class DataComercial extends Component{
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Marca gerenciamiento</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no gerenciamiento</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Grupo económico/Relación</span></th>
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Centro de decisión</span></th>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>NIT principal</span></th>
           </tr>
         </thead>
         <tbody>
@@ -36,7 +36,7 @@ class DataComercial extends Component{
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm ? 'Si' : 'No'}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForNoRMKey}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.economicGroupKey}</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isDecisionCenter ? 'Si' : 'No'}</td>
+            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.nitPrincipal}</td>
           </tr>
         </tbody>
         </table>
@@ -46,7 +46,7 @@ class DataComercial extends Component{
               <tr>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>¿Necesita LME?</span></th>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no necesita LME</span></th>
-                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>NIT principal</span></th>
+                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Centro de decisión</span></th>
                 <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación excliente</span></th>
               </tr>
             </thead>
@@ -54,7 +54,7 @@ class DataComercial extends Component{
               <tr>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isCreditNeeded ? 'Si' : 'No'}</td>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForCreditNeedKey}</td>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.nitPrincipal}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isDecisionCenter ? 'Si' : 'No'}</td>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForLostClientKey}</td>
               </tr>
             </tbody>

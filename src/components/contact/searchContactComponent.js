@@ -50,14 +50,13 @@ class SearchContactComponent extends Component {
 
   _handleContactsByClientsFind(){
       const {contactsByClientFindServer,contactsByClient,clearContact} = this.props;
+        clearContact();
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          clearContact();
           contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
           v1,
           v2,
           v3);
       }else{
-          clearContact();
           contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keyword,
           v1,
           v2,
