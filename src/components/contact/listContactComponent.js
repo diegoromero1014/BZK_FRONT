@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer} from './actions';
+import {contactsByClientFindServer,clearContact} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
@@ -64,7 +64,8 @@ class ListContactComponent extends Component {
   }
 
   componentWillMount(){
-      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3} = this.props;
+      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
+      clearContact();
       contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
       "",
       "",
@@ -114,7 +115,7 @@ class ListContactComponent extends Component {
     const {contactsByClient} = this.props;
     const modalTitle = 'Contacto Detalle';
     const data = contactsByClient.get('contacts');
-    return ( < div className = "horizontal-scroll-wrapper" >
+    return ( <div className = "horizontal-scroll-wrapper" >
       <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>
     );
@@ -124,7 +125,7 @@ class ListContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer
+    contactsByClientFindServer,clearContact
   }, dispatch);
 }
 

@@ -6,7 +6,8 @@ const initialState = Immutable.Map({
     shareholders: [],
     keyword: "",
     limInf : 0,
-    page:1
+    page:1,
+    rowCount:0
 });
 
 
@@ -30,7 +31,9 @@ export default (state = initialState, action) => {
                 return state.withMutations(map => {
                     map
                     .set('page', 1)
-                    .set('limInf', 0);
+                    .set('limInf', 0)
+                    .set('shareholders', [])
+                    .set('rowCount', 0);
                 });
         default:
             return state;

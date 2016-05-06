@@ -2,6 +2,8 @@ import React, {
   Component
 } from 'react';
 import {connect} from 'react-redux';
+import {clearShareholder} from './actions';
+import {bindActionCreators} from 'redux';
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
 import PaginationShareholderComponent from './paginationShareholderComponent';
@@ -12,6 +14,11 @@ class ShareholderComponent extends Component {
 
   constructor(props){
      super(props);
+  }
+
+  componentWillMount(){
+    const{clearShareholder} = this.props;
+    clearShareholder();
   }
 
   render() {
@@ -56,6 +63,11 @@ class ShareholderComponent extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    clearShareholder
+  }, dispatch);
+}
 
 function mapStateToProps({shareholdersReducer}, ownerProps){
     return {
@@ -63,4 +75,4 @@ function mapStateToProps({shareholdersReducer}, ownerProps){
     };
 }
 
-export default connect(mapStateToProps)(ShareholderComponent);
+export default connect(mapStateToProps,mapDispatchToProps)(ShareholderComponent);

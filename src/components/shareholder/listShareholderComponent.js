@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer} from './actions';
+import {shareholdersByClientFindServer,clearShareholder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
@@ -36,7 +36,7 @@ const headers = [
   },
   {
     title: "Tipo de accionista",
-    key:"nombre"
+    key:"shareHolderKind"
   },
   {
     title: "",
@@ -52,7 +52,8 @@ class ListShareholderComponent extends Component {
   }
 
   componentWillMount(){
-      const {shareholdersByClientFindServer} = this.props;
+      const {shareholdersByClientFindServer,clearShareholder} = this.props;
+      clearShareholder();
       shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"");
   }
 
@@ -89,7 +90,7 @@ class ListShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer
+    shareholdersByClientFindServer,clearShareholder
   }, dispatch);
 }
 

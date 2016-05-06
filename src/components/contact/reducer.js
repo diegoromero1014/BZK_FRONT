@@ -6,7 +6,8 @@ const initialState = Immutable.Map({
     keyword: "",
     contacts: [],
     page: 1,
-    limInf: 0
+    limInf: 0,
+    rowCount: 0
 });
 
 
@@ -30,7 +31,9 @@ export default (state = initialState, action) => {
           return state.withMutations(map => {
               map
               .set('page', 1)
-              .set('limInf', 0);
+              .set('limInf', 0)
+              .set('rowCount', 0)
+              .set('contacts', []);
           });
         default:
             return state;
