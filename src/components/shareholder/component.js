@@ -1,8 +1,10 @@
 import React, {
   Component
 } from 'react';
+import {connect} from 'react-redux';
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
+import PaginationShareholderComponent from './paginationShareholderComponent';
 import ListShareholderComponent from './listShareholderComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 
@@ -13,8 +15,13 @@ class ShareholderComponent extends Component {
   }
 
   render() {
-    var visibleTable = 'block';
-    var visibleMessage = 'none';
+    const {shareholdersReducer} = this.props;
+    var visibleTable = 'none';
+    var visibleMessage = 'block';
+    if(shareholdersReducer.get('rowCount') !== 0){
+      visibleTable = 'block';
+      visibleMessage = 'none';
+    }
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
@@ -35,6 +42,7 @@ class ShareholderComponent extends Component {
             <Row>
               <Col xs={12} sm={8} md={12} lg={12}>
               <ListShareholderComponent/>
+              <PaginationShareholderComponent/>
               </Col>
             </Row>
           </Grid>
@@ -49,4 +57,10 @@ class ShareholderComponent extends Component {
 }
 
 
-export default ShareholderComponent;
+function mapStateToProps({shareholdersReducer}, ownerProps){
+    return {
+        shareholdersReducer
+    };
+}
+
+export default connect(mapStateToProps)(ShareholderComponent);

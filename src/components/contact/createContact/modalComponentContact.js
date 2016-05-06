@@ -381,8 +381,8 @@ class ModalComponentContact extends Component {
                               </Col>
                               <Col xs>
                               <dl style={{width: '100%'}}>
-                                <dt><span>Fecha nacimiento</span></dt>
-                                <dd><DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...fechaNacimiento}/></dd>
+                                <dt><span>Fecha nacimiento - MM/DD/YYYY</span></dt>
+                                <dd><DateTimePickerUi culture='es' format={"MM/DD/YYYY"} time={false} {...fechaNacimiento}/></dd>
                               </dl>
                               </Col>
                             </Row>
