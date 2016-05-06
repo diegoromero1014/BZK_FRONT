@@ -117,7 +117,7 @@ const validate = values => {
     } else {
       errors.marcGeren = null;
     }
-    if (values.marcGeren && !values.justifyNoGeren) {
+    if (values.marcGeren === 'false' && !values.justifyNoGeren) {
       errors.justifyNoGeren = "Debe seleccionar un valor";
     } else {
       errors.justifyNoGeren = null;
@@ -132,7 +132,7 @@ const validate = values => {
     } else {
       errors.necesitaLME = null;
     }
-    if (values.necesitaLME && !values.justifyNoLME) {
+    if (values.necesitaLME === 'false' && !values.justifyNoLME) {
       errors.justifyNoLME = "Debe seleccionar un valor";
     } else {
       errors.justifyNoLME = null;
@@ -624,7 +624,7 @@ class clientEdit extends Component{
               <dt style={{marginRight:"15px"}}>
                 <Input
                   name="txtTelefono"
-                  type="number"
+                  type="text"
                   placeholder="Ingrese el teléfono"
                   {...telephone}
                 />
@@ -695,10 +695,10 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - MM/DD/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
+              <DateTimePickerUi culture='es' format={"MM/DD/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -873,6 +873,18 @@ class clientEdit extends Component{
                 />
               </dt>
             </Col>
+            <SelectsJustificacion
+              visible={marcGeren.value}
+              title="Justificación no gerenciamiento"
+              labelInput="Seleccione..."
+              value={justifyNoGeren.value}
+              onBlur={justifyNoGeren.onBlur}
+              valueProp={"id"}
+              textProp={"value"}
+              justify={justifyNoGeren}
+              obligatory={true}
+              data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
+            />
             <Col xs={12} md={4} lg={4}>
               <dt>
                 <span>Centro de decisión </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
@@ -888,6 +900,8 @@ class clientEdit extends Component{
                 />
               </dt>
             </Col>
+          </Row>
+          <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "25px"}}>
               <dt>
                 <span>¿Necesita LME? </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
@@ -904,32 +918,6 @@ class clientEdit extends Component{
                 />
               </dt>
             </Col>
-          </Row>
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <SelectsJustificacion
-              visible={'false'}
-              title="Justificación excliente"
-              labelInput="Seleccione..."
-              value={justifyExClient.value}
-              onBlur={justifyExClient.onBlur}
-              valueProp={"id"}
-              textProp={"value"}
-              justify={justifyExClient}
-              obligatory={false}
-              data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
-            />
-            <SelectsJustificacion
-              visible={marcGeren.value}
-              title="Justificación no gerenciamiento"
-              labelInput="Seleccione..."
-              value={justifyNoGeren.value}
-              onBlur={justifyNoGeren.onBlur}
-              valueProp={"id"}
-              textProp={"value"}
-              justify={justifyNoGeren}
-              obligatory={true}
-              data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
-            />
             <SelectsJustificacion
               visible={necesitaLME.value}
               title="Justificación no necesita LME"
@@ -941,6 +929,18 @@ class clientEdit extends Component{
               justify={justifyNoLME}
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
+            />
+            <SelectsJustificacion
+              visible={'false'}
+              title="Justificación excliente"
+              labelInput="Seleccione..."
+              value={justifyExClient.value}
+              onBlur={justifyExClient.onBlur}
+              valueProp={"id"}
+              textProp={"value"}
+              justify={justifyExClient}
+              obligatory={false}
+              data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
             />
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>

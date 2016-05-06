@@ -53,18 +53,18 @@ class comboBoxComponent extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, error, name, disabled} = this.props;
+       const {nameInput, labelInput, data, touched, error, name, disabled, deployUp} = this.props;
        if( touched && error && !focusInFiled ){
          $(`.ui.selection.dropdown.${name}`).focus();
          focusInFiled = true;
        }
        return (
-           <div>
-               <div className={`styleWidthComponents ui search selection dropdown ${disabled} ${name}`}>
+           <div style={{marginBottom:"20px"}}>
+               <div className={`styleWidthComponents ui search selection dropdown ${disabled} ${name} ${deployUp === true ? 'bottom pointing' : ''}`}>
                    <input type="hidden" name={nameInput}/>
                    <i className="dropdown icon"/>
                    <div className="default text">{labelInput}</div>
-                   <div className="menu">
+                   <div className="right menu">
                        {_.map(data, this.mapValuesToDropDown)}
                    </div>
                </div>
