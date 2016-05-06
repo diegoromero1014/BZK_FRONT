@@ -637,8 +637,8 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <Row style={{padding: "10px 30px 20px 20px"}}>
-            <Col xs={12} md={4} lg={4}>
+          <Row style={{padding: "0px 10px 20px 20px"}}>
+            <Col xs={12} md={8} lg={8}>
               <dt><span>Barrio</span></dt>
               <dt style={{marginRight:"17px"}}>
                 <Input
@@ -649,7 +649,7 @@ class clientEdit extends Component{
                 />
               </dt>
             </Col>
-            <Col xs={10} md={4} lg={4} style={{marginLeft:"10px"}}>
+            <Col xs style={{marginLeft:"10px"}}>
               <dt>
                 <span>Teléfono (</span><span style={{color: "red"}}>*</span>)
               </dt>
@@ -663,12 +663,27 @@ class clientEdit extends Component{
               </dt>
             </Col>
           </Row>
-          <Row style={{padding: "10px 40px 20px 20px"}}>
-            <Col xs={12} md={8} lg={8}>
+          <Row style={{padding: "10px 0px 20px 20px", width:'100%'}}>
+          <Col xs>
+            <dt>
+              <span>¿Desea consultar sus extractos de forma virtual? (</span><span style={{color: "red"}}>*</span>)
+            </dt>
+            <dt style={{marginRight:"17px"}}>
+              <ComboBox
+                name="extractsVirtual"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                data={valuesYesNo}
+                {...extractsVirtual}
+              />
+            </dt>
+          </Col>
+            <Col xs style={{marginLeft:"10px"}}>
               <dt>
                 <span>¿Desea recibir su reporte de costos consolidado de forma virtual? (</span><span style={{color: "red"}}>*</span>)
               </dt>
-              <dt>
+              <dt style={{marginRight:"15px"}}>
                 <ComboBox
                   name="reportVirtual"
                   labelInput="Seleccione..."
@@ -676,21 +691,6 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   data={valuesYesNo}
-                />
-              </dt>
-            </Col>
-            <Col xs={12} md={8} lg={8} style={{paddingTop:"20px", marginTop:"5px"}}>
-              <dt>
-                <span>¿Desea consultar sus extractos de forma virtual? (</span><span style={{color: "red"}}>*</span>)
-              </dt>
-              <dt>
-                <ComboBox
-                  name="extractsVirtual"
-                  labelInput="Seleccione..."
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={valuesYesNo}
-                  {...extractsVirtual}
                 />
               </dt>
             </Col>
@@ -1080,7 +1080,7 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
 
 function fomatInitialStateNumber(val){
     var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(val.toString())){
+    while (pattern.test(val + "")){
       val = val.toString().replace(pattern, "$1,$2");
     }
     return val;
