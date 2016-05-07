@@ -115,7 +115,7 @@ class CreatePropspect extends Component{
                 <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
-                  labelInput="Ingrese el número de documento del prospecto"
+                  labelInput="Seleccion el tipo de documento del prospecto"
                   {...idType}
                   valueProp={'id'}
                   textProp={'value'}
@@ -127,6 +127,7 @@ class CreatePropspect extends Component{
                   <Input
                     name="documento"
                     type="text"
+                    max={20}
                     placeholder="Ingrese el número de documento del prospecto"
                     {...idNumber}
                   />

@@ -30,7 +30,7 @@ class inputComponent extends Component {
                   <input type={type}
                     name={nameInput}
                     min={min}
-                    max={max}
+                    maxLength={max}
                     onChange={this._onChange}
                     placeholder={placeholder}
                     value={value || ''} />

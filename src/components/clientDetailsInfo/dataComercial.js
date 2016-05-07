@@ -33,7 +33,7 @@ class DataComercial extends Component{
         </thead>
         <tbody>
           <tr>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm ? 'Si' : 'No'}</td>
+            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm === null ? '' : ( infoClient.isManagedByRm ? 'Si' : 'No')}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForNoRMKey}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.economicGroupKey}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.nitPrincipal}</td>
@@ -52,9 +52,9 @@ class DataComercial extends Component{
             </thead>
             <tbody>
               <tr>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isCreditNeeded ? 'Si' : 'No'}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isCreditNeeded === null ? '' : ( infoClient.isCreditNeeded ? 'Si' : 'No')}</td>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForCreditNeedKey}</td>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isDecisionCenter ? 'Si' : 'No'}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isDecisionCenter === null ? '' : ( infoClient.isDecisionCenter ? 'Si' : 'No')}</td>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForLostClientKey}</td>
               </tr>
             </tbody>

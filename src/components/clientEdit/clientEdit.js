@@ -25,6 +25,7 @@ import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
+  {'id': null, 'value': "Seleccione..."},
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ];
@@ -491,6 +492,7 @@ class clientEdit extends Component{
                   style={{width: '100%', height: '100%'}}
                   onChange={val => this._onchangeValue("description", val)}
                   placeholder="Ingrese la descripción"
+                  max={1000}
                   rows={4}
                   {...description}
                 />
@@ -592,6 +594,7 @@ class clientEdit extends Component{
                   name="address"
                   type="text"
                   style={{width: '100%', height: '100%'}}
+                  max={250}
                   onChange={val => this._onchangeValue("address", val)}
                   placeholder="Ingrese la dirección"
                   {...address}
@@ -651,6 +654,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtBarrio"
                   type="text"
+                  max={120}
                   placeholder="Ingrese el barrio"
                   {...neighborhood}
                 />
@@ -664,6 +668,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtTelefono"
                   type="text"
+                  max={30}
                   placeholder="Ingrese el teléfono"
                   {...telephone}
                 />
@@ -722,6 +727,7 @@ class clientEdit extends Component{
                   format="0,000"
                   type="text"
                   min={0}
+                  maxLength={16}
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
                   style={{width: "100%", textAlign:"right"}}
@@ -736,7 +742,7 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
+                <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -749,6 +755,7 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   type="text"
+                  maxLength={16}
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   {...assets}
@@ -768,6 +775,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  maxLength={16}
                   type="text"
                   onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
@@ -787,6 +795,7 @@ class clientEdit extends Component{
                   format="0,000"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   min={0}
+                  maxLength={16}
                   type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
@@ -804,6 +813,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  maxLength={16}
                   type="text"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
@@ -824,6 +834,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
+                  maxLength={16}
                   type="text"
                   onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
@@ -852,6 +863,7 @@ class clientEdit extends Component{
                 <div style={{display:"inline-block", width:"85%"}}>
                   <Input
                     name="txtGrupoEconomico"
+                    max={50}
                     placeholder="Ingrese el grupo económico a buscar"
                     {...keywordFindEconomicGroup}
                   />

@@ -91,8 +91,8 @@ class ModalComponentContact extends Component {
 
     constructor(props) {
         super(props);
-        this._closeCreate = this._closeCreate.bind(this);
         this._close = this._close.bind(this);
+        this._closeCreate = this._closeCreate.bind(this);
         this._handleCreateContact = this._handleCreateContact.bind(this);
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
@@ -115,6 +115,14 @@ class ModalComponentContact extends Component {
       getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
+    _close(){
+      const{clearSearchContact} = this.props;
+      clearSearchContact();
+      //this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
+      this.setState({showErrorYa:false});
+    }
+
     _onChangeCountry(val){
       const {fields: {pais, departamento, ciudad}} = this.props;
       pais.onChange(val);
@@ -130,14 +138,6 @@ class ModalComponentContact extends Component {
       const {consultListWithParameterUbication} = this.props;
       consultListWithParameterUbication(FILTER_CITY, departamento.value);
       ciudad.onChange('');
-    }
-
-    _close(){
-      const{clearSearchContact} = this.props;
-      clearSearchContact();
-      //this.props.resetForm();
-      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
-      this.setState({showErrorYa:false});
     }
 
     _closeCreate(){
@@ -157,17 +157,15 @@ class ModalComponentContact extends Component {
     }
 
     _searchContact(){
-      console.log("pera");
       const {fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
       const {searchContact,clearSearchContact} = this.props;
-      console.log(tipoDocumento.value);
       if(tipoDocumento.value && numeroDocumento.value){
         searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
             if((_.get(data, 'payload.data.isClientContact'))){
                 clearSearchContact();
-                //this.props.resetForm();
+                this.props.resetForm();
                 this.setState({showErrorYa: true});
               }else if(!(_.get(data, 'payload.data.findContact'))){
                 this.setState({showErrorNo: true});
@@ -267,6 +265,7 @@ class ModalComponentContact extends Component {
                                   <dd><Input
                                     name="numeroDocumento"
                                     type="text"
+                                    max={20}
                                     placeholder="Ingrese el número de documento"
                                     disabled = {this.state.disabled}
                                     {...numeroDocumento}
@@ -310,6 +309,7 @@ class ModalComponentContact extends Component {
                                   <Input
                                     name="primerNombre"
                                     type="text"
+                                    max={60}
                                     {...primerNombre}
                                     /></dd>
                                 </dl>
@@ -322,6 +322,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoNombre"
                                   type="text"
+                                  max={60}
                                   {...segundoNombre}
                                 /></dd>
                               </dl>
@@ -332,6 +333,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="primerApellido"
                                   type="text"
+                                  max={60}
                                   {...primerApellido}
                                 /></dd>
                               </dl>
@@ -342,6 +344,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoApellido"
                                   type="text"
+                                  max={60}
                                   {...segundoApellido}
                                 /></dd>
                               </dl>
@@ -457,6 +460,7 @@ class ModalComponentContact extends Component {
                                 <TextareaComponent
                                   name="direccion"
                                   type="text"
+                                  max={250}
                                   style={{width: '100%', height: '100%'}}
                                   onChange={val => this._onchangeValue("direccion", val)}
                                   rows={4}
@@ -472,6 +476,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="barrio"
                                   type="text"
+                                  max={120}
                                   {...barrio}
                                 /></dd>
                               </dl>
@@ -482,6 +487,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="codigoPostal"
                                   type="text"
+                                  max={25}
                                   {...codigoPostal}
                                 /></dd>
                               </dl>
@@ -492,6 +498,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="telefono"
                                   type="text"
+                                  max={30}
                                   {...telefono}
                                 /></dd>
                               </dl>
@@ -504,6 +511,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="extension"
                                   type="text"
+                                  max={20}
                                   {...extension}
                                 /></dd>
                               </dl>
@@ -514,6 +522,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="celular"
                                   type="text"
+                                  max={30}
                                   {...celular}
                                 /></dd>
                               </dl>
@@ -524,6 +533,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="correo"
                                   type="text"
+                                  max={150}
                                   {...correo}
                                 /></dd>
                               </dl>
