@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer,changeKeyword,clearContact} from './actions';
+import {contactsByClientFindServer,changeKeywordContact,clearContact} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import _ from 'lodash';
 
@@ -14,7 +14,7 @@ class SearchContactComponent extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        keyword: ''
+        keywordContact: ''
       };
       this._handleContactsByClientsFind = this._handleContactsByClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
@@ -41,23 +41,23 @@ class SearchContactComponent extends Component {
       this._handleContactsByClientsFind(e);
     }else{
       this.setState({
-        keyword: e.target.value
+        keywordContact: e.target.value
       });
-      const {changeKeyword} = this.props;
-      changeKeyword(e.target.value);
+      const {changeKeywordContact} = this.props;
+      changeKeywordContact(e.target.value);
     }
   }
 
   _handleContactsByClientsFind(){
       const {contactsByClientFindServer,contactsByClient,clearContact} = this.props;
         clearContact();
-      if(this.state.keyword === '' || this.state.keyword === undefined){
+      if(this.state.keywordContact === '' || this.state.keywordContact === undefined){
           contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
           v1,
           v2,
           v3);
       }else{
-          contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keyword,
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,this.state.keywordContact,
           v1,
           v2,
           v3);
@@ -67,7 +67,7 @@ class SearchContactComponent extends Component {
     render() {
         return (
           <div className="InputAddOn">
-          <input style={{padding: '0px 11px !important'}} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, cargo" value={this.state.keyword} onChange={this._handleChangeKeyword}/>
+          <input style={{padding: '0px 11px !important'}} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, cargo" value={this.state.keywordContact} onChange={this._handleChangeKeyword}/>
             <button onClick={this._handleContactsByClientsFind} className="button InputAddOn-item">
               <i className="search icon" />
             </button>
@@ -78,7 +78,7 @@ class SearchContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer, changeKeyword,clearContact
+    contactsByClientFindServer,changeKeywordContact,clearContact
   }, dispatch);
 }
 

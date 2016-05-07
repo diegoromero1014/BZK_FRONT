@@ -39,13 +39,13 @@ class PaginationContactComponent extends Component{
     const {changePage,limitiInf,contactsByClient} = this.props;
     var limInf = (page - 1);
     limitiInf(limInf);
-    this._handleContactsByClientsFind(limInf);
     changePage(page);
+    this._handleContactsByClientsFind(limInf);
   }
 
   _handleContactsByClientsFind(limInf){
       const {contactsByClient,contactsByClientFindServer} = this.props;
-      contactsByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,contactsByClient.get('keyword'),v1,
+      contactsByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,contactsByClient.get('keywordContact'),v1,
     v2,
     v3);
   }

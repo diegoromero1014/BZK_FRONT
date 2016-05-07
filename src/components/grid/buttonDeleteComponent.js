@@ -3,7 +3,7 @@ import SweetAlert from 'sweetalert-react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
-import {contactsByClientFindServer} from '../contact/actions';
+import {contactsByClientFindServer,clearContactDelete} from '../contact/actions';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
 class ButtonDeleteComponent extends Component{
@@ -33,9 +33,10 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer,actionsDelete} = this.props;
+        const {contactsByClientFindServer,actionsDelete,clearContactDelete} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
+            clearContactDelete();
             contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
             "",
             "",
@@ -87,7 +88,7 @@ ButtonDeleteComponent.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    deleteServer,contactsByClientFindServer
+    deleteServer,contactsByClientFindServer,clearContactDelete
   }, dispatch);
 }
 

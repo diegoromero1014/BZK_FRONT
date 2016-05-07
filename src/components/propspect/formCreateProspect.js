@@ -129,6 +129,7 @@ class FormCreateProspect extends Component{
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
        } = this.props;
+       console.log("dateSalesAnnualsdateSalesAnnualsdateSalesAnnuals", dateSalesAnnuals);
        var jsonCreateProspect= {
          "clientIdNumber": numberDocument,
          "clientName": razonSocial.value,
@@ -156,7 +157,7 @@ class FormCreateProspect extends Component{
          "status":0,
          "isCreditNeeded":null,
          "annualSales": annualSales.value === undefined ? null : numeral(annualSales.value).format('0'),
-         "salesUpadateDate": dateSalesAnnuals.value === undefined ? null : moment(dateSalesAnnuals.value).format('x'),
+         "salesUpadateDate": dateSalesAnnuals.value ? null : moment(dateSalesAnnuals.value).format('x'),
          "assets": assets.value === undefined ? null : numeral(assets.value).format('0'),
          "liabilities": liabilities.value === undefined ? null : numeral(liabilities.value).format('0'),
          "operatingIncome": operatingIncome.value === undefined ? null : numeral(operatingIncome.value).format('0'),
