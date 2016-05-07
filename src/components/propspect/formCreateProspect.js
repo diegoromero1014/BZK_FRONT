@@ -157,7 +157,7 @@ class FormCreateProspect extends Component{
          "status":0,
          "isCreditNeeded":null,
          "annualSales": annualSales.value === undefined ? null : numeral(annualSales.value).format('0'),
-         "salesUpadateDate": dateSalesAnnuals.value ? null : moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'),
+         "salesUpadateDate": dateSalesAnnuals.value ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
          "assets": assets.value === undefined ? null : numeral(assets.value).format('0'),
          "liabilities": liabilities.value === undefined ? null : numeral(liabilities.value).format('0'),
          "operatingIncome": operatingIncome.value === undefined ? null : numeral(operatingIncome.value).format('0'),
