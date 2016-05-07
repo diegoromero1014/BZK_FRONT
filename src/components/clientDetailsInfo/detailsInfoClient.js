@@ -39,7 +39,8 @@ class DetailsInfoClient extends Component{
     const {infoClient, menuState} = this.props;
 
     var actualizationDateString = "";
-    if( actualizationDate != null && actualizationDate != undefined ){
+    if( infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined ){
+      console.log("Fecha actualizacion");
       var actualizationDate = moment(infoClient.actualizationDate).locale('es');
       actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
     }

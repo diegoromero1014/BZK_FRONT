@@ -59,7 +59,7 @@ class comboBoxComponent extends Component {
          focusInFiled = true;
        }
        return (
-           <div style={{marginBottom:"20px"}}>
+           <div>
                <div className={`styleWidthComponents ui search selection dropdown ${disabled} ${name} ${deployUp === true ? 'bottom pointing' : ''}`}>
                    <input type="hidden" name={nameInput}/>
                    <i className="dropdown icon"/>
