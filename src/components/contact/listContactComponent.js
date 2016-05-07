@@ -51,25 +51,11 @@ const headers = [
   },
 ];
 
-let v1 = "";
-let v2 = "";
-let v3 = "";
-let limInf1 = 0;
-
 class ListContactComponent extends Component {
 
   constructor(props){
       super(props);
       this._renderCellView = this._renderCellView.bind(this);
-  }
-
-  componentWillMount(){
-      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
-      clearContact();
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
-      "",
-      "",
-      "");
   }
 
   _renderCellView(data){

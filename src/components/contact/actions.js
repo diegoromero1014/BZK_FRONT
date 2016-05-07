@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT} from './constants';
+import {GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_DELETE} from './constants';
 import axios from 'axios';
 
 export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId){
@@ -44,10 +44,10 @@ export function changePage(page){
   }
 }
 
-export function changeKeyword(keyword){
+export function changeKeywordContact(keywordContact){
   return {
-    type: CHANGE_KEYWORD,
-    keyword: keyword
+    type: CHANGE_KEYWORD_CONTACT,
+    keywordContact: keywordContact
   }
 }
 
@@ -61,5 +61,11 @@ export function limitiInf(limInf){
 export function clearContact(){
     return {
         type: CLEAR_CONTACT
+    };
+}
+
+export function clearContactDelete(){
+    return {
+        type: CLEAR_CONTACT_DELETE
     };
 }
