@@ -25,6 +25,7 @@ import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
+  {'id': null, 'value': "Seleccione..."},
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ];
@@ -736,7 +737,7 @@ class clientEdit extends Component{
                 <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
+                <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
