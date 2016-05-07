@@ -91,6 +91,7 @@ class ModalComponentContact extends Component {
 
     constructor(props) {
         super(props);
+        this._close = this._close.bind(this);
         this._closeCreate = this._closeCreate.bind(this);
         this._handleCreateContact = this._handleCreateContact.bind(this);
         this._onChangeCountry = this._onChangeCountry.bind(this);
@@ -112,6 +113,14 @@ class ModalComponentContact extends Component {
     componentWillMount(){
       const{getMasterDataFields} = this.props;
       getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+    }
+
+    _close(){
+      const{clearSearchContact} = this.props;
+      clearSearchContact();
+      //this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
+      this.setState({showErrorYa:false});
     }
 
     _onChangeCountry(val){
@@ -617,7 +626,7 @@ class ModalComponentContact extends Component {
                           title="Advertencia"
                           show={this.state.showErrorYa}
                           text="Señor usuario, el cliente ya presenta una relación con el contacto buscado"
-                          onConfirm={() => this.setState({showErrorYa:false})}
+                          onConfirm={() => this._close()}
                           />
                           <SweetAlert
                            type= "error"
@@ -668,11 +677,11 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         extension:contactDetail.extension,
         celular:contactDetail.mobileNumber,
         correo:contactDetail.emailAddress,
-        tipoHobbie: _.join(contactDetail.hobbies, ','),
+        tipoHobbie: JSON.parse('["'+_.join(contactDetail.hobbies, '","')+'"]'),
         tipoContacto:contactDetail.typeOfContact,
-        tipoEntidad:_.join(contactDetail.lineOfBusiness, ','),
-        tipoFuncion:_.join(contactDetail.function, ','),
-        tipoDeporte:_.join(contactDetail.sports, ',')
+        tipoEntidad:JSON.parse('["'+_.join(contactDetail.lineOfBusiness, '","')+'"]'),
+        tipoFuncion:JSON.parse('["'+_.join(contactDetail.function, '","')+'"]'),
+        tipoDeporte:JSON.parse('["'+_.join(contactDetail.sports, '","')+'"]'),
       }
     };
   }else{
