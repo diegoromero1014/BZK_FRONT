@@ -195,6 +195,10 @@ class ContactDetailsModalComponent extends Component {
         var {fields: {contactCity}} = this.props;
         contactCity.onChange(val);
         break;
+      case "contactDateOfBirth":
+        const {fields: {contactDateOfBirth}} = this.props;
+        contactDateOfBirth.onChange(val);
+        break;
       default:
         break;
     }
@@ -284,7 +288,7 @@ class ContactDetailsModalComponent extends Component {
       "contactPosition": contactPosition.value !== undefined ? contactPosition.value : null,
       "unit": contactDependency.value !== undefined ? contactDependency.value : null,
       "function": contactFunctions.value !== undefined ? _.split(contactFunctions.value, ',') : null,
-      "dateOfBirth": contactDateOfBirth.value !== undefined ? moment(contactDateOfBirth.value).format('x') : null,
+      "dateOfBirth": contactDateOfBirth.value !== undefined ? moment(contactDateOfBirth.value, 'DD/MM/YYYY').format('x') : null,
       "address": contactAddress.value !== undefined ? contactAddress.value : null,
       "country": contactCountry.value !== undefined ? contactCountry.value : null,
       "province": contactProvince.value !== undefined ? contactProvince.value : null,
@@ -494,6 +498,8 @@ class ContactDetailsModalComponent extends Component {
                   <dt>{'Fecha de nacimiento'}</dt>
                   <dd>
                     <DateTimePickerUi
+                      name="contactDateOfBirth"
+                      onChange={val => this._onchangeValue("contactDateOfBirth", val)}
                       culture='es'
                       format={"DD/MM/YYYY"}
                       time={false}
@@ -822,7 +828,7 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
        contactSecondLastName:contact.secondLastName,
        contactPosition:contact.contactPosition,
        contactDependency:contact.unit,
-       contactDateOfBirth:contact.dateOfBirth,
+       contactDateOfBirth:moment(contact.dateOfBirth).format('DD/MM/YYYY'),
        contactSocialStyle:contact.socialStyle,
        contactAttitudeOverGroup:contact.attitudeOverGroup,
        contactCountry:contact.country,
