@@ -372,7 +372,6 @@ class ContactDetailsModalComponent extends Component {
                       type="text"
                       max={20}
                       disabled={'disabled'}
-                      placeholder="Ingrese el número de documento del usuario"
                       onChange={val => this._onchangeValue("contactIdentityNumber", val)}
                       {...contactIdentityNumber}
                     />
@@ -601,7 +600,6 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <textarea className="form-control need-input"
                       name="contactAddress"
-                      placeholder="Ingrese la dirección"
                       maxLength={250}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("address", val)}
@@ -617,7 +615,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactNeighborhood"
                         type="text"
-                        placeholder="Ingrese el barrio"
                         max={120}
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("neighborhood", val)}
@@ -632,7 +629,6 @@ class ContactDetailsModalComponent extends Component {
                         name="contactPostalCode"
                         type="text"
                         max={25}
-                        placeholder="Ingrese el código postal"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("postalCode", val)}
                         {...contactPostalCode}
@@ -646,7 +642,6 @@ class ContactDetailsModalComponent extends Component {
                       name="contactTelephoneNumber"
                       type="text"
                       max={30}
-                      placeholder="Ingrese el número de telefono"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("telephoneNumber", val)}
                       {...contactTelephoneNumber}
@@ -662,7 +657,6 @@ class ContactDetailsModalComponent extends Component {
                         name="contactExtension"
                         type="text"
                         max={20}
-                        placeholder="Ingrese la extensión"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("extension", val)}
                         {...contactExtension}
@@ -676,7 +670,6 @@ class ContactDetailsModalComponent extends Component {
                       name="contactMobileNumber"
                       type="text"
                       max={30}
-                      placeholder="Ingrese el celular"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("mobileNumber", val)}
                       {...contactMobileNumber}
@@ -690,7 +683,6 @@ class ContactDetailsModalComponent extends Component {
                       name="contactEmailAddress"
                       type="text"
                       max={150}
-                      placeholder="Ingrese el correo electrónico"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("emailAddress", val)}
                       {...contactEmailAddress}
