@@ -355,7 +355,6 @@ class clientEdit extends Component{
         errorNote = true;
       }
     });
-
     if(!errorNote){
       const {
       fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
@@ -391,7 +390,7 @@ class clientEdit extends Component{
         "status":infoClient.status,
         "isCreditNeeded":necesitaLME.value,
         "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-        "salesUpadateDate": moment(dateSalesAnnuals.value).format('x'),
+        "salesUpadateDate": moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'),
         "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
         "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
         "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
@@ -734,10 +733,10 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Fecha de ventas anuales - MM/DD/YYYY (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-              <DateTimePickerUi culture='es' format={"MM/DD/YYYY"} time={false} {...dateSalesAnnuals}/>
+              <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
@@ -1069,7 +1068,7 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
       annualSales: fomatInitialStateNumber(infoClient.annualSales),
-      dateSalesAnnuals: infoClient.salesUpadateDate,
+      dateSalesAnnuals: moment(infoClient.salesUpadateDate).format("DD/MM/YYYY"),
       assets: fomatInitialStateNumber(infoClient.assets),
       liabilities: fomatInitialStateNumber(infoClient.liabilities),
       operatingIncome: fomatInitialStateNumber(infoClient.operatingIncome),
