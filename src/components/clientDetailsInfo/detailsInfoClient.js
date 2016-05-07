@@ -40,7 +40,6 @@ class DetailsInfoClient extends Component{
 
     var actualizationDateString = "";
     if( infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined ){
-      console.log("Fecha actualizacion");
       var actualizationDate = moment(infoClient.actualizationDate).locale('es');
       actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
     }
