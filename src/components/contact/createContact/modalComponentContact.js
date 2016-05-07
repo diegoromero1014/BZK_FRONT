@@ -26,62 +26,62 @@ const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependen
 const errors = {};
 const validate = (values) => {
     if(!values.tipoFuncion){
-      errors.tipoFuncion = "Seleccione una función";
+      errors.tipoFuncion = "Debe Seleccionar una función";
     }else{
       errors.tipoFuncion = null;
     }
     if(!values.primerNombre){
-      errors.primerNombre = "Ingrese el primer nombre";
+      errors.primerNombre = "Debe ingresar el primer nombre";
     }else{
       errors.primerNombre = null;
     }
     if(!values.primerApellido){
-      errors.primerApellido = "Ingrese el primer apellido";
+      errors.primerApellido = "Debe ingresar el primer apellido";
     }else{
       errors.primerApellido = null;
     }
     if(!values.direccion){
-      errors.direccion = "Ingrese la dirección";
+      errors.direccion = "Debe ingresar la dirección";
     }else{
       errors.direccion = null;
     }
     if(!values.telefono){
-      errors.telefono = "Ingrese el teléfono";
+      errors.telefono = "Debe ingresar el teléfono";
     }else{
       errors.telefono = null;
     }
     if(!values.correo){
-      errors.correo = "Ingrese el correo electrónico";
+      errors.correo = "Debe ingresar el correo electrónico";
     }else{
       errors.correo = null;
     }
     if(!values.tipoTratamiendo){
-      errors.tipoTratamiendo = "Seleccione un tipo de tratamiendo";
+      errors.tipoTratamiendo = "Debe Seleccionar un tipo de tratamiendo";
     }else{
       errors.tipoTratamiendo = null;
     }
     if(!values.tipoGenero){
-      errors.tipoGenero = "Seleccione un género";
+      errors.tipoGenero = "Debe Seleccionar un género";
     }else{
       errors.tipoGenero = null;
     }
     if(!values.tipoContacto){
-      errors.tipoContacto = "Seleccione un tipo de contacto";
+      errors.tipoContacto = "Debe Seleccionar un tipo de contacto";
     }else{
       errors.tipoContacto = null;
     }
     if(!values.pais){
-      errors.pais = "Seleccione un país";
+      errors.pais = "Debe Seleccionar un país";
     }else{
       errors.pais = null;
     }
     if(!values.departamento){
-      errors.departamento = "Seleccione un departamento";
+      errors.departamento = "Debe Seleccionar un departamento";
     }else{
       errors.departamento = null;
     }
     if(!values.ciudad){
-      errors.ciudad = "Seleccione una ciudad";
+      errors.ciudad = "Debe Seleccionar una ciudad";
     }else{
       errors.ciudad = null;
     }
@@ -443,10 +443,12 @@ class ModalComponentContact extends Component {
                               <dl style={{width: '100%'}}>
                                 <dt><span>Dirección (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd>
-                                <Input
+                                <TextareaComponent
                                   name="direccion"
                                   type="text"
                                   style={{width: '100%', height: '100%'}}
+                                  onChange={val => this._onchangeValue("direccion", val)}
+                                  rows={4}
                                   {...direccion}
                                 /></dd>
                               </dl>
