@@ -842,10 +842,10 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
        contactNombileNumber:contact.mobileNumber,
        contactEmailAddress:contact.emailAddress,
        contactTypeOfContact:contact.typeOfContact,
-       contactLineOfBusiness:_.join(contact.lineOfBusiness, ','),
-       contactFunctions:_.join(contact.function, ','),
-       contactHobbies:_.join(contact.hobbies, ','),
-       contactSports:_.join(contact.sports, ',')
+       contactLineOfBusiness:JSON.parse('["'+_.join(contact.lineOfBusiness, '","')+'"]'),
+       contactFunctions:JSON.parse('["'+_.join(contact.function, '","')+'"]'),
+       contactHobbies:JSON.parse('["'+_.join(contact.hobbies, '","')+'"]'),
+       contactSports:JSON.parse('["'+_.join(contact.sports, '","')+'"]')
      }
    };
  } else {
