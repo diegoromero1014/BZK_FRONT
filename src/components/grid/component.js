@@ -19,7 +19,7 @@ class GridComponent extends Component {
   }
 
   _renderHeader(header, idx){
-      return <HeaderComponent  key={idx} titleColumn={header.title} />;
+      return <HeaderComponent key={idx} titleColumn={header.title} />;
   }
 
   _renderCell(row, headers,modalTitle){

@@ -18,7 +18,7 @@ const headers = [
     key:"title"
   },
   {
-      title: "Nombre",
+      title:"Nombre",
       key: "nameComplet"
   },
   {
@@ -57,6 +57,15 @@ class ListContactComponent extends Component {
       super(props);
       this._renderCellView = this._renderCellView.bind(this);
   }
+
+  componentWillMount(){
+      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
+      "",
+      "",
+      "");
+  }
+
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el contacto ";

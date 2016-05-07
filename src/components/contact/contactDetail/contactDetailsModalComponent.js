@@ -355,7 +355,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactType"
-                      labelInput="Seleccione el tipo de documento"
+                      labelInput="Seleccione"
                       {...contactType}
                       disabled={'disabled'}
                       valueProp={'id'}
@@ -387,7 +387,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactTitle"
-                      labelInput="Seleccione el tratamiento"
+                      labelInput="Seleccione"
                       {...contactTitle}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
@@ -401,7 +401,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactGender"
-                      labelInput="Seleccione el genero"
+                      labelInput="Seleccione"
                       {...contactGender}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
@@ -417,7 +417,6 @@ class ContactDetailsModalComponent extends Component {
                       name="contactFirstName"
                       type="text"
                       disabled={this.state.isEditable ? '' : 'disabled'}
-                      placeholder="Ingrese el primer nombre"
                       //onChange={val => this._onchangeValue("firstName", val)}
                       {...contactFirstName}
                     />
@@ -432,7 +431,6 @@ class ContactDetailsModalComponent extends Component {
                         name="contactMiddleName"
                         type="text"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        placeholder="Ingrese el segundo nombre"
                         //onChange={val => this._onchangeValue("middleName", val)}
                         {...contactMiddleName}
                       />
@@ -445,7 +443,6 @@ class ContactDetailsModalComponent extends Component {
                         name="contactFirstLastName"
                         type="text"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        placeholder="Ingrese el primer apellido"
                         //onChange={val => this._onchangeValue("firstLastName", val)}
                         {...contactFirstLastName}
                       />
@@ -458,7 +455,6 @@ class ContactDetailsModalComponent extends Component {
                         name="contactSecondLastName"
                         type="text"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        placeholder="Ingrese el segundo apellido"
                         //onChange={val => this._onchangeValue("secondLastName", val)}
                         {...contactSecondLastName}
                       />
@@ -471,7 +467,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactPosition"
-                      labelInput="Seleccione el cargo"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactPosition}
                       valueProp={'id'}
@@ -485,7 +481,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactDependency"
-                      labelInput="Seleccione la dependencia"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactDependency}
                       valueProp={'id'}
@@ -515,7 +511,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactSocialStyle"
-                      labelInput="Seleccione el estilo social"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactSocialStyle}
                       valueProp={'id'}
@@ -529,7 +525,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactAttitudeOverGroup"
-                      labelInput="Seleccione la actitud frente al Grupo"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactAttitudeOverGroup}
                       valueProp={'id'}
@@ -550,7 +546,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactCountry"
-                      labelInput="Seleccione el país"
+                      labelInput="Seleccione"
                       onChange={val => this._onChangeCountry(val)}
                       value={contactCountry.value}
                       onBlur={contactCountry.onBlur}
@@ -567,7 +563,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactProvince"
-                      labelInput="Seleccione el departamento"
+                      labelInput="Seleccione"
                       onChange={val => this._onChangeProvince(val)}
                       value={contactProvince.value}
                       onBlur={contactProvince.onBlur}
@@ -584,7 +580,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactCity"
-                      labelInput="Seleccine la ciudad"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactCity}
                       valueProp={'id'}
@@ -600,7 +596,6 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <textarea className="form-control need-input"
                       name="contactAddress"
-                      placeholder="Ingrese la dirección"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("address", val)}
                       {...contactAddress}
@@ -615,7 +610,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactNeighborhood"
                         type="text"
-                        placeholder="Ingrese el barrio"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("neighborhood", val)}
                         {...contactNeighborhood}
@@ -628,7 +622,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactPostalCode"
                         type="text"
-                        placeholder="Ingrese el código postal"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("postalCode", val)}
                         {...contactPostalCode}
@@ -641,7 +634,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactTelephoneNumber"
                       type="text"
-                      placeholder="Ingrese el número de telefono"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("telephoneNumber", val)}
                       {...contactTelephoneNumber}
@@ -656,7 +648,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactExtension"
                         type="text"
-                        placeholder="Ingrese la extensión"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("extension", val)}
                         {...contactExtension}
@@ -669,7 +660,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactMobileNumber"
                       type="text"
-                      placeholder="Ingrese el celular"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("mobileNumber", val)}
                       {...contactMobileNumber}
@@ -682,7 +672,6 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactEmailAddress"
                       type="text"
-                      placeholder="Ingrese el correo electrónico"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("emailAddress", val)}
                       {...contactEmailAddress}
@@ -701,7 +690,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <ComboBox
                       name="contactTypeOfContact"
-                      labelInput="Seleccione el tipo de contacto"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactTypeOfContact}
                       valueProp={'id'}
@@ -715,7 +704,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <MultipleSelect
                       name="contactLineOfBusiness"
-                      labelInput="Seleccione al menos una línea de negocio"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactLineOfBusiness}
                       valueProp={'id'}
@@ -729,7 +718,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <MultipleSelect
                       name="contactFunctions"
-                      labelInput="Seleccione al menos una función"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactFunctions}
                       valueProp={'id'}
@@ -750,7 +739,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <MultipleSelect
                       name="contactHobbies"
-                      labelInput="Seleccione al menos un hobby"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactHobbies}
                       valueProp={'id'}
@@ -764,7 +753,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <MultipleSelect
                       name="contactSports"
-                      labelInput="Seleccione al menos un deporte"
+                      labelInput="Seleccione"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactSports}
                       valueProp={'id'}
