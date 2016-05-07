@@ -127,6 +127,7 @@ class CreatePropspect extends Component{
                   <Input
                     name="documento"
                     type="text"
+                    max={20}
                     placeholder="Ingrese el número de documento del prospecto"
                     {...idNumber}
                   />

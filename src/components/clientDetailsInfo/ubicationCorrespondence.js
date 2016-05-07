@@ -14,6 +14,7 @@ class UbicationCorrespondence extends Component{
     } else {
       addresses = addresses[0];
     }
+    console.log("infoClientinfoClientinfoClient", infoClient);
     return(
       <div className="tab-content-row" style={{marginTop: "40px",borderTop: "1px dotted #cea70b"}}>
         <table>
@@ -81,8 +82,8 @@ class UbicationCorrespondence extends Component{
             </thead>
             <tbody>
               <tr>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isVirtualStatement  ? 'Si': 'No'}</td>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.isPrincipalAddress ? 'Si': 'No'}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isVirtualStatement === null  ? '' : ( infoClient.isVirtualStatement ? 'Si': 'No')}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.isPrincipalAddress === null  ? '' : ( infoClient.isPrincipalAddress ? 'Si': 'No')}</td>
               </tr>
             </tbody>
           </table>

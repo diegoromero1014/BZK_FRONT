@@ -258,6 +258,7 @@ class ModalComponentShareholder extends Component {
                           <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                           <dd><InputComponent
                             name="numeroDocumento"
+                            max={15}
                             placeholder="Ingrese el documento del accionista"
                             type="text"
                             disabled = {this.state.disabled}
@@ -308,6 +309,7 @@ class ModalComponentShareholder extends Component {
                           name="primerNombre"
                           placeholder="Ingrese el primer nombre del accionista"
                           type="text"
+                          max={50}
                           {...primerNombre}
                         />
                       </Col>
@@ -317,6 +319,7 @@ class ModalComponentShareholder extends Component {
                           name="segundoNombre"
                           placeholder="Ingrese el segundo nombre del accionista"
                           type="text"
+                          max={50}
                           {...segundoNombre}
                         />
                       </Col>
@@ -326,6 +329,7 @@ class ModalComponentShareholder extends Component {
                           name="primerApellido"
                           placeholder="Ingrese el primer apellido del accionista"
                           type="text"
+                          max={50}
                           {...primerApellido}
                         />
                       </Col>
@@ -335,6 +339,7 @@ class ModalComponentShareholder extends Component {
                           name="segundoApellido"
                           placeholder="Ingrese el segundo apellido del accionista"
                           type="text"
+                          max={50}
                           {...segundoApellido}
                         />
                       </Col>
@@ -353,6 +358,7 @@ class ModalComponentShareholder extends Component {
                           name="razonSocial"
                           placeholder="Ingrese la razón social del accionista"
                           type="text"
+                          max={110}
                           {...razonSocial}
                         />
                       </Col>
@@ -362,6 +368,7 @@ class ModalComponentShareholder extends Component {
                           name="direccion"
                           placeholder="Ingrese la dirección del accionista"
                           type="text"
+                          max={100}
                           {...direccion}
                         />
                       </Col>
@@ -422,6 +429,7 @@ class ModalComponentShareholder extends Component {
                         <Textarea
                           name="observaciones"
                           type="text"
+                          max={250}
                           style={{width: '100%', height: '100%'}}
                           placeholder="Ingrese las observaciones"
                           {...observaciones}
