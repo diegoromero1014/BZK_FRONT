@@ -157,7 +157,7 @@ class FormCreateProspect extends Component{
          "status":0,
          "isCreditNeeded":null,
          "annualSales": annualSales.value === undefined ? null : numeral(annualSales.value).format('0'),
-         "salesUpadateDate": dateSalesAnnuals.value ? null : moment(dateSalesAnnuals.value).format('x'),
+         "salesUpadateDate": dateSalesAnnuals.value ? null : moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'),
          "assets": assets.value === undefined ? null : numeral(assets.value).format('0'),
          "liabilities": liabilities.value === undefined ? null : numeral(liabilities.value).format('0'),
          "operatingIncome": operatingIncome.value === undefined ? null : numeral(operatingIncome.value).format('0'),
@@ -559,10 +559,10 @@ class FormCreateProspect extends Component{
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px"}}>
-              <dt><span>Fecha de ventas anuales - MM/DD/YYYY</span></dt>
+              <dt><span>Fecha de ventas anuales - DD/MM/YYYY</span></dt>
               <DateTimePickerUi
                 {...dateSalesAnnuals}
-                format={"MM/DD/YYYY"}
+                format={"DD/MM/YYYY"}
                 time={false}
                 placeholder="Seleccione una fecha"
                 culture='es'
