@@ -7,6 +7,7 @@ import {reduxForm} from 'redux-form';
 import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
+import Textarea from '../../../ui/textarea/textareaComponent';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder} from './actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE} from '../../selectsComponent/constants';
@@ -15,10 +16,97 @@ import _ from 'lodash';
 
 const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
-      "primerApellido","segundoApellido", "razonSocial", "direccion", "porcentajePart",
+      "primerApellido","segundoApellido", "genero", "razonSocial", "direccion", "porcentajePart",
       "pais", "departamento", "ciudad", "numeroIdTributaria", "observaciones"];
 const errors = {};
+
+const PERSONA_NATURAL = 451;
+const PERSONA_JURIDICA = 452;
+
+var valueTypeShareholder;
+
 const validate = (values) => {
+  if(!values.tipoPersona){
+    errors.tipoPersona = "Debe seleccionar una opción";
+  }else{
+    errors.tipoPersona = null;
+  }
+  if(!values.tipoAccionista){
+    errors.tipoAccionista = "Debe seleccionar una opción";
+  }else{
+    errors.tipoAccionista = null;
+  }
+  if(!values.paisResidencia){
+    errors.paisResidencia = "Debe seleccionar una opción";
+  }else{
+    errors.paisResidencia = null;
+  }
+  if(!values.primerNombre && valueTypeShareholder === PERSONA_NATURAL){
+    errors.primerNombre = "Debe ingresar un valor";
+  }else{
+    errors.primerNombre = null;
+  }
+  if(!values.segundoNombre && valueTypeShareholder === PERSONA_NATURAL){
+    errors.segundoNombre = "Debe ingresar un valor";
+  }else{
+    errors.segundoNombre = null;
+  }
+  if(!values.primerApellido && valueTypeShareholder === PERSONA_NATURAL){
+    errors.primerApellido = "Debe ingresar un valor";
+  }else{
+    errors.primerApellido = null;
+  }
+  if(!values.segundoApellido && valueTypeShareholder === PERSONA_NATURAL){
+    errors.segundoApellido = "Debe ingresar un valor";
+  }else{
+    errors.segundoApellido = null;
+  }
+  if(!values.genero && valueTypeShareholder === PERSONA_NATURAL){
+    errors.genero = "Debe seleccionar un valor";
+  }else{
+    errors.genero = null;
+  }
+  if(!values.razonSocial && valueTypeShareholder === PERSONA_JURIDICA){
+    errors.razonSocial = "Debe ingresar un valor";
+  }else{
+    errors.razonSocial = null;
+  }
+  if(!values.direccion){
+    errors.direccion = "Debe ingresar un valor";
+  }else{
+    errors.direccion = null;
+  }
+  if(!values.porcentajePart){
+    errors.porcentajePart = "Debe ingresar un valor";
+  }else{
+    errors.porcentajePart = null;
+  }
+  if(!values.pais){
+    errors.pais = "Debe seleccionar un valor";
+  }else{
+    errors.pais = null;
+  }
+  if(!values.departamento){
+    errors.departamento = "Debe seleccionar un valor";
+  }else{
+    errors.departamento = null;
+  }
+  if(!values.ciudad){
+    errors.ciudad = "Debe seleccionar un valor";
+  }else{
+    errors.ciudad = null;
+  }
+  if(!values.numeroIdTributaria){
+    errors.numeroIdTributaria = "Debe ingresar un valor";
+  }else{
+    errors.numeroIdTributaria = null;
+  }
+  if(!values.observaciones){
+    errors.observaciones = "Debe ingresar un valor";
+  }else{
+    errors.observaciones = null;
+  }
+
   return errors;
 };
 class ModalComponentShareholder extends Component {
@@ -55,7 +143,7 @@ class ModalComponentShareholder extends Component {
   componentWillMount(){
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
-    getMasterDataFields([CONTACT_ID_TYPE, , FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY]);
+    getMasterDataFields([CONTACT_ID_TYPE, FILTER_COUNTRY]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -99,24 +187,25 @@ class ModalComponentShareholder extends Component {
   _onChangeTypeShareholder(val){
     const {fields: {tipoPersona}} = this.props;
     tipoPersona.onChange(val);
+    valueTypeShareholder = parseInt(val);
     this.setState({valueTypeShareholder : parseInt(val)});
   }
 
   _onChangeCountry(val){
-    const {fields: {country, province, city}} = this.props;
-    country.onChange(val);
+    const {fields: {pais, departamento, ciudad}} = this.props;
+    pais.onChange(val);
     const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-    province.onChange('');
-    city.onChange('');
+    consultListWithParameterUbication(FILTER_PROVINCE, pais.value);
+    departamento.onChange('');
+    ciudad.onChange('');
   }
 
   _onChangeProvince(val){
-    const {fields: {country, province, city}} = this.props;
-    province.onChange(val);
+    const {fields: {pais, departamento, ciudad}} = this.props;
+    departamento.onChange(val);
     const {consultListWithParameterUbication} = this.props;
-    consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-    city.onChange('');
+    consultListWithParameterUbication(FILTER_CITY, departamento.value);
+    ciudad.onChange('');
   }
 
   _handleCreateShareholder(){
@@ -126,7 +215,7 @@ class ModalComponentShareholder extends Component {
   render(){
     const {fields:{ tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
-      razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
+      genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
       numeroIdTributaria, observaciones },
       selectsReducer, createShareholder,handleSubmit, error} = this.props;
     const modalStatus = createShareholder.get('modalState');
@@ -185,7 +274,7 @@ class ModalComponentShareholder extends Component {
                     </Row>
                     <Row style={{visibility: this.state.noExiste}}>
                       <Col xs={12} md={4} lg={4}>
-                      <dt><span>Tipo de persona(</span><span style={{color: "red"}}>*</span>)</dt>
+                      <dt><span>Tipo de persona (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="tipoPersona" labelInput="Seleccione"
                           {...tipoPersona}
                           valueProp={'id'}
@@ -195,7 +284,7 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de accionista(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Tipo de accionista (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="tipoAccionista" labelInput="Seleccione"
                           {...tipoAccionista}
                           valueProp={'id'}
@@ -204,7 +293,7 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>País de residencia fiscal(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="paisResidencia" labelInput="Seleccione"
                           {...paisResidencia}
                           valueProp={'id'}
@@ -213,8 +302,8 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
 
-                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === 451 ?{ visible: "" }: {}}>
-                        <dt><span>Primer nombre(</span><span style={{color: "red"}}>*</span>)</dt>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+                        <dt><span>Primer nombre (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="primerNombre"
                           placeholder="Ingrese el primer nombre del accionista"
@@ -222,7 +311,7 @@ class ModalComponentShareholder extends Component {
                           {...primerNombre}
                         />
                       </Col>
-                      <Col xs={12} md={4} lg={4}>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                         <dt><span>Segundo nombre</span></dt>
                         <InputComponent
                           name="segundoNombre"
@@ -231,8 +320,8 @@ class ModalComponentShareholder extends Component {
                           {...segundoNombre}
                         />
                       </Col>
-                      <Col xs={12} md={4} lg={4}>
-                        <dt><span>Primer apellido(</span><span style={{color: "red"}}>*</span>)</dt>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+                        <dt><span>Primer apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="primerApellido"
                           placeholder="Ingrese el primer apellido del accionista"
@@ -240,8 +329,8 @@ class ModalComponentShareholder extends Component {
                           {...primerApellido}
                         />
                       </Col>
-                      <Col xs={12} md={4} lg={4}>
-                        <dt><span>Segundo apellido(</span><span style={{color: "red"}}>*</span>)</dt>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+                        <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="segundoApellido"
                           placeholder="Ingrese el segundo apellido del accionista"
@@ -249,8 +338,17 @@ class ModalComponentShareholder extends Component {
                           {...segundoApellido}
                         />
                       </Col>
-                      <Col xs={12} md={8} lg={8}>
-                        <dt><span>Razón social(</span><span style={{color: "red"}}>*</span>)</dt>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+                        <dt><span>Género (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <ComboBox name="genero" labelInput="Seleccione"
+                          {...genero}
+                          valueProp={'id'}
+                          textProp = {'value'}
+                          data={selectsReducer.get(FILTER_COUNTRY) || []}
+                        />
+                      </Col>
+                      <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
+                        <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="razonSocial"
                           placeholder="Ingrese la razón social del accionista"
@@ -259,7 +357,7 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={8} lg={8}>
-                        <dt><span>Dirección sede principal(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Dirección sede principal (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="direccion"
                           placeholder="Ingrese la dirección del accionista"
@@ -268,7 +366,7 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>Porcentaje de participación(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Porcentaje de participación (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="porcentajePart"
                           style={{textAlign: "right"}}
@@ -280,7 +378,7 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>País(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="pais" labelInput="Seleccione"
                           {...pais}
                           valueProp={'id'}
@@ -290,26 +388,26 @@ class ModalComponentShareholder extends Component {
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>Departamento(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Departamento (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="departamento" labelInput="Seleccione"
                           {...departamento}
                           valueProp={'id'}
                           textProp = {'value'}
                           onChange={val => this._onChangeProvince(val)}
-                          data={selectsReducer.get(FILTER_PROVINCE) || []}
+                          data={selectsReducer.get('dataTypeProvince') || []}
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>Ciudad(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Ciudad (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox name="ciudad" labelInput="Seleccione"
                           {...ciudad}
                           valueProp={'id'}
                           textProp = {'value'}
-                          data={selectsReducer.get(FILTER_CITY) || []}
+                          data={selectsReducer.get('dataTypeCity') || []}
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de id tributaria(</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
                         <InputComponent
                           name="numeroIdTributaria"
                           style={{textAlign: "right"}}
@@ -319,12 +417,13 @@ class ModalComponentShareholder extends Component {
                           {...numeroIdTributaria}
                         />
                       </Col>
-                      <Col xs={12} md={8} lg={8}>
-                        <dt><span>Observaciones(</span><span style={{color: "red"}}>*</span>)</dt>
-                        <InputComponent
+                      <Col xs={12} md={12} lg={12}>
+                        <dt><span>Observaciones (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <Textarea
                           name="observaciones"
-                          placeholder="Ingrese la observaciones"
                           type="text"
+                          style={{width: '100%', height: '100%'}}
+                          placeholder="Ingrese las observaciones"
                           {...observaciones}
                         />
                       </Col>
