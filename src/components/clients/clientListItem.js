@@ -35,7 +35,7 @@ class ClientListItem extends Component{
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument}</div>
-            <div className="celula-title">{dataEconomicGroup}</div>
+            <div className="celula-title">{dataEconomicGroup.length > 33 ? dataEconomicGroup.substring(0, 33) + "..." : dataEconomicGroup}</div>
             <div className="celula-name" style={{marginTop: "5px", fontStyle: "italic"}}>{dataAccountManager}</div>
           </div>
         </div>

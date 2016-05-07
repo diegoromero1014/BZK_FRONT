@@ -42,6 +42,11 @@ var errorNote = false;
 const validate = values => {
     const errors = {}
 
+    if(!values.description){
+      errors.description = "Debe ingresar un valor";
+    }else{
+      errors.description = null;
+    }
     if (!values.idCIIU) {
       errors.idCIIU = "Debe seleccionar una opción";
     } else {
@@ -481,12 +486,15 @@ class clientEdit extends Component{
                 <span>Breve descripción de la empresa</span>
               </dt>
               <dt>
-              <textarea
-                style={{width: "100%"}}
-                rows="4"
-                placeholder="Ingrese la descripción"
-                {...description}
-              />
+                <Textarea
+                  name="description"
+                  type="text"
+                  style={{width: '100%', height: '100%'}}
+                  onChange={val => this._onchangeValue("description", val)}
+                  placeholder="Ingrese la descripción"
+                  rows={4}
+                  {...description}
+                />
               </dt>
             </Col>
           </Row>
