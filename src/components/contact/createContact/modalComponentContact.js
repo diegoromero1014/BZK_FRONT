@@ -118,7 +118,7 @@ class ModalComponentContact extends Component {
     _close(){
       const{clearSearchContact} = this.props;
       clearSearchContact();
-      //this.props.resetForm();
+      this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
       this.setState({showErrorYa:false});
     }
