@@ -199,7 +199,7 @@ class ModalComponentContact extends Component {
         "contactPosition" : tipoCargo.value,
         "unit" : tipoDependencia.value,
         "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value).format('x') : null,
+        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
         "address" : direccion.value,
         "country" : pais.value,
         "province" : departamento.value,
@@ -381,8 +381,8 @@ class ModalComponentContact extends Component {
                               </Col>
                               <Col xs>
                               <dl style={{width: '100%'}}>
-                                <dt><span>Fecha nacimiento - MM/DD/YYYY</span></dt>
-                                <dd><DateTimePickerUi culture='es' format={"MM/DD/YYYY"} time={false} {...fechaNacimiento}/></dd>
+                                <dt><span>Fecha nacimiento - DD/MM/YYYY</span></dt>
+                                <dd><DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...fechaNacimiento}/></dd>
                               </dl>
                               </Col>
                             </Row>
@@ -666,7 +666,7 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         segundoApellido:contactDetail.secondLastName,
         tipoCargo:contactDetail.contactPosition,
         tipoDependencia:contactDetail.unit,
-        fechaNacimiento:contactDetail.dateOfBirth,
+        fechaNacimiento:moment(contactDetail.dateOfBirth).format("DD/MM/YYYY"),
         tipoEstiloSocial:contactDetail.socialStyle,
         tipoActitud:contactDetail.attitudeOverGroup,
         pais:contactDetail.country,
