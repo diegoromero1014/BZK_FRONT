@@ -92,6 +92,7 @@ class ModalComponentContact extends Component {
     constructor(props) {
         super(props);
         this._closeCreate = this._closeCreate.bind(this);
+        this._close = this._close.bind(this);
         this._handleCreateContact = this._handleCreateContact.bind(this);
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
@@ -131,6 +132,14 @@ class ModalComponentContact extends Component {
       ciudad.onChange('');
     }
 
+    _close(){
+      const{clearSearchContact} = this.props;
+      clearSearchContact();
+      //this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
+      this.setState({showErrorYa:false});
+    }
+
     _closeCreate(){
       const{clearSearchContact,isOpen} = this.props;
       clearSearchContact();
@@ -148,15 +157,17 @@ class ModalComponentContact extends Component {
     }
 
     _searchContact(){
+      console.log("pera");
       const {fields:{id,tipoDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoContacto,
       numeroDocumento,primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
       codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
       const {searchContact,clearSearchContact} = this.props;
+      console.log(tipoDocumento.value);
       if(tipoDocumento.value && numeroDocumento.value){
         searchContact(tipoDocumento.value,numeroDocumento.value,window.localStorage.getItem('idClientSelected')).then((data) => {
             if((_.get(data, 'payload.data.isClientContact'))){
                 clearSearchContact();
-                this.props.resetForm();
+                //this.props.resetForm();
                 this.setState({showErrorYa: true});
               }else if(!(_.get(data, 'payload.data.findContact'))){
                 this.setState({showErrorNo: true});
@@ -605,7 +616,7 @@ class ModalComponentContact extends Component {
                           title="Advertencia"
                           show={this.state.showErrorYa}
                           text="Señor usuario, el cliente ya presenta una relación con el contacto buscado"
-                          onConfirm={() => this.setState({showErrorYa:false})}
+                          onConfirm={() => this._close()}
                           />
                           <SweetAlert
                            type= "error"
@@ -656,11 +667,11 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         extension:contactDetail.extension,
         celular:contactDetail.mobileNumber,
         correo:contactDetail.emailAddress,
-        tipoHobbie: _.join(contactDetail.hobbies, ','),
+        tipoHobbie: JSON.parse('["'+_.join(contactDetail.hobbies, '","')+'"]'),
         tipoContacto:contactDetail.typeOfContact,
-        tipoEntidad:_.join(contactDetail.lineOfBusiness, ','),
-        tipoFuncion:_.join(contactDetail.function, ','),
-        tipoDeporte:_.join(contactDetail.sports, ',')
+        tipoEntidad:JSON.parse('["'+_.join(contactDetail.lineOfBusiness, '","')+'"]'),
+        tipoFuncion:JSON.parse('["'+_.join(contactDetail.function, '","')+'"]'),
+        tipoDeporte:JSON.parse('["'+_.join(contactDetail.sports, '","')+'"]'),
       }
     };
   }else{
