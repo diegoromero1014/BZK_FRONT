@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {toggleModalContact,createContactNew,searchContact,clearSearchContact} from './actions';
+import {clearContactDelete} from '../actions';
 import {contactsByClientFindServer} from '../actions';
 import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
@@ -105,13 +106,17 @@ class ModalComponentContact extends Component {
            showErrorNo: false,
            noExiste : 'hidden',
            disabled : '',
-           botonBus : 'block'
+           botonBus : 'block',
+           disabledDep : 'disabled',
+           disabledCiu :'disabled'
          }
         momentLocalizer(moment);
     }
 
     componentWillMount(){
-      const{getMasterDataFields} = this.props;
+      const{getMasterDataFields,clearSearchContact} = this.props;
+      clearSearchContact();
+      this.props.resetForm();
       getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
@@ -130,6 +135,7 @@ class ModalComponentContact extends Component {
       consultListWithParameterUbication(FILTER_PROVINCE, pais.value);
       departamento.onChange('');
       ciudad.onChange('');
+      this.setState({disabledDep : ''});
     }
 
     _onChangeProvince(val){
@@ -138,15 +144,17 @@ class ModalComponentContact extends Component {
       const {consultListWithParameterUbication} = this.props;
       consultListWithParameterUbication(FILTER_CITY, departamento.value);
       ciudad.onChange('');
+      this.setState({disabledCiu : ''});
     }
 
     _closeCreate(){
-      const{clearSearchContact,isOpen} = this.props;
+      const{clearSearchContact,isOpen,clearContactDelete} = this.props;
       clearSearchContact();
       this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
       this.setState({showEx: false});
       isOpen();
+      clearContactDelete();
     }
 
     _onClickLimpiar(){
@@ -429,6 +437,7 @@ class ModalComponentContact extends Component {
                                 <dd><ComboBox
                                     name="departamento"
                                     labelInput="Seleccione"
+                                    disabled = {this.state.disabledDep}
                                     onChange={val => this._onChangeProvince(val)}
                                     value={departamento.value}
                                     onBlur={departamento.onBlur}
@@ -443,6 +452,7 @@ class ModalComponentContact extends Component {
                                 <dt><span>Ciudad (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd> <ComboBox
                                     name="ciudad"
+                                    disabled = {this.state.disabledCiu}
                                     labelInput="Seleccione"
                                     {...ciudad}
                                     valueProp={'id'}
@@ -701,6 +711,7 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         getMasterDataFields,
         contactsByClientFindServer,
+        clearContactDelete,
         consultList
     }, dispatch);
 }
