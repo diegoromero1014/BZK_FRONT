@@ -429,7 +429,8 @@ class clientEdit extends Component{
         "notes":notesArray,
         "description": description.value,
         "clientIdType": infoClient.clientIdType,
-        "celulaId": infoClient.celulaId
+        "celulaId": infoClient.celulaId,
+        "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
      }
      const {createProspect} = this.props;
      createProspect(jsonCreateProspect)

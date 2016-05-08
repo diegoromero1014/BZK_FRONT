@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 
-var focusInFiled = false;
+var focusInField = false;
 class comboBoxComponent extends Component {
    constructor(props) {
        super(props);
@@ -32,7 +32,7 @@ class comboBoxComponent extends Component {
      const self = this;
      selector.dropdown({
          onChange: function (id, text) {
-             focusInFiled = false;
+             focusInField = false;
              self.touched = true;
              self.setState({
                  value: id
@@ -54,9 +54,9 @@ class comboBoxComponent extends Component {
 
    render() {
        const {nameInput, labelInput, data, touched, error, name, disabled, deployUp} = this.props;
-       if( touched && error && !focusInFiled ){
+       if( touched && error && !focusInField ){
          $(`.ui.selection.dropdown.${name}`).focus();
-         focusInFiled = true;
+         focusInField = true;
        }
        return (
            <div>
