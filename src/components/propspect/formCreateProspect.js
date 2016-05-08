@@ -129,7 +129,6 @@ class FormCreateProspect extends Component{
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
        } = this.props;
-       console.log("dateSalesAnnualsdateSalesAnnualsdateSalesAnnuals", dateSalesAnnuals);
        var jsonCreateProspect= {
          "clientIdNumber": numberDocument,
          "clientName": razonSocial.value,
@@ -156,13 +155,13 @@ class FormCreateProspect extends Component{
          "typeOfClient":"",
          "status":0,
          "isCreditNeeded":null,
-         "annualSales": annualSales.value === undefined ? null : numeral(annualSales.value).format('0'),
+         "annualSales": ( annualSales.value === undefined || annualSales.value === null || annualSales.value === "" ) ? null : numeral(annualSales.value).format('0'),
          "salesUpadateDate": dateSalesAnnuals.value ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-         "assets": assets.value === undefined ? null : numeral(assets.value).format('0'),
-         "liabilities": liabilities.value === undefined ? null : numeral(liabilities.value).format('0'),
-         "operatingIncome": operatingIncome.value === undefined ? null : numeral(operatingIncome.value).format('0'),
-         "nonOperatingIncome": nonOperatingIncome.value === undefined ? null : numeral(nonOperatingIncome.value).format('0'),
-         "expenses": expenses.value === undefined ? null : numeral(expenses.value).format('0'),
+         "assets": ( assets.value === undefined || assets.value === null || assets.value === "" ) ? null : numeral(assets.value).format('0'),
+         "liabilities": ( liabilities.value === undefined || liabilities.value === null || liabilities.value === "" ) ? null : numeral(liabilities.value).format('0'),
+         "operatingIncome": ( operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === "" ) ? null : numeral(operatingIncome.value).format('0'),
+         "nonOperatingIncome": ( nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === "" ) ? null : numeral(nonOperatingIncome.value).format('0'),
+         "expenses": ( expenses.value === undefined || expenses.value === null || expenses.value === "" ) ? null : numeral(expenses.value).format('0'),
          "localMarket":"",
          "marketLeader":"",
          "territory":"",
