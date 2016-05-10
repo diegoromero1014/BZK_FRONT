@@ -287,7 +287,7 @@ class FormCreateProspect extends Component{
               <textarea
                 {...descriptionCompany}
                 style={{width: "100%"}}
-                max="250"
+                maxLength="250"
                 rows="4"
               />
             </div>

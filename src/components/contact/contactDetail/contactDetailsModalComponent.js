@@ -601,7 +601,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <textarea className="form-control need-input"
                       name="contactAddress"
-                      maxLength={250}
+                      maxLength="250"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("address", val)}
                       {...contactAddress}
