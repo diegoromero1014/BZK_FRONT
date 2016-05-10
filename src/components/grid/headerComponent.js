@@ -5,15 +5,16 @@ import React, {
 
 class HeaderComponent extends Component {
   render(){
-    const titleColumn = this.props.titleColumn;
+    const {titleColumn,orderColumn} = this.props;
     return (
-      <th style={{textTransform:'none'}}>{titleColumn}</th>
+      <th style={{textTransform:'none'}}>{titleColumn}{orderColumn}</th>
     );
   }
 }
 
 HeaderComponent.propTypes = {
-   titleColumn: PropTypes.string.isRequired
+   titleColumn: PropTypes.string.isRequired,
+   orderColumn:PropTypes.object
 };
 
 

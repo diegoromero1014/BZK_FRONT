@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT, CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_DELETE} from './constants';
+import {ORDER_COLUMN,GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT, CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_DELETE} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -7,6 +7,8 @@ const initialState = Immutable.Map({
     contacts: [],
     page: 1,
     limInf: 0,
+    order: 0,
+    column:"",
     rowCount: 0
 });
 
@@ -41,6 +43,11 @@ export default (state = initialState, action) => {
               .set('page', 1)
               .set('limInf', 0)
           });
+          case ORDER_COLUMN:
+          return state.withMutations(map => {
+              map
+              .set('order', action.order)
+              .set('column', action.column)});
         default:
             return state;
     }

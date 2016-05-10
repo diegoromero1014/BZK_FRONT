@@ -20,7 +20,6 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
 import {FILTER_CITY,FILTER_PROVINCE,CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
-
 const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
 "numeroDocumento","primerNombre","segundoNombre","primerApellido", "segundoApellido","fechaNacimiento","direccion","barrio",
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
@@ -121,9 +120,6 @@ class ModalComponentContact extends Component {
     }
 
     _close(){
-      const{clearSearchContact} = this.props;
-      clearSearchContact();
-      this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
       this.setState({showErrorYa:false});
     }
@@ -696,7 +692,11 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
     };
   }else{
     return {
-      selectsReducer
+      selectsReducer,
+      initialValues: {
+        tipoDocumento: '',
+        numeroDocumento: ''
+      }
     };
   }
 }
