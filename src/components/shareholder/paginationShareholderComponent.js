@@ -29,7 +29,7 @@ class PaginationShareholderComponent extends Component{
 
   _handleShareholdersByClientsFind(limInf){
       const {shareholdersReducer,shareholdersByClientFindServer} = this.props;
-      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,shareholdersReducer.get('keyword'));
+      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,shareholdersReducer.get('keyword'),"");
   }
 
   render(){
