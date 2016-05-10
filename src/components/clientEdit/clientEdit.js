@@ -43,11 +43,6 @@ var errorNote = false;
 const validate = values => {
     const errors = {}
 
-    if(!values.description){
-      errors.description = "Debe ingresar un valor";
-    }else{
-      errors.description = null;
-    }
     if (!values.idCIIU) {
       errors.idCIIU = "Debe seleccionar una opción";
     } else {
@@ -203,6 +198,7 @@ class clientEdit extends Component{
     this._closeError = this._closeError.bind(this);
     this._closeSuccess = this._closeSuccess.bind(this);
     this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
+    this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
   }
 
   _closeWindow(){
@@ -223,6 +219,17 @@ class clientEdit extends Component{
     redirectUrl("/dashboard/clientInformation");
   }
 
+  _onChangeGroupEconomic(e){
+    const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
+    if(e.keyCode == 13 || e.which == 13){
+      e.preventDefault();
+      economicGroupsByKeyword(keywordFindEconomicGroup.value);
+      groupEconomic.onChange('')
+    } else {
+      keywordFindEconomicGroup.onChange(e.target.value);
+    }
+  }
+
   _handleGroupEconomicFind(){
     const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
     economicGroupsByKeyword(keywordFindEconomicGroup.value);
@@ -231,7 +238,7 @@ class clientEdit extends Component{
 
   _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="-0123456789"; i< val.toString().length; i++){
+    for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
      if (validos.indexOf(val.toString().charAt(i)) != -1){
         output += val.toString().charAt(i)
       }
@@ -723,9 +730,8 @@ class clientEdit extends Component{
                 <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
-                  format="0,000"
                   type="text"
                   min={0}
                   maxLength={16}
@@ -751,7 +757,7 @@ class clientEdit extends Component{
                 <span>Activos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
@@ -772,7 +778,7 @@ class clientEdit extends Component{
                 <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
@@ -791,7 +797,7 @@ class clientEdit extends Component{
                 <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
@@ -810,7 +816,7 @@ class clientEdit extends Component{
                 <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
@@ -831,7 +837,7 @@ class clientEdit extends Component{
                 <span>Egresos (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
-                <input
+                <Input
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
@@ -867,6 +873,7 @@ class clientEdit extends Component{
                     max={50}
                     placeholder="Ingrese el grupo económico a buscar"
                     {...keywordFindEconomicGroup}
+                    onKey={this._onChangeGroupEconomic}
                   />
                 </div>
                 <button id="searchGrupoEconomico" className="btn" title="Buscar grupo económico"

@@ -14,7 +14,6 @@ class UbicationCorrespondence extends Component{
     } else {
       addresses = addresses[0];
     }
-    console.log("infoClientinfoClientinfoClient", infoClient);
     return(
       <div className="tab-content-row" style={{marginTop: "40px",borderTop: "1px dotted #cea70b"}}>
         <table>

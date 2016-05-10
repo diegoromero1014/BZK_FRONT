@@ -11,16 +11,16 @@ class inputComponent extends Component {
       this._onChange = this._onChange.bind(this);
   }
 
-  _onChange(e){
+  _onChange(e, event){
     const {onChange} = this.props;
     this.setState({
       value: e.target.value
     });
-    onChange(e.target.value);
+    onChange(e.target.value, e);
   }
 
   render() {
-      const {nameInput, type, placeholder, disabled, touched, error, name, onChange, min, max, defaultValue, value} = this.props;
+      const {nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value} = this.props;
       if( touched && error ){
         $(`.ui.input.${name} [type=text]`).focus();
       }
@@ -31,8 +31,11 @@ class inputComponent extends Component {
                     name={nameInput}
                     min={min}
                     maxLength={max}
+                    style={style}
                     onChange={this._onChange}
                     placeholder={placeholder}
+                    onBlur={onBlur}
+                    onKeyPress={onKey}
                     value={value || ''} />
               </div>
               {
