@@ -53,8 +53,13 @@ const validate = (values) => {
     if(!values.correo){
       errors.correo = "Debe ingresar el correo electrónico";
     }else{
-      errors.correo = null;
+      if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.correo))){
+          errors.correo = "Debe ingresar un formato válido";
+      }else{
+        errors.correo = null;
+      }
     }
+
     if(!values.tipoTratamiendo){
       errors.tipoTratamiendo = "Debe Seleccionar un tipo de tratamiendo";
     }else{
@@ -206,8 +211,8 @@ class ModalComponentContact extends Component {
         "secondLastName" : segundoApellido.value,
         "contactPosition" : tipoCargo.value,
         "unit" : tipoDependencia.value,
-        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
+        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']'),
+        "dateOfBirth" : fechaNacimiento.value !== '' && fechaNacimiento.value !== null && fechaNacimiento.value !== undefined ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
         "address" : direccion.value,
         "country" : pais.value,
         "province" : departamento.value,
@@ -226,7 +231,7 @@ class ModalComponentContact extends Component {
         "attitudeOverGroup" : tipoActitud.value
       }
       createContactNew(messageBody).then((data) => {
-          if((_.get(data, 'payload.status') === 200)){
+          if((_.get(data, 'payload.data.status') === 200)){
               this.setState({showEx: true});
               contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
               "",
@@ -670,7 +675,7 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         segundoApellido:contactDetail.secondLastName,
         tipoCargo:contactDetail.contactPosition,
         tipoDependencia:contactDetail.unit,
-        fechaNacimiento:moment(contactDetail.dateOfBirth).format("DD/MM/YYYY"),
+        fechaNacimiento: contactDetail.dateOfBirth !== '' && contactDetail.dateOfBirth !== null && contactDetail.dateOfBirth !== undefined ? moment(contactDetail.dateOfBirth).format('DD/MM/YYYY') : null,
         tipoEstiloSocial:contactDetail.socialStyle,
         tipoActitud:contactDetail.attitudeOverGroup,
         pais:contactDetail.country,

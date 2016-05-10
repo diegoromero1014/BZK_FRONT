@@ -1,5 +1,5 @@
 import {APP_URL} from '../../../constantsGlobal';
-import {GET_CONTACT_DETAILS, SAVE_CONTACT} from '../constants';
+import {GET_CONTACT_DETAILS, SAVE_CONTACT, CLEAR_EDIT_CONTACT} from '../constants';
 import axios from 'axios';
 
 /**
@@ -30,6 +30,12 @@ export function getContactDetails(contactId, clientId) {
   return {
     type: GET_CONTACT_DETAILS,
     payload: request
+  }
+}
+
+export function clearClienEdit(){
+  return {
+    type: CLEAR_EDIT_CONTACT
   }
 }
 

@@ -4,10 +4,11 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,clearShareholder} from './actions';
+import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
+let v1 = "";
 class ListShareholderComponent extends Component {
 
   constructor(props){
@@ -20,6 +21,28 @@ class ListShareholderComponent extends Component {
         orderA: 'inline-block',
         orderD: 'none'
       }
+  }
+
+  componentWillReceiveProps(nextProps){
+      const {
+          value1
+      } = nextProps;
+      if (v1 !== nextProps.value1) {
+      v1 = nextProps.value1;
+      this._orderColumn(0,"");
+    }
+  }
+
+
+  _orderColumn(order,column){
+    if(order === 1){
+      this.setState({orderA :'none',orderD:'inline-block'});
+    }else{
+      this.setState({orderA :'inline-block',orderD :'none'});
+    }
+    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder} = this.props;
+    orderColumnShareholder(order,column);
+    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,column,order,shareholdersReducer.get('keyword'),v1);
   }
 
   _renderHeaders(){
@@ -50,6 +73,7 @@ class ListShareholderComponent extends Component {
       },
       {
         title: "Tipo de accionista",
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"shk.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"shk.id")}></i></span>,
         key:"shareHolderKind"
       },
       {
@@ -91,7 +115,7 @@ class ListShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer,clearShareholder
+    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder
   }, dispatch);
 }
 

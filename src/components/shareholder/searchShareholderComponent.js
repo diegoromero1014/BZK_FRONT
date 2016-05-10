@@ -42,9 +42,9 @@ class SearchShareholderComponent extends Component {
       const {shareholdersByClientFindServer,clearShareholder} = this.props;
       clearShareholder();
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"","");
+          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"",v1);
       }else{
-          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword,"");
+          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword,v1);
       }
   }
 
