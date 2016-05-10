@@ -4,6 +4,8 @@ import {bindActionCreators} from 'redux';
 import {shareholdersByClientFindServer,changeKeyword,clearShareholder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
+let v1 = "";
+
 class SearchShareholderComponent extends Component {
   constructor(props) {
       super(props);
@@ -12,6 +14,16 @@ class SearchShareholderComponent extends Component {
       };
       this._handleShareholderByClientsFind = this._handleShareholderByClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps){
+      const {
+          value1
+      } = nextProps;
+      if (v1 !== nextProps.value1) {
+      v1 = nextProps.value1;
+      this._handleShareholderByClientsFind();
+      }
   }
 
   _handleChangeKeyword(e){
@@ -30,9 +42,9 @@ class SearchShareholderComponent extends Component {
       const {shareholdersByClientFindServer,clearShareholder} = this.props;
       clearShareholder();
       if(this.state.keyword === '' || this.state.keyword === undefined){
-          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"");
+          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"","");
       }else{
-          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword);
+          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword,"");
       }
   }
 

@@ -27,6 +27,10 @@ class ContactComponent extends Component {
     componentWillMount(){
         const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
         clearContact();
+        contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
+        "",
+        "",
+        "");
     }
 
   render() {

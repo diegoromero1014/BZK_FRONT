@@ -19,7 +19,7 @@ class GridComponent extends Component {
   }
 
   _renderHeader(header, idx){
-      return <HeaderComponent key={idx} titleColumn={header.title} />;
+      return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} />;
   }
 
   _renderCell(row, headers,modalTitle){
@@ -38,7 +38,7 @@ class GridComponent extends Component {
       });
   }
 
-  _renderRow(data, headers,modalTitle){
+  _renderRow(data,headers,modalTitle){
       return data.map((value, idx) => {
           return (
               <tr role="row" key={idx}>
@@ -56,11 +56,11 @@ class GridComponent extends Component {
           <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info" >
             <thead style={{color: '#4c5360'}}>
               <tr role="row">
-                {headers.map(this._renderHeader)}
+                {headers().map(this._renderHeader)}
               </tr>
             </thead>
             <tbody>
-                {this._renderRow(data, headers, modalTitle)}
+                {this._renderRow(data, headers(), modalTitle)}
             </tbody>
           </table>
     );
@@ -68,7 +68,7 @@ class GridComponent extends Component {
 }
 
 GridComponent.propTypes = {
-   headers: PropTypes.array.isRequired,
+   headers: PropTypes.func.isRequired,
    data: PropTypes.array.isRequired,
    modalTitle: PropTypes.string,
 };

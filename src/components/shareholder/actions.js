@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE} from './constants';
 import axios from 'axios';
 
-export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm){
+export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,shareholderKindId){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -23,7 +23,8 @@ export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOr
        "maxRows" : maxRows,
        "searchTerm" : searchTerm,
        "columnOrder": columnOrder,
-       "order": order
+       "order": order,
+       "shareholderKindId":shareholderKindId
    }
   }
 
