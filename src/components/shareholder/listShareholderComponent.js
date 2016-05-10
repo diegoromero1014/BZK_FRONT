@@ -8,55 +8,56 @@ import {shareholdersByClientFindServer,clearShareholder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
-
-const headers = [
-  {
-    title: "",
-    key:"actions"
-  },
-  {
-    title: "Tipo de documento",
-    key:"shareHolderIdType"
-  },
-  {
-    title: "Número de documento",
-    key:"shareHolderIdNumber"
-  },
-  {
-    title: "Tipo de persona",
-    key:"shareHolderType"
-  },
-  {
-    title: "Nombre/Razón social",
-    key:"name"
-  },
-  {
-    title: "% de participación",
-    key:"percentage"
-  },
-  {
-    title: "Tipo de accionista",
-    key:"shareHolderKind"
-  },
-  {
-    title: "",
-    key:"delete"
-  },
-];
-
 class ListShareholderComponent extends Component {
 
   constructor(props){
       super(props);
       this._renderCellView = this._renderCellView.bind(this);
+      this._renderHeaders = this._renderHeaders.bind(this);
+      this.state = {
+        column : "",
+        order : "",
+        orderA: 'inline-block',
+        orderD: 'none'
+      }
   }
 
-  componentWillMount(){
-      const {shareholdersByClientFindServer,clearShareholder} = this.props;
-      clearShareholder();
-      shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"");
+  _renderHeaders(){
+    return [
+      {
+        title: "",
+        key:"actions"
+      },
+      {
+        title: "Tipo de documento",
+        key:"shareHolderIdType"
+      },
+      {
+        title: "Número de documento",
+        key:"shareHolderIdNumber"
+      },
+      {
+        title: "Tipo de persona",
+        key:"shareHolderType"
+      },
+      {
+        title: "Nombre/Razón social",
+        key:"name"
+      },
+      {
+        title: "% de participación",
+        key:"percentage"
+      },
+      {
+        title: "Tipo de accionista",
+        key:"shareHolderKind"
+      },
+      {
+        title: "",
+        key:"delete"
+      },
+    ]
   }
-
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el accionista ";
@@ -82,7 +83,7 @@ class ListShareholderComponent extends Component {
     const {shareholdersReducer} = this.props;
     const data = shareholdersReducer.get('shareholders');
     return ( < div className = "horizontal-scroll-wrapper" >
-      <GridComponent headers={headers} data={this._renderCellView(data)} modalTitle={modalTitle}/>
+      <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>
     );
   }
