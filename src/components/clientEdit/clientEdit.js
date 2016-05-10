@@ -500,7 +500,7 @@ class clientEdit extends Component{
                   style={{width: '100%', height: '100%'}}
                   onChange={val => this._onchangeValue("description", val)}
                   placeholder="Ingrese la descripción"
-                  max={1000}
+                  max="1000"
                   rows={4}
                   {...description}
                 />
@@ -602,7 +602,7 @@ class clientEdit extends Component{
                   name="address"
                   type="text"
                   style={{width: '100%', height: '100%'}}
-                  max={250}
+                  max="250"
                   onChange={val => this._onchangeValue("address", val)}
                   placeholder="Ingrese la dirección"
                   {...address}
@@ -662,7 +662,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtBarrio"
                   type="text"
-                  max={120}
+                  max="120"
                   placeholder="Ingrese el barrio"
                   {...neighborhood}
                 />
@@ -676,7 +676,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtTelefono"
                   type="text"
-                  max={30}
+                  max="30"
                   placeholder="Ingrese el teléfono"
                   {...telephone}
                 />
@@ -870,7 +870,7 @@ class clientEdit extends Component{
                 <div style={{display:"inline-block", width:"85%"}}>
                   <Input
                     name="txtGrupoEconomico"
-                    max={50}
+                    max="50"
                     placeholder="Ingrese el grupo económico a buscar"
                     {...keywordFindEconomicGroup}
                     onKey={this._onChangeGroupEconomic}

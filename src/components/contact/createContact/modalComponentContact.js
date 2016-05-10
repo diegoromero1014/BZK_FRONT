@@ -269,7 +269,7 @@ class ModalComponentContact extends Component {
                                   <dd><Input
                                     name="numeroDocumento"
                                     type="text"
-                                    max={20}
+                                    max="20"
                                     placeholder="Ingrese el número de documento"
                                     disabled = {this.state.disabled}
                                     {...numeroDocumento}
@@ -313,7 +313,7 @@ class ModalComponentContact extends Component {
                                   <Input
                                     name="primerNombre"
                                     type="text"
-                                    max={60}
+                                    max="60"
                                     {...primerNombre}
                                     /></dd>
                                 </dl>
@@ -326,7 +326,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoNombre"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...segundoNombre}
                                 /></dd>
                               </dl>
@@ -337,7 +337,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="primerApellido"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...primerApellido}
                                 /></dd>
                               </dl>
@@ -348,7 +348,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoApellido"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...segundoApellido}
                                 /></dd>
                               </dl>
@@ -466,7 +466,7 @@ class ModalComponentContact extends Component {
                                 <TextareaComponent
                                   name="direccion"
                                   type="text"
-                                  max={250}
+                                  max="250"
                                   style={{width: '100%', height: '100%'}}
                                   onChange={val => this._onchangeValue("direccion", val)}
                                   rows={4}
@@ -482,7 +482,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="barrio"
                                   type="text"
-                                  max={120}
+                                  max="120"
                                   {...barrio}
                                 /></dd>
                               </dl>
@@ -493,7 +493,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="codigoPostal"
                                   type="text"
-                                  max={25}
+                                  max="25"
                                   {...codigoPostal}
                                 /></dd>
                               </dl>
@@ -504,7 +504,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="telefono"
                                   type="text"
-                                  max={30}
+                                  max="30"
                                   {...telefono}
                                 /></dd>
                               </dl>
@@ -517,7 +517,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="extension"
                                   type="text"
-                                  max={20}
+                                  max="20"
                                   {...extension}
                                 /></dd>
                               </dl>
@@ -528,7 +528,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="celular"
                                   type="text"
-                                  max={30}
+                                  max="30"
                                   {...celular}
                                 /></dd>
                               </dl>
@@ -539,7 +539,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="correo"
                                   type="text"
-                                  max={150}
+                                  max="150"
                                   {...correo}
                                 /></dd>
                               </dl>

@@ -371,7 +371,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactIdentityNumber"
                       type="text"
-                      max={20}
+                      max="20"
                       disabled={'disabled'}
                       onChange={val => this._onchangeValue("contactIdentityNumber", val)}
                       {...contactIdentityNumber}
@@ -417,7 +417,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactFirstName"
                       type="text"
-                      max={60}
+                      max="60"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("firstName", val)}
                       {...contactFirstName}
@@ -432,7 +432,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactMiddleName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("middleName", val)}
                         {...contactMiddleName}
@@ -445,7 +445,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactFirstLastName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("firstLastName", val)}
                         {...contactFirstLastName}
@@ -458,7 +458,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactSecondLastName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("secondLastName", val)}
                         {...contactSecondLastName}
@@ -616,7 +616,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactNeighborhood"
                         type="text"
-                        max={120}
+                        max="120"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("neighborhood", val)}
                         {...contactNeighborhood}
@@ -629,7 +629,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactPostalCode"
                         type="text"
-                        max={25}
+                        max="25"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("postalCode", val)}
                         {...contactPostalCode}
@@ -642,7 +642,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactTelephoneNumber"
                       type="text"
-                      max={30}
+                      max="30"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("telephoneNumber", val)}
                       {...contactTelephoneNumber}
@@ -657,7 +657,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactExtension"
                         type="text"
-                        max={20}
+                        max="20"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("extension", val)}
                         {...contactExtension}
@@ -670,7 +670,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactMobileNumber"
                       type="text"
-                      max={30}
+                      max="30"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("mobileNumber", val)}
                       {...contactMobileNumber}
@@ -683,7 +683,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactEmailAddress"
                       type="text"
-                      max={150}
+                      max="150"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("emailAddress", val)}
                       {...contactEmailAddress}
