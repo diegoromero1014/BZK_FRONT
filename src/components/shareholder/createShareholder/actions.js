@@ -20,10 +20,38 @@ export function searchShareholder(typeDocument,numberDocument,clientId){
       "messageBody": {
         "typeDocument": typeDocument,
         "numberDocument":numberDocument,
-        "clientId": clientId
+        "idClient": clientId
       }
     }
-  var request = axios.post(APP_URL + "/getShareholderByDocument", json);
+  var request = axios.post(APP_URL + "/validateShareholderExists", json);
+  return {
+    type: actions.SEARCH_SHAREHOLDER,
+    payload: request
+  }
+}
+
+export function cretaeShareholder(jsonCreateShareholder){
+  const json = {
+      messageHeader: {
+        "timestamp": new Date().getTime(),
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+         "username":"lmejias",
+         "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+      "messageBody": {
+        "typeDocument": typeDocument,
+        "numberDocument":numberDocument,
+        "idClient": clientId
+      }
+    }
+  var request = axios.post(APP_URL + "/validateShareholderExists", json);
   return {
     type: actions.SEARCH_SHAREHOLDER,
     payload: request

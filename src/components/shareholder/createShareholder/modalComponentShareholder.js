@@ -8,9 +8,10 @@ import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import {toggleModalShareholder, clearSearchShareholder, searchShareholder} from './actions';
+import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
+import {toggleModalShareholder, clearSearchShareholder, searchShareholder, cretaeShareholder} from './actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE} from '../../selectsComponent/constants';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -20,8 +21,10 @@ const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "pais", "departamento", "ciudad", "numeroIdTributaria", "observaciones"];
 const errors = {};
 
-const PERSONA_NATURAL = 451;
-const PERSONA_JURIDICA = 452;
+var typeMessage = "error";
+var titleMessage = "Campos obligatorios";
+var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
+
 
 var valueTypeShareholder;
 
@@ -118,10 +121,7 @@ class ModalComponentShareholder extends Component {
     this._onClickLimpiar = this._onClickLimpiar.bind(this);
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
     this.state = {
-       showEx:false,
-       showEr:false,
-       showErrorYa: false,
-       showErrorNo: false,
+       showMessage:false,
        noExiste : 'hidden',
        disabled : '',
        botonBus : 'block',
@@ -130,7 +130,7 @@ class ModalComponentShareholder extends Component {
   }
 
   _closeCreate(){
-    this.setState({showEx:false, showEr: false,showErrorYa:false, showErrorNo:false});
+    this.setState({showMessage:false});
   }
 
   _onClickLimpiar(){
@@ -143,7 +143,8 @@ class ModalComponentShareholder extends Component {
   componentWillMount(){
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
-    getMasterDataFields([CONTACT_ID_TYPE, FILTER_COUNTRY]);
+    this.props.resetForm();
+    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -158,30 +159,40 @@ class ModalComponentShareholder extends Component {
   _searchShareholder(){
     const {fields:{tipoDocumento, numeroDocumento},
       searchShareholder, clearSearchShareholder}= this.props;
-    /*if(tipoDocumento.value && numeroDocumento.value){
+    if(tipoDocumento.value && numeroDocumento.value){
       searchShareholder(tipoDocumento.value, numeroDocumento.value,
-        window.localStorage.getItem('idClientSelected')).then((data) => {
-          if((_.get(data, 'payload.data.isShareholder'))){
-              clearSearchShareholder();
-              this.props.resetForm();
-              this.setState({showErrorYa: true});
-            }else if(!(_.get(data, 'payload.data.findShareholder'))){
-              this.setState({showErrorNo: true});
+        window.localStorage.getItem('idClientSelected') ).then((data) => {
+          if( (_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista existe
+              typeMessage="warning";
+              titleMessage="Advertencia";
+              message="Señor usuario, el accionista ya se encuentra registrado en el cliente.";
+              this.setState({showMessage: true});
+
+            } else if ( !(_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista no existe
+              typeMessage="warning";
+              titleMessage="Advertencia";
+              message="Señor usuario, el accionista no existe.";
+
               this.setState({disabled : 'disabled'});
               this.setState({noExiste : 'visible'});
               this.setState({botonBus : 'none'});
-            } else if ((_.get(data, 'payload.data.findShareholder'))){
-              this.setState({disabled : 'disabled'});
-              this.setState({noExiste : 'visible'});
-              this.setState({botonBus : 'none'});
+              this.setState({showMessage: true});
             }
           }, (reason) => {
-            this.setState({showEr: true});
+            typeMessage = "error";
+            titleMessage = "Error";
+            message = "Señor usuario, se presento un error.";
+            this.setState({showMessage: true});
         });
-    }*/
-    this.setState({disabled : 'disabled'});
+    } else {
+      typeMessage = "error";
+      titleMessage = "Campos obligatorios";
+      message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
+      this.setState({showMessage: true});
+    }
+    /*this.setState({disabled : 'disabled'});
     this.setState({noExiste : 'visible'});
-    this.setState({botonBus : 'none'});
+    this.setState({botonBus : 'none'});*/
   }
 
   _onChangeTypeShareholder(val){
@@ -209,7 +220,52 @@ class ModalComponentShareholder extends Component {
   }
 
   _handleCreateShareholder(){
-    console.log("save information");
+    const {fields:{ tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
+      paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
+      genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
+      numeroIdTributaria, observaciones }, cretaeShareholder} = this.props;
+      var messageBody = {
+        "id" :id.value,
+        "client": window.localStorage.getItem('idClientSelected'),
+        "title": tipoTratamiendo.value,
+        "gender" : tipoGenero.value ,
+        "contactType" : tipoDocumento.value,
+        "contactIdentityNumber": numeroDocumento.value,
+        "firstName":primerNombre.value,
+        "middleName" : segundoNombre.value,
+        "firstLastName" : primerApellido.value,
+        "secondLastName" : segundoApellido.value,
+        "contactPosition" : tipoCargo.value,
+        "unit" : tipoDependencia.value,
+        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
+        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
+        "address" : direccion.value,
+        "country" : pais.value,
+        "province" : departamento.value,
+        "city" : ciudad.value,
+        "neighborhood" : barrio.value,
+        "postalCode" : codigoPostal.value,
+        "telephoneNumber" : telefono.value,
+        "extension" : extension.value,
+        "mobileNumber" : celular.value,
+        "emailAddress" : correo.value,
+        "hobbies" : JSON.parse('[' + ((tipoHobbie.value)?tipoHobbie.value:"") +']'),
+        "sports" : JSON.parse('[' + ((tipoDeporte.value)?tipoDeporte.value:"") +']'),
+        "typeOfContact" : tipoContacto.value,
+        "lineOfBusiness" : JSON.parse('[' + ((tipoEntidad.value)?tipoEntidad.value:"") +']'),
+        "socialStyle" : tipoEstiloSocial.value,
+        "attitudeOverGroup" : tipoActitud.value
+      }
+
+      cretaeShareholder(messageBody).then((data) => {
+          if((_.get(data, 'payload.status') === 200)){
+              this.setState({showMessage: true});
+            } else {
+              this.setState({showMessage: true});
+          }
+          }, (reason) => {
+            this.setState({showMessage: true});
+      });
   }
 
   render(){
@@ -219,6 +275,8 @@ class ModalComponentShareholder extends Component {
       numeroIdTributaria, observaciones },
       selectsReducer, createShareholder,handleSubmit, error} = this.props;
     const modalStatus = createShareholder.get('modalState');
+    console.log("PERSONA_NATURAL", PERSONA_NATURAL);
+    console.log("PERSONA_JURIDICA", PERSONA_JURIDICA);
     return (
       <div>
       <Modal
@@ -290,7 +348,7 @@ class ModalComponentShareholder extends Component {
                           {...tipoAccionista}
                           valueProp={'id'}
                           textProp = {'value'}
-                          data={selectsReducer.get(FILTER_COUNTRY) || []}
+                          data={selectsReducer.get(SHAREHOLDER_KIND) || []}
                         />
                       </Col>
                       <Col xs={12} md={4} lg={4}>
@@ -448,27 +506,13 @@ class ModalComponentShareholder extends Component {
           </div>
           </form>
       </Modal>
-      <SweetAlert
-       type= "warning"
-       title="Advertencia"
-       show={this.state.showErrorYa}
-       text="El accionista ya se encuentra registrado en el cliente"
-       onConfirm={() => this._closeCreate()}
-       />
-       <SweetAlert
-        type= "error"
-        show={this.state.showEr}
-        title="Error"
-        text="Se presento un error"
-        onConfirm={() => this._closeCreate()}
-        />
-       <SweetAlert
-        type= "warning"
-        show={this.state.showErrorNo}
-        title="Advertencia"
-        text="El contacto no existe"
-        onConfirm={() => this._closeCreate()}
-        />
+         <SweetAlert
+          type= {typeMessage}
+          show={this.state.showMessage}
+          title={titleMessage}
+          text={message}
+          onConfirm={() => this._closeCreate()}
+          />
       </div>
     );
   }
@@ -482,7 +526,8 @@ function mapDispatchToProps(dispatch) {
       getMasterDataFields,
       clearValuesAdressess,
       consultListWithParameterUbication,
-      consultDataSelect
+      consultDataSelect,
+      cretaeShareholder
     }, dispatch);
 }
 
