@@ -487,7 +487,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese las ventas anuales"
                 type="text"
                 min={0}
-                max="16"
+                maxLength="16"
                 {...annualSales}
                 value={annualSales.value}
                 onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
@@ -502,7 +502,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los activos"
                 type="text"
                 min={0}
-                max="16"
+                maxLength="16"
                 {...assets}
                 value={assets.value}
                 onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
@@ -517,7 +517,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los pasivos"
                 type="text"
                 min={0}
-                max="16"
+                maxLength="16"
                 {...liabilities}
                 value={liabilities.value}
                 onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
@@ -531,7 +531,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos operacionales"
                 type="text"
-                max="16"
+                maxLength="16"
                 {...operatingIncome}
                 value={operatingIncome.value}
                 onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
@@ -545,7 +545,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos no operacionales"
                 type="text"
-                max="16"
+                maxLength="16"
                 {...nonOperatingIncome}
                 value={nonOperatingIncome.value}
                 onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
@@ -559,7 +559,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los egresos"
                 min={0}
-                max="16"
+                maxLength="16"
                 type="text"
                 {...expenses}
                 value={expenses.value}
