@@ -53,8 +53,13 @@ const validate = (values) => {
     if(!values.correo){
       errors.correo = "Debe ingresar el correo electrónico";
     }else{
-      errors.correo = null;
+      if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.correo))){
+          errors.correo = "Debe ingresar un formato válido";
+      }else{
+        errors.correo = null;
+      }
     }
+
     if(!values.tipoTratamiendo){
       errors.tipoTratamiendo = "Debe Seleccionar un tipo de tratamiendo";
     }else{
@@ -206,8 +211,8 @@ class ModalComponentContact extends Component {
         "secondLastName" : segundoApellido.value,
         "contactPosition" : tipoCargo.value,
         "unit" : tipoDependencia.value,
-        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
+        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']'),
+        "dateOfBirth" : fechaNacimiento.value !== '' && fechaNacimiento.value !== null && fechaNacimiento.value !== undefined ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
         "address" : direccion.value,
         "country" : pais.value,
         "province" : departamento.value,
@@ -226,7 +231,7 @@ class ModalComponentContact extends Component {
         "attitudeOverGroup" : tipoActitud.value
       }
       createContactNew(messageBody).then((data) => {
-          if((_.get(data, 'payload.status') === 200)){
+          if((_.get(data, 'payload.data.status') === 200)){
               this.setState({showEx: true});
               contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
               "",
@@ -247,7 +252,7 @@ class ModalComponentContact extends Component {
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
         return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
-                      <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+                      <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
                       <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica contacto</span></dt>
                       <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
                             <Row>
@@ -259,6 +264,7 @@ class ModalComponentContact extends Component {
                                   disabled = {this.state.disabled}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                   /></dd>
                                 </dl>
@@ -269,7 +275,7 @@ class ModalComponentContact extends Component {
                                   <dd><Input
                                     name="numeroDocumento"
                                     type="text"
-                                    max={20}
+                                    max="20"
                                     placeholder="Ingrese el número de documento"
                                     disabled = {this.state.disabled}
                                     {...numeroDocumento}
@@ -291,6 +297,7 @@ class ModalComponentContact extends Component {
                                   {...tipoTratamiendo}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_TITLE) || []}
                                   /></dd>
                                 </dl>
@@ -302,6 +309,7 @@ class ModalComponentContact extends Component {
                                   {...tipoGenero}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_GENDER) || []}
                                   /></dd>
                                 </dl>
@@ -313,7 +321,7 @@ class ModalComponentContact extends Component {
                                   <Input
                                     name="primerNombre"
                                     type="text"
-                                    max={60}
+                                    max="60"
                                     {...primerNombre}
                                     /></dd>
                                 </dl>
@@ -326,7 +334,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoNombre"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...segundoNombre}
                                 /></dd>
                               </dl>
@@ -337,7 +345,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="primerApellido"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...primerApellido}
                                 /></dd>
                               </dl>
@@ -348,7 +356,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="segundoApellido"
                                   type="text"
-                                  max={60}
+                                  max="60"
                                   {...segundoApellido}
                                 /></dd>
                               </dl>
@@ -362,6 +370,7 @@ class ModalComponentContact extends Component {
                                 {...tipoCargo}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                                 /></dd>
                               </dl>
@@ -373,6 +382,7 @@ class ModalComponentContact extends Component {
                                 {...tipoDependencia}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                                 /></dd>
                               </dl>
@@ -392,6 +402,7 @@ class ModalComponentContact extends Component {
                                 {...tipoEstiloSocial}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                                 /></dd>
                               </dl>
@@ -403,6 +414,7 @@ class ModalComponentContact extends Component {
                                 {...tipoActitud}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                                 /></dd>
                               </dl>
@@ -418,11 +430,13 @@ class ModalComponentContact extends Component {
                                 <dd><ComboBox
                                   name="pais"
                                   labelInput="Seleccione"
+                                      {...pais}
                                   onChange={val => this._onChangeCountry(val)}
                                   value={pais.value}
                                   onBlur={pais.onBlur}
                                   valueProp={'id'}
                                   textProp={'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_COUNTRY) || []}
                                   /></dd>
                               </dl>
@@ -433,12 +447,14 @@ class ModalComponentContact extends Component {
                                 <dd><ComboBox
                                     name="departamento"
                                     labelInput="Seleccione"
+                                        {...departamento}
                                     disabled = {this.state.disabledDep}
                                     onChange={val => this._onChangeProvince(val)}
                                     value={departamento.value}
                                     onBlur={departamento.onBlur}
                                     valueProp={'id'}
                                     textProp={'value'}
+                                    parentId="modalComponentScroll"
                                     data={selectsReducer.get('dataTypeProvince')}
                                     /></dd>
                               </dl>
@@ -453,6 +469,7 @@ class ModalComponentContact extends Component {
                                     {...ciudad}
                                     valueProp={'id'}
                                     textProp={'value'}
+                                    parentId="modalComponentScroll"
                                     data={selectsReducer.get('dataTypeCity')}
                                     /></dd>
                               </dl>
@@ -466,7 +483,7 @@ class ModalComponentContact extends Component {
                                 <TextareaComponent
                                   name="direccion"
                                   type="text"
-                                  max={250}
+                                  max="250"
                                   style={{width: '100%', height: '100%'}}
                                   onChange={val => this._onchangeValue("direccion", val)}
                                   rows={4}
@@ -482,7 +499,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="barrio"
                                   type="text"
-                                  max={120}
+                                  max="120"
                                   {...barrio}
                                 /></dd>
                               </dl>
@@ -493,7 +510,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="codigoPostal"
                                   type="text"
-                                  max={25}
+                                  max="25"
                                   {...codigoPostal}
                                 /></dd>
                               </dl>
@@ -504,7 +521,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="telefono"
                                   type="text"
-                                  max={30}
+                                  max="30"
                                   {...telefono}
                                 /></dd>
                               </dl>
@@ -517,7 +534,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="extension"
                                   type="text"
-                                  max={20}
+                                  max="20"
                                   {...extension}
                                 /></dd>
                               </dl>
@@ -528,7 +545,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="celular"
                                   type="text"
-                                  max={30}
+                                  max="30"
                                   {...celular}
                                 /></dd>
                               </dl>
@@ -539,7 +556,7 @@ class ModalComponentContact extends Component {
                                 <dd><Input
                                   name="correo"
                                   type="text"
-                                  max={150}
+                                  max="150"
                                   {...correo}
                                 /></dd>
                               </dl>
@@ -556,6 +573,7 @@ class ModalComponentContact extends Component {
                             {...tipoContacto}
                             valueProp={'id'}
                             textProp = {'value'}
+                            parentId="modalComponentScroll"
                             data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                             /></dd>
                           </dl>
@@ -582,6 +600,7 @@ class ModalComponentContact extends Component {
                             {...tipoFuncion}
                             valueProp={'id'}
                             textProp = {'value'}
+                            parentId="modalComponentScroll"
                             data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
                             /></dd>
                           </dl>
@@ -670,7 +689,7 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         segundoApellido:contactDetail.secondLastName,
         tipoCargo:contactDetail.contactPosition,
         tipoDependencia:contactDetail.unit,
-        fechaNacimiento:moment(contactDetail.dateOfBirth).format("DD/MM/YYYY"),
+        fechaNacimiento: contactDetail.dateOfBirth !== '' && contactDetail.dateOfBirth !== null && contactDetail.dateOfBirth !== undefined ? moment(contactDetail.dateOfBirth).format('DD/MM/YYYY') : null,
         tipoEstiloSocial:contactDetail.socialStyle,
         tipoActitud:contactDetail.attitudeOverGroup,
         pais:contactDetail.country,

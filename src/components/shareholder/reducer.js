@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CHANGE_PAGE,LIMITE_INF,CLEAR_SHAREHOLDERS} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CHANGE_PAGE,LIMITE_INF,CLEAR_SHAREHOLDERS,ORDER_COLUMN,CLEAR_SHAREHOLDERS_DELETE} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -7,7 +7,9 @@ const initialState = Immutable.Map({
     keyword: "",
     limInf : 0,
     page:1,
-    rowCount:0
+    rowCount:0,
+    order: 0,
+    column:"",
 });
 
 
@@ -35,6 +37,17 @@ export default (state = initialState, action) => {
                     .set('shareholders', [])
                     .set('rowCount', 0);
                 });
+            case CLEAR_SHAREHOLDERS_DELETE:
+                    return state.withMutations(map => {
+                        map
+                        .set('page', 1)
+                        .set('limInf', 0);
+                    });
+          case ORDER_COLUMN:
+                return state.withMutations(map => {
+                    map
+                    .set('order', action.order)
+                    .set('column', action.column)});
         default:
             return state;
     }

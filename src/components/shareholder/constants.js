@@ -5,3 +5,5 @@ export const CLEAR_SHAREHOLDERS = "CLEAR_SHAREHOLDERS";
 export const CHANGE_PAGE = "CHANGE_PAGE";
 export const LIMITE_INF = "LIMITE_INF";
 export const SHAREHOLDER_KIND = "shareHolderKind";
+export const ORDER_COLUMN = "ORDER_COLUMN";
+export const CLEAR_SHAREHOLDERS_DELETE = "CLEAR_SHAREHOLDERS_DELETE";

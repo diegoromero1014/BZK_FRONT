@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
-import {GET_CONTACT_DETAILS} from '../constants';
+import {GET_CONTACT_DETAILS, CLEAR_EDIT_CONTACT} from '../constants';
 
 const initialContactDetail = Immutable.Map({
-	contactDetailList: []
+	contactDetailList: {}
 });
 
 export default (state = initialContactDetail, action) => {
@@ -14,6 +14,9 @@ export default (state = initialContactDetail, action) => {
                 map.set('contactDetailList', JSON.parse(response.contactDetail));
             });
             break;
+
+				case CLEAR_EDIT_CONTACT:
+					return state.set('contactDetailList', {});
         default:
             return state;
     }

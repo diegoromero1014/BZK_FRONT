@@ -11,12 +11,11 @@ import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
-import {getContactDetails, saveContact} from './actions';
+import {getContactDetails, saveContact, clearClienEdit} from './actions';
 import {contactsByClientFindServer} from '../actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NUMBER_RECORDS} from '../constants';
-
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
               "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -50,6 +49,16 @@ const validate = values => {
     } else {
       errors.contactCountry = null;
     }
+    if (!values.contactProvince) {
+      errors.contactProvince = "Debe seleccionar el departameto";
+    } else {
+      errors.contactProvince = null;
+    }
+    if (!values.contactCity) {
+      errors.contactCity = "Debe seleccionar la ciudad";
+    } else {
+      errors.contactCity = null;
+    }
     if (!values.contactIdentityNumber) {
       errors.contactIdentityNumber = "Debe ingresar el número del documento";
     } else {
@@ -65,10 +74,14 @@ const validate = values => {
     } else {
       errors.contactFirstLastName = null;
     }
-    if (!values.contactEmailAddress) {
+    if(!values.contactEmailAddress){
       errors.contactEmailAddress = "Debe ingresar el correo electrónico";
-    } else {
-      errors.contactEmailAddress = null;
+    }else{
+      if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.contactEmailAddress))){
+          errors.contactEmailAddress = "Debe ingresar un formato válido";
+      }else{
+        errors.contactEmailAddress = null;
+      }
     }
     if (!values.contactTelephoneNumber) {
       errors.contactTelephoneNumber = "Debe ingresar el número de telefono";
@@ -103,7 +116,8 @@ class ContactDetailsModalComponent extends Component {
     this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
     this.state = {
       contactEdited: false,
-      isEditable: false
+      isEditable: false,
+      showEr:false,
     };
     momentLocalizer(moment);
   }
@@ -112,20 +126,17 @@ class ContactDetailsModalComponent extends Component {
   componentWillMount() {
     const {getMasterDataFields, getContactDetails, contactId, _uploadProvinces, _uploadCities} = this.props;
     const that = this;
+    const {fields: {contactFunctions, contactHobbies, contactSports,contactLineOfBusiness}} = this.props;
+    contactFunctions.onChange('');
+    contactHobbies.onChange('');
+    contactSports.onChange('');
+    contactLineOfBusiness.onChange('');
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
                         FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
-
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
     .then(function(data) {
-      //console.log(_.get(data, 'payload.data.contactDetail'));
       const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-
-      //console.log('Datos del contacto -> ', contact);
-      //console.log('this ', that);
-
       const {_uploadProvinces, _uploadCities} = that.props;
-
-
       if (contact.country !== undefined && contact.country !== null) {
         that._uploadProvincesByCountryId(contact.country);
       }
@@ -207,7 +218,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _onChangeCountry(val) {
-    //console.log('Entering on _onChangeCountry with val -> ', val);
     const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     if (val !== undefined && val !== null) {
       contactCountry.onChange(val);
@@ -219,7 +229,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _onChangeProvince(val) {
-    //console.log('Entering on _onChangeProvince with val ->, ', val);
     const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     if (val !== undefined && val !== null) {
       contactProvince.onChange(val);
@@ -230,7 +239,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _uploadProvincesByCountryId(countryId) {
-    //console.log('Entering on _uploadProvinces with countryId -> ', countryId);
     const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     const {consultListWithParameterUbication} = this.props;
     if (countryId !== undefined && countryId !== null) {
@@ -239,7 +247,6 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _uploadCitiesByProvinceId(provinceId) {
-    //console.log('Entering on _uploadCities with provinceId -> ', provinceId);
     const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
     const {consultListWithParameterUbication} = this.props;
     if (provinceId !== undefined && provinceId !== null) {
@@ -251,29 +258,26 @@ class ContactDetailsModalComponent extends Component {
     this.setState({
       isEditable: !this.state.isEditable
     });
-    //console.log('Habilitar campos y botón para editar');
   }
 
   _closeViewOrEditContact() {
-    const {isOpen} = this.props;
+    const {isOpen, clearClienEdit} = this.props;
     this.setState({contactEdited: false, isEditable: false});
     isOpen();
-    //console.log('Cerrar ventana modal de ver o editar contacto');
+    this.props.resetForm();
+    clearClienEdit();
   }
 
   /* metodo para enviar el formulario */
   _handlerSubmitContact() {
-    //console.log('Se envió la información');
     const { fields: { contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
       contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
-    }, error, handleSubmit, selectsReducer} = this.props;
-
-    const {contactDetail} = this.props;
+    }, error, handleSubmit, selectsReducer,isOpen} = this.props;
+    const {contactDetail,contactsByClientFindServer} = this.props;
     const contact = contactDetail.get('contactDetailList');
     const {saveContact} = this.props;
-
     const jsonUpdateContact = {
       "client": window.localStorage.getItem('idClientSelected'),
       "id": contact.id,
@@ -287,9 +291,8 @@ class ContactDetailsModalComponent extends Component {
       "secondLastName": contactSecondLastName.value !== undefined ? contactSecondLastName.value : null,
       "contactPosition": contactPosition.value !== undefined ? contactPosition.value : null,
       "unit": contactDependency.value !== undefined ? contactDependency.value : null,
-      "function": contactFunctions.value !== undefined ? _.split(contactFunctions.value, ',') : null,
-      "dateOfBirth" : contactDateOfBirth.value ? moment(contactDateOfBirth.value, "DD/MM/YYYY").format('x'): null,
-      //"dateOfBirth": contactDateOfBirth.value !== undefined ? moment(contactDateOfBirth.value, 'DD/MM/YYYY').format('x') : null,
+      "function" : JSON.parse('[' + ((contactFunctions.value)?contactFunctions.value:"") +']'),
+      "dateOfBirth" : contactDateOfBirth.value !== '' && contactDateOfBirth.value !== null && contactDateOfBirth.value !== undefined ? moment(contactDateOfBirth.value, "DD/MM/YYYY").format('x'): null,
       "address": contactAddress.value !== undefined ? contactAddress.value : null,
       "country": contactCountry.value !== undefined ? contactCountry.value : null,
       "province": contactProvince.value !== undefined ? contactProvince.value : null,
@@ -301,32 +304,30 @@ class ContactDetailsModalComponent extends Component {
       "extension": contactExtension.value !== undefined ? contactExtension.value : null,
       "mobileNumber": contactMobileNumber.value !== undefined ? contactMobileNumber.value : null,
       "emailAddress": contactEmailAddress.value !== undefined ? contactEmailAddress.value : null,
-      "hobbies": contactHobbies.value !== undefined ? _.split(contactHobbies.value, ',') : null,
-      "sports": contactSports.value !== undefined ? _.split(contactSports.value, ',') : null,
       "modeOfContact": null,
       "registryKey": null,
       "notes": null,
+      "hobbies" : JSON.parse('[' + ((contactHobbies.value)?contactHobbies.value:"") +']'),
+      "sports" : JSON.parse('[' + ((contactSports.value)?contactSports.value:"") +']'),
       "typeOfContact": contactTypeOfContact.value !== undefined ? contactTypeOfContact.value : null,
       "shippingInformation": null,
-      "lineOfBusiness": contactLineOfBusiness.value !== undefined ? _.split(contactLineOfBusiness.value, ',') : null,
+      "lineOfBusiness" : JSON.parse('[' + ((contactLineOfBusiness.value)?contactLineOfBusiness.value:"") +']'),
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
       "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
     }
-
-    //console.log('El objecto a guardar -> ', jsonUpdateContact);
     saveContact(jsonUpdateContact).then((data) => {
-      if (_.get(data, 'payload.status') === 200) {
+      if (_.get(data, 'payload.data.status') === 200) {
         this.setState({contactEdited: true});
         contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
               "",
               "",
               "");
-        this.closeModal();
-        //console.log('Se guardó correctamente');
-      } else {
-        //console.log('Se produjo un error');
-      }
-    });
+          } else {
+          this.setState({showEr: true});
+          }
+      }, (reason) => {
+        this.setState({showEr: true});
+      });
   }
 
   render() {
@@ -336,10 +337,9 @@ class ContactDetailsModalComponent extends Component {
       contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
       contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
     }, error, handleSubmit, selectsReducer} = this.props;
-
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
-        <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+        <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalEditCotact">
             <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
               <Row>
                 <Col md={12} lg={12}>
@@ -361,6 +361,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                     />
                   </dd>
@@ -371,7 +372,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactIdentityNumber"
                       type="text"
-                      max={20}
+                      max="20"
                       disabled={'disabled'}
                       onChange={val => this._onchangeValue("contactIdentityNumber", val)}
                       {...contactIdentityNumber}
@@ -393,6 +394,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_TITLE) || []}
                     />
                   </dd>
@@ -407,6 +409,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_GENDER) || []}
                     />
                   </dd>
@@ -417,7 +420,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactFirstName"
                       type="text"
-                      max={60}
+                      max="60"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("firstName", val)}
                       {...contactFirstName}
@@ -432,7 +435,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactMiddleName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("middleName", val)}
                         {...contactMiddleName}
@@ -445,7 +448,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactFirstLastName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("firstLastName", val)}
                         {...contactFirstLastName}
@@ -458,7 +461,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactSecondLastName"
                         type="text"
-                        max={60}
+                        max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("secondLastName", val)}
                         {...contactSecondLastName}
@@ -477,6 +480,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactPosition}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                     />
                   </dd>
@@ -491,6 +495,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactDependency}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                     />
                   </dd>
@@ -521,6 +526,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactSocialStyle}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                     />
                   </dd>
@@ -535,6 +541,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactAttitudeOverGroup}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                     />
                   </dd>
@@ -547,19 +554,20 @@ class ContactDetailsModalComponent extends Component {
               </Row>
               <Row>
                 <Col xs={12} sm={12} md={6} lg={4}>
-                  <dt><span>{'País ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                  <dt><span>País (</span><span style={{color: 'red'}}>*</span><span>)</span></dt>
                   <dd>
                     <ComboBox
                       name="contactCountry"
                       labelInput="Seleccione"
+                      {...contactCountry}
                       onChange={val => this._onChangeCountry(val)}
                       value={contactCountry.value}
                       onBlur={contactCountry.onBlur}
-                      disabled={this.state.isEditable ? '' : 'disabled'}
-                      {...contactCountry}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_COUNTRY) || []}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
                     />
                   </dd>
                 </Col>
@@ -569,14 +577,15 @@ class ContactDetailsModalComponent extends Component {
                     <ComboBox
                       name="contactProvince"
                       labelInput="Seleccione"
+                      {...contactProvince}
                       onChange={val => this._onChangeProvince(val)}
                       value={contactProvince.value}
                       onBlur={contactProvince.onBlur}
-                      disabled={this.state.isEditable ? '' : 'disabled'}
-                      {...contactProvince}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get('dataTypeProvince') || []}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
                     />
                   </dd>
                 </Col>
@@ -586,11 +595,12 @@ class ContactDetailsModalComponent extends Component {
                     <ComboBox
                       name="contactCity"
                       labelInput="Seleccione"
-                      disabled={this.state.isEditable ? '' : 'disabled'}
                       {...contactCity}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get('dataTypeCity') || []}
+                      disabled={this.state.isEditable ? '' : 'disabled'}
                     />
                   </dd>
                 </Col>
@@ -601,7 +611,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <textarea className="form-control need-input"
                       name="contactAddress"
-                      maxLength={250}
+                      maxLength="250"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("address", val)}
                       {...contactAddress}
@@ -616,7 +626,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactNeighborhood"
                         type="text"
-                        max={120}
+                        max="120"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("neighborhood", val)}
                         {...contactNeighborhood}
@@ -629,7 +639,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactPostalCode"
                         type="text"
-                        max={25}
+                        max="25"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("postalCode", val)}
                         {...contactPostalCode}
@@ -642,7 +652,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactTelephoneNumber"
                       type="text"
-                      max={30}
+                      max="30"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("telephoneNumber", val)}
                       {...contactTelephoneNumber}
@@ -657,7 +667,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                         name="contactExtension"
                         type="text"
-                        max={20}
+                        max="20"
                         disabled={this.state.isEditable ? '' : 'disabled'}
                         //onChange={val => this._onchangeValue("extension", val)}
                         {...contactExtension}
@@ -670,7 +680,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactMobileNumber"
                       type="text"
-                      max={30}
+                      max="30"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("mobileNumber", val)}
                       {...contactMobileNumber}
@@ -683,7 +693,7 @@ class ContactDetailsModalComponent extends Component {
                     <Input
                       name="contactEmailAddress"
                       type="text"
-                      max={150}
+                      max="150"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("emailAddress", val)}
                       {...contactEmailAddress}
@@ -697,7 +707,7 @@ class ContactDetailsModalComponent extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                <Col xs>
                   <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <ComboBox
@@ -707,11 +717,14 @@ class ContactDetailsModalComponent extends Component {
                       {...contactTypeOfContact}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                     />
                   </dd>
                 </Col>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                </Row>
+                <Row>
+                <Col xs>
                   <dt><span>{'Entidad / Línea de negocio'}</span></dt>
                   <dd>
                     <MultipleSelect
@@ -725,7 +738,9 @@ class ContactDetailsModalComponent extends Component {
                     />
                   </dd>
                 </Col>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                  </Row>
+              <Row>
+                <Col xs>
                   <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <MultipleSelect
@@ -791,6 +806,13 @@ class ContactDetailsModalComponent extends Component {
           text="Señor usuario, el contacto se editó correctamente"
           onConfirm={() => this._closeViewOrEditContact()}
         />
+        <SweetAlert
+         type= "error"
+         show={this.state.showEr}
+         title="Error"
+         text="Señor usuario, se presento un error"
+         onConfirm={() => this.setState({showEr:false})}
+         />
       </form>
     );
   }
@@ -807,7 +829,8 @@ function mapDispatchToProps(dispatch) {
     consultDataSelect,
     getMasterDataFields,
     consultListWithParameterUbication,
-    contactsByClientFindServer
+    contactsByClientFindServer,
+    clearClienEdit
   }, dispatch);
 }
 
@@ -829,7 +852,7 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
        contactSecondLastName:contact.secondLastName,
        contactPosition:contact.contactPosition,
        contactDependency:contact.unit,
-       contactDateOfBirth:moment(contact.dateOfBirth).format('DD/MM/YYYY'),
+       contactDateOfBirth: contact.dateOfBirth !== '' && contact.dateOfBirth !== null && contact.dateOfBirth !== undefined ? moment(contact.dateOfBirth).format('DD/MM/YYYY') : null,
        contactSocialStyle:contact.socialStyle,
        contactAttitudeOverGroup:contact.attitudeOverGroup,
        contactCountry:contact.country,
@@ -840,7 +863,7 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
        contactPostalCode:contact.postalCode,
        contactTelephoneNumber:contact.telephoneNumber,
        contactExtension:contact.extension,
-       contactNombileNumber:contact.mobileNumber,
+       contactMobileNumber:contact.mobileNumber,
        contactEmailAddress:contact.emailAddress,
        contactTypeOfContact:contact.typeOfContact,
        contactLineOfBusiness:JSON.parse('["'+_.join(contact.lineOfBusiness, '","')+'"]'),

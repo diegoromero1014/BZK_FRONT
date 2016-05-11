@@ -110,7 +110,7 @@ class FormCreateProspect extends Component{
       valuReduxForm.onChange(val);
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
-      if( value > 0 ){
+      if( value >= 0 ){
         var pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
@@ -156,7 +156,7 @@ class FormCreateProspect extends Component{
          "status":0,
          "isCreditNeeded":null,
          "annualSales": ( annualSales.value === undefined || annualSales.value === null || annualSales.value === "" ) ? null : numeral(annualSales.value).format('0'),
-         "salesUpadateDate": dateSalesAnnuals.value ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
+         "salesUpadateDate" : dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined && dateSalesAnnuals.value ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'): null,
          "assets": ( assets.value === undefined || assets.value === null || assets.value === "" ) ? null : numeral(assets.value).format('0'),
          "liabilities": ( liabilities.value === undefined || liabilities.value === null || liabilities.value === "" ) ? null : numeral(liabilities.value).format('0'),
          "operatingIncome": ( operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === "" ) ? null : numeral(operatingIncome.value).format('0'),
@@ -261,7 +261,7 @@ class FormCreateProspect extends Component{
               <Input
                 name="razonSocial"
                 type="text"
-                max={150}
+                max="150"
                 placeholder="Ingrese la razón social del prospecto"
                 {...razonSocial}
               />
@@ -276,6 +276,7 @@ class FormCreateProspect extends Component{
                 valueProp={'id'}
                 textProp={'description'}
                 style={stylepaddingRigth}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('teamValueObjects')}
                 {...idCelula}
               />
@@ -287,7 +288,7 @@ class FormCreateProspect extends Component{
               <textarea
                 {...descriptionCompany}
                 style={{width: "100%"}}
-                max={250}
+                maxLength="250"
                 rows="4"
               />
             </div>
@@ -364,7 +365,7 @@ class FormCreateProspect extends Component{
               <Input
                 name="address"
                 type="text"
-                max={250}
+                max="250"
                 placeholder="Ingrese la dirección del prospecto"
                 {...address}
               />
@@ -422,7 +423,7 @@ class FormCreateProspect extends Component{
                   <Input
                     name="district"
                     type="text"
-                    max={120}
+                    max="120"
                     placeholder="Ingrese el barrio del prospecto"
                     {...district}
                   />
@@ -434,7 +435,7 @@ class FormCreateProspect extends Component{
                   <Input
                     name="telephone"
                     type="text"
-                    max={30}
+                    max="30"
                     placeholder="Ingrese el teléfono del prospecto"
                     {...telephone}
                   />
@@ -487,7 +488,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese las ventas anuales"
                 type="text"
                 min={0}
-                max={16}
+                maxLength="16"
                 {...annualSales}
                 value={annualSales.value}
                 onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
@@ -502,7 +503,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los activos"
                 type="text"
                 min={0}
-                max={16}
+                maxLength="16"
                 {...assets}
                 value={assets.value}
                 onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
@@ -517,7 +518,7 @@ class FormCreateProspect extends Component{
                 placeholder="Ingrese los pasivos"
                 type="text"
                 min={0}
-                max={16}
+                maxLength="16"
                 {...liabilities}
                 value={liabilities.value}
                 onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
@@ -531,7 +532,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos operacionales"
                 type="text"
-                max={16}
+                maxLength="16"
                 {...operatingIncome}
                 value={operatingIncome.value}
                 onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
@@ -545,7 +546,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los ingresos no operacionales"
                 type="text"
-                max={16}
+                maxLength="16"
                 {...nonOperatingIncome}
                 value={nonOperatingIncome.value}
                 onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
@@ -559,7 +560,7 @@ class FormCreateProspect extends Component{
                 style={{width: "100%", textAlign: "right"}}
                 placeholder="Ingrese los egresos"
                 min={0}
-                max={16}
+                maxLength="16"
                 type="text"
                 {...expenses}
                 value={expenses.value}

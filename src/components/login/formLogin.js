@@ -35,23 +35,19 @@ class FormLogin extends Component{
     const {validateLogin} = this.props;
     validateLogin(usuario, password)
     .then( response => {
-      console.log("response");
       if( _.get(response, 'payload.data') !== {} && _.get(response, 'payload.data') !== undefined ){
         if( _.get(response, 'payload.data.redirecUrl') === "/login" &&
             _.get(response, 'payload.data.sessionToken') === "" ){
-          console.log("response 1");
           this.setState({
             messageUsuarioIncorrecto: true,
             messageErrorServidor: false
           });
         } else {
-          console.log("response 2");
           const {saveSessionToken, redirectUrl} = this.props;
           saveSessionToken(_.get(response, 'payload.data.sessionToken'));
           redirectUrl("/dashboard/clients");
         }
       } else {
-        console.log("response 3");
         this.setState({
           messageErrorServidor: true,
           messageUsuarioIncorrecto: false

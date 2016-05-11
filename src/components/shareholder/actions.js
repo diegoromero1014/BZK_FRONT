@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN,CLEAR_SHAREHOLDERS_DELETE} from './constants';
 import axios from 'axios';
 
 export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,shareholderKindId){
@@ -59,5 +59,19 @@ export function limitiInf(limInf){
 export function clearShareholder(){
     return {
         type: CLEAR_SHAREHOLDERS
+    };
+}
+
+export function clearShareholderDelete(){
+    return {
+        type: CLEAR_SHAREHOLDERS_DELETE
+    };
+}
+
+export function orderColumnShareholder(order,column){
+    return {
+        type: ORDER_COLUMN,
+        order:order,
+        column:column
     };
 }
