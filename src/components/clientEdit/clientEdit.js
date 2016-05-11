@@ -7,8 +7,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword,
-    consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -25,7 +24,7 @@ import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
-  {'id': null, 'value': "Seleccione..."},
+  {'id': '', 'value': "Seleccione..."},
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ];
@@ -148,7 +147,7 @@ const validate = values => {
     } else {
       errors.extractsVirtual = null;
     }
-    return errors
+    return errors;
 };
 
 //Componente genérico para cargar los selects de justificación
@@ -410,9 +409,9 @@ class clientEdit extends Component{
           "marketLeader":"",
           "territory":"",
           "actualizationDate": null,
-          "justificationForNoRM": justifyNoGeren.value,
+          "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
           "justificationForLostClient": justifyExClient.value,
-          "justificationForCreditNeed": justifyNoLME.value,
+          "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
           "isVirtualStatement": extractsVirtual.value,
           "lineOfBusiness": infoClient.lineOfBusiness,
           "isManagedByRm": marcGeren.value,
@@ -1026,7 +1025,7 @@ class clientEdit extends Component{
                 <button className="btn"
                     style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
                     type="submit">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
+                  <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
                 </button>
                 <button className="btn btn-secondary modal-button-edit"
                   onClick={this._closeWindow}
@@ -1065,7 +1064,6 @@ class clientEdit extends Component{
         </form>
     );
   }
-
 }
 
 function mapDispatchToProps(dispatch) {
@@ -1101,13 +1099,13 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
       reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
-      annualSales: fomatInitialStateNumber(infoClient.annualSales),
+      annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
       dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,
-      assets: fomatInitialStateNumber(infoClient.assets),
-      liabilities: fomatInitialStateNumber(infoClient.liabilities),
-      operatingIncome: fomatInitialStateNumber(infoClient.operatingIncome),
-      nonOperatingIncome: fomatInitialStateNumber(infoClient.nonOperatingIncome),
-      expenses: fomatInitialStateNumber(infoClient.expenses),
+      assets: infoClient.assets === 0 ? '0' : fomatInitialStateNumber(infoClient.assets),
+      liabilities: infoClient.liabilities === 0 ? '0' : fomatInitialStateNumber(infoClient.liabilities),
+      operatingIncome: infoClient.operatingIncome === 0 ? '0' : fomatInitialStateNumber(infoClient.operatingIncome),
+      nonOperatingIncome: infoClient.nonOperatingIncome === 0 ? '0' : fomatInitialStateNumber(infoClient.nonOperatingIncome),
+      expenses: infoClient.expenses === 0 ? '0' : fomatInitialStateNumber(infoClient.expenses),
       marcGeren: infoClient.isManagedByRm,
       centroDecision: infoClient.isDecisionCenter,
       necesitaLME: infoClient.isCreditNeeded,
