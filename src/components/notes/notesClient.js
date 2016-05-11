@@ -44,7 +44,6 @@ class NotesClient extends Component {
 
     _mapNotesItems(note) {
         const {selectsReducer} = this.props;
-        console.log("selectsReducer.get('dataTypeNotes')", selectsReducer.get("dataTypeNotes"));
         return <Note
             index={note.uid}
             key={note.uid}

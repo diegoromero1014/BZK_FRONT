@@ -10,7 +10,6 @@ export const scrollToComponent = (ChildComponent) => {
         }
 
         scrollTo(id) {
-            console.log(id, "id");
             if (this.refs[name] !== null && id) {
                 var combo = this.refs[name];
                 const parentScroll = document.getElementById(id).scrollTop;
@@ -22,7 +21,6 @@ export const scrollToComponent = (ChildComponent) => {
         componentDidMount() {
             var combo = this.refs[name];
             var comboRect = combo.getBoundingClientRect();
-            console.log(comboRect);
         }
 
         render() {

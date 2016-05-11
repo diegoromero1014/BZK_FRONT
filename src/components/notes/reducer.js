@@ -17,7 +17,6 @@ export default (state = initialState, action) => {
             combo: '',
             uid: action.uid
         });
-        console.log(state.push(newNote));
         return state.push(newNote);
     case DELETE_NOTE:
         const index = state.findIndex(item => item.uid === action.index);
