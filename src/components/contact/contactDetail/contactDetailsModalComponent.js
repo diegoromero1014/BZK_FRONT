@@ -17,7 +17,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NUMBER_RECORDS} from '../constants';
 
-
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
               "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
               "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
@@ -117,9 +116,13 @@ class ContactDetailsModalComponent extends Component {
   componentWillMount() {
     const {getMasterDataFields, getContactDetails, contactId, _uploadProvinces, _uploadCities} = this.props;
     const that = this;
+    const {fields: {contactFunctions, contactHobbies, contactSports,contactLineOfBusiness}} = this.props;
+    contactFunctions.onChange('');
+    contactHobbies.onChange('');
+    contactSports.onChange('');
+    contactLineOfBusiness.onChange('');
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
                         FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
-
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
     .then(function(data) {
       const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
@@ -324,7 +327,6 @@ class ContactDetailsModalComponent extends Component {
       contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
       contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
     }, error, handleSubmit, selectsReducer} = this.props;
-
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
@@ -685,7 +687,7 @@ class ContactDetailsModalComponent extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                <Col xs>
                   <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <ComboBox
@@ -699,7 +701,9 @@ class ContactDetailsModalComponent extends Component {
                     />
                   </dd>
                 </Col>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                </Row>
+                <Row>
+                <Col xs>
                   <dt><span>{'Entidad / Línea de negocio'}</span></dt>
                   <dd>
                     <MultipleSelect
@@ -713,7 +717,9 @@ class ContactDetailsModalComponent extends Component {
                     />
                   </dd>
                 </Col>
-                <Col xs={12} sm={12} md={6} lg={4}>
+                  </Row>
+              <Row>
+                <Col xs>
                   <dt><span>{'Función ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <MultipleSelect

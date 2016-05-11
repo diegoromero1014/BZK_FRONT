@@ -110,7 +110,7 @@ class FormCreateProspect extends Component{
       valuReduxForm.onChange(val);
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
-      if( value > 0 ){
+      if( value >= 0 ){
         var pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");

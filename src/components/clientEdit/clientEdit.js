@@ -256,7 +256,7 @@ class clientEdit extends Component{
       valuReduxForm.onChange(val);
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
-      if( value > 0 ){
+      if( value >= 0 ){
         var pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
@@ -734,10 +734,9 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   type="text"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
-                  style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
                   value={annualSales.value}
                   onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
@@ -762,7 +761,7 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   type="text"
-                  maxLength={16}
+                  max="16"
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   {...assets}
@@ -782,7 +781,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
@@ -802,7 +801,7 @@ class clientEdit extends Component{
                   format="0,000"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
@@ -820,7 +819,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
@@ -841,7 +840,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
@@ -955,7 +954,7 @@ class clientEdit extends Component{
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs={12} md={4} lg={4} style={{paddingRight: "25px"}}>
+            <Col xs={12} md={4} lg={4}>
               <dt>
                 <span>¿Necesita LME? </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
               </dt>
