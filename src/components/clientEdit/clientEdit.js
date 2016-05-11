@@ -172,6 +172,7 @@ function SelectsJustificacion(props) {
           textProp={props.textProp}
           {...props.justify}
           data={props.data}
+          parentId="dashboardComponentScroll"
         />
       </dt>
     </Col>;
@@ -528,6 +529,7 @@ class clientEdit extends Component{
                 onBlur={idCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'ciiu'}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('dataCIIU')}
                 />
             </div>
@@ -550,6 +552,7 @@ class clientEdit extends Component{
                 onBlur={idSubCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'subCiiu'}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('dataSubCIIU')}
                 />
             </div>
@@ -623,6 +626,7 @@ class clientEdit extends Component{
                   onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                   />
               </div>
@@ -637,6 +641,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeProvince(val)}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataTypeProvince') || []}
                 />
               </div>
@@ -650,6 +655,7 @@ class clientEdit extends Component{
                   {...city}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataTypeCity') || []}
                 />
               </div>
@@ -694,6 +700,7 @@ class clientEdit extends Component{
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
+                parentId="dashboardComponentScroll"
                 data={valuesYesNo}
                 {...extractsVirtual}
               />
@@ -710,6 +717,7 @@ class clientEdit extends Component{
                   {...reportVirtual}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                 />
               </dt>
@@ -894,6 +902,7 @@ class clientEdit extends Component{
                   onBlur={groupEconomic.onBlur}
                   valueProp={'id'}
                   textProp={'group'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataEconomicGroup')}
                 />
               </dt>
@@ -920,6 +929,7 @@ class clientEdit extends Component{
                   labelInput="Seleccione marca..."
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...marcGeren}
                 />
@@ -933,6 +943,7 @@ class clientEdit extends Component{
               onBlur={justifyNoGeren.onBlur}
               valueProp={"id"}
               textProp={"value"}
+              parentId="dashboardComponentScroll"
               justify={justifyNoGeren}
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
@@ -947,6 +958,7 @@ class clientEdit extends Component{
                   labelInput="Seleccione..."
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...centroDecision}
                 />
@@ -966,6 +978,7 @@ class clientEdit extends Component{
                   onBlur={necesitaLME.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                 />
               </dt>

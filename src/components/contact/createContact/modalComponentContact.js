@@ -252,7 +252,7 @@ class ModalComponentContact extends Component {
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
         const status = modalStatus ? "Verdadero" : "Falso";
         return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
-                      <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+                      <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
                       <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica contacto</span></dt>
                       <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
                             <Row>
@@ -264,6 +264,7 @@ class ModalComponentContact extends Component {
                                   disabled = {this.state.disabled}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                   /></dd>
                                 </dl>
@@ -296,6 +297,7 @@ class ModalComponentContact extends Component {
                                   {...tipoTratamiendo}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_TITLE) || []}
                                   /></dd>
                                 </dl>
@@ -307,6 +309,7 @@ class ModalComponentContact extends Component {
                                   {...tipoGenero}
                                   valueProp={'id'}
                                   textProp = {'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_GENDER) || []}
                                   /></dd>
                                 </dl>
@@ -367,6 +370,7 @@ class ModalComponentContact extends Component {
                                 {...tipoCargo}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                                 /></dd>
                               </dl>
@@ -378,6 +382,7 @@ class ModalComponentContact extends Component {
                                 {...tipoDependencia}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                                 /></dd>
                               </dl>
@@ -397,6 +402,7 @@ class ModalComponentContact extends Component {
                                 {...tipoEstiloSocial}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                                 /></dd>
                               </dl>
@@ -408,6 +414,7 @@ class ModalComponentContact extends Component {
                                 {...tipoActitud}
                                 valueProp={'id'}
                                 textProp = {'value'}
+                                parentId="modalComponentScroll"
                                 data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                                 /></dd>
                               </dl>
@@ -423,11 +430,13 @@ class ModalComponentContact extends Component {
                                 <dd><ComboBox
                                   name="pais"
                                   labelInput="Seleccione"
+                                      {...pais}
                                   onChange={val => this._onChangeCountry(val)}
                                   value={pais.value}
                                   onBlur={pais.onBlur}
                                   valueProp={'id'}
                                   textProp={'value'}
+                                  parentId="modalComponentScroll"
                                   data={selectsReducer.get(FILTER_COUNTRY) || []}
                                   /></dd>
                               </dl>
@@ -438,12 +447,14 @@ class ModalComponentContact extends Component {
                                 <dd><ComboBox
                                     name="departamento"
                                     labelInput="Seleccione"
+                                        {...departamento}
                                     disabled = {this.state.disabledDep}
                                     onChange={val => this._onChangeProvince(val)}
                                     value={departamento.value}
                                     onBlur={departamento.onBlur}
                                     valueProp={'id'}
                                     textProp={'value'}
+                                    parentId="modalComponentScroll"
                                     data={selectsReducer.get('dataTypeProvince')}
                                     /></dd>
                               </dl>
@@ -458,6 +469,7 @@ class ModalComponentContact extends Component {
                                     {...ciudad}
                                     valueProp={'id'}
                                     textProp={'value'}
+                                    parentId="modalComponentScroll"
                                     data={selectsReducer.get('dataTypeCity')}
                                     /></dd>
                               </dl>
@@ -561,6 +573,7 @@ class ModalComponentContact extends Component {
                             {...tipoContacto}
                             valueProp={'id'}
                             textProp = {'value'}
+                            parentId="modalComponentScroll"
                             data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                             /></dd>
                           </dl>
@@ -587,6 +600,7 @@ class ModalComponentContact extends Component {
                             {...tipoFuncion}
                             valueProp={'id'}
                             textProp = {'value'}
+                            parentId="modalComponentScroll"
                             data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
                             /></dd>
                           </dl>

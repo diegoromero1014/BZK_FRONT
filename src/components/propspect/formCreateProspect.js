@@ -276,6 +276,7 @@ class FormCreateProspect extends Component{
                 valueProp={'id'}
                 textProp={'description'}
                 style={stylepaddingRigth}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('teamValueObjects')}
                 {...idCelula}
               />

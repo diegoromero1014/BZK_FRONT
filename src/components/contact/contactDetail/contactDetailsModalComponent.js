@@ -49,6 +49,16 @@ const validate = values => {
     } else {
       errors.contactCountry = null;
     }
+    if (!values.contactProvince) {
+      errors.contactProvince = "Debe seleccionar el departameto";
+    } else {
+      errors.contactProvince = null;
+    }
+    if (!values.contactCity) {
+      errors.contactCity = "Debe seleccionar la ciudad";
+    } else {
+      errors.contactCity = null;
+    }
     if (!values.contactIdentityNumber) {
       errors.contactIdentityNumber = "Debe ingresar el número del documento";
     } else {
@@ -329,7 +339,7 @@ class ContactDetailsModalComponent extends Component {
     }, error, handleSubmit, selectsReducer} = this.props;
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
-        <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
+        <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalEditCotact">
             <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
               <Row>
                 <Col md={12} lg={12}>
@@ -351,6 +361,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                     />
                   </dd>
@@ -383,6 +394,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_TITLE) || []}
                     />
                   </dd>
@@ -397,6 +409,7 @@ class ContactDetailsModalComponent extends Component {
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_GENDER) || []}
                     />
                   </dd>
@@ -467,6 +480,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactPosition}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                     />
                   </dd>
@@ -481,6 +495,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactDependency}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                     />
                   </dd>
@@ -511,6 +526,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactSocialStyle}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                     />
                   </dd>
@@ -525,6 +541,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactAttitudeOverGroup}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                     />
                   </dd>
@@ -548,6 +565,7 @@ class ContactDetailsModalComponent extends Component {
                       onBlur={contactCountry.onBlur}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_COUNTRY) || []}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                     />
@@ -565,6 +583,7 @@ class ContactDetailsModalComponent extends Component {
                       onBlur={contactProvince.onBlur}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get('dataTypeProvince') || []}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                     />
@@ -579,6 +598,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactCity}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get('dataTypeCity') || []}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                     />
@@ -697,6 +717,7 @@ class ContactDetailsModalComponent extends Component {
                       {...contactTypeOfContact}
                       valueProp={'id'}
                       textProp={'value'}
+                      parentId="modalEditCotact"
                       data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                     />
                   </dd>
