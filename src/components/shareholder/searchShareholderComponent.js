@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,changeKeyword,clearShareholder} from './actions';
+import {shareholdersByClientFindServer,changeKeywordShareholder,clearShareholderDelete} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
@@ -10,7 +10,7 @@ class SearchShareholderComponent extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        keyword: ''
+        keywordShareholder: ''
       };
       this._handleShareholderByClientsFind = this._handleShareholderByClientsFind.bind(this);
       this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
@@ -31,27 +31,27 @@ class SearchShareholderComponent extends Component {
       this._handleShareholderByClientsFind(e);
     }else{
       this.setState({
-        keyword: e.target.value
+        keywordShareholder: e.target.value
       });
-      const {changeKeyword} = this.props;
-      changeKeyword(e.target.value);
+      const {changeKeywordShareholder} = this.props;
+      changeKeywordShareholder(e.target.value);
     }
   }
 
   _handleShareholderByClientsFind(){
-      const {shareholdersByClientFindServer,clearShareholder} = this.props;
-      clearShareholder();
-      if(this.state.keyword === '' || this.state.keyword === undefined){
+      const {shareholdersByClientFindServer,clearShareholderDelete} = this.props;
+      clearShareholderDelete();
+      if(this.state.keywordShareholder === '' || this.state.keywordShareholder === undefined){
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"",v1);
       }else{
-          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keyword,v1);
+          shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,this.state.keywordShareholder,v1);
       }
   }
 
     render() {
         return (
           <div className="InputAddOn">
-          <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por numero, nombre, tipo de persona"  value={this.state.keyword} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+          <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por numero, nombre, tipo de persona"  value={this.state.keywordShareholder} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
             <button onClick={this._handleShareholderByClientsFind}  className="button InputAddOn-item">
               <i className="search icon" />
             </button>
@@ -62,7 +62,7 @@ class SearchShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer, changeKeyword,clearShareholder
+    shareholdersByClientFindServer, changeKeywordShareholder,clearShareholderDelete
   }, dispatch);
 }
 

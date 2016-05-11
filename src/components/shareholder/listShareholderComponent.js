@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder} from './actions';
+import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderDelete} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
@@ -34,15 +34,16 @@ class ListShareholderComponent extends Component {
   }
 
 
-  _orderColumn(order,column){
-    if(order === 1){
+  _orderColumn(orderShareholder,columnShareholder){
+    if(orderShareholder === 1){
       this.setState({orderA :'none',orderD:'inline-block'});
     }else{
       this.setState({orderA :'inline-block',orderD :'none'});
     }
-    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder} = this.props;
-    orderColumnShareholder(order,column);
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,column,order,shareholdersReducer.get('keyword'),v1);
+    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder,clearShareholderDelete} = this.props;
+    clearShareholderDelete();
+    orderColumnShareholder(orderShareholder,columnShareholder);
+    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,columnShareholder,orderShareholder,shareholdersReducer.get('keywordShareholder'),v1);
   }
 
   _renderHeaders(){
@@ -73,7 +74,7 @@ class ListShareholderComponent extends Component {
       },
       {
         title: "Tipo de accionista",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"shk.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"shk.id")}></i></span>,
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.shareHolderKind.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.shareHolderKind.id")}></i></span>,
         key:"shareHolderKind"
       },
       {
@@ -115,7 +116,7 @@ class ListShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder
+    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderDelete
   }, dispatch);
 }
 

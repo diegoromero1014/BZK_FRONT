@@ -5,6 +5,7 @@ import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder} 
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
+
 class PaginationShareholderComponent extends Component{
 
   constructor(props){
@@ -37,7 +38,7 @@ class PaginationShareholderComponent extends Component{
 
   _handleShareholdersByClientsFind(limInf){
       const {shareholdersReducer,shareholdersByClientFindServer} = this.props;
-      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,shareholdersReducer.get('keyword'),v1);
+      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,shareholdersReducer.get("columnShareholder"),shareholdersReducer.get("orderShareholder"),shareholdersReducer.get('keywordShareholder'),v1);
   }
 
   render(){

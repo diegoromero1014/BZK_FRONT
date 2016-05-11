@@ -7,8 +7,7 @@ export function createContactNew(jsonCreateContact){
       messageHeader: {
         "timestamp": new Date().getTime(),
         "sessionToken": window.localStorage.getItem('sessionToken'),
-         "username":"lmejias",
-         "service": "",
+        "service": "",
         "status": "0",
         "language": "es",
         "displayErrorMessage": "",

@@ -8,7 +8,6 @@ import {contactsByClientFindServer,clearContactDelete,orderColumnContact} from '
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
-
 let v1 = "";
 let v2 = "";
 let v3 = "";
@@ -64,7 +63,6 @@ class ListContactComponent extends Component {
                 "messageHeader": {
                   "sessionToken": window.localStorage.getItem('sessionToken'),
                       "timestamp": new Date().getTime(),
-                      "username":"lmejias",
                       "service": "",
                       "status": "0",
                       "language": "es",
