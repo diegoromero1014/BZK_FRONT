@@ -33,7 +33,7 @@ class ClientListItem extends Component{
         <div className="client-card" onClick={this._handleClickClientItem} style={{float:"left"}}>
         <div className="celula-card-top">
           <div className="celula-card-top-left">
-            <div className="celula-title">{dataName.length > 30 ? dataName.substring(0, 30) + "..." : dataName}</div>
+            <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
             <div className="celula-title">{dataEconomicGroup.length > 30 ? dataEconomicGroup.substring(0, 30) + "..." : dataEconomicGroup}</div>
             <div className="celula-name" style={{marginTop: "5px", fontStyle: "italic"}}>{dataAccountManager}</div>

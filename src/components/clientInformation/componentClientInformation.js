@@ -32,7 +32,7 @@ class ComponentClientInformation extends Component{
         <header className="header-client-detail" style={{boxShadow: "-3px 2px 5px 0 rgba(0, 0, 0, 0.2)"}}>
   					<div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
   						<div>
-  							<h3 className="inline title-head">
+  							<h3 style={{wordBreak:'break-all'}} className="inline title-head">
   								{infoClient.clientName}
   							</h3>
                 {infoClient.isProspect &&
