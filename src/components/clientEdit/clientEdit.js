@@ -7,8 +7,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword,
-    consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -148,7 +147,7 @@ const validate = values => {
     } else {
       errors.extractsVirtual = null;
     }
-    return errors
+    return errors;
 };
 
 //Componente genérico para cargar los selects de justificación
@@ -1051,7 +1050,6 @@ class clientEdit extends Component{
         </form>
     );
   }
-
 }
 
 function mapDispatchToProps(dispatch) {

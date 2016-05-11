@@ -3,6 +3,8 @@ import $ from 'jquery';
 import _ from 'lodash';
 
 var focusInField = false;
+
+
 class comboBoxComponent extends Component {
    constructor(props) {
        super(props);
@@ -10,8 +12,13 @@ class comboBoxComponent extends Component {
            value: ''
        };
        this.mapValuesToDropDown = this.mapValuesToDropDown.bind(this);
+       this.scrollTo = this.scrollTo.bind(this);
    }
 
+   scrollTo() {
+       console.log(this.state);
+       window.scrollTo(this.state.right, this.state.top);
+   }
 
    componentWillReceiveProps({value, name}) {
      const selector = $(`.ui.selection.dropdown.${name}`);
@@ -41,6 +48,15 @@ class comboBoxComponent extends Component {
              onChange(id, text);
          }
      });
+
+     const {comboScroll} = this.refs;
+     const compoRect = comboScroll.getBoundingClientRect();
+     this.setState({
+         top: compoRect.top,
+         bottom: compoRect.bottom,
+         left: compoRect.left,
+         right: compoRect.right
+     });
    }
 
    mapValuesToDropDown(item, idx) {
@@ -53,13 +69,13 @@ class comboBoxComponent extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, error, name, disabled, deployUp} = this.props;
-       if( touched && error && !focusInField ){
-         $(`.ui.selection.dropdown.${name}`).focus();
-         focusInField = true;
+      console.log(this.state);
+       const {nameInput, labelInput, invalid, data, touched, error, name, disabled, deployUp} = this.props;
+       if( touched && invalid){
+         this.scrollTo();
        }
        return (
-           <div>
+         <div ref="comboScroll">
                <div className={`styleWidthComponents ui search selection dropdown ${disabled} ${name} ${deployUp === true ? 'bottom pointing' : ''}`}>
                    <input type="hidden" name={nameInput}/>
                    <i className="dropdown icon"/>
@@ -76,7 +92,7 @@ class comboBoxComponent extends Component {
                        </div>
                    </div>
                }
-           </div>
+          </div>
        );
    }
 }
