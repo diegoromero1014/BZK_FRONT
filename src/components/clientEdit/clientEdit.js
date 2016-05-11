@@ -83,7 +83,7 @@ const validate = values => {
     } else {
       errors.city = null;
     }
-    if (!values.dateSalesAnnuals) {
+    if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
       errors.dateSalesAnnuals = "Debe seleccionar un día";
     } else {
       errors.dateSalesAnnuals = null;
@@ -372,78 +372,80 @@ class clientEdit extends Component{
         centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
         error, handleSubmit, selectsReducer, clientInformacion} = this.props;
       var infoClient = clientInformacion.get('responseClientInfo');
-      var jsonCreateProspect= {
-        "id": infoClient.id,
-        "clientIdNumber": infoClient.clientIdNumber,
-        "clientName": infoClient.clientName,
-        "clientStatus": infoClient.clientStatus,
-        "riskRating": null,
-        "isProspect": infoClient.isProspect,
-        "ciiu": idCIIU.value,
-        "commercialRelationshipType": "",
-        "countryOfOrigin": "",
-        "isDecisionCenter": centroDecision.value,
-        "economicGroup": groupEconomic.value,
-        "internalRating": "",
-        "isic": "",
-        "ratingHistory": "",
-        "registrationKey": null,
-        "riskGroup": "",
-        "segment": infoClient.segment,
-        "subCiiu": idSubCIIU.value,
-        "subSegment": "",
-        "countryOfFirstLevelManagement": "",
-        "countryOfMainMarket": "",
-        "relationshipStatus": infoClient.relationshipStatus,
-        "typeOfClient":"",
-        "status":infoClient.status,
-        "isCreditNeeded":necesitaLME.value,
-        "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-        "salesUpadateDate": moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'),
-        "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-        "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-        "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-        "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-        "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
-        "localMarket":"",
-        "marketLeader":"",
-        "territory":"",
-        "actualizationDate": null,
-        "justificationForNoRM": justifyNoGeren.value,
-        "justificationForLostClient": justifyExClient.value,
-        "justificationForCreditNeed": justifyNoLME.value,
-        "isVirtualStatement": extractsVirtual.value,
-        "lineOfBusiness": infoClient.lineOfBusiness,
-        "isManagedByRm": marcGeren.value,
-        "addresses":[
-          {
-            "typeOfAddress": 41,
-            "address":address.value,
-            "country":country.value,
-            "province":province.value,
-            "city":city.value,
-            "neighborhood":neighborhood.value,
-            "isPrincipalAddress": reportVirtual.value,
-            "phoneNumber":telephone.value,
-            "postalCode":"",
-          }],
-        "notes":notesArray,
-        "description": description.value,
-        "clientIdType": infoClient.clientIdType,
-        "celulaId": infoClient.celulaId,
-        "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
-     }
-     const {createProspect} = this.props;
-     createProspect(jsonCreateProspect)
-     .then((data) => {
-       if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-           this.setState({showEx: true});
-         } else {
-           this.setState({showEr: true});
+      if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
+        var jsonCreateProspect= {
+          "id": infoClient.id,
+          "clientIdNumber": infoClient.clientIdNumber,
+          "clientName": infoClient.clientName,
+          "clientStatus": infoClient.clientStatus,
+          "riskRating": null,
+          "isProspect": infoClient.isProspect,
+          "ciiu": idCIIU.value,
+          "commercialRelationshipType": "",
+          "countryOfOrigin": "",
+          "isDecisionCenter": centroDecision.value,
+          "economicGroup": groupEconomic.value,
+          "internalRating": "",
+          "isic": "",
+          "ratingHistory": "",
+          "registrationKey": null,
+          "riskGroup": "",
+          "segment": infoClient.segment,
+          "subCiiu": idSubCIIU.value,
+          "subSegment": "",
+          "countryOfFirstLevelManagement": "",
+          "countryOfMainMarket": "",
+          "relationshipStatus": infoClient.relationshipStatus,
+          "typeOfClient":"",
+          "status":infoClient.status,
+          "isCreditNeeded":necesitaLME.value,
+          "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+          "salesUpadateDate" : dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'): null,
+          "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
+          "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
+          "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
+          "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
+          "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+          "localMarket":"",
+          "marketLeader":"",
+          "territory":"",
+          "actualizationDate": null,
+          "justificationForNoRM": justifyNoGeren.value,
+          "justificationForLostClient": justifyExClient.value,
+          "justificationForCreditNeed": justifyNoLME.value,
+          "isVirtualStatement": extractsVirtual.value,
+          "lineOfBusiness": infoClient.lineOfBusiness,
+          "isManagedByRm": marcGeren.value,
+          "addresses":[
+            {
+              "typeOfAddress": 41,
+              "address":address.value,
+              "country":country.value,
+              "province":province.value,
+              "city":city.value,
+              "neighborhood":neighborhood.value,
+              "isPrincipalAddress": reportVirtual.value,
+              "phoneNumber":telephone.value,
+              "postalCode":"",
+            }],
+          "notes":notesArray,
+          "description": description.value,
+          "clientIdType": infoClient.clientIdType,
+          "celulaId": infoClient.celulaId,
+          "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
        }
-       }, (reason) => {
-         this.setState({showEr: true});
-     });
+         const {createProspect} = this.props;
+         createProspect(jsonCreateProspect)
+         .then((data) => {
+           if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+               this.setState({showEx: true});
+             } else {
+               this.setState({showEr: true});
+           }
+           }, (reason) => {
+             this.setState({showEr: true});
+         });
+      }
     }
   };
 
@@ -1100,7 +1102,7 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
       annualSales: fomatInitialStateNumber(infoClient.annualSales),
-      dateSalesAnnuals: moment(infoClient.salesUpadateDate).format("DD/MM/YYYY"),
+      dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,
       assets: fomatInitialStateNumber(infoClient.assets),
       liabilities: fomatInitialStateNumber(infoClient.liabilities),
       operatingIncome: fomatInitialStateNumber(infoClient.operatingIncome),
