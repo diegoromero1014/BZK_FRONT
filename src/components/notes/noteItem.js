@@ -29,17 +29,13 @@ class NoteItem extends Component {
         deleteNote(index);
     }
 
-    _updateValue(e){
-    }
-
-    componentWillMount(){
-      const {combo, body} = this.props;
-      this.updateValue("combo", combo);
-      this.updateValue("body", body);
-    }
-
     render() {
-        const {combo, body, data, index, _onBlurField} = this.props;
+        const {
+            combo,
+            data,
+            index,
+            _onBlurField
+        } = this.props;
         return (
             <div>
                 <Row>
@@ -48,10 +44,10 @@ class NoteItem extends Component {
                             <dt><span>Tipo de nota(</span><span style={{color: "red"}}>*</span>)</dt>
                             <ComboBox
                                 name={`typeNote${index}`}
+                                labelInput="Seleccione el tipo de nota"
                                 value={this.state.combo}
-                                defaultValue={this.state.combo}
                                 onChange={val => this.updateValue('combo', val)}
-                                onBlur={() => console.log.bind(console)}
+                                onBlur={_onBlurField}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={data}
