@@ -24,7 +24,7 @@ import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
-  {'id': null, 'value': "Seleccione..."},
+  {'id': '', 'value': "Seleccione..."},
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ];
@@ -409,9 +409,9 @@ class clientEdit extends Component{
           "marketLeader":"",
           "territory":"",
           "actualizationDate": null,
-          "justificationForNoRM": justifyNoGeren.value,
+          "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
           "justificationForLostClient": justifyExClient.value,
-          "justificationForCreditNeed": justifyNoLME.value,
+          "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
           "isVirtualStatement": extractsVirtual.value,
           "lineOfBusiness": infoClient.lineOfBusiness,
           "isManagedByRm": marcGeren.value,
@@ -1025,7 +1025,7 @@ class clientEdit extends Component{
                 <button className="btn"
                     style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
                     type="submit">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
+                  <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
                 </button>
                 <button className="btn btn-secondary modal-button-edit"
                   onClick={this._closeWindow}
