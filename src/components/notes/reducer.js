@@ -23,16 +23,20 @@ export default (state = initialState, action) => {
         return state.delete(index);
     case SET_NOTES:
         const notes = action.notes;
-        notes.map(map => {
+        const list = Immutable.List(notes);
+        return state.withMutations(list => {
+
+          notes.map(item => {
             const uid = _.uniqueId('note_');
-            state.set(uid, {body: map.note, combo: map.typeOfNote});
-        });
-        return state.withMutations(map => {
-            notes.forEach(map2 => {
-                const uid = _.uniqueId('note_');
-                map.set(uid, {body: map2.note, combo: map2.typeOfNote});
-            });
-        });
+            list.push(
+              {
+                uid,
+                body: item.note,
+                combo: String(item.typeOfNote)
+              }
+            )
+          });
+      });
     case CLEAR_NOTES:
         return state.clear();
     default:
