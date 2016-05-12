@@ -21,10 +21,11 @@ class ShareholderComponent extends Component {
      };
   }
 
+
   componentWillMount(){
     const{clearShareholder,shareholdersByClientFindServer} = this.props;
     clearShareholder();
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,"","");
+    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
   }
 
   render() {

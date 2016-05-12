@@ -23,7 +23,7 @@ class Notas extends Component{
             <tbody>
               <tr>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{typeOfNoteKey}</td>
-                <td style={{width: "75%", verticalAlign: "initial"}}>{note}</td>
+                <td style={{width: "75%", verticalAlign: "initial"}}><p style={{wordBreak:'break-all'}}>{note}</p></td>
               </tr>
             </tbody>
           </table>

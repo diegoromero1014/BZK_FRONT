@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import {scrollToComponent} from '../../components/scrollTo/scrollComponent';
 import $ from 'jquery';
 import _ from 'lodash';
 
-var focusInField = false;
 class comboBoxComponent extends Component {
    constructor(props) {
        super(props);
@@ -32,7 +32,6 @@ class comboBoxComponent extends Component {
      const self = this;
      selector.dropdown({
          onChange: function (id, text) {
-             focusInField = false;
              self.touched = true;
              self.setState({
                  value: id
@@ -53,10 +52,9 @@ class comboBoxComponent extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, error, name, disabled, deployUp} = this.props;
-       if( touched && error && !focusInField ){
-         $(`.ui.selection.dropdown.${name}`).focus();
-         focusInField = true;
+       const {nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId} = this.props;
+       if( touched && invalid ){
+         scrollTo(parentId);
        }
        return (
            <div>
@@ -92,4 +90,4 @@ comboBoxComponent.PropTypes = {
   defaultValue: PropTypes.string
 };
 
-export default comboBoxComponent;
+export default scrollToComponent(comboBoxComponent);

@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
+let v1 = "";
 
 class PaginationShareholderComponent extends Component{
 
@@ -17,19 +18,27 @@ class PaginationShareholderComponent extends Component{
     clearShareholder();
   }
 
+  componentWillReceiveProps(nextProps){
+      const {
+          value1
+      } = nextProps;
+      if (v1 !== nextProps.value1) {
+      v1 = nextProps.value1;
+      this._handleShareholderByClientsFind(0);
+      }
+  }
+
   _handlePaginar(page){
     const {changePage,limitiInf} = this.props;
     var limInf = (page - 1);
     limitiInf(limInf);
-    console.log(limitiInf);
     this._handleShareholdersByClientsFind(limInf);
-    console.log(page);
     changePage(page);
   }
 
   _handleShareholdersByClientsFind(limInf){
       const {shareholdersReducer,shareholdersByClientFindServer} = this.props;
-      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",-1,shareholdersReducer.get('keyword'),"");
+      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,shareholdersReducer.get("columnShareholder"),shareholdersReducer.get("orderShareholder"),shareholdersReducer.get('keywordShareholder'),v1);
   }
 
   render(){

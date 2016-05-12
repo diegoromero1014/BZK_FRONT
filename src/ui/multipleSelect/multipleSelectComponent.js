@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {scrollToComponent} from '../../components/scrollTo/scrollComponent';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -47,8 +48,10 @@ class MultipleSelectComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, style, data, touched, error, name, disabled} = this.props;
-
+        const {nameInput, labelInput, style, data, touched, invalid, error, name, disabled, scrollTo, parentId} = this.props;
+        if( touched && invalid ){
+          scrollTo(parentId);
+        }
         return (
             <div style={style}>
                 <div className={`styleWidthComponents ui multiple search selection dropdown ${disabled} ${name}`}>
@@ -83,4 +86,4 @@ MultipleSelectComponent.PropTypes = {
     style: PropTypes.object
 };
 
-export default MultipleSelectComponent;
+export default scrollToComponent(MultipleSelectComponent);

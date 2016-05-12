@@ -7,8 +7,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword,
-    consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -25,7 +24,7 @@ import _ from 'lodash';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
-  {'id': null, 'value': "Seleccione..."},
+  {'id': '', 'value': "Seleccione..."},
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ];
@@ -83,7 +82,7 @@ const validate = values => {
     } else {
       errors.city = null;
     }
-    if (!values.dateSalesAnnuals) {
+    if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
       errors.dateSalesAnnuals = "Debe seleccionar un día";
     } else {
       errors.dateSalesAnnuals = null;
@@ -148,7 +147,7 @@ const validate = values => {
     } else {
       errors.extractsVirtual = null;
     }
-    return errors
+    return errors;
 };
 
 //Componente genérico para cargar los selects de justificación
@@ -172,6 +171,7 @@ function SelectsJustificacion(props) {
           textProp={props.textProp}
           {...props.justify}
           data={props.data}
+          parentId="dashboardComponentScroll"
         />
       </dt>
     </Col>;
@@ -256,7 +256,7 @@ class clientEdit extends Component{
       valuReduxForm.onChange(val);
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
-      if( value > 0 ){
+      if( value >= 0 ){
         var pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
@@ -371,78 +371,80 @@ class clientEdit extends Component{
         centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
         error, handleSubmit, selectsReducer, clientInformacion} = this.props;
       var infoClient = clientInformacion.get('responseClientInfo');
-      var jsonCreateProspect= {
-        "id": infoClient.id,
-        "clientIdNumber": infoClient.clientIdNumber,
-        "clientName": infoClient.clientName,
-        "clientStatus": infoClient.clientStatus,
-        "riskRating": null,
-        "isProspect": infoClient.isProspect,
-        "ciiu": idCIIU.value,
-        "commercialRelationshipType": "",
-        "countryOfOrigin": "",
-        "isDecisionCenter": centroDecision.value,
-        "economicGroup": groupEconomic.value,
-        "internalRating": "",
-        "isic": "",
-        "ratingHistory": "",
-        "registrationKey": null,
-        "riskGroup": "",
-        "segment": infoClient.segment,
-        "subCiiu": idSubCIIU.value,
-        "subSegment": "",
-        "countryOfFirstLevelManagement": "",
-        "countryOfMainMarket": "",
-        "relationshipStatus": infoClient.relationshipStatus,
-        "typeOfClient":"",
-        "status":infoClient.status,
-        "isCreditNeeded":necesitaLME.value,
-        "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-        "salesUpadateDate": moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'),
-        "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-        "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-        "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-        "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-        "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
-        "localMarket":"",
-        "marketLeader":"",
-        "territory":"",
-        "actualizationDate": null,
-        "justificationForNoRM": justifyNoGeren.value,
-        "justificationForLostClient": justifyExClient.value,
-        "justificationForCreditNeed": justifyNoLME.value,
-        "isVirtualStatement": extractsVirtual.value,
-        "lineOfBusiness": infoClient.lineOfBusiness,
-        "isManagedByRm": marcGeren.value,
-        "addresses":[
-          {
-            "typeOfAddress": 41,
-            "address":address.value,
-            "country":country.value,
-            "province":province.value,
-            "city":city.value,
-            "neighborhood":neighborhood.value,
-            "isPrincipalAddress": reportVirtual.value,
-            "phoneNumber":telephone.value,
-            "postalCode":"",
-          }],
-        "notes":notesArray,
-        "description": description.value,
-        "clientIdType": infoClient.clientIdType,
-        "celulaId": infoClient.celulaId,
-        "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
-     }
-     const {createProspect} = this.props;
-     createProspect(jsonCreateProspect)
-     .then((data) => {
-       if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-           this.setState({showEx: true});
-         } else {
-           this.setState({showEr: true});
+      if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
+        var jsonCreateProspect= {
+          "id": infoClient.id,
+          "clientIdNumber": infoClient.clientIdNumber,
+          "clientName": infoClient.clientName,
+          "clientStatus": infoClient.clientStatus,
+          "riskRating": null,
+          "isProspect": infoClient.isProspect,
+          "ciiu": idCIIU.value,
+          "commercialRelationshipType": "",
+          "countryOfOrigin": "",
+          "isDecisionCenter": centroDecision.value,
+          "economicGroup": groupEconomic.value,
+          "internalRating": "",
+          "isic": "",
+          "ratingHistory": "",
+          "registrationKey": null,
+          "riskGroup": "",
+          "segment": infoClient.segment,
+          "subCiiu": idSubCIIU.value,
+          "subSegment": "",
+          "countryOfFirstLevelManagement": "",
+          "countryOfMainMarket": "",
+          "relationshipStatus": infoClient.relationshipStatus,
+          "typeOfClient":"",
+          "status":infoClient.status,
+          "isCreditNeeded":necesitaLME.value,
+          "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+          "salesUpadateDate" : dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'): null,
+          "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
+          "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
+          "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
+          "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
+          "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+          "localMarket":"",
+          "marketLeader":"",
+          "territory":"",
+          "actualizationDate": null,
+          "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
+          "justificationForLostClient": justifyExClient.value,
+          "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
+          "isVirtualStatement": extractsVirtual.value,
+          "lineOfBusiness": infoClient.lineOfBusiness,
+          "isManagedByRm": marcGeren.value,
+          "addresses":[
+            {
+              "typeOfAddress": 41,
+              "address":address.value,
+              "country":country.value,
+              "province":province.value,
+              "city":city.value,
+              "neighborhood":neighborhood.value,
+              "isPrincipalAddress": reportVirtual.value,
+              "phoneNumber":telephone.value,
+              "postalCode":"",
+            }],
+          "notes":notesArray,
+          "description": description.value,
+          "clientIdType": infoClient.clientIdType,
+          "celulaId": infoClient.celulaId,
+          "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
        }
-       }, (reason) => {
-         this.setState({showEr: true});
-     });
+         const {createProspect} = this.props;
+         createProspect(jsonCreateProspect)
+         .then((data) => {
+           if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+               this.setState({showEx: true});
+             } else {
+               this.setState({showEr: true});
+           }
+           }, (reason) => {
+             this.setState({showEr: true});
+         });
+      }
     }
   };
 
@@ -462,7 +464,7 @@ class clientEdit extends Component{
             <Col xs={12} md={4} lg={4}>
               <dt><span>Razón social</span></dt>
               <dt>
-                <p style={{fontWeight: "normal", marginTop: "8px"}}>
+                <p style={{fontWeight: "normal", marginTop: "8px",wordBreak:'break-all'}}>
                   {infoClient.clientName}
                 </p>
               </dt>
@@ -528,6 +530,7 @@ class clientEdit extends Component{
                 onBlur={idCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'ciiu'}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('dataCIIU')}
                 />
             </div>
@@ -550,6 +553,7 @@ class clientEdit extends Component{
                 onBlur={idSubCIIU.onBlur}
                 valueProp={'id'}
                 textProp={'subCiiu'}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('dataSubCIIU')}
                 />
             </div>
@@ -623,6 +627,7 @@ class clientEdit extends Component{
                   onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                   />
               </div>
@@ -637,6 +642,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeProvince(val)}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataTypeProvince') || []}
                 />
               </div>
@@ -650,6 +656,7 @@ class clientEdit extends Component{
                   {...city}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataTypeCity') || []}
                 />
               </div>
@@ -694,6 +701,7 @@ class clientEdit extends Component{
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
+                parentId="dashboardComponentScroll"
                 data={valuesYesNo}
                 {...extractsVirtual}
               />
@@ -710,6 +718,7 @@ class clientEdit extends Component{
                   {...reportVirtual}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                 />
               </dt>
@@ -734,10 +743,9 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   type="text"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   onChange={val => this._onChangeValue("annualSales", val)}
                   placeholder="Ingrese las ventas anuales"
-                  style={{width: "100%", textAlign:"right"}}
                   {...annualSales}
                   value={annualSales.value}
                   onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
@@ -762,7 +770,7 @@ class clientEdit extends Component{
                   format="0,000"
                   min={0}
                   type="text"
-                  maxLength={16}
+                  max="16"
                   onChange={val => this._onChangeValue("assets", val)}
                   placeholder="Ingrese los activos"
                   {...assets}
@@ -782,7 +790,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("liabilities", val)}
                   placeholder="Ingrese los pasivos"
@@ -802,7 +810,7 @@ class clientEdit extends Component{
                   format="0,000"
                   onChange={val => this._onChangeValue("operatingIncome", val)}
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   placeholder="Ingrese los ingresos operacionales"
                   {...operatingIncome}
@@ -820,7 +828,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                   placeholder="Ingrese los ingresos no operacionales"
@@ -841,7 +849,7 @@ class clientEdit extends Component{
                   style={{width: "100%", textAlign: "right"}}
                   format="0,000"
                   min={0}
-                  maxLength={16}
+                  max="16"
                   type="text"
                   onChange={val => this._onChangeValue("expenses", val)}
                   placeholder="Ingrese los egresos"
@@ -895,6 +903,7 @@ class clientEdit extends Component{
                   onBlur={groupEconomic.onBlur}
                   valueProp={'id'}
                   textProp={'group'}
+                  parentId="dashboardComponentScroll"
                   data={selectsReducer.get('dataEconomicGroup')}
                 />
               </dt>
@@ -921,6 +930,7 @@ class clientEdit extends Component{
                   labelInput="Seleccione marca..."
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...marcGeren}
                 />
@@ -934,6 +944,7 @@ class clientEdit extends Component{
               onBlur={justifyNoGeren.onBlur}
               valueProp={"id"}
               textProp={"value"}
+              parentId="dashboardComponentScroll"
               justify={justifyNoGeren}
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
@@ -948,6 +959,7 @@ class clientEdit extends Component{
                   labelInput="Seleccione..."
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...centroDecision}
                 />
@@ -955,7 +967,7 @@ class clientEdit extends Component{
             </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs={12} md={4} lg={4} style={{paddingRight: "25px"}}>
+            <Col xs={12} md={4} lg={4}>
               <dt>
                 <span>¿Necesita LME? </span> {!infoClient.isProspect && <div style={{display:"inline"}}>(<span style={{color: "red"}}>*</span>)</div> }
               </dt>
@@ -967,6 +979,7 @@ class clientEdit extends Component{
                   onBlur={necesitaLME.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
+                  parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                 />
               </dt>
@@ -1012,7 +1025,7 @@ class clientEdit extends Component{
                 <button className="btn"
                     style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
                     type="submit">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
+                  <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
                 </button>
                 <button className="btn btn-secondary modal-button-edit"
                   onClick={this._closeWindow}
@@ -1051,7 +1064,6 @@ class clientEdit extends Component{
         </form>
     );
   }
-
 }
 
 function mapDispatchToProps(dispatch) {
@@ -1087,13 +1099,13 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
       reportVirtual: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].isPrincipalAddress : '',
       extractsVirtual: infoClient.isVirtualStatement,
-      annualSales: fomatInitialStateNumber(infoClient.annualSales),
-      dateSalesAnnuals: moment(infoClient.salesUpadateDate).format("DD/MM/YYYY"),
-      assets: fomatInitialStateNumber(infoClient.assets),
-      liabilities: fomatInitialStateNumber(infoClient.liabilities),
-      operatingIncome: fomatInitialStateNumber(infoClient.operatingIncome),
-      nonOperatingIncome: fomatInitialStateNumber(infoClient.nonOperatingIncome),
-      expenses: fomatInitialStateNumber(infoClient.expenses),
+      annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
+      dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,
+      assets: infoClient.assets === 0 ? '0' : fomatInitialStateNumber(infoClient.assets),
+      liabilities: infoClient.liabilities === 0 ? '0' : fomatInitialStateNumber(infoClient.liabilities),
+      operatingIncome: infoClient.operatingIncome === 0 ? '0' : fomatInitialStateNumber(infoClient.operatingIncome),
+      nonOperatingIncome: infoClient.nonOperatingIncome === 0 ? '0' : fomatInitialStateNumber(infoClient.nonOperatingIncome),
+      expenses: infoClient.expenses === 0 ? '0' : fomatInitialStateNumber(infoClient.expenses),
       marcGeren: infoClient.isManagedByRm,
       centroDecision: infoClient.isDecisionCenter,
       necesitaLME: infoClient.isCreditNeeded,

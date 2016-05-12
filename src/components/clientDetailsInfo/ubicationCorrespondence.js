@@ -37,7 +37,7 @@ class UbicationCorrespondence extends Component{
             </thead>
             <tbody>
               <tr>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.address}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}><p style={{wordBreak:'break-all'}}>{addresses.address}</p></td>
               </tr>
             </tbody>
           </table>
@@ -66,7 +66,7 @@ class UbicationCorrespondence extends Component{
                 </thead>
                 <tbody>
                   <tr>
-                    <td style={{width: "50%", verticalAlign: "initial"}}>{addresses.neighborhood}</td>
+                    <td style={{width: "50%", verticalAlign: "initial",paddingRight: '16px'}}><p style={{wordBreak:'break-all'}}>{addresses.neighborhood}</p></td>
                     <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.phoneNumber}</td>
                   </tr>
                 </tbody>
@@ -82,7 +82,7 @@ class UbicationCorrespondence extends Component{
             <tbody>
               <tr>
                 <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isVirtualStatement === null  ? '' : ( infoClient.isVirtualStatement ? 'Si': 'No')}</td>
-                <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.isPrincipalAddress === null  ? '' : ( infoClient.isPrincipalAddress ? 'Si': 'No')}</td>
+                <td style={{width: "25%", verticalAlign: "initial"}}>{addresses === null  ? '' : (addresses.isPrincipalAddress ? 'Si': 'No')}</td>
               </tr>
             </tbody>
           </table>

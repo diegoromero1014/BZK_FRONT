@@ -37,18 +37,6 @@ export default (state = initialState, action) => {
             )
           });
       });
-
-        /*notes.map(map => {
-          console.log("reducer notas");
-          const uid = _.uniqueId('note_');
-          state.set(uid, {body: map.note, combo: map.typeOfNote});
-        });
-        return state.withMutations(map => {
-            notes.forEach(map2 => {
-                const uid = _.uniqueId('note_');
-                map.set(uid, {body: map2.note, combo: map2.typeOfNote});
-            });
-        });*/
     case CLEAR_NOTES:
         return state.clear();
     default:

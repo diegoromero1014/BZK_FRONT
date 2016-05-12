@@ -66,7 +66,7 @@ class NoteItem extends Component {
                                 type="text"
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
                                 value={this.state.body}
-                                max="600"
+                                max={600}
                                 onChange={this.updateValue.bind(this, 'body')}
                                 onBlur={() => console.log}
                             />

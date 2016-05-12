@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE} from './constants';
 import axios from 'axios';
 
 export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,shareholderKindId){
@@ -35,10 +35,10 @@ export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOr
   }
 }
 
-export function changeKeyword(keyword){
+export function changeKeywordShareholder(keywordShareholder){
   return {
-    type: CHANGE_KEYWORD,
-    keyword: keyword
+    type: CHANGE_KEYWORD_SHAREHOLDER,
+    keywordShareholder: keywordShareholder
   }
 }
 
@@ -59,5 +59,19 @@ export function limitiInf(limInf){
 export function clearShareholder(){
     return {
         type: CLEAR_SHAREHOLDERS
+    };
+}
+
+export function clearShareholderDelete(){
+    return {
+        type: CLEAR_SHAREHOLDERS_DELETE
+    };
+}
+
+export function orderColumnShareholder(orderShareholder,columnShareholder){
+    return {
+        type: ORDER_COLUMN_SHAREHOLDER,
+        orderShareholder:orderShareholder,
+        columnShareholder:columnShareholder
     };
 }
