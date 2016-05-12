@@ -118,6 +118,8 @@ class ModalComponentShareholder extends Component {
     this._closeCreate = this._closeCreate.bind(this);
     this._onClickLimpiar = this._onClickLimpiar.bind(this);
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
+    this._handleCreateShareholder = this._handleCreateShareholder.bind(this);
+    this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     this.state = {
        showMessage:false,
        noExiste : 'hidden',
@@ -125,6 +127,16 @@ class ModalComponentShareholder extends Component {
        botonBus : 'block',
        valueTypeShareholder: ""
     }
+  }
+
+  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i=0, output='', validos="0123456789"; i< val.length; i++){
+     if (validos.indexOf(val.charAt(i)) != -1){
+        output += val.charAt(i)
+      }
+    }
+    val = output;
   }
 
   _closeCreate(){
@@ -219,8 +231,8 @@ class ModalComponentShareholder extends Component {
       numeroIdTributaria, observaciones }, createShareholder} = this.props;
       var messageBody = {
         "clientId": window.localStorage.getItem('idClientSelected'),
-        "shareholderIdType": tipoDocumento.value,
-        "shareholderIdNumber" : documento.value ,
+        "shareHolderIdType": tipoDocumento.value,
+        "shareHolderIdNumber" : numeroDocumento.value ,
         "shareHolderType" : tipoPersona.value,
         "shareHolderName": razonSocial.value,
         "sharePercentage":porcentajePart.value,
@@ -230,7 +242,6 @@ class ModalComponentShareholder extends Component {
         "secondLastName" : segundoApellido.value,
         "genderId" : genero.value,
         "shareHolderKindId" : tipoAccionista.value,
-        "address" : barrio.value,
         "countryId" : pais.value,
         "provinceId" : departamento.value,
         "cityId" : ciudad.value,
@@ -241,11 +252,19 @@ class ModalComponentShareholder extends Component {
 
       createShareholder(messageBody).then((data) => {
           if((_.get(data, 'payload.status') === 200)){
-              this.setState({showMessage: true});
+              typeMessage="success";
+              titleMessage="Creación de accionista";
+              message="Señor usuario, el accionista se creo de forma exitosa.";
             } else {
-              this.setState({showMessage: true});
+              typeMessage="error";
+              titleMessage="Error creando accionista";
+              message="Señor usuario, ocurrió un error creando el accionista.";
           }
+          this.setState({showMessage: true});
           }, (reason) => {
+            typeMessage="error";
+            titleMessage="Error creando accionista";
+            message="Señor usuario, ocurrió un error creando el accionista.";
             this.setState({showMessage: true});
       });
   }
@@ -401,10 +420,11 @@ class ModalComponentShareholder extends Component {
                     name="porcentajePart"
                     style={{textAlign: "right"}}
                     placeholder="Ingrese el procentaje de participación"
-                    type="number"
+                    type="text"
                     min={0}
                     max="100"
                     {...porcentajePart}
+                    onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
@@ -442,9 +462,10 @@ class ModalComponentShareholder extends Component {
                     name="numeroIdTributaria"
                     style={{textAlign: "right"}}
                     placeholder="Ingrese el número de id tributaria"
-                    type="number"
+                    type="text"
                     min={0}
                     {...numeroIdTributaria}
+                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>

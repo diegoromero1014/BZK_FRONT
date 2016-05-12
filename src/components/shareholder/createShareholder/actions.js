@@ -45,13 +45,9 @@ export function createShareholder(jsonCreateShareholder){
         "debug": true,
         "isSuccessful": true
       },
-      "messageBody": {
-        "typeDocument": typeDocument,
-        "numberDocument":numberDocument,
-        "idClient": clientId
-      }
+      "messageBody": jsonCreateShareholder
     }
-  var request = axios.post(APP_URL + "/validateShareholderExists", json);
+  var request = axios.post(APP_URL + "/saveShareholder", json);
   return {
     type: actions.SEARCH_SHAREHOLDER,
     payload: request
