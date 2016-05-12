@@ -63,7 +63,6 @@ class TabClientInfo extends Component{
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
           {styleContacts && <ContactInfo infoClient={infoClient}/>}
-          {styleShareholders && <ShareholderInfo infoClient={infoClient}/>}
         </div>
       </div>
     );
