@@ -30,7 +30,7 @@ export function searchShareholder(typeDocument,numberDocument,clientId){
   }
 }
 
-export function cretaeShareholder(jsonCreateShareholder){
+export function createShareholder(jsonCreateShareholder){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
