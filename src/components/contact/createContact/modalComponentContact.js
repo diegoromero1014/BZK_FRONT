@@ -107,7 +107,6 @@ class ModalComponentContact extends Component {
            showEx:false,
            showEr:false,
            showErrorYa: false,
-           showErrorNo: false,
            noExiste : 'hidden',
            disabled : '',
            botonBus : 'block',
@@ -177,7 +176,6 @@ class ModalComponentContact extends Component {
                 this.props.resetForm();
                 this.setState({showErrorYa: true});
               }else if(!(_.get(data, 'payload.data.findContact'))){
-                this.setState({showErrorNo: true});
                 this.setState({disabled : 'disabled'});
                 this.setState({noExiste : 'visible'});
                 this.setState({botonBus : 'none'});
@@ -660,13 +658,6 @@ class ModalComponentContact extends Component {
                            text="Señor usuario, se presento un error"
                            onConfirm={() => this.setState({showEr:false})}
                            />
-                           <SweetAlert
-                            type= "warning"
-                            show={this.state.showErrorNo}
-                            title="Advertencia"
-                            text="Señor usuario, el contacto no existe"
-                            onConfirm={() => this.setState({showErrorNo:false})}
-                            />
                   </form>
         );
     }
