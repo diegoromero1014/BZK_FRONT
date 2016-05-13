@@ -30,7 +30,7 @@ export function searchShareholder(typeDocument,numberDocument,clientId){
   }
 }
 
-export function cretaeShareholder(jsonCreateShareholder){
+export function createShareholder(jsonCreateShareholder){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
@@ -45,13 +45,9 @@ export function cretaeShareholder(jsonCreateShareholder){
         "debug": true,
         "isSuccessful": true
       },
-      "messageBody": {
-        "typeDocument": typeDocument,
-        "numberDocument":numberDocument,
-        "idClient": clientId
-      }
+      "messageBody": jsonCreateShareholder
     }
-  var request = axios.post(APP_URL + "/validateShareholderExists", json);
+  var request = axios.post(APP_URL + "/saveShareholder", json);
   return {
     type: actions.SEARCH_SHAREHOLDER,
     payload: request

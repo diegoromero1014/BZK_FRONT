@@ -8,9 +8,9 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
-import {toggleModalShareholder, clearSearchShareholder, searchShareholder, cretaeShareholder} from './actions';
+import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -118,6 +118,8 @@ class ModalComponentShareholder extends Component {
     this._closeCreate = this._closeCreate.bind(this);
     this._onClickLimpiar = this._onClickLimpiar.bind(this);
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
+    this._handleCreateShareholder = this._handleCreateShareholder.bind(this);
+    this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     this.state = {
        showMessage:false,
        noExiste : 'hidden',
@@ -125,6 +127,16 @@ class ModalComponentShareholder extends Component {
        botonBus : 'block',
        valueTypeShareholder: ""
     }
+  }
+
+  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i=0, output='', validos="0123456789"; i< val.length; i++){
+     if (validos.indexOf(val.charAt(i)) != -1){
+        output += val.charAt(i)
+      }
+    }
+    val = output;
   }
 
   _closeCreate(){
@@ -148,7 +160,7 @@ class ModalComponentShareholder extends Component {
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY]);
+    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -165,14 +177,14 @@ class ModalComponentShareholder extends Component {
               this.setState({showMessage: true});
 
             } else if ( !(_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista no existe
-              typeMessage="warning";
-              titleMessage="Advertencia";
-              message="Señor usuario, el accionista no existe.";
+              //typeMessage="warning";
+              //titleMessage="Advertencia";
+              //message="Señor usuario, el accionista no existe.";
 
               this.setState({disabled : 'disabled'});
               this.setState({noExiste : 'visible'});
               this.setState({botonBus : 'none'});
-              this.setState({showMessage: true});
+              //this.setState({showMessage: true});
             }
           }, (reason) => {
             typeMessage = "error";
@@ -216,46 +228,43 @@ class ModalComponentShareholder extends Component {
     const {fields:{ tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, cretaeShareholder} = this.props;
+      numeroIdTributaria, observaciones }, createShareholder} = this.props;
       var messageBody = {
         "clientId": window.localStorage.getItem('idClientSelected'),
-        "shareholderIdType": tipoTratamiendo.value,
-        "shareholderIdNumber" : tipoGenero.value ,
-        "shareHolderType" : tipoDocumento.value,
-        "shareHolderName": numeroDocumento.value,
-        "sharePercentage":primerNombre.value,
-        "firstName" : segundoNombre.value,
+        "shareHolderIdType": tipoDocumento.value,
+        "shareHolderIdNumber" : numeroDocumento.value ,
+        "shareHolderType" : tipoPersona.value,
+        "shareHolderName": razonSocial.value,
+        "sharePercentage":porcentajePart.value,
+        "firstName" : primerNombre.value,
+        "middleName" : segundoNombre.value,
         "firstLastName" : primerApellido.value,
         "secondLastName" : segundoApellido.value,
-        "contactPosition" : tipoCargo.value,
-        "unit" : tipoDependencia.value,
-        "function" : JSON.parse('[' + ((tipoFuncion.value)?tipoFuncion.value:"") +']') ,
-        "dateOfBirth" : fechaNacimiento.value ? moment(fechaNacimiento.value, "DD/MM/YYYY").format('x'): null,
-        "address" : direccion.value,
-        "country" : pais.value,
-        "province" : departamento.value,
-        "city" : ciudad.value,
-        "neighborhood" : barrio.value,
-        "postalCode" : codigoPostal.value,
-        "telephoneNumber" : telefono.value,
-        "extension" : extension.value,
-        "mobileNumber" : celular.value,
-        "emailAddress" : correo.value,
-        "hobbies" : JSON.parse('[' + ((tipoHobbie.value)?tipoHobbie.value:"") +']'),
-        "sports" : JSON.parse('[' + ((tipoDeporte.value)?tipoDeporte.value:"") +']'),
-        "typeOfContact" : tipoContacto.value,
-        "lineOfBusiness" : JSON.parse('[' + ((tipoEntidad.value)?tipoEntidad.value:"") +']'),
-        "socialStyle" : tipoEstiloSocial.value,
-        "attitudeOverGroup" : tipoActitud.value
+        "genderId" : genero.value,
+        "shareHolderKindId" : tipoAccionista.value,
+        "countryId" : pais.value,
+        "provinceId" : departamento.value,
+        "cityId" : ciudad.value,
+        "fiscalCountryId" : paisResidencia.value,
+        "tributaryNumber" : numeroIdTributaria.value,
+        "comment" : observaciones .value
       }
 
-      cretaeShareholder(messageBody).then((data) => {
+      createShareholder(messageBody).then((data) => {
           if((_.get(data, 'payload.status') === 200)){
-              this.setState({showMessage: true});
+              typeMessage="success";
+              titleMessage="Creación de accionista";
+              message="Señor usuario, el accionista se creo de forma exitosa.";
             } else {
-              this.setState({showMessage: true});
+              typeMessage="error";
+              titleMessage="Error creando accionista";
+              message="Señor usuario, ocurrió un error creando el accionista.";
           }
+          this.setState({showMessage: true});
           }, (reason) => {
+            typeMessage="error";
+            titleMessage="Error creando accionista";
+            message="Señor usuario, ocurrió un error creando el accionista.";
             this.setState({showMessage: true});
       });
   }
@@ -281,7 +290,7 @@ class ModalComponentShareholder extends Component {
                       disabled = {this.state.disabled}
                       valueProp={'id'}
                       textProp = {'value'}
-                      data={selectsReducer.get(CONTACT_ID_TYPE) || []}
+                      data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
                     />
                     </dd>
                   </dl>
@@ -411,10 +420,11 @@ class ModalComponentShareholder extends Component {
                     name="porcentajePart"
                     style={{textAlign: "right"}}
                     placeholder="Ingrese el procentaje de participación"
-                    type="number"
+                    type="text"
                     min={0}
                     max="100"
                     {...porcentajePart}
+                    onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
@@ -452,9 +462,10 @@ class ModalComponentShareholder extends Component {
                     name="numeroIdTributaria"
                     style={{textAlign: "right"}}
                     placeholder="Ingrese el número de id tributaria"
-                    type="number"
+                    type="text"
                     min={0}
                     {...numeroIdTributaria}
+                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>
@@ -498,7 +509,7 @@ function mapDispatchToProps(dispatch) {
       clearValuesAdressess,
       consultListWithParameterUbication,
       consultDataSelect,
-      cretaeShareholder
+      createShareholder
     }, dispatch);
 }
 
