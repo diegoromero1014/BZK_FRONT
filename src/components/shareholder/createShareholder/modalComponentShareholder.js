@@ -7,10 +7,13 @@ import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
+import {redirectUrl} from '../../globalComponents/actions';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
+import {shareholdersByClientFindServer} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
+import {NUMBER_RECORDS} from '../constants';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -129,7 +132,7 @@ class ModalComponentShareholder extends Component {
     }
   }
 
-  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+  _handleBlurValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="0123456789"; i< val.length; i++){
      if (validos.indexOf(val.charAt(i)) != -1){
@@ -140,13 +143,15 @@ class ModalComponentShareholder extends Component {
   }
 
   _closeCreate(){
-    const{clearSearchShareholder,isOpen,clearContactDelete} = this.props;
-    clearSearchShareholder();
-    this.props.resetForm();
-    this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
-    isOpen();
-    clearContactDelete();
-    this.setState({showMessage:false});
+    if( typeMessage === "success" ){
+      const{clearSearchShareholder,isOpen} = this.props;
+      clearSearchShareholder();
+      this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block', showMessage: false});
+      isOpen();
+    } else {
+      this.setState({showMessage: false});
+    }
   }
 
   _onClickLimpiar(){
@@ -177,14 +182,9 @@ class ModalComponentShareholder extends Component {
               this.setState({showMessage: true});
 
             } else if ( !(_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista no existe
-              //typeMessage="warning";
-              //titleMessage="Advertencia";
-              //message="Señor usuario, el accionista no existe.";
-
               this.setState({disabled : 'disabled'});
               this.setState({noExiste : 'visible'});
               this.setState({botonBus : 'none'});
-              //this.setState({showMessage: true});
             }
           }, (reason) => {
             typeMessage = "error";
@@ -228,7 +228,7 @@ class ModalComponentShareholder extends Component {
     const {fields:{ tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, createShareholder} = this.props;
+      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder} = this.props;
       var messageBody = {
         "clientId": window.localStorage.getItem('idClientSelected'),
         "shareHolderIdType": tipoDocumento.value,
@@ -251,21 +251,26 @@ class ModalComponentShareholder extends Component {
       }
 
       createShareholder(messageBody).then((data) => {
+        if((_.get(data, 'payload.validateLogin') === 'false')){
+          redirectUrl("/login");
+        } else {
           if((_.get(data, 'payload.status') === 200)){
               typeMessage="success";
               titleMessage="Creación de accionista";
               message="Señor usuario, el accionista se creo de forma exitosa.";
-            } else {
+              shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+          } else {
               typeMessage="error";
               titleMessage="Error creando accionista";
               message="Señor usuario, ocurrió un error creando el accionista.";
           }
+        }
           this.setState({showMessage: true});
-          }, (reason) => {
-            typeMessage="error";
-            titleMessage="Error creando accionista";
-            message="Señor usuario, ocurrió un error creando el accionista.";
-            this.setState({showMessage: true});
+      }, (reason) => {
+        typeMessage="error";
+        titleMessage="Error creando accionista";
+        message="Señor usuario, ocurrió un error creando el accionista.";
+        this.setState({showMessage: true});
       });
   }
 
@@ -290,6 +295,7 @@ class ModalComponentShareholder extends Component {
                       disabled = {this.state.disabled}
                       valueProp={'id'}
                       textProp = {'value'}
+                      labelInput="Seleccione"
                       data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
                     />
                     </dd>
@@ -301,7 +307,6 @@ class ModalComponentShareholder extends Component {
                     <dd><InputComponent
                       name="numeroDocumento"
                       max="15"
-                      placeholder="Ingrese el documento del accionista"
                       type="text"
                       disabled = {this.state.disabled}
                       {...numeroDocumento}
@@ -322,6 +327,7 @@ class ModalComponentShareholder extends Component {
                     {...tipoPersona}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     onChange={val => this._onChangeTypeShareholder(val)}
                     data={selectsReducer.get("dataTypeShareholders") || []}
                   />
@@ -332,24 +338,35 @@ class ModalComponentShareholder extends Component {
                     {...tipoAccionista}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     data={selectsReducer.get(SHAREHOLDER_KIND) || []}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <ComboBox name="paisResidencia" labelInput="Seleccione"
-                    {...paisResidencia}
-                    valueProp={'id'}
-                    textProp = {'value'}
-                    data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  <dt><span>Porcentaje de participación (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <InputComponent
+                    name="porcentajePart"
+                    style={{textAlign: "right"}}
+                    type="text"
+                    min={0}
+                    max="100"
+                    {...porcentajePart}
+                    onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
                   />
                 </Col>
-
+                <Col xs={12} md={8} lg={8} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
+                  <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <InputComponent
+                    name="razonSocial"
+                    type="text"
+                    max="110"
+                    {...razonSocial}
+                  />
+                </Col>
                 <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                   <dt><span>Primer nombre (</span><span style={{color: "red"}}>*</span>)</dt>
                   <InputComponent
                     name="primerNombre"
-                    placeholder="Ingrese el primer nombre del accionista"
                     type="text"
                     max="50"
                     {...primerNombre}
@@ -359,7 +376,6 @@ class ModalComponentShareholder extends Component {
                   <dt><span>Segundo nombre</span></dt>
                   <InputComponent
                     name="segundoNombre"
-                    placeholder="Ingrese el segundo nombre del accionista"
                     type="text"
                     max="50"
                     {...segundoNombre}
@@ -369,7 +385,6 @@ class ModalComponentShareholder extends Component {
                   <dt><span>Primer apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                   <InputComponent
                     name="primerApellido"
-                    placeholder="Ingrese el primer apellido del accionista"
                     type="text"
                     max="50"
                     {...primerApellido}
@@ -379,7 +394,6 @@ class ModalComponentShareholder extends Component {
                   <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                   <InputComponent
                     name="segundoApellido"
-                    placeholder="Ingrese el segundo apellido del accionista"
                     type="text"
                     max="50"
                     {...segundoApellido}
@@ -391,48 +405,33 @@ class ModalComponentShareholder extends Component {
                     {...genero}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     data={selectsReducer.get(FILTER_COUNTRY) || []}
                   />
                 </Col>
-                <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
-                  <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <InputComponent
-                    name="razonSocial"
-                    placeholder="Ingrese la razón social del accionista"
-                    type="text"
-                    max="110"
-                    {...razonSocial}
-                  />
-                </Col>
-                <Col xs={12} md={8} lg={8}>
-                  <dt><span>Dirección sede principal (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <InputComponent
-                    name="direccion"
-                    placeholder="Ingrese la dirección del accionista"
-                    type="text"
-                    max="100"
-                    {...direccion}
-                  />
-                </Col>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>Porcentaje de participación (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
                   <InputComponent
-                    name="porcentajePart"
+                    name="numeroIdTributaria"
                     style={{textAlign: "right"}}
-                    placeholder="Ingrese el procentaje de participación"
                     type="text"
                     min={0}
-                    max="100"
-                    {...porcentajePart}
-                    onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
+                    {...numeroIdTributaria}
+                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
                   />
                 </Col>
+              </Row>
+            </div>
+            <dt style={{visibility: this.state.noExiste}} className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y correspondencia</span></dt>
+            <div style={{paddingLeft:'20px',paddingRight:'20px', visibility: this.state.noExiste}}>
+              <Row>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
                   <ComboBox name="pais" labelInput="Seleccione"
                     {...pais}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     onChange={val => this._onChangeCountry(val)}
                     data={selectsReducer.get(FILTER_COUNTRY) || []}
                   />
@@ -443,6 +442,7 @@ class ModalComponentShareholder extends Component {
                     {...departamento}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     onChange={val => this._onChangeProvince(val)}
                     data={selectsReducer.get('dataTypeProvince') || []}
                   />
@@ -453,32 +453,46 @@ class ModalComponentShareholder extends Component {
                     {...ciudad}
                     valueProp={'id'}
                     textProp = {'value'}
+                    labelInput="Seleccione"
                     data={selectsReducer.get('dataTypeCity') || []}
                   />
                 </Col>
-                <Col xs={12} md={4} lg={4}>
-                  <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <InputComponent
-                    name="numeroIdTributaria"
-                    style={{textAlign: "right"}}
-                    placeholder="Ingrese el número de id tributaria"
-                    type="text"
-                    min={0}
-                    {...numeroIdTributaria}
-                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
-                  />
-                </Col>
                 <Col xs={12} md={12} lg={12}>
-                  <dt><span>Observaciones (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Dirección sede principal (</span><span style={{color: "red"}}>*</span>)</dt>
                   <Textarea
-                    name="observaciones"
+                    name="direccion"
                     type="text"
-                    max="250"
+                    max="100"
                     style={{width: '100%', height: '100%'}}
-                    placeholder="Ingrese las observaciones"
-                    {...observaciones}
+                    {...direccion}
                   />
                 </Col>
+                <Col xs={12} md={4} lg={4}>
+                  <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <ComboBox name="paisResidencia" labelInput="Seleccione"
+                    {...paisResidencia}
+                    valueProp={'id'}
+                    textProp = {'value'}
+                    labelInput="Seleccione"
+                    labelInput="Seleccione"
+                    data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  />
+                </Col>
+                </Row>
+              </div>
+              <dt style={{visibility: this.state.noExiste}} className="business-title"><span style={{paddingLeft: '20px'}}>Otros</span></dt>
+              <div style={{paddingLeft:'20px',paddingRight:'20px', visibility: this.state.noExiste}}>
+                <Row>
+                  <Col xs={12} md={12} lg={12}>
+                    <dt><span>Observaciones (</span><span style={{color: "red"}}>*</span>)</dt>
+                    <Textarea
+                      name="observaciones"
+                      type="text"
+                      max="250"
+                      style={{width: '100%', height: '100%'}}
+                      {...observaciones}
+                    />
+                  </Col>
               </Row>
             </div>
           </div>
@@ -493,7 +507,7 @@ class ModalComponentShareholder extends Component {
            show={this.state.showMessage}
            title={titleMessage}
            text={message}
-           onConfirm={() => this.setState({showMessage:false})}
+           onConfirm={this._closeCreate}
            />
         </form>
     );
@@ -509,7 +523,8 @@ function mapDispatchToProps(dispatch) {
       clearValuesAdressess,
       consultListWithParameterUbication,
       consultDataSelect,
-      createShareholder
+      createShareholder,
+      shareholdersByClientFindServer
     }, dispatch);
 }
 
