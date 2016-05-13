@@ -47,7 +47,7 @@ class TabClientInfo extends Component{
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
-      //backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     }
     return (
       <div className="my-custom-tab" style={{marginTop: "2px"}}>
@@ -59,10 +59,14 @@ class TabClientInfo extends Component{
   				<li style={backgroundContacts} onClick={this._handleClickTabItem.bind(this, 2)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Contactos</a>
           </li>
+          <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, 3)}>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
+          </li>
   			</ul>
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
           {styleContacts && <ContactInfo infoClient={infoClient}/>}
+          {styleShareholders && <ShareholderInfo infoClient={infoClient}/>}
         </div>
       </div>
     );
