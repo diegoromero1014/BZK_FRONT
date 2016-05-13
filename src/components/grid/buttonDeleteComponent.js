@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactDelete} from '../contact/actions';
-import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
+import {shareholdersByClientFindServer,clearShareholderDelete} from '../shareholder/actions';
+import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER} from './constants';
 
 class ButtonDeleteComponent extends Component{
 
@@ -33,7 +34,7 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer,actionsDelete,clearContactDelete} = this.props;
+        const {contactsByClientFindServer,actionsDelete,clearContactDelete,clearShareholderDelete,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactDelete();
@@ -41,7 +42,10 @@ class ButtonDeleteComponent extends Component{
             "",
             "",
             "");
-          }
+          }else if(actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER){
+              clearShareholderDelete();
+              shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+            }
         }
         this.setState({showEx:false, showEr: false,show: false});
     }
@@ -88,7 +92,8 @@ ButtonDeleteComponent.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    deleteServer,contactsByClientFindServer,clearContactDelete
+    deleteServer,contactsByClientFindServer,clearContactDelete,
+    shareholdersByClientFindServer,clearShareholderDelete
   }, dispatch);
 }
 
