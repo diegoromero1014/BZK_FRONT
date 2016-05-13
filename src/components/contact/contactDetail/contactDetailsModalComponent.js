@@ -340,44 +340,26 @@ class ContactDetailsModalComponent extends Component {
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalEditCotact">
+          <dt className="business-title" style={{fontSize: '17px'}}>
+            <span style={{paddingLeft: '20px'}}>Información básica contacto</span>
+          </dt>
             <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
               <Row>
-                <Col md={12} lg={12}>
-                  <dt className="business-title" style={{fontSize: '17px'}}>
-                    <span style={{paddingLeft: '20px'}}>
-                      {'Información básica contacto'}
-                    </span>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                  <dt><span>Tipo de documento</span></dt>
+                  <dt>
+                    <p style={{fontWeight: "normal"}}>
+                      {contactType.value}
+                    </p>
                   </dt>
                 </Col>
-              </Row>
-              <Row>
-                <Col xs={12} sm={12} md={4} lg={4}>
-                  <dt><span>{'Tipo de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                  <dd>
-                    <ComboBox
-                      name="contactType"
-                      labelInput="Seleccione"
-                      {...contactType}
-                      disabled={'disabled'}
-                      valueProp={'id'}
-                      textProp={'value'}
-                      parentId="modalEditCotact"
-                      data={selectsReducer.get(CONTACT_ID_TYPE) || []}
-                    />
-                  </dd>
-                </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
-                  <dt><span>{'Número de documento ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
-                  <dd>
-                    <Input
-                      name="contactIdentityNumber"
-                      type="text"
-                      max="20"
-                      disabled={'disabled'}
-                      onChange={val => this._onchangeValue("contactIdentityNumber", val)}
-                      {...contactIdentityNumber}
-                    />
-                  </dd>
+                  <dt><span>Número de documento</span></dt>
+                  <dt>
+                    <p style={{fontWeight: "normal"}}>
+                      {contactIdentityNumber.value}
+                    </p>
+                  </dt>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <button type="button" onClick={this._editContact} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
@@ -422,7 +404,6 @@ class ContactDetailsModalComponent extends Component {
                       type="text"
                       max="60"
                       disabled={this.state.isEditable ? '' : 'disabled'}
-                      //onChange={val => this._onchangeValue("firstName", val)}
                       {...contactFirstName}
                     />
                   </dd>
@@ -437,7 +418,6 @@ class ContactDetailsModalComponent extends Component {
                         type="text"
                         max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        //onChange={val => this._onchangeValue("middleName", val)}
                         {...contactMiddleName}
                       />
                   </dd>
@@ -450,7 +430,6 @@ class ContactDetailsModalComponent extends Component {
                         type="text"
                         max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        //onChange={val => this._onchangeValue("firstLastName", val)}
                         {...contactFirstLastName}
                       />
                   </dd>
@@ -463,7 +442,6 @@ class ContactDetailsModalComponent extends Component {
                         type="text"
                         max="60"
                         disabled={this.state.isEditable ? '' : 'disabled'}
-                        //onChange={val => this._onchangeValue("secondLastName", val)}
                         {...contactSecondLastName}
                       />
                   </dd>
@@ -516,7 +494,7 @@ class ContactDetailsModalComponent extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12} sm={12} md={4} lg={4}>
+                <Col xs>
                   <dt>{'Estilo social'}</dt>
                   <dd>
                     <ComboBox
@@ -531,7 +509,7 @@ class ContactDetailsModalComponent extends Component {
                     />
                   </dd>
                 </Col>
-                <Col xs={12} sm={12} md={4} lg={4}>
+                <Col xs>
                   <dt>{'Actitud frente al Grupo'}</dt>
                   <dd>
                     <ComboBox
@@ -547,11 +525,9 @@ class ContactDetailsModalComponent extends Component {
                   </dd>
                 </Col>
               </Row>
-              <Row>
-                <Col md={12}>
-                  <dt className="business-title" style={{fontSize: '17px'}}>{'Información de ubicación y correspondencia'}</dt>
-                </Col>
-              </Row>
+            </div>
+            <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y correspondencia</span></dt>
+            <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
               <Row>
                 <Col xs={12} sm={12} md={6} lg={4}>
                   <dt><span>País (</span><span style={{color: 'red'}}>*</span><span>)</span></dt>
@@ -701,11 +677,9 @@ class ContactDetailsModalComponent extends Component {
                   </dd>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={12}>
-                  <dt className="business-title" style={{fontSize: '17px'}}>{'Clasificación del contacto'}</dt>
-                </Col>
-              </Row>
+            </div>
+            <dt className="business-title"><span style={{paddingLeft: '20px'}}>Clasificación del contacto</span></dt>
+            <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
               <Row>
                 <Col xs>
                   <dt><span>{'Tipo de contacto ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
@@ -722,8 +696,8 @@ class ContactDetailsModalComponent extends Component {
                     />
                   </dd>
                 </Col>
-                </Row>
-                <Row>
+              </Row>
+              <Row>
                 <Col xs>
                   <dt><span>{'Entidad / Línea de negocio'}</span></dt>
                   <dd>
@@ -755,11 +729,9 @@ class ContactDetailsModalComponent extends Component {
                   </dd>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={12}>
-                  <dt className="business-title" style={{fontSize: '17px'}}>{'Hobbies y deportes'}</dt>
-                </Col>
-              </Row>
+            </div>
+            <dt className="business-title"><span style={{paddingLeft: '20px'}}>Hobbies y deportes</span></dt>
+            <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
               <Row>
                 <Col xs={12} sm={12} md={6} lg={6}>
                   <dt><span>{'Hobbies'}</span></dt>

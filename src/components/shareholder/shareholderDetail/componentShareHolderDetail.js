@@ -16,13 +16,92 @@ const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "
   "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
   "shareHolderIdType", "shareHolderKindId", "shareHolderName", "shareHolderType", "sharePercentage",
   "tributaryNumber"];
+const errors = {}
 
 var valueTypeShareholder;
 
 const validate = values => {
-    const errors = {}
-
-    return errors;
+  if(!values.shareHolderType){
+    errors.shareHolderType = "Debe seleccionar una opción";
+  }else{
+    errors.shareHolderType = null;
+  }
+  if(!values.shareHolderKindId){
+    errors.shareHolderKindId = "Debe seleccionar una opción";
+  }else{
+    errors.shareHolderKindId = null;
+  }
+  if(!values.fiscalCountryId){
+    errors.fiscalCountryId = "Debe seleccionar una opción";
+  }else{
+    errors.fiscalCountryId = null;
+  }
+  if(!values.firstName && valueTypeShareholder === PERSONA_NATURAL){
+    errors.firstName = "Debe ingresar un valor";
+  }else{
+    errors.firstName = null;
+  }
+  if(!values.middleName && valueTypeShareholder === PERSONA_NATURAL){
+    errors.middleName = "Debe ingresar un valor";
+  }else{
+    errors.middleName = null;
+  }
+  if(!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL){
+    errors.firstLastName = "Debe ingresar un valor";
+  }else{
+    errors.firstLastName = null;
+  }
+  if(!values.secondLastName && valueTypeShareholder === PERSONA_NATURAL){
+    errors.secondLastName = "Debe ingresar un valor";
+  }else{
+    errors.secondLastName = null;
+  }
+  if(!values.genderId && valueTypeShareholder === PERSONA_NATURAL){
+    errors.genderId = "Debe seleccionar un valor";
+  }else{
+    errors.genderId = null;
+  }
+  if(!values.shareHolderName && valueTypeShareholder === PERSONA_JURIDICA){
+    errors.shareHolderName = "Debe ingresar un valor";
+  }else{
+    errors.shareHolderName = null;
+  }
+  if(!values.address){
+    errors.address = "Debe ingresar un valor";
+  }else{
+    errors.address = null;
+  }
+  if(!values.sharePercentage){
+    errors.sharePercentage = "Debe ingresar un valor";
+  }else{
+    errors.sharePercentage = null;
+  }
+  if(!values.countryId){
+    errors.countryId = "Debe seleccionar un valor";
+  }else{
+    errors.countryId = null;
+  }
+  if(!values.provinceId){
+    errors.provinceId = "Debe seleccionar un valor";
+  }else{
+    errors.provinceId = null;
+  }
+  if(!values.cityId){
+    errors.cityId = "Debe seleccionar un valor";
+  }else{
+    errors.cityId = null;
+  }
+  if(!values.tributaryNumber){
+    errors.tributaryNumber = "Debe ingresar un valor";
+  }else{
+    errors.tributaryNumber = null;
+  }
+  if(!values.comment){
+    errors.comment = "Debe ingresar un valor";
+  }else{
+    errors.comment = null;
+  }
+  return errors;
 };
 
 class ComponentShareHolderDetail extends Component {
@@ -55,13 +134,29 @@ class ComponentShareHolderDetail extends Component {
     this.setState({valueTypeShareholder : parseInt(val)});
   }
 
+  _onChangeCountry(val){
+    const {fields: {countryId, provinceId, cityId}} = this.props;
+    countryId.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(FILTER_PROVINCE, countryId.value);
+    provinceId.onChange('');
+    cityId.onChange('');
+  }
+
+  _onChangeProvince(val){
+    const {fields: {countryId, provinceId, cityId}} = this.props;
+    provinceId.onChange(val);
+    const {consultListWithParameterUbication} = this.props;
+    consultListWithParameterUbication(FILTER_CITY, provinceId.value);
+    cityId.onChange('');
+  }
+
   _editShareHolder() {
     this.setState({
       isEditable: !this.state.isEditable
     });
   }
 
-  //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditShareHolderDetail(){
   }
 
@@ -70,16 +165,11 @@ class ComponentShareHolderDetail extends Component {
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
     tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer} = this.props;
-    console.log(shareHolderType);
-    console.log('typedocument =',selectsReducer.get(SHAREHOLDER_ID_TYPE));
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica accionista</span></dt>
           <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
-            <div style={{marginTop: "10px"}}>
-              <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
-            </div>
             <Row>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de documento</span></dt>
@@ -131,7 +221,6 @@ class ComponentShareHolderDetail extends Component {
                   {...sharePercentage}
                   name="porcentajePart"
                   style={{textAlign: "right"}}
-                  placeholder="Ingrese el procentaje de participación"
                   type="text"
                   min={0}
                   max="100"
@@ -145,7 +234,6 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...shareHolderName}
                   name="razonSocial"
-                  placeholder="Ingrese la razón social del accionista"
                   type="text"
                   max="110"
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -156,7 +244,6 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...firstName}
                   name="primerNombre"
-                  placeholder="Ingrese el primer nombre del accionista"
                   type="text"
                   max="50"
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -167,7 +254,6 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...middleName}
                   name="segundoNombre"
-                  placeholder="Ingrese el segundo nombre del accionista"
                   type="text"
                   max="50"
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -178,7 +264,6 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...firstLastName}
                   name="primerApellido"
-                  placeholder="Ingrese el primer apellido del accionista"
                   type="text"
                   max="50"
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -189,7 +274,6 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...secondLastName}
                   name="segundoApellido"
-                  placeholder="Ingrese el segundo apellido del accionista"
                   type="text"
                   max="50"
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -206,12 +290,13 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
-                <ComboBox name="paisResidencia" labelInput="Seleccione"
-                  {...fiscalCountryId}
-                  valueProp={'id'}
-                  textProp = {'value'}
-                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
+                <InputComponent
+                  {...tributaryNumber}
+                  name="numeroIdTributaria"
+                  style={{textAlign: "right"}}
+                  type="text"
+                  min={0}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -259,10 +344,19 @@ class ComponentShareHolderDetail extends Component {
                 <Textarea
                   {...address}
                   name="direccion"
-                  placeholder="Ingrese la dirección del accionista"
                   type="text"
                   max="100"
                   style={{width: '100%', height: '100%'}}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                />
+              </Col>
+              <Col xs={12} md={4} lg={4}>
+                <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
+                <ComboBox name="paisResidencia" labelInput="Seleccione"
+                  {...fiscalCountryId}
+                  valueProp={'id'}
+                  textProp = {'value'}
+                  data={selectsReducer.get(FILTER_COUNTRY) || []}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -279,7 +373,6 @@ class ComponentShareHolderDetail extends Component {
                   type="text"
                   max="250"
                   style={{width: '100%', height: '100%'}}
-                  placeholder="Ingrese las observaciones"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -314,7 +407,6 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({editShareholderReducer, selectsReducer, notes},ownerProps) {
   const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
-  console.log(shareHolderEdit);
   if(shareHolderEdit !== undefined && shareHolderEdit !== null && shareHolderEdit !== ''){
     return {
       editShareholderReducer,
