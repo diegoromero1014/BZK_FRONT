@@ -349,7 +349,7 @@ class ContactDetailsModalComponent extends Component {
                   <dt><span>Tipo de documento</span></dt>
                   <dt>
                     <p style={{fontWeight: "normal"}}>
-                      {contactType.value}
+                      {(contactType.value !== "" && contactType.value !== null && contactType.value !== undefined && !_.isEmpty(selectsReducer.get(CONTACT_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(contactType.value)]), '[0].value') : ''}
                     </p>
                   </dt>
                 </Col>

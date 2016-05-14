@@ -25,9 +25,11 @@ const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependen
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
 const validate = (values) => {
+  console.log("tipoFuncion = ", values.tipoFuncion);
     if(!values.tipoFuncion){
       errors.tipoFuncion = "Debe Seleccionar una función";
     }else{
+      console.log("length = ", _.isEmpty(values.tipoFuncion));
       errors.tipoFuncion = null;
     }
     if(!values.primerNombre){
@@ -666,6 +668,7 @@ class ModalComponentContact extends Component {
 function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
   const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     if(contactDetail && contactDetail.contactIdentityNumber){
+    console.log("contactDetail.function", contactDetail.function);
     return {
       selectsReducer,
       initialValues: {
@@ -696,7 +699,7 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         tipoHobbie: JSON.parse('["'+_.join(contactDetail.hobbies, '","')+'"]'),
         tipoContacto:contactDetail.typeOfContact,
         tipoEntidad:JSON.parse('["'+_.join(contactDetail.lineOfBusiness, '","')+'"]'),
-        tipoFuncion:JSON.parse('["'+_.join(contactDetail.function, '","')+'"]'),
+        tipoFuncion: contactDetail.function === null || contactDetail.function === '' || contactDetail.function === undefined ? contactDetail.function : JSON.parse('["'+_.join(contactDetail.function, '","')+'"]'),
         tipoDeporte:JSON.parse('["'+_.join(contactDetail.sports, '","')+'"]'),
       }
     };
