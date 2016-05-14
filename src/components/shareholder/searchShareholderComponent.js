@@ -51,7 +51,7 @@ class SearchShareholderComponent extends Component {
     render() {
         return (
           <div className="InputAddOn">
-          <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por numero, nombre, tipo de persona"  value={this.state.keywordShareholder} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+          <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por número, nombre, tipo de persona"  value={this.state.keywordShareholder} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
             <button onClick={this._handleShareholderByClientsFind}  className="button InputAddOn-item">
               <i className="search icon" />
             </button>
