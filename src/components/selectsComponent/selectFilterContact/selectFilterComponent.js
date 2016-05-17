@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
-import {SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
+import {SHAREHOLDER_TYPE,SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
 
 
 class SelectFilterComponent extends Component{
@@ -15,6 +15,7 @@ class SelectFilterComponent extends Component{
   componentWillMount(){
     const {consultDataSelect, idTypeFilter} = this.props;
     consultDataSelect(idTypeFilter);
+
   }
 
   render(){
@@ -52,6 +53,8 @@ class SelectFilterComponent extends Component{
         data = selectsReducer.get('dataTypeCity');
       } else if (idTypeFilter == SHAREHOLDER_KIND) {
         data = selectsReducer.get('dataTypeShareholdersKind');
+      }else if (idTypeFilter == SHAREHOLDER_TYPE) {
+        data = selectsReducer.get('dataTypeShareholdersType');
       }
       // console.log('Datos de la lista');
       // console.log(data);

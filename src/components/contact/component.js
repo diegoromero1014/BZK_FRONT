@@ -78,7 +78,7 @@ class ContactComponent extends Component {
         </div>
           <Grid style= {{display:visibleTable, width: "100%"}}>
             <Row>
-              <Col xs={12} sm={8} md={12} lg={12}> <ListContactComponent
+              <Col xs> <ListContactComponent
                 value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}/ >

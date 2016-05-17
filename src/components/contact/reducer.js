@@ -35,7 +35,9 @@ export default (state = initialState, action) => {
               .set('page', 1)
               .set('limInf', 0)
               .set('rowCount', 0)
-              .set('contacts', []);
+              .set('contacts', [])
+              .set('order', 0)
+              .set('column',"");
           });
           case CLEAR_CONTACT_DELETE:
           return state.withMutations(map => {

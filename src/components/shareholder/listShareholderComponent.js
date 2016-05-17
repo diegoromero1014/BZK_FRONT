@@ -8,8 +8,9 @@ import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,c
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
-
 let v1 = "";
+let v2 = "";
+
 class ListShareholderComponent extends Component {
 
   constructor(props){
@@ -19,18 +20,20 @@ class ListShareholderComponent extends Component {
       this.state = {
         column : "",
         order : "",
-        orderA: 'inline-block',
-        orderD: 'none'
+        orderA: 'none',
+        orderD: 'inline-block'
       }
   }
 
   componentWillReceiveProps(nextProps){
       const {
-          value1
+          value1,
+          value2
       } = nextProps;
-      if (v1 !== nextProps.value1) {
+      if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
-      this._orderColumn(0,"");
+      v2 = nextProps.value2;
+      this._orderColumn(1,"sh.sharePercentage");
     }
   }
 
@@ -44,7 +47,7 @@ class ListShareholderComponent extends Component {
     const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder,clearShareholderDelete} = this.props;
     clearShareholderDelete();
     orderColumnShareholder(orderShareholder,columnShareholder);
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,columnShareholder,orderShareholder,shareholdersReducer.get('keywordShareholder'),v1);
+    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,columnShareholder,orderShareholder,shareholdersReducer.get('keywordShareholder'),v1,v2);
   }
 
   _renderHeaders(){
@@ -71,11 +74,12 @@ class ListShareholderComponent extends Component {
       },
       {
         title: "% de participación",
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.sharePercentage")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.sharePercentage")}></i></span>,
         key:"percentage"
       },
       {
         title: "Tipo de accionista",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.shareHolderKind.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.shareHolderKind.id")}></i></span>,
+        //orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.shareHolderKind.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.shareHolderKind.id")}></i></span>,
         key:"shareHolderKind"
       },
       {
@@ -127,7 +131,7 @@ class ListShareholderComponent extends Component {
     const modalTitle = 'Accionista Detalle';
     const {shareholdersReducer} = this.props;
     const data = shareholdersReducer.get('shareholders');
-    return ( < div className = "horizontal-scroll-wrapper" >
+    return ( < div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
       <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
     </div>
     );
