@@ -696,7 +696,7 @@ function mapStateToProps({createContactReducer,selectsReducer}, {fields}) {
         tipoHobbie: JSON.parse('["'+_.join(contactDetail.hobbies, '","')+'"]'),
         tipoContacto:contactDetail.typeOfContact,
         tipoEntidad:JSON.parse('["'+_.join(contactDetail.lineOfBusiness, '","')+'"]'),
-        tipoFuncion: contactDetail.function === null || contactDetail.function === '' || contactDetail.function === undefined ? contactDetail.function : JSON.parse('["'+_.join(contactDetail.function, '","')+'"]'),
+        tipoFuncion:contactDetail.function !== null && contactDetail.function !== "" && contactDetail.function !== undefined ? JSON.parse('["'+_.join(contactDetail.function, '","')+'"]') : contactDetail.function,
         tipoDeporte:JSON.parse('["'+_.join(contactDetail.sports, '","')+'"]'),
       }
     };
