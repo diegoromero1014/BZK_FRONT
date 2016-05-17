@@ -41,11 +41,6 @@ const validate = (values) => {
   }else{
     errors.tipoAccionista = null;
   }
-  if(!values.paisResidencia){
-    errors.paisResidencia = "Debe seleccionar una opción";
-  }else{
-    errors.paisResidencia = null;
-  }
   if(!values.primerNombre && valueTypeShareholder === PERSONA_NATURAL){
     errors.primerNombre = "Debe ingresar un valor";
   }else{
@@ -76,40 +71,10 @@ const validate = (values) => {
   }else{
     errors.razonSocial = null;
   }
-  if(!values.direccion){
-    errors.direccion = "Debe ingresar un valor";
-  }else{
-    errors.direccion = null;
-  }
   if(!values.porcentajePart){
     errors.porcentajePart = "Debe ingresar un valor";
   }else{
     errors.porcentajePart = null;
-  }
-  if(!values.pais){
-    errors.pais = "Debe seleccionar un valor";
-  }else{
-    errors.pais = null;
-  }
-  if(!values.departamento){
-    errors.departamento = "Debe seleccionar un valor";
-  }else{
-    errors.departamento = null;
-  }
-  if(!values.ciudad){
-    errors.ciudad = "Debe seleccionar un valor";
-  }else{
-    errors.ciudad = null;
-  }
-  if(!values.numeroIdTributaria){
-    errors.numeroIdTributaria = "Debe ingresar un valor";
-  }else{
-    errors.numeroIdTributaria = null;
-  }
-  if(!values.observaciones){
-    errors.observaciones = "Debe ingresar un valor";
-  }else{
-    errors.observaciones = null;
   }
 
   return errors;
@@ -306,7 +271,7 @@ class ModalComponentShareholder extends Component {
                     <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                     <dd><InputComponent
                       name="numeroDocumento"
-                      max="15"
+                      max="25"
                       type="text"
                       disabled = {this.state.disabled}
                       {...numeroDocumento}
@@ -349,17 +314,17 @@ class ModalComponentShareholder extends Component {
                     style={{textAlign: "right"}}
                     type="text"
                     min={0}
-                    max="100"
+                    max="3"
                     {...porcentajePart}
                     onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
                   />
                 </Col>
-                <Col xs={12} md={8} lg={8} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
+                <Col xs={12} md={12} lg={12} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
                   <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
                   <InputComponent
                     name="razonSocial"
                     type="text"
-                    max="110"
+                    max="150"
                     {...razonSocial}
                   />
                 </Col>
@@ -368,7 +333,7 @@ class ModalComponentShareholder extends Component {
                   <InputComponent
                     name="primerNombre"
                     type="text"
-                    max="50"
+                    max="60"
                     {...primerNombre}
                   />
                 </Col>
@@ -377,7 +342,7 @@ class ModalComponentShareholder extends Component {
                   <InputComponent
                     name="segundoNombre"
                     type="text"
-                    max="50"
+                    max="60"
                     {...segundoNombre}
                   />
                 </Col>
@@ -386,7 +351,7 @@ class ModalComponentShareholder extends Component {
                   <InputComponent
                     name="primerApellido"
                     type="text"
-                    max="50"
+                    max="60"
                     {...primerApellido}
                   />
                 </Col>
@@ -395,7 +360,7 @@ class ModalComponentShareholder extends Component {
                   <InputComponent
                     name="segundoApellido"
                     type="text"
-                    max="50"
+                    max="60"
                     {...segundoApellido}
                   />
                 </Col>
@@ -409,24 +374,23 @@ class ModalComponentShareholder extends Component {
                     data={selectsReducer.get(FILTER_COUNTRY) || []}
                   />
                 </Col>
-                <Col xs={12} md={4} lg={4}>
-                  <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <InputComponent
-                    name="numeroIdTributaria"
-                    style={{textAlign: "right"}}
+                <Col xs={12} md={12} lg={12}>
+                  <dt><span>Observaciones</span></dt>
+                  <Textarea
+                    name="observaciones"
                     type="text"
-                    min={0}
-                    {...numeroIdTributaria}
-                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
+                    max="250"
+                    style={{width: '100%', height: '100%'}}
+                    {...observaciones}
                   />
                 </Col>
               </Row>
             </div>
-            <dt style={{visibility: this.state.noExiste}} className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y correspondencia</span></dt>
+            <dt style={{visibility: this.state.noExiste}} className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y tributaria</span></dt>
             <div style={{paddingLeft:'20px',paddingRight:'20px', visibility: this.state.noExiste}}>
               <Row>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>País</span></dt>
                   <ComboBox name="pais" labelInput="Seleccione"
                     {...pais}
                     valueProp={'id'}
@@ -437,7 +401,7 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>Departamento (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Departamento</span></dt>
                   <ComboBox name="departamento" labelInput="Seleccione"
                     {...departamento}
                     valueProp={'id'}
@@ -448,7 +412,7 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>Ciudad (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Ciudad</span></dt>
                   <ComboBox name="ciudad" labelInput="Seleccione"
                     {...ciudad}
                     valueProp={'id'}
@@ -458,17 +422,17 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>
-                  <dt><span>Dirección sede principal (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Dirección sede principal</span></dt>
                   <Textarea
                     name="direccion"
                     type="text"
-                    max="100"
+                    max="250"
                     style={{width: '100%', height: '100%'}}
                     {...direccion}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
-                  <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>País de residencia fiscal</span></dt>
                   <ComboBox name="paisResidencia" labelInput="Seleccione"
                     {...paisResidencia}
                     valueProp={'id'}
@@ -478,23 +442,20 @@ class ModalComponentShareholder extends Component {
                     data={selectsReducer.get(FILTER_COUNTRY) || []}
                   />
                 </Col>
+                <Col xs={12} md={4} lg={4}>
+                  <dt><span>Número de id tributaria</span></dt>
+                  <InputComponent
+                    name="numeroIdTributaria"
+                    style={{textAlign: "right"}}
+                    type="text"
+                    min={0}
+                    max="50"
+                    {...numeroIdTributaria}
+                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
+                  />
+                </Col>
                 </Row>
               </div>
-              <dt style={{visibility: this.state.noExiste}} className="business-title"><span style={{paddingLeft: '20px'}}>Otros</span></dt>
-              <div style={{paddingLeft:'20px',paddingRight:'20px', visibility: this.state.noExiste}}>
-                <Row>
-                  <Col xs={12} md={12} lg={12}>
-                    <dt><span>Observaciones (</span><span style={{color: "red"}}>*</span>)</dt>
-                    <Textarea
-                      name="observaciones"
-                      type="text"
-                      max="250"
-                      style={{width: '100%', height: '100%'}}
-                      {...observaciones}
-                    />
-                  </Col>
-              </Row>
-            </div>
           </div>
           <div className="modalBt4-footer modal-footer">
               <button type="submit"
