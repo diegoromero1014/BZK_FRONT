@@ -21,20 +21,10 @@ const errors = {}
 var valueTypeShareholder;
 
 const validate = values => {
-  if(!values.shareHolderType){
-    errors.shareHolderType = "Debe seleccionar una opción";
-  }else{
-    errors.shareHolderType = null;
-  }
   if(!values.shareHolderKindId){
     errors.shareHolderKindId = "Debe seleccionar una opción";
   }else{
     errors.shareHolderKindId = null;
-  }
-  if(!values.fiscalCountryId){
-    errors.fiscalCountryId = "Debe seleccionar una opción";
-  }else{
-    errors.fiscalCountryId = null;
   }
   if(!values.firstName && valueTypeShareholder === PERSONA_NATURAL){
     errors.firstName = "Debe ingresar un valor";
@@ -66,40 +56,10 @@ const validate = values => {
   }else{
     errors.shareHolderName = null;
   }
-  if(!values.address){
-    errors.address = "Debe ingresar un valor";
-  }else{
-    errors.address = null;
-  }
   if(!values.sharePercentage){
     errors.sharePercentage = "Debe ingresar un valor";
   }else{
     errors.sharePercentage = null;
-  }
-  if(!values.countryId){
-    errors.countryId = "Debe seleccionar un valor";
-  }else{
-    errors.countryId = null;
-  }
-  if(!values.provinceId){
-    errors.provinceId = "Debe seleccionar un valor";
-  }else{
-    errors.provinceId = null;
-  }
-  if(!values.cityId){
-    errors.cityId = "Debe seleccionar un valor";
-  }else{
-    errors.cityId = null;
-  }
-  if(!values.tributaryNumber){
-    errors.tributaryNumber = "Debe ingresar un valor";
-  }else{
-    errors.tributaryNumber = null;
-  }
-  if(!values.comment){
-    errors.comment = "Debe ingresar un valor";
-  }else{
-    errors.comment = null;
   }
   return errors;
 };
@@ -109,8 +69,7 @@ class ComponentShareHolderDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditable: false,
-      valueTypeShareholder: ""
+      isEditable: false
     };
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
     this._editShareHolder = this._editShareHolder.bind(this);
@@ -164,7 +123,11 @@ class ComponentShareHolderDetail extends Component {
     const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer} = this.props;
+    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, } = this.props;
+    const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
+        valueTypeShareholder = shareHolderEdit.shareHolderType;
+    }
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
@@ -189,22 +152,18 @@ class ComponentShareHolderDetail extends Component {
                   </p>
                 </dt>
               </Col>
-              <Col xs={12} sm={12} md={6} lg={4}>
-                <button type="button" onClick={this._editShareHolder} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+              <Col xs={12} md={4} lg={4}>
+                <dt>
+                  <span>Tipo de persona</span>
+                </dt>
+                <dt>
+                  <p style={{fontWeight: "normal"}}>
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholders"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholders"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                  </p>
+                </dt>
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={4} lg={4}>
-              <dt><span>Tipo de persona (</span><span style={{color: "red"}}>*</span>)</dt>
-                <ComboBox name="tipoPersona" labelInput="Seleccione"
-                  {...shareHolderType}
-                  valueProp={'id'}
-                  textProp = {'value'}
-                  onChange={val => this._onChangeTypeShareholder(val)}
-                  data={selectsReducer.get("dataTypeShareholders") || []}
-                  disabled={this.state.isEditable ? '' : 'disabled'}
-                />
-              </Col>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de accionista (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox name="tipoAccionista" labelInput="Seleccione"
@@ -223,63 +182,66 @@ class ComponentShareHolderDetail extends Component {
                   style={{textAlign: "right"}}
                   type="text"
                   min={0}
-                  max="100"
+                  max="3"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
+              <Col xs={12} sm={12} md={6} lg={4}>
+                <button type="button" onClick={this._editShareHolder} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+              </Col>
             </Row>
             <Row>
-              <Col xs={12} md={8} lg={8} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={12} lg={12} style={valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" }: {display: "none"}}>
                 <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
                 <InputComponent
                   {...shareHolderName}
                   name="razonSocial"
                   type="text"
-                  max="110"
+                  max="150"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                 <dt><span>Primer nombre (</span><span style={{color: "red"}}>*</span>)</dt>
                 <InputComponent
                   {...firstName}
                   name="primerNombre"
                   type="text"
-                  max="50"
+                  max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                 <dt><span>Segundo nombre</span></dt>
                 <InputComponent
                   {...middleName}
                   name="segundoNombre"
                   type="text"
-                  max="50"
+                  max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                 <dt><span>Primer apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                 <InputComponent
                   {...firstLastName}
                   name="primerApellido"
                   type="text"
-                  max="50"
+                  max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                 <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
                 <InputComponent
                   {...secondLastName}
                   name="segundoApellido"
                   type="text"
-                  max="50"
+                  max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                 <dt><span>Género (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox name="genero" labelInput="Seleccione"
                   {...genderId}
@@ -289,24 +251,26 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Número de id tributaria (</span><span style={{color: "red"}}>*</span>)</dt>
-                <InputComponent
-                  {...tributaryNumber}
-                  name="numeroIdTributaria"
-                  style={{textAlign: "right"}}
+            </Row>
+            <Row>
+              <Col xs={12} md={12} lg={12}>
+                <dt><span>Observaciones</span></dt>
+                <Textarea
+                  {...comment}
+                  name="observaciones"
                   type="text"
-                  min={0}
+                  max="250"
+                  style={{width: '100%', height: '100%'}}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
             </Row>
           </div>
-          <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y correspondencia</span></dt>
+          <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y tributaria</span></dt>
           <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
             <Row>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>País</span></dt>
                 <ComboBox name="pais" labelInput="Seleccione"
                   {...countryId}
                   valueProp={'id'}
@@ -317,7 +281,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Departamento (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Departamento</span></dt>
                 <ComboBox name="departamento" labelInput="Seleccione"
                   {...provinceId}
                   valueProp={'id'}
@@ -328,7 +292,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Ciudad (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Ciudad</span></dt>
                 <ComboBox name="ciudad" labelInput="Seleccione"
                   {...cityId}
                   valueProp={'id'}
@@ -340,18 +304,18 @@ class ComponentShareHolderDetail extends Component {
             </Row>
             <Row>
               <Col xs={12} md={12} lg={12}>
-                <dt><span>Dirección sede principal (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Dirección sede principal</span></dt>
                 <Textarea
                   {...address}
                   name="direccion"
                   type="text"
-                  max="100"
+                  max="250"
                   style={{width: '100%', height: '100%'}}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>País de residencia fiscal (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>País de residencia fiscal</span></dt>
                 <ComboBox name="paisResidencia" labelInput="Seleccione"
                   {...fiscalCountryId}
                   valueProp={'id'}
@@ -360,19 +324,15 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-            </Row>
-          </div>
-          <dt className="business-title"><span style={{paddingLeft: '20px'}}>Otros</span></dt>
-          <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
-            <Row>
-              <Col xs={12} md={12} lg={12}>
-                <dt><span>Observaciones (</span><span style={{color: "red"}}>*</span>)</dt>
-                <Textarea
-                  {...comment}
-                  name="observaciones"
+              <Col xs={12} md={4} lg={4}>
+                <dt><span>Número de id tributario</span></dt>
+                <InputComponent
+                  {...tributaryNumber}
+                  name="numeroIdTributaria"
+                  style={{textAlign: "right"}}
                   type="text"
-                  max="250"
-                  style={{width: '100%', height: '100%'}}
+                  min={0}
+                  max="50"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
