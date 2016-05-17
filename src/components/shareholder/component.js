@@ -9,7 +9,7 @@ import BotonCreateShareholderComponent from './createShareholder/botonCreateShar
 import PaginationShareholderComponent from './paginationShareholderComponent';
 import ListShareholderComponent from './listShareholderComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
-import {NUMBER_RECORDS,SHAREHOLDER_KIND} from './constants';
+import {NUMBER_RECORDS,SHAREHOLDER_KIND,SHAREHOLDER_TYPE} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 
 class ShareholderComponent extends Component {
@@ -17,7 +17,8 @@ class ShareholderComponent extends Component {
   constructor(props){
      super(props);
      this.state= {
-        value1: ""
+        value1: "",
+        value2:""
      };
   }
 
@@ -25,7 +26,7 @@ class ShareholderComponent extends Component {
   componentWillMount(){
     const{clearShareholder,shareholdersByClientFindServer} = this.props;
     clearShareholder();
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","","");
   }
 
   render() {
@@ -44,6 +45,7 @@ class ShareholderComponent extends Component {
           <Row><Col xs={10} sm={10} md={11} lg={11}>
           <SearchShareholderComponent
             value1={this.state.value1}
+            value2={this.state.value2}
           /></Col>
             <BotonCreateShareholderComponent/>
           </Row>
@@ -54,16 +56,24 @@ class ShareholderComponent extends Component {
             }}
             idTypeFilter={SHAREHOLDER_KIND}/>
             </Col>
+            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de persona:</span>
+            <SelectFilterContact config={{
+                onChange: (value) => this.setState({value2: value.id})
+            }}
+            idTypeFilter={SHAREHOLDER_TYPE}/>
+            </Col>
           </Row>
         </Grid>
         </div>
           <Grid style= {{display:visibleTable, width: "100%"}}>
             <Row>
-              <Col xs={12} sm={8} md={12} lg={12}>
+              <Col xs>
               <ListShareholderComponent
-                value1={this.state.value1}/>
+                value1={this.state.value1}
+                value2={this.state.value2}/>
               <PaginationShareholderComponent
-                value1={this.state.value1}/>
+                value1={this.state.value1}
+                value2={this.state.value2}/>
               </Col>
             </Row>
           </Grid>

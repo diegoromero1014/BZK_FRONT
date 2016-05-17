@@ -8,8 +8,8 @@ const initialState = Immutable.Map({
     limInf : 0,
     page:1,
     rowCount:0,
-    orderShareholder: 0,
-    columnShareholder:"",
+    orderShareholder: 1,
+    columnShareholder:"sh.sharePercentage",
 });
 
 
@@ -35,7 +35,9 @@ export default (state = initialState, action) => {
                     .set('page', 1)
                     .set('limInf', 0)
                     .set('shareholders', [])
-                    .set('rowCount', 0);
+                    .set('rowCount', 0)
+                    .set('orderShareholder', 1)
+                    .set('columnShareholder',"sh.sharePercentage");
                 });
             case CLEAR_SHAREHOLDERS_DELETE:
                     return state.withMutations(map => {

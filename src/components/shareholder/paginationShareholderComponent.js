@@ -5,12 +5,12 @@ import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder} 
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
-
+let v2 = "";
 class PaginationShareholderComponent extends Component{
 
   constructor(props){
      super(props)
-    this._handleShareholdersByClientsFind = this._handleShareholdersByClientsFind.bind(this);
+     this._handleShareholdersByClientsFind = this._handleShareholdersByClientsFind.bind(this);
   }
 
   componentWillMount(){
@@ -19,12 +19,14 @@ class PaginationShareholderComponent extends Component{
   }
 
   componentWillReceiveProps(nextProps){
-      const {
-          value1
-      } = nextProps;
-      if (v1 !== nextProps.value1) {
+    const {
+        value1,
+        value2
+    } = nextProps;
+    if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
-      this._handleShareholderByClientsFind(0);
+      v2 = nextProps.value2;
+      this._handleShareholdersByClientsFind(0);
       }
   }
 
@@ -38,7 +40,7 @@ class PaginationShareholderComponent extends Component{
 
   _handleShareholdersByClientsFind(limInf){
       const {shareholdersReducer,shareholdersByClientFindServer} = this.props;
-      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,shareholdersReducer.get("columnShareholder"),shareholdersReducer.get("orderShareholder"),shareholdersReducer.get('keywordShareholder'),v1);
+      shareholdersByClientFindServer(limInf,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,shareholdersReducer.get("columnShareholder"),shareholdersReducer.get("orderShareholder"),shareholdersReducer.get('keywordShareholder'),v1,v2);
   }
 
   render(){
