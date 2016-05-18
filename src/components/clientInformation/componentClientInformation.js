@@ -19,14 +19,14 @@ class ComponentClientInformation extends Component{
 
   render(){
     const {clientInformacion} = this.props;
-    var {aecStatus} = clientInformacion;
+    const infoClient = clientInformacion.get('responseClientInfo');
+    const {aecStatus} = infoClient;
     var showAECNoAplica = false;
     var showAECNivel = true;
     if( aecStatus === undefined || aecStatus === null ){
       showAECNoAplica = true;
       showAECNivel = false;
     }
-    var infoClient = clientInformacion.get('responseClientInfo');
     return(
       <div>
         <header className="header-client-detail" style={{boxShadow: "-3px 2px 5px 0 rgba(0, 0, 0, 0.2)"}}>
@@ -41,7 +41,7 @@ class ComponentClientInformation extends Component{
                 }
                 {showAECNivel &&
                   <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#ec5f48"}}
-                    className="label label-important bounceIn animated aec-status" >Nivel: {aecStatus}</span>
+                    className="label label-important bounceIn animated aec-status" >{aecStatus}</span>
                 }
                 {showAECNoAplica &&
                   <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
