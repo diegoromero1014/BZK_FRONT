@@ -10,7 +10,7 @@ const initialState = Immutable.Map({
 
 export default function(state = initialState, action){
     switch(action.type){
-      
+
     case actions.TOGGLE_MODAL_SHAREHOLDER:
         const actualState = state.get('modalState');
         const newState = actualState === false ? true : false;

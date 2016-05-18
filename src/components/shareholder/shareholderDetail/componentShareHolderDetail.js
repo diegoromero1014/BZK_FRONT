@@ -4,7 +4,7 @@ import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SweetAlert from 'sweetalert-react';
-import {getDetailShareHolder} from './actions';
+import {getDetailShareHolder, clearSearchShareholder} from './actions';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -107,18 +107,6 @@ class ComponentShareHolderDetail extends Component {
     cityId.onChange('');
   }
 
-  _closeCreate(){
-    if( typeMessage === "success" ){
-      const{clearSearchShareholder,isOpen} = this.props;
-      clearSearchShareholder();
-      this.props.resetForm();
-      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block', showMessage: false});
-      isOpen();
-    } else {
-      this.setState({showMessage: false});
-    }
-  }
-
   _editShareHolder() {
     this.setState({
       showMessage:false,
@@ -149,6 +137,7 @@ class ComponentShareHolderDetail extends Component {
       "countryId" : countryId.value,
       "provinceId" : provinceId.value,
       "cityId" : cityId.value,
+      "address" : address.value,
       "fiscalCountryId" : fiscalCountryId.value,
       "tributaryNumber" : tributaryNumber.value,
       "comment" : comment.value
@@ -158,7 +147,7 @@ class ComponentShareHolderDetail extends Component {
       if((_.get(data, 'payload.validateLogin') === 'false')){
         redirectUrl("/login");
       } else {
-        if((_.get(data, 'payload.status') === 200)){
+        if((_.get(data, 'payload.data.status') === 200)){
             typeMessage="success";
             titleMessage="Edición de accionista";
             message="Señor usuario, el accionista se editó de forma exitosa.";
@@ -175,6 +164,18 @@ class ComponentShareHolderDetail extends Component {
       message="Señor usuario, ocurrió un error editando el accionista.";
       this.setState({showMessage: true});
     });
+  }
+
+  _closeCreate(){
+    if(typeMessage === "success"){
+      const{clearSearchShareholder, isOpen} = this.props;
+      clearSearchShareholder();
+      this.props.resetForm();
+      this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block', showMessage: false});
+      isOpen();
+    } else {
+      this.setState({showMessage: false});
+    }
   }
 
   render() {
@@ -217,7 +218,7 @@ class ComponentShareHolderDetail extends Component {
                 </dt>
                 <dt>
                   <p style={{fontWeight: "normal"}}>
-                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholders"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholdersType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
                   </p>
                 </dt>
               </Col>
@@ -424,6 +425,7 @@ ComponentShareHolderDetail.PropTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getDetailShareHolder,
+    clearSearchShareholder,
     getMasterDataFields,
     clearValuesAdressess,
     consultListWithParameterUbication,

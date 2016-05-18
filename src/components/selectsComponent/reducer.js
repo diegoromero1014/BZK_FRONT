@@ -24,7 +24,6 @@ const initialState = Immutable.Map({
   dataEconomicGroup: [],
   dataTypeNotes: [],
   dataEconomicGroup: [],
-  dataTypeShareholders: [],
   dataTypeShareholdersKind : [],
   dataTypeShareholdersType:[]
 });
