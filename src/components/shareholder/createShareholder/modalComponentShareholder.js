@@ -302,7 +302,7 @@ class ModalComponentShareholder extends Component {
                     textProp = {'value'}
                     labelInput="Seleccione"
                     onChange={val => this._onChangeTypeShareholder(val)}
-                    data={selectsReducer.get("dataTypeShareholders") || []}
+                    data={selectsReducer.get("dataTypeShareholdersType") || []}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
@@ -364,7 +364,7 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                  <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Segundo apellido</span></dt>
                   <InputComponent
                     name="segundoApellido"
                     type="text"

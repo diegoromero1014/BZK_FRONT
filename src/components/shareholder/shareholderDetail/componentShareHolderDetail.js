@@ -36,20 +36,10 @@ const validate = values => {
   }else{
     errors.firstName = null;
   }
-  if(!values.middleName && valueTypeShareholder === PERSONA_NATURAL){
-    errors.middleName = "Debe ingresar un valor";
-  }else{
-    errors.middleName = null;
-  }
   if(!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL){
     errors.firstLastName = "Debe ingresar un valor";
   }else{
     errors.firstLastName = null;
-  }
-  if(!values.secondLastName && valueTypeShareholder === PERSONA_NATURAL){
-    errors.secondLastName = "Debe ingresar un valor";
-  }else{
-    errors.secondLastName = null;
   }
   if(!values.genderId && valueTypeShareholder === PERSONA_NATURAL){
     errors.genderId = "Debe seleccionar un valor";
@@ -143,7 +133,8 @@ class ComponentShareHolderDetail extends Component {
     tributaryNumber}, shareHolderId, createShareholder} = this.props;
 
     var messageBody = {
-      "clientId": shareHolderId,
+      "clientId": clientId.value,
+      "id": shareHolderId,
       "shareHolderIdType": shareHolderIdType.value,
       "shareHolderIdNumber" : shareHolderIdNumber.value ,
       "shareHolderType" : shareHolderType.value,
@@ -162,7 +153,7 @@ class ComponentShareHolderDetail extends Component {
       "tributaryNumber" : tributaryNumber.value,
       "comment" : comment.value
     }
-
+    console.log("messageBody", messageBody);
     createShareholder(messageBody).then((data) => {
       if((_.get(data, 'payload.validateLogin') === 'false')){
         redirectUrl("/login");
@@ -226,7 +217,7 @@ class ComponentShareHolderDetail extends Component {
                 </dt>
                 <dt>
                   <p style={{fontWeight: "normal"}}>
-                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholders"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholders"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholders"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
                   </p>
                 </dt>
               </Col>
@@ -300,7 +291,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Segundo apellido</span></dt>
                 <InputComponent
                   {...secondLastName}
                   name="segundoApellido"
