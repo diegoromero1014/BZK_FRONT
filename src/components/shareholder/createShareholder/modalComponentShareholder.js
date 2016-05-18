@@ -96,6 +96,7 @@ class ModalComponentShareholder extends Component {
       }
     }
     val = output;
+    valuReduxForm.onChange(val);
   }
 
   _closeCreate(){
@@ -457,7 +458,6 @@ class ModalComponentShareholder extends Component {
                     min={0}
                     max="50"
                     {...numeroIdTributaria}
-                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
                   />
                 </Col>
                 </Row>
