@@ -12,7 +12,8 @@ import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
 import {shareholdersByClientFindServer} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
+  SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
 import numeral from 'numeral';
 import _ from 'lodash';
@@ -120,7 +121,7 @@ class ModalComponentShareholder extends Component {
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY]);
+    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -210,7 +211,7 @@ class ModalComponentShareholder extends Component {
         if((_.get(data, 'payload.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
-          if((_.get(data, 'payload.status') === 200)){
+          if((_.get(data, 'payload.data.status') === 200)){
               var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
               if( valoresResponse[0] === "exceedPorcentaje" ){
                 typeMessage="error";
@@ -369,7 +370,7 @@ class ModalComponentShareholder extends Component {
                     valueProp={'id'}
                     textProp = {'value'}
                     labelInput="Seleccione"
-                    data={selectsReducer.get(FILTER_COUNTRY) || []}
+                    data={selectsReducer.get(GENDER) || []}
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>
