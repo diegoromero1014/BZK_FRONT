@@ -212,11 +212,18 @@ class ModalComponentShareholder extends Component {
           redirectUrl("/login");
         } else {
           if((_.get(data, 'payload.data.status') === 200)){
-              var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
-              if( valoresResponse[0] === "exceedPorcentaje" ){
-                typeMessage="error";
-                titleMessage="Procentaje excedido";
-                message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1];
+              if( _.get(data, 'payload.data.data') !== null && _.get(data, 'payload.data.data') !== undefined ){
+                var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
+                if( valoresResponse[0] === "exceedPorcentaje" ){
+                  typeMessage="error";
+                  titleMessage="Procentaje excedido";
+                  message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1];
+                } else {
+                  typeMessage="success";
+                  titleMessage="Creación de accionista";
+                  message="Señor usuario, el accionista se creo de forma exitosa.";
+                  shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+                }
               } else {
                 typeMessage="success";
                 titleMessage="Creación de accionista";
