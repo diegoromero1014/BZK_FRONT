@@ -46,20 +46,10 @@ const validate = (values) => {
   }else{
     errors.primerNombre = null;
   }
-  if(!values.segundoNombre && valueTypeShareholder === PERSONA_NATURAL){
-    errors.segundoNombre = "Debe ingresar un valor";
-  }else{
-    errors.segundoNombre = null;
-  }
   if(!values.primerApellido && valueTypeShareholder === PERSONA_NATURAL){
     errors.primerApellido = "Debe ingresar un valor";
   }else{
     errors.primerApellido = null;
-  }
-  if(!values.segundoApellido && valueTypeShareholder === PERSONA_NATURAL){
-    errors.segundoApellido = "Debe ingresar un valor";
-  }else{
-    errors.segundoApellido = null;
   }
   if(!values.genero && valueTypeShareholder === PERSONA_NATURAL){
     errors.genero = "Debe seleccionar un valor";
