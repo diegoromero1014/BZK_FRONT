@@ -1,5 +1,5 @@
 import {APP_URL} from '../../../constantsGlobal';
-import {SHARE_HOLDER_DETAIL} from './constants';
+import {SHARE_HOLDER_DETAIL, CLEAR_SEARCH_SHAREHOLDER} from './constants';
 import axios from 'axios';
 
 export function getDetailShareHolder(idShareHolder){
@@ -26,4 +26,10 @@ export function getDetailShareHolder(idShareHolder){
     type: SHARE_HOLDER_DETAIL,
     payload: request
   }
+}
+
+export function clearSearchShareholder(){
+    return {
+        type: CLEAR_SEARCH_SHAREHOLDER
+    };
 }

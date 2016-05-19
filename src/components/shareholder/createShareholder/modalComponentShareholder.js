@@ -12,7 +12,8 @@ import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
 import {shareholdersByClientFindServer} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND} from '../../selectsComponent/constants';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
+  SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
 import numeral from 'numeral';
 import _ from 'lodash';
@@ -46,20 +47,10 @@ const validate = (values) => {
   }else{
     errors.primerNombre = null;
   }
-  if(!values.segundoNombre && valueTypeShareholder === PERSONA_NATURAL){
-    errors.segundoNombre = "Debe ingresar un valor";
-  }else{
-    errors.segundoNombre = null;
-  }
   if(!values.primerApellido && valueTypeShareholder === PERSONA_NATURAL){
     errors.primerApellido = "Debe ingresar un valor";
   }else{
     errors.primerApellido = null;
-  }
-  if(!values.segundoApellido && valueTypeShareholder === PERSONA_NATURAL){
-    errors.segundoApellido = "Debe ingresar un valor";
-  }else{
-    errors.segundoApellido = null;
   }
   if(!values.genero && valueTypeShareholder === PERSONA_NATURAL){
     errors.genero = "Debe seleccionar un valor";
@@ -74,7 +65,11 @@ const validate = (values) => {
   if(!values.porcentajePart){
     errors.porcentajePart = "Debe ingresar un valor";
   }else{
-    errors.porcentajePart = null;
+    if(values.porcentajePart > 100){
+      errors.porcentajePart = "Debe ingresar un valor entre 0 y 100";
+    }else{
+      errors.porcentajePart = null;
+    }
   }
 
   return errors;
@@ -105,6 +100,7 @@ class ModalComponentShareholder extends Component {
       }
     }
     val = output;
+    valuReduxForm.onChange(val);
   }
 
   _closeCreate(){
@@ -130,7 +126,7 @@ class ModalComponentShareholder extends Component {
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY]);
+    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -210,6 +206,7 @@ class ModalComponentShareholder extends Component {
         "countryId" : pais.value,
         "provinceId" : departamento.value,
         "cityId" : ciudad.value,
+        "address" : direccion.value,
         "fiscalCountryId" : paisResidencia.value,
         "tributaryNumber" : numeroIdTributaria.value,
         "comment" : observaciones .value
@@ -219,11 +216,25 @@ class ModalComponentShareholder extends Component {
         if((_.get(data, 'payload.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
-          if((_.get(data, 'payload.status') === 200)){
-              typeMessage="success";
-              titleMessage="Creación de accionista";
-              message="Señor usuario, el accionista se creo de forma exitosa.";
-              shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+          if((_.get(data, 'payload.data.status') === 200)){
+              if( _.get(data, 'payload.data.data') !== null && _.get(data, 'payload.data.data') !== undefined ){
+                var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
+                if( valoresResponse[0] === "exceedPorcentaje" ){
+                  typeMessage="error";
+                  titleMessage="Procentaje excedido";
+                  message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1];
+                } else {
+                  typeMessage="success";
+                  titleMessage="Creación de accionista";
+                  message="Señor usuario, el accionista se creo de forma exitosa.";
+                  shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+                }
+              } else {
+                typeMessage="success";
+                titleMessage="Creación de accionista";
+                message="Señor usuario, el accionista se creo de forma exitosa.";
+                shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+              }
           } else {
               typeMessage="error";
               titleMessage="Error creando accionista";
@@ -294,7 +305,7 @@ class ModalComponentShareholder extends Component {
                     textProp = {'value'}
                     labelInput="Seleccione"
                     onChange={val => this._onChangeTypeShareholder(val)}
-                    data={selectsReducer.get("dataTypeShareholders") || []}
+                    data={selectsReducer.get("dataTypeShareholdersType") || []}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
@@ -356,7 +367,7 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                  <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Segundo apellido</span></dt>
                   <InputComponent
                     name="segundoApellido"
                     type="text"
@@ -371,7 +382,7 @@ class ModalComponentShareholder extends Component {
                     valueProp={'id'}
                     textProp = {'value'}
                     labelInput="Seleccione"
-                    data={selectsReducer.get(FILTER_COUNTRY) || []}
+                    data={selectsReducer.get(GENDER) || []}
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>
@@ -451,7 +462,6 @@ class ModalComponentShareholder extends Component {
                     min={0}
                     max="50"
                     {...numeroIdTributaria}
-                    onBlur={val => this._handleBlurValueNumber(numeroIdTributaria, numeroIdTributaria.value)}
                   />
                 </Col>
                 </Row>

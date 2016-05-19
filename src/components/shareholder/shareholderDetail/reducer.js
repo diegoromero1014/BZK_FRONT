@@ -13,6 +13,11 @@ export default function(state = initialState, action){
     case actions.SHARE_HOLDER_DETAIL:
       return state.set('shareHolderEdit', action.payload.data.data);
 
+    case actions.CLEAR_SEARCH_SHAREHOLDER:
+        return state.withMutations( map => {
+          map
+            .set('clientEdit', {});
+        });
     default:
         return state;
     }

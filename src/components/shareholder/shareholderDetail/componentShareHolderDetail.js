@@ -3,12 +3,16 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {getDetailShareHolder} from './actions';
+import SweetAlert from 'sweetalert-react';
+import {NUMBER_RECORDS} from '../constants';
+import {shareholdersByClientFindServer} from '../actions';
+import {getDetailShareHolder, clearSearchShareholder, toggleModalShareholder} from './actions';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE} from '../../selectsComponent/constants';
+import {createShareholder} from '../createShareholder/actions';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER} from '../../selectsComponent/constants';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import _ from 'lodash';
 
@@ -18,6 +22,9 @@ const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "
   "tributaryNumber"];
 const errors = {}
 
+var typeMessage = "error";
+var titleMessage = "Campos obligatorios";
+var message = "Señor usuario, debe ingresar los campos marcados con asterisco.";
 var valueTypeShareholder;
 
 const validate = values => {
@@ -31,20 +38,10 @@ const validate = values => {
   }else{
     errors.firstName = null;
   }
-  if(!values.middleName && valueTypeShareholder === PERSONA_NATURAL){
-    errors.middleName = "Debe ingresar un valor";
-  }else{
-    errors.middleName = null;
-  }
   if(!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL){
     errors.firstLastName = "Debe ingresar un valor";
   }else{
     errors.firstLastName = null;
-  }
-  if(!values.secondLastName && valueTypeShareholder === PERSONA_NATURAL){
-    errors.secondLastName = "Debe ingresar un valor";
-  }else{
-    errors.secondLastName = null;
   }
   if(!values.genderId && valueTypeShareholder === PERSONA_NATURAL){
     errors.genderId = "Debe seleccionar un valor";
@@ -59,7 +56,11 @@ const validate = values => {
   if(!values.sharePercentage){
     errors.sharePercentage = "Debe ingresar un valor";
   }else{
-    errors.sharePercentage = null;
+    if(values.sharePercentage > 100){
+      errors.sharePercentage = "Debe ingresar un valor entre 0 y 100";
+    }else{
+      errors.sharePercentage = null;
+    }
   }
   return errors;
 };
@@ -69,10 +70,13 @@ class ComponentShareHolderDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showMessage:false,
       isEditable: false
     };
-    this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
+    this._closeCreate = this._closeCreate.bind(this);
     this._editShareHolder = this._editShareHolder.bind(this);
+    this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
+    this._submitEditShareHolderDetail = this._submitEditShareHolderDetail.bind(this);
   }
 
   componentWillMount(){
@@ -81,7 +85,7 @@ class ComponentShareHolderDetail extends Component {
     this.props.resetForm();
     if(shareHolderId !== undefined && shareHolderId !== null && shareHolderId !== ''){
       getDetailShareHolder(shareHolderId);
-      getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE]);
+      getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
       consultDataSelect(SHAREHOLDER_TYPE);
     }
   }
@@ -112,19 +116,82 @@ class ComponentShareHolderDetail extends Component {
 
   _editShareHolder() {
     this.setState({
+      showMessage:false,
       isEditable: !this.state.isEditable
     });
   }
 
   _submitEditShareHolderDetail(){
+    const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
+    fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
+    shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
+    tributaryNumber}, shareHolderId, createShareholder, shareholdersByClientFindServer} = this.props;
+
+    var messageBody = {
+      "clientId": clientId.value,
+      "id": shareHolderId,
+      "shareHolderIdType": shareHolderIdType.value,
+      "shareHolderIdNumber" : shareHolderIdNumber.value ,
+      "shareHolderType" : shareHolderType.value,
+      "shareHolderName": shareHolderName.value,
+      "sharePercentage":sharePercentage.value,
+      "firstName" : firstName.value,
+      "middleName" : middleName.value,
+      "firstLastName" : firstLastName.value,
+      "secondLastName" : secondLastName.value,
+      "genderId" : genderId.value,
+      "shareHolderKindId" : shareHolderKindId.value,
+      "countryId" : countryId.value,
+      "provinceId" : provinceId.value,
+      "cityId" : cityId.value,
+      "address" : address.value,
+      "fiscalCountryId" : fiscalCountryId.value,
+      "tributaryNumber" : tributaryNumber.value,
+      "comment" : comment.value
+    }
+    createShareholder(messageBody).then((data) => {
+      if((_.get(data, 'payload.validateLogin') === 'false')){
+        redirectUrl("/login");
+      } else {
+        if((_.get(data, 'payload.data.status') === 200)){
+            typeMessage="success";
+            titleMessage="Edición de accionista";
+            message="Señor usuario, el accionista se editó de forma exitosa.";
+            shareholdersByClientFindServer(0, clientId.value, NUMBER_RECORDS, "", 0, "", "");
+        } else {
+            typeMessage="error";
+            titleMessage="Error editando accionista";
+            message="Señor usuario, ocurrió un error editando el accionista.";
+        }
+      }
+      this.setState({showMessage: true});
+    }, (reason) => {
+      typeMessage="error";
+      titleMessage="Error editando accionista";
+      message="Señor usuario, ocurrió un error editando el accionista.";
+      this.setState({showMessage: true});
+    });
+  }
+
+  _closeCreate(){
+    if(typeMessage === "success"){
+      const{clearSearchShareholder, isOpen} = this.props;
+      clearSearchShareholder();
+      this.props.resetForm();
+      this.setState({showMessage: false});
+      isOpen();
+    } else {
+      this.setState({showMessage: false});
+    }
   }
 
   render() {
     const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, } = this.props;
+    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer} = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    console.log(shareHolderEdit);
     if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
@@ -158,7 +225,7 @@ class ComponentShareHolderDetail extends Component {
                 </dt>
                 <dt>
                   <p style={{fontWeight: "normal"}}>
-                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholders"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholders"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholdersType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
                   </p>
                 </dt>
               </Col>
@@ -232,7 +299,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                <dt><span>Segundo apellido (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Segundo apellido</span></dt>
                 <InputComponent
                   {...secondLastName}
                   name="segundoApellido"
@@ -247,7 +314,7 @@ class ComponentShareHolderDetail extends Component {
                   {...genderId}
                   valueProp={'id'}
                   textProp = {'value'}
-                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  data={selectsReducer.get(GENDER) || []}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -346,6 +413,13 @@ class ComponentShareHolderDetail extends Component {
             className="btn btn-primary modal-button-edit"
             >{'Guardar'}</button>
         </div>
+        <SweetAlert
+         type= {typeMessage}
+         show={this.state.showMessage}
+         title={titleMessage}
+         text={message}
+         onConfirm={this._closeCreate}
+         />
       </form>
     );
   }
@@ -357,20 +431,25 @@ ComponentShareHolderDetail.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    toggleModalShareholder,
     getDetailShareHolder,
+    clearSearchShareholder,
     getMasterDataFields,
     clearValuesAdressess,
     consultListWithParameterUbication,
     consultDataSelect,
+    shareholdersByClientFindServer,
+    createShareholder
   }, dispatch);
 }
 
-function mapStateToProps({editShareholderReducer, selectsReducer, notes},ownerProps) {
+function mapStateToProps({editShareholderReducer, selectsReducer, createShareholder},ownerProps) {
   const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
   if(shareHolderEdit !== undefined && shareHolderEdit !== null && shareHolderEdit !== ''){
     return {
       editShareholderReducer,
       selectsReducer,
+      createShareholder,
       initialValues:{
         id: shareHolderEdit.id,
         address: shareHolderEdit.address,
