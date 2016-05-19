@@ -25,12 +25,16 @@ class ContactComponent extends Component {
   }
 
     componentWillMount(){
+      if( window.localStorage.getItem('sessionToken') === "" ){
+        redirectUrl("/login");
+      }else{
         const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
         clearContact();
         contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
         "",
         "",
         "");
+      }
     }
 
   render() {

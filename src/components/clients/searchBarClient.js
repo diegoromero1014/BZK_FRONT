@@ -55,13 +55,13 @@ class SearchBarClient extends Component{
     const {clientR} = this.props;
     var keyword = clientR.get('keyword');
     return(
-      <div style={{paddingBottom:"15px", display: "inline", width:"100%", margin: "auto"}}>
-       <div style={{display: "inline", margin: "auto"}}>
-         <input type="search" onKeyPress={this._handleChangeKeyword} className="input-lg" placeholder="Búsqueda por cliente, NIT o grupo económico" style={{width:"80%", display: "inline"}} value={keyword} onChange={this._handleChangeKeyword}/>
-         <span style={{width:"5%"}}>
-           <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2", width:"50px", height:"50px"}}><i className="search icon" style={{margin:'0em', fontSize : '1.2em'}}></i></button>
-         </span>
-       </div>
+      <div style={{marginLeft: '17px'}}>
+      <div className="InputAddOn">
+      <input type="text" style={{padding: '0px 11px !important'}} placeholder="Búsqueda por cliente, NIT o grupo económico" value={keyword} onKeyPress={this._handleChangeKeyword}  onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"/>
+        <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{backgroundColor:"#E0E2E2"}}>
+          <i className="search icon" style={{margin:'0em', fontSize : '1.2em'}} />
+        </button>
+      </div>
        <SweetAlert
           type= "error"
           show={this.state.showEr}

@@ -457,7 +457,6 @@ class clientEdit extends Component{
       error, handleSubmit, selectsReducer, clientInformacion} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
-    console.log(infoClient);
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
           <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
