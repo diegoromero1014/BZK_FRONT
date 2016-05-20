@@ -52,10 +52,11 @@ class SearchShareholderComponent extends Component {
   }
 
     render() {
+      const {disabled} = this.props;
         return (
           <div className="InputAddOn">
-          <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por número, nombre"  value={this.state.keywordShareholder} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
-            <button onClick={this._handleShareholderByClientsFind}  className="button InputAddOn-item">
+          <input style={{padding: '0px 11px !important'}} disabled={disabled} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por número, nombre"  value={this.state.keywordShareholder} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+            <button onClick={this._handleShareholderByClientsFind} disabled={disabled}  className="button InputAddOn-item">
               <i className="search icon" />
             </button>
           </div>
