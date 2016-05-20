@@ -8,7 +8,6 @@ export const ScrollTo = Child => class extends Component {
       }
 
       scrollTo() {
-          console.log(this.state);
           window.scrollTo(this.state.right, this.state.top);
       }
 

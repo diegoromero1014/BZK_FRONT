@@ -24,9 +24,13 @@ class ShareholderComponent extends Component {
 
 
   componentWillMount(){
-    const{clearShareholder,shareholdersByClientFindServer} = this.props;
-    clearShareholder();
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","","");
+    if( window.localStorage.getItem('sessionToken') === "" ){
+      redirectUrl("/login");
+    }else{
+      const{clearShareholder,shareholdersByClientFindServer} = this.props;
+      clearShareholder();
+      shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","","");
+    }
   }
 
   render() {
