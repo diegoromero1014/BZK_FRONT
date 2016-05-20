@@ -226,13 +226,13 @@ class ModalComponentShareholder extends Component {
                 } else {
                   typeMessage="success";
                   titleMessage="Creación de accionista";
-                  message="Señor usuario, el accionista se creo de forma exitosa.";
+                  message="Señor usuario, el accionista se creó de forma exitosa.";
                   shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
                 }
               } else {
                 typeMessage="success";
                 titleMessage="Creación de accionista";
-                message="Señor usuario, el accionista se creo de forma exitosa.";
+                message="Señor usuario, el accionista se creó de forma exitosa.";
                 shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
               }
           } else {

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {connect} from 'react-redux';
-import {clearShareholder,shareholdersByClientFindServer} from './actions';
+import {clearShareholder,shareholdersByClientFindServer, updateCertificateNoShareholder} from './actions';
 import {bindActionCreators} from 'redux';
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
@@ -11,14 +11,19 @@ import ListShareholderComponent from './listShareholderComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {NUMBER_RECORDS,SHAREHOLDER_KIND,SHAREHOLDER_TYPE} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
+import $ from 'jquery';
 
+var enableClickCertificationShareholder = "";
 class ShareholderComponent extends Component {
 
   constructor(props){
      super(props);
+     this._handleChangeValueCertificateShareholder = this._handleChangeValueCertificateShareholder.bind(this);
      this.state= {
         value1: "",
-        value2:""
+        value2:"",
+        valueCheck: false,
+        disabledComponents: ""
      };
   }
 
@@ -27,10 +32,52 @@ class ShareholderComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const{clearShareholder,shareholdersByClientFindServer} = this.props;
+      const{clearShareholder,shareholdersByClientFindServer, clientInformacion} = this.props;
+      const infoClient = clientInformacion.get('responseClientInfo');
       clearShareholder();
-      shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","","");
+      shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),
+          NUMBER_RECORDS,"sh.sharePercentage",1,"","","").then((data) => {
+              if( _.get(data, 'payload.data.rowCount') !== 0 ){
+                enableClickCertificationShareholder = "disabled";
+              } else {
+                enableClickCertificationShareholder = "";
+                if( infoClient.certificateNoShareholder ){
+                  this.setState({
+                    valueCheck: infoClient.certificateNoShareholder,
+                    disabledComponents: "disabled"
+                  });
+                } else {
+                  this.setState({
+                    valueCheck: infoClient.certificateNoShareholder,
+                    disabledComponents: ""
+                  });
+                }
+              }
+            }, (reason) => {
+            }
+        );
     }
+  }
+
+  _handleChangeValueCertificateShareholder(){
+    const selector = $("#checkNoShareholder");
+    if( !selector[0].checked ){
+      this.setState({
+        valueCheck: false,
+        disabledComponents: ""
+      });
+    } else {
+      this.setState({
+        valueCheck: true,
+        disabledComponents: "disabled"
+      });
+    }
+    const {updateCertificateNoShareholder} = this.props;
+    updateCertificateNoShareholder(selector[0].checked);
+  }
+
+  _validateDisabledCheckCertificate(){
+
   }
 
   render() {
@@ -40,30 +87,45 @@ class ShareholderComponent extends Component {
     if(shareholdersReducer.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
+      enableClickCertificationShareholder = "disabled"
+    } else {
+      enableClickCertificationShareholder = "";
     }
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
+        <div style={{marginBottom: "10px"}}>
+          <label style={{fontWeight: "bold"}}>
+              <input type="checkbox" id="checkNoShareholder"
+                checked={this.state.valueCheck}
+                disabled={enableClickCertificationShareholder}
+                onClick={this._handleChangeValueCertificateShareholder} />
+              &nbsp;&nbsp;Certifico que el cliente no tiene accionistas con un porcentaje de participación mayor a 5%.
+          </label>
+        </div>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         <Grid style={{ width: "100%"}}>
           <Row><Col xs={10} sm={10} md={11} lg={11}>
           <SearchShareholderComponent
             value1={this.state.value1}
             value2={this.state.value2}
+            disabled={this.state.disabledComponents}
           /></Col>
-            <BotonCreateShareholderComponent/>
+            <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
           </Row>
           <Row>
             <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de accionista:</span>
             <SelectFilterContact config={{
                 onChange: (value) => this.setState({value1: value.id})
             }}
+            disabled={this.state.disabledComponents}
             idTypeFilter={SHAREHOLDER_KIND}/>
             </Col>
             <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de persona:</span>
             <SelectFilterContact config={{
                 onChange: (value) => this.setState({value2: value.id})
             }}
+            disabled={this.state.disabledComponents}
             idTypeFilter={SHAREHOLDER_TYPE}/>
             </Col>
           </Row>
@@ -93,13 +155,16 @@ class ShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    clearShareholder,shareholdersByClientFindServer
+    clearShareholder,
+    shareholdersByClientFindServer,
+    updateCertificateNoShareholder
   }, dispatch);
 }
 
-function mapStateToProps({shareholdersReducer}, ownerProps){
+function mapStateToProps({shareholdersReducer, clientInformacion}, ownerProps){
     return {
-        shareholdersReducer
+        shareholdersReducer,
+        clientInformacion
     };
 }
 

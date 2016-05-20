@@ -1273,6 +1273,7 @@
 ::-webkit-scrollbar {
 	-webkit-appearance: none;
 	width: 7px;
+	height: 7px !important;
 }
 ::-webkit-scrollbar-thumb {
 	border-radius: 4px;

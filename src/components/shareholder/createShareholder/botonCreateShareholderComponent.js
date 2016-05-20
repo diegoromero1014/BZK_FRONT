@@ -26,10 +26,10 @@ class BotonCreateShareholderComponent extends Component {
   }
 
   render() {
-    const {toggleModalShareholder} = this.props;
+    const {toggleModalShareholder, disabled} = this.props;
     return (
           <Col xs={2} sm={2} md={1} lg={1}>
-          <button className="btn btn-primary" type="button" title="Crear accionista" style={{float: "right"}} onClick={this.openModal}>
+          <button className="btn btn-primary" disabled={disabled} type="button" title="Crear accionista" style={{float: "right"}} onClick={this.openModal}>
               <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
             </button>
             <Modal

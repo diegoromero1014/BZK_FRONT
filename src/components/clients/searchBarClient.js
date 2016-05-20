@@ -38,7 +38,7 @@ class SearchBarClient extends Component{
   }
 
   _handleClientsFind(e){
-    const {clientsFindServer} = this.props;
+    const {clientsFindServer, valueTeam,valueCertification} = this.props;
     const {clientR} = this.props;
     var keyword = clientR.get('keyword');
     if(keyword === '' || keyword === undefined){
@@ -46,7 +46,7 @@ class SearchBarClient extends Component{
     }else{
       const {changePage} = this.props;
       var limInf = (1 - 1) * NUMBER_RECORDS;
-      clientsFindServer(keyword, limInf, NUMBER_RECORDS);
+      clientsFindServer(keyword, limInf, NUMBER_RECORDS,valueCertification,valueTeam);
       changePage(1);
     }
   }

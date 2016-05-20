@@ -25,7 +25,9 @@ const initialState = Immutable.Map({
   dataTypeNotes: [],
   dataEconomicGroup: [],
   dataTypeShareholdersKind : [],
-  dataTypeShareholdersType:[]
+  dataTypeShareholdersType:[],
+  dataTypeTeams:[],
+  dataTypeCertificationStatus:[]
 });
 
 
@@ -97,6 +99,12 @@ export default (state = initialState, action) => {
         case constants.SHAREHOLDER_TYPE:
             var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
             return state.set('dataTypeShareholdersType', masterDataDetailEntries);
+        case constants.TEAM_FOR_EMPLOYEE:
+            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+            return state.set('dataTypeTeams', masterDataDetailEntries);
+        case constants.CERTIFICATION_STATUS:
+            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+            return state.set('dataTypeCertificationStatus', masterDataDetailEntries);
         case constants.CLEAR_VALUES_COUNTRY:
           return state.withMutations( map => {
             map
