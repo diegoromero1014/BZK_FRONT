@@ -24,7 +24,8 @@ class SelectFilterComponent extends Component{
           idTypeFilter,
           defaultValue,
           onChange,
-          config
+          config,
+          disabled
       } = this.props;
       var data =[];
       if (idTypeFilter === CLIENT_ID_TYPE) {
@@ -69,6 +70,7 @@ class SelectFilterComponent extends Component{
               filter='contains'
               onChange={onChange}
               defaultValue={defaultValue}
+              disabled={disabled}
               {...config}
           />
       );

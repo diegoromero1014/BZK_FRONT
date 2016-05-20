@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CHANGE_PAGE,LIMITE_INF,CLEAR_SHAREHOLDERS,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CHANGE_PAGE,
+  LIMITE_INF,CLEAR_SHAREHOLDERS,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -9,7 +10,7 @@ const initialState = Immutable.Map({
     page:1,
     rowCount:0,
     orderShareholder: 1,
-    columnShareholder:"sh.sharePercentage",
+    columnShareholder:"sh.sharePercentage"
 });
 
 
@@ -36,6 +37,7 @@ export default (state = initialState, action) => {
                     .set('limInf', 0)
                     .set('shareholders', [])
                     .set('rowCount', 0)
+                    .set('enableClickCertificationShareholder', "")
                     .set('orderShareholder', 1)
                     .set('columnShareholder',"sh.sharePercentage");
                 });
@@ -50,6 +52,17 @@ export default (state = initialState, action) => {
                     map
                     .set('orderShareholder', action.orderShareholder)
                     .set('columnShareholder', action.columnShareholder)});
+
+          case UPDATE_CERTIFICATE_NO_SHAREHOLDER:
+            const data = action.payload.data.data;
+            var responseClientInfo = state.get('responseClientInfo');
+            if( responseClientInfo !== null && responseClientInfo !== undefined ){
+              responseClientInfo.certificateNoShareholder = data;
+              return state.set("responseClientInfo", responseClientInfo);
+            } else {
+              return state;
+            }
+
         default:
             return state;
     }

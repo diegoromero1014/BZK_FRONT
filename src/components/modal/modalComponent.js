@@ -4,6 +4,8 @@ import Modal from 'react-modal';
 import {toggleModal} from './action';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
+import {clearSearchShareholder} from '../shareholder/shareholderDetail/actions';
+import {clearValuesAdressessKeys} from '../selectsComponent/actions';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../shareholder/shareholderDetail/componentShareHolderDetail';
 
@@ -19,6 +21,13 @@ class ModalComponentDialog extends Component {
         }
 
     openModal(){
+    const {actions, clearValuesAdressessKeys, clearSearchShareholder} = this.props;
+    switch (actions.component) {
+      case views.VIEW_SHAREHOLDER:
+        clearValuesAdressessKeys();
+        clearSearchShareholder();
+        break;
+    }
     this.setState({modalIsOpen: true});
     }
 
@@ -80,7 +89,9 @@ function mapStateToProps({modal},{idModal}) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        toggleModal
+      clearValuesAdressessKeys,
+      clearSearchShareholder,
+      toggleModal
     }, dispatch);
 }
 

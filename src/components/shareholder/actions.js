@@ -1,5 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CLEAR_SHAREHOLDERS,LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE} from './constants';
+import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CLEAR_SHAREHOLDERS,
+  LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
 import axios from 'axios';
 
 export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,shareholderKindId,shareHolderType){
@@ -32,6 +33,33 @@ export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOr
   var request = axios.post(APP_URL + "/shareholderList", json);
   return{
     type: GET_SHAREHOLDERS_LIST_CLIENT,
+    payload: request
+  }
+}
+
+export function updateCertificateNoShareholder(valueCertificate){
+  const json = {
+    "messageHeader":{
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody":{
+      "idClient": window.localStorage.getItem('idClientSelected'),
+      "certificateNoShareholder": valueCertificate
+    }
+  }
+
+  var request = axios.post(APP_URL + "/updateCertificateNotShareholder", json);
+  return{
+    type: UPDATE_CERTIFICATE_NO_SHAREHOLDER,
     payload: request
   }
 }
