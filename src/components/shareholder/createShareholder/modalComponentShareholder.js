@@ -94,13 +94,15 @@ class ModalComponentShareholder extends Component {
 
   _handleBlurValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="0123456789."; i< val.length; i++){
-     if (validos.indexOf(val.charAt(i)) != -1){
-        output += val.charAt(i)
+    if(val !== null && val !== '' && val !== undefined){
+      for (var i=0, output='', validos="0123456789."; i< val.length; i++){
+       if (validos.indexOf(val.charAt(i)) != -1){
+          output += val.charAt(i)
+        }
       }
+      val = output;
+      valuReduxForm.onChange(val);
     }
-    val = output;
-    valuReduxForm.onChange(val);
   }
 
   _closeCreate(){
@@ -116,9 +118,11 @@ class ModalComponentShareholder extends Component {
   }
 
   _onClickLimpiar(){
-    const{clearSearchShareholder} = this.props;
+    const{fields:{direccion, observaciones}, clearSearchShareholder} = this.props;
     clearSearchShareholder();
     this.props.resetForm();
+    direccion.onChange('');
+    observaciones.onChange('');
     this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
   }
 

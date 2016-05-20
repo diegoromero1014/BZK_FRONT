@@ -83,13 +83,15 @@ class ComponentShareHolderDetail extends Component {
 
   _handleBlurValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="0123456789."; i< val.length; i++){
-     if (validos.indexOf(val.charAt(i)) != -1){
-        output += val.charAt(i)
+    if(val !== null && val !== '' && val !== undefined){
+      for (var i=0, output='', validos="0123456789."; i< val.length; i++){
+       if (validos.indexOf(val.charAt(i)) != -1){
+          output += val.charAt(i)
+        }
       }
+      val = output;
+      valuReduxForm.onChange(val);
     }
-    val = output;
-    valuReduxForm.onChange(val);
   }
 
   _onChangeTypeShareholder(val){
@@ -230,8 +232,6 @@ class ComponentShareHolderDetail extends Component {
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
     tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId} = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
-    console.log(shareHolderEdit);
-    console.log("render = shareHolderId = ", shareHolderId);
     if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
