@@ -65,7 +65,11 @@ const validate = (values) => {
   if(!values.porcentajePart){
     errors.porcentajePart = "Debe ingresar un valor";
   }else{
-    errors.porcentajePart = null;
+    if(values.porcentajePart > 100){
+      errors.porcentajePart = "Debe ingresar un valor entre 0 y 100";
+    }else{
+      errors.porcentajePart = null;
+    }
   }
 
   return errors;

@@ -28,4 +28,5 @@ export const SHAREHOLDER_ID_TYPE = 'shareHolderIdType';
 export const CLEAR_VALUES_COUNTRY = "CLEAR_VALUES_COUNTRY";
 export const ECONOMIC_GROUPS = "economicGroupsByKeyword";
 export const SHAREHOLDER_KIND = "shareHolderKind";
+export const CERTIFICATION_STATUS = "certificationStatus";
 export const GENDER = "gender";

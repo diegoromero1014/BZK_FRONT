@@ -7,6 +7,9 @@ import ClientListItem from './clientListItem';
 import SearchBarClient from './searchBarClient';
 import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import {consultList,getMasterDataFields} from '../selectsComponent/actions';
+import * as constants from '../selectsComponent/constants';
 
 class ClientsFind extends Component {
   constructor(props) {
@@ -19,8 +22,10 @@ class ClientsFind extends Component {
     if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
       redirectUrl("/login");
     } else {
-      const {clearClients} = this.props;
+      const {clearClients,consultList,getMasterDataFields} = this.props;
       clearClients();
+      getMasterDataFields([constants.CERTIFICATION_STATUS]);
+      consultList(constants.TEAM_FOR_EMPLOYEE);
     }
   }
 
@@ -44,22 +49,44 @@ class ClientsFind extends Component {
 
     render() {
       var clientItems = [];
-      const {clientR} = this.props;
+      const {clientR,selectsReducer} = this.props;
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
       clientItems = clientR.get('responseClients');
       return (
-          <Row style={{paddingLeft: "10px"}}>
-            <Col xs={12} md={12} lg={12}>
-              <div style={{borderBottom:"2px solid #D9DEDF", display: "inline", margin:"auto", width:"100%"}}>
-                <div style={{width:"90%", margin:"auto", marginTop:"15px", textAlign:"center"}}>
-                  <SearchBarClient />
-                  <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"30px", width:"50px", height:"50px"}}>
-                    <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-                  </button>
-                </div>
-              </div>
+        <div>
+        <Row style={{borderBottom:"2px solid #D9DEDF",marginTop:"15px"}}>
+            <Col xs={12} sm={12} md={4} lg={5} style={{width:'100%'}}>
+                <SearchBarClient />
             </Col>
+            <Col xs={12} sm={12} md={3} lg={3} style={{width:'100%'}}>
+                <ComboBox
+                  name="celula"
+                  labelInput="Célula"
+                  valueProp={'id'}
+                  textProp={'description'}
+                  data={selectsReducer.get('teamValueObjects')}
+                />
+            </Col>
+            <Col xs={12} sm={12} md={3} lg={2} style={{width:'100%'}}>
+                <ComboBox
+                  name="celula"
+                  labelInput="Estado certificación"
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={selectsReducer.get(constants.CERTIFICATION_STATUS) || []}
+                />
+            </Col>
+            <Col xs={12} sm={12} md={2} lg={2} style={{width:'100%'}}>
+                <button className="btn btn-primary" type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
+                  <i className="erase icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                </button>
+                <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
+                  <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                </button>
+            </Col>
+        </Row>
+          <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={12} lg={12}>
               <div className="news-page content">
                 <div className="team-modal">
@@ -72,6 +99,7 @@ class ClientsFind extends Component {
               <Pagination />
             </Col>
           </Row>
+          </div>
       )
     }
 }
@@ -79,13 +107,16 @@ class ClientsFind extends Component {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     clientsFindServer,
-    clearClients
+    clearClients,
+    getMasterDataFields,
+    consultList
   }, dispatch);
 }
 
-function mapStateToProps({clientR}, ownerProps){
+function mapStateToProps({clientR,selectsReducer}, ownerProps){
   return {
-    clientR
+    clientR,
+    selectsReducer
   };
 }
 
