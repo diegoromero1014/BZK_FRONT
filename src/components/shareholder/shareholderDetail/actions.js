@@ -28,8 +28,9 @@ export function getDetailShareHolder(idShareHolder){
   }
 }
 
-export function clearSearchShareholder(){
+export function clearSearchShareholder(data){
     return {
-        type: CLEAR_SEARCH_SHAREHOLDER
+        type: CLEAR_SEARCH_SHAREHOLDER,
+        payload: data
     };
 }

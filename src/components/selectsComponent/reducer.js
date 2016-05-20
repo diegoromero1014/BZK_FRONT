@@ -104,6 +104,13 @@ export default (state = initialState, action) => {
               .set('dataTypeCity', [])
               .set('dataEconomicGroup', [])
           });
+        case constants.CLEAR_VALUES_COUNTRY_KEY:
+          return state.withMutations( map => {
+            map
+              .set(constants.FILTER_COUNTRY, null)
+              .set('dataTypeProvince', null)
+              .set('dataTypeCity', null)
+          });
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
           const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
           const lists = _.groupBy(masterDataDetailEntries, 'field');

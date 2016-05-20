@@ -6,13 +6,14 @@ import {connect} from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import {NUMBER_RECORDS} from '../constants';
 import {shareholdersByClientFindServer} from '../actions';
-import {getDetailShareHolder, clearSearchShareholder, toggleModalShareholder} from './actions';
+import {getDetailShareHolder, toggleModalShareholder} from './actions';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
+import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createShareholder} from '../createShareholder/actions';
-import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER} from '../../selectsComponent/constants';
+import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER}
+from '../../selectsComponent/constants';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import _ from 'lodash';
 
@@ -77,17 +78,18 @@ class ComponentShareHolderDetail extends Component {
     this._editShareHolder = this._editShareHolder.bind(this);
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
     this._submitEditShareHolderDetail = this._submitEditShareHolderDetail.bind(this);
+    this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
   }
 
-  componentWillMount(){
-    const {shareHolderId, getDetailShareHolder, getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
-    clearValuesAdressess();
-    this.props.resetForm();
-    if(shareHolderId !== undefined && shareHolderId !== null && shareHolderId !== ''){
-      getDetailShareHolder(shareHolderId);
-      getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
-      consultDataSelect(SHAREHOLDER_TYPE);
+  _handleBlurValueNumber(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i=0, output='', validos="0123456789"; i< val.length; i++){
+     if (validos.indexOf(val.charAt(i)) != -1){
+        output += val.charAt(i)
+      }
     }
+    val = output;
+    valuReduxForm.onChange(val);
   }
 
   _onChangeTypeShareholder(val){
@@ -98,20 +100,26 @@ class ComponentShareHolderDetail extends Component {
   }
 
   _onChangeCountry(val){
-    const {fields: {countryId, provinceId, cityId}} = this.props;
+    const {fields: {countryId, provinceId, cityId}, editShareholderReducer} = this.props;
     countryId.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(FILTER_PROVINCE, countryId.value);
-    provinceId.onChange('');
-    cityId.onChange('');
+    const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    if(shareHolderEdit !== null && !_.isEqual(shareHolderEdit.countryId, countryId.value)){
+      provinceId.onChange('');
+      cityId.onChange('');
+    }
   }
 
   _onChangeProvince(val){
-    const {fields: {countryId, provinceId, cityId}} = this.props;
+    const {fields: {countryId, provinceId, cityId}, editShareholderReducer} = this.props;
     provinceId.onChange(val);
     const {consultListWithParameterUbication} = this.props;
     consultListWithParameterUbication(FILTER_CITY, provinceId.value);
-    cityId.onChange('');
+    const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    if(shareHolderEdit !== null && !_.isEqual(shareHolderEdit.provinceId, provinceId.value)){
+      cityId.onChange('');
+    }
   }
 
   _editShareHolder() {
@@ -154,10 +162,19 @@ class ComponentShareHolderDetail extends Component {
         redirectUrl("/login");
       } else {
         if((_.get(data, 'payload.data.status') === 200)){
+          if(_.get(data, 'payload.data.data') !== undefined && _.get(data, 'payload.data.data') !== null){
+            var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
+            if(valoresResponse[0] === "exceedPorcentaje"){
+              typeMessage="error";
+              titleMessage="Procentaje excedido";
+              message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
+            }
+          } else {
             typeMessage="success";
             titleMessage="Edición de accionista";
             message="Señor usuario, el accionista se editó de forma exitosa.";
             shareholdersByClientFindServer(0, clientId.value, NUMBER_RECORDS, "", 0, "", "");
+          }
         } else {
             typeMessage="error";
             titleMessage="Error editando accionista";
@@ -175,8 +192,7 @@ class ComponentShareHolderDetail extends Component {
 
   _closeCreate(){
     if(typeMessage === "success"){
-      const{clearSearchShareholder, isOpen} = this.props;
-      clearSearchShareholder();
+      const{isOpen} = this.props;
       this.props.resetForm();
       this.setState({showMessage: false});
       isOpen();
@@ -185,13 +201,37 @@ class ComponentShareHolderDetail extends Component {
     }
   }
 
+  componentWillMount(){
+    const {shareHolderId, getDetailShareHolder, getMasterDataFields,
+      consultDataSelect} = this.props;
+    this.props.resetForm();
+    if(shareHolderId !== undefined && shareHolderId !== null && shareHolderId !== ''){
+      getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
+      consultDataSelect(SHAREHOLDER_TYPE);
+
+      getDetailShareHolder(shareHolderId).then((data) => {
+        const {editShareholderReducer, consultListWithParameterUbication} = this.props;
+        const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+        if(shareHolderEdit.countryId !== null && shareHolderEdit.countryId !== '' && shareHolderEdit.countryId !== undefined){
+          consultListWithParameterUbication(FILTER_PROVINCE, shareHolderEdit.countryId);
+          if(shareHolderEdit.provinceId !== null && shareHolderEdit.provinceId !== '' && shareHolderEdit.provinceId !== undefined){
+            consultListWithParameterUbication(FILTER_CITY, shareHolderEdit.provinceId);
+          }
+        }
+        }, (reason) => {
+          this.setState({showEx: true});
+      });
+    }
+  }
+
   render() {
     const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer} = this.props;
+    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId} = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
     console.log(shareHolderEdit);
+    console.log("render = shareHolderId = ", shareHolderId);
     if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
@@ -233,11 +273,13 @@ class ComponentShareHolderDetail extends Component {
             <Row>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de accionista (</span><span style={{color: "red"}}>*</span>)</dt>
-                <ComboBox name="tipoAccionista" labelInput="Seleccione"
+                <ComboBox
+                  name="tipoAccionista"
+                  labelInput="Seleccione"
                   {...shareHolderKindId}
                   valueProp={'id'}
                   textProp = {'value'}
-                  data={selectsReducer.get(SHAREHOLDER_KIND) || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get(SHAREHOLDER_KIND)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -250,6 +292,7 @@ class ComponentShareHolderDetail extends Component {
                   type="text"
                   min={0}
                   max="3"
+                  onBlur={val => this._handleBlurValueNumber(sharePercentage, sharePercentage.value)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -314,7 +357,7 @@ class ComponentShareHolderDetail extends Component {
                   {...genderId}
                   valueProp={'id'}
                   textProp = {'value'}
-                  data={selectsReducer.get(GENDER) || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get(GENDER)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -338,33 +381,39 @@ class ComponentShareHolderDetail extends Component {
             <Row>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>País</span></dt>
-                <ComboBox name="pais" labelInput="Seleccione"
+                <ComboBox
+                  name="pais"
+                  labelInput="Seleccione"
                   {...countryId}
                   valueProp={'id'}
                   textProp = {'value'}
                   onChange={val => this._onChangeCountry(val)}
-                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get(FILTER_COUNTRY)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Departamento</span></dt>
-                <ComboBox name="departamento" labelInput="Seleccione"
+                <ComboBox
+                  name="departamento"
+                  labelInput="Seleccione"
                   {...provinceId}
                   valueProp={'id'}
                   textProp = {'value'}
                   onChange={val => this._onChangeProvince(val)}
-                  data={selectsReducer.get('dataTypeProvince') || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get('dataTypeProvince')}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Ciudad</span></dt>
-                <ComboBox name="ciudad" labelInput="Seleccione"
+                <ComboBox
+                  name="ciudad"
+                  labelInput="Seleccione"
                   {...cityId}
                   valueProp={'id'}
                   textProp = {'value'}
-                  data={selectsReducer.get('dataTypeCity') || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get('dataTypeCity')}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -387,7 +436,7 @@ class ComponentShareHolderDetail extends Component {
                   {...fiscalCountryId}
                   valueProp={'id'}
                   textProp = {'value'}
-                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  data={shareHolderEdit === null ? [] : selectsReducer.get(FILTER_COUNTRY)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -433,9 +482,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     toggleModalShareholder,
     getDetailShareHolder,
-    clearSearchShareholder,
     getMasterDataFields,
-    clearValuesAdressess,
     consultListWithParameterUbication,
     consultDataSelect,
     shareholdersByClientFindServer,
