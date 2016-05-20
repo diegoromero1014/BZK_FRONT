@@ -9,15 +9,11 @@ class Pagination extends Component{
   _handlePaginar(page){
     const {clientsFindServer} = this.props;
     const {changePage} = this.props;
-    const {clientR} = this.props;
+    const {clientR,valueCertification,valueTeam} = this.props;
     var keyword = clientR.get('keyword');
-    if (keyword === '' || keyword === undefined){
-     alert('Por favor ingrese un criterio de búsqueda');
-    }else{
-      var limInf = (page - 1) * NUMBER_RECORDS;
-      clientsFindServer(clientR.get('keyword'), limInf, NUMBER_RECORDS);
-      changePage(page);
-    }
+    var limInf = (page - 1) * NUMBER_RECORDS;
+    clientsFindServer(clientR.get('keyword'), limInf, NUMBER_RECORDS,valueCertification,valueTeam);
+    changePage(page);
   }
 
   render(){
