@@ -5,19 +5,15 @@ const initialState = Immutable.Map({
     modalState: false,
     status: false,
     validateLogin: true,
-    clientEdit: {}
+    shareHolderEdit: {}
 });
 
 export default function(state = initialState, action){
     switch(action.type){
     case actions.SHARE_HOLDER_DETAIL:
       return state.set('shareHolderEdit', action.payload.data.data);
-
     case actions.CLEAR_SEARCH_SHAREHOLDER:
-        return state.withMutations( map => {
-          map
-            .set('clientEdit', {});
-        });
+      return state.set('shareHolderEdit', null);
     default:
         return state;
     }

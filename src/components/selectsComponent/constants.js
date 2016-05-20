@@ -26,6 +26,7 @@ export const TYPE_NOTES = 'typeOfNotes';
 export const SHAREHOLDER_TYPE = 'shareHolderType';
 export const SHAREHOLDER_ID_TYPE = 'shareHolderIdType';
 export const CLEAR_VALUES_COUNTRY = "CLEAR_VALUES_COUNTRY";
+export const CLEAR_VALUES_COUNTRY_KEY = "CLEAR_VALUES_COUNTRY_KEY";
 export const ECONOMIC_GROUPS = "economicGroupsByKeyword";
 export const SHAREHOLDER_KIND = "shareHolderKind";
 export const CERTIFICATION_STATUS = "certificationStatus";
