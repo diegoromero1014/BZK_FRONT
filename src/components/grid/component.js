@@ -30,7 +30,7 @@ class GridComponent extends Component {
             }else if(value.key == 'delete'){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else{
-              cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} />
+              cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} styles={value.style} />
             }
           return (
             cell
