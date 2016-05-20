@@ -65,8 +65,8 @@ const validate = (values) => {
   if(!values.porcentajePart){
     errors.porcentajePart = "Debe ingresar un valor";
   }else{
-    if(values.porcentajePart > 100){
-      errors.porcentajePart = "Debe ingresar un valor entre 0 y 100";
+    if(values.porcentajePart <= 0 || values.porcentajePart > 100){
+      errors.porcentajePart = "Debe ingresar un valor mayor a 0 y menor o igual a 100";
     }else{
       errors.porcentajePart = null;
     }
@@ -94,13 +94,15 @@ class ModalComponentShareholder extends Component {
 
   _handleBlurValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="0123456789"; i< val.length; i++){
-     if (validos.indexOf(val.charAt(i)) != -1){
-        output += val.charAt(i)
+    if(val !== null && val !== '' && val !== undefined){
+      for (var i=0, output='', validos="0123456789."; i< val.length; i++){
+       if (validos.indexOf(val.charAt(i)) != -1){
+          output += val.charAt(i)
+        }
       }
+      val = output;
+      valuReduxForm.onChange(val);
     }
-    val = output;
-    valuReduxForm.onChange(val);
   }
 
   _closeCreate(){
@@ -116,9 +118,11 @@ class ModalComponentShareholder extends Component {
   }
 
   _onClickLimpiar(){
-    const{clearSearchShareholder} = this.props;
+    const{fields:{direccion, observaciones}, clearSearchShareholder} = this.props;
     clearSearchShareholder();
     this.props.resetForm();
+    direccion.onChange('');
+    observaciones.onChange('');
     this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
   }
 
@@ -218,22 +222,22 @@ class ModalComponentShareholder extends Component {
         } else {
           if((_.get(data, 'payload.data.status') === 200)){
               if( _.get(data, 'payload.data.data') !== null && _.get(data, 'payload.data.data') !== undefined ){
-                var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
+                var valoresResponse = (_.get(data, 'payload.data.data')).split("_");
                 if( valoresResponse[0] === "exceedPorcentaje" ){
                   typeMessage="error";
-                  titleMessage="Procentaje excedido";
+                  titleMessage="Poocentaje excedido";
                   message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
                 } else {
                   typeMessage="success";
                   titleMessage="Creación de accionista";
                   message="Señor usuario, el accionista se creó de forma exitosa.";
-                  shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+                  shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
                 }
               } else {
                 typeMessage="success";
                 titleMessage="Creación de accionista";
                 message="Señor usuario, el accionista se creó de forma exitosa.";
-                shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+                shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
               }
           } else {
               typeMessage="error";
@@ -325,7 +329,7 @@ class ModalComponentShareholder extends Component {
                     style={{textAlign: "right"}}
                     type="text"
                     min={0}
-                    max="3"
+                    max="5"
                     {...porcentajePart}
                     onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
                   />

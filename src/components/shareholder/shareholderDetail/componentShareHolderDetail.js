@@ -57,8 +57,8 @@ const validate = values => {
   if(!values.sharePercentage){
     errors.sharePercentage = "Debe ingresar un valor";
   }else{
-    if(values.sharePercentage > 100){
-      errors.sharePercentage = "Debe ingresar un valor entre 0 y 100";
+    if(values.sharePercentage <= 0 || values.sharePercentage > 100){
+      errors.sharePercentage = "Debe ingresar un valor mayor a 0 y menor o igual a 100";
     }else{
       errors.sharePercentage = null;
     }
@@ -83,13 +83,15 @@ class ComponentShareHolderDetail extends Component {
 
   _handleBlurValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="0123456789"; i< val.length; i++){
-     if (validos.indexOf(val.charAt(i)) != -1){
-        output += val.charAt(i)
+    if(val !== null && val !== '' && val !== undefined){
+      for (var i=0, output='', validos="0123456789."; i< val.length; i++){
+       if (validos.indexOf(val.charAt(i)) != -1){
+          output += val.charAt(i)
+        }
       }
+      val = output;
+      valuReduxForm.onChange(val);
     }
-    val = output;
-    valuReduxForm.onChange(val);
   }
 
   _onChangeTypeShareholder(val){
@@ -163,17 +165,17 @@ class ComponentShareHolderDetail extends Component {
       } else {
         if((_.get(data, 'payload.data.status') === 200)){
           if(_.get(data, 'payload.data.data') !== undefined && _.get(data, 'payload.data.data') !== null){
-            var valoresResponse = (_.get(data, 'payload.data.data')).split(",");
+            var valoresResponse = (_.get(data, 'payload.data.data')).split("_");
             if(valoresResponse[0] === "exceedPorcentaje"){
               typeMessage="error";
-              titleMessage="Procentaje excedido";
+              titleMessage="Porcentaje excedido";
               message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
             }
           } else {
             typeMessage="success";
             titleMessage="Edición de accionista";
             message="Señor usuario, el accionista se editó de forma exitosa.";
-            shareholdersByClientFindServer(0, clientId.value, NUMBER_RECORDS, "", 0, "", "");
+            shareholdersByClientFindServer(0, clientId.value, NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
           }
         } else {
             typeMessage="error";
@@ -230,8 +232,6 @@ class ComponentShareHolderDetail extends Component {
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
     tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId} = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
-    console.log(shareHolderEdit);
-    console.log("render = shareHolderId = ", shareHolderId);
     if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
@@ -291,7 +291,7 @@ class ComponentShareHolderDetail extends Component {
                   style={{textAlign: "right"}}
                   type="text"
                   min={0}
-                  max="3"
+                  max="5"
                   onBlur={val => this._handleBlurValueNumber(sharePercentage, sharePercentage.value)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
