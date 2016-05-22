@@ -73,9 +73,10 @@ class ListShareholderComponent extends Component {
         key:"name"
       },
       {
-        title: "% de participación",
+        title: "Participación",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.sharePercentage")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.sharePercentage")}></i></span>,
-        key:"percentage"
+        key:"percentageS",
+        style: {textAlign: 'right'}
       },
       {
         title: "Tipo de accionista",
@@ -117,6 +118,7 @@ class ListShareholderComponent extends Component {
               urlServer: "./component",
               component : "VIEW_SHAREHOLDER"
             });
+            _.set(value,'percentageS', value.percentage + "%");
             _.set(value, 'delete',  {
               actionDelete: true,
               urlServer: "/deleteEntity",

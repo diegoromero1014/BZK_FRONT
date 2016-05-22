@@ -44,7 +44,7 @@ class ButtonDeleteComponent extends Component{
             "");
           }else if(actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER){
               clearShareholderDelete();
-              shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","");
+              shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
             }
         }
         this.setState({showEx:false, showEr: false,show: false});
