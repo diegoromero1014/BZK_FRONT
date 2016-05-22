@@ -56,7 +56,9 @@ class uiTester extends Component {
                     <ComboBox {...propsComboBox} {...combo1}/>
                     Hi there
                 </div>
-
+                <div className="ui icon button" data-content="La longitud máxima del campo es de 250 caracteres">
+                  <i className="help icon"></i>
+                </div>
                 <NotesClient />
             </form>
         );
