@@ -44,11 +44,6 @@ const validate = values => {
   }else{
     errors.firstLastName = null;
   }
-  if(!values.genderId && valueTypeShareholder === PERSONA_NATURAL){
-    errors.genderId = "Debe seleccionar un valor";
-  }else{
-    errors.genderId = null;
-  }
   if(!values.shareHolderName && valueTypeShareholder === PERSONA_JURIDICA){
     errors.shareHolderName = "Debe ingresar un valor";
   }else{
@@ -352,7 +347,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                <dt><span>Género (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Género</span></dt>
                 <ComboBox name="genero" labelInput="Seleccione"
                   {...genderId}
                   valueProp={'id'}
@@ -370,6 +365,7 @@ class ComponentShareHolderDetail extends Component {
                   name="observaciones"
                   type="text"
                   max="250"
+                  title="La longitud máxima de caracteres es de 250"
                   style={{width: '100%', height: '100%'}}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
