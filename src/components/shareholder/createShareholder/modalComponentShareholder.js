@@ -404,7 +404,7 @@ class ModalComponentShareholder extends Component {
                   <Textarea
                     name="observaciones"
                     type="text"
-                    max="250"
+                    max="150"
                     title="La longitud máxima de caracteres es de 250"
                     style={{width: '100%', height: '100%'}}
                     {...observaciones}
@@ -475,7 +475,7 @@ class ModalComponentShareholder extends Component {
                     style={{textAlign: "right"}}
                     type="text"
                     min={0}
-                    max="50"
+                    max="30"
                     {...numeroIdTributaria}
                   />
                 </Col>

@@ -375,7 +375,7 @@ class ComponentShareHolderDetail extends Component {
                   {...comment}
                   name="observaciones"
                   type="text"
-                  max="250"
+                  max="150"
                   title="La longitud máxima de caracteres es de 250"
                   style={{width: '100%', height: '100%'}}
                   disabled={this.state.isEditable ? '' : 'disabled'}
@@ -455,7 +455,7 @@ class ComponentShareHolderDetail extends Component {
                   style={{textAlign: "right"}}
                   type="text"
                   min={0}
-                  max="50"
+                  max="30"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
