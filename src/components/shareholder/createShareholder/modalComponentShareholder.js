@@ -395,7 +395,7 @@ class ModalComponentShareholder extends Component {
                     <div style={{width: "100%", float: "left"}}>
                       <span>Observaciones</span>
                       <div className="ui icon"
-                        title="La longitud máxima del campo es de 250 caracteres"
+                        title="La longitud máxima del campo es de 150 caracteres"
                         style={{marginLeft: "10px", marginBottom: "5px", cursor: "pointer", width: "50px", display: "inline-block"}}>
                         <i className="help icon"></i>
                       </div>
@@ -405,7 +405,7 @@ class ModalComponentShareholder extends Component {
                     name="observaciones"
                     type="text"
                     max="150"
-                    title="La longitud máxima de caracteres es de 250"
+                    title="La longitud máxima de caracteres es de 150"
                     style={{width: '100%', height: '100%'}}
                     {...observaciones}
                   />
