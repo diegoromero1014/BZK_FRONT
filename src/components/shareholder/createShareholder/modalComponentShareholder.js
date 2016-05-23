@@ -53,11 +53,6 @@ const validate = (values) => {
   }else{
     errors.primerApellido = null;
   }
-  if(!values.genero && valueTypeShareholder === PERSONA_NATURAL){
-    errors.genero = "Debe seleccionar un valor";
-  }else{
-    errors.genero = null;
-  }
   if(!values.razonSocial && valueTypeShareholder === PERSONA_JURIDICA){
     errors.razonSocial = "Debe ingresar un valor";
   }else{
@@ -386,7 +381,7 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
-                  <dt><span>Género (</span><span style={{color: "red"}}>*</span>)</dt>
+                  <dt><span>Género</span></dt>
                   <ComboBox name="genero" labelInput="Seleccione"
                     {...genero}
                     valueProp={'id'}
@@ -396,11 +391,21 @@ class ModalComponentShareholder extends Component {
                   />
                 </Col>
                 <Col xs={12} md={12} lg={12}>
-                  <dt><span>Observaciones</span></dt>
+                  <dt>
+                    <div style={{width: "100%", float: "left"}}>
+                      <span>Observaciones</span>
+                      <div className="ui icon"
+                        title="La longitud máxima del campo es de 250 caracteres"
+                        style={{marginLeft: "10px", marginBottom: "5px", cursor: "pointer", width: "50px", display: "inline-block"}}>
+                        <i className="help icon"></i>
+                      </div>
+                    </div>
+                  </dt>
                   <Textarea
                     name="observaciones"
                     type="text"
                     max="250"
+                    title="La longitud máxima de caracteres es de 250"
                     style={{width: '100%', height: '100%'}}
                     {...observaciones}
                   />
