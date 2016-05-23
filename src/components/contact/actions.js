@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {ORDER_COLUMN,GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_DELETE} from './constants';
+import {CLEAR_CONTACT_ORDER,CLEAR_CONTACT_CREAR,ORDER_COLUMN,GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_PAGINATOR} from './constants';
 import axios from 'axios';
 
 export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId){
@@ -64,11 +64,25 @@ export function clearContact(){
     };
 }
 
-export function clearContactDelete(){
+export function clearContactPaginator(){
     return {
-        type: CLEAR_CONTACT_DELETE
+        type: CLEAR_CONTACT_PAGINATOR
     };
 }
+
+export function clearContactOrder(){
+    return {
+        type: CLEAR_CONTACT_ORDER
+    };
+}
+
+
+export function clearContactCreate(){
+    return {
+        type: CLEAR_CONTACT_CREAR
+    };
+}
+
 
 export function orderColumnContact(order,column){
     return {

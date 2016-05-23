@@ -10,13 +10,14 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import {redirectUrl} from '../../globalComponents/actions';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
-import {shareholdersByClientFindServer} from '../actions';
+import {shareholdersByClientFindServer,clearShareholderOrder,clearShareholderCreate} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
 import numeral from 'numeral';
 import _ from 'lodash';
+
 
 const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -107,11 +108,14 @@ class ModalComponentShareholder extends Component {
 
   _closeCreate(){
     if( typeMessage === "success" ){
-      const{clearSearchShareholder,isOpen} = this.props;
+
+      const{clearSearchShareholder,clearShareholderOrder,clearShareholderCreate,isOpen} = this.props;
       clearSearchShareholder();
       this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block', showMessage: false});
       isOpen();
+      clearShareholderOrder();
+      clearShareholderCreate();
     } else {
       this.setState({showMessage: false});
     }
@@ -143,8 +147,9 @@ class ModalComponentShareholder extends Component {
           if( (_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista existe
               typeMessage="warning";
               titleMessage="Advertencia";
-              message="Señor usuario, el accionista ya se encuentra registrado en el cliente.";
+              message="Señor usuario, el cliente ya presenta una relación con el accionista buscado.";
               this.setState({showMessage: true});
+              this.props.resetForm();
 
             } else if ( !(_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista no existe
               this.setState({disabled : 'disabled'});
@@ -157,7 +162,8 @@ class ModalComponentShareholder extends Component {
             message = "Señor usuario, se presento un error.";
             this.setState({showMessage: true});
         });
-    } else {
+    }
+     else {
       typeMessage = "error";
       titleMessage = "Campos obligatorios";
       message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
@@ -225,7 +231,7 @@ class ModalComponentShareholder extends Component {
                 var valoresResponse = (_.get(data, 'payload.data.data')).split("_");
                 if( valoresResponse[0] === "exceedPorcentaje" ){
                   typeMessage="error";
-                  titleMessage="Poocentaje excedido";
+                  titleMessage="Porcentaje excedido";
                   message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
                 } else {
                   typeMessage="success";
@@ -495,6 +501,8 @@ function mapDispatchToProps(dispatch) {
       clearSearchShareholder,
       searchShareholder,
       getMasterDataFields,
+      clearShareholderOrder,
+      clearShareholderCreate,
       clearValuesAdressess,
       consultListWithParameterUbication,
       consultDataSelect,

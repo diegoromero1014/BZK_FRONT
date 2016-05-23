@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CLEAR_SHAREHOLDERS,
-  LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
+import {CLEAR_SHAREHOLDERS_ORDER,CLEAR_SHAREHOLDERS_CREATE,GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CLEAR_SHAREHOLDERS,
+  LIMITE_INF,CHANGE_PAGE,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_PAGINATOR, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
 import axios from 'axios';
 
 export function shareholdersByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,shareholderKindId,shareHolderType){
@@ -91,9 +91,21 @@ export function clearShareholder(){
     };
 }
 
-export function clearShareholderDelete(){
+export function clearShareholderPaginator(){
     return {
-        type: CLEAR_SHAREHOLDERS_DELETE
+        type: CLEAR_SHAREHOLDERS_PAGINATOR
+    };
+}
+
+export function clearShareholderOrder(){
+    return {
+        type: CLEAR_SHAREHOLDERS_ORDER
+    };
+}
+
+export function clearShareholderCreate(){
+    return {
+        type: CLEAR_SHAREHOLDERS_CREATE
     };
 }
 

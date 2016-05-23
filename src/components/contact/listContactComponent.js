@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer,clearContactDelete,orderColumnContact} from './actions';
+import {contactsByClientFindServer,clearContactPaginator,orderColumnContact,clearContactOrder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
 
@@ -26,6 +26,13 @@ class ListContactComponent extends Component {
       }
   }
 
+ componentWillMount(){
+   this.state = {
+     orderA: 'inline-block',
+     orderD: 'none'
+   }
+ }
+
   componentWillReceiveProps(nextProps){
       const {
           value1,
@@ -37,6 +44,8 @@ class ListContactComponent extends Component {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      const {clearContactOrder} = this.props;
+      clearContactOrder();
       this._orderColumn(0,"");
     }
   }
@@ -47,8 +56,8 @@ class ListContactComponent extends Component {
     }else{
       this.setState({orderA :'inline-block',orderD :'none'});
     }
-    const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContactDelete,orderColumnContact} = this.props;
-    clearContactDelete();
+    const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContactPaginator,orderColumnContact} = this.props;
+    clearContactPaginator();
     orderColumnContact(order,column);
     contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,column,order,contactsByClient.get('keywordContact'),
     v1,
@@ -154,7 +163,7 @@ class ListContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer,clearContactDelete,orderColumnContact
+    contactsByClientFindServer,clearContactPaginator,orderColumnContact,clearContactOrder
   }, dispatch);
 }
 

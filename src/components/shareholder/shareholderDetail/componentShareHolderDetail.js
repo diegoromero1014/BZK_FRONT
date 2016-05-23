@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import {NUMBER_RECORDS} from '../constants';
-import {shareholdersByClientFindServer} from '../actions';
+import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../actions';
 import {getDetailShareHolder, toggleModalShareholder} from './actions';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
@@ -194,10 +194,12 @@ class ComponentShareHolderDetail extends Component {
 
   _closeCreate(){
     if(typeMessage === "success"){
-      const{isOpen} = this.props;
+      const{isOpen,clearShareholderCreate,clearShareholderOrder} = this.props;
       this.props.resetForm();
       this.setState({showMessage: false});
       isOpen();
+      clearShareholderOrder();
+      clearShareholderCreate();
     } else {
       this.setState({showMessage: false});
     }
@@ -483,6 +485,8 @@ function mapDispatchToProps(dispatch) {
     toggleModalShareholder,
     getDetailShareHolder,
     getMasterDataFields,
+    clearShareholderCreate,
+    clearShareholderOrder,
     consultListWithParameterUbication,
     consultDataSelect,
     shareholdersByClientFindServer,
