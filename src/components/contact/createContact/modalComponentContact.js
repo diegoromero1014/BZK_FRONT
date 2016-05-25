@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {toggleModalContact,createContactNew,searchContact,clearSearchContact} from './actions';
 import {clearContactDelete} from '../actions';
-import {contactsByClientFindServer} from '../actions';
+import {contactsByClientFindServer, downloadFileSocialStyle} from '../actions';
 import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
@@ -26,67 +26,67 @@ const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependen
 const errors = {};
 const validate = (values) => {
     if(!values.tipoFuncion){
-      errors.tipoFuncion = "Debe Seleccionar una función";
+      errors.tipoFuncion = "Debe seleccionar una opción";
     }else{
       errors.tipoFuncion = null;
     }
     if(!values.primerNombre){
-      errors.primerNombre = "Debe ingresar el primer nombre";
+      errors.primerNombre = "Debe ingresar un valor";
     }else{
       errors.primerNombre = null;
     }
     if(!values.primerApellido){
-      errors.primerApellido = "Debe ingresar el primer apellido";
+      errors.primerApellido = "Debe ingresar un valor";
     }else{
       errors.primerApellido = null;
     }
-    if(!values.direccion){
-      errors.direccion = "Debe ingresar la dirección";
+    if(!values.direccion || values.direccion === ''){
+      errors.direccion = "Debe ingresar un valor";
     }else{
       errors.direccion = null;
     }
     if(!values.telefono){
-      errors.telefono = "Debe ingresar el teléfono";
+      errors.telefono = "Debe ingresar un valor";
     }else{
       errors.telefono = null;
     }
     if(!values.correo){
-      errors.correo = "Debe ingresar el correo electrónico";
+      errors.correo = "Debe ingresar un valor";
     }else{
       if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.correo))){
-          errors.correo = "Debe ingresar un formato válido";
+          errors.correo = "Debe ingresar un valor";
       }else{
         errors.correo = null;
       }
     }
 
     if(!values.tipoTratamiendo){
-      errors.tipoTratamiendo = "Debe Seleccionar un tipo de tratamiendo";
+      errors.tipoTratamiendo = "Debe seleccionar una opción";
     }else{
       errors.tipoTratamiendo = null;
     }
     if(!values.tipoGenero){
-      errors.tipoGenero = "Debe Seleccionar un género";
+      errors.tipoGenero = "Debe seleccionar una opción";
     }else{
       errors.tipoGenero = null;
     }
     if(!values.tipoContacto){
-      errors.tipoContacto = "Debe Seleccionar un tipo de contacto";
+      errors.tipoContacto = "Debe seleccionar una opción";
     }else{
       errors.tipoContacto = null;
     }
     if(!values.pais){
-      errors.pais = "Debe Seleccionar un país";
+      errors.pais = "Debe seleccionar una opción";
     }else{
       errors.pais = null;
     }
     if(!values.departamento){
-      errors.departamento = "Debe Seleccionar un departamento";
+      errors.departamento = "Debe seleccionar una opción";
     }else{
       errors.departamento = null;
     }
     if(!values.ciudad){
-      errors.ciudad = "Debe Seleccionar una ciudad";
+      errors.ciudad = "Debe seleccionar una opción";
     }else{
       errors.ciudad = null;
     }
@@ -103,6 +103,7 @@ class ModalComponentContact extends Component {
         this._onChangeProvince = this._onChangeProvince.bind(this);
         this._searchContact = this._searchContact.bind(this);
         this._onClickLimpiar = this._onClickLimpiar.bind(this);
+        this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
         this.state = {
            showEx:false,
            showEr:false,
@@ -121,6 +122,11 @@ class ModalComponentContact extends Component {
       clearSearchContact();
       this.props.resetForm();
       getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION,FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+    }
+
+    _downloadFileSocialStyle(){
+      const {downloadFileSocialStyle} = this.props;
+      downloadFileSocialStyle();
     }
 
     _close(){
@@ -395,7 +401,13 @@ class ModalComponentContact extends Component {
                             <Row style={{visibility: this.state.noExiste}}>
                               <Col xs>
                               <dl style={{width: '100%'}}>
-                                <dt><span>Estilo social</span></dt>
+                                <dt>
+                                <span>Estilo social</span>
+                                <i onClick={this._downloadFileSocialStyle}
+                                  style={{marginLeft: "10px", cursor: "pointer"}}
+                                  title="Descargar archivo de estilo social"
+                                  className="red file pdf outline icon"></i>
+                                </dt>
                                 <dd><ComboBox name="tipoEstiloSocial" labelInput="Seleccione"
                                 {...tipoEstiloSocial}
                                 valueProp={'id'}
@@ -722,7 +734,8 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         contactsByClientFindServer,
         clearContactDelete,
-        consultList
+        consultList,
+        downloadFileSocialStyle
     }, dispatch);
 }
 

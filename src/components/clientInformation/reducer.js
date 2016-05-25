@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {CONSULT_INFO_CLIENT} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT} from './constants';
 
 const initialState = Immutable.Map({
   status: "200",
@@ -17,6 +17,15 @@ export default(state = initialState, action) => {
           .set('validateLogin', validateLogin)
           .set('responseClientInfo', JSON.parse(clientInformation));
       })
+    case CHANGE_CHECK_CLIENT:
+      const data = action.payload;
+      var responseClientInfo = state.get('responseClientInfo')
+      if( responseClientInfo !== null && responseClientInfo !== undefined ){
+        responseClientInfo.certificateNoShareholder = data;
+        return state.set("responseClientInfo", responseClientInfo);
+      } else {
+        return state;
+      }
     default:
         return state;
   }

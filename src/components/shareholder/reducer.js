@@ -53,16 +53,6 @@ export default (state = initialState, action) => {
                     .set('orderShareholder', action.orderShareholder)
                     .set('columnShareholder', action.columnShareholder)});
 
-          case UPDATE_CERTIFICATE_NO_SHAREHOLDER:
-            const data = action.payload.data.data;
-            var responseClientInfo = state.get('responseClientInfo');
-            if( responseClientInfo !== null && responseClientInfo !== undefined ){
-              responseClientInfo.certificateNoShareholder = data;
-              return state.set("responseClientInfo", responseClientInfo);
-            } else {
-              return state;
-            }
-
         default:
             return state;
     }

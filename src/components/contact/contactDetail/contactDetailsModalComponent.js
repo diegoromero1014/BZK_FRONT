@@ -10,6 +10,8 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {downloadFileSocialStyle} from '../actions';
+import Textarea from '../../../ui/textarea/textareaComponent';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact, clearClienEdit} from './actions';
 import {contactsByClientFindServer} from '../actions';
@@ -25,57 +27,57 @@ const fields = ["contactId", "contactType", "contactTitle", "contactGender", "co
 const validate = values => {
     const errors = {};
     if (!values.contactType) {
-      errors.contactType = "Debe seleccionar el tipo de documento";
+      errors.contactType = "Debe seleccionar una opción";
     } else {
       errors.contactType = null;
     }
     if (!values.contactTitle) {
-      errors.contactTitle = "Debe seleccionar el tratamiento";
+      errors.contactTitle = "Debe seleccionar una opción";
     } else {
       errors.contactTitle = null;
     }
     if (!values.contactGender) {
-      errors.contactGender = "Debe seleccionar el genero";
+      errors.contactGender = "Debe seleccionar una opción";
     } else {
       errors.contactGender = null;
     }
     if (!values.contactTypeOfContact) {
-      errors.contactTypeOfContact = "Debe seleccionar el tipo de contacto";
+      errors.contactTypeOfContact = "Debe seleccionar una opción";
     } else {
       errors.contactTypeOfContact = null;
     }
     if (!values.contactCountry) {
-      errors.contactCountry = "Debe seleccionar el país";
+      errors.contactCountry = "Debe seleccionar una opción";
     } else {
       errors.contactCountry = null;
     }
     if (!values.contactProvince) {
-      errors.contactProvince = "Debe seleccionar el departameto";
+      errors.contactProvince = "Debe seleccionar una opción";
     } else {
       errors.contactProvince = null;
     }
     if (!values.contactCity) {
-      errors.contactCity = "Debe seleccionar la ciudad";
+      errors.contactCity = "Debe seleccionar una opción";
     } else {
       errors.contactCity = null;
     }
     if (!values.contactIdentityNumber) {
-      errors.contactIdentityNumber = "Debe ingresar el número del documento";
+      errors.contactIdentityNumber = "Debe ingresar un valor";
     } else {
       errors.contactIdentityNumber = null;
     }
     if (!values.contactFirstName) {
-      errors.contactFirstName = "Debe ingresar el primer nombre";
+      errors.contactFirstName = "Debe ingresar un valor";
     } else {
       errors.contactFirstName = null;
     }
     if (!values.contactFirstLastName) {
-      errors.contactFirstLastName = "Debe ingresar el primer apellido";
+      errors.contactFirstLastName = "Debe ingresar un valor";
     } else {
       errors.contactFirstLastName = null;
     }
     if(!values.contactEmailAddress){
-      errors.contactEmailAddress = "Debe ingresar el correo electrónico";
+      errors.contactEmailAddress = "Debe ingresar un valor";
     }else{
       if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.contactEmailAddress))){
           errors.contactEmailAddress = "Debe ingresar un formato válido";
@@ -84,17 +86,17 @@ const validate = values => {
       }
     }
     if (!values.contactTelephoneNumber) {
-      errors.contactTelephoneNumber = "Debe ingresar el número de telefono";
+      errors.contactTelephoneNumber = "Debe ingresar un valor";
     } else {
       errors.contactTelephoneNumber = null;
     }
     if (!values.contactFunctions) {
-      errors.contactFunctions = "Debe seleccionar al menos una función";
+      errors.contactFunctions = "Debe seleccionar una opción";
     } else {
       errors.contactFunctions = null;
     }
-    if (!values.contactAddress) {
-      errors.contactAddress = "Debe ingresar la dirección";
+    if (!values.contactAddress || values.contactAddress === '') {
+      errors.contactAddress = "Debe ingresar un valor";
     } else {
       errors.contactAddress = null;
     }
@@ -114,6 +116,7 @@ class ContactDetailsModalComponent extends Component {
     this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
     this._editContact = this._editContact.bind(this);
     this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
+    this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
     this.state = {
       contactEdited: false,
       isEditable: false,
@@ -144,6 +147,11 @@ class ContactDetailsModalComponent extends Component {
         that._uploadCitiesByProvinceId(contact.province);
       }
     });
+  }
+
+  _downloadFileSocialStyle(){
+    const {downloadFileSocialStyle} = this.props;
+    downloadFileSocialStyle();
   }
 
   /* Cambio en los valores */
@@ -495,7 +503,13 @@ class ContactDetailsModalComponent extends Component {
               </Row>
               <Row>
                 <Col xs>
-                  <dt>{'Estilo social'}</dt>
+                  <dt>
+                  {'Estilo social'}
+                  <i onClick={this._downloadFileSocialStyle}
+                    style={{marginLeft: "10px", cursor: "pointer"}}
+                    title="Descargar archivo de estilo social"
+                    className="red file pdf outline icon"></i>
+                  </dt>
                   <dd>
                     <ComboBox
                       name="contactSocialStyle"
@@ -585,13 +599,13 @@ class ContactDetailsModalComponent extends Component {
                 <Col xs={12} sm={12} md={12} lg={12}>
                   <dt><span>{'Dirección ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
-                    <textarea className="form-control need-input"
+                    <Textarea className="form-control need-input"
+                      {...contactAddress}
                       name="contactAddress"
                       maxLength="250"
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       //onChange={val => this._onchangeValue("address", val)}
-                      {...contactAddress}
-                    ></textarea>
+                    />
                   </dd>
                 </Col>
               </Row>
@@ -802,7 +816,8 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     consultListWithParameterUbication,
     contactsByClientFindServer,
-    clearClienEdit
+    clearClienEdit,
+    downloadFileSocialStyle
   }, dispatch);
 }
 

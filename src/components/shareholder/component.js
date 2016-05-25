@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {clearShareholder,shareholdersByClientFindServer, updateCertificateNoShareholder} from './actions';
+import {changeCheckInfoClient} from '../clientInformation/actions';
 import {bindActionCreators} from 'redux';
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
@@ -72,8 +73,9 @@ class ShareholderComponent extends Component {
         disabledComponents: "disabled"
       });
     }
-    const {updateCertificateNoShareholder} = this.props;
+    const {updateCertificateNoShareholder, changeCheckInfoClient} = this.props;
     updateCertificateNoShareholder(selector[0].checked);
+    changeCheckInfoClient(selector[0].checked);
   }
 
   _validateDisabledCheckCertificate(){
@@ -157,7 +159,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     clearShareholder,
     shareholdersByClientFindServer,
-    updateCertificateNoShareholder
+    updateCertificateNoShareholder,
+    changeCheckInfoClient
   }, dispatch);
 }
 

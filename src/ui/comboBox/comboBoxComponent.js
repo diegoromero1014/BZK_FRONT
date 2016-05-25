@@ -23,7 +23,6 @@ class comboBoxComponent extends Component {
    }
 
    _clearValues(name){
-     console.log("clear");
       const selector = $(`.ui.selection.dropdown.${name}`);
       selector.dropdown('clear');
    }
@@ -56,9 +55,7 @@ class comboBoxComponent extends Component {
        if(valueIsNotEmpty){
          this._changeValue(value, name);
        } else {
-         if(setPristineAgain){
           this._setPristine(labelInput, name);
-         }
        }
      }
    }
