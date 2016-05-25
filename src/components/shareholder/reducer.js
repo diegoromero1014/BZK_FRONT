@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
-import {GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CHANGE_PAGE,
-  LIMITE_INF,CLEAR_SHAREHOLDERS,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_DELETE, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
+import {CLEAR_SHAREHOLDERS_ORDER,CLEAR_SHAREHOLDERS_CREATE, GET_SHAREHOLDERS_LIST_CLIENT,CHANGE_KEYWORD_SHAREHOLDER,CHANGE_PAGE,
+  LIMITE_INF,CLEAR_SHAREHOLDERS,ORDER_COLUMN_SHAREHOLDER,CLEAR_SHAREHOLDERS_PAGINATOR, UPDATE_CERTIFICATE_NO_SHAREHOLDER} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -41,11 +41,24 @@ export default (state = initialState, action) => {
                     .set('orderShareholder', 1)
                     .set('columnShareholder',"sh.sharePercentage");
                 });
-            case CLEAR_SHAREHOLDERS_DELETE:
+            case CLEAR_SHAREHOLDERS_PAGINATOR:
                     return state.withMutations(map => {
                         map
                         .set('page', 1)
                         .set('limInf', 0);
+                    });
+          case CLEAR_SHAREHOLDERS_ORDER:
+                  return state.withMutations(map => {
+                        map
+                        .set('orderShareholder', 1)
+                        .set('columnShareholder', "sh.sharePercentage")
+                    });
+        case CLEAR_SHAREHOLDERS_CREATE:
+                    return state.withMutations(map => {
+                        map
+                        .set('page', 1)
+                        .set('limInf', 0)
+                        .set('keywordShareholder','')
                     });
           case ORDER_COLUMN_SHAREHOLDER:
                 return state.withMutations(map => {

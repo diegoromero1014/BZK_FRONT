@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import {NUMBER_RECORDS} from '../constants';
-import {shareholdersByClientFindServer} from '../actions';
+import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../actions';
 import {getDetailShareHolder, toggleModalShareholder} from './actions';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
@@ -189,10 +189,12 @@ class ComponentShareHolderDetail extends Component {
 
   _closeCreate(){
     if(typeMessage === "success"){
-      const{isOpen} = this.props;
+      const{isOpen,clearShareholderCreate,clearShareholderOrder} = this.props;
       this.props.resetForm();
       this.setState({showMessage: false});
       isOpen();
+      clearShareholderOrder();
+      clearShareholderCreate();
     } else {
       this.setState({showMessage: false});
     }
@@ -361,20 +363,15 @@ class ComponentShareHolderDetail extends Component {
               <Col xs={12} md={12} lg={12}>
                 <dt>
                   <div style={{width: "100%", float: "left"}}>
-                    <span>Observaciones</span>
-                    <div className="ui icon"
-                      title="La longitud máxima del campo es de 250 caracteres"
-                      style={{marginLeft: "10px", marginBottom: "5px", cursor: "pointer", width: "50px", display: "inline-block"}}>
-                      <i className="help icon"></i>
-                    </div>
+                    <span title="La longitud máxima del campo es de 150 caracteres">Observaciones</span>
                   </div>
                 </dt>
                 <Textarea
                   {...comment}
                   name="observaciones"
                   type="text"
-                  max="250"
-                  title="La longitud máxima de caracteres es de 250"
+                  max="150"
+                  title="La longitud máxima de caracteres es de 150"
                   style={{width: '100%', height: '100%'}}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
@@ -453,7 +450,7 @@ class ComponentShareHolderDetail extends Component {
                   style={{textAlign: "right"}}
                   type="text"
                   min={0}
-                  max="50"
+                  max="30"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -487,6 +484,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     toggleModalShareholder,
     getDetailShareHolder,
+    clearShareholderCreate,
+    clearShareholderOrder,
     getMasterDataFields,
     consultListWithParameterUbication,
     consultDataSelect,

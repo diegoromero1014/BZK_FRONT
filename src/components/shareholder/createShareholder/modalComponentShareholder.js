@@ -10,13 +10,14 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import {redirectUrl} from '../../globalComponents/actions';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
-import {shareholdersByClientFindServer} from '../actions';
+import {shareholdersByClientFindServer,clearShareholderOrder,clearShareholderCreate} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
 import numeral from 'numeral';
 import _ from 'lodash';
+
 
 const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -102,11 +103,14 @@ class ModalComponentShareholder extends Component {
 
   _closeCreate(){
     if( typeMessage === "success" ){
-      const{clearSearchShareholder,isOpen} = this.props;
+
+      const{clearSearchShareholder,clearShareholderOrder,clearShareholderCreate,isOpen} = this.props;
       clearSearchShareholder();
       this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block', showMessage: false});
       isOpen();
+      clearShareholderOrder();
+      clearShareholderCreate();
     } else {
       this.setState({showMessage: false});
     }
@@ -138,8 +142,9 @@ class ModalComponentShareholder extends Component {
           if( (_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista existe
               typeMessage="warning";
               titleMessage="Advertencia";
-              message="Señor usuario, el accionista ya se encuentra registrado en el cliente.";
+              message="Señor usuario, el cliente ya presenta una relación con el accionista buscado.";
               this.setState({showMessage: true});
+              this.props.resetForm();
 
             } else if ( !(_.get(data, 'payload.data.shareholderExist')) ){ //Si el accionista no existe
               this.setState({disabled : 'disabled'});
@@ -152,7 +157,8 @@ class ModalComponentShareholder extends Component {
             message = "Señor usuario, se presento un error.";
             this.setState({showMessage: true});
         });
-    } else {
+    }
+     else {
       typeMessage = "error";
       titleMessage = "Campos obligatorios";
       message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
@@ -220,7 +226,7 @@ class ModalComponentShareholder extends Component {
                 var valoresResponse = (_.get(data, 'payload.data.data')).split("_");
                 if( valoresResponse[0] === "exceedPorcentaje" ){
                   typeMessage="error";
-                  titleMessage="Poocentaje excedido";
+                  titleMessage="Porcentaje excedido";
                   message="Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
                 } else {
                   typeMessage="success";
@@ -387,19 +393,14 @@ class ModalComponentShareholder extends Component {
                 <Col xs={12} md={12} lg={12}>
                   <dt>
                     <div style={{width: "100%", float: "left"}}>
-                      <span>Observaciones</span>
-                      <div className="ui icon"
-                        title="La longitud máxima del campo es de 250 caracteres"
-                        style={{marginLeft: "10px", marginBottom: "5px", cursor: "pointer", width: "50px", display: "inline-block"}}>
-                        <i className="help icon"></i>
-                      </div>
+                      <span title="La longitud máxima del campo es de 150 caracteres">Observaciones</span>
                     </div>
                   </dt>
                   <Textarea
                     name="observaciones"
                     type="text"
-                    max="250"
-                    title="La longitud máxima de caracteres es de 250"
+                    max="150"
+                    title="La longitud máxima de caracteres es de 150"
                     style={{width: '100%', height: '100%'}}
                     {...observaciones}
                   />
@@ -469,7 +470,7 @@ class ModalComponentShareholder extends Component {
                     style={{textAlign: "right"}}
                     type="text"
                     min={0}
-                    max="50"
+                    max="30"
                     {...numeroIdTributaria}
                   />
                 </Col>
@@ -500,6 +501,8 @@ function mapDispatchToProps(dispatch) {
       clearSearchShareholder,
       searchShareholder,
       getMasterDataFields,
+      clearShareholderOrder,
+      clearShareholderCreate,
       clearValuesAdressess,
       consultListWithParameterUbication,
       consultDataSelect,

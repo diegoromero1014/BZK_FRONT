@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,changeKeywordShareholder,clearShareholderDelete} from './actions';
+import {shareholdersByClientFindServer,changeKeywordShareholder,clearShareholderPaginator,clearShareholderOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
 let v2 = "";
+
 
 class SearchShareholderComponent extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class SearchShareholderComponent extends Component {
       if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
       v2 = nextProps.value2;
+      const {clearShareholderOrder} = this.props;
+      clearShareholderOrder();
       this._handleShareholderByClientsFind();
       }
   }
@@ -42,8 +45,9 @@ class SearchShareholderComponent extends Component {
   }
 
   _handleShareholderByClientsFind(){
-      const {shareholdersByClientFindServer,clearShareholderDelete} = this.props;
-      clearShareholderDelete();
+      const {shareholdersByClientFindServer,clearShareholderPaginator} = this.props;
+      clearShareholderPaginator();
+      clearShareholderOrder();
       if(this.state.keywordShareholder === '' || this.state.keywordShareholder === undefined){
           shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"",v1,v2);
       }else{
@@ -66,7 +70,7 @@ class SearchShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer, changeKeywordShareholder,clearShareholderDelete
+    shareholdersByClientFindServer, changeKeywordShareholder,clearShareholderPaginator,clearShareholderOrder
   }, dispatch);
 }
 

@@ -4,12 +4,13 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderDelete} from './actions';
+import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderPaginator,clearShareholderOrder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
 
 let v1 = "";
 let v2 = "";
+
 
 class ListShareholderComponent extends Component {
 
@@ -25,6 +26,13 @@ class ListShareholderComponent extends Component {
       }
   }
 
+  componentWillMount(){
+    this.state = {
+      orderA: 'none',
+      orderD: 'inline-block'
+    }
+  }
+
   componentWillReceiveProps(nextProps){
       const {
           value1,
@@ -33,6 +41,8 @@ class ListShareholderComponent extends Component {
       if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
       v2 = nextProps.value2;
+      const {clearShareholderOrder} = this.props;
+      clearShareholderOrder();
       this._orderColumn(1,"sh.sharePercentage");
     }
   }
@@ -44,8 +54,8 @@ class ListShareholderComponent extends Component {
     }else{
       this.setState({orderA :'inline-block',orderD :'none'});
     }
-    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder,clearShareholderDelete} = this.props;
-    clearShareholderDelete();
+    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder,clearShareholderPaginator} = this.props;
+    clearShareholderPaginator();
     orderColumnShareholder(orderShareholder,columnShareholder);
     shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,columnShareholder,orderShareholder,shareholdersReducer.get('keywordShareholder'),v1,v2);
   }
@@ -142,7 +152,7 @@ class ListShareholderComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderDelete
+    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderPaginator,clearShareholderOrder
   }, dispatch);
 }
 

@@ -3,8 +3,8 @@ import SweetAlert from 'sweetalert-react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
-import {contactsByClientFindServer,clearContactDelete} from '../contact/actions';
-import {shareholdersByClientFindServer,clearShareholderDelete} from '../shareholder/actions';
+import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
+import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER} from './constants';
 
 class ButtonDeleteComponent extends Component{
@@ -34,16 +34,18 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer,actionsDelete,clearContactDelete,clearShareholderDelete,shareholdersByClientFindServer} = this.props;
+        const {contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
-            clearContactDelete();
+            clearContactCreate();
+            clearContactOrder();
             contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
             "",
             "",
             "");
           }else if(actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER){
-              clearShareholderDelete();
+              clearShareholderCreate();
+              clearShareholderOrder();
               shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
             }
         }
@@ -78,7 +80,7 @@ class ButtonDeleteComponent extends Component{
               type= "error"
               show={this.state.showEr}
               title="Error"
-              text="Señor usuario, se presento un error al realizar la eliminación"
+              text="Señor usuario, se presento un error al realizar la eliminación."
               onConfirm={() => this._closeDelete()}
               />
         </td>);
@@ -92,8 +94,8 @@ ButtonDeleteComponent.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    deleteServer,contactsByClientFindServer,clearContactDelete,
-    shareholdersByClientFindServer,clearShareholderDelete
+    deleteServer,contactsByClientFindServer,clearContactCreate,
+    shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder
   }, dispatch);
 }
 

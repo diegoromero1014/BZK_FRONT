@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer, changePage, limitiInf,clearContact} from './actions';
+import {contactsByClientFindServer, changePage, limitiInf,clearContact,clearContactOrder,clearContactPaginator} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
@@ -26,6 +26,8 @@ class PaginationContactComponent extends Component{
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      const {clearContactOrder} = this.props;
+      clearContactOrder();
       this._handleContactsByClientsFind(0);
       }
   }
@@ -103,7 +105,7 @@ class PaginationContactComponent extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer, changePage, limitiInf,clearContact
+    contactsByClientFindServer, changePage, limitiInf,clearContact,clearContactOrder,clearContactPaginator
   }, dispatch);
 }
 

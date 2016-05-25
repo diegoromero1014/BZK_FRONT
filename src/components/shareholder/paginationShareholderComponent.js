@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder} from './actions';
+import {shareholdersByClientFindServer, changePage, limitiInf,clearShareholder,clearShareholderOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
 let v2 = "";
 class PaginationShareholderComponent extends Component{
+
 
   constructor(props){
      super(props)
@@ -26,6 +27,8 @@ class PaginationShareholderComponent extends Component{
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
       v2 = nextProps.value2;
+      const {clearShareholderOrder} = this.props;
+      clearShareholderOrder();
       this._handleShareholdersByClientsFind(0);
       }
   }
@@ -96,7 +99,7 @@ class PaginationShareholderComponent extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    shareholdersByClientFindServer, changePage, limitiInf, clearShareholder
+    shareholdersByClientFindServer, changePage, limitiInf, clearShareholder,clearShareholderOrder
   }, dispatch);
 }
 

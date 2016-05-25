@@ -14,7 +14,7 @@ import {downloadFileSocialStyle} from '../actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact, clearClienEdit} from './actions';
-import {contactsByClientFindServer} from '../actions';
+import {contactsByClientFindServer,clearContactOrder,clearContactCreate} from '../actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NUMBER_RECORDS} from '../constants';
@@ -269,11 +269,13 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _closeViewOrEditContact() {
-    const {isOpen, clearClienEdit} = this.props;
+    const {isOpen, clearClienEdit,clearContactOrder,clearContactCreate} = this.props;
     this.setState({contactEdited: false, isEditable: false});
     isOpen();
     this.props.resetForm();
     clearClienEdit();
+    clearContactCreate();
+    clearContactOrder();
   }
 
   /* metodo para enviar el formulario */
@@ -789,14 +791,14 @@ class ContactDetailsModalComponent extends Component {
           type= "success"
           show={this.state.contactEdited}
           title="Contacto editado"
-          text="Señor usuario, el contacto se editó correctamente"
+          text="Señor usuario, el contacto se editó de forma exitosa."
           onConfirm={() => this._closeViewOrEditContact()}
         />
         <SweetAlert
          type= "error"
          show={this.state.showEr}
          title="Error"
-         text="Señor usuario, se presento un error"
+         text="Señor usuario, se presento un error."
          onConfirm={() => this.setState({showEr:false})}
          />
       </form>
@@ -812,6 +814,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getContactDetails,
     saveContact,
+    clearContactOrder,
+    clearContactCreate,
     consultDataSelect,
     getMasterDataFields,
     consultListWithParameterUbication,

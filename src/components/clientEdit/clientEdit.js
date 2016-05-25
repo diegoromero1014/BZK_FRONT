@@ -1051,7 +1051,7 @@ class clientEdit extends Component{
            type= "success"
            show={this.state.showEx}
            title="Cliente editado"
-           text="Señor usuario, el cliente se editó correctamente."
+           text="Señor usuario, el cliente se editó de forma exitosa."
            onConfirm={() => this._closeSuccess()}
          />
          <SweetAlert

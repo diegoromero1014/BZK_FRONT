@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer,changeKeywordContact,clearContactDelete} from './actions';
+import {contactsByClientFindServer,changeKeywordContact,clearContactPaginator,clearContactOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import _ from 'lodash';
 
@@ -31,6 +31,8 @@ class SearchContactComponent extends Component {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      const {clearContactOrder} = this.props;
+      clearContactOrder();
       this._handleContactsByClientsFind();
       }
   }
@@ -49,8 +51,9 @@ class SearchContactComponent extends Component {
   }
 
   _handleContactsByClientsFind(){
-      const {contactsByClientFindServer,contactsByClient,clearContactDelete} = this.props;
-        clearContactDelete();
+      const {contactsByClientFindServer,contactsByClient,clearContactPaginator,clearContactOrder} = this.props;
+      clearContactPaginator();
+      clearContactOrder();
       if(this.state.keywordContact === '' || this.state.keywordContact === undefined){
           contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
           v1,
@@ -78,7 +81,7 @@ class SearchContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer,changeKeywordContact,clearContactDelete
+    contactsByClientFindServer,changeKeywordContact,clearContactPaginator,clearContactOrder
   }, dispatch);
 }
 
