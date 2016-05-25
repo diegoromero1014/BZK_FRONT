@@ -23,7 +23,6 @@ class comboBoxComponent extends Component {
    }
 
    _clearValues(name){
-     console.log("clear");
       const selector = $(`.ui.selection.dropdown.${name}`);
       selector.dropdown('clear');
    }
@@ -49,16 +48,18 @@ class comboBoxComponent extends Component {
      selector.dropdown('refresh');
      const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
      const valueIsNotEmpty = value !== null && value !== undefined && value !== "";
-     const setPristineAgain = _.isUndefined(value) && _.isEqual(pristine, true) && this.state.used;
-     if (isEmptyAndUsed) {
-         this._clearValues(name);
-     }else{
+     const setPristineAgain = _.isEqual(value, '') && pristine && this.state.used;
+
+     if(setPristineAgain){
+         this._setPristine(labelInput, name);
+     }
+     else{
        if(valueIsNotEmpty){
          this._changeValue(value, name);
        } else {
-         if(setPristineAgain){
-          this._setPristine(labelInput, name);
-         }
+           if (isEmptyAndUsed) {
+               this._clearValues(name);
+           }
        }
      }
    }
