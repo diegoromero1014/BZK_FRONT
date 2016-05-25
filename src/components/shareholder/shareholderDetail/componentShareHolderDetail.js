@@ -363,12 +363,7 @@ class ComponentShareHolderDetail extends Component {
               <Col xs={12} md={12} lg={12}>
                 <dt>
                   <div style={{width: "100%", float: "left"}}>
-                    <span>Observaciones</span>
-                    <div className="ui icon"
-                      title="La longitud máxima del campo es de 150 caracteres"
-                      style={{marginLeft: "10px", marginBottom: "5px", cursor: "pointer", width: "50px", display: "inline-block"}}>
-                      <i className="help icon"></i>
-                    </div>
+                    <span title="La longitud máxima del campo es de 150 caracteres">Observaciones</span>
                   </div>
                 </dt>
                 <Textarea
