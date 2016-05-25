@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {toggleModalContact,createContactNew,searchContact,clearSearchContact} from './actions';
 import {clearContactDelete} from '../actions';
-import {contactsByClientFindServer, downloadFileSocialStyle} from '../actions';
+import {contactsByClientFindServer,clearContactOrder,clearContactCreate, downloadFileSocialStyle} from '../actions'
 import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
@@ -154,13 +154,14 @@ class ModalComponentContact extends Component {
     }
 
     _closeCreate(){
-      const{clearSearchContact,isOpen,clearContactDelete} = this.props;
+      const{clearSearchContact,isOpen,clearContactCreate,clearContactOrder} = this.props;
       clearSearchContact();
       this.props.resetForm();
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
       this.setState({showEx: false});
       isOpen();
-      clearContactDelete();
+      clearContactOrder();
+      clearContactCreate();
     }
 
     _onClickLimpiar(){
@@ -653,21 +654,21 @@ class ModalComponentContact extends Component {
                          type= "success"
                          show={this.state.showEx}
                          title="Contacto creado"
-                         text="Señor usuario, el contacto se creó correctamente."
+                         text="Señor usuario, el contacto se creó se creó de forma exitosa."
                          onConfirm={() => this._closeCreate()}
                          />
                          <SweetAlert
                           type= "warning"
                           title="Advertencia"
                           show={this.state.showErrorYa}
-                          text="Señor usuario, el cliente ya presenta una relación con el contacto buscado"
+                          text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
                           onConfirm={() => this._close()}
                           />
                           <SweetAlert
                            type= "error"
                            show={this.state.showEr}
                            title="Error"
-                           text="Señor usuario, se presento un error"
+                           text="Señor usuario, se presento un error."
                            onConfirm={() => this.setState({showEr:false})}
                            />
                   </form>
@@ -733,7 +734,8 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         getMasterDataFields,
         contactsByClientFindServer,
-        clearContactDelete,
+        clearContactCreate,
+        clearContactOrder,
         consultList,
         downloadFileSocialStyle
     }, dispatch);

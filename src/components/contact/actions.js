@@ -37,6 +37,10 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
   }
 }
 
+export function downloadFileSocialStyle(){
+  window.open(APP_URL + "/downloadFileSocialStyle", '_blank', '');
+}
+
 export function changePage(page){
   return{
     type: CHANGE_PAGE,
