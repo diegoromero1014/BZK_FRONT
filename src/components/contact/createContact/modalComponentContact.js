@@ -654,7 +654,7 @@ class ModalComponentContact extends Component {
                          type= "success"
                          show={this.state.showEx}
                          title="Contacto creado"
-                         text="Señor usuario, el contacto se creó se creó de forma exitosa."
+                         text="Señor usuario, el contacto se creó de forma exitosa."
                          onConfirm={() => this._closeCreate()}
                          />
                          <SweetAlert
