@@ -1050,15 +1050,15 @@ class clientEdit extends Component{
           <SweetAlert
            type= "success"
            show={this.state.showEx}
-           title="Cliente editado"
+           title="Edición de cliente"
            text="Señor usuario, el cliente se editó de forma exitosa."
            onConfirm={() => this._closeSuccess()}
          />
          <SweetAlert
           type= "error"
           show={this.state.showEr}
-          title="Error"
-          text="Señor usuario, se presento un error al realizar la edición del cliente."
+          title="Error editando cliente"
+          text="Señor usuario, ocurrió un error editando del cliente."
           onConfirm={() => this._closeError()}
           />
         </form>

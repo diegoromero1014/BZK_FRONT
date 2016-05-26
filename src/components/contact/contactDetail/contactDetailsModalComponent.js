@@ -790,15 +790,15 @@ class ContactDetailsModalComponent extends Component {
         <SweetAlert
           type= "success"
           show={this.state.contactEdited}
-          title="Contacto editado"
+          title="Edición de contacto"
           text="Señor usuario, el contacto se editó de forma exitosa."
           onConfirm={() => this._closeViewOrEditContact()}
         />
         <SweetAlert
          type= "error"
          show={this.state.showEr}
-         title="Error"
-         text="Señor usuario, se presento un error."
+         title="Error editando contacto"
+         text="Señor usuario, ocurrió un error editando el contacto."
          onConfirm={() => this.setState({showEr:false})}
          />
       </form>
