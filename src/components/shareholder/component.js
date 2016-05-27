@@ -13,6 +13,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {NUMBER_RECORDS,SHAREHOLDER_KIND,SHAREHOLDER_TYPE} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import $ from 'jquery';
+import {redirectUrl} from '../globalComponents/actions';
 
 var enableClickCertificationShareholder = "";
 class ShareholderComponent extends Component {

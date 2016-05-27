@@ -11,6 +11,7 @@ import ShareholderComponent from './components/shareholder/component';
 import ComponentClientInformation from './components/clientInformation/componentClientInformation';
 import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
+import Previsita from './components/previsita/createPrevisita/createPrevisita';
 import uiTester from './ui/uiTester';
 
 class App extends Component {
@@ -34,6 +35,7 @@ export default (
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
+                <Route path="previsita" component={Previsita}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

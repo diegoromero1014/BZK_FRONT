@@ -1,18 +1,11 @@
-import React, {
-  Component,
-  PropTypes
-} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderPaginator,clearShareholderOrder} from './actions';
-import GridComponent from '../grid/component';
-import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
+import React, {Component,PropTypes} from 'react';
+import GridComponent from '../../grid/component';
 
 let v1 = "";
 let v2 = "";
 
 
-class ListShareholderComponent extends Component {
+class ListParticipantesCliente extends Component {
 
   constructor(props){
       super(props);
@@ -42,8 +35,6 @@ class ListShareholderComponent extends Component {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       const {clearShareholderOrder} = this.props;
-      clearShareholderOrder();
-      this._orderColumn(1,"sh.sharePercentage");
     }
   }
 
@@ -54,10 +45,6 @@ class ListShareholderComponent extends Component {
     }else{
       this.setState({orderA :'inline-block',orderD :'none'});
     }
-    const {shareholdersReducer,shareholdersByClientFindServer,orderColumnShareholder,clearShareholderPaginator} = this.props;
-    clearShareholderPaginator();
-    orderColumnShareholder(orderShareholder,columnShareholder);
-    shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,columnShareholder,orderShareholder,shareholdersReducer.get('keywordShareholder'),v1,v2);
   }
 
   _renderHeaders(){
@@ -67,31 +54,20 @@ class ListShareholderComponent extends Component {
         key:"actions"
       },
       {
-        title: "Tipo de documento",
-        key:"shareHolderIdType"
-      },
-      {
-        title: "Número de documento",
-        key:"shareHolderIdNumber"
-      },
-      {
-        title: "Tipo de persona",
-        key:"shareHolderType"
-      },
-      {
-        title: "Nombre/Razón social",
+        title: "Nombre",
         key:"name"
       },
       {
-        title: "Participación",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.sharePercentage")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.sharePercentage")}></i></span>,
-        key:"percentageS",
-        style: {textAlign: 'right'}
+        title: "Cargo",
+        key:"cargo"
       },
       {
-        title: "Tipo de accionista",
-        //orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"sh.shareHolderKind.id")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"sh.shareHolderKind.id")}></i></span>,
-        key:"shareHolderKind"
+        title: "Estilo social",
+        key:"estiloSocial"
+      },
+      {
+        title: "Actitud frente al grupo",
+        key:"actitudGrupo"
       },
       {
         title: "",
@@ -132,7 +108,7 @@ class ListShareholderComponent extends Component {
             _.set(value, 'delete',  {
               actionDelete: true,
               urlServer: "/deleteEntity",
-              typeDelete : DELETE_TYPE_SHAREHOLDER,
+              typeDelete : 'DELETE_TYPE_SHAREHOLDER',
               mensaje: mensaje + value.name + "?",
               json: json1
             });
@@ -142,7 +118,27 @@ class ListShareholderComponent extends Component {
   render() {
     const modalTitle = 'Accionista Detalle';
     const {shareholdersReducer} = this.props;
-    const data = shareholdersReducer.get('shareholders');
+    const data =
+    [
+      {
+        name: "Maria Fernanda",
+        cargo: "Analista",
+        estiloSocial: "Expresivo",
+        actitudGrupo: "Desfavorable"
+      },
+      {
+        name: "Wilfer Salazar",
+        cargo: "Directo",
+        estiloSocial: "Expresivo",
+        actitudGrupo: "Analítico"
+      },
+      {
+        name: "Tatiana Montoya",
+        cargo: "Vicepresidente",
+        estiloSocial: "Expresivo",
+        actitudGrupo: "Favorable"
+      }
+    ]
     return (
       <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
@@ -151,16 +147,4 @@ class ListShareholderComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({
-    shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderPaginator,clearShareholderOrder
-  }, dispatch);
-}
-
-function mapStateToProps({shareholdersReducer}, ownerProps){
-    return {
-        shareholdersReducer
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ListShareholderComponent);
+export default ListParticipantesCliente;

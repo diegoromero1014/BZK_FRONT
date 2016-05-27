@@ -16,6 +16,7 @@ import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLD
 from '../../selectsComponent/constants';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import _ from 'lodash';
+import {redirectUrl} from '../../globalComponents/actions';
 
 const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "firstLastName", "firstName",
   "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
