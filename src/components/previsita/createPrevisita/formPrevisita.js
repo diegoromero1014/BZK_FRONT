@@ -220,7 +220,7 @@ class FormPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="archive icon" style={{fontSize: "25px"}}/>
-              <span className="title-middle"> 5. Anexos</span>
+              <span className="title-middle"> 6. Anexos</span>
             </div>
           </Col>
         </Row>

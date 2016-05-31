@@ -4,6 +4,7 @@ import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
 import ShareholderInfo from '../shareholder/component';
 import PrevisitaInfo from '../previsita/component';
+import VisitaInfo from '../visit/component';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 
 class TabClientInfo extends Component{
@@ -26,11 +27,13 @@ class TabClientInfo extends Component{
     var styleContacts = false;
     var styleShareholders = false;
     var stylePrevisitas = false;
+    var styleVisits = false;
 
     var backgroundInfo = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     var backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+    var backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
 
     const {tabActive} = this.state;
     if( tabActive === 1 ){
@@ -40,30 +43,48 @@ class TabClientInfo extends Component{
       styleContacts = true;
       styleShareholders = false;
       stylePrevisitas = false;
+      styleVisits = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
     } else if( tabActive === 3 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = true;
       stylePrevisitas = false;
+      styleVisits = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
     }else if( tabActive === 4 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
-      stylePrevisitas = true;
+      stylePrevisitas = false;
+      styleVisits = true;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+    }else if( tabActive === 5 ){
+      styleInfo = false;
+      styleContacts = false;
+      styleShareholders = false;
+      stylePrevisitas = true;
+      styleVisits = false;
+
+      backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     }
     return (
@@ -79,7 +100,10 @@ class TabClientInfo extends Component{
           <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, 3)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
           </li>
-          <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 4)}>
+          <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
+          </li>
+          <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
           </li>
   			</ul>
@@ -88,6 +112,7 @@ class TabClientInfo extends Component{
           {styleContacts && <ContactInfo infoClient={infoClient}/>}
           {styleShareholders && <ShareholderInfo infoClient={infoClient}/>}
           {stylePrevisitas && <PrevisitaInfo infoClient={infoClient}/>}
+          {styleVisits && <VisitaInfo infoClient={infoClient}/>}
         </div>
       </div>
     );
