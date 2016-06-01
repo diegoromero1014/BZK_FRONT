@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
-import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER} from './constants';
+import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW} from './constants';
 
 class ButtonDeleteComponent extends Component{
 
@@ -22,15 +22,20 @@ class ButtonDeleteComponent extends Component{
 
     _onConfirmDelete(){
       const {actionsDelete,deleteServer} = this.props;
-      deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
-        if((_.get(data, 'payload.status') === 200)){
-            this.setState({showEx: true});
-          } else {
+      if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW){
+        deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
+          if((_.get(data, 'payload.status') === 200)){
+              this.setState({showEx: true});
+            } else {
+              this.setState({showEr: true});
+          }
+          }, (reason) => {
             this.setState({showEr: true});
-        }
-        }, (reason) => {
-          this.setState({showEr: true});
-      });
+        });
+      } else {
+        this.setState({show: true});
+        alert("DELETE_PARTICIPANT_VIEW");
+      }
     }
 
     _closeDelete(){

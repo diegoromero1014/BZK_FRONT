@@ -18,7 +18,6 @@ class CreatePrevisita extends Component{
   render(){
     const {clientInformacion} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    console.log(infoClient);
     return(
       <div>
         <HeaderPrevisita/>

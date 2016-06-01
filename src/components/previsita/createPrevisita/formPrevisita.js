@@ -8,9 +8,9 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import ParticipantesCliente from './participantesCliente';
-import ParticipantesBancolombia from './ParticipantesBancolombia';
-import ParticipantesOtros from './ParticipantesOtros';
+import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
+import ParticipantesBancolombia from '../../participantsVisitPre/ParticipantesBancolombia';
+import ParticipantesOtros from '../../participantsVisitPre/ParticipantesOtros';
 import NegociosPendientes from './negociosPendientes';
 
 const fields = [];
@@ -414,8 +414,6 @@ function mapStateToProps({clientInformacion}, ownerProps){
       clientInformacion
     };
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormPrevisita);
 
 export default reduxForm({
   form: 'submitValidation',

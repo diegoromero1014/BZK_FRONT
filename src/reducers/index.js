@@ -18,6 +18,7 @@ import deleteGridReducer from '../components/grid/reducer';
 import createContactReducer from '../components/contact/createContact/reducer';
 import createShareholderReducer from '../components/shareholder/createShareholder/reducer';
 import editShareholderReducer from '../components/shareholder/shareholderDetail/reducer';
+import participantsReducer from '../components/participantsVisitPre/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -38,5 +39,6 @@ export default combineReducers({
     deleteGridReducer:deleteGridReducer,
     createContactReducer:createContactReducer,
     createShareholder: createShareholderReducer,
-    editShareholderReducer: editShareholderReducer
+    editShareholderReducer: editShareholderReducer,
+    participants: participantsReducer
 });
