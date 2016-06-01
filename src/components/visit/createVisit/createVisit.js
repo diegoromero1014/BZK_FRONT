@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../../globalComponents/actions';
 import HeaderPrevisita from '../../previsita/createPrevisita/headerPrevisita';
 import FormVisita from './formVisita';
+import TaskVisit from './taskVisit';
 
 class CreateVisit extends Component{
 
@@ -22,6 +23,7 @@ class CreateVisit extends Component{
       <div>
         <HeaderPrevisita/>
         <FormVisita/>
+        <TaskVisit />
       </div>
     );
   }
