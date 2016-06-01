@@ -172,6 +172,7 @@ class ParticipantesCliente extends Component{
   }
 }
 
+
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         deleteParticipant,
