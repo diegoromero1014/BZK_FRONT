@@ -86,6 +86,7 @@ class ListParticipantesCliente extends Component {
           empresa: empresa, estiloSocial: estiloSocial, actitudBanco: actitudBanco, uuid: uuid,
           'delete':  {
             typeDelete : DELETE_PARTICIPANT_VIEW,
+            id: idParticipante,
             mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
           }
         });
@@ -103,7 +104,7 @@ class ListParticipantesCliente extends Component {
     this._mapValueParticipantes();
     const {shareholdersReducer} = this.props;
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
+      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px", marginTop: "15px"}}>
         <GridComponent headers={this._renderHeaders} data={this._mapValueParticipantes()}/>
       </div>
     );
@@ -118,7 +119,9 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({participants}) {
     return {
-        participants
+        participants: participants.sort(function(valueA, valueB){
+          return valueA.fecha < valueB.fecha;
+        })
     };
 }
 

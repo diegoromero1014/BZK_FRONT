@@ -16,12 +16,14 @@ export default (state = initialState, action) => {
             empresa: participant.empresa,
             estiloSocial: participant.estiloSocial,
             actitudBanco: participant.actitudBanco,
+            fecha: participant.fecha,
             uuid: participant.uuid
         });
         return state.push(newParticipant);
     case contants.DELETE_PARTICIPANT:
-        const index = state.findIndex(item => item.uid === action.index);
-        return state.delete(index);
+        return state.delete(action.index);
+    case contants.CLEAR_PARTICIPANTS:
+        return state.clear();
     default:
         return state;
     }

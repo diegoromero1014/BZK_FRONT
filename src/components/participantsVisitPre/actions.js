@@ -13,3 +13,9 @@ export function addParticipant(participant){
       data : participant
     };
 }
+
+export function clearParticipants(){
+  return {
+      type: constants.CLEAR_PARTICIPANTS
+    };
+}

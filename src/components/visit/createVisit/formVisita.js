@@ -11,6 +11,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
 import {VISIT_TYPE} from '../../selectsComponent/constants';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
+import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 
 const fields = [];
 
@@ -99,6 +100,19 @@ class FormVisita extends Component{
           </Col>
         </Row>
         <ParticipantesCliente />
+
+        <Row style={{padding: "10px 10px 20px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+              <i className="users icon" style={{fontSize: "18px"}}/>
+              <span style={{fontSize: "22px"}}> Otros participantes en la reunión  </span>
+              <i className="help circle icon blue"
+              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+            </div>
+          </Col>
+        </Row>
+        <ParticipantesOtros />
       </form>
     );
   }

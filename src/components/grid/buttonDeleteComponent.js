@@ -6,6 +6,7 @@ import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW} from './constants';
+import {deleteParticipant} from '../participantsVisitPre/actions';
 
 class ButtonDeleteComponent extends Component{
 
@@ -21,7 +22,8 @@ class ButtonDeleteComponent extends Component{
   }
 
     _onConfirmDelete(){
-      const {actionsDelete,deleteServer} = this.props;
+      const {actionsDelete, deleteServer, participants} = this.props;
+      console.log("actionsDelete.typeDelete", actionsDelete.typeDelete);
       if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW){
         deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
           if((_.get(data, 'payload.status') === 200)){
@@ -33,8 +35,13 @@ class ButtonDeleteComponent extends Component{
             this.setState({showEr: true});
         });
       } else {
-        this.setState({show: true});
-        alert("DELETE_PARTICIPANT_VIEW");
+        this.setState({show: false});
+        const {deleteParticipant} = this.props;
+        var indexDelete = participants.findIndex(function(item){
+          return item.idParticipante === actionsDelete.id;
+        });
+        deleteParticipant(indexDelete);
+        //alert("DELETE_PARTICIPANT_VIEW");
       }
     }
 
@@ -100,13 +107,15 @@ ButtonDeleteComponent.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     deleteServer,contactsByClientFindServer,clearContactCreate,
-    shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder
+    shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
+    deleteParticipant
   }, dispatch);
 }
 
-function mapStateToProps({deleteGridReducer}, ownerProps) {
+function mapStateToProps({deleteGridReducer, participants}, ownerProps) {
   return {
-    deleteGridReducer
+    deleteGridReducer,
+    participants
   };
 }
 
