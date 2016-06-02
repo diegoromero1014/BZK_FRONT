@@ -4,13 +4,12 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
-import {addParticipant, deleteParticipant, clearParticipants} from './actions';
+import {addParticipant, clearParticipants} from './actions';
 import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';
-import {NUMBER_RECORDS} from '../contact/constants';
+import {NUMBER_CONTACTS} from './constants';
 import _ from 'lodash';
 
 const validate = values => {
@@ -76,7 +75,7 @@ class ParticipantesCliente extends Component{
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
     if( _.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined ){
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","","","");
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_CONTACTS,"",0,"","","","");
     }
   }
 
@@ -172,11 +171,16 @@ class ParticipantesCliente extends Component{
             </button>
           </Col>
         </Row>
-        <Row style={{padding: "0px 10px 20px 20px"}}>
-          <Col xs>
-            <ListParticipantesCliente />
-          </Col>
-        </Row>
+        {participants.size > 0 ?
+          <Row style={{padding: "0px 10px 20px 20px"}}>
+            <Col xs>
+              <ListParticipantesCliente />
+            </Col>
+          </Row> :
+          <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
+            <h4 className="form-item">Señor usuario, no se han adicionado participantes por parte del cliente.</h4>
+          </div>
+        }
         <SweetAlert
          type="error"
          show={this.state.showEmptyParticipant}
@@ -199,7 +203,6 @@ class ParticipantesCliente extends Component{
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        deleteParticipant,
         addParticipant,
         contactsByClientFindServer,
         clearParticipants
