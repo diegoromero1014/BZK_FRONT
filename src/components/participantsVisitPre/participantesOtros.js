@@ -22,14 +22,36 @@ class ParticipantesOtros extends Component{
   constructor(props) {
       super(props);
       this.state = {
-        showEmptyParticipant: false,
-        showParticipantExist: false
+        showEmptyParticipantOtro: false
       }
       this._addParticipantClient = this._addParticipantClient.bind(this);
       this._submitValores = this._submitValores.bind(this);
   }
 
   _addParticipantClient() {
+    const {fields: { nombrePersona, cargoPersona, empresaPersona }, participants, addParticipant} = this.props;
+    if( nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined ){
+        const uuid = _.uniqueId('participanOther_');
+        var otherParticipant = {
+          tipoParticipante: 'other',
+          idParticipante: '',
+          nombreParticipante: nombrePersona.value,
+          cargo: cargoPersona.value,
+          empresa: empresaPersona.value,
+          estiloSocial: '',
+          actitudBanco: '',
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(otherParticipant);
+        nombrePersona.onChange('');
+        cargoPersona.onChange('');
+        empresaPersona.onChange('');
+    } else {
+      this.setState({
+        showEmptyParticipantOtro: true
+      });
+    }
   }
 
   componentWillMount(){
@@ -46,7 +68,13 @@ class ParticipantesOtros extends Component{
     const {fields: {
       nombrePersona, cargoPersona, empresaPersona
     }, error, handleSubmit, participants, contactsByClient, addParticipant} = this.props;
-    if( participants.size === 10 ){
+
+    var data = _.chain(participants.toArray()).map(participant => {
+      return participant;
+    })
+    .filter(participant => _.isEqual(participant.tipoParticipante, 'other'))
+    .value();
+    if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
     }
     return(
@@ -56,10 +84,14 @@ class ParticipantesOtros extends Component{
             <dt>
               <span>Nombre</span>
             </dt>
-            <dt>
-              <div className="InputAddOn">
-                <input type="text" style={{padding: '0px 11px !important'}} placeholder="Ingrese el nombre de las persona" className="input-lg input InputAddOn-field"/>
-              </div>
+            <dt style={{marginRight:"17px"}}>
+                <Input
+                name="Nombre"
+                type="text"
+                {...nombrePersona}
+                placeholder="Ingrese el nombre del participante"
+                max="100"
+                />
             </dt>
           </Col>
           <Col xs={12} md={4} lg={4}>
@@ -68,8 +100,9 @@ class ParticipantesOtros extends Component{
               <Input
                 name="txtCargo"
                 type="text"
-                max="120"
-                placeholder="Ingrese el cargo de la persona"
+                {...cargoPersona}
+                max="100"
+                placeholder="Ingrese el cargo del participante"
               />
             </dt>
           </Col>
@@ -79,28 +112,33 @@ class ParticipantesOtros extends Component{
               <Input
                 name="txtCargo"
                 type="text"
-                max="120"
-                placeholder="Ingrese la empresa"
+                {...empresaPersona}
+                max="100"
+                placeholder="Ingrese la empresa del participante"
               />
             </dt>
           </Col>
           <Col xs={1} md={1} lg={1}>
             <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
-              type="button" title="Adicionar participante" style={{marginLeft:"17px", marginTop: "20px"}}>
+              type="button" title="Adicionar participante, máximo 10" style={{marginLeft:"17px", marginTop: "20px"}}>
               <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
             </button>
           </Col>
         </Row>
-        {participants.size > 0 ?
+        {data.length > 0 &&
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs>
               <ListParticipantesOtros />
             </Col>
-          </Row> :
-          <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
-            <h4 className="form-item">Señor usuario, no se han adicionado participantes por parte del cliente.</h4>
-          </div>
+          </Row>
         }
+        <SweetAlert
+         type="error"
+         show={this.state.showEmptyParticipantOtro}
+         title="Error participante"
+         text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
+         onConfirm={() => this.setState({showEmptyParticipantOtro:false})}
+         />
       </div>
     );
   }

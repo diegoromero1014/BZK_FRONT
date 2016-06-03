@@ -37,11 +37,19 @@ class ButtonDeleteComponent extends Component{
       } else {
         this.setState({show: false});
         const {deleteParticipant} = this.props;
-        var indexDelete = participants.findIndex(function(item){
-          return item.idParticipante === actionsDelete.id;
-        });
-        deleteParticipant(indexDelete);
-        //alert("DELETE_PARTICIPANT_VIEW");
+        if( actionsDelete.tipo === "client" || actionsDelete.tipo === "banco" ){
+          var indexDelete = participants.findIndex(function(item){
+            return item.idParticipante === actionsDelete.id;
+          });
+          deleteParticipant(indexDelete);
+        } else if( actionsDelete.tipo === "other" ){
+          var indexDelete = participants.findIndex(function(item){
+            if( item.tipoParticipante === 'other' ){
+              return item.nombreParticipante === actionsDelete.nombre;
+            }
+          });
+          deleteParticipant(indexDelete);
+        }
       }
     }
 
