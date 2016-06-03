@@ -5,7 +5,8 @@ import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
-import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER} from './constants';
+import {visitByClientFindServer} from '../visit/actions';
+import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER,DELETE_TYPE_VISIT} from './constants';
 
 class ButtonDeleteComponent extends Component{
 
@@ -25,6 +26,7 @@ class ButtonDeleteComponent extends Component{
       deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
         if((_.get(data, 'payload.status') === 200)){
             this.setState({showEx: true});
+            console.log(actionsDelete);
           } else {
             this.setState({showEr: true});
         }
@@ -34,7 +36,7 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        const {visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -47,7 +49,10 @@ class ButtonDeleteComponent extends Component{
               clearShareholderCreate();
               clearShareholderOrder();
               shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
-            }
+          }
+          else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
+            visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"sh.sharePercentage",1,"");
+          }
         }
         this.setState({showEx:false, showEr: false,show: false});
     }
@@ -66,7 +71,7 @@ class ButtonDeleteComponent extends Component{
               confirmButtonColor= '#DD6B55'
               confirmButtonText= 'Sí, estoy seguro!'
               cancelButtonText = "Cancelar"
-              text={actionsDelete.mensaje}
+              text={actionsDelete.mensaje != null  ? actionsDelete.mensaje : ''}
               showCancelButton= {true}
               onCancel= {() => this.setState({show: false })}
               onConfirm={() => this._onConfirmDelete()}/>
@@ -95,7 +100,8 @@ ButtonDeleteComponent.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     deleteServer,contactsByClientFindServer,clearContactCreate,
-    shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder
+    shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
+    visitByClientFindServer
   }, dispatch);
 }
 

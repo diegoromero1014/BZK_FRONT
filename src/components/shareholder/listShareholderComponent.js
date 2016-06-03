@@ -107,7 +107,6 @@ class ListShareholderComponent extends Component {
                 "messageHeader": {
                   "sessionToken": window.localStorage.getItem('sessionToken'),
                       "timestamp": new Date().getTime(),
-                      "username":"lmejias",
                       "service": "",
                       "status": "0",
                       "language": "es",

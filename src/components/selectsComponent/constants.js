@@ -31,3 +31,4 @@ export const ECONOMIC_GROUPS = "economicGroupsByKeyword";
 export const SHAREHOLDER_KIND = "shareHolderKind";
 export const CERTIFICATION_STATUS = "certificationStatus";
 export const GENDER = "gender";
+export const FILTER_STATUS_VISIT_ID = 'FILTER_STATUS_VISIT_ID';
