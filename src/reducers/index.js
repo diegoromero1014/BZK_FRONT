@@ -6,7 +6,7 @@ import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
 import ClientInformationReducer from '../components/clientInformation/reducer';
 import modalReducer from '../components/modal/reducer';
-import ShareHolderReducer from '../components/shareHolder/reducer';
+import ShareHolderReducer from '../components/shareholder/reducer';
 import contactsReducer from '../components/contact/reducer';
 import shareholdersReducer from '../components/shareholder/reducer';
 import propspectReducer from '../components/propspect/reducer';
@@ -19,6 +19,7 @@ import createContactReducer from '../components/contact/createContact/reducer';
 import createShareholderReducer from '../components/shareholder/createShareholder/reducer';
 import editShareholderReducer from '../components/shareholder/shareholderDetail/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
+import taskReducer from '../components/visit/createVisit/tasks/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -40,5 +41,6 @@ export default combineReducers({
     createContactReducer:createContactReducer,
     createShareholder: createShareholderReducer,
     editShareholderReducer: editShareholderReducer,
-    participants: participantsReducer
+    participants: participantsReducer,
+    tasks: taskReducer
 });

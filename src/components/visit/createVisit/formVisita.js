@@ -12,6 +12,7 @@ import {consultDataSelect, consultList, getMasterDataFields} from '../../selects
 import {VISIT_TYPE} from '../../selectsComponent/constants';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
+import TaskVisit from './tasks/taskVisit';
 
 const fields = [];
 
@@ -113,6 +114,7 @@ class FormVisita extends Component{
           </Col>
         </Row>
         <ParticipantesOtros />
+        <TaskVisit />
       </form>
     );
   }
