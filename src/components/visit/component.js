@@ -55,7 +55,7 @@ class VisitComponent extends Component {
           </Col>
           <Col xs>
           <button className="btn btn-primary" type="button" title="Crear visita" style={{marginTop: '21px'}} onClick={this._createVisit}>
-            <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+            <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
           </button>
         </Col>
           </Row>
