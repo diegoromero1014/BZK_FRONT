@@ -14,6 +14,7 @@ import ParticipantesCliente from '../../participantsVisitPre/participantesClient
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from './tasks/taskVisit';
+import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 
 const fields = ["desarrolloGeneral"];
 
@@ -129,6 +130,38 @@ class FormVisita extends Component{
         </Row>
         <ParticipantesOtros />
         <TaskVisit />
+        <Row style={{padding: "30px 10px 20px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+              <i className="book icon" style={{fontSize: "18px"}}/>
+              <span style={{fontSize: "22px"}}> Desarrollo general de la reunión  </span>
+            </div>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 10px 20px"}}>
+        <Col xs={12} md={12} lg={12}>
+          <Textarea
+            {...desarrolloGeneral}
+            name="desarrolloGeneral"
+            type="text"
+            max="3500"
+            title="La longitud máxima de caracteres es de 3500"
+            style={{width: '100%', height: '250px'}}
+          />
+        </Col>
+        </Row>
+        <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+          <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+            <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
+          </button>
+          <button className="btn" style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+          </button>
+          <button className="btn" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+          </button>
+        </div>
       </form>
     );
   }
