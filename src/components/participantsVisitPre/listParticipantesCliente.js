@@ -38,7 +38,6 @@ class ListParticipantesCliente extends Component {
       if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
       v2 = nextProps.value2;
-      const {clearShareholderOrder} = this.props;
     }
   }
 
@@ -87,6 +86,7 @@ class ListParticipantesCliente extends Component {
           'delete':  {
             typeDelete : DELETE_PARTICIPANT_VIEW,
             id: idParticipante,
+            tipo: 'client',
             mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
           }
         });
@@ -102,7 +102,6 @@ class ListParticipantesCliente extends Component {
 
   render() {
     this._mapValueParticipantes();
-    const {shareholdersReducer} = this.props;
     return (
       <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px", marginTop: "15px"}}>
         <GridComponent headers={this._renderHeaders} data={this._mapValueParticipantes()}/>

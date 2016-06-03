@@ -1,5 +1,9 @@
 import React, {Component,PropTypes} from 'react';
 import GridComponent from '../grid/component';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {DELETE_PARTICIPANT_VIEW} from './constants';
+import _ from 'lodash';
 
 let v1 = "";
 let v2 = "";
@@ -9,7 +13,7 @@ class ListParticipantesBancolombia extends Component {
 
   constructor(props){
       super(props);
-      this._renderCellView = this._renderCellView.bind(this);
+      this._mapValueParticipantes = this._mapValueParticipantes.bind(this);
       this._renderHeaders = this._renderHeaders.bind(this);
       this.state = {
         column : "",
@@ -64,69 +68,53 @@ class ListParticipantesBancolombia extends Component {
     ]
   }
 
-  _renderCellView(data){
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar el participante ";
-    return _.forOwn(data, function(value, key) {
-              var json1 = {
-                "messageHeader": {
-                  "sessionToken": window.localStorage.getItem('sessionToken'),
-                      "timestamp": new Date().getTime(),
-                      "username":"lmejias",
-                      "service": "",
-                      "status": "0",
-                      "language": "es",
-                      "displayErrorMessage": "",
-                      "technicalErrorMessage": "",
-                      "applicationVersion": "",
-                      "debug": true,
-                      "isSuccessful": true
-                },
-                "messageBody": {
-                "entity":"SHAREHOLDER",
-                "id":value.id
-                }
-              }
-            _.set(value, 'actions',  {
-              actionView: true,
-              id: value.id,
-              urlServer: "./component",
-              component : "VIEW_SHAREHOLDER"
-            });
-            _.set(value,'percentageS', value.percentage + "%");
-            _.set(value, 'delete',  {
-              actionDelete: true,
-              urlServer: "/deleteEntity",
-              typeDelete : 'DELETE_TYPE_SHAREHOLDER',
-              mensaje: mensaje + value.name + "?",
-              json: json1
-            });
-      });
+  _mapValueParticipantes(){
+    const {participants} = this.props;
+    if( participants.size > 0 ){
+      var data = _.chain(participants.toArray()).map(participant => {
+        const {tipoParticipante, idParticipante, nombreParticipante, cargo, empresa, estiloSocial,
+          actitudBanco, uuid} = participant;
+        return _.assign({}, {name: nombreParticipante, cargo: cargo, tipo: tipoParticipante, id: idParticipante,
+          empresa: empresa, estiloSocial: estiloSocial, actitudBanco: actitudBanco, uuid: uuid,
+          'delete':  {
+            typeDelete : DELETE_PARTICIPANT_VIEW,
+            id: idParticipante,
+            tipo: 'banco',
+            mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
+          }
+        });
+      })
+      .filter(participant => _.isEqual(participant.tipo, 'banco'))
+      .value();
+
+      return data;
+    } else {
+      return [];
+    }
   }
 
   render() {
-    const modalTitle = 'Accionista Detalle';
-    const {shareholdersReducer} = this.props;
-    const data =
-    [
-      {
-        name: "Maria Fernanda",
-        cargo: "Analista"
-      },
-      {
-        name: "Wilfer Salazar",
-        cargo: "Directo"
-      },
-      {
-        name: "Tatiana Montoya",
-        cargo: "Vicepresidente"
-      }
-    ]
+    this._mapValueParticipantes();
+    const {participants} = this.props;
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
-        <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
+      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px", marginTop: "15px"}}>
+        <GridComponent headers={this._renderHeaders} data={this._mapValueParticipantes()}/>
       </div>
     );
   }
 }
 
-export default ListParticipantesBancolombia;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+    }, dispatch);
+}
+
+function mapStateToProps({participants}) {
+    return {
+        participants: participants.sort(function(valueA, valueB){
+          return valueA.fecha < valueB.fecha;
+        })
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListParticipantesBancolombia);

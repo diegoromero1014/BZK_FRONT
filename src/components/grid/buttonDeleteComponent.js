@@ -36,14 +36,23 @@ class ButtonDeleteComponent extends Component{
             }, (reason) => {
               this.setState({showEr: true});
           });
-        }else {
+        } else {
         if(actionsDelete.typeDelete === DELETE_PARTICIPANT_VIEW){
           this.setState({show: false});
           const {deleteParticipant} = this.props;
-          var indexDelete = participants.findIndex(function(item){
-            return item.idParticipante === actionsDelete.id;
-          });
-          deleteParticipant(indexDelete);
+          if( actionsDelete.tipo === "client" || actionsDelete.tipo === "banco" ){
+            var indexDelete = participants.findIndex(function(item){
+              return item.idParticipante === actionsDelete.id;
+            });
+            deleteParticipant(indexDelete);
+          } else if( actionsDelete.tipo === "other" ){
+            var indexDelete = participants.findIndex(function(item){
+              if( item.tipoParticipante === 'other' ){
+                return item.nombreParticipante === actionsDelete.nombre;
+              }
+            });
+            deleteParticipant(indexDelete);
+          }
         }else{
           if(actionsDelete.typeDelete === DELETE_TASK_VIEW){
             this.setState({show: false});

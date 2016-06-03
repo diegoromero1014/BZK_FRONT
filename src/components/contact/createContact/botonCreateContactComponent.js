@@ -28,11 +28,18 @@ class BotonCreateContactComponent extends Component {
   }
 
   render() {
+    const {typeButton} = this.props;
     return (
-          <Col xs={2} sm={2} md={1} lg={1}>
-          <button className="btn btn-primary" type="button" title="Crear contacto" style={{float: "right"}} onClick={this.openModal}>
+          <Col xs={2} sm={2} md={typeButton === 1 ? 2 : 1} lg={typeButton === 1 ? 2 : 1}>
+          { typeButton === 1 ?
+            <button className="btn btn-primary" type="button" title="Crear contacto" style={{float: "right"}} onClick={this.openModal}>
+              Crear contacto
+            </button>
+            :
+            <button className="btn btn-primary" type="button" title="Crear contacto" style={{float: "right"}} onClick={this.openModal}>
               <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
             </button>
+          }
             <Modal
                 isOpen={this.state.modalIsOpen}
                 onRequestClose={this.closeModal}

@@ -106,7 +106,13 @@ class ParticipantesCliente extends Component{
     const {fields: {
       contactoCliente, cargoContacto, estiloSocial, actitudGrupo
     }, error, handleSubmit, participants, contactsByClient, addParticipant} = this.props;
-    if( participants.size === 10 ){
+
+    var data = _.chain(participants.toArray()).map(participant => {
+      return participant;
+    })
+    .filter(participant => _.isEqual(participant.tipoParticipante, 'client'))
+    .value();
+    if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
     }
     return(
@@ -152,7 +158,7 @@ class ParticipantesCliente extends Component{
               />
             </div>
           </Col>
-          <Col xs={12} md={2.9} lg={2.9}>
+          <Col xs={12} md={2} lg={2}>
             <div style={{paddingRight: "15px"}}>
               <dt><span>Actitud frente al grupo</span></dt>
               <Input
@@ -164,14 +170,14 @@ class ParticipantesCliente extends Component{
               />
             </div>
           </Col>
-          <Col xs={1} md={0.1} lg={0.1}>
+          <Col xs={1} md={1} lg={1}>
             <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
               type="button" title="Adicionar participante, máximo 10" style={{marginLeft:"17px", marginTop: "20px"}}>
               <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
             </button>
           </Col>
         </Row>
-        {participants.size > 0 ?
+        {data.length > 0 ?
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs>
               <ListParticipantesCliente />
@@ -184,8 +190,8 @@ class ParticipantesCliente extends Component{
         <SweetAlert
          type="error"
          show={this.state.showEmptyParticipant}
-         title="Debe seleccionar un contacto"
-         text="Señor usuario, para agregar un participante, debe seleccionar un contacto"
+         title="Error participante"
+         text="Señor usuario, para agregar un participante debe seleccionar un contacto"
          onConfirm={() => this.setState({showEmptyParticipant:false})}
          />
          <SweetAlert
