@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import HeaderPrevisita from './HeaderPrevisita';
-import FormPrevisita from './FormPrevisita';
+import HeaderPrevisita from './headerPrevisita';
+import FormPrevisita from './formPrevisita';
 import {redirectUrl} from '../../globalComponents/actions';
 
 class CreatePrevisita extends Component{

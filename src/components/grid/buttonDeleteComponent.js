@@ -5,8 +5,10 @@ import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
-import {NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW} from './constants';
+import {visitByClientFindServer} from '../visit/actions';
+import {DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
+import {deleteTask} from '../visit/createVisit/tasks/actions';
 
 class ButtonDeleteComponent extends Component{
 
@@ -21,40 +23,42 @@ class ButtonDeleteComponent extends Component{
      this._closeDelete = this._closeDelete.bind(this);
   }
 
-    _onConfirmDelete(){
-      const {actionsDelete, deleteServer, participants} = this.props;
-      console.log("actionsDelete.typeDelete", actionsDelete.typeDelete);
-      if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW){
-        deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
-          if((_.get(data, 'payload.status') === 200)){
-              this.setState({showEx: true});
-            } else {
+  _onConfirmDelete(){
+    const {actionsDelete, deleteServer, participants, tasks} = this.props;
+    if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW){
+          deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
+            if((_.get(data, 'payload.status') === 200)){
+                this.setState({showEx: true});
+                console.log(actionsDelete)
+              } else {
+                this.setState({showEr: true});
+            }
+            }, (reason) => {
               this.setState({showEr: true});
-          }
-          }, (reason) => {
-            this.setState({showEr: true});
-        });
-      } else {
-        this.setState({show: false});
-        const {deleteParticipant} = this.props;
-        if( actionsDelete.tipo === "client" || actionsDelete.tipo === "banco" ){
+          });
+        }else {
+        if(actionsDelete.typeDelete === DELETE_PARTICIPANT_VIEW){
+          this.setState({show: false});
+          const {deleteParticipant} = this.props;
           var indexDelete = participants.findIndex(function(item){
             return item.idParticipante === actionsDelete.id;
           });
           deleteParticipant(indexDelete);
-        } else if( actionsDelete.tipo === "other" ){
-          var indexDelete = participants.findIndex(function(item){
-            if( item.tipoParticipante === 'other' ){
-              return item.nombreParticipante === actionsDelete.nombre;
-            }
-          });
-          deleteParticipant(indexDelete);
+        }else{
+          if(actionsDelete.typeDelete === DELETE_TASK_VIEW){
+            this.setState({show: false});
+            const {deleteTask} = this.props;
+            var indexDelete = tasks.findIndex(function(item){
+              return item.uuid === actionsDelete.id;
+            });
+            deleteTask(indexDelete);
+          }
         }
       }
     }
 
     _closeDelete(){
-        const {contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        const {visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -67,15 +71,18 @@ class ButtonDeleteComponent extends Component{
               clearShareholderCreate();
               clearShareholderOrder();
               shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
-            }
-        }
-        this.setState({showEx:false, showEr: false,show: false});
+          }
+          else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
+            visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"sh.sharePercentage",1,"");
+          }
+      }
     }
 
-    render(){
-      const {actionsDelete,deleteGridReducer} = this.props;
-      return (
-      <td style={{padding: '10px', textAlign: 'center'}}>
+
+  render(){
+    const {actionsDelete,deleteGridReducer} = this.props;
+    return (
+    <td style={{padding: '10px', textAlign: 'center'}}>
       <button onClick={() => this.setState({ show: true })} className="btn btn-sm  btn-danger">
           <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
         </button>
@@ -116,14 +123,17 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     deleteServer,contactsByClientFindServer,clearContactCreate,
     shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
-    deleteParticipant
+    visitByClientFindServer,
+    deleteParticipant,
+    deleteTask
   }, dispatch);
 }
 
-function mapStateToProps({deleteGridReducer, participants}, ownerProps) {
+function mapStateToProps({deleteGridReducer, participants, tasks}, ownerProps) {
   return {
     deleteGridReducer,
-    participants
+    participants,
+    tasks
   };
 }
 

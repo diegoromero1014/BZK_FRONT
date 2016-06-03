@@ -9,8 +9,8 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
-import ParticipantesBancolombia from '../../participantsVisitPre/ParticipantesBancolombia';
-import ParticipantesOtros from '../../participantsVisitPre/ParticipantesOtros';
+import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
+import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import NegociosPendientes from './negociosPendientes';
 
 const fields = [];

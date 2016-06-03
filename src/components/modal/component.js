@@ -10,12 +10,12 @@ class ModalComponentButton extends Component{
       super(props);
   }
 
-    render(){
-      const {toggleModal} = this.props;
-      const modalTitle = this.props.modalTitle;
-      const actions = this.props.actions;
-      return (<ModalComponentDialog modalTitle={modalTitle} actions={actions}/>);
-    }
+  render(){
+    const {toggleModal} = this.props;
+    const modalTitle = this.props.modalTitle;
+    const actions = this.props.actions;
+    return (<ModalComponentDialog modalTitle={modalTitle} actions={actions}/>);
+  }
 }
 
 function mapDispatchToProps(dispatch){

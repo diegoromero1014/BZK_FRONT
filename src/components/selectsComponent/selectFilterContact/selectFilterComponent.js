@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
-import {SHAREHOLDER_TYPE,SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
+import {FILTER_STATUS_VISIT_ID,SHAREHOLDER_TYPE,SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
 
 
 class SelectFilterComponent extends Component{
@@ -56,11 +56,9 @@ class SelectFilterComponent extends Component{
         data = selectsReducer.get('dataTypeShareholdersKind');
       }else if (idTypeFilter == SHAREHOLDER_TYPE) {
         data = selectsReducer.get('dataTypeShareholdersType');
+      }else if(idTypeFilter == FILTER_STATUS_VISIT_ID){
+        data=[{id:'0', value:'Guardado como borrador'},{id:'1',value:'Guardado como definitivo'}];
       }
-      // console.log('Datos de la lista');
-      // console.log(data);
-      // console.log('...config -> ');
-      // console.log(config);
       return(
           <Combobox
               valueField='id'
