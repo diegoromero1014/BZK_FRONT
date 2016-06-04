@@ -84,7 +84,7 @@ class ListVisitComponent extends Component {
 
 
   _renderCellView(data){
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar la visita ?";
+    const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de la reunión?";
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
