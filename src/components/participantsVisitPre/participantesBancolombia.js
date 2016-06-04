@@ -4,19 +4,22 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
-import {addParticipant, clearParticipants} from './actions';
+import {addParticipant, clearParticipants, filterUsersBanco} from './actions';
 import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';
 import {NUMBER_CONTACTS} from './constants';
+import {APP_URL} from '../../constantsGlobal';
 import _ from 'lodash';
+import $ from 'jquery';
 
 const validate = values => {
     const errors = {}
     return errors
 };
 
+var usersBanco = [];
 var disabledButtonCreate= '';
 class ParticipantesBancolombia extends Component{
 
@@ -28,14 +31,17 @@ class ParticipantesBancolombia extends Component{
       }
       this._addParticipantClient = this._addParticipantClient.bind(this);
       this._updateValue = this._updateValue.bind(this);
+      this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this._submitValores = this._submitValores.bind(this);
   }
 
   _addParticipantClient() {
-    const {fields: { idUsuario, nameUsuario, cargoUsuario }, participants, addParticipant} = this.props;
-    if( idUsuario.value !== "" && idUsuario.value !== null && idUsuario.value !== undefined ){
+    const {fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario }, participants, addParticipant} = this.props;
+    if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
       var particip = participants.find(function(item){
-        return item.idParticipante === idUsuario.value;
+        if(item.tipoParticipante === "banco"){
+          return item.idParticipante === objetoUsuario.value.idUsuario;
+        }
       });
       if( particip === undefined ){
         const uuid = _.uniqueId('participanBanco_');
@@ -93,6 +99,41 @@ class ParticipantesBancolombia extends Component{
     }
   }
 
+  updateKeyValueUsersBanco(e){
+    const {fields: {objetoUsuario, nameUsuario, idUsuario, cargoUsuario}, filterUsersBanco} = this.props;
+    console.log("nameUsuarionameUsuarionameUsuario", nameUsuario.value);
+    if(e.keyCode == 13 || e.which == 13){
+      e.preventDefault();
+      if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
+        $('.ui.search.participantBanc').toggleClass('loading');
+        filterUsersBanco(nameUsuario.value).then((data) => {
+          usersBanco = _.get(data, 'payload.data.data');
+          $('.ui.search.participantBanc')
+            .search({
+              cache: false,
+              source: usersBanco,
+              searchFields: [
+                'title',
+                'description',
+                'idUsuario',
+                'cargo'
+              ],
+              onSelect : function(event) {
+                  objetoUsuario.onChange(event);
+                  nameUsuario.onChange(event.title);
+                  idUsuario.onChange(event.idUsuario);
+                  cargoUsuario.onChange(event.cargo);
+                  return 'default';
+              }
+            });
+            $('.ui.search.participantBanc').toggleClass('loading');
+            $('#inputParticipantBanc').focus();
+          }, (reason) => {
+        });
+      }
+    }
+  }
+
   _submitValores(){
 
   }
@@ -118,15 +159,22 @@ class ParticipantesBancolombia extends Component{
               <span>Nombre</span>
             </dt>
             <dt>
-              <ComboBox
-                name="txtClienteBanco"
-                labelInput="Seleccione..."
-                {...idUsuario}
-                onChange={val => this._updateValue(val)}
-                valueProp={'id'}
-                textProp={'nameComplet'}
-                data={contactsByClient.get('contacts')}
-            />
+            <div className="ui search participantBanc fluid">
+              <div className="ui icon input" style={{width: "100%"}}>
+                <input className="prompt" id="inputParticipantBanc"
+                  style={{borderRadius: "3px"}}
+                  autoComplete="off"
+                  type="text"
+                  value={nameUsuario.value}
+                  onChange={nameUsuario.onChange}
+                  placeholder="Ingrese un criterio de búsquerda..."
+                  onKeyPress={this.updateKeyValueUsersBanco}
+                  onSelect={val => this._updateValue(val)}
+                />
+                <i className="search icon"></i>
+              </div>
+              <div className="results"></div>
+            </div>
             </dt>
           </Col>
           <Col xs={12} md={5.5} lg={5.5}>
@@ -134,9 +182,9 @@ class ParticipantesBancolombia extends Component{
             <dt style={{marginRight:"17px"}}>
               <Input
                 name="txtCargo"
+                {...cargoUsuario}
                 type="text"
                 disabled='disabled'
-                {...cargoUsuario}
                 placeholder="Cargo de la persona"
               />
             </dt>
@@ -181,7 +229,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addParticipant,
         clearParticipants,
-        contactsByClientFindServer
+        contactsByClientFindServer,
+        filterUsersBanco
     }, dispatch);
 }
 
@@ -195,6 +244,6 @@ function mapStateToProps({selectsReducer, participants, contactsByClient}) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idUsuario", "nameUsuario", "cargoUsuario"],
+  fields: ["idUsuario", "nameUsuario", "objetoUsuario", "cargoUsuario"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ParticipantesBancolombia);
