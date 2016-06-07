@@ -28,22 +28,21 @@ class TaskVisit extends Component{
     return(
       <form className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <Row style={{padding: "10px 10px 0px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{padding: "0px 10px 10px 20px"}}>
+        <Row style={{padding: "20px 10px 0px 20px"}}>
           <Col xs={11} md={11} lg={11}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <i className="users icon" style={{fontSize: "18px"}}/>
+            <div style={{fontSize: "25px", color: "#505050", marginTop: "15px", marginBottom: "5px"}}>
               <span style={{fontSize: "22px"}}> Pendientes de la reunión</span>
             </div>
           </Col>
           <Col xs={1} md={1} lg={1}>
             <BotonCreateContactComponent/>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 10px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+            </div>
           </Col>
         </Row>
         {tasks.size > 0 ?
