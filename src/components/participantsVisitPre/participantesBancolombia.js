@@ -167,7 +167,7 @@ class ParticipantesBancolombia extends Component{
                   type="text"
                   value={nameUsuario.value}
                   onChange={nameUsuario.onChange}
-                  placeholder="Ingrese un criterio de búsquerda..."
+                  placeholder="Ingrese un criterio de búsqueda..."
                   onKeyPress={this.updateKeyValueUsersBanco}
                   onSelect={val => this._updateValue(val)}
                 />
