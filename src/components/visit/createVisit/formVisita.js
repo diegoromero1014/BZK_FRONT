@@ -22,6 +22,7 @@ import SweetAlert from 'sweetalert-react';
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
 const validate = values => {
+  var errors = {};
     if(!values.tipoVisita){
       errors.tipoVisita = "Debe seleccionar una opción";
     }else{
