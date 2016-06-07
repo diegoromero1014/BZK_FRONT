@@ -90,19 +90,22 @@ class FormVisita extends Component{
             </dt>
           </Col>
         </Row>
-
-        <Row style={{padding: "10px 42px 20px 20px"}}>
+        <Row style={{padding: "10px 42px 0px 20px"}}>
           <Col xs={10} md={10} lg={10}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
+            <dl style={{fontSize: "20px", color: "#505050", marginTop: "15px", marginBottom: "0px"}}>
               <span className="section-title">Participantes en la reunión por parte del cliente </span>
               <i className="help circle icon blue"
               style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
             </dl>
           </Col>
           <BotonCreateContactComponent typeButton={1} />
+        </Row>
+        <Row style={{padding: "0px 10px 10px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+            </div>
+          </Col>
         </Row>
         <ParticipantesCliente />
 

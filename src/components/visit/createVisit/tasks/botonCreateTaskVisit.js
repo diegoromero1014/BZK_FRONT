@@ -26,7 +26,7 @@ class BotonCreateTaskComponent extends Component {
 
   render() {
     return (
-      <div style={{marginLeft:"2%"}}>
+      <div style={{marginLeft: "17px"}}>
         <button className="btn btn-primary" type="button" title="Adicionar tarea" onClick={this.openModal}>
           <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
         </button>
