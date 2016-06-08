@@ -48,10 +48,9 @@ class comboBoxComponent extends Component {
      selector.dropdown('refresh');
      const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
      const valueIsNotEmpty = value !== null && value !== undefined && value !== "";
-     const setPristineAgain = _.isEqual(value, '') && pristine && this.state.used;
-
+     const setPristineAgain =  (value === null || value === undefined || value === "") && pristine && this.state.used;
      if(setPristineAgain){
-         this._setPristine(labelInput, name);
+        this._setPristine(labelInput, name);
      }
      else{
        if(valueIsNotEmpty){

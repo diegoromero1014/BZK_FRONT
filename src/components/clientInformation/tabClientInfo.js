@@ -5,6 +5,7 @@ import ContactInfo from '../contact/component';
 import ShareholderInfo from '../shareholder/component';
 import PrevisitaInfo from '../previsita/component';
 import VisitaInfo from '../visit/component';
+import PendingInfo from '../pendingTask/component';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 
 class TabClientInfo extends Component{
@@ -28,12 +29,14 @@ class TabClientInfo extends Component{
     var styleShareholders = false;
     var stylePrevisitas = false;
     var styleVisits = false;
+    let stylePendings = false;
 
     var backgroundInfo = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     var backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
+    let backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
 
     const {tabActive} = this.state;
     if( tabActive === 1 ){
@@ -44,48 +47,70 @@ class TabClientInfo extends Component{
       styleShareholders = false;
       stylePrevisitas = false;
       styleVisits = false;
+      stylePendings = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
     } else if( tabActive === 3 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = true;
       stylePrevisitas = false;
       styleVisits = false;
+      stylePendings = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
     }else if( tabActive === 4 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
       stylePrevisitas = false;
       styleVisits = true;
+      stylePendings = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundVisits = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
     }else if( tabActive === 5 ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
       stylePrevisitas = true;
       styleVisits = false;
+      stylePendings = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
+    } else if (tabActive === 6) {
+      styleInfo = false;
+      styleContacts = false;
+      styleShareholders = false;
+      stylePrevisitas = false;
+      styleVisits = false;
+      stylePendings = true;
+
+      backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     }
     return (
       <div className="my-custom-tab" style={{marginTop: "2px"}}>
@@ -106,6 +131,9 @@ class TabClientInfo extends Component{
           <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
           </li>
+          <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, 6)}>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Pendientes</a>
+          </li>
   			</ul>
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
@@ -113,6 +141,7 @@ class TabClientInfo extends Component{
           {styleShareholders && <ShareholderInfo infoClient={infoClient}/>}
           {stylePrevisitas && <PrevisitaInfo infoClient={infoClient}/>}
           {styleVisits && <VisitaInfo infoClient={infoClient}/>}
+          {stylePendings && <PendingInfo infoClient={infoClient} />}
         </div>
       </div>
     );
