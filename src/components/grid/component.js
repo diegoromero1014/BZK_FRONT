@@ -8,6 +8,7 @@ import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
 import ModalComponent from '../modal/modalComponent';
+import ButtonDetailsRedirectComponent from './buttonDetailsRedirectComponent';
 
 class GridComponent extends Component {
 
@@ -29,6 +30,8 @@ class GridComponent extends Component {
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key == 'delete' &&  _.get(row, value.key)){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
+            }else if(value.key == 'actionsRedirect'){
+              cell= <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} styles={value.style} />
             }

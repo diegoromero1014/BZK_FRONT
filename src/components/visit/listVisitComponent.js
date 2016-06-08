@@ -60,7 +60,7 @@ class ListVisitComponent extends Component {
     return [
       {
         title: "",
-        key:"actions"
+        key:"actionsRedirect"
       },
       {
         title: "Tipo de reunión",
@@ -104,11 +104,11 @@ class ListVisitComponent extends Component {
                 "id":value.id
                 }
               }
-            _.set(value, 'actions',  {
+            _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.nombre,
-              urlServer: "./component",
-              component : "VIEW_SHAREHOLDER"
+              urlRedirect: "/dashboard/visitaEditar",
+              component : "VIEW_VISIT"
             });
 
             if(value.idStatusDocument === 0){
