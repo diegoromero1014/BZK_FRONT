@@ -13,6 +13,7 @@ import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
 import Previsita from './components/previsita/createPrevisita/createPrevisita';
 import Visit from './components/visit/createVisit/createVisit';
+import VisitEdit from './components/visit/editVisit/editVisit';
 import uiTester from './ui/uiTester';
 
 class App extends Component {
@@ -38,6 +39,7 @@ export default (
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="previsita" component={Previsita}></Route>
                 <Route path="visita" component={Visit}></Route>
+                <Route path="visitaEditar" component={VisitEdit}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>
