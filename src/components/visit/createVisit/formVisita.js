@@ -48,11 +48,14 @@ class FormVisita extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      showErrorSaveVisit: false
+      showErrorSaveVisit: false,
+      showConfirm: false
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButton = this._onClickButton.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
+    this._onCloseButton = this._onCloseButton.bind(this);
+    this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -66,6 +69,11 @@ class FormVisita extends Component{
         showMessageCreateVisit: false
       });
     }
+  }
+
+  _closeConfirmCloseVisit(){
+    this.setState({showConfirm: false });
+    redirectUrl("/dashboard/clientInformation");
   }
 
   _submitCreateVisita(){
@@ -154,6 +162,12 @@ class FormVisita extends Component{
 
   _onClickButton(buttonClick){
     typeButtonClick = buttonClick;
+  }
+
+  _onCloseButton(){
+    message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
+    titleMessage = "Confirmación salida";
+    this.setState({showConfirm :true});
   }
 
   componentWillMount(){
@@ -302,7 +316,7 @@ class FormVisita extends Component{
             <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
-            <button className="btn" type="button" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>
@@ -321,6 +335,17 @@ class FormVisita extends Component{
          text={message}
          onConfirm={this._closeMessageCreateVisit}
          />
+         <SweetAlert
+           type= "warning"
+           show={this.state.showConfirm}
+           title={titleMessage}
+           text={message}
+           confirmButtonColor= '#DD6B55'
+           confirmButtonText= 'Sí, estoy seguro!'
+           cancelButtonText = "Cancelar"
+           showCancelButton= {true}
+           onCancel= {() => this.setState({showConfirm: false })}
+           onConfirm={this._closeConfirmCloseVisit}/>
       </form>
     );
   }
