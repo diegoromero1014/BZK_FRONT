@@ -1,8 +1,32 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW} from './constants';
+  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT} from './constants';
 import axios from 'axios';
 
+
+export function createVisti(jsonVisit){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+    },
+    "messageBody": jsonVisit
+  }
+
+  var request = axios.post(APP_URL + "/saveVisit", json);
+  return{
+    type: CREATE_VISIT,
+    payload: request
+  }
+}
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,order,statusDocumentId){
   const json = {
     "messageHeader": {

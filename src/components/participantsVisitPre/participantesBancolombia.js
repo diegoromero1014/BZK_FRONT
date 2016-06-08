@@ -37,7 +37,8 @@ class ParticipantesBancolombia extends Component{
 
   _addParticipantClient() {
     const {fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario }, participants, addParticipant} = this.props;
-    if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
+    if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined &&
+        idUsuario.value !== "" && idUsuario.value !== null && idUsuario.value !== undefined){
       var particip = participants.find(function(item){
         if(item.tipoParticipante === "banco"){
           return item.idParticipante === objetoUsuario.value.idUsuario;
@@ -101,7 +102,6 @@ class ParticipantesBancolombia extends Component{
 
   updateKeyValueUsersBanco(e){
     const {fields: {objetoUsuario, nameUsuario, idUsuario, cargoUsuario}, filterUsersBanco} = this.props;
-    console.log("nameUsuarionameUsuarionameUsuario", nameUsuario.value);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
