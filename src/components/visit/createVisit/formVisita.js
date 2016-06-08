@@ -15,12 +15,19 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from './tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import {LAST_VISIT_REVIEW} from '../constants';
-import {consultParameterServer} from '../actions';
+import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
+import {consultParameterServer, createVisti} from '../actions';
 import SweetAlert from 'sweetalert-react';
+import moment from 'moment';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
+var showMessageCreateVisit= false;
+var typeMessage = "";
+var titleMessage = "";
+var message = "";
+var typeButtonClick;
+
 const validate = values => {
   var errors = {};
     if(!values.tipoVisita){
@@ -41,15 +48,112 @@ class FormVisita extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      showErrorSaveVisit: false,
+      showErrorSaveVisit: false
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
+    this._onClickButton = this._onClickButton.bind(this);
+    this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
+  }
+
+  _closeMessageCreateVisit(){
+    if( typeMessage === "success" ){
+      this.setState({
+        showMessageCreateVisit: false
+      });
+      redirectUrl("/dashboard/clientInformation");
+    } else {
+      this.setState({
+        showMessageCreateVisit: false
+      });
+    }
   }
 
   _submitCreateVisita(){
-    const {participants} = this.props;
-    var data = _.filter(participants, participant => _.isEqual(participant.tipo, 'banco'));
-    console.log("Participants banco", data.size);
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
+      participants, createVisti} = this.props;
+    var dataBanco = _.map(participants.toArray(),
+      function(participant){
+        if(_.isEqual(participant.tipoParticipante, 'banco') ){
+          return _.assign({}, {
+            "id": null,
+            "employee": participant.idParticipante
+          });
+        }
+      }
+    );
+    if( dataBanco.length > 0 && dataBanco[0] === undefined ){
+      dataBanco = [];
+    }
+
+    if( dataBanco.length > 0 ){
+      var dataClient = _.map(participants.toArray(),
+        function(participant){
+          if(_.isEqual(participant.tipoParticipante, 'client')){
+            return _.assign({}, {
+              "id": null,
+              "contact": participant.idParticipante
+            });
+          }
+        }
+      );
+      if( dataClient.length > 0 && dataClient[0] === undefined ){
+        dataClient = [];
+      }
+      var dataOthers = _.map(participants.toArray(),
+        function(participant){
+          if(_.isEqual(participant.tipoParticipante, 'other') ){
+            return _.assign({}, {
+              "id": null,
+              "name": participant.nombreParticipante,
+              "position": participant.cargo,
+              "company": participant.empresa
+            });
+          }
+        }
+      );
+      if( dataOthers.length > 0 && dataOthers[0] === undefined ){
+        dataOthers = [];
+      }
+      var visitJson = {
+        "id": null,
+        "client": window.localStorage.getItem('idClientSelected'),
+        "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
+        "participatingContacts": dataClient.length === 0 ? null : dataClient,
+        "participatingEmployees": dataBanco,
+        "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+        "comments": desarrolloGeneral.value,
+        "visitType": tipoVisita.value,
+        "documentStatus": typeButtonClick
+      }
+      createVisti(visitJson).then((data)=> {
+        if((_.get(data, 'payload.validateLogin') === 'false')){
+          redirectUrl("/login");
+        } else {
+          if( (_.get(data, 'payload.status') === 200) ){
+            typeMessage = "success";
+            titleMessage = "Creación visita";
+            message = "Señor usuario, la visita se creó de forma exitosa.";
+            this.setState({showMessageCreateVisit :true});
+          } else {
+            typeMessage = "error";
+            titleMessage = "Creación visita";
+            message = "Señor usuario, ocurrió un error creando la visita.";
+            this.setState({showMessageCreateVisit :true});
+          }
+        }
+      }, (reason) =>{
+        typeMessage = "error";
+        titleMessage = "Creación visita";
+        message = "Señor usuario, ocurrió un error creando la visita.";
+        this.setState({showMessageCreateVisit :true});
+      });
+    } else {
+      this.setState({showErrorSaveVisit :true});
+    }
+  }
+
+  _onClickButton(buttonClick){
+    typeButtonClick = buttonClick;
   }
 
   componentWillMount(){
@@ -60,10 +164,8 @@ class FormVisita extends Component{
     } else {
       getMasterDataFields([VISIT_TYPE]);
       consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
-        console.log("data.payload.data",data.payload.data);
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
-            console.log("JSON.parse(data.payload.data.parameter)", JSON.parse(data.payload.data.parameter));
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
         }
       }, (reason) =>{
@@ -99,6 +201,7 @@ class FormVisita extends Component{
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
+                {...tipoVisita}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
               />
@@ -113,6 +216,7 @@ class FormVisita extends Component{
                 culture='es'
                 format={"DD/MM/YYYY"}
                 time={false}
+                {...fechaVisita}
                 placeholder="Seleccione la fecha de reunión"
                 max={new Date()}
               />
@@ -186,19 +290,19 @@ class FormVisita extends Component{
         <Row>
           <Col xs={12} md={12} lg={12}>
             <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
-            <h4 className="form-item">Fecha última revisión formato visita(YYY/DD/MM): <span>{dateVisitLastReview}</span></h4>
+            <h4 className="form-item">Fecha última revisión formato visita (YYY/DD/MM): <span>{dateVisitLastReview}</span></h4>
             </div>
           </Col>
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
-            <button className="btn" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>
@@ -209,6 +313,13 @@ class FormVisita extends Component{
          title="Error participantes"
          text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
          onConfirm={() => this.setState({showErrorSaveVisit:false})}
+         />
+        <SweetAlert
+         type={typeMessage}
+         show={this.state.showMessageCreateVisit}
+         title={titleMessage}
+         text={message}
+         onConfirm={this._closeMessageCreateVisit}
          />
       </form>
     );
@@ -221,7 +332,8 @@ function mapDispatchToProps(dispatch){
     consultDataSelect,
     consultList,
     getMasterDataFields,
-    consultParameterServer
+    consultParameterServer,
+    createVisti
   }, dispatch);
 }
 
