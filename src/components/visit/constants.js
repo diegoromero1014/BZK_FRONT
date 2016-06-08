@@ -10,4 +10,7 @@ export const CLEAR_VISIT_PAGINATOR = "CLEAR_VISIT_PAGINATOR";
 export const CLEAR_VISIT_ORDER = "CLEAR_VISIT_ORDER";
 export const CLEAR_VISIT_CREATE = "CLEAR_VISIT_CREATE";
 export const CONSULT_LAST_VISIT_REVIEW = "CONSULT_LAST_VISIT_REVIEW";
+export const CREATE_VISIT = "CREATE_VISIT";
 export const LAST_VISIT_REVIEW = "last_visit_review";
+export const SAVE_DRAFT = 0;
+export const SAVE_PUBLISHED = 1;

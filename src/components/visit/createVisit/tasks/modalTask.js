@@ -8,13 +8,19 @@ import {DateTimePicker} from 'react-widgets';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {addTask, editTask} from './actions';
+import {filterUsersBanco} from '../../../participantsVisitPre/actions';
 import Input from '../../../../ui/input/inputComponent';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from '../../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../../ui/dateTimePicker/dateTimePickerComponent';
+import _ from 'lodash';
+import $ from 'jquery';
 
-const fields =["responsable", "fecha", "tarea"];
+const fields = ["responsable", "fecha", "tarea"];
 const errors = {};
+var usersBanco = [];
+var idUsuario, nameUsuario;
 
 const validate = (values) => {
   if(!values.responsable){
@@ -42,6 +48,7 @@ class ModalTask extends Component {
       this._close = this._close.bind(this);
       this._closeCreate = this._closeCreate.bind(this);
       this._handleCreateTask = this._handleCreateTask.bind(this);
+      this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this.state = {
         showSuccessAdd:false,
         showSuccessEdit:false,
@@ -73,11 +80,31 @@ class ModalTask extends Component {
       this.props.resetForm();
     }
 
+    updateKeyValueUsersBanco(e){
+      const {fields: {responsable}, filterUsersBanco} = this.props;
+      if(e.keyCode == 13 || e.which == 13){
+        e.preventDefault();
+        if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
+          filterUsersBanco(responsable.value).then((data) => {
+            usersBanco = _.get(data, 'payload.data.data');
+            const selector =  $('.ui.search.responsable');
+            responsable.onChange(responsable.value);
+            }, (reason) => {
+          });
+        }
+      }
+    }
+
     _handleCreateTask(){
       const {fields:{responsable, fecha, tarea}, handleSubmit, error, addTask, editTask, taskEdit} = this.props;
+      if(responsable.value !== nameUsuario){
+        nameUsuario = responsable.value;
+        idUsuario = null;
+      }
       if(taskEdit !== undefined){
         taskEdit.tarea = tarea.value;
-        taskEdit.responsable = responsable.value;
+        taskEdit.idResponsable = idUsuario;
+        taskEdit.responsable = nameUsuario;
         taskEdit.fecha = fecha.value;
         editTask(taskEdit);
         this.setState({
@@ -88,7 +115,8 @@ class ModalTask extends Component {
         var task = {
           uuid,
           tarea: tarea.value,
-          responsable: responsable.value,
+          idResponsable: idUsuario,
+          responsable: nameUsuario,
           fecha: fecha.value
         }
         addTask(task);
@@ -113,12 +141,14 @@ class ModalTask extends Component {
                   <Col xs={6} md={6} lg={6}>
                     <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
-                      <Input
-                        name="txtResponsable"
-                        type="text"
-                        max="120"
-                        placeholder="Responsable de la tarea"
+                      <ComboBoxFilter
+                        name="responsableTask"
+                        labelInput="Ingrese un criterio de búsqueda..."
                         {...responsable}
+                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                        parentId="dashboardComponentScroll"
+                        data={usersBanco}
+                        value={responsable.value}
                       />
                     </dt>
                   </Col>
@@ -180,13 +210,15 @@ class ModalTask extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
       addTask,
-      editTask
+      editTask,
+      filterUsersBanco
     }, dispatch);
 }
 
-function mapStateToProps({tasks,selectsReducer}, {taskEdit}) {
+function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
   if(taskEdit !== undefined){
     return {
+      participants,
       tasks,
       selectsReducer,
       initialValues: {
