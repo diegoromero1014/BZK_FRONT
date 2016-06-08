@@ -15,11 +15,24 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from './tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
+import {LAST_VISIT_REVIEW} from '../constants';
+import {consultParameterServer} from '../actions';
+import SweetAlert from 'sweetalert-react';
 
-const fields = ["desarrolloGeneral"];
-
+const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
+var dateVisitLastReview;
 const validate = values => {
-    const errors = {}
+  var errors = {};
+    if(!values.tipoVisita){
+      errors.tipoVisita = "Debe seleccionar una opción";
+    }else{
+      errors.tipoVisita = null;
+    }
+    if(!values.fechaVisita){
+      errors.fechaVisita = "Debe seleccionar una fecha";
+    }else{
+      errors.fechaVisita = null;
+    }
     return errors;
 };
 
@@ -27,24 +40,40 @@ class FormVisita extends Component{
 
   constructor(props) {
     super(props);
+    this.state = {
+      showErrorSaveVisit: false,
+    }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
   }
 
   _submitCreateVisita(){
+    const {participants} = this.props;
+    var data = _.filter(participants, participant => _.isEqual(participant.tipo, 'banco'));
+    console.log("Participants banco", data.size);
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields} = this.props;
+    const {clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
       getMasterDataFields([VISIT_TYPE]);
+      consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
+        console.log("data.payload.data",data.payload.data);
+        if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
+          data.payload.data.parameter !== undefined ){
+            console.log("JSON.parse(data.payload.data.parameter)", JSON.parse(data.payload.data.parameter));
+          dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
+        }
+      }, (reason) =>{
+      });
     }
   }
 
   render(){
-    const {fields: {desarrolloGeneral}, clientInformacion, selectsReducer, handleSubmit} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
+      clientInformacion, selectsReducer, handleSubmit} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
@@ -90,19 +119,22 @@ class FormVisita extends Component{
             </dt>
           </Col>
         </Row>
-
-        <Row style={{padding: "10px 42px 20px 20px"}}>
+        <Row style={{padding: "10px 42px 0px 20px"}}>
           <Col xs={10} md={10} lg={10}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
+            <dl style={{fontSize: "20px", color: "#505050", marginTop: "15px", marginBottom: "0px"}}>
               <span className="section-title">Participantes en la reunión por parte del cliente </span>
               <i className="help circle icon blue"
               style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
             </dl>
           </Col>
           <BotonCreateContactComponent typeButton={1} />
+        </Row>
+        <Row style={{padding: "0px 10px 10px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+            </div>
+          </Col>
         </Row>
         <ParticipantesCliente />
 
@@ -151,17 +183,33 @@ class FormVisita extends Component{
           />
         </Col>
         </Row>
+        <Row>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
+            <h4 className="form-item">Fecha última revisión formato visita(YYY/DD/MM): <span>{dateVisitLastReview}</span></h4>
+            </div>
+          </Col>
+        </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-          <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
-            <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
-          </button>
-          <button className="btn" style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
-            <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
-          </button>
-          <button className="btn" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
-            <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
-          </button>
+          <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
+            </button>
+            <button className="btn" style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+            </button>
+            <button className="btn" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+            </button>
+          </div>
         </div>
+        <SweetAlert
+         type="error"
+         show={this.state.showErrorSaveVisit}
+         title="Error participantes"
+         text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
+         onConfirm={() => this.setState({showErrorSaveVisit:false})}
+         />
       </form>
     );
   }
@@ -172,14 +220,17 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     consultDataSelect,
     consultList,
-    getMasterDataFields
+    getMasterDataFields,
+    consultParameterServer
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants}, ownerProps){
     return {
       clientInformacion,
-      selectsReducer
+      selectsReducer,
+      visitReducer,
+      participants
     };
 }
 

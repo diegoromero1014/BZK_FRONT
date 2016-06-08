@@ -24,6 +24,8 @@ export default (state = initialState, action) => {
         return state.delete(action.index);
     case contants.CLEAR_PARTICIPANTS:
         return state.clear();
+    case contants.FILTER_USER_BANCO:
+        return state;
     default:
         return state;
     }
