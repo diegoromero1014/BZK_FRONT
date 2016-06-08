@@ -11,6 +11,7 @@ export default (state = initialState, action) => {
       const newTask = _.assign({}, {
         uuid: task.uuid,
         tarea: task.tarea,
+        idResponsable: task.idResponsable,
         responsable: task.responsable,
         fecha: task.fecha
       });
@@ -26,6 +27,7 @@ export default (state = initialState, action) => {
           return item.uuid === taskEdit.uuid;
         }), function(item) {
            item.tarea = taskEdit.tarea;
+           item.idResponsable = taskEdit.idResponsable;
            item.responsable = taskEdit.responsable;
            item.fecha = taskEdit.fecha;
            return item;
