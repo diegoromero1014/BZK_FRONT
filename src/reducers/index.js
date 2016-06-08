@@ -21,6 +21,7 @@ import editShareholderReducer from '../components/shareholder/shareholderDetail/
 import visitReducer from '../components/visit/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import taskReducer from '../components/visit/createVisit/tasks/reducer';
+import tasksByClientReducer from '../components/pendingTask/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -44,5 +45,6 @@ export default combineReducers({
     editShareholderReducer: editShareholderReducer,
     visitReducer: visitReducer,
     participants: participantsReducer,
-    tasks: taskReducer
+    tasks: taskReducer,
+    tasksByClient: tasksByClientReducer
 });
