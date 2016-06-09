@@ -10,7 +10,6 @@ class comboBoxFilter extends Component {
 
     componentWillReceiveProps({value, name, pristine, labelInput, data}) {
       const selector =  $(`.ui.search.${name}`);
-      const self = this;
       selector.search({
           cache: false,
           source: data,
@@ -19,16 +18,18 @@ class comboBoxFilter extends Component {
             'description'
           ],
           onSelect : function(event) {
+            console.log("event.title", event.title);
             self.touched = true;
-            self.setState({
-                value: event
-            });
+            value = event.title;
             return 'default';
           },
           onChange: function (id, text) {
+            console.log("onChange");
             self.touched = true;
           }
         });
+        console.log("value", value);
+        selector.search('set value', value);
         selector.search('search local', value);
         selector.focus();
     }
@@ -38,7 +39,7 @@ class comboBoxFilter extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, value} = this.props;
+       const {nameInput, labelInput, data, touched, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, onSelect, value} = this.props;
        if( touched && invalid ){
          scrollTo(parentId);
        }
@@ -55,6 +56,7 @@ class comboBoxFilter extends Component {
                    onChange={onChange}
                    placeholder="Ingrese un criterio de búsqueda..."
                    onKeyPress={onKeyPress}
+                   onSelect={onSelect}
                  />
                  <i className="search icon"></i>
                </div>
@@ -82,6 +84,7 @@ comboBoxFilter.PropTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onKeyPress: PropTypes.func,
+  onSelect: PropTypes.func,
   defaultValue: PropTypes.string
 };
 

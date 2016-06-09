@@ -31,19 +31,7 @@ const validate = (values) => {
   if(!values.fecha){
     errors.fecha = "Debe seleccionar una opción";
   }else{
-    if(!values.fecha){
-      errors.fecha = "Debe seleccionar una fecha";
-    } else {
-      if( moment(values.fecha, "DD/MM/YYYY").isValid() ){
-        if( moment(values.fecha, "DD/MM/YYYY").isAfter(moment().add("days", -1)) ){
-          errors.fecha = null;
-        } else {
-          errors.fecha = "La fecha debe ser menor o igual a la fecha actual";
-        }
-      } else {
-        errors.fecha = "La fecha ingresada no es valida";
-      }
-    }
+    errors.fecha = null;
   }
   if(!values.tarea){
     errors.tarea = "Debe ingresar un valor";
@@ -59,6 +47,7 @@ class ModalTask extends Component {
       super(props);
       this._close = this._close.bind(this);
       this._closeCreate = this._closeCreate.bind(this);
+      this._updateValue = this._updateValue.bind(this);
       this._handleCreateTask = this._handleCreateTask.bind(this);
       this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this.state = {
@@ -71,10 +60,7 @@ class ModalTask extends Component {
     }
 
     componentWillMount(){
-      const {fields: {responsable, fecha, tarea}} = this.props;
-      responsable.onChange('');
-      fecha.onChange('');
-      tarea.onChange('');
+      this.props.resetForm();
     }
 
     _close(){
@@ -92,7 +78,7 @@ class ModalTask extends Component {
         });
       }
       isOpen();
-      //this.props.resetForm();
+      this.props.resetForm();
     }
 
     updateKeyValueUsersBanco(e){
@@ -108,6 +94,10 @@ class ModalTask extends Component {
           });
         }
       }
+    }
+
+    _updateValue(value){
+      console.log("value func", value);
     }
 
     _handleCreateTask(){
@@ -164,6 +154,8 @@ class ModalTask extends Component {
                         parentId="dashboardComponentScroll"
                         data={usersBanco}
                         value={responsable.value}
+                        onChange={responsable.onChange}
+                        onSelect={val => this._updateValue(val)}
                       />
                     </dt>
                   </Col>
