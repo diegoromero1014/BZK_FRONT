@@ -80,43 +80,50 @@ class FormVisita extends Component{
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       participants, createVisti} = this.props;
-    var dataBanco = _.map(participants.toArray(),
+      console.log("participants", participants.toArray());
+    var dataBanco =[];
+    _.map(participants.toArray(),
       function(participant){
-        if(_.isEqual(participant.tipoParticipante, 'banco') ){
-          return _.assign({}, {
+        console.log("participant.tipoParticipante: ", participant.tipoParticipante);
+        if( participant.tipoParticipante === "banco" ){
+          var data = {
             "id": null,
             "employee": participant.idParticipante
-          });
+          }
+          dataBanco.push(data)
         }
       }
     );
     if( dataBanco.length > 0 && dataBanco[0] === undefined ){
       dataBanco = [];
     }
-
     if( dataBanco.length > 0 ){
-      var dataClient = _.map(participants.toArray(),
+      var dataClient = [];
+      _.map(participants.toArray(),
         function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'client')){
-            return _.assign({}, {
+          if(participant.tipoParticipante === "client"){
+            var data = {
               "id": null,
               "contact": participant.idParticipante
-            });
+            }
+            dataClient.push(data);
           }
         }
       );
       if( dataClient.length > 0 && dataClient[0] === undefined ){
         dataClient = [];
       }
-      var dataOthers = _.map(participants.toArray(),
+      var dataOthers = [];
+      _.map(participants.toArray(),
         function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'other') ){
-            return _.assign({}, {
+          if(participant.tipoParticipante === "other" ){
+            var data = {
               "id": null,
               "name": participant.nombreParticipante,
               "position": participant.cargo,
               "company": participant.empresa
-            });
+            }
+            dataOthers.push(data);
           }
         }
       );
