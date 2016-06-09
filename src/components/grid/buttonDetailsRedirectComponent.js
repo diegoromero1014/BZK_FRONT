@@ -13,7 +13,7 @@ class ButtonDetailsRedirectComponent extends Component {
 
   _detailVisit(){
       const {actionsRedirect} = this.props;
-      redirectUrl(actionsRedirect.urlRedirect);
+      redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }
 
   render(){

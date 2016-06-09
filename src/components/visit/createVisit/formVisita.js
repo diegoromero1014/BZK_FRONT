@@ -13,7 +13,7 @@ import {VISIT_TYPE} from '../../selectsComponent/constants';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
-import TaskVisit from './tasks/taskVisit';
+import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti} from '../actions';

@@ -20,13 +20,10 @@ class TaskVisit extends Component{
     super(props);
   }
 
-  componentWillMount(){
-  }
-
   render(){
     const {error, handleSubmit, tasks} = this.props;
     return(
-      <form className="my-custom-tab"
+      <div className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <Row style={{padding: "20px 10px 0px 20px"}}>
           <Col xs={11} md={11} lg={11}>
@@ -55,7 +52,7 @@ class TaskVisit extends Component{
             <h4 className="form-item">Señor usuario, no se han adicionado pendientes.</h4>
           </div>
         }
-      </form>
+      </div>
     );
   }
 
@@ -68,10 +65,9 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({tasks, selectsReducer}, ownerProps){
+function mapStateToProps({tasks}, ownerProps){
     return {
-      tasks,
-      selectsReducer
+      tasks
     };
 }
 

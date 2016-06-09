@@ -1,8 +1,7 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT} from './constants';
+  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT} from './constants';
 import axios from 'axios';
-
 
 export function createVisti(jsonVisit){
   const json = {
@@ -27,6 +26,7 @@ export function createVisti(jsonVisit){
     payload: request
   }
 }
+
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,order,statusDocumentId){
   const json = {
     "messageHeader": {
@@ -100,28 +100,54 @@ export function limitiInf(limInf){
 }
 
 export function clearVisit(){
-    return {
-        type: CLEAR_VISIT
-    };
+  return {
+    type: CLEAR_VISIT
+  };
 }
 
 export function clearVisitPaginator(){
-    return {
-        type: CLEAR_VISIT_PAGINATOR
-    };
+  return {
+    type: CLEAR_VISIT_PAGINATOR
+  };
 }
 
 export function clearVisitOrder(){
-    return {
-        type: CLEAR_VISIT_ORDER
-    };
+  return {
+    type: CLEAR_VISIT_ORDER
+  };
 }
 
 
 export function orderColumnVisit(orderVisit,columnVisit){
-    return {
-        type: ORDER_COLUMN_VISIT,
-        orderVisit:orderVisit,
-        columnVisit:columnVisit
-    };
+  return {
+    type: ORDER_COLUMN_VISIT,
+    orderVisit:orderVisit,
+    columnVisit:columnVisit
+  };
+}
+
+export function detailVisit(idVisit){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+    },
+    "messageBody": {
+         "id": idVisit
+     }
+  }
+
+  var request = axios.post(APP_URL + "/visitDocumentDetail", json);
+  return{
+    type: GET_DETAIL_VISIT,
+    payload: request
+  }
 }

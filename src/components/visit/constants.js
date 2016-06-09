@@ -14,3 +14,4 @@ export const CREATE_VISIT = "CREATE_VISIT";
 export const LAST_VISIT_REVIEW = "last_visit_review";
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
+export const GET_DETAIL_VISIT = "GET_DETAIL_VISIT";

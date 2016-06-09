@@ -1,5 +1,5 @@
 import React, {Component,PropTypes} from 'react';
-import GridComponent from '../../../grid/component';
+import GridComponent from '../../grid/component';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {DELETE_TASK_VIEW} from './constants';

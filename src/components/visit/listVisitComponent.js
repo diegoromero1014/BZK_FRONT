@@ -106,7 +106,7 @@ class ListVisitComponent extends Component {
               }
             _.set(value, 'actionsRedirect',  {
               actionView: true,
-              id: value.nombre,
+              id: value.id,
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });
