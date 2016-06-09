@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
-import {visitByClientFindServer} from '../visit/actions';
+import {visitByClientFindServer,clearVisitOrder} from '../visit/actions';
 import {DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
@@ -29,7 +29,6 @@ class ButtonDeleteComponent extends Component{
           deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
             if((_.get(data, 'payload.status') === 200)){
                 this.setState({showEx: true});
-                console.log(actionsDelete)
               } else {
                 this.setState({showEr: true});
             }
@@ -67,7 +66,7 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        const {visitByClientFindServer,contactsByClientFindServer,clearVisitOrder,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -80,11 +79,12 @@ class ButtonDeleteComponent extends Component{
               clearShareholderCreate();
               clearShareholderOrder();
               shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
-          }
-          else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
-            visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"sh.sharePercentage",1,"");
+          }else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
+            clearVisitOrder();
+              visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
           }
       }
+      this.setState({showEx:false, showEr: false,show: false});
     }
 
 
@@ -133,6 +133,7 @@ function mapDispatchToProps(dispatch) {
     deleteServer,contactsByClientFindServer,clearContactCreate,
     shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
     visitByClientFindServer,
+    clearVisitOrder,
     deleteParticipant,
     deleteTask
   }, dispatch);
