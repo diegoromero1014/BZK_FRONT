@@ -16,7 +16,7 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
-import {consultParameterServer, createVisti, detailVisit} from '../actions';
+import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import _ from 'lodash';
@@ -49,13 +49,15 @@ class FormEdit extends Component{
     super(props);
     this.state = {
       showErrorSaveVisit: false,
-      showConfirm: false
+      showConfirm: false,
+      idVisit: ""
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButton = this._onClickButton.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
+    this._onClickPDF = this._onClickPDF.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -69,6 +71,11 @@ class FormEdit extends Component{
         showMessageCreateVisit: false
       });
     }
+  }
+
+  _onClickPDF(){
+    const {pdfDescarga} = this.props;
+    pdfDescarga(window.localStorage.getItem('idClientSelected'),this.state.idVisit);
   }
 
   _closeConfirmCloseVisit(){
@@ -173,6 +180,8 @@ class FormEdit extends Component{
   componentWillMount(){
     const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit} = this.props;
     console.log("idParam", id);
+    this.setState({idVisit : id});
+    console.log("idParam1", this.state.idVisit);
     getMasterDataFields([VISIT_TYPE]);
     detailVisit(id).then(() => {
     });
@@ -307,11 +316,14 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px -117px", position:"fixed"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+            </button>
+            <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
             </button>
             <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
@@ -353,6 +365,7 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     consultDataSelect,
     consultList,
+    pdfDescarga,
     getMasterDataFields,
     consultParameterServer,
     createVisti,

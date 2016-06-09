@@ -1,11 +1,12 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
+import {CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN_TASK, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
 import axios from 'axios';
 
-export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder, order, searchTerm) {
+export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder, order,status) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
+      "username":"lmejias",
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -20,21 +21,18 @@ export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder,
       "clientId": clientId,
       "pageNum": pageNum,
       "maxRows" : maxRows,
-      "searchTerm" : searchTerm,
       "columnOrder": columnOrder,
-      "order": order
+      "order": order,
+       "status": status
     }
   };
+
 
   var request = axios.post(APP_URL + "/pendingTaskList", json);
   return {
     type: GET_USER_TASK_LIST_CLIENT,
     payload: request
   }
-}
-
-export function downloadFileSocialStyle() {
-  window.open(APP_URL + "/downloadFileSocialStyle", '_blank', '');
 }
 
 export function changePage(page) {
@@ -44,19 +42,13 @@ export function changePage(page) {
   }
 }
 
-export function changeKeywordUserTask(keywordUserTask) {
-  return {
-    type: CHANGE_KEYWORD_USERTASK,
-    keywordUserTask: keywordUserTask
-  }
-}
-
 export function limitiInf(limInf) {
   return {
     type: LIMITE_INF,
     limInfe: limInf
   }
 }
+
 
 export function clearUserTask() {
     return {
@@ -76,18 +68,10 @@ export function clearUserTaskOrder() {
     };
 }
 
-
-export function clearUserTaskCreate() {
+export function orderColumnUserTask(orderTask, columnTask) {
     return {
-        type: CLEAR_USER_TASK_CREAR
-    };
-}
-
-
-export function orderColumnUserTask(order, column) {
-    return {
-        type: ORDER_COLUMN,
-        order:order,
-        column:column
+        type: ORDER_COLUMN_TASK,
+        orderTask:orderTask,
+        columnTask:columnTask
     };
 }

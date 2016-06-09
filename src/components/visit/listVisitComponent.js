@@ -8,6 +8,7 @@ import {visitByClientFindServer,orderColumnVisit,clearVisitOrder,clearVisitPagin
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_VISIT} from './constants';
 
+
 let v1 = "";
 
 

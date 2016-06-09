@@ -52,7 +52,8 @@ class FormVisita extends Component{
       showConfirm: false
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
-    this._onClickButton = this._onClickButton.bind(this);
+    this._onClickButtonPublished = this._onClickButtonPublished.bind(this);
+    this._onClickButtonDraft = this._onClickButtonDraft.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
@@ -79,49 +80,57 @@ class FormVisita extends Component{
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       participants, createVisti} = this.props;
-    var dataBanco = _.map(participants.toArray(),
+      console.log("participants", participants.toArray());
+    var dataBanco =[];
+    _.map(participants.toArray(),
       function(participant){
-        if(_.isEqual(participant.tipoParticipante, 'banco') ){
-          return _.assign({}, {
+        console.log("participant.tipoParticipante: ", participant.tipoParticipante);
+        if( participant.tipoParticipante === "banco" ){
+          var data = {
             "id": null,
             "employee": participant.idParticipante
-          });
+          }
+          dataBanco.push(data)
         }
       }
     );
     if( dataBanco.length > 0 && dataBanco[0] === undefined ){
       dataBanco = [];
     }
-
     if( dataBanco.length > 0 ){
-      var dataClient = _.map(participants.toArray(),
+      var dataClient = [];
+      _.map(participants.toArray(),
         function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'client')){
-            return _.assign({}, {
+          if(participant.tipoParticipante === "client"){
+            var data = {
               "id": null,
               "contact": participant.idParticipante
-            });
+            }
+            dataClient.push(data);
           }
         }
       );
       if( dataClient.length > 0 && dataClient[0] === undefined ){
         dataClient = [];
       }
-      var dataOthers = _.map(participants.toArray(),
+      var dataOthers = [];
+      _.map(participants.toArray(),
         function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'other') ){
-            return _.assign({}, {
+          if(participant.tipoParticipante === "other" ){
+            var data = {
               "id": null,
               "name": participant.nombreParticipante,
               "position": participant.cargo,
               "company": participant.empresa
-            });
+            }
+            dataOthers.push(data);
           }
         }
       );
       if( dataOthers.length > 0 && dataOthers[0] === undefined ){
         dataOthers = [];
       }
+      console.log("typeButtonClick", typeButtonClick);
       var visitJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
@@ -160,7 +169,12 @@ class FormVisita extends Component{
     }
   }
 
-  _onClickButton(buttonClick){
+  _onClickButtonPublished(buttonClick){
+    typeButtonClick = buttonClick;
+  }
+
+  _onClickButtonDraft(buttonClick){
+    console.log("Valor focus button draft", buttonClick);
     typeButtonClick = buttonClick;
   }
 
@@ -310,10 +324,10 @@ class FormVisita extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>

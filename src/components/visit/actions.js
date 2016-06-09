@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT} from './constants';
+  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT,PDF} from './constants';
 import axios from 'axios';
 
 export function createVisti(jsonVisit){
@@ -25,6 +25,11 @@ export function createVisti(jsonVisit){
     type: CREATE_VISIT,
     payload: request
   }
+}
+
+
+export function pdfDescarga(idclient, idVisit){
+window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es");
 }
 
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,order,statusDocumentId){
