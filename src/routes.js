@@ -39,7 +39,7 @@ export default (
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="previsita" component={Previsita}></Route>
                 <Route path="visita" component={Visit}></Route>
-                <Route path="visitaEditar" component={VisitEdit}></Route>
+                <Route path="visitaEditar/:id" component={VisitEdit}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

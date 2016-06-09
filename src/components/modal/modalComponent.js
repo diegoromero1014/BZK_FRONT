@@ -8,7 +8,7 @@ import {clearSearchShareholder} from '../shareholder/shareholderDetail/actions';
 import {clearValuesAdressessKeys} from '../selectsComponent/actions';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../shareholder/shareholderDetail/componentShareHolderDetail';
-import ModalTask from '../visit/createVisit/tasks/modalTask';
+import ModalTask from '../visit/tasks/modalTask';
 
 class ModalComponentDialog extends Component {
     constructor(props) {

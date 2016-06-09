@@ -116,7 +116,7 @@ class ParticipantesCliente extends Component{
       disabledButtonCreate = 'disabled';
     }
     return(
-      <form onSubmit={handleSubmit(this._submitValores)}>
+      <div>
         <Row style={{padding: "0px 10px 0px 20px"}}>
           <Col xs={12} md={3} lg={3} style={{paddingRight: "20px"}}>
             <dt>
@@ -201,7 +201,7 @@ class ParticipantesCliente extends Component{
           text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
           onConfirm={() => this.setState({showParticipantExist:false})}
           />
-      </form>
+      </div>
     );
   }
 }

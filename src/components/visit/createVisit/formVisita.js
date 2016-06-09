@@ -13,7 +13,7 @@ import {VISIT_TYPE} from '../../selectsComponent/constants';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
-import TaskVisit from './tasks/taskVisit';
+import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti} from '../actions';
@@ -48,11 +48,15 @@ class FormVisita extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      showErrorSaveVisit: false
+      showErrorSaveVisit: false,
+      showConfirm: false
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
-    this._onClickButton = this._onClickButton.bind(this);
+    this._onClickButtonPublished = this._onClickButtonPublished.bind(this);
+    this._onClickButtonDraft = this._onClickButtonDraft.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
+    this._onCloseButton = this._onCloseButton.bind(this);
+    this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -66,6 +70,11 @@ class FormVisita extends Component{
         showMessageCreateVisit: false
       });
     }
+  }
+
+  _closeConfirmCloseVisit(){
+    this.setState({showConfirm: false });
+    redirectUrl("/dashboard/clientInformation");
   }
 
   _submitCreateVisita(){
@@ -114,6 +123,7 @@ class FormVisita extends Component{
       if( dataOthers.length > 0 && dataOthers[0] === undefined ){
         dataOthers = [];
       }
+      console.log("typeButtonClick", typeButtonClick);
       var visitJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
@@ -152,8 +162,19 @@ class FormVisita extends Component{
     }
   }
 
-  _onClickButton(buttonClick){
+  _onClickButtonPublished(buttonClick){
     typeButtonClick = buttonClick;
+  }
+
+  _onClickButtonDraft(buttonClick){
+    console.log("Valor focus button draft", buttonClick);
+    typeButtonClick = buttonClick;
+  }
+
+  _onCloseButton(){
+    message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
+    titleMessage = "Confirmación salida";
+    this.setState({showConfirm :true});
   }
 
   componentWillMount(){
@@ -296,13 +317,13 @@ class FormVisita extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
-            <button className="btn" type="button" style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>
@@ -321,6 +342,17 @@ class FormVisita extends Component{
          text={message}
          onConfirm={this._closeMessageCreateVisit}
          />
+         <SweetAlert
+           type= "warning"
+           show={this.state.showConfirm}
+           title={titleMessage}
+           text={message}
+           confirmButtonColor= '#DD6B55'
+           confirmButtonText= 'Sí, estoy seguro!'
+           cancelButtonText = "Cancelar"
+           showCancelButton= {true}
+           onCancel= {() => this.setState({showConfirm: false })}
+           onConfirm={this._closeConfirmCloseVisit}/>
       </form>
     );
   }

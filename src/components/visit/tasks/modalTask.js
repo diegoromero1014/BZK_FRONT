@@ -8,12 +8,12 @@ import {DateTimePicker} from 'react-widgets';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {addTask, editTask} from './actions';
-import {filterUsersBanco} from '../../../participantsVisitPre/actions';
-import Input from '../../../../ui/input/inputComponent';
-import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
-import ComboBoxFilter from '../../../../ui/comboBoxFilter/comboBoxFilter';
-import Textarea from '../../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../../ui/dateTimePicker/dateTimePickerComponent';
+import {filterUsersBanco} from '../../participantsVisitPre/actions';
+import Input from '../../../ui/input/inputComponent';
+import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
+import Textarea from '../../../ui/textarea/textareaComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import _ from 'lodash';
 import $ from 'jquery';
 
