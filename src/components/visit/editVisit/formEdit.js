@@ -19,8 +19,9 @@ import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti, detailVisit} from '../actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
+import _ from 'lodash';
 
-const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
+const fields = ["tipoVisita","fechaVisita","desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 var dateVisitLastReview;
 var showMessageCreateVisit= false;
 var typeMessage = "";
@@ -185,7 +186,8 @@ class FormEdit extends Component{
   }
 
   render(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, selectsReducer, handleSubmit} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
+    selectsReducer, handleSubmit} = this.props;
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -360,10 +362,18 @@ function mapDispatchToProps(dispatch){
 
 function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
-    console.log("detailVisit", detailVisit);
-    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== ''){
+    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      console.log("es diferente", detailVisit);
+      var visitTime = detailVisit.data.visitTime;
       return {
         initialValues:{
+          tipoVisita: detailVisit.data.visitType,
+          fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime).format('DD/MM/YYYY') : null,
+          desarrolloGeneral: detailVisit.data.comments,
+          participantesCliente: detailVisit.data.participatingContacts,
+          participantesBanco: detailVisit.data.participatingEmployees,
+          participantesOtros: detailVisit.data.relatedEmployees,
+          pendientes: detailVisit.data.userTasks
         },
         selectsReducer,
         visitReducer,
@@ -372,6 +382,13 @@ function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProp
     }else{
       return {
         initialValues:{
+          tipoVisita: '',
+          fechaVisita: '',
+          desarrolloGeneral: '',
+          participantesCliente: '',
+          participantesBanco: '',
+          participantesOtros: '',
+          pendientes: ''
         },
         selectsReducer,
         visitReducer,

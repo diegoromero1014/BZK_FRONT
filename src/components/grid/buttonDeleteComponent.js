@@ -8,7 +8,7 @@ import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOr
 import {visitByClientFindServer} from '../visit/actions';
 import {DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
-import {deleteTask} from '../visit/createVisit/tasks/actions';
+import {deleteTask} from '../visit/tasks/actions';
 
 class ButtonDeleteComponent extends Component{
 
