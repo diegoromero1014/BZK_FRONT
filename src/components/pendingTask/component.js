@@ -1,34 +1,29 @@
 import React, {Component} from 'react';
-import SearchUserTaskComponent from './searchUserTaskComponent';
-import ListPendingTaskComponent from './listPendingTaskComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {tasksByClientFindServer, clearUserTask} from './actions';
 import {Combobox} from 'react-widgets';
-//import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
+import {NUMBER_RECORDS,FILTER_STATUS_TASK_ID} from './constants';
+import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
-import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RECORDS} from './constants';
-//import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
+import ListPendingTaskComponent from './listPendingTaskComponent';
 
 class UserTaskComponent extends Component {
 
   constructor(props) {
      super(props);
-     this.state= {
-        value1: "",
-        value2: "",
-        value3: ""
-     };
+     this.state = {value1: ""};
+
   }
 
   componentWillMount() {
     if( window.localStorage.getItem('sessionToken') === "" ) {
       redirectUrl("/login");
     } else {
-      const {tasksByClientFindServer, selectsReducer, tasksByClient, value1, value2, value3, clearUserTask} = this.props;
+      const {tasksByClientFindServer,tasksByClient,clearUserTask} = this.props;
       clearUserTask();
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "");
+      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
     }
   }
 
@@ -43,21 +38,23 @@ class UserTaskComponent extends Component {
     return (
       <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
-          <Grid style={{ width: "100%"}}>
-            <Row>
-              <Col xs={10} sm={10} md={11} lg={11}>
-                <SearchUserTaskComponent value1={this.state.value1} value2={this.state.value2} value3={this.state.value3} />
-              </Col>
-              {/* <BotonCreateContactComponent/> */}
-            </Row>
-          </Grid>
+        <Grid style={{ width: "100%"}}>
+          <Row>
+          <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Estado de la tarea:</span>
+          <SelectFilterContact config={{
+              onChange: (value) => this.setState({value1: value.id})
+          }}
+          idTypeFilter={FILTER_STATUS_TASK_ID}/>
+          </Col>
+          </Row>
+        </Grid>
         </div>
         <Grid style= {{display:visibleTable, width: "100%"}}>
           <Row>
             <Col xs>
-              <ListPendingTaskComponent value1={this.state.value1} value2={this.state.value2} value3={this.state.value3} />
-              <PaginationPendingTaskComponent value1={this.state.value1} value2={this.state.value2} value3={this.state.value3} />
-            </Col>
+              <ListPendingTaskComponent value1={this.state.value1}/>
+              <PaginationPendingTaskComponent value1={this.state.value1}/>
+          </Col>
           </Row>
         </Grid>
         <Grid style= {{display:visibleMessage, width: "100%"}}>
@@ -78,9 +75,9 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({tasksByClient, selectsReducer}, ownerProps) {
+function mapStateToProps({tasksByClient}, ownerProps) {
   return {
-    tasksByClient, selectsReducer
+    tasksByClient
   };
 }
 

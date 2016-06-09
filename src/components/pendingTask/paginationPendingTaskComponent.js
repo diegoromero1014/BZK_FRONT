@@ -1,53 +1,46 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {tasksByClientFindServer, changePage, limitiInf, clearUserTask, clearUserTaskOrder, clearUserTaskPaginator} from './actions';
+import {tasksByClientFindServer,changePage, limitiInf,clearUserTask,clearUserTaskOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
-let v1 = "";
-let v2 = "";
-let v3 = "";
-
+let v1 ="" ;
 class PaginationPendingTaskComponent extends Component {
 
   constructor(props) {
      super(props);
-    this._handleContactsByClientsFind = this._handleContactsByClientsFind.bind(this);
+     this._handleTaskByClientsFind = this._handleTaskByClientsFind.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-      const {
-          value1,
-          value2,
-          value3
-      } = nextProps;
-      if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
-          (v3 !== nextProps.value3)) {
-        v1 = nextProps.value1;
-        v2 = nextProps.value2;
-        v3 = nextProps.value3;
-        const {clearUserTaskOrder} = this.props;
-        clearUserTaskOrder();
-        this._handleContactsByClientsFind(0);
-      }
-  }
 
-  componentWillMount() {
+  componentWillMount(){
     const{clearUserTask} = this.props;
     clearUserTask();
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {
+        value1
+    } = nextProps;
+    if ((v1 !== nextProps.value1)){
+      v1 = nextProps.value1;
+      const {clearUserTaskOrder} = this.props;
+      clearUserTaskOrder();
+      this._handleTaskByClientsFind(0);
+    }
   }
 
   _handlePaginar(page) {
     const {changePage, limitiInf, tasksByClient} = this.props;
     var limInf = (page - 1);
     limitiInf(limInf);
+    this._handleTaskByClientsFind(limInf);
     changePage(page);
-    this._handleContactsByClientsFind(limInf);
   }
 
-  _handleContactsByClientsFind(limInf) {
+  _handleTaskByClientsFind(limInf) {
       const {tasksByClient, tasksByClientFindServer} = this.props;
-      tasksByClientFindServer(limInf, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('column'), tasksByClient.get('order'), tasksByClient.get('keywordUserTask'));
+      tasksByClientFindServer(limInf, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('columnTask'), tasksByClient.get('orderTask'), v1);
   }
 
   render() {
@@ -103,7 +96,7 @@ class PaginationPendingTaskComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    tasksByClientFindServer, changePage, limitiInf, clearUserTask, clearUserTaskOrder, clearUserTaskPaginator
+    tasksByClientFindServer, changePage, limitiInf,clearUserTask,clearUserTaskOrder
   }, dispatch);
 }
 

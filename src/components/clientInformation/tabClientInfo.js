@@ -128,11 +128,8 @@ class TabClientInfo extends Component{
           <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
           </li>
-          <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
-          </li>
           <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, 6)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Pendientes</a>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Tareas</a>
           </li>
   			</ul>
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
