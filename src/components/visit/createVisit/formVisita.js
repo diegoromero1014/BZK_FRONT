@@ -37,8 +37,16 @@ const validate = values => {
     }
     if(!values.fechaVisita){
       errors.fechaVisita = "Debe seleccionar una fecha";
-    }else{
-      errors.fechaVisita = null;
+    } else {
+      if( moment(values.fechaVisita, "DD/MM/YYYY").isValid() ){
+        if( moment(values.fechaVisita, "DD/MM/YYYY").isAfter(moment()) ){
+          errors.fechaVisita = "La fecha debe ser menor o igual a la fecha actual";
+        } else {
+          errors.fechaVisita = null;
+        }
+      } else {
+        errors.fechaVisita = "La fecha ingresada no es valida";
+      }
     }
     return errors;
 };
@@ -79,7 +87,7 @@ class FormVisita extends Component{
 
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, createVisti} = this.props;
+      participants, tasks, createVisti} = this.props;
       console.log("participants", participants.toArray());
     var dataBanco =[];
     _.map(participants.toArray(),
@@ -127,6 +135,21 @@ class FormVisita extends Component{
           }
         }
       );
+
+      var tareas = [];
+      _.map(tasks.toArray(),
+        function(task){
+            var data = {
+              "id": null,
+              "task": task.tarea,
+              "employee": task.idResponsable,
+              "employeeName": task.responsable,
+              "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+            }
+            tareas.push(data);
+        }
+      );
+
       if( dataOthers.length > 0 && dataOthers[0] === undefined ){
         dataOthers = [];
       }
@@ -138,10 +161,12 @@ class FormVisita extends Component{
         "participatingContacts": dataClient.length === 0 ? null : dataClient,
         "participatingEmployees": dataBanco,
         "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+        "userTasks": tareas,
         "comments": desarrolloGeneral.value,
         "visitType": tipoVisita.value,
         "documentStatus": typeButtonClick
       }
+      console.log("visitJson", visitJson);
       createVisti(visitJson).then((data)=> {
         if((_.get(data, 'payload.validateLogin') === 'false')){
           redirectUrl("/login");
@@ -225,11 +250,11 @@ class FormVisita extends Component{
             </dt>
             <dt>
               <ComboBox
+                {...tipoVisita}
                 name="tipoVisita"
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                {...tipoVisita}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
               />
@@ -376,12 +401,13 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       visitReducer,
-      participants
+      participants,
+      tasks
     };
 }
 

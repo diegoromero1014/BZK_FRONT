@@ -7,13 +7,6 @@ import {deleteTask, clearTasks} from './actions';
 import BotonCreateContactComponent from './botonCreateTaskVisit';
 import ListTasks from './listTasks';
 
-const fields = [];
-
-const validate = values => {
-    const errors = {}
-    return errors;
-};
-
 class TaskVisit extends Component{
 
   constructor(props) {
@@ -21,7 +14,7 @@ class TaskVisit extends Component{
   }
 
   render(){
-    const {error, handleSubmit, tasks} = this.props;
+    const {tasks} = this.props;
     return(
       <div className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -71,8 +64,4 @@ function mapStateToProps({tasks}, ownerProps){
     };
 }
 
-export default reduxForm({
-  form: 'submitValidation',
-  fields,
-  validate
-}, mapStateToProps, mapDispatchToProps)(TaskVisit);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskVisit);

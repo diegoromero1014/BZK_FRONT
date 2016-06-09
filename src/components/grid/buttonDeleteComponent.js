@@ -20,10 +20,11 @@ class ButtonDeleteComponent extends Component{
        showEr:false
      };
      this._onConfirmDelete = this._onConfirmDelete.bind(this);
+     this._confirmDeleteEntity = this._confirmDeleteEntity.bind(this);
      this._closeDelete = this._closeDelete.bind(this);
   }
 
-  _onConfirmDelete(){
+  _onConfirmDelete(e){
     const {actionsDelete, deleteServer, participants, tasks} = this.props;
     if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW){
           deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
@@ -87,12 +88,16 @@ class ButtonDeleteComponent extends Component{
       this.setState({showEx:false, showEr: false,show: false});
     }
 
+  _confirmDeleteEntity(e){
+    e.preventDefault();
+    this.setState({ show: true });
+  }
 
   render(){
     const {actionsDelete,deleteGridReducer} = this.props;
     return (
     <td style={{padding: '10px', textAlign: 'center'}}>
-      <button onClick={() => this.setState({ show: true })} className="btn btn-sm  btn-danger">
+      <button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
           <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
         </button>
             <SweetAlert
