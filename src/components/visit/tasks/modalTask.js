@@ -47,6 +47,7 @@ class ModalTask extends Component {
       super(props);
       this._close = this._close.bind(this);
       this._closeCreate = this._closeCreate.bind(this);
+      this._updateValue = this._updateValue.bind(this);
       this._handleCreateTask = this._handleCreateTask.bind(this);
       this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this.state = {
@@ -93,6 +94,10 @@ class ModalTask extends Component {
           });
         }
       }
+    }
+
+    _updateValue(value){
+      console.log("value func", value);
     }
 
     _handleCreateTask(){
@@ -149,6 +154,8 @@ class ModalTask extends Component {
                         parentId="dashboardComponentScroll"
                         data={usersBanco}
                         value={responsable.value}
+                        onChange={responsable.onChange}
+                        onSelect={val => this._updateValue(val)}
                       />
                     </dt>
                   </Col>
