@@ -13,6 +13,11 @@ class TaskVisit extends Component{
     super(props);
   }
 
+  componentWillMount(){
+    const{clearTasks} = this.props;
+    clearTasks();
+  }
+
   render(){
     const {tasks} = this.props;
     return(

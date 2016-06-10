@@ -30,19 +30,6 @@ var typeButtonClick;
 
 const validate = values => {
   var errors = {};
-    /*if(!values.fechaVisita){
-      errors.fechaVisita = "Debe seleccionar una fecha";
-    } else {
-      if( moment(values.fechaVisita, "DD/MM/YYYY").isValid() ){
-        if( moment(values.fechaVisita, "DD/MM/YYYY").isAfter(moment()) ){
-          errors.fechaVisita = "La fecha debe ser menor o igual a la fecha actual";
-        } else {
-          errors.fechaVisita = null;
-        }
-      } else {
-        errors.fechaVisita = "La fecha ingresada no es valida";
-      }
-    }*/
     return errors;
 };
 
