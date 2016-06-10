@@ -68,7 +68,7 @@ class ListParticipantesCliente extends Component {
         },
         {
           title: "Actitud frente al grupo",
-          key:"actitudGrupo"
+          key:"actitudBanco"
         },
         {
           title: "",
@@ -91,7 +91,7 @@ class ListParticipantesCliente extends Component {
         },
         {
           title: "Actitud frente al grupo",
-          key:"actitudGrupo"
+          key:"actitudBanco"
         }
       ]
     }

@@ -54,7 +54,7 @@ class VisitComponent extends Component {
           idTypeFilter={FILTER_STATUS_VISIT_ID}/>
           </Col>
           <Col xs>
-          <button className="btn btn-primary" type="button" title="Crear visita" style={{marginTop: '21px'}} onClick={this._createVisit}>
+          <button className="btn btn-primary" type="button" title="Crear reunión" style={{marginTop: '21px'}} onClick={this._createVisit}>
             <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
           </button>
         </Col>
