@@ -48,28 +48,50 @@ class ListTasks extends Component {
   }
 
   _renderHeaders(){
-    return [
-      {
-        title: "",
-        key:"actions"
-      },
-      {
-        title: "Tarea",
-        key: "tarea"
-      },
-      {
-        title: "Responsable",
-        key: "responsable"
-      },
-      {
-        title: "Fecha",
-        key: "fecha"
-      },
-      {
-        title: "",
-        key:"delete"
-      }
-    ]
+    const {disabled} = this.props;
+    if(disabled === '' || disabled === undefined){
+      return [
+        {
+          title: "",
+          key:"actions"
+        },
+        {
+          title: "Tarea",
+          key: "tarea"
+        },
+        {
+          title: "Responsable",
+          key: "responsable"
+        },
+        {
+          title: "Fecha",
+          key: "fecha"
+        },
+        {
+          title: "",
+          key:"delete"
+        }
+      ]
+    }else{
+      return [
+        {
+          title: "",
+          key:"actions"
+        },
+        {
+          title: "Tarea",
+          key: "tarea"
+        },
+        {
+          title: "Responsable",
+          key: "responsable"
+        },
+        {
+          title: "Fecha",
+          key: "fecha"
+        }
+      ]
+    }
   }
 
   _mapValueTasks(){

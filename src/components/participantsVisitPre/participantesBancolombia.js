@@ -141,7 +141,7 @@ class ParticipantesBancolombia extends Component{
   render(){
     const {fields: {
       idUsuario, nameUsuario, cargoUsuario
-    }, error, handleSubmit, participants, contactsByClient, addParticipant} = this.props;
+    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -153,6 +153,7 @@ class ParticipantesBancolombia extends Component{
     }
     return(
       <div>
+      { disabled === '' || disabled === undefined ?
         <Row style={{padding: "0px 10px 0px 20px"}}>
           <Col xs={12} md={5.5} lg={5.5} style={{paddingRight: "20px"}}>
             <dt>
@@ -196,10 +197,11 @@ class ParticipantesBancolombia extends Component{
             </button>
           </Col>
         </Row>
+        : ''}
         {data.length > 0 ?
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs>
-              <ListParticipantesBancolombia />
+              <ListParticipantesBancolombia disabled={disabled}/>
             </Col>
           </Row> :
           <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>

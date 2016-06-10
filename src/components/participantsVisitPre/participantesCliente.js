@@ -105,8 +105,7 @@ class ParticipantesCliente extends Component{
   render(){
     const {fields: {
       contactoCliente, cargoContacto, estiloSocial, actitudGrupo
-    }, error, handleSubmit, participants, contactsByClient, addParticipant} = this.props;
-
+    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -117,6 +116,7 @@ class ParticipantesCliente extends Component{
     }
     return(
       <div>
+      { disabled === '' || disabled === undefined ?
         <Row style={{padding: "0px 10px 0px 20px"}}>
           <Col xs={12} md={3} lg={3} style={{paddingRight: "20px"}}>
             <dt>
@@ -177,10 +177,11 @@ class ParticipantesCliente extends Component{
             </button>
           </Col>
         </Row>
+        : ''}
         {data.length > 0 ?
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs>
-              <ListParticipantesCliente />
+              <ListParticipantesCliente disabled={disabled}/>
             </Col>
           </Row> :
           <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
