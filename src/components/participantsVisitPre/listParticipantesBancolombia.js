@@ -52,20 +52,34 @@ class ListParticipantesBancolombia extends Component {
   }
 
   _renderHeaders(){
-    return [
-      {
-        title: "Nombre",
-        key:"name"
-      },
-      {
-        title: "Cargo",
-        key:"cargo"
-      },
-      {
-        title: "",
-        key:"delete"
-      },
-    ]
+    const {disabled} = this.props;
+    if(disabled === '' || disabled === undefined){
+      return [
+        {
+          title: "Nombre",
+          key:"name"
+        },
+        {
+          title: "Cargo",
+          key:"cargo"
+        },
+        {
+          title: "",
+          key:"delete"
+        },
+      ]
+    }else{
+      return [
+        {
+          title: "Nombre",
+          key:"name"
+        },
+        {
+          title: "Cargo",
+          key:"cargo"
+        }
+      ]
+    }
   }
 
   _mapValueParticipantes(){

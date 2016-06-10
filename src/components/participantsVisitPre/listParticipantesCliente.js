@@ -51,28 +51,50 @@ class ListParticipantesCliente extends Component {
   }
 
   _renderHeaders(){
-    return [
-      {
-        title: "Nombre",
-        key:"name"
-      },
-      {
-        title: "Cargo",
-        key:"cargo"
-      },
-      {
-        title: "Estilo social",
-        key:"estiloSocial"
-      },
-      {
-        title: "Actitud frente al grupo",
-        key:"actitudGrupo"
-      },
-      {
-        title: "",
-        key:"delete"
-      },
-    ]
+    const {disabled} = this.props;
+    if(disabled === '' || disabled === undefined){
+      return [
+        {
+          title: "Nombre",
+          key:"name"
+        },
+        {
+          title: "Cargo",
+          key:"cargo"
+        },
+        {
+          title: "Estilo social",
+          key:"estiloSocial"
+        },
+        {
+          title: "Actitud frente al grupo",
+          key:"actitudGrupo"
+        },
+        {
+          title: "",
+          key:"delete"
+        },
+      ]
+    }else{
+      return [
+        {
+          title: "Nombre",
+          key:"name"
+        },
+        {
+          title: "Cargo",
+          key:"cargo"
+        },
+        {
+          title: "Estilo social",
+          key:"estiloSocial"
+        },
+        {
+          title: "Actitud frente al grupo",
+          key:"actitudGrupo"
+        }
+      ]
+    }
   }
 
   _mapValueParticipantes(){

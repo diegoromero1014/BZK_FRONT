@@ -14,7 +14,7 @@ class TaskVisit extends Component{
   }
 
   render(){
-    const {tasks} = this.props;
+    const {tasks, disabled} = this.props;
     return(
       <div className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -24,9 +24,11 @@ class TaskVisit extends Component{
               <span style={{fontSize: "22px"}}> Pendientes de la reunión</span>
             </div>
           </Col>
-          <Col xs={1} md={1} lg={1}>
-            <BotonCreateContactComponent/>
-          </Col>
+          {disabled === '' || disabled === undefined ?
+            <Col xs={1} md={1} lg={1}>
+              <BotonCreateContactComponent/>
+            </Col>
+          : ''}
         </Row>
         <Row style={{padding: "0px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -38,7 +40,7 @@ class TaskVisit extends Component{
         {tasks.size > 0 ?
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs>
-              <ListTasks />
+              <ListTasks disabled={disabled}/>
             </Col>
           </Row> :
           <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
