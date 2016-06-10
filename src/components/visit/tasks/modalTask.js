@@ -31,7 +31,19 @@ const validate = (values) => {
   if(!values.fecha){
     errors.fecha = "Debe seleccionar una opción";
   }else{
-    errors.fecha = null;
+    if(!values.fecha){
+      errors.fecha = "Debe seleccionar una fecha";
+    } else {
+      if( moment(values.fecha, "DD/MM/YYYY").isValid() ){
+        if( moment(values.fecha, "DD/MM/YYYY").isAfter(moment().add("days", -1)) ){
+          errors.fecha = null;
+        } else {
+          errors.fecha = "La fecha debe ser menor o igual a la fecha actual";
+        }
+      } else {
+        errors.fecha = "La fecha ingresada no es valida";
+      }
+    }
   }
   if(!values.tarea){
     errors.tarea = "Debe ingresar un valor";
@@ -54,13 +66,14 @@ class ModalTask extends Component {
         showSuccessAdd:false,
         showSuccessEdit:false,
         showEr:false,
+        prueba:[],
         showErrorYa: false
       }
       momentLocalizer(moment);
     }
 
     componentWillMount(){
-      this.props.resetForm();
+      //this.props.resetForm();
     }
 
     _close(){
@@ -81,15 +94,41 @@ class ModalTask extends Component {
       this.props.resetForm();
     }
 
+  /*updateKeyValueUsersBanco(){
+      const {fields: {responsable}, filterUsersBanco} = this.props;
+      filterUsersBanco(responsable.value).then((data) => {
+        var usersBanco = _.get(data, 'payload.data.data');
+        this.setState({prueba : usersBanco});
+        const selector =  $('.ui.search.responsable');
+        //responsable.onChange(responsable.value);
+        }, (reason) => {
+      });
+    }*/
+
     updateKeyValueUsersBanco(e){
       const {fields: {responsable}, filterUsersBanco} = this.props;
+        const selector =  $('.ui.search.responsable');
       if(e.keyCode == 13 || e.which == 13){
         e.preventDefault();
         if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
+          selector.toggleClass('loading');
           filterUsersBanco(responsable.value).then((data) => {
             usersBanco = _.get(data, 'payload.data.data');
-            const selector =  $('.ui.search.responsable');
-            responsable.onChange(responsable.value);
+            selector.search({
+                cache: false,
+                source: usersBanco,
+                searchFields: [
+                  'title',
+                  'description'
+                ],
+                onSelect : function(event) {
+                    responsable.onChange(event.title);
+                    return 'default';
+                }
+              });
+              selector.toggleClass('loading');
+              selector.search('search local', responsable.value);
+              selector.focus();
             }, (reason) => {
           });
         }
@@ -97,7 +136,8 @@ class ModalTask extends Component {
     }
 
     _updateValue(value){
-      console.log("value func", value);
+      const{fields: {responsable}, contactsByClient} = this.props;
+        responsable.onChange(value);
     }
 
     _handleCreateTask(){
@@ -150,11 +190,10 @@ class ModalTask extends Component {
                         name="responsableTask"
                         labelInput="Ingrese un criterio de búsqueda..."
                         {...responsable}
-                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                         parentId="dashboardComponentScroll"
-                        data={usersBanco}
-                        value={responsable.value}
                         onChange={responsable.onChange}
+                        value={responsable.value}
+                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                         onSelect={val => this._updateValue(val)}
                       />
                     </dt>

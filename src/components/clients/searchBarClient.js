@@ -5,6 +5,7 @@ import {clientsFindServer, changePage, changeKeyword} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import SweetAlert from 'sweetalert-react';
+import {updateTabSeleted} from '../clientDetailsInfo/actions';
 
 class SearchBarClient extends Component{
 
@@ -23,7 +24,8 @@ class SearchBarClient extends Component{
   }
 
   componentWillMount(){
-    const {login} = this.props;
+    const {login, updateTabSeleted} = this.props;
+    updateTabSeleted(null);
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }
@@ -76,13 +78,14 @@ class SearchBarClient extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    clientsFindServer, changePage, changeKeyword
+    clientsFindServer, changePage, changeKeyword, updateTabSeleted
   }, dispatch);
 }
 
-function mapStateToProps({clientR}, ownerProps){
+function mapStateToProps({clientR, tabReducer}, ownerProps){
   return {
-    clientR
+    clientR,
+    tabReducer
   };
 }
 

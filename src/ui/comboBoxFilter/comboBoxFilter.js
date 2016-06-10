@@ -8,36 +8,6 @@ class comboBoxFilter extends Component {
        super(props);
    }
 
-    componentWillReceiveProps({value, name, pristine, labelInput, data}) {
-      const selector =  $(`.ui.search.${name}`);
-      selector.search({
-          cache: false,
-          source: data,
-          searchFields: [
-            'title',
-            'description'
-          ],
-          onSelect : function(event) {
-            console.log("event.title", event.title);
-            self.touched = true;
-            value = event.title;
-            return 'default';
-          },
-          onChange: function (id, text) {
-            console.log("onChange");
-            self.touched = true;
-          }
-        });
-        console.log("value", value);
-        selector.search('set value', value);
-        selector.search('search local', value);
-        selector.focus();
-    }
-
-   componentDidMount() {
-
-   }
-
    render() {
        const {nameInput, labelInput, data, touched, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, onSelect, value} = this.props;
        if( touched && invalid ){
