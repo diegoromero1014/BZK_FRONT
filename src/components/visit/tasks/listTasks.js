@@ -75,10 +75,6 @@ class ListTasks extends Component {
     }else{
       return [
         {
-          title: "",
-          key:"actions"
-        },
-        {
           title: "Tarea",
           key: "tarea"
         },

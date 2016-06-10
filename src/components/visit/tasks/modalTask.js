@@ -107,7 +107,7 @@ class ModalTask extends Component {
 
     updateKeyValueUsersBanco(e){
       const {fields: {responsable}, filterUsersBanco} = this.props;
-        const selector =  $('.ui.search.responsable');
+      const selector =  $('.ui.search.responsable');
       if(e.keyCode == 13 || e.which == 13){
         e.preventDefault();
         if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){

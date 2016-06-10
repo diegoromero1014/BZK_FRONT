@@ -18,6 +18,7 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
+import {addTask} from '../tasks/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import _ from 'lodash';
@@ -188,7 +189,7 @@ class FormEdit extends Component{
   }
 
   componentWillMount(){
-    const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco} = this.props;
+    const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
     console.log("idParam", id);
     this.setState({idVisit : id});
     console.log("idParam1", this.state.idVisit);
@@ -250,6 +251,20 @@ class FormEdit extends Component{
         addParticipant(otherParticipant);
       });
 
+      //Adicionar tareas
+      _.forIn(part.userTasks, function(value, key) {
+        const uuid = _.uniqueId('task_');
+        var task = {
+          uuid,
+          tarea: value.task,
+          idResponsable: value.employee,
+          responsable: value.employeeName,
+          fecha: moment(value.closingDate).format('DD/MM/YYYY')
+        }
+        addTask(task);
+      });
+
+
     });
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -258,10 +273,6 @@ class FormEdit extends Component{
       }
     }, (reason) =>{
     });
-  }
-
-  componentDidMount(){
-
   }
 
   render(){
@@ -444,11 +455,12 @@ function mapDispatchToProps(dispatch){
     createVisti,
     addParticipant,
     detailVisit,
-    filterUsersBanco
+    filterUsersBanco,
+    addTask
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
@@ -465,7 +477,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         selectsReducer,
         visitReducer,
         contactsByClient,
-        participants
+        participants,
+        tasks
       };
     }else{
       return {
@@ -481,7 +494,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         selectsReducer,
         visitReducer,
         contactsByClient,
-        participants
+        participants,
+        tasks
       };
     }
 }
