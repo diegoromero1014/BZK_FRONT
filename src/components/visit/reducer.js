@@ -54,6 +54,7 @@ export default (state = initialState, action) => {
           .set('columnVisit', "vd.visitTime")
         });
     case GET_DETAIL_VISIT:
+    console.log("reduicer", state.set('detailVisit', action.payload.data));
       return state.set('detailVisit', action.payload.data);
     case PDF:
       return state.set('status', "200");
