@@ -17,6 +17,7 @@ import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
+import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import _ from 'lodash';
@@ -178,12 +179,71 @@ class FormEdit extends Component{
   }
 
   componentWillMount(){
-    const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit} = this.props;
+    const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco} = this.props;
     console.log("idParam", id);
     this.setState({idVisit : id});
     console.log("idParam1", this.state.idVisit);
     getMasterDataFields([VISIT_TYPE]);
-    detailVisit(id).then(() => {
+    detailVisit(id).then((result) => {
+      const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
+      var part = result.payload.data.data;
+      
+      //Adicionar participantes por parte del cliente
+      _.forIn(part.participatingContacts, function(value, key) {
+        var contactClient = contactsByClient.get('contacts');
+        const uuid = _.uniqueId('participanClient_');
+        var contactSelected = _.get(_.filter(contactClient, ['id', parseInt(value.contact)]), '[0]');
+        var clientParticipant = {
+          tipoParticipante: 'client',
+          idParticipante: value.id,
+          nombreParticipante: contactSelected.nameComplet,
+          cargo: contactSelected.contactPosition,
+          empresa: '',
+          estiloSocial: value.socialStyle,
+          actitudBanco: value.attitudeOverGroup,
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(clientParticipant);
+      });
+
+      //Adicionar participantes por parte de bancolombia
+      /*_.forIn(part.participatingEmployees, function(value, key) {
+        const uuid = _.uniqueId('participanBanco_');
+        filterUsersBanco(nameUsuario.value).then((data) => {
+          usersBanco = _.get(data, 'payload.data.data');
+        });
+        var clientParticipant = {
+          tipoParticipante: 'banco',
+          idParticipante: idUsuario.value,
+          nombreParticipante: nameUsuario.value,
+          cargo: cargoUsuario.value,
+          empresa: '',
+          estiloSocial: '',
+          actitudBanco: '',
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(clientParticipant);
+      });*/
+
+      //Adicionar otros participantes
+      _.forIn(part.relatedEmployees, function(value, key) {
+        const uuid = _.uniqueId('participanOther_');
+        var otherParticipant = {
+          tipoParticipante: 'other',
+          idParticipante: value.id,
+          nombreParticipante: value.name,
+          cargo: value.position,
+          empresa: value.company,
+          estiloSocial: '',
+          actitudBanco: '',
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(otherParticipant);
+      });
+
     });
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -192,6 +252,10 @@ class FormEdit extends Component{
       }
     }, (reason) =>{
     });
+  }
+
+  componentDidMount(){
+
   }
 
   render(){
@@ -369,12 +433,15 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     consultParameterServer,
     createVisti,
-    detailVisit
+    addParticipant,
+    detailVisit,
+    filterUsersBanco
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
+    console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
       return {
@@ -382,13 +449,13 @@ function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProp
           tipoVisita: detailVisit.data.visitType,
           fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime).format('DD/MM/YYYY') : null,
           desarrolloGeneral: detailVisit.data.comments,
-          participantesCliente: detailVisit.data.participatingContacts,
-          participantesBanco: detailVisit.data.participatingEmployees,
-          participantesOtros: detailVisit.data.relatedEmployees,
+          participantesBanco: _.toArray(detailVisit.data.participatingEmployees),
+          participantesOtros: _.toArray(detailVisit.data.relatedEmployees),
           pendientes: detailVisit.data.userTasks
         },
         selectsReducer,
         visitReducer,
+        contactsByClient,
         participants
       };
     }else{
@@ -404,6 +471,7 @@ function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProp
         },
         selectsReducer,
         visitReducer,
+        contactsByClient,
         participants
       };
     }
