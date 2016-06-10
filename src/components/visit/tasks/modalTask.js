@@ -31,7 +31,19 @@ const validate = (values) => {
   if(!values.fecha){
     errors.fecha = "Debe seleccionar una opción";
   }else{
-    errors.fecha = null;
+    if(!values.fecha){
+      errors.fecha = "Debe seleccionar una fecha";
+    } else {
+      if( moment(values.fecha, "DD/MM/YYYY").isValid() ){
+        if( moment(values.fecha, "DD/MM/YYYY").isAfter(moment().add("days", -1)) ){
+          errors.fecha = null;
+        } else {
+          errors.fecha = "La fecha debe ser menor o igual a la fecha actual";
+        }
+      } else {
+        errors.fecha = "La fecha ingresada no es valida";
+      }
+    }
   }
   if(!values.tarea){
     errors.tarea = "Debe ingresar un valor";
@@ -60,7 +72,7 @@ class ModalTask extends Component {
     }
 
     componentWillMount(){
-      this.props.resetForm();
+      //this.props.resetForm();
     }
 
     _close(){
