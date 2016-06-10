@@ -141,7 +141,7 @@ class ParticipantesCliente extends Component{
                 name="txtCargo"
                 {...cargoContacto}
                 type="text"
-                disabled='disabled'
+                disabled="disabled"
                 placeholder="Cargo de la persona"
               />
             </dt>
@@ -153,7 +153,7 @@ class ParticipantesCliente extends Component{
                 name="estiloSocial"
                 {...estiloSocial}
                 placeholder="Estilo social de la persona"
-                disabled='disabled'
+                disabled="disabled"
                 parentId="dashboardComponentScroll"
               />
             </div>
@@ -165,7 +165,7 @@ class ParticipantesCliente extends Component{
                 name="actitudGrupo"
                 {...actitudGrupo}
                 placeholder="Actitud frente al grupo de la persona"
-                disabled='disabled'
+                disabled="disabled"
                 parentId="dashboardComponentScroll"
               />
             </div>
