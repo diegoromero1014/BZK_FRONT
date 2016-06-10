@@ -7,6 +7,9 @@ import PrevisitaInfo from '../previsita/component';
 import VisitaInfo from '../visit/component';
 import PendingInfo from '../pendingTask/component';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {updateTabSeleted} from '../clientDetailsInfo/actions';
 
 class TabClientInfo extends Component{
   constructor(props){
@@ -16,14 +19,16 @@ class TabClientInfo extends Component{
     };
   }
 
-  _handleClickTabItem(tabSeleted, e){
+  _handleClickTabItem(tabSelect, e){
+    const {updateTabSeleted} = this.props;
+    updateTabSeleted(tabSelect);
     this.setState({
-      tabActive: tabSeleted
+      tabActive: tabSelect
     });
   }
 
   render(){
-    const {infoClient} = this.props;
+    const {infoClient, tabReducer} = this.props;
     var styleInfo = true;
     var styleContacts = false;
     var styleShareholders = false;
@@ -37,8 +42,10 @@ class TabClientInfo extends Component{
     var backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
     var backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
     let backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
-
-    const {tabActive} = this.state;
+    var tabActive = tabReducer.get('tabSelected');
+    if( tabActive === null || tabActive === undefined || tabActive === "" ){
+      tabActive = 1;
+    }
     if( tabActive === 1 ){
       //la configuración ya se hizo arriba
     } else if( tabActive === 2 ){
@@ -144,4 +151,17 @@ class TabClientInfo extends Component{
     );
   }
 }
-export default TabClientInfo;
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateTabSeleted
+  }, dispatch);
+}
+
+function mapStateToProps({tabReducer},ownerProps) {
+  return {
+    tabReducer
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabClientInfo);

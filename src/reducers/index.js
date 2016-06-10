@@ -22,6 +22,7 @@ import visitReducer from '../components/visit/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import taskReducer from '../components/visit/tasks/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
+import tabReducer from '../components/clientDetailsInfo/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -46,5 +47,6 @@ export default combineReducers({
     visitReducer: visitReducer,
     participants: participantsReducer,
     tasks: taskReducer,
-    tasksByClient: tasksByClientReducer
+    tasksByClient: tasksByClientReducer,
+    tabReducer: tabReducer
 });

@@ -30,12 +30,7 @@ var typeButtonClick;
 
 const validate = values => {
   var errors = {};
-    if(!values.tipoVisita){
-      errors.tipoVisita = "Debe seleccionar una opción";
-    }else{
-      errors.tipoVisita = null;
-    }
-    if(!values.fechaVisita){
+    /*if(!values.fechaVisita){
       errors.fechaVisita = "Debe seleccionar una fecha";
     } else {
       if( moment(values.fechaVisita, "DD/MM/YYYY").isValid() ){
@@ -47,7 +42,7 @@ const validate = values => {
       } else {
         errors.fechaVisita = "La fecha ingresada no es valida";
       }
-    }
+    }*/
     return errors;
 };
 
@@ -57,6 +52,10 @@ class FormVisita extends Component{
     super(props);
     this.state = {
       showErrorSaveVisit: false,
+      typeVisit: "",
+      typeVisitError: null,
+      dateVisit: "",
+      dateVisitError: null,
       showConfirm: false
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
@@ -65,12 +64,15 @@ class FormVisita extends Component{
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
+    this._changeTypeVisit = this._changeTypeVisit.bind(this);
+    this._changeDateVisit = this._changeDateVisit.bind(this);
   }
 
   _closeMessageCreateVisit(){
     if( typeMessage === "success" ){
       this.setState({
-        showMessageCreateVisit: false
+        showMessageCreateVisit: false,
+        dateVisit: ""
       });
       redirectUrl("/dashboard/clientInformation");
     } else {
@@ -88,109 +90,137 @@ class FormVisita extends Component{
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       participants, tasks, createVisti} = this.props;
-      console.log("participants", participants.toArray());
-    var dataBanco =[];
-    _.map(participants.toArray(),
-      function(participant){
-        console.log("participant.tipoParticipante: ", participant.tipoParticipante);
-        if( participant.tipoParticipante === "banco" ){
-          var data = {
-            "id": null,
-            "employee": participant.idParticipante
-          }
-          dataBanco.push(data)
-        }
-      }
-    );
-    if( dataBanco.length > 0 && dataBanco[0] === undefined ){
-      dataBanco = [];
+    var errorInForm = false;
+    if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        typeVisitError: "Debe seleccionar una opción"
+      });
     }
-    if( dataBanco.length > 0 ){
-      var dataClient = [];
-      _.map(participants.toArray(),
-        function(participant){
-          if(participant.tipoParticipante === "client"){
-            var data = {
-              "id": null,
-              "contact": participant.idParticipante
-            }
-            dataClient.push(data);
-          }
-        }
-      );
-      if( dataClient.length > 0 && dataClient[0] === undefined ){
-        dataClient = [];
-      }
-      var dataOthers = [];
-      _.map(participants.toArray(),
-        function(participant){
-          if(participant.tipoParticipante === "other" ){
-            var data = {
-              "id": null,
-              "name": participant.nombreParticipante,
-              "position": participant.cargo,
-              "company": participant.empresa
-            }
-            dataOthers.push(data);
-          }
-        }
-      );
-
-      var tareas = [];
-      _.map(tasks.toArray(),
-        function(task){
-            var data = {
-              "id": null,
-              "task": task.tarea,
-              "employee": task.idResponsable,
-              "employeeName": task.responsable,
-              "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-            }
-            tareas.push(data);
-        }
-      );
-
-      if( dataOthers.length > 0 && dataOthers[0] === undefined ){
-        dataOthers = [];
-      }
-      console.log("typeButtonClick", typeButtonClick);
-      var visitJson = {
-        "id": null,
-        "client": window.localStorage.getItem('idClientSelected'),
-        "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
-        "participatingContacts": dataClient.length === 0 ? null : dataClient,
-        "participatingEmployees": dataBanco,
-        "relatedEmployees": dataOthers === 0 ? null : dataOthers,
-        "userTasks": tareas,
-        "comments": desarrolloGeneral.value,
-        "visitType": tipoVisita.value,
-        "documentStatus": typeButtonClick
-      }
-      console.log("visitJson", visitJson);
-      createVisti(visitJson).then((data)=> {
-        if((_.get(data, 'payload.validateLogin') === 'false')){
-          redirectUrl("/login");
-        } else {
-          if( (_.get(data, 'payload.status') === 200) ){
-            typeMessage = "success";
-            titleMessage = "Creación visita";
-            message = "Señor usuario, la visita se creó de forma exitosa.";
-            this.setState({showMessageCreateVisit :true});
-          } else {
-            typeMessage = "error";
-            titleMessage = "Creación visita";
-            message = "Señor usuario, ocurrió un error creando la visita.";
-            this.setState({showMessageCreateVisit :true});
-          }
-        }
-      }, (reason) =>{
-        typeMessage = "error";
-        titleMessage = "Creación visita";
-        message = "Señor usuario, ocurrió un error creando la visita.";
-        this.setState({showMessageCreateVisit :true});
+    if( this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        dateVisitError: "Debe seleccionar una opción"
       });
     } else {
-      this.setState({showErrorSaveVisit :true});
+      if( this.state.dateVisit.isValid() ){
+        if( this.state.dateVisit.isAfter(moment()) ){
+          errorInForm = true;
+          this.setState({
+            dateVisitError: "La fecha debe ser menor o igual a la fecha actual"
+          });
+        }
+      } else {
+        errorInForm = true;
+        this.setState({
+          dateVisitError: "La fecha ingresada no es valida"
+        });
+      }
+    }
+
+    if( !errorInForm ){
+      var dataBanco =[];
+      _.map(participants.toArray(),
+        function(participant){
+          if( participant.tipoParticipante === "banco" ){
+            var data = {
+              "id": null,
+              "employee": participant.idParticipante
+            }
+            dataBanco.push(data)
+          }
+        }
+      );
+      if( dataBanco.length > 0 && dataBanco[0] === undefined ){
+        dataBanco = [];
+      }
+      if( dataBanco.length > 0 ){
+        var dataClient = [];
+        _.map(participants.toArray(),
+          function(participant){
+            if(participant.tipoParticipante === "client"){
+              var data = {
+                "id": null,
+                "contact": participant.idParticipante
+              }
+              dataClient.push(data);
+            }
+          }
+        );
+        if( dataClient.length > 0 && dataClient[0] === undefined ){
+          dataClient = [];
+        }
+        var dataOthers = [];
+        _.map(participants.toArray(),
+          function(participant){
+            if(participant.tipoParticipante === "other" ){
+              var data = {
+                "id": null,
+                "name": participant.nombreParticipante,
+                "position": participant.cargo,
+                "company": participant.empresa
+              }
+              dataOthers.push(data);
+            }
+          }
+        );
+
+        var tareas = [];
+        _.map(tasks.toArray(),
+          function(task){
+              var data = {
+                "id": null,
+                "task": task.tarea,
+                "employee": task.idResponsable,
+                "employeeName": task.responsable,
+                "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+              }
+              tareas.push(data);
+          }
+        );
+
+        if( dataOthers.length > 0 && dataOthers[0] === undefined ){
+          dataOthers = [];
+        }
+        console.log("typeButtonClick", typeButtonClick);
+        var visitJson = {
+          "id": null,
+          "client": window.localStorage.getItem('idClientSelected'),
+          "visitTime": this.state.dateVisit.format('x'),
+          "participatingContacts": dataClient.length === 0 ? null : dataClient,
+          "participatingEmployees": dataBanco,
+          "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+          "userTasks": tareas,
+          "comments": desarrolloGeneral.value,
+          "visitType": this.state.typeVisit,
+          "documentStatus": typeButtonClick
+        }
+        console.log("visitJson", visitJson);
+        createVisti(visitJson).then((data)=> {
+          if((_.get(data, 'payload.validateLogin') === 'false')){
+            redirectUrl("/login");
+          } else {
+            if( (_.get(data, 'payload.status') === 200) ){
+              typeMessage = "success";
+              titleMessage = "Creación visita";
+              message = "Señor usuario, la visita se creó de forma exitosa.";
+              this.setState({showMessageCreateVisit :true});
+            } else {
+              typeMessage = "error";
+              titleMessage = "Creación visita";
+              message = "Señor usuario, ocurrió un error creando la visita.";
+              this.setState({showMessageCreateVisit :true});
+            }
+          }
+        }, (reason) =>{
+          typeMessage = "error";
+          titleMessage = "Creación visita";
+          message = "Señor usuario, ocurrió un error creando la visita.";
+          this.setState({showMessageCreateVisit :true});
+        });
+      } else {
+        this.setState({showErrorSaveVisit :true});
+      }
     }
   }
 
@@ -207,6 +237,22 @@ class FormVisita extends Component{
     message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
     titleMessage = "Confirmación salida";
     this.setState({showConfirm :true});
+  }
+
+  _changeTypeVisit(value){
+    console.log("Type visit", value);
+    this.setState({
+      typeVisit: value,
+      typeVisitError: null
+    });
+  }
+
+  _changeDateVisit(value){
+    console.log("Date visit", value);
+    this.setState({
+      dateVisit: value,
+      dateVisitError: null
+    });
   }
 
   componentWillMount(){
@@ -250,11 +296,15 @@ class FormVisita extends Component{
             </dt>
             <dt>
               <ComboBox
-                {...tipoVisita}
                 name="tipoVisita"
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
+                value={this.state.typeVisit}
+                touched={true}
+                error={this.state.typeVisitError}
+                onChange={val => this._changeTypeVisit(val)}
+                onBlur={() => console.log("")}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
               />
@@ -269,7 +319,11 @@ class FormVisita extends Component{
                 culture='es'
                 format={"DD/MM/YYYY"}
                 time={false}
-                {...fechaVisita}
+                value={this.state.dateVisit}
+                touched={true}
+                error={this.state.dateVisitError}
+                onChange={val => this._changeDateVisit(val)}
+                onBlur={() => console.log("")}
                 placeholder="Seleccione la fecha de reunión"
                 max={new Date()}
               />

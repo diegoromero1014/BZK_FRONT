@@ -376,6 +376,7 @@ function mapDispatchToProps(dispatch){
 function mapStateToProps({selectsReducer, visitReducer, participants}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      console.log("detailVisit.data", detailVisit.data);
       var visitTime = detailVisit.data.visitTime;
       return {
         initialValues:{
