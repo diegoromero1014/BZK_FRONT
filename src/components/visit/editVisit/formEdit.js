@@ -205,8 +205,8 @@ class FormEdit extends Component{
         var clientParticipant = {
           tipoParticipante: 'client',
           idParticipante: value.id,
-          nombreParticipante: contactSelected.nameComplet,
-          cargo: contactSelected.contactPosition,
+          nombreParticipante: value.contactName,
+          cargo: value.contactPositionName,
           empresa: '',
           estiloSocial: value.socialStyle,
           actitudBanco: value.attitudeOverGroup,
@@ -217,16 +217,13 @@ class FormEdit extends Component{
       });
 
       //Adicionar participantes por parte de bancolombia
-      /*_.forIn(part.participatingEmployees, function(value, key) {
+      _.forIn(part.participatingEmployees, function(value, key) {
         const uuid = _.uniqueId('participanBanco_');
-        filterUsersBanco(nameUsuario.value).then((data) => {
-          usersBanco = _.get(data, 'payload.data.data');
-        });
         var clientParticipant = {
           tipoParticipante: 'banco',
-          idParticipante: idUsuario.value,
-          nombreParticipante: nameUsuario.value,
-          cargo: cargoUsuario.value,
+          idParticipante: value.id,
+          nombreParticipante: value.employeeName,
+          cargo: value.positionName,
           empresa: '',
           estiloSocial: '',
           actitudBanco: '',
@@ -234,7 +231,7 @@ class FormEdit extends Component{
           uuid,
         }
         addParticipant(clientParticipant);
-      });*/
+      });
 
       //Adicionar otros participantes
       _.forIn(part.relatedEmployees, function(value, key) {
@@ -326,7 +323,7 @@ class FormEdit extends Component{
               style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
             </dl>
           </Col>
-          {this.state.isEditable === '' || this.state.isEditable === undefined &&
+          {this.state.isEditable === '' &&
             <BotonCreateContactComponent typeButton={1} />
           }
         </Row>
@@ -392,10 +389,10 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px -117px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={{float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
