@@ -273,9 +273,37 @@ class FormVisita extends Component{
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       clientInformacion, selectsReducer, handleSubmit} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
+    const {aecStatus} = infoClient;
+    var showAECNoAplica = false;
+    var showAECNivel = true;
+    if( aecStatus === undefined || aecStatus === null ){
+      showAECNoAplica = true;
+      showAECNivel = false;
+    }
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
+        <header className="header-client-detail">
+          <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
+            <div>
+              <h3 style={{wordBreak:'break-all'}} className="inline title-head">
+                {infoClient.clientName}
+              </h3>
+              {infoClient.isProspect &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px"}}
+                  className="label label-important bounceIn animated prospect" >Prospecto</span>
+              }
+              {showAECNivel &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#ec5f48"}}
+                  className="label label-important bounceIn animated aec-status" >{aecStatus}</span>
+              }
+              {showAECNoAplica &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
+                  className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
+              }
+            </div>
+          </div>
+        </header>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>

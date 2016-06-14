@@ -44,11 +44,11 @@ class ListParticipantesOtros extends Component {
     }
   }
 
-  _clickButtonDelete(idData){
+  _clickButtonDelete(name){
     const {participants, deleteParticipant} = this.props;
     var indexDelete = participants.findIndex(function(item){
       if( item.tipoParticipante === 'other' ){
-        return item.nombreParticipante === actionsDelete.nombre;
+        return item.nombreParticipante === name;
       }
     });
     deleteParticipant(indexDelete);
@@ -59,7 +59,7 @@ class ListParticipantesOtros extends Component {
               <span  style={{ paddingRight: '10px',fontWeight: 'bold',color: 'black'}} >{otherData.name}</span>
               {otherData.cargo} {otherData.empresa}
               <i className="remove icon"
-                onClick={this._clickButtonDelete.bind(this, otherData.id)}
+                onClick={this._clickButtonDelete.bind(this, otherData.name)}
                 style={{float: 'right',margin:'0em', fontSize : '1.2em'}}
                 title="Eliminar participante"
                 ></i>
