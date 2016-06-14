@@ -315,7 +315,7 @@ class FormVisita extends Component{
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Tipo de reunión (</span><span style={{color: "red"}}>*</span>)
             </dt>
@@ -335,7 +335,7 @@ class FormVisita extends Component{
               />
             </dt>
           </Col>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Fecha de reunión - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
             </dt>
