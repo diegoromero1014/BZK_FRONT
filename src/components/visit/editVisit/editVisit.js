@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../../globalComponents/actions';
-import HeaderPrevisita from '../../previsita/createPrevisita/headerPrevisita';
 import FormEdit from './formEdit';
 
 class EditVisit extends Component{
@@ -20,7 +19,6 @@ class EditVisit extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <div>
-        <HeaderPrevisita />
         <FormEdit id={id}/>
       </div>
     );

@@ -53,22 +53,47 @@ class FormEdit extends Component{
       showErrorSaveVisit: false,
       showConfirm: false,
       idVisit: "",
-      isEditable: false
+      isEditable: false,
+      activeItemTabBanc: '',
+      activeItemTabClient: 'active',
+      activeItemTabOther: ''
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButton = this._onClickButton.bind(this);
-    this._editShareHolder = this._editShareHolder.bind(this);
+    this._editVisit = this._editVisit.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
     this._onClickPDF = this._onClickPDF.bind(this);
   }
 
-  _editShareHolder() {
+  _editVisit() {
     this.setState({
       showMessage:false,
       isEditable: !this.state.isEditable
     });
+  }
+
+  _clickSeletedTab(tab){
+    if( tab === 1 ){
+      this.setState({
+        activeItemTabClient: 'active',
+        activeItemTabBanc: '',
+        activeItemTabOther: ''
+      });
+    } else if( tab === 2 ){
+      this.setState({
+        activeItemTabClient: '',
+        activeItemTabBanc: 'active',
+        activeItemTabOther: ''
+      });
+    } else {
+      this.setState({
+        activeItemTabBanc: '',
+        activeItemTabClient: '',
+        activeItemTabOther: 'active'
+      });
+    }
   }
 
   _closeMessageCreateVisit(){
@@ -264,8 +289,7 @@ class FormEdit extends Component{
     });
 
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
-      if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-        data.payload.data.parameter !== undefined ){
+      if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
         var fechaVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es');
         dateVisitLastReview = fechaVisitLastReview.format("DD") + " " + fechaVisitLastReview.format("MMM") + " " + fechaVisitLastReview.format("YYYY");
       }
@@ -274,8 +298,17 @@ class FormEdit extends Component{
   }
 
   render(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes}, selectsReducer, handleSubmit, visitReducer} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
+    selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
+    const infoClient = clientInformacion.get('responseClientInfo');
+    const {aecStatus} = infoClient;
+    var showAECNoAplica = false;
+    var showAECNivel = true;
+    if( aecStatus === undefined || aecStatus === null ){
+      showAECNoAplica = true;
+      showAECNivel = false;
+    }
     var fechaModString = '';
     var fechaCreateString = '';
     var createdBy = '';
@@ -286,17 +319,45 @@ class FormEdit extends Component{
       updatedBy = detailVisit.data.updatedByName;
       if(detailVisit.data.updatedTimestamp !== null){
         var fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
-        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY");
+        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
       }
       if(detailVisit.data.createdTimestamp !== null){
         var fechaCreateDateMoment = moment(detailVisit.data.createdTimestamp, "x").locale('es');
-        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY");
+        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
       }
     }
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+        <header className="header-client-detail">
+          <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
+            <div>
+              <h3 style={{wordBreak:'break-all'}} className="inline title-head">
+                {infoClient.clientName}
+              </h3>
+              {infoClient.isProspect &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px"}}
+                  className="label label-important bounceIn animated prospect" >Prospecto</span>
+              }
+              {showAECNivel &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#ec5f48"}}
+                  className="label label-important bounceIn animated aec-status" >{aecStatus}</span>
+              }
+              {showAECNoAplica &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
+                  className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
+              }
+            </div>
+          </div>
+        </header>
+        <Row style={{padding: "10px 10px 0px 20px"}}>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          </Col>
+          <Col xs={2} sm={2} md={2} lg={2}>
+            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-10px'}}>Editar <i className={'icon edit'}></i></button>
+          </Col>
+        </Row>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -332,7 +393,7 @@ class FormEdit extends Component{
               <DateTimePickerUi
                 culture='es'
                 format={"DD/MM/YYYY"}
-                time={false}
+                time={true}
                 {...fechaVisita}
                 placeholder="Seleccione la fecha de reunión"
                 max={new Date()}
@@ -342,47 +403,32 @@ class FormEdit extends Component{
           </Col>
         </Row>
         <Row style={{padding: "10px 42px 0px 20px"}}>
-          <Col xs={10} md={10} lg={10}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "15px", marginBottom: "0px"}}>
-              <span className="section-title">Participantes en la reunión por parte del cliente </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-            </dl>
-          </Col>
-          {this.state.isEditable === '' &&
-            <BotonCreateContactComponent typeButton={1} />
-          }
-        </Row>
-        <Row style={{padding: "0px 10px 10px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+          <Col xs>
+            <div className="ui top attached tabular menu">
+              <a className={`${this.state.activeItemTabClient} item`}
+                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabBanc} item`}
+                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabOther} item`}
+                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
+                <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`} data-tab="second">
+                <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`} data-tab="third">
+                <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
             </div>
           </Col>
         </Row>
-        <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
-        <Row style={{padding: "10px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Participantes en la reunión por parte del Grupo Bancolombia </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
-        <Row style={{padding: "20px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Otros participantes en la reunión </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
         <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "30px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -424,7 +470,7 @@ class FormEdit extends Component{
             : '' }
           </Col>
         </Row>
-        <Row style={{padding: "5px 10px 20px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
           </Col>
@@ -507,7 +553,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
@@ -527,7 +573,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         visitReducer,
         contactsByClient,
         participants,
-        tasks
+        tasks,
+        clientInformacion
       };
     }else{
       return {
@@ -544,7 +591,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         visitReducer,
         contactsByClient,
         participants,
-        tasks
+        tasks,
+        clientInformacion
       };
     }
 }
