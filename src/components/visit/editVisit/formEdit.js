@@ -26,7 +26,7 @@ import _ from 'lodash';
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 var dateVisitLastReview;
 var showMessageCreateVisit= false;
-var typeMessage = "";
+var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;
@@ -304,6 +304,16 @@ class FormEdit extends Component{
     });
   }
 
+  componentDidMount(){
+    const {visitReducer} = this.props;
+    const detailVisit = visitReducer.get('detailVisit');
+    var visitTime = detailVisit.data.visitTime;
+    this.setState({
+      typeVisit: detailVisit.data.visitType,
+      dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
+    });
+  }
+
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
     selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
@@ -385,7 +395,11 @@ class FormEdit extends Component{
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                {...tipoVisita}
+                value={this.state.typeVisit}
+                touched={true}
+                error={this.state.typeVisitError}
+                onChange={val => this._changeTypeVisit(val)}
+                onBlur={() => console.log("")}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
                 disabled={this.state.isEditable ? '' : 'disabled'}
@@ -401,8 +415,11 @@ class FormEdit extends Component{
                 culture='es'
                 format={"DD/MM/YYYY hh:mm a"}
                 time={true}
-                {...fechaVisita}
-                placeholder="Seleccione la fecha de reunión"
+                value={this.state.dateVisit}
+                touched={true}
+                error={this.state.dateVisitError}
+                onChange={val => this._changeDateVisit(val)}
+                onBlur={() => console.log("")}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
