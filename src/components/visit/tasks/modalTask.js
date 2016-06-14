@@ -31,19 +31,7 @@ const validate = (values) => {
   if(!values.fecha){
     errors.fecha = "Debe seleccionar una opción";
   }else{
-    if(!values.fecha){
-      errors.fecha = "Debe seleccionar una fecha";
-    } else {
-      if( moment(values.fecha, "DD/MM/YYYY").isValid() ){
-        if( moment(values.fecha, "DD/MM/YYYY").isAfter(moment().add("days", -1)) ){
-          errors.fecha = null;
-        } else {
-          errors.fecha = "La fecha debe ser menor o igual a la fecha actual";
-        }
-      } else {
-        errors.fecha = "La fecha ingresada no es valida";
-      }
-    }
+    errors.fecha = null;
   }
   if(!values.tarea){
     errors.tarea = "Debe ingresar un valor";
@@ -206,7 +194,6 @@ class ModalTask extends Component {
                         culture='es'
                         format={"DD/MM/YYYY"}
                         time={false}
-                        min={new Date()}
                       />
                     </dt>
                   </Col>
@@ -269,7 +256,7 @@ function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
       selectsReducer,
       initialValues: {
         responsable: taskEdit.responsable,
-        fecha: taskEdit.fecha,
+        fecha: moment(taskEdit.fecha, 'DD MMM YYYY').format("DD/MM/YYYY"),
         tarea : taskEdit.tarea
       }
 
