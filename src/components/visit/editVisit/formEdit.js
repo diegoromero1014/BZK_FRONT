@@ -237,10 +237,13 @@ class FormEdit extends Component{
           tipoParticipante: 'client',
           idParticipante: value.id,
           nombreParticipante: value.contactName,
-          cargo: value.contactPositionName,
+          cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+          : ' - ' + value.contactPositionName,
           empresa: '',
-          estiloSocial: value.socialStyle,
-          actitudBanco: value.attitudeOverGroup,
+          estiloSocial: value.socialStyle === null || value.socialStyle === undefined || value.socialStyle === '' ? ''
+          : ' - ' + value.socialStyle,
+          actitudBanco: value.attitudeOverGroup === null || value.attitudeOverGroup === undefined || value.attitudeOverGroup === '' ? ''
+          : ' - ' + value.attitudeOverGroup,
           fecha: Date.now(),
           uuid,
         }
@@ -254,7 +257,8 @@ class FormEdit extends Component{
           tipoParticipante: 'banco',
           idParticipante: value.id,
           nombreParticipante: value.employeeName,
-          cargo: value.positionName,
+          cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+          : ' - ' + value.positionName,
           empresa: '',
           estiloSocial: '',
           actitudBanco: '',
@@ -271,8 +275,10 @@ class FormEdit extends Component{
           tipoParticipante: 'other',
           idParticipante: value.id,
           nombreParticipante: value.name,
-          cargo: value.position,
-          empresa: value.company,
+          cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+          : ' - ' + value.position,
+          empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+          : ' - ' + value.company,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -401,7 +407,7 @@ class FormEdit extends Component{
                 touched={true}
                 error={this.state.typeVisitError}
                 onChange={val => this._changeTypeVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={() => ''}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
                 disabled={this.state.isEditable ? '' : 'disabled'}
@@ -421,7 +427,7 @@ class FormEdit extends Component{
                 touched={true}
                 error={this.state.dateVisitError}
                 onChange={val => this._changeDateVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={() => ''}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
@@ -432,15 +438,15 @@ class FormEdit extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
