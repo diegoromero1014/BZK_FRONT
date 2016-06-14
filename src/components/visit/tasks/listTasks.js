@@ -110,7 +110,7 @@ class ListTasks extends Component {
               <td>{taskData.tarea}</td>
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar tarea"
-                  onClick={this._confirmDeleteTask.bind(this, taskData.id)}
+                  onClick={this._confirmDeleteTask.bind(this, taskData.uuid)}
                   style={{cursor: "pointer"}} />
               </td>
            </tr>
