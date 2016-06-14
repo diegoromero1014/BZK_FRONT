@@ -3,92 +3,24 @@ import GridComponent from '../grid/component';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {DELETE_PARTICIPANT_VIEW} from './constants';
+import {deleteParticipant} from './actions';
+import _ from 'lodash';
 
-let v1 = "";
-let v2 = "";
-
+var arrayValueOther = [];
 
 class ListParticipantesOtros extends Component {
 
   constructor(props){
       super(props);
-      this._renderHeaders = this._renderHeaders.bind(this);
-      this.state = {
-        column : "",
-        order : "",
-        orderA: 'none',
-        orderD: 'inline-block'
-      }
+      this._mapValuesData = this._mapValuesData.bind(this);
+      this._getValuesParticipantOther = this._getValuesParticipantOther.bind(this);
   }
 
-  componentWillMount(){
-    this.state = {
-      orderA: 'none',
-      orderD: 'inline-block'
-    }
-  }
-
-  componentWillReceiveProps(nextProps){
-      const {
-          value1,
-          value2
-      } = nextProps;
-      if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
-      v1 = nextProps.value1;
-      v2 = nextProps.value2;
-    }
-  }
-
-
-  _orderColumn(orderShareholder,columnShareholder){
-    if(orderShareholder === 1){
-      this.setState({orderA :'none',orderD:'inline-block'});
-    }else{
-      this.setState({orderA :'inline-block',orderD :'none'});
-    }
-  }
-
-  _renderHeaders(){
-    const {disabled} = this.props;
-    if(disabled === '' || disabled === undefined){
-      return [
-        {
-          title: "Nombre",
-          key:"name"
-        },
-        {
-          title: "Cargo",
-          key:"cargo"
-        },
-        {
-          title: "Empresa",
-          key:"empresa"
-        },
-        {
-          title: "",
-          key:"delete"
-        },
-      ]
-    }else{
-      return [
-        {
-          title: "Nombre",
-          key:"name"
-        },
-        {
-          title: "Cargo",
-          key:"cargo"
-        },
-        {
-          title: "Empresa",
-          key:"empresa"
-        }
-      ]
-    }
-  }
-
-  _mapValueParticipantes(){
-    const {participants} = this.props;
+  _getValuesParticipantOther(){
+    var {participants} = this.props;
+    participants = participants.sort(function(valueA, valueB){
+      return valueA.fecha < valueB.fecha;
+    })
     if( participants.size > 0 ){
       var data = _.chain(participants.toArray()).map(participant => {
         const {tipoParticipante, idParticipante, nombreParticipante, cargo, empresa, estiloSocial,
@@ -99,7 +31,6 @@ class ListParticipantesOtros extends Component {
             typeDelete : DELETE_PARTICIPANT_VIEW,
             id: idParticipante,
             tipo: 'other',
-            nombre: nombreParticipante,
             mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
           }
         });
@@ -107,17 +38,39 @@ class ListParticipantesOtros extends Component {
       .filter(participant => _.isEqual(participant.tipo, 'other'))
       .value();
 
-      return data;
+      arrayValueOther= data;
     } else {
-      return [];
+      arrayValueOther= [];
     }
   }
 
+  _clickButtonDelete(idData){
+    const {participants, deleteParticipant} = this.props;
+    var indexDelete = participants.findIndex(function(item){
+      if( item.tipoParticipante === 'other' ){
+        return item.nombreParticipante === actionsDelete.nombre;
+      }
+    });
+    deleteParticipant(indexDelete);
+  }
+
+  _mapValuesData(otherData){
+    return <div className="item">
+              <span  style={{ paddingRight: '10px',fontWeight: 'bold',color: 'black'}} >{otherData.name}</span>
+              {otherData.cargo} {otherData.empresa}
+              <i className="remove icon"
+                onClick={this._clickButtonDelete.bind(this, otherData.id)}
+                style={{float: 'right',margin:'0em', fontSize : '1.2em'}}
+                title="Eliminar participante"
+                ></i>
+            </div>
+  }
+
   render() {
-    this._mapValueParticipantes();
+    this._getValuesParticipantOther();
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px", marginTop: "15px"}}>
-        <GridComponent headers={this._renderHeaders} data={this._mapValueParticipantes()}/>
+      <div className="ui divided selection list" style={{paddingRight: '23px', height: "240px", overflow: 'scroll'}}>
+        {arrayValueOther.map(this._mapValuesData)}
       </div>
     );
   }
@@ -125,14 +78,13 @@ class ListParticipantesOtros extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
+      deleteParticipant
     }, dispatch);
 }
 
 function mapStateToProps({participants}) {
     return {
-        participants: participants.sort(function(valueA, valueB){
-          return valueA.fecha < valueB.fecha;
-        })
+        participants
     };
 }
 

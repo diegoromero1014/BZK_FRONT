@@ -24,11 +24,11 @@ class ParticipantesOtros extends Component{
       this.state = {
         showEmptyParticipantOtro: false
       }
-      this._addParticipantClient = this._addParticipantClient.bind(this);
+      this._addParticipantOther = this._addParticipantOther.bind(this);
       this._submitValores = this._submitValores.bind(this);
   }
 
-  _addParticipantClient() {
+  _addParticipantOther() {
     const {fields: { nombrePersona, cargoPersona, empresaPersona }, participants, addParticipant} = this.props;
     if( nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined ){
         const uuid = _.uniqueId('participanOther_');
@@ -79,69 +79,76 @@ class ParticipantesOtros extends Component{
     }
     return(
       <div>
-      { disabled === '' || disabled === undefined ?
         <Row style={{padding: "0px 10px 0px 20px"}}>
-          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
-            <dt>
-              <span>Nombre</span>
-            </dt>
-            <dt style={{marginRight:"17px"}}>
-                <Input
-                name="Nombre"
-                type="text"
-                {...nombrePersona}
-                placeholder="Ingrese el nombre del participante"
-                max="100"
-                />
-            </dt>
-          </Col>
-          <Col xs={12} md={4} lg={4}>
-            <dt><span>Cargo</span></dt>
-            <dt style={{marginRight:"17px"}}>
-              <Input
-                name="txtCargo"
-                type="text"
-                {...cargoPersona}
-                max="100"
-                placeholder="Ingrese el cargo del participante"
-              />
-            </dt>
-          </Col>
-          <Col xs={12} md={3} lg={3}>
-            <dt><span>Empresa</span></dt>
-            <dt style={{marginRight:"17px"}}>
-              <Input
-                name="txtCargo"
-                type="text"
-                {...empresaPersona}
-                max="100"
-                placeholder="Ingrese la empresa del participante"
-              />
-            </dt>
-          </Col>
-          <Col xs={1} md={1} lg={1}>
-            <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
-              type="button" title="Adicionar participante, máximo 10" style={{marginLeft:"17px", marginTop: "20px"}}>
-              <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-            </button>
-          </Col>
-        </Row>
-        : ''}
-        {data.length > 0 &&
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs>
-              <ListParticipantesOtros disabled={disabled}/>
+        { disabled === '' || disabled === undefined ?
+          <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
+            <Col xs={12} md={12} lg={12}>
+              <dt><span>Nombre</span></dt>
+              <dt style={{marginRight:"17px"}}>
+                  <Input
+                  name="Nombre"
+                  type="text"
+                  {...nombrePersona}
+                  max="100"
+                  />
+              </dt>
+            </Col>
+
+            <Row style={{padding: "5px 10px 0px 10px"}}>
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Cargo</span></dt>
+                <dt style={{marginRight:"17px"}}>
+                  <Input
+                    name="txtCargo"
+                    type="text"
+                    {...cargoPersona}
+                    max="100"
+                  />
+                </dt>
+              </Col>
+
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Empresa</span></dt>
+                <dt style={{marginRight:"17px"}}>
+                  <Input
+                    name="txtCargo"
+                    type="text"
+                    {...empresaPersona}
+                    max="100"
+                  />
+                </dt>
+              </Col>
+            </Row>
+
+          <Row style={{paddingLeft: "10px"}}>
+            <Col xs={12} md={5} lg={5}>
+              <button className="btn btn-primary" onClick={this._addParticipantOther} disabled={disabledButtonCreate}
+              type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
+                Agregar participante
+              </button>
             </Col>
           </Row>
+        </Col>
+        : ''}
+        {data.length > 0 ?
+          <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+            <ListParticipantesOtros disabled={disabled}/>
+          </Col> :
+          <Col xs={12} md={6} lg={6}>
+            <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
+              <span className="form-item">Aún no se han adicionado participantes</span>
+            </div>
+          </Col>
         }
-        <SweetAlert
-         type="error"
-         show={this.state.showEmptyParticipantOtro}
-         title="Error participante"
-         text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
-         onConfirm={() => this.setState({showEmptyParticipantOtro:false})}
-         />
-      </div>
+      </Row>
+      <SweetAlert
+       type="error"
+       show={this.state.showEmptyParticipantOtro}
+       title="Error participante"
+       text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
+       onConfirm={() => this.setState({showEmptyParticipantOtro:false})}
+       />
+     </div>
     );
   }
 }

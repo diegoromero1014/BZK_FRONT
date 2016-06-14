@@ -43,7 +43,10 @@ class FormVisita extends Component{
       typeVisitError: null,
       dateVisit: "",
       dateVisitError: null,
-      showConfirm: false
+      showConfirm: false,
+      activeItemTabBanc: '',
+      activeItemTabClient: 'active',
+      activeItemTabOther: ''
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButtonPublished = this._onClickButtonPublished.bind(this);
@@ -74,6 +77,28 @@ class FormVisita extends Component{
     redirectUrl("/dashboard/clientInformation");
   }
 
+  _clickSeletedTab(tab){
+    if( tab === 1 ){
+      this.setState({
+        activeItemTabClient: 'active',
+        activeItemTabBanc: '',
+        activeItemTabOther: ''
+      });
+    } else if( tab === 2 ){
+      this.setState({
+        activeItemTabClient: '',
+        activeItemTabBanc: 'active',
+        activeItemTabOther: ''
+      });
+    } else {
+      this.setState({
+        activeItemTabBanc: '',
+        activeItemTabClient: '',
+        activeItemTabOther: 'active'
+      });
+    }
+  }
+
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       participants, tasks, createVisti} = this.props;
@@ -89,20 +114,6 @@ class FormVisita extends Component{
       this.setState({
         dateVisitError: "Debe seleccionar una opción"
       });
-    } else {
-      if( this.state.dateVisit.isValid() ){
-        if( this.state.dateVisit.isAfter(moment()) ){
-          errorInForm = true;
-          this.setState({
-            dateVisitError: "La fecha debe ser menor o igual a la fecha actual"
-          });
-        }
-      } else {
-        errorInForm = true;
-        this.setState({
-          dateVisitError: "La fecha ingresada no es valida"
-        });
-      }
     }
 
     if( !errorInForm ){
@@ -216,7 +227,6 @@ class FormVisita extends Component{
   }
 
   _onClickButtonDraft(buttonClick){
-    console.log("Valor focus button draft", buttonClick);
     typeButtonClick = buttonClick;
   }
 
@@ -235,7 +245,6 @@ class FormVisita extends Component{
   }
 
   _changeDateVisit(value){
-    console.log("Date visit", value);
     this.setState({
       dateVisit: value,
       dateVisitError: null
@@ -253,6 +262,7 @@ class FormVisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
+          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").format("DD MMM YYYY");
         }
       }, (reason) =>{
       });
@@ -265,14 +275,14 @@ class FormVisita extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
-        style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
+        style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="browser icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "22px"}}> Información general</span>
+              <span style={{fontSize: "20px"}}> Datos de la reunión</span>
             </div>
           </Col>
         </Row>
@@ -304,68 +314,52 @@ class FormVisita extends Component{
             <dt>
               <DateTimePickerUi
                 culture='es'
-                format={"DD/MM/YYYY"}
-                time={false}
+                format={"DD/MM/YYYY hh:mm a"}
+                time={true}
                 value={this.state.dateVisit}
                 touched={true}
                 error={this.state.dateVisitError}
                 onChange={val => this._changeDateVisit(val)}
                 onBlur={() => console.log("")}
-                placeholder="Seleccione la fecha de reunión"
-                max={new Date()}
               />
             </dt>
           </Col>
         </Row>
-        <Row style={{padding: "10px 42px 0px 20px"}}>
-          <Col xs={10} md={10} lg={10}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "15px", marginBottom: "0px"}}>
-              <span className="section-title">Participantes en la reunión por parte del cliente </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-            </dl>
-          </Col>
-          <BotonCreateContactComponent typeButton={1} />
-        </Row>
-        <Row style={{padding: "0px 10px 10px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+
+        <Row style={{padding: "20px 10px 10px 20px", paddingRight: '23px'}}>
+          <Col xs>
+            <div className="ui top attached tabular menu">
+              <a className={`${this.state.activeItemTabClient} item`}
+                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabBanc} item`}
+                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabOther} item`}
+                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+              </a>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
+                <ParticipantesCliente />
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`} data-tab="second">
+                <ParticipantesBancolombia />
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`} data-tab="third">
+                <ParticipantesOtros />
             </div>
           </Col>
         </Row>
-        <ParticipantesCliente />
 
-        <Row style={{padding: "10px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Participantes en la reunión por parte del Grupo Bancolombia </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesBancolombia />
-
-        <Row style={{padding: "20px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Otros participantes en la reunión </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesOtros />
-        <TaskVisit />
         <Row style={{padding: "30px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "22px"}}> Desarrollo general de la reunión  </span>
+              <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
             </div>
           </Col>
         </Row>
@@ -377,14 +371,15 @@ class FormVisita extends Component{
             type="text"
             max="3500"
             title="La longitud máxima de caracteres es de 3500"
-            style={{width: '100%', height: '250px'}}
+            style={{width: '100%', height: '178px'}}
           />
         </Col>
         </Row>
+        <TaskVisit />
         <Row>
           <Col xs={12} md={12} lg={12}>
             <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
-            <h4 className="form-item">Fecha última revisión formato visita (YYY/DD/MM): <span>{dateVisitLastReview}</span></h4>
+            <h4 className="form-item" style={{color: '#818282'}}>Fecha última revisión formato visita: <span>{dateVisitLastReview}</span></h4>
             </div>
           </Col>
         </Row>
@@ -396,7 +391,7 @@ class FormVisita extends Component{
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
-            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>

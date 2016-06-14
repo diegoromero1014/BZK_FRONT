@@ -9,6 +9,7 @@ import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';
+import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
 import {NUMBER_CONTACTS} from './constants';
 import _ from 'lodash';
 
@@ -116,78 +117,84 @@ class ParticipantesCliente extends Component{
     }
     return(
       <div>
-      { disabled === '' || disabled === undefined ?
-        <Row style={{padding: "0px 10px 0px 20px"}}>
-          <Col xs={12} md={3} lg={3} style={{paddingRight: "20px"}}>
-            <dt>
-              <span>Nombre</span>
-            </dt>
-            <dt>
-                <ComboBox
-                    name="txtContactoCliente"
-                    labelInput="Seleccione..."
-                    {...contactoCliente}
-                    onChange={val => this._updateValue(val)}
-                    valueProp={'id'}
-                    textProp={'nameComplet'}
-                    data={contactsByClient.get('contacts')}
-                />
-            </dt>
-          </Col>
-          <Col xs={12} md={3} lg={3}>
-            <dt><span>Cargo</span></dt>
-            <dt style={{marginRight:"17px"}}>
-              <Input
-                name="txtCargo"
-                {...cargoContacto}
-                type="text"
-                disabled="disabled"
-                placeholder="Cargo de la persona"
-              />
-            </dt>
-          </Col>
-          <Col xs={12} md={3} lg={3}>
-            <div style={{paddingRight: "15px"}}>
-              <dt><span>Estilo social</span></dt>
-              <Input
-                name="estiloSocial"
-                {...estiloSocial}
-                placeholder="Estilo social de la persona"
-                disabled="disabled"
-                parentId="dashboardComponentScroll"
-              />
-            </div>
-          </Col>
-          <Col xs={12} md={2} lg={2}>
-            <div style={{paddingRight: "15px"}}>
-              <dt><span>Actitud frente al grupo</span></dt>
-              <Input
-                name="actitudGrupo"
-                {...actitudGrupo}
-                placeholder="Actitud frente al grupo de la persona"
-                disabled="disabled"
-                parentId="dashboardComponentScroll"
-              />
-            </div>
-          </Col>
-          <Col xs={1} md={1} lg={1}>
-            <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
-              type="button" title="Adicionar participante, máximo 10" style={{marginLeft:"17px", marginTop: "20px"}}>
-              <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-            </button>
-          </Col>
-        </Row>
-        : ''}
-        {data.length > 0 ?
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs>
-              <ListParticipantesCliente disabled={disabled}/>
+        <Row style={{padding: "0px 10px 0px 10px"}}>
+        { disabled === '' || disabled === undefined ?
+          <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
+            <Col xs={12} md={12} lg={12}>
+              <dt><span>Nombre</span></dt>
+              <dt>
+                  <ComboBox
+                      name="txtContactoCliente"
+                      labelInput="Seleccione..."
+                      {...contactoCliente}
+                      onChange={val => this._updateValue(val)}
+                      valueProp={'id'}
+                      textProp={'nameComplet'}
+                      data={contactsByClient.get('contacts')}
+                  />
+              </dt>
             </Col>
-          </Row> :
-          <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
-            <h4 className="form-item">Señor usuario, no se han adicionado participantes por parte del cliente.</h4>
-          </div>
-        }
+
+            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
+              <dt><span>Cargo</span></dt>
+              <dt>
+                <Input
+                  name="txtCargo"
+                  {...cargoContacto}
+                  type="text"
+                  disabled="disabled"
+                />
+              </dt>
+            </Col>
+
+            <Row style={{padding: "5px 10px 0px 10px"}}>
+              <Col xs={12} md={6} lg={6}>
+                <dt><span>Estilo social</span></dt>
+                <dt>
+                  <Input
+                    name="estiloSocial"
+                    {...estiloSocial}
+                    disabled="disabled"
+                    parentId="dashboardComponentScroll"
+                  />
+                </dt>
+              </Col>
+
+              <Col xs={12} md={6} lg={6}>
+                <dt><span>Actitud frente al grupo</span></dt>
+                <dt>
+                  <Input
+                    name="actitudGrupo"
+                    {...actitudGrupo}
+                    disabled="disabled"
+                    parentId="dashboardComponentScroll"
+                  />
+                </dt>
+              </Col>
+            </Row>
+
+            <Row style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
+              <Col xs={12} md={4} lg={4} style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
+                <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
+                type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
+                Agregar participante
+                </button>
+              </Col>
+              <BotonCreateContactComponent typeButton={1} />
+            </Row>
+          </Col>
+          : ''}
+          {data.length > 0 ?
+            <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+              <ListParticipantesCliente disabled={disabled}/>
+            </Col> :
+            <Col xs={12} md={6} lg={6}>
+              <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
+                <span className="form-item">Aún no se han adicionado participantes</span>
+              </div>
+            </Col>
+          }
+        </Row>
         <SweetAlert
          type="error"
          show={this.state.showEmptyParticipant}
