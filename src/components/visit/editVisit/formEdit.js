@@ -33,16 +33,6 @@ var typeButtonClick;
 
 const validate = values => {
   var errors = {};
-    if(!values.tipoVisita){
-      errors.tipoVisita = "Debe seleccionar una opción";
-    }else{
-      errors.tipoVisita = null;
-    }
-    if(!values.fechaVisita){
-      errors.fechaVisita = "Debe seleccionar una fecha";
-    }else{
-      errors.fechaVisita = null;
-    }
     return errors;
 };
 
@@ -65,11 +55,13 @@ class FormEdit extends Component{
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
     this._onClickPDF = this._onClickPDF.bind(this);
+    this._changeTypeVisit = this._changeTypeVisit.bind(this);
+    this._changeDateVisit = this._changeDateVisit.bind(this);
   }
 
   _editVisit() {
     this.setState({
-      showMessage:false,
+      showMessage: false,
       isEditable: !this.state.isEditable
     });
   }
@@ -211,6 +203,21 @@ class FormEdit extends Component{
     message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
     titleMessage = "Confirmación salida";
     this.setState({showConfirm :true});
+  }
+
+  _changeTypeVisit(value){
+    console.log("Type visit", value);
+    this.setState({
+      typeVisit: value,
+      typeVisitError: null
+    });
+  }
+
+  _changeDateVisit(value){
+    this.setState({
+      dateVisit: value,
+      dateVisitError: null
+    });
   }
 
   componentWillMount(){
@@ -368,7 +375,7 @@ class FormEdit extends Component{
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Tipo de reunión (</span><span style={{color: "red"}}>*</span>)
             </dt>
@@ -385,18 +392,17 @@ class FormEdit extends Component{
               />
             </dt>
           </Col>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Fecha de reunión - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
             </dt>
             <dt>
               <DateTimePickerUi
                 culture='es'
-                format={"DD/MM/YYYY"}
+                format={"DD/MM/YYYY hh:mm a"}
                 time={true}
                 {...fechaVisita}
                 placeholder="Seleccione la fecha de reunión"
-                max={new Date()}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
@@ -493,10 +499,10 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
@@ -563,7 +569,7 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
       return {
         initialValues:{
           tipoVisita: detailVisit.data.visitType,
-          fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime).format('DD/MM/YYYY') : null,
+          fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime, "x").format('DD/MM/YYYY HH:mm') : null,
           desarrolloGeneral: detailVisit.data.comments,
           participantesBanco: _.toArray(detailVisit.data.participatingEmployees),
           participantesOtros: _.toArray(detailVisit.data.relatedEmployees),
