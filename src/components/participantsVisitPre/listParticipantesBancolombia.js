@@ -3,87 +3,24 @@ import GridComponent from '../grid/component';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {DELETE_PARTICIPANT_VIEW} from './constants';
+import {deleteParticipant} from './actions';
 import _ from 'lodash';
 
-let v1 = "";
-let v2 = "";
-
+var arrayValueBanc = [];
 
 class ListParticipantesBancolombia extends Component {
 
   constructor(props){
       super(props);
-      this._mapValueParticipantes = this._mapValueParticipantes.bind(this);
-      this._renderHeaders = this._renderHeaders.bind(this);
-      this.state = {
-        column : "",
-        order : "",
-        orderA: 'none',
-        orderD: 'inline-block'
-      }
+      this._mapValuesData = this._mapValuesData.bind(this);
+      this._getValuesParticipantBanc = this._getValuesParticipantBanc.bind(this);
   }
 
-  componentWillMount(){
-    this.state = {
-      orderA: 'none',
-      orderD: 'inline-block'
-    }
-  }
-
-  componentWillReceiveProps(nextProps){
-      const {
-          value1,
-          value2
-      } = nextProps;
-      if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
-      v1 = nextProps.value1;
-      v2 = nextProps.value2;
-      const {clearShareholderOrder} = this.props;
-    }
-  }
-
-
-  _orderColumn(orderShareholder,columnShareholder){
-    if(orderShareholder === 1){
-      this.setState({orderA :'none',orderD:'inline-block'});
-    }else{
-      this.setState({orderA :'inline-block',orderD :'none'});
-    }
-  }
-
-  _renderHeaders(){
-    const {disabled} = this.props;
-    if(disabled === '' || disabled === undefined){
-      return [
-        {
-          title: "Nombre",
-          key:"name"
-        },
-        {
-          title: "Cargo",
-          key:"cargo"
-        },
-        {
-          title: "",
-          key:"delete"
-        },
-      ]
-    }else{
-      return [
-        {
-          title: "Nombre",
-          key:"name"
-        },
-        {
-          title: "Cargo",
-          key:"cargo"
-        }
-      ]
-    }
-  }
-
-  _mapValueParticipantes(){
-    const {participants} = this.props;
+  _getValuesParticipantBanc(){
+    var {participants} = this.props;
+    participants = participants.sort(function(valueA, valueB){
+      return valueA.fecha < valueB.fecha;
+    })
     if( participants.size > 0 ){
       var data = _.chain(participants.toArray()).map(participant => {
         const {tipoParticipante, idParticipante, nombreParticipante, cargo, empresa, estiloSocial,
@@ -101,18 +38,38 @@ class ListParticipantesBancolombia extends Component {
       .filter(participant => _.isEqual(participant.tipo, 'banco'))
       .value();
 
-      return data;
+      arrayValueBanc= data;
     } else {
-      return [];
+      arrayValueBanc= [];
     }
   }
 
+  _clickButtonDelete(idData){
+    const {participants, deleteParticipant} = this.props;
+    var indexDelete = participants.findIndex(function(item){
+      return item.idParticipante === idData;
+    });
+    console.log("indexDelete", indexDelete);
+    deleteParticipant(indexDelete);
+  }
+
+  _mapValuesData(userData){
+    return <div className="item">
+              <span  style={{ paddingRight: '10px',fontWeight: 'bold',color: 'black'}} >{userData.name}</span>
+              {userData.cargo} {userData.empresa}
+              <i className="remove icon"
+                onClick={this._clickButtonDelete.bind(this, userData.id)}
+                style={{float: 'right',margin:'0em', fontSize : '1.2em'}}
+                title="Eliminar participante"
+                ></i>
+            </div>
+  }
+
   render() {
-    this._mapValueParticipantes();
-    const {participants} = this.props;
+    this._getValuesParticipantBanc();
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px", marginTop: "15px"}}>
-        <GridComponent headers={this._renderHeaders} data={this._mapValueParticipantes()}/>
+      <div className="ui divided selection list" style={{paddingRight: '23px', height: "240px", overflow: 'scroll'}}>
+        {arrayValueBanc.map(this._mapValuesData)}
       </div>
     );
   }
@@ -120,14 +77,13 @@ class ListParticipantesBancolombia extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
+      deleteParticipant
     }, dispatch);
 }
 
 function mapStateToProps({participants}) {
     return {
-        participants: participants.sort(function(valueA, valueB){
-          return valueA.fecha < valueB.fecha;
-        })
+        participants
     };
 }
 

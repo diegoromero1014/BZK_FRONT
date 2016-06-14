@@ -29,14 +29,14 @@ class ParticipantesBancolombia extends Component{
         showEmptyParticipantBanco: false,
         showParticipantExistBanco: false
       }
-      this._addParticipantClient = this._addParticipantClient.bind(this);
+      this._addParticipantBanc = this._addParticipantBanc.bind(this);
       this._updateValue = this._updateValue.bind(this);
       this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this._submitValores = this._submitValores.bind(this);
   }
 
-  _addParticipantClient() {
-    const {fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario }, participants, addParticipant} = this.props;
+  _addParticipantBanc() {
+    const {fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant} = this.props;
     if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined &&
         idUsuario.value !== "" && idUsuario.value !== null && idUsuario.value !== undefined){
       var particip = participants.find(function(item){
@@ -51,7 +51,7 @@ class ParticipantesBancolombia extends Component{
           idParticipante: idUsuario.value,
           nombreParticipante: nameUsuario.value,
           cargo: cargoUsuario.value,
-          empresa: '',
+          empresa: empresaUsuario.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -87,6 +87,7 @@ class ParticipantesBancolombia extends Component{
       idUsuario.onChange(contactSelected.id);
       nameUsuario.onChange(contactSelected.nameComplet);
       cargoUsuario.onChange(contactSelected.contactPosition);
+      empresaUsuario.onChange(contactSelected.company);
     }
   }
 
@@ -101,7 +102,7 @@ class ParticipantesBancolombia extends Component{
   }
 
   updateKeyValueUsersBanco(e){
-    const {fields: {objetoUsuario, nameUsuario, idUsuario, cargoUsuario}, filterUsersBanco} = this.props;
+    const {fields: {objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario}, filterUsersBanco} = this.props;
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -119,10 +120,12 @@ class ParticipantesBancolombia extends Component{
                 'cargo'
               ],
               onSelect : function(event) {
+                  console.log("event", event);
                   objetoUsuario.onChange(event);
                   nameUsuario.onChange(event.title);
                   idUsuario.onChange(event.idUsuario);
                   cargoUsuario.onChange(event.cargo);
+                  empresaUsuario.onChange(event.empresa);
                   return 'default';
               }
             });
@@ -140,7 +143,7 @@ class ParticipantesBancolombia extends Component{
 
   render(){
     const {fields: {
-      idUsuario, nameUsuario, cargoUsuario
+      idUsuario, nameUsuario, cargoUsuario, empresaUsuario
     }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
@@ -153,75 +156,89 @@ class ParticipantesBancolombia extends Component{
     }
     return(
       <div>
-      { disabled === '' || disabled === undefined ?
         <Row style={{padding: "0px 10px 0px 20px"}}>
-          <Col xs={12} md={5.5} lg={5.5} style={{paddingRight: "20px"}}>
-            <dt>
-              <span>Nombre</span>
-            </dt>
-            <dt>
-            <div className="ui search participantBanc fluid">
-              <div className="ui icon input" style={{width: "100%"}}>
-                <input className="prompt" id="inputParticipantBanc"
-                  style={{borderRadius: "3px"}}
-                  autoComplete="off"
+        { disabled === '' || disabled === undefined ?
+          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+            <Col xs={12} md={12} lg={12}>
+              <dt><span>Nombre</span></dt>
+              <dt>
+                <div className="ui search participantBanc fluid">
+                  <div className="ui icon input" style={{width: "100%"}}>
+                    <input className="prompt" id="inputParticipantBanc"
+                      style={{borderRadius: "3px"}}
+                      autoComplete="off"
+                      type="text"
+                      value={nameUsuario.value}
+                      onChange={nameUsuario.onChange}
+                      placeholder="Ingrese un criterio de búsqueda..."
+                      onKeyPress={this.updateKeyValueUsersBanco}
+                      onSelect={val => this._updateValue(val)}
+                    />
+                    <i className="search icon"></i>
+                  </div>
+                  <div className="results"></div>
+                </div>
+              </dt>
+            </Col>
+
+            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
+              <dt><span>Cargo</span></dt>
+              <dt>
+                <Input
+                  name="txtCargo"
+                  {...cargoUsuario}
                   type="text"
-                  value={nameUsuario.value}
-                  onChange={nameUsuario.onChange}
-                  placeholder="Ingrese un criterio de búsqueda..."
-                  onKeyPress={this.updateKeyValueUsersBanco}
-                  onSelect={val => this._updateValue(val)}
+                  disabled='disabled'
                 />
-                <i className="search icon"></i>
-              </div>
-              <div className="results"></div>
-            </div>
-            </dt>
-          </Col>
-          <Col xs={12} md={5.5} lg={5.5}>
-            <dt><span>Cargo</span></dt>
-            <dt style={{marginRight:"17px"}}>
-              <Input
-                name="txtCargo"
-                {...cargoUsuario}
-                type="text"
-                disabled='disabled'
-                placeholder="Cargo de la persona"
-              />
-            </dt>
-          </Col>
-          <Col xs={1} md={1} lg={1}>
-            <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
-            type="button" title="Adicionar participante, máximo 10" style={{marginLeft:"17px", marginTop: "20px"}}>
-              <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-            </button>
-          </Col>
-        </Row>
+              </dt>
+            </Col>
+
+            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
+              <dt><span>Empresa</span></dt>
+              <dt>
+                <Input
+                  name="txtEmpresa"
+                  {...empresaUsuario}
+                  type="text"
+                  disabled='disabled'
+                />
+              </dt>
+            </Col>
+          <Row style={{paddingLeft: "10px"}}>
+            <Col xs={12} md={5} lg={5}>
+              <button className="btn btn-primary" onClick={this._addParticipantBanc} disabled={disabledButtonCreate}
+              type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
+                Agregar participante
+              </button>
+            </Col>
+          </Row>
+        </Col>
         : ''}
         {data.length > 0 ?
-          <Row style={{padding: "0px 10px 20px 20px"}}>
-            <Col xs>
-              <ListParticipantesBancolombia disabled={disabled}/>
-            </Col>
-          </Row> :
-          <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
-            <h4 className="form-item">Señor usuario, no se han adicionado participantes por parte del Grupo Bancolombia.</h4>
-          </div>
+          <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+            <ListParticipantesBancolombia disabled={disabled}/>
+          </Col> :
+          <Col xs={12} md={6} lg={6}>
+            <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
+              <span className="form-item">Aún no se han adicionado participantes</span>
+            </div>
+          </Col>
         }
-        <SweetAlert
-         type="error"
-         show={this.state.showEmptyParticipantBanco}
-         title="Error participante"
-         text="Señor usuario, para agregar un participante debe seleccionar un usuario del banco"
-         onConfirm={() => this.setState({showEmptyParticipantBanco:false})}
-         />
-         <SweetAlert
-          type="error"
-          show={this.state.showParticipantExistBanco}
-          title="Participante existente"
-          text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
-          onConfirm={() => this.setState({showParticipantExistBanco:false})}
-          />
+      </Row>
+      <SweetAlert
+       type="error"
+       show={this.state.showEmptyParticipantBanco}
+       title="Error participante"
+       text="Señor usuario, para agregar un participante debe seleccionar un usuario del banco"
+       onConfirm={() => this.setState({showEmptyParticipantBanco:false})}
+       />
+       <SweetAlert
+        type="error"
+        show={this.state.showParticipantExistBanco}
+        title="Participante existente"
+        text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
+        onConfirm={() => this.setState({showParticipantExistBanco:false})}
+        />
       </div>
     );
   }
@@ -246,6 +263,6 @@ function mapStateToProps({selectsReducer, participants, contactsByClient}) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idUsuario", "nameUsuario", "objetoUsuario", "cargoUsuario"],
+  fields: ["idUsuario", "nameUsuario", "objetoUsuario", "cargoUsuario", "empresaUsuario"],
   validate
 }, mapStateToProps, mapDispatchToProps)(ParticipantesBancolombia);

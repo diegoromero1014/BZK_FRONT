@@ -20,7 +20,6 @@ class CreateVisit extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <div>
-        <HeaderPrevisita/>
         <FormVisita/>
       </div>
     );
