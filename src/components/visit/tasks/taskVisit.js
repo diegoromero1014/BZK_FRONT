@@ -23,18 +23,18 @@ class TaskVisit extends Component{
     return(
       <div className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <Row style={{padding: "20px 10px 0px 20px"}}>
-          <Col xs={11} md={11} lg={11}>
-          <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-            <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}></div>
-            <i className="browser icon" style={{fontSize: "18px"}}/>
-            <span style={{fontSize: "20px"}}> Pendientes</span>
-          </div>
+        <Row xs={12} md={12} lg={12} style={{padding: "20px 10px 0px 30px"}}>
+          <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}></div>
+        </Row>
+        <Row>
+          <Col xs={11} md={11} lg={11} style={{paddingLeft: "30px"}}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "0px", marginBottom: "5px"}}>
+              <i className="browser icon" style={{fontSize: "18px"}}/>
+              <span style={{fontSize: "20px"}}> Pendientes</span>
+            </div>
           </Col>
           {disabled === '' || disabled === undefined ?
-            <Col xs={1} md={1} lg={1} style={{marginTop: "15px"}}>
-              <BotonCreateContactComponent/>
-            </Col>
+            <BotonCreateContactComponent/>
           : ''}
         </Row>
         {tasks.size > 0 ?
