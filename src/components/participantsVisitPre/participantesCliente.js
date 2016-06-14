@@ -44,10 +44,13 @@ class ParticipantesCliente extends Component{
             tipoParticipante: 'client',
             idParticipante: idContacto.value,
             nombreParticipante: nameContacto.value,
-            cargo: cargoContacto.value,
+            cargo: cargoContacto.value === null || cargoContacto.value === undefined || cargoContacto.value === '' ?
+                    '' : ' - ' + cargoContacto.value,
             empresa: '',
-            estiloSocial: estiloSocial.value,
-            actitudBanco: actitudGrupo.value,
+            estiloSocial: estiloSocial.value === null || estiloSocial.value === undefined || estiloSocial.value === '' ?
+                    '' : ' - ' + estiloSocial.value,
+            actitudBanco: actitudGrupo.value === null || actitudGrupo.value === undefined || actitudGrupo.value === '' ?
+                    '' : ' - ' + actitudGrupo.value,
             fecha: Date.now(),
             uuid,
           }
