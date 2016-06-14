@@ -98,8 +98,8 @@ class ListTasks extends Component {
     });
   }
 
-  _mapValuesTask(taskData){
-    return <tr>
+  _mapValuesTask(taskData, idx){
+    return <tr key={idx}>
               <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                 onClick={this._viewDetailsTask.bind(this, taskData)}

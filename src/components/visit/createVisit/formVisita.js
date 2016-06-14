@@ -23,7 +23,7 @@ import moment from 'moment';
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
 var showMessageCreateVisit= false;
-var typeMessage = "";
+var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;

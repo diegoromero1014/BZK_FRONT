@@ -154,6 +154,8 @@ class ParticipantesBancolombia extends Component{
 
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    } else {
+      disabledButtonCreate = '';
     }
     if(disabled === "disabled"){
       numColumnList = 12;
@@ -164,7 +166,7 @@ class ParticipantesBancolombia extends Component{
         { disabled === '' || disabled === undefined ?
           <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <dt><span>Nombre</span></dt>
+              <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt>
                 <div className="ui search participantBanc fluid">
                   <div className="ui icon input" style={{width: "100%"}}>
@@ -184,28 +186,30 @@ class ParticipantesBancolombia extends Component{
                 </div>
               </dt>
             </Col>
-            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
-              <dt><span>Cargo</span></dt>
-              <dt>
-                <Input
-                  name="txtCargo"
-                  {...cargoUsuario}
-                  type="text"
-                  disabled='disabled'
-                />
-              </dt>
-            </Col>
-            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
-              <dt><span>Empresa</span></dt>
-              <dt>
-                <Input
-                  name="txtEmpresa"
-                  {...empresaUsuario}
-                  type="text"
-                  disabled='disabled'
-                />
-              </dt>
-            </Col>
+            <Row style={{padding: "5px 10px 0px 10px"}}>
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Cargo</span></dt>
+                <dt>
+                  <Input
+                    name="txtCargo"
+                    {...cargoUsuario}
+                    type="text"
+                    disabled='disabled'
+                  />
+                </dt>
+              </Col>
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Empresa</span></dt>
+                <dt>
+                  <Input
+                    name="txtEmpresa"
+                    {...empresaUsuario}
+                    type="text"
+                    disabled='disabled'
+                  />
+                </dt>
+              </Col>
+            </Row>
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={5} lg={5}>
               <button className="btn btn-primary" onClick={this._addParticipantBanc} disabled={disabledButtonCreate}

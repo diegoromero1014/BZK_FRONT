@@ -76,6 +76,8 @@ class ParticipantesOtros extends Component{
     .value();
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    } else {
+      disabledButtonCreate = '';
     }
     if(disabled === "disabled"){
       numColumnList = 12;
@@ -86,7 +88,7 @@ class ParticipantesOtros extends Component{
         { disabled === '' || disabled === undefined ?
           <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
             <Col xs={12} md={12} lg={12}>
-              <dt><span>Nombre</span></dt>
+              <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt style={{marginRight:"17px"}}>
                   <Input
                   name="Nombre"
