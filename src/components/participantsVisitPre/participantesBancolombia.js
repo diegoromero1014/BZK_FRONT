@@ -120,7 +120,6 @@ class ParticipantesBancolombia extends Component{
                 'cargo'
               ],
               onSelect : function(event) {
-                  console.log("event", event);
                   objetoUsuario.onChange(event);
                   nameUsuario.onChange(event.title);
                   idUsuario.onChange(event.idUsuario);
@@ -145,6 +144,7 @@ class ParticipantesBancolombia extends Component{
     const {fields: {
       idUsuario, nameUsuario, cargoUsuario, empresaUsuario
     }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
+    var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -153,6 +153,9 @@ class ParticipantesBancolombia extends Component{
 
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    }
+    if(disabled === "disabled"){
+      numColumnList = 12;
     }
     return(
       <div>
@@ -180,7 +183,6 @@ class ParticipantesBancolombia extends Component{
                 </div>
               </dt>
             </Col>
-
             <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
               <dt><span>Cargo</span></dt>
               <dt>
@@ -192,7 +194,6 @@ class ParticipantesBancolombia extends Component{
                 />
               </dt>
             </Col>
-
             <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
               <dt><span>Empresa</span></dt>
               <dt>
@@ -215,10 +216,10 @@ class ParticipantesBancolombia extends Component{
         </Col>
         : ''}
         {data.length > 0 ?
-          <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+          <Col xs={12} md={numColumnList} lg={numColumnList} style={{paddingLeft: "5px", paddingTop: "10px"}}>
             <ListParticipantesBancolombia disabled={disabled}/>
           </Col> :
-          <Col xs={12} md={6} lg={6}>
+          <Col xs={12} md={numColumnList} lg={numColumnList}>
             <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
               <span className="form-item">Aún no se han adicionado participantes</span>
             </div>
