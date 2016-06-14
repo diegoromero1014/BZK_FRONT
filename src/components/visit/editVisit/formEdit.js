@@ -190,9 +190,7 @@ class FormEdit extends Component{
 
   componentWillMount(){
     const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
-    console.log("idParam", id);
     this.setState({idVisit : id});
-    console.log("idParam1", this.state.idVisit);
     getMasterDataFields([VISIT_TYPE]);
     detailVisit(id).then((result) => {
       const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
@@ -263,21 +261,38 @@ class FormEdit extends Component{
         }
         addTask(task);
       });
-
-
     });
+
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
         data.payload.data.parameter !== undefined ){
-        dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
+        var fechaVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es');
+        dateVisitLastReview = fechaVisitLastReview.format("DD") + " " + fechaVisitLastReview.format("MMM") + " " + fechaVisitLastReview.format("YYYY");
       }
     }, (reason) =>{
     });
   }
 
   render(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
-    selectsReducer, handleSubmit} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes}, selectsReducer, handleSubmit, visitReducer} = this.props;
+    const detailVisit = visitReducer.get('detailVisit');
+    var fechaModString = '';
+    var fechaCreateString = '';
+    var createdBy = '';
+    var updatedBy = '';
+
+    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      createdBy = detailVisit.data.createdByName;
+      updatedBy = detailVisit.data.updatedByName;
+      if(detailVisit.data.updatedTimestamp !== null){
+        var fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
+        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY");
+      }
+      if(detailVisit.data.createdTimestamp !== null){
+        var fechaCreateDateMoment = moment(detailVisit.data.createdTimestamp, "x").locale('es');
+        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY");
+      }
+    }
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -379,22 +394,54 @@ class FormEdit extends Component{
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 10px 20px"}}>
-        <Col xs={12} md={12} lg={12}>
-          <Textarea
-            {...desarrolloGeneral}
-            name="desarrolloGeneral"
-            type="text"
-            max="3500"
-            title="La longitud máxima de caracteres es de 3500"
-            style={{width: '100%', height: '250px'}}
-            disabled={this.state.isEditable ? '' : 'disabled'}
-          />
-        </Col>
+          <Col xs={12} md={12} lg={12}>
+            <Textarea
+              {...desarrolloGeneral}
+              name="desarrolloGeneral"
+              type="text"
+              max="3500"
+              title="La longitud máxima de caracteres es de 3500"
+              style={{width: '100%', height: '250px'}}
+              disabled={this.state.isEditable ? '' : 'disabled'}
+            />
+          </Col>
+        </Row>
+        <Row style={{padding: "10px 10px 0px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
+            : '' }
+            </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
+            : '' }
+          </Col>
+        </Row>
+        <Row style={{padding: "5px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+          </Col>
         </Row>
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
-            <h4 className="form-item">Fecha última revisión formato visita (YYY/DD/MM): <span>{dateVisitLastReview}</span></h4>
+            <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px", color: "#818282"}}>
+            <h4 className="form-item" style={{color: "#818282"}}>Fecha última revisión formato visita: <span style={{color: "#818282"}}>{dateVisitLastReview}</span></h4>
             </div>
           </Col>
         </Row>
@@ -465,6 +512,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
     console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
+      var createdTimestamp = detailVisit.data.createdTimestamp;
+      var updatedTimestamp = detailVisit.data.updatedTimestamp;
       return {
         initialValues:{
           tipoVisita: detailVisit.data.visitType,
