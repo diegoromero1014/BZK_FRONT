@@ -61,6 +61,7 @@ class ParticipantesBancolombia extends Component{
         idUsuario.onChange('');
         nameUsuario.onChange('');
         cargoUsuario.onChange('');
+        empresaUsuario.onChange('');
       } else {
         this.setState({
           showParticipantExistBanco: true
