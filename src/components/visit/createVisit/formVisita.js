@@ -406,7 +406,7 @@ class FormVisita extends Component{
         <TaskVisit />
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
             <h4 className="form-item" style={{color: '#818282'}}>Fecha última revisión formato visita: <span>{dateVisitLastReview}</span></h4>
             </div>
           </Col>

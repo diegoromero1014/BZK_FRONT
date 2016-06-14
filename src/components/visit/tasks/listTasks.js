@@ -86,6 +86,7 @@ class ListTasks extends Component {
   }
 
   _viewDetailsTask(taskDetails){
+    console.log("taskDetails", taskDetails);
     var actions = {
       actionView: true,
       task: taskDetails,
@@ -127,7 +128,7 @@ class ListTasks extends Component {
           <BotonCreateTaskComponent/>
         : ''}
         {tasks.size > 0 ?
-          <Row style={{marginTop: '31px'}}>
+          <Row style={disabled === '' || disabled === undefined ? {marginTop: '31px'} : {}}>
             <Col xs>
               <table className="ui striped table">
                 <thead>

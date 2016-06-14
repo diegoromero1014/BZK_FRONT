@@ -307,11 +307,13 @@ class FormEdit extends Component{
   componentDidMount(){
     const {visitReducer} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
-    var visitTime = detailVisit.data.visitTime;
-    this.setState({
-      typeVisit: detailVisit.data.visitType,
-      dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
-    });
+    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      var visitTime = detailVisit.data.visitTime;
+      this.setState({
+        typeVisit: detailVisit.data.visitType,
+        dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
+      });
+    }
   }
 
   render(){
@@ -452,7 +454,6 @@ class FormEdit extends Component{
             </div>
           </Col>
         </Row>
-        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "30px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -470,11 +471,12 @@ class FormEdit extends Component{
               type="text"
               max="3500"
               title="La longitud máxima de caracteres es de 3500"
-              style={{width: '100%', height: '250px'}}
+              style={{width: '100%', height: '178px'}}
               disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </Col>
         </Row>
+        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "10px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
@@ -525,7 +527,7 @@ class FormEdit extends Component{
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
             </button>
-            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>

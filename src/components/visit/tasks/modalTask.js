@@ -60,8 +60,13 @@ class ModalTask extends Component {
       momentLocalizer(moment);
     }
 
-    componentWillMount(){
-      //this.props.resetForm();
+    componentDidMount(){
+      const {fields:{responsable, fecha, tarea}, taskEdit} = this.props;
+      if(taskEdit !== undefined){
+        responsable.onChange(taskEdit.responsable);
+        tarea.onChange(taskEdit.tarea);
+        fecha.onChange(moment(taskEdit.fecha, 'DD MMM YYYY').format("DD/MM/YYYY"));
+      }
     }
 
     _close(){
@@ -81,17 +86,6 @@ class ModalTask extends Component {
       isOpen();
       this.props.resetForm();
     }
-
-  /*updateKeyValueUsersBanco(){
-      const {fields: {responsable}, filterUsersBanco} = this.props;
-      filterUsersBanco(responsable.value).then((data) => {
-        var usersBanco = _.get(data, 'payload.data.data');
-        this.setState({prueba : usersBanco});
-        const selector =  $('.ui.search.responsable');
-        //responsable.onChange(responsable.value);
-        }, (reason) => {
-      });
-    }*/
 
     updateKeyValueUsersBanco(e){
       const {fields: {responsable}, filterUsersBanco} = this.props;
@@ -249,6 +243,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
+  console.log("modal", taskEdit);
   if(taskEdit !== undefined){
     return {
       participants,
