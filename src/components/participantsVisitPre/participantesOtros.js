@@ -36,8 +36,10 @@ class ParticipantesOtros extends Component{
           tipoParticipante: 'other',
           idParticipante: '',
           nombreParticipante: nombrePersona.value,
-          cargo: cargoPersona.value,
-          empresa: empresaPersona.value,
+          cargo: cargoPersona.value === null || cargoPersona.value === undefined || cargoPersona.value === '' ?
+                  '' : ' - ' + cargoPersona.value,
+          empresa: empresaPersona.value === null || empresaPersona.value === undefined || empresaPersona.value === '' ?
+                  '' : ' - ' + empresaPersona.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),

@@ -50,8 +50,10 @@ class ParticipantesBancolombia extends Component{
           tipoParticipante: 'banco',
           idParticipante: idUsuario.value,
           nombreParticipante: nameUsuario.value,
-          cargo: cargoUsuario.value,
-          empresa: empresaUsuario.value,
+          cargo: cargoUsuario.value === null || cargoUsuario.value === undefined || cargoUsuario.value === '' ?
+                  '' : ' - ' + cargoUsuario.value,
+          empresa: empresaUsuario.value === null || empresaUsuario.value === undefined || empresaUsuario.value === '' ?
+                  '' : ' - ' + empresaUsuario.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -77,18 +79,18 @@ class ParticipantesBancolombia extends Component{
   _updateValue(value){
     const{fields: {idUsuario, nameUsuario, cargoUsuario}, contactsByClient} = this.props;
     var contactClient = contactsByClient.get('contacts');
-    var contactSelected;
+    var userSelected;
     _.map(contactClient, contact => {
       if( contact.id.toString() === value ){
-        contactSelected = contact;
+        userSelected = contact;
         return contact;
       }
     });
-    if( contactSelected !== null && contactSelected !== undefined ){
-      idUsuario.onChange(contactSelected.id);
-      nameUsuario.onChange(contactSelected.nameComplet);
-      cargoUsuario.onChange(contactSelected.contactPosition);
-      empresaUsuario.onChange(contactSelected.company);
+    if( userSelected !== null && userSelected !== undefined ){
+      idUsuario.onChange(userSelected.id);
+      nameUsuario.onChange(userSelected.nameComplet);
+      cargoUsuario.onChange(userSelected.contactPosition);
+      empresaUsuario.onChange(userSelected.company);
     }
   }
 

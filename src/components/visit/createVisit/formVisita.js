@@ -154,15 +154,14 @@ class FormVisita extends Component{
             if(participant.tipoParticipante === "other" ){
               var data = {
                 "id": null,
-                "name": participant.nombreParticipante,
-                "position": participant.cargo,
-                "company": participant.empresa
+                "name": participant.nombreParticipante.replace('-', ''),
+                "position": participant.cargo.replace('-', ''),
+                "company": participant.empresa.replace('-', '')
               }
               dataOthers.push(data);
             }
           }
         );
-
         var tareas = [];
         _.map(tasks.toArray(),
           function(task){
@@ -180,7 +179,6 @@ class FormVisita extends Component{
         if( dataOthers.length > 0 && dataOthers[0] === undefined ){
           dataOthers = [];
         }
-        console.log("typeButtonClick", typeButtonClick);
         var visitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
@@ -193,7 +191,6 @@ class FormVisita extends Component{
           "visitType": this.state.typeVisit,
           "documentStatus": typeButtonClick
         }
-        console.log("visitJson", visitJson);
         createVisti(visitJson).then((data)=> {
           if((_.get(data, 'payload.validateLogin') === 'false')){
             redirectUrl("/login");
