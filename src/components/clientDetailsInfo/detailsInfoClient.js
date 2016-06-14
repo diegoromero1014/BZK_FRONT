@@ -86,10 +86,12 @@ class DetailsInfoClient extends Component{
 
           <table style={{width: "100%", marginTop: "20px", marginBottom: "30px"}}>
             <thead>
-              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Fecha de actualización</span></th>
-              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado</span></th>
-              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado de certificación</span></th>
-              <th><span style={{fontWeight: "bold", color: "#4C5360"}}></span></th>
+              <tr>
+                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Fecha de actualización</span></th>
+                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado</span></th>
+                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado de certificación</span></th>
+                <th><span style={{fontWeight: "bold", color: "#4C5360"}}></span></th>
+              </tr>
             </thead>
             <tbody>
               <tr>

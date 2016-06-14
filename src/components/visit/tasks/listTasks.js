@@ -99,11 +99,12 @@ class ListTasks extends Component {
   }
 
   _mapValuesTask(taskData, idx){
+    var {disabled} = this.props;
     return <tr key={idx}>
               <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                 onClick={this._viewDetailsTask.bind(this, taskData)}
-                style={{cursor: "pointer"}} />
+                style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
               </td>
               <td>{taskData.responsable}</td>
               <td>{taskData.fecha}</td>
@@ -111,7 +112,7 @@ class ListTasks extends Component {
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar tarea"
                   onClick={this._confirmDeleteTask.bind(this, taskData.uuid)}
-                  style={{cursor: "pointer"}} />
+                  style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
               </td>
            </tr>
   }
@@ -122,7 +123,9 @@ class ListTasks extends Component {
     const modalTitle = 'Pendiente Detalle';
     return (
       <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial',marginLeft:'20px',marginRight: '25px',marginTop: '20px'}}>
-        <BotonCreateTaskComponent/>
+        {disabled === '' || disabled === undefined ?
+          <BotonCreateTaskComponent/>
+        : ''}
         {tasks.size > 0 ?
           <Row style={{marginTop: '31px'}}>
             <Col xs>
