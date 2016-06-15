@@ -95,10 +95,10 @@ class ListPendingTaskComponent extends Component {
 
   _renderHeaders() {
     return [
-      /*{
+      {
         title: "",
         key:"actions"
-      },*/
+      },
       {
         title: "Tarea",
         key:"task"
