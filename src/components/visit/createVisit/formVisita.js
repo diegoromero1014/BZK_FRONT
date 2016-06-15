@@ -18,12 +18,13 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti} from '../actions';
 import SweetAlert from 'sweetalert-react';
+import {downloadFilesPdf} from '../../clientInformation/actions';
 import moment from 'moment';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
 var showMessageCreateVisit= false;
-var typeMessage = "";
+var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;
@@ -56,6 +57,7 @@ class FormVisita extends Component{
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
     this._changeTypeVisit = this._changeTypeVisit.bind(this);
     this._changeDateVisit = this._changeDateVisit.bind(this);
+    this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -154,15 +156,14 @@ class FormVisita extends Component{
             if(participant.tipoParticipante === "other" ){
               var data = {
                 "id": null,
-                "name": participant.nombreParticipante,
-                "position": participant.cargo,
-                "company": participant.empresa
+                "name": participant.nombreParticipante.replace('-', ''),
+                "position": participant.cargo.replace('-', ''),
+                "company": participant.empresa.replace('-', '')
               }
               dataOthers.push(data);
             }
           }
         );
-
         var tareas = [];
         _.map(tasks.toArray(),
           function(task){
@@ -180,20 +181,18 @@ class FormVisita extends Component{
         if( dataOthers.length > 0 && dataOthers[0] === undefined ){
           dataOthers = [];
         }
-        console.log("typeButtonClick", typeButtonClick);
         var visitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
           "visitTime": this.state.dateVisit.format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
-          "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+          "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
           "userTasks": tareas,
           "comments": desarrolloGeneral.value,
           "visitType": this.state.typeVisit,
           "documentStatus": typeButtonClick
         }
-        console.log("visitJson", visitJson);
         createVisti(visitJson).then((data)=> {
           if((_.get(data, 'payload.validateLogin') === 'false')){
             redirectUrl("/login");
@@ -251,6 +250,11 @@ class FormVisita extends Component{
     });
   }
 
+  _downloadFileShoppingMap(){
+    //const {downloadFilesPdf} = this.props;
+    //downloadFilesPdf("fileShoppingMap");
+  }
+
   componentWillMount(){
     const {clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
@@ -262,7 +266,7 @@ class FormVisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").format("DD MMM YYYY");
+          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
         }
       }, (reason) =>{
       });
@@ -359,15 +363,15 @@ class FormVisita extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -388,6 +392,10 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
+              <i onClick={this._downloadFileShoppingMap}
+                style={{marginLeft: "0px", cursor: "pointer", fontSize: "19px"}}
+                title="Descargar pdf mapa de compras"
+                className="red file pdf outline icon"></i>
             </div>
           </Col>
         </Row>
@@ -406,7 +414,7 @@ class FormVisita extends Component{
         <TaskVisit />
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px"}}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
             <h4 className="form-item" style={{color: '#818282'}}>Fecha última revisión formato visita: <span>{dateVisitLastReview}</span></h4>
             </div>
           </Col>
@@ -461,7 +469,8 @@ function mapDispatchToProps(dispatch){
     consultList,
     getMasterDataFields,
     consultParameterServer,
-    createVisti
+    createVisti,
+    downloadFilesPdf
   }, dispatch);
 }
 

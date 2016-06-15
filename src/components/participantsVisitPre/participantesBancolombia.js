@@ -50,8 +50,10 @@ class ParticipantesBancolombia extends Component{
           tipoParticipante: 'banco',
           idParticipante: idUsuario.value,
           nombreParticipante: nameUsuario.value,
-          cargo: cargoUsuario.value,
-          empresa: empresaUsuario.value,
+          cargo: cargoUsuario.value === null || cargoUsuario.value === undefined || cargoUsuario.value === '' ?
+                  '' : ' - ' + cargoUsuario.value,
+          empresa: empresaUsuario.value === null || empresaUsuario.value === undefined || empresaUsuario.value === '' ?
+                  '' : ' - ' + empresaUsuario.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -77,18 +79,18 @@ class ParticipantesBancolombia extends Component{
   _updateValue(value){
     const{fields: {idUsuario, nameUsuario, cargoUsuario}, contactsByClient} = this.props;
     var contactClient = contactsByClient.get('contacts');
-    var contactSelected;
+    var userSelected;
     _.map(contactClient, contact => {
       if( contact.id.toString() === value ){
-        contactSelected = contact;
+        userSelected = contact;
         return contact;
       }
     });
-    if( contactSelected !== null && contactSelected !== undefined ){
-      idUsuario.onChange(contactSelected.id);
-      nameUsuario.onChange(contactSelected.nameComplet);
-      cargoUsuario.onChange(contactSelected.contactPosition);
-      empresaUsuario.onChange(contactSelected.company);
+    if( userSelected !== null && userSelected !== undefined ){
+      idUsuario.onChange(userSelected.id);
+      nameUsuario.onChange(userSelected.nameComplet);
+      cargoUsuario.onChange(userSelected.contactPosition);
+      empresaUsuario.onChange(userSelected.company);
     }
   }
 
@@ -121,7 +123,6 @@ class ParticipantesBancolombia extends Component{
                 'cargo'
               ],
               onSelect : function(event) {
-                  console.log("event", event);
                   objetoUsuario.onChange(event);
                   nameUsuario.onChange(event.title);
                   idUsuario.onChange(event.idUsuario);
@@ -146,6 +147,7 @@ class ParticipantesBancolombia extends Component{
     const {fields: {
       idUsuario, nameUsuario, cargoUsuario, empresaUsuario
     }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
+    var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -154,6 +156,11 @@ class ParticipantesBancolombia extends Component{
 
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    } else {
+      disabledButtonCreate = '';
+    }
+    if(disabled === "disabled"){
+      numColumnList = 12;
     }
     return(
       <div>
@@ -161,7 +168,7 @@ class ParticipantesBancolombia extends Component{
         { disabled === '' || disabled === undefined ?
           <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
             <Col xs={12} md={12} lg={12}>
-              <dt><span>Nombre</span></dt>
+              <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt>
                 <div className="ui search participantBanc fluid">
                   <div className="ui icon input" style={{width: "100%"}}>
@@ -181,30 +188,30 @@ class ParticipantesBancolombia extends Component{
                 </div>
               </dt>
             </Col>
-
-            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
-              <dt><span>Cargo</span></dt>
-              <dt>
-                <Input
-                  name="txtCargo"
-                  {...cargoUsuario}
-                  type="text"
-                  disabled='disabled'
-                />
-              </dt>
-            </Col>
-
-            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
-              <dt><span>Empresa</span></dt>
-              <dt>
-                <Input
-                  name="txtEmpresa"
-                  {...empresaUsuario}
-                  type="text"
-                  disabled='disabled'
-                />
-              </dt>
-            </Col>
+            <Row style={{padding: "5px 10px 0px 10px"}}>
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Cargo</span></dt>
+                <dt>
+                  <Input
+                    name="txtCargo"
+                    {...cargoUsuario}
+                    type="text"
+                    disabled='disabled'
+                  />
+                </dt>
+              </Col>
+              <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
+                <dt><span>Empresa</span></dt>
+                <dt>
+                  <Input
+                    name="txtEmpresa"
+                    {...empresaUsuario}
+                    type="text"
+                    disabled='disabled'
+                  />
+                </dt>
+              </Col>
+            </Row>
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={5} lg={5}>
               <button className="btn btn-primary" onClick={this._addParticipantBanc} disabled={disabledButtonCreate}
@@ -216,10 +223,10 @@ class ParticipantesBancolombia extends Component{
         </Col>
         : ''}
         {data.length > 0 ?
-          <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+          <Col xs={12} md={numColumnList} lg={numColumnList} style={{paddingLeft: "5px", paddingTop: "10px"}}>
             <ListParticipantesBancolombia disabled={disabled}/>
           </Col> :
-          <Col xs={12} md={6} lg={6}>
+          <Col xs={12} md={numColumnList} lg={numColumnList}>
             <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
               <span className="form-item">Aún no se han adicionado participantes</span>
             </div>

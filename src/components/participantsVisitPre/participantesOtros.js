@@ -36,8 +36,10 @@ class ParticipantesOtros extends Component{
           tipoParticipante: 'other',
           idParticipante: '',
           nombreParticipante: nombrePersona.value,
-          cargo: cargoPersona.value,
-          empresa: empresaPersona.value,
+          cargo: cargoPersona.value === null || cargoPersona.value === undefined || cargoPersona.value === '' ?
+                  '' : ' - ' + cargoPersona.value,
+          empresa: empresaPersona.value === null || empresaPersona.value === undefined || empresaPersona.value === '' ?
+                  '' : ' - ' + empresaPersona.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -68,7 +70,7 @@ class ParticipantesOtros extends Component{
     const {fields: {
       nombrePersona, cargoPersona, empresaPersona
     }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
-
+    var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -76,6 +78,11 @@ class ParticipantesOtros extends Component{
     .value();
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    } else {
+      disabledButtonCreate = '';
+    }
+    if(disabled === "disabled"){
+      numColumnList = 12;
     }
     return(
       <div>
@@ -83,7 +90,7 @@ class ParticipantesOtros extends Component{
         { disabled === '' || disabled === undefined ?
           <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
             <Col xs={12} md={12} lg={12}>
-              <dt><span>Nombre</span></dt>
+              <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt style={{marginRight:"17px"}}>
                   <Input
                   name="Nombre"
@@ -93,7 +100,6 @@ class ParticipantesOtros extends Component{
                   />
               </dt>
             </Col>
-
             <Row style={{padding: "5px 10px 0px 10px"}}>
               <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
                 <dt><span>Cargo</span></dt>
@@ -106,7 +112,6 @@ class ParticipantesOtros extends Component{
                   />
                 </dt>
               </Col>
-
               <Col xs={12} md={6} lg={6} style={{paddingTop: "5px"}}>
                 <dt><span>Empresa</span></dt>
                 <dt style={{marginRight:"17px"}}>
@@ -119,7 +124,6 @@ class ParticipantesOtros extends Component{
                 </dt>
               </Col>
             </Row>
-
           <Row style={{paddingLeft: "10px"}}>
             <Col xs={12} md={5} lg={5}>
               <button className="btn btn-primary" onClick={this._addParticipantOther} disabled={disabledButtonCreate}
@@ -131,10 +135,10 @@ class ParticipantesOtros extends Component{
         </Col>
         : ''}
         {data.length > 0 ?
-          <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+          <Col xs={12} md={numColumnList} lg={numColumnList} style={{paddingLeft: "5px", paddingTop: "10px"}}>
             <ListParticipantesOtros disabled={disabled}/>
           </Col> :
-          <Col xs={12} md={6} lg={6}>
+          <Col xs={12} md={numColumnList} lg={numColumnList}>
             <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
               <span className="form-item">Aún no se han adicionado participantes</span>
             </div>

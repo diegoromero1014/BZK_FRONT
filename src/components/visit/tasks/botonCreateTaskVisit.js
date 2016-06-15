@@ -16,19 +16,20 @@ class BotonCreateTaskComponent extends Component {
       };
   }
 
-  openModal(){
+  openModal(e){
+    e.preventDefault();
     this.setState({modalIsOpen: true});
   }
 
-  closeModal(){
+  closeModal(e){
     this.setState({modalIsOpen: false});
   }
 
   render() {
     return (
       <div style={{marginLeft: "17px"}}>
-        <button className="btn btn-primary" type="button" title="Adicionar tarea" onClick={this.openModal}>
-          <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+        <button className="ui button" onClick={this.openModal} style={{float: 'right',color:'#505458', cursor: 'pointer'}}>
+          <i className="plus icon"/><span>Agregar pendiente</span>
         </button>
         <Modal
             isOpen={this.state.modalIsOpen}

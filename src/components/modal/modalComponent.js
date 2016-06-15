@@ -33,7 +33,7 @@ class ModalComponentDialog extends Component {
     }
 
     closeModal(){
-    this.setState({modalIsOpen: false});
+      this.setState({modalIsOpen: false});
     }
 
     _contectViewModal(actions, idx){

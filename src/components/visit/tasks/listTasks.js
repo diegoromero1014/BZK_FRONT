@@ -2,96 +2,42 @@ import React, {Component,PropTypes} from 'react';
 import GridComponent from '../../grid/component';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Grid, Row, Col} from 'react-flexbox-grid';
+import BotonCreateTaskComponent from './botonCreateTaskVisit';
 import {DELETE_TASK_VIEW} from './constants';
+import {deleteTask} from './actions';
+import SweetAlert from 'sweetalert-react';
+import Modal from 'react-modal';
+import ModalTask from './modalTask';
 import _ from 'lodash';
 import moment from 'moment';
 
-let v1 = "";
-let v2 = "";
-
+var arrayValueTask = [];
+var idTaskSeleted = null;
 class ListTasks extends Component {
 
   constructor(props){
       super(props);
-      this._renderHeaders = this._renderHeaders.bind(this);
-      this._mapValueTasks = this._mapValueTasks.bind(this);
       this.state = {
-        column : "",
-        order : "",
-        orderA: 'none',
-        orderD: 'inline-block'
-      }
+        showConfirmDeleteTask: false,
+        actions: {},
+        modalIsOpen: false
+      };
+      this._mapValuesTask = this._mapValuesTask.bind(this);
+      this._getValuesTask = this._getValuesTask.bind(this);
+      this._deleteTask = this._deleteTask.bind(this);
+      this.closeModal = this.closeModal.bind(this);
   }
 
-  componentWillMount(){
-    this.state = {
-      orderA: 'none',
-      orderD: 'inline-block'
-    }
+  closeModal(){
+    this.setState({modalIsOpen: false});
   }
 
-  componentWillReceiveProps(nextProps){
-    const {value1, value2} = nextProps;
-    if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
-      v1 = nextProps.value1;
-      v2 = nextProps.value2;
-    }
-  }
-
-
-  _orderColumn(orderShareholder,columnShareholder){
-    if(orderShareholder === 1){
-      this.setState({orderA :'none',orderD:'inline-block'});
-    }else{
-      this.setState({orderA :'inline-block',orderD :'none'});
-    }
-  }
-
-  _renderHeaders(){
-    const {disabled} = this.props;
-    if(disabled === '' || disabled === undefined){
-      return [
-        {
-          title: "",
-          key:"actions"
-        },
-        {
-          title: "Tarea",
-          key: "tarea"
-        },
-        {
-          title: "Responsable",
-          key: "responsable"
-        },
-        {
-          title: "Fecha",
-          key: "fecha"
-        },
-        {
-          title: "",
-          key:"delete"
-        }
-      ]
-    }else{
-      return [
-        {
-          title: "Tarea",
-          key: "tarea"
-        },
-        {
-          title: "Responsable",
-          key: "responsable"
-        },
-        {
-          title: "Fecha",
-          key: "fecha"
-        }
-      ]
-    }
-  }
-
-  _mapValueTasks(){
-    const {tasks} = this.props;
+  _getValuesTask(){
+    var {tasks} = this.props;
+    tasks = tasks.sort(function(valueA, valueB){
+      return valueA.fecha > valueB.fecha;
+    });
     if(tasks.size > 0){
       var data = _.chain(tasks.toArray()).map(task => {
         const {uuid, responsable, fecha, tarea} = task;
@@ -114,17 +60,129 @@ class ListTasks extends Component {
         });
       })
       .value();
-      return data;
+      arrayValueTask = data;
     } else {
-      return [];
+      arrayValueTask = [];
     }
   }
 
+  _confirmDeleteTask(idTask){
+    idTaskSeleted = idTask;
+    this.setState({
+      showConfirmDeleteTask: true
+    });
+  }
+
+  _deleteTask(){
+    const {deleteTask, tasks} = this.props;
+    var indexDelete = tasks.findIndex(function(item){
+      return item.uuid === idTaskSeleted;
+    });
+    deleteTask(indexDelete);
+    this.setState({
+      showConfirmDeleteTask: false
+    });
+    idTaskSeleted= null;
+  }
+
+  _viewDetailsTask(taskDetails){
+    console.log("taskDetails", taskDetails);
+    var actions = {
+      actionView: true,
+      task: taskDetails,
+      urlServer: "./component",
+      component : "VIEW_TASK"
+    }
+    this.setState({
+      actions,
+      modalIsOpen: true
+    });
+  }
+
+  _mapValuesTask(taskData, idx){
+    var {disabled} = this.props;
+    return <tr key={idx}>
+              <td className="collapsing">
+                <i className="zoom icon" title="Ver detalle"
+                onClick={this._viewDetailsTask.bind(this, taskData)}
+                style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
+              </td>
+              <td>{taskData.responsable}</td>
+              <td>{taskData.fecha}</td>
+              <td>{taskData.tarea}</td>
+              <td  className="collapsing">
+                <i className="remove icon" title="Eliminar tarea"
+                  onClick={this._confirmDeleteTask.bind(this, taskData.uuid)}
+                  style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
+              </td>
+           </tr>
+  }
+
   render() {
+    this._getValuesTask();
+    const {tasks, disabled} = this.props;
     const modalTitle = 'Pendiente Detalle';
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', height: "200px"}}>
-        <GridComponent headers={this._renderHeaders} data={this._mapValueTasks()} modalTitle={modalTitle}/>
+      <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial',marginLeft:'20px',marginRight: '25px',marginTop: '20px'}}>
+        {disabled === '' || disabled === undefined ?
+          <BotonCreateTaskComponent/>
+        : ''}
+        {tasks.size > 0 ?
+          <Row style={disabled === '' || disabled === undefined ? {marginTop: '31px'} : {}}>
+            <Col xs>
+              <table className="ui striped table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Responsable</th>
+                    <th>Fecha de cierre</th>
+                    <th>Descripción</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {arrayValueTask.map(this._mapValuesTask)}
+                </tbody>
+              </table>
+            </Col>
+          </Row> :
+          <Row>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
+                <span className="form-item">Aún no se han adicionado pendientes</span>
+              </div>
+            </Col>
+          </Row>
+        }
+      <Modal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.closeModal}
+          className="modalBt4-fade modal fade contact-detail-modal in">
+
+        <div className="modalBt4-dialog modalBt4-lg">
+          <div className="modalBt4-content modal-content">
+            <div className="modalBt4-header modal-header">
+              <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
+                <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                <span className="sr-only">Close</span>
+              </button>
+              <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
+            </div>
+            <ModalTask taskEdit={this.state.actions.task} isOpen={this.closeModal}/>
+          </div>
+        </div>
+      </Modal>
+      <SweetAlert
+        type= "warning"
+        show={this.state.showConfirmDeleteTask}
+        title="Eliminación tarea"
+        text="¿Señor usuario, está seguro que desea eliminar la tarea?"
+        confirmButtonColor= '#DD6B55'
+        confirmButtonText= 'Sí, estoy seguro!'
+        cancelButtonText = "Cancelar"
+        showCancelButton= {true}
+        onCancel= {() => this.setState({showConfirmDeleteTask: false })}
+        onConfirm={this._deleteTask}/>
       </div>
     );
   }
@@ -133,14 +191,13 @@ class ListTasks extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
+      deleteTask
     }, dispatch);
 }
 
 function mapStateToProps({tasks}) {
     return {
-        tasks: tasks.sort(function(valueA, valueB){
-          return valueA.fecha > valueB.fecha;
-        })
+        tasks
     };
 }
 

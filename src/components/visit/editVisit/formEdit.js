@@ -26,23 +26,13 @@ import _ from 'lodash';
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 var dateVisitLastReview;
 var showMessageCreateVisit= false;
-var typeMessage = "";
+var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;
 
 const validate = values => {
   var errors = {};
-    if(!values.tipoVisita){
-      errors.tipoVisita = "Debe seleccionar una opción";
-    }else{
-      errors.tipoVisita = null;
-    }
-    if(!values.fechaVisita){
-      errors.fechaVisita = "Debe seleccionar una fecha";
-    }else{
-      errors.fechaVisita = null;
-    }
     return errors;
 };
 
@@ -53,22 +43,49 @@ class FormEdit extends Component{
       showErrorSaveVisit: false,
       showConfirm: false,
       idVisit: "",
-      isEditable: false
+      isEditable: false,
+      activeItemTabBanc: '',
+      activeItemTabClient: 'active',
+      activeItemTabOther: ''
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButton = this._onClickButton.bind(this);
-    this._editShareHolder = this._editShareHolder.bind(this);
+    this._editVisit = this._editVisit.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
     this._onClickPDF = this._onClickPDF.bind(this);
+    this._changeTypeVisit = this._changeTypeVisit.bind(this);
+    this._changeDateVisit = this._changeDateVisit.bind(this);
   }
 
-  _editShareHolder() {
+  _editVisit() {
     this.setState({
-      showMessage:false,
+      showMessage: false,
       isEditable: !this.state.isEditable
     });
+  }
+
+  _clickSeletedTab(tab){
+    if( tab === 1 ){
+      this.setState({
+        activeItemTabClient: 'active',
+        activeItemTabBanc: '',
+        activeItemTabOther: ''
+      });
+    } else if( tab === 2 ){
+      this.setState({
+        activeItemTabClient: '',
+        activeItemTabBanc: 'active',
+        activeItemTabOther: ''
+      });
+    } else {
+      this.setState({
+        activeItemTabBanc: '',
+        activeItemTabClient: '',
+        activeItemTabOther: 'active'
+      });
+    }
   }
 
   _closeMessageCreateVisit(){
@@ -188,6 +205,21 @@ class FormEdit extends Component{
     this.setState({showConfirm :true});
   }
 
+  _changeTypeVisit(value){
+    console.log("Type visit", value);
+    this.setState({
+      typeVisit: value,
+      typeVisitError: null
+    });
+  }
+
+  _changeDateVisit(value){
+    this.setState({
+      dateVisit: value,
+      dateVisitError: null
+    });
+  }
+
   componentWillMount(){
     const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
     this.setState({idVisit : id});
@@ -205,10 +237,13 @@ class FormEdit extends Component{
           tipoParticipante: 'client',
           idParticipante: value.id,
           nombreParticipante: value.contactName,
-          cargo: value.contactPositionName,
+          cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+          : ' - ' + value.contactPositionName,
           empresa: '',
-          estiloSocial: value.socialStyle,
-          actitudBanco: value.attitudeOverGroup,
+          estiloSocial: value.socialStyle === null || value.socialStyle === undefined || value.socialStyle === '' ? ''
+          : ' - ' + value.socialStyle,
+          actitudBanco: value.attitudeOverGroup === null || value.attitudeOverGroup === undefined || value.attitudeOverGroup === '' ? ''
+          : ' - ' + value.attitudeOverGroup,
           fecha: Date.now(),
           uuid,
         }
@@ -222,7 +257,8 @@ class FormEdit extends Component{
           tipoParticipante: 'banco',
           idParticipante: value.id,
           nombreParticipante: value.employeeName,
-          cargo: value.positionName,
+          cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+          : ' - ' + value.positionName,
           empresa: '',
           estiloSocial: '',
           actitudBanco: '',
@@ -239,8 +275,10 @@ class FormEdit extends Component{
           tipoParticipante: 'other',
           idParticipante: value.id,
           nombreParticipante: value.name,
-          cargo: value.position,
-          empresa: value.company,
+          cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+          : ' - ' + value.position,
+          empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+          : ' - ' + value.company,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -264,18 +302,37 @@ class FormEdit extends Component{
     });
 
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
-      if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-        data.payload.data.parameter !== undefined ){
-        var fechaVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es');
-        dateVisitLastReview = fechaVisitLastReview.format("DD") + " " + fechaVisitLastReview.format("MMM") + " " + fechaVisitLastReview.format("YYYY");
+      if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
+        dateVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
       }
     }, (reason) =>{
     });
   }
 
-  render(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes}, selectsReducer, handleSubmit, visitReducer} = this.props;
+  componentDidMount(){
+    const {visitReducer} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
+    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      var visitTime = detailVisit.data.visitTime;
+      this.setState({
+        typeVisit: detailVisit.data.visitType,
+        dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
+      });
+    }
+  }
+
+  render(){
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
+    selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
+    const detailVisit = visitReducer.get('detailVisit');
+    const infoClient = clientInformacion.get('responseClientInfo');
+    const {aecStatus} = infoClient;
+    var showAECNoAplica = false;
+    var showAECNivel = true;
+    if( aecStatus === undefined || aecStatus === null ){
+      showAECNoAplica = true;
+      showAECNivel = false;
+    }
     var fechaModString = '';
     var fechaCreateString = '';
     var createdBy = '';
@@ -286,17 +343,45 @@ class FormEdit extends Component{
       updatedBy = detailVisit.data.updatedByName;
       if(detailVisit.data.updatedTimestamp !== null){
         var fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
-        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY");
+        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
       }
       if(detailVisit.data.createdTimestamp !== null){
         var fechaCreateDateMoment = moment(detailVisit.data.createdTimestamp, "x").locale('es');
-        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY");
+        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
       }
     }
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+        <header className="header-client-detail">
+          <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
+            <div>
+              <h3 style={{wordBreak:'break-all'}} className="inline title-head">
+                {infoClient.clientName}
+              </h3>
+              {infoClient.isProspect &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px"}}
+                  className="label label-important bounceIn animated prospect" >Prospecto</span>
+              }
+              {showAECNivel &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#ec5f48"}}
+                  className="label label-important bounceIn animated aec-status" >{aecStatus}</span>
+              }
+              {showAECNoAplica &&
+                <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
+                  className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
+              }
+            </div>
+          </div>
+        </header>
+        <Row style={{padding: "10px 10px 0px 20px"}}>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          </Col>
+          <Col xs={2} sm={2} md={2} lg={2}>
+            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-10px'}}>Editar <i className={'icon edit'}></i></button>
+          </Col>
+        </Row>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -307,7 +392,7 @@ class FormEdit extends Component{
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Tipo de reunión (</span><span style={{color: "red"}}>*</span>)
             </dt>
@@ -317,73 +402,63 @@ class FormEdit extends Component{
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                {...tipoVisita}
+                value={this.state.typeVisit}
+                touched={true}
+                error={this.state.typeVisitError}
+                onChange={val => this._changeTypeVisit(val)}
+                onBlur={() => ''}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
           </Col>
-          <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+          <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Fecha de reunión - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
             </dt>
             <dt>
               <DateTimePickerUi
                 culture='es'
-                format={"DD/MM/YYYY"}
-                time={false}
-                {...fechaVisita}
-                placeholder="Seleccione la fecha de reunión"
-                max={new Date()}
+                format={"DD/MM/YYYY hh:mm a"}
+                time={true}
+                value={this.state.dateVisit}
+                touched={true}
+                error={this.state.dateVisitError}
+                onChange={val => this._changeDateVisit(val)}
+                onBlur={() => ''}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
           </Col>
         </Row>
         <Row style={{padding: "10px 42px 0px 20px"}}>
-          <Col xs={10} md={10} lg={10}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "15px", marginBottom: "0px"}}>
-              <span className="section-title">Participantes en la reunión por parte del cliente </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-            </dl>
-          </Col>
-          {this.state.isEditable === '' &&
-            <BotonCreateContactComponent typeButton={1} />
-          }
-        </Row>
-        <Row style={{padding: "0px 10px 10px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
+          <Col xs>
+            <div className="ui top attached tabular menu">
+              <a className={`${this.state.activeItemTabClient} item`}
+                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabBanc} item`}
+                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+              </a>
+              <a className={`${this.state.activeItemTabOther} item`}
+                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+              </a>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
+                <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`} data-tab="second">
+                <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
+            </div>
+            <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`} data-tab="third">
+                <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
             </div>
           </Col>
         </Row>
-        <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
-        <Row style={{padding: "10px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Participantes en la reunión por parte del Grupo Bancolombia </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
-        <Row style={{padding: "20px 10px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <dl style={{fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px"}}>
-              <span className="section-title">Otros participantes en la reunión </span>
-              <i className="help circle icon blue"
-              style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
-              <div className="tab-content-row" style={{borderTop: "1px solid #505050", width:"99%", marginTop: "5px"}}></div>
-            </dl>
-          </Col>
-        </Row>
-        <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
-        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "30px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -401,11 +476,12 @@ class FormEdit extends Component{
               type="text"
               max="3500"
               title="La longitud máxima de caracteres es de 3500"
-              style={{width: '100%', height: '250px'}}
+              style={{width: '100%', height: '178px'}}
               disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </Col>
         </Row>
+        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "10px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
@@ -424,7 +500,7 @@ class FormEdit extends Component{
             : '' }
           </Col>
         </Row>
-        <Row style={{padding: "5px 10px 20px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
           </Col>
@@ -447,16 +523,16 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === '' ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
             </button>
-            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>
@@ -507,7 +583,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
@@ -517,7 +593,7 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
       return {
         initialValues:{
           tipoVisita: detailVisit.data.visitType,
-          fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime).format('DD/MM/YYYY') : null,
+          fechaVisita: visitTime !== '' && visitTime !== null && visitTime !== undefined ? moment(visitTime, "x").format('DD/MM/YYYY HH:mm') : null,
           desarrolloGeneral: detailVisit.data.comments,
           participantesBanco: _.toArray(detailVisit.data.participatingEmployees),
           participantesOtros: _.toArray(detailVisit.data.relatedEmployees),
@@ -527,7 +603,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         visitReducer,
         contactsByClient,
         participants,
-        tasks
+        tasks,
+        clientInformacion
       };
     }else{
       return {
@@ -544,7 +621,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         visitReducer,
         contactsByClient,
         participants,
-        tasks
+        tasks,
+        clientInformacion
       };
     }
 }

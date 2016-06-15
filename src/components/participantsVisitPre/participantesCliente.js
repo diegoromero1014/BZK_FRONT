@@ -44,10 +44,13 @@ class ParticipantesCliente extends Component{
             tipoParticipante: 'client',
             idParticipante: idContacto.value,
             nombreParticipante: nameContacto.value,
-            cargo: cargoContacto.value,
+            cargo: cargoContacto.value === null || cargoContacto.value === undefined || cargoContacto.value === '' ?
+                    '' : ' - ' + cargoContacto.value,
             empresa: '',
-            estiloSocial: estiloSocial.value,
-            actitudBanco: actitudGrupo.value,
+            estiloSocial: estiloSocial.value === null || estiloSocial.value === undefined || estiloSocial.value === '' ?
+                    '' : ' - ' + estiloSocial.value,
+            actitudBanco: actitudGrupo.value === null || actitudGrupo.value === undefined || actitudGrupo.value === '' ?
+                    '' : ' - ' + actitudGrupo.value,
             fecha: Date.now(),
             uuid,
           }
@@ -104,9 +107,9 @@ class ParticipantesCliente extends Component{
   }
 
   render(){
-    const {fields: {
-      contactoCliente, cargoContacto, estiloSocial, actitudGrupo
-    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
+    const {fields: {contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, error, handleSubmit, participants, contactsByClient,
+    addParticipant, disabled} = this.props;
+    var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
@@ -114,6 +117,11 @@ class ParticipantesCliente extends Component{
     .value();
     if( data.length === 10 ){
       disabledButtonCreate = 'disabled';
+    } else {
+      disabledButtonCreate = '';
+    }
+    if(disabled === "disabled"){
+      numColumnList = 12;
     }
     return(
       <div>
@@ -121,20 +129,19 @@ class ParticipantesCliente extends Component{
         { disabled === '' || disabled === undefined ?
           <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
             <Col xs={12} md={12} lg={12}>
-              <dt><span>Nombre</span></dt>
+              <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt>
-                  <ComboBox
-                      name="txtContactoCliente"
-                      labelInput="Seleccione..."
-                      {...contactoCliente}
-                      onChange={val => this._updateValue(val)}
-                      valueProp={'id'}
-                      textProp={'nameComplet'}
-                      data={contactsByClient.get('contacts')}
-                  />
+                <ComboBox
+                  name="txtContactoCliente"
+                  labelInput="Seleccione..."
+                  {...contactoCliente}
+                  onChange={val => this._updateValue(val)}
+                  valueProp={'id'}
+                  textProp={'nameComplet'}
+                  data={contactsByClient.get('contacts')}
+                />
               </dt>
             </Col>
-
             <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
               <dt><span>Cargo</span></dt>
               <dt>
@@ -146,7 +153,6 @@ class ParticipantesCliente extends Component{
                 />
               </dt>
             </Col>
-
             <Row style={{padding: "5px 10px 0px 10px"}}>
               <Col xs={12} md={6} lg={6}>
                 <dt><span>Estilo social</span></dt>
@@ -159,7 +165,6 @@ class ParticipantesCliente extends Component{
                   />
                 </dt>
               </Col>
-
               <Col xs={12} md={6} lg={6}>
                 <dt><span>Actitud frente al grupo</span></dt>
                 <dt>
@@ -172,8 +177,7 @@ class ParticipantesCliente extends Component{
                 </dt>
               </Col>
             </Row>
-
-            <Row style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
+            <Row style={{paddingRight: "0px !important", paddingLeft: "0px", marginLeft: "10px"}}>
               <Col xs={12} md={4} lg={4} style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
                 <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
                 type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
@@ -185,10 +189,10 @@ class ParticipantesCliente extends Component{
           </Col>
           : ''}
           {data.length > 0 ?
-            <Col xs={12} md={6} lg={6} style={{paddingLeft: "5px", paddingTop: "10px"}}>
+            <Col xs={12} md={numColumnList} lg={numColumnList} style={{paddingLeft: "5px", paddingTop: "10px"}}>
               <ListParticipantesCliente disabled={disabled}/>
             </Col> :
-            <Col xs={12} md={6} lg={6}>
+            <Col xs={12} md={numColumnList} lg={numColumnList}>
               <div style={{textAlign:"center", marginTop:"20px", marginBottom:"20px"}}>
                 <span className="form-item">Aún no se han adicionado participantes</span>
               </div>

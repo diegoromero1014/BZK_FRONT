@@ -25,9 +25,9 @@ class Dashboard extends Component {
         const {navBar} = this.props;
         var widthComponent = '70px';
         if(navBar.get('status') === "closed"){
-            widthComponent = '205px';
+          widthComponent= '70px';
         } else {
-            widthComponent= '70px';
+          widthComponent = '205px';
         }
 
         return (
