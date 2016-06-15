@@ -258,6 +258,8 @@ class FormVisita extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
+  }
+  
   _downloadFileShoppingMap(){
     //const {downloadFilesPdf} = this.props;
     //downloadFilesPdf("fileShoppingMap");
