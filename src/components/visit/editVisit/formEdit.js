@@ -237,10 +237,13 @@ class FormEdit extends Component{
           tipoParticipante: 'client',
           idParticipante: value.id,
           nombreParticipante: value.contactName,
-          cargo: value.contactPositionName,
+          cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+          : ' - ' + value.contactPositionName,
           empresa: '',
-          estiloSocial: value.socialStyle,
-          actitudBanco: value.attitudeOverGroup,
+          estiloSocial: value.socialStyle === null || value.socialStyle === undefined || value.socialStyle === '' ? ''
+          : ' - ' + value.socialStyle,
+          actitudBanco: value.attitudeOverGroup === null || value.attitudeOverGroup === undefined || value.attitudeOverGroup === '' ? ''
+          : ' - ' + value.attitudeOverGroup,
           fecha: Date.now(),
           uuid,
         }
@@ -254,7 +257,8 @@ class FormEdit extends Component{
           tipoParticipante: 'banco',
           idParticipante: value.id,
           nombreParticipante: value.employeeName,
-          cargo: value.positionName,
+          cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+          : ' - ' + value.positionName,
           empresa: '',
           estiloSocial: '',
           actitudBanco: '',
@@ -271,8 +275,10 @@ class FormEdit extends Component{
           tipoParticipante: 'other',
           idParticipante: value.id,
           nombreParticipante: value.name,
-          cargo: value.position,
-          empresa: value.company,
+          cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+          : ' - ' + value.position,
+          empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+          : ' - ' + value.company,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -298,7 +304,7 @@ class FormEdit extends Component{
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
         var fechaVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es');
-        dateVisitLastReview = moment(fechaVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
+        dateVisitLastReview = fechaVisitLastReview.format("DD") + " " + fechaVisitLastReview.format("MMM") + " " + fechaVisitLastReview.format("YYYY");
       }
     }, (reason) =>{
     });
@@ -307,11 +313,13 @@ class FormEdit extends Component{
   componentDidMount(){
     const {visitReducer} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
-    var visitTime = detailVisit.data.visitTime;
-    this.setState({
-      typeVisit: detailVisit.data.visitType,
-      dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
-    });
+    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
+      var visitTime = detailVisit.data.visitTime;
+      this.setState({
+        typeVisit: detailVisit.data.visitType,
+        dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
+      });
+    }
   }
 
   render(){
@@ -399,7 +407,7 @@ class FormEdit extends Component{
                 touched={true}
                 error={this.state.typeVisitError}
                 onChange={val => this._changeTypeVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={() => ''}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
                 disabled={this.state.isEditable ? '' : 'disabled'}
@@ -419,7 +427,7 @@ class FormEdit extends Component{
                 touched={true}
                 error={this.state.dateVisitError}
                 onChange={val => this._changeDateVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={() => ''}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
@@ -430,15 +438,15 @@ class FormEdit extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -452,7 +460,6 @@ class FormEdit extends Component{
             </div>
           </Col>
         </Row>
-        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "30px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -470,11 +477,12 @@ class FormEdit extends Component{
               type="text"
               max="3500"
               title="La longitud máxima de caracteres es de 3500"
-              style={{width: '100%', height: '250px'}}
+              style={{width: '100%', height: '178px'}}
               disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </Col>
         </Row>
+        <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
         <Row style={{padding: "10px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
@@ -525,7 +533,7 @@ class FormEdit extends Component{
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
             </button>
-            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"red"}}>
+            <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
             </button>
           </div>
