@@ -25,7 +25,6 @@ import _ from 'lodash';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 var dateVisitLastReview;
-var showMessageCreateVisit= false;
 var typeMessage = "success";
 var titleMessage = "";
 var message = "";
@@ -40,6 +39,7 @@ class FormEdit extends Component{
   constructor(props) {
     super(props);
     this.state = {
+      showMessageCreateVisit: false,
       showErrorSaveVisit: false,
       showConfirm: false,
       idVisit: "",
@@ -57,6 +57,7 @@ class FormEdit extends Component{
     this._onClickPDF = this._onClickPDF.bind(this);
     this._changeTypeVisit = this._changeTypeVisit.bind(this);
     this._changeDateVisit = this._changeDateVisit.bind(this);
+    this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
   }
 
   _editVisit() {
@@ -112,86 +113,100 @@ class FormEdit extends Component{
   }
 
   _submitCreateVisita(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, createVisti} = this.props;
-    var dataBanco = _.map(participants.toArray(),
-      function(participant){
-        if(_.isEqual(participant.tipoParticipante, 'banco') ){
-          return _.assign({}, {
-            "id": null,
-            "employee": participant.idParticipante
-          });
-        }
-      }
-    );
-    if( dataBanco.length > 0 && dataBanco[0] === undefined ){
-      dataBanco = [];
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer} = this.props;
+    const detailVisit = visitReducer.get('detailVisit');
+    var errorInForm = false;
+
+    if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        typeVisitError: "Debe seleccionar una opción"
+      });
+    }
+    console.log("this.state.dateVisit", this.state.dateVisit);
+    if( this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        dateVisitError: "Debe seleccionar una opción"
+      });
     }
 
-    if( dataBanco.length > 0 ){
-      var dataClient = _.map(participants.toArray(),
-        function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'client')){
-            return _.assign({}, {
-              "id": null,
-              "contact": participant.idParticipante
-            });
+    if(!errorInForm){
+      if( this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
+        errorInForm = true;
+        this.setState({
+          dateVisitError: "Debe seleccionar una opción"
+        });
+      }
+      var participantsBanco = _.filter(participants.toArray(), ['tipoParticipante', 'banco']);
+      if(participantsBanco.length > 0){
+        var dataClient = _.map(participants.toArray(),
+          function(participant){
+            if(_.isEqual(participant.tipoParticipante, 'client')){
+              return _.assign({}, {
+                "id": null,
+                "contact": participant.idParticipante
+              });
+            }
           }
+        );
+        if( dataClient.length > 0 && dataClient[0] === undefined ){
+          dataClient = [];
         }
-      );
-      if( dataClient.length > 0 && dataClient[0] === undefined ){
-        dataClient = [];
-      }
-      var dataOthers = _.map(participants.toArray(),
-        function(participant){
-          if(_.isEqual(participant.tipoParticipante, 'other') ){
-            return _.assign({}, {
-              "id": null,
-              "name": participant.nombreParticipante,
-              "position": participant.cargo,
-              "company": participant.empresa
-            });
+        var dataOthers = _.map(participants.toArray(),
+          function(participant){
+            if(_.isEqual(participant.tipoParticipante, 'other') ){
+              return _.assign({}, {
+                "id": null,
+                "name": participant.nombreParticipante,
+                "position": participant.cargo,
+                "company": participant.empresa
+              });
+            }
           }
+        );
+        if( dataOthers.length > 0 && dataOthers[0] === undefined ){
+          dataOthers = [];
         }
-      );
-      if( dataOthers.length > 0 && dataOthers[0] === undefined ){
-        dataOthers = [];
-      }
-      var visitJson = {
-        "id": null,
-        "client": window.localStorage.getItem('idClientSelected'),
-        "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
-        "participatingContacts": dataClient.length === 0 ? null : dataClient,
-        "participatingEmployees": dataBanco,
-        "relatedEmployees": dataOthers === 0 ? null : dataOthers,
-        "comments": desarrolloGeneral.value,
-        "visitType": tipoVisita.value,
-        "documentStatus": typeButtonClick
-      }
-      createVisti(visitJson).then((data)=> {
-        if((_.get(data, 'payload.validateLogin') === 'false')){
-          redirectUrl("/login");
-        } else {
-          if( (_.get(data, 'payload.status') === 200) ){
-            typeMessage = "success";
-            titleMessage = "Creación visita";
-            message = "Señor usuario, la visita se creó de forma exitosa.";
-            this.setState({showMessageCreateVisit :true});
+        var visitJson = {
+          "id": detailVisit.data.id,
+          "client": window.localStorage.getItem('idClientSelected'),
+          "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
+          "participatingContacts": dataClient.length === 0 ? null : dataClient,
+          "participatingEmployees": participantsBanco,
+          "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+          "comments": desarrolloGeneral.value,
+          "visitType": tipoVisita.value,
+          "documentStatus": typeButtonClick
+        }
+        console.log("visitJson", visitJson);
+        const {createVisti} = this.props;
+
+        createVisti(visitJson).then((data)=> {
+          if(data.payload.validateLogin === 'false'){
+            redirectUrl("/login");
           } else {
-            typeMessage = "error";
-            titleMessage = "Creación visita";
-            message = "Señor usuario, ocurrió un error creando la visita.";
-            this.setState({showMessageCreateVisit :true});
+            if(data.payload.status === 200){
+              typeMessage = "success";
+              titleMessage = "Creación visita";
+              message = "Señor usuario, la visita se creó de forma exitosa.";
+              this.setState({showMessageCreateVisit :true});
+            } else {
+              typeMessage = "error";
+              titleMessage = "Creación visita";
+              message = "Señor usuario, ocurrió un error creando la visita.";
+              this.setState({showMessageCreateVisit :true});
+            }
           }
-        }
-      }, (reason) =>{
-        typeMessage = "error";
-        titleMessage = "Creación visita";
-        message = "Señor usuario, ocurrió un error creando la visita.";
-        this.setState({showMessageCreateVisit :true});
-      });
-    } else {
-      this.setState({showErrorSaveVisit :true});
+        }, (reason) =>{
+          typeMessage = "error";
+          titleMessage = "Creación visita";
+          message = "Señor usuario, ocurrió un error creando la visita.";
+          this.setState({showMessageCreateVisit :true});
+        });
+      } else {
+        this.setState({showErrorSaveVisit :true});
+      }
     }
   }
 
@@ -206,7 +221,6 @@ class FormEdit extends Component{
   }
 
   _changeTypeVisit(value){
-    console.log("Type visit", value);
     this.setState({
       typeVisit: value,
       typeVisitError: null
@@ -218,6 +232,14 @@ class FormEdit extends Component{
       dateVisit: value,
       dateVisitError: null
     });
+  }
+  _changeDateVisitOnBlur(value){
+    var date = value.target.value;
+    if(date === '' || date === undefined || date === null){
+      this.setState({
+        dateVisitError: "Debe seleccionar una opción"
+      });
+    }
   }
 
   componentWillMount(){
@@ -427,7 +449,7 @@ class FormEdit extends Component{
                 touched={true}
                 error={this.state.dateVisitError}
                 onChange={val => this._changeDateVisit(val)}
-                onBlur={() => ''}
+                onBlur={val => this._changeDateVisitOnBlur(val)}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
@@ -524,10 +546,10 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
-            <button className="btn" type="submit" onClick={this._onClickButton} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
