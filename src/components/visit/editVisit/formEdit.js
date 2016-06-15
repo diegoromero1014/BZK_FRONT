@@ -325,8 +325,7 @@ class FormEdit extends Component{
 
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
-        var fechaVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es');
-        dateVisitLastReview = fechaVisitLastReview.format("DD") + " " + fechaVisitLastReview.format("MMM") + " " + fechaVisitLastReview.format("YYYY");
+        dateVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
       }
     }, (reason) =>{
     });

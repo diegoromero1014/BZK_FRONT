@@ -18,6 +18,7 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti} from '../actions';
 import SweetAlert from 'sweetalert-react';
+import {downloadFilesPdf} from '../../clientInformation/actions';
 import moment from 'moment';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
@@ -57,6 +58,7 @@ class FormVisita extends Component{
     this._changeTypeVisit = this._changeTypeVisit.bind(this);
     this._changeDateVisit = this._changeDateVisit.bind(this);
     this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
+    this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -186,7 +188,7 @@ class FormVisita extends Component{
           "visitTime": this.state.dateVisit.format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
-          "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+          "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
           "userTasks": tareas,
           "comments": desarrolloGeneral.value,
           "visitType": this.state.typeVisit,
@@ -256,6 +258,9 @@ class FormVisita extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
+  _downloadFileShoppingMap(){
+    //const {downloadFilesPdf} = this.props;
+    //downloadFilesPdf("fileShoppingMap");
   }
 
   componentWillMount(){
@@ -395,6 +400,10 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
+              <i onClick={this._downloadFileShoppingMap}
+                style={{marginLeft: "0px", cursor: "pointer", fontSize: "19px"}}
+                title="Descargar pdf mapa de compras"
+                className="red file pdf outline icon"></i>
             </div>
           </Col>
         </Row>
@@ -468,7 +477,8 @@ function mapDispatchToProps(dispatch){
     consultList,
     getMasterDataFields,
     consultParameterServer,
-    createVisti
+    createVisti,
+    downloadFilesPdf
   }, dispatch);
 }
 
