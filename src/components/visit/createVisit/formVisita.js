@@ -135,7 +135,7 @@ class FormVisita extends Component{
       if( dataBanco.length > 0 && dataBanco[0] === undefined ){
         dataBanco = [];
       }
-      if( dataBanco.length > 0 ){
+      if( dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT ){
         var dataClient = [];
         _.map(participants.toArray(),
           function(participant){
@@ -259,7 +259,7 @@ class FormVisita extends Component{
       });
     }
   }
-  
+
   _downloadFileShoppingMap(){
     //const {downloadFilesPdf} = this.props;
     //downloadFilesPdf("fileShoppingMap");
@@ -424,18 +424,18 @@ class FormVisita extends Component{
         <TaskVisit />
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-            <h4 className="form-item" style={{color: '#818282'}}>Fecha última revisión formato visita: <span>{dateVisitLastReview}</span></h4>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"30px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: {dateVisitLastReview}</span>
             </div>
           </Col>
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
-              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
-            </button>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+            </button>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
             <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
