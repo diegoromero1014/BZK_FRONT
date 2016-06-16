@@ -426,7 +426,7 @@ class FormVisita extends Component{
         <Row>
           <Col xs={12} md={12} lg={12}>
             <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"30px"}}>
-            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: {dateVisitLastReview}</span>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{dateVisitLastReview}</span>
             </div>
           </Col>
         </Row>
