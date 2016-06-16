@@ -7,6 +7,8 @@ import {bindActionCreators} from 'redux';
 import {visitByClientFindServer,orderColumnVisit,clearVisitOrder,clearVisitPaginator} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_VISIT} from './constants';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 
 let v1 = "";
@@ -69,7 +71,7 @@ class ListVisitComponent extends Component {
       },
       {
         title: "Fecha de reunión",
-        key:"dateVisit",
+        key:"dateVisitFormat",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"vd.visitTime")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"vd.visitTime")}></i></span>
       },
       {
@@ -86,6 +88,7 @@ class ListVisitComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de la reunión?";
+
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -111,7 +114,8 @@ class ListVisitComponent extends Component {
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });
-
+            var dateVisitFormat = moment(value.dateVisit).locale('es');
+             _.set(value, 'dateVisitFormat',dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a"));
             if(value.idStatusDocument === 0){
               _.set(value, 'delete',  {
                 actionDelete: true,

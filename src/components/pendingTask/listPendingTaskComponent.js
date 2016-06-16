@@ -4,6 +4,8 @@ import {bindActionCreators} from 'redux';
 import {tasksByClientFindServer,orderColumnUserTask,clearUserTaskOrder,clearUserTaskPaginator} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS} from './constants';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 let v1= "";
 class ListPendingTaskComponent extends Component {
@@ -83,6 +85,9 @@ class ListPendingTaskComponent extends Component {
         urlServer: "./component",
         component : "VIEW_TASK_ADMIN"
       });
+      var dateTaskFormat = moment(value.finalDate).locale('es');
+       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
+
       _.set(value, 'delete',  {
         actionDelete: true,
         urlServer: "/deleteContactForClient",
@@ -105,7 +110,7 @@ class ListPendingTaskComponent extends Component {
       },
       {
         title: "Fecha de cierre",
-        key: "finalDate",
+        key: "dateTaskFormat",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"c.closingDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"c.closingDate")}></i></span>
       },
       {

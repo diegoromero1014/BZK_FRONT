@@ -138,9 +138,47 @@ class FormEdit extends Component{
           dateVisitError: "Debe seleccionar una opción"
         });
       }
-      var participantsBanco = _.filter(participants.toArray(), ['tipoParticipante', 'banco']);
-      if(participantsBanco.length > 0){
-        var dataClient = _.map(participants.toArray(),
+    //  var participantsBanco = _.filter(participants.toArray(), ['tipoParticipante', 'banco']);
+
+    //_.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector')
+      var dataClient = [], dataBanco = [], dataOthers = [];
+
+      _.forEach(participants.toArray(), function(value, key) {
+        console.log("value", value);
+        if(_.isEqual(value.tipoParticipante, 'client')){
+          var contactParticipantCliente = null;
+          if(value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined){
+            contactParticipantCliente = _.filter(detailVisit.data.participatingContacts, ['id', value.idParticipante]);
+          }
+          dataClient.push({
+            "id": contactParticipantCliente.length > 0 ? value.idParticipante : null,
+            "contact": value.idParticipante
+          });
+        }else{
+          if(_.isEqual(value.tipoParticipante, 'banco')){
+            var contactParticipantBanco = null;
+            if(value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined){
+              contactParticipantBanco = _.filter(detailVisit.data.participatingEmployees, ['id', value.idParticipante]);
+            }
+            dataBanco.push({
+              "id": contactParticipantBanco.length > 0 ? value.idParticipante : null,
+              "employee": value.idParticipante
+            });
+          }else{
+            if(_.isEqual(value.tipoParticipante, 'other')){
+              dataOthers.push({
+                "id": value.idParticipante,
+                "name": value.nombreParticipante.replace('-', ''),
+                "position": value.cargo.replace('-', ''),
+                "company": value.empresa.replace('-', '')
+              });
+            }
+          }
+        }
+      });
+
+      if(dataBanco.length > 0){
+        /*var dataClient = _.map(participants.toArray(),
           function(participant){
             if(_.isEqual(participant.tipoParticipante, 'client')){
               return _.assign({}, {
@@ -167,13 +205,13 @@ class FormEdit extends Component{
         );
         if( dataOthers.length > 0 && dataOthers[0] === undefined ){
           dataOthers = [];
-        }
+        }*/
         var visitJson = {
           "id": detailVisit.data.id,
           "client": window.localStorage.getItem('idClientSelected'),
           "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
-          "participatingEmployees": participantsBanco,
+          "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers === 0 ? null : dataOthers,
           "comments": desarrolloGeneral.value,
           "visitType": tipoVisita.value,
@@ -183,10 +221,11 @@ class FormEdit extends Component{
         const {createVisti} = this.props;
 
         createVisti(visitJson).then((data)=> {
-          if(data.payload.validateLogin === 'false'){
+          console.log("Respuesta = ", data);
+          if(data.payload.data.validateLogin === 'false'){
             redirectUrl("/login");
           } else {
-            if(data.payload.status === 200){
+            if(data.payload.data.status === 200){
               typeMessage = "success";
               titleMessage = "Creación visita";
               message = "Señor usuario, la visita se creó de forma exitosa.";

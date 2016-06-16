@@ -3,7 +3,7 @@ import axios from 'axios';
 import {APP_URL} from '../../../constantsGlobal';
 
 export function createPendingTaskNew(json){
-  const jsonGlobal = {
+  const jsonCreate = {
       messageHeader: {
         "timestamp": new Date().getTime(),
         "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -18,7 +18,8 @@ export function createPendingTaskNew(json){
       },
       messageBody: json
     }
-  var request = axios.post(APP_URL + "/saveUserTask", jsonGlobal);
+    console.log(json);
+  var request = axios.post(APP_URL + "/saveUserTask", jsonCreate);
   return {
     type: actions.CREATE_PENDING,
     payload: request
