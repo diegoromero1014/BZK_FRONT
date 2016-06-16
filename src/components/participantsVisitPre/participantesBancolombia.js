@@ -216,7 +216,7 @@ class ParticipantesBancolombia extends Component{
             <Col xs={12} md={5} lg={5}>
               <button className="btn btn-primary" onClick={this._addParticipantBanc} disabled={disabledButtonCreate}
               type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
-                Agregar participante
+                <i className="white plus icon"/> Agregar participante
               </button>
             </Col>
           </Row>

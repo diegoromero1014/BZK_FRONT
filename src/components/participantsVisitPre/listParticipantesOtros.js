@@ -63,14 +63,14 @@ class ListParticipantesOtros extends Component {
     });
   }
 
-  _clickButtonDelete(name){
+  _clickButtonDelete(){
     this.setState({
       showConfirmDeleteParticiOther: false
     });
     const {participants, deleteParticipant} = this.props;
     var indexDelete = participants.findIndex(function(item){
       if( item.tipoParticipante === 'other' ){
-        return item.nombreParticipante === name;
+        return item.nombreParticipante === idParticipantSelect;
       }
     });
     deleteParticipant(indexDelete);

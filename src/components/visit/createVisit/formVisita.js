@@ -135,7 +135,7 @@ class FormVisita extends Component{
       if( dataBanco.length > 0 && dataBanco[0] === undefined ){
         dataBanco = [];
       }
-      if( dataBanco.length > 0 ){
+      if( dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT ){
         var dataClient = [];
         _.map(participants.toArray(),
           function(participant){
@@ -276,7 +276,7 @@ class FormVisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
+          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
         }
       }, (reason) =>{
       });
@@ -402,8 +402,9 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
               <i onClick={this._downloadFileShoppingMap}
-                style={{marginLeft: "0px", cursor: "pointer", fontSize: "19px"}}
+                style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
                 title="Descargar pdf mapa de compras"
                 className="red file pdf outline icon"></i>
             </div>
@@ -424,18 +425,18 @@ class FormVisita extends Component{
         <TaskVisit />
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-            <h4 className="form-item" style={{color: '#818282'}}>Fecha última revisión formato visita: <span>{dateVisitLastReview}</span></h4>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"30px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{dateVisitLastReview}</span>
             </div>
           </Col>
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
-              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
-            </button>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 210px", position:"fixed", backgroundColor:"#00B5AD"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+            </button>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
             <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>

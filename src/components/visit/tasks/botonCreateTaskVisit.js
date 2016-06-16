@@ -27,11 +27,12 @@ class BotonCreateTaskComponent extends Component {
 
   render() {
     return (
-      <div style={{marginLeft: "17px"}}>
-        <button className="ui button" onClick={this.openModal} style={{float: 'right',color:'#505458', cursor: 'pointer'}}>
-          <i className="plus icon"/><span>Agregar pendiente</span>
-        </button>
-        <Modal
+      <Col xsOffset={1} mdOffset={9} lgOffset={9} xs={12} md={3} lg={3}>
+        <div style={{marginLeft: "17px"}}>
+          <button className="btn btn-primary" onClick={this.openModal} style={{float: 'right',cursor: 'pointer'}}>
+            <i className="white plus icon"/> Agregar pendiente
+          </button>
+          <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
             className="modalBt4-fade modal fade contact-detail-modal in">
@@ -49,6 +50,7 @@ class BotonCreateTaskComponent extends Component {
             </div>
           </Modal>
         </div>
+      </Col>
     );
   }
 }

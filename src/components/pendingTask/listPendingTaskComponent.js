@@ -79,9 +79,9 @@ class ListPendingTaskComponent extends Component {
       };
       _.set(value, 'actions',  {
         actionView: true,
-        id: value.task,
+        id: value,
         urlServer: "./component",
-        component : "VIEW_CONTACT"
+        component : "VIEW_TASK_ADMIN"
       });
       _.set(value, 'delete',  {
         actionDelete: true,
@@ -100,10 +100,6 @@ class ListPendingTaskComponent extends Component {
         key:"actions"
       },
       {
-        title: "Tarea",
-        key:"task"
-      },
-      {
         title: "Responsable",
         key: "responsable"
       },
@@ -115,10 +111,6 @@ class ListPendingTaskComponent extends Component {
       {
         title: "Estado",
         key: "status"
-      },
-      {
-        title: "Avance",
-        key: "advance"
       }
       /*{
         title: "",
