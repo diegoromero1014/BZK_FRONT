@@ -99,10 +99,14 @@ class ListPendingTaskComponent extends Component {
         title: "",
         key:"actions"
       },
-      {
+    /*{
         title: "Tarea",
         key:"task"
       },
+      {
+        title: "Avance",
+        key: "advance"
+      },*/
       {
         title: "Responsable",
         key: "responsable"
@@ -116,10 +120,6 @@ class ListPendingTaskComponent extends Component {
         title: "Estado",
         key: "status"
       },
-      {
-        title: "Avance",
-        key: "advance"
-      }
       /*{
         title: "",
         key:"delete"
