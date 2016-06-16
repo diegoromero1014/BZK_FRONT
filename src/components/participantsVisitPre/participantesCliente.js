@@ -178,10 +178,10 @@ class ParticipantesCliente extends Component{
               </Col>
             </Row>
             <Row style={{paddingRight: "0px !important", paddingLeft: "0px", marginLeft: "10px"}}>
-              <Col xs={12} md={4} lg={4} style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
+              <Col xs={12} md={5} lg={5} style={{paddingRight: "0px !important", paddingLeft: "0px"}}>
                 <button className="btn btn-primary" onClick={this._addParticipantClient} disabled={disabledButtonCreate}
                 type="button" title="Adicionar participante, máximo 10" style={{marginTop: "20px"}}>
-                Agregar participante
+                <i className="white plus icon"/> Agregar participante
                 </button>
               </Col>
               <BotonCreateContactComponent typeButton={1} />

@@ -125,7 +125,9 @@ class ListTasks extends Component {
     return (
       <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial',marginLeft:'20px',marginRight: '25px',marginTop: '20px'}}>
         {disabled === '' || disabled === undefined ?
+        <Row xs={12} md={12} lg={12}>
           <BotonCreateTaskComponent/>
+        </Row>
         : ''}
         {tasks.size > 0 ?
           <Row style={disabled === '' || disabled === undefined ? {marginTop: '31px'} : {}}>

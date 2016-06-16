@@ -15,7 +15,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance"];
+const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
@@ -35,6 +35,11 @@ const validate = values => {
     errors.tarea = "Debe ingresar un valor";
   }else{
     errors.tarea = null;
+  }
+  if(!values.idEstado){
+    errors.idEstado = "Debe ingresar un valor";
+  }else{
+    errors.idEstado = null;
   }
   return errors;
 };
@@ -60,11 +65,12 @@ class ModalCreateTask extends Component{
   }
 
   updateKeyValueUsersBanco(e){
-    const {fields: {responsable}, filterUsersBanco} = this.props;
+    const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
     const selector =  $('.ui.search.responsable');
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
+        idEmployee.onChange(null);
         selector.toggleClass('loading');
         filterUsersBanco(responsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -77,6 +83,7 @@ class ModalCreateTask extends Component{
               ],
               onSelect : function(event) {
                   responsable.onChange(event.title);
+                  idEmployee.onChange(idEmployee.id);
                   return 'default';
               }
             });
@@ -112,7 +119,8 @@ class ModalCreateTask extends Component{
   }
 
   render(){
-    const {fields: {responsable, fecha, idEstado, tarea, advance},taskEdit, selectsReducer, handleSubmit} = this.props;
+    const {fields: {responsable, fecha, idEstado, tarea, advance, visit},
+        taskEdit, selectsReducer, handleSubmit} = this.props;
     console.log("taskEdit", taskEdit);
     return  (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
@@ -122,29 +130,26 @@ class ModalCreateTask extends Component{
             <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
-                <dt style={{paddingTop:"0px"}}>
-                  <ComboBoxFilter
-                    name="responsableTask"
-                    labelInput="Ingrese un criterio de búsqueda..."
-                    {...responsable}
-                    parentId="dashboardComponentScroll"
-                    onChange={responsable.onChange}
-                    value={responsable.value}
-                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                    onSelect={val => this._updateValue(val)}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
-                </dt>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Fecha (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <DateTimePickerUi
                     {...fecha}
                     culture='es'
                     format={"DD/MM/YYYY"}
                     time={false}
+                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                  />
+                </dt>
+              </Col>
+              <Col xs={12} md={4} lg={4}>
+                <dt><span>Estado (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt style={{paddingTop:"0px"}}>
+                  <ComboBox name="idEstado" labelInput="Seleccione"
+                    {...idEstado}
+                    valueProp={'id'}
+                    textProp = {'value'}
+                    labelInput="Seleccione"
+                    data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
@@ -157,16 +162,19 @@ class ModalCreateTask extends Component{
               </Col>
             </Row>
             <Row style={{padding: "0px 10px 0px 0px"}}>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Estado (<span style={{color: "red"}}>*</span>)</span></dt>
+              <Col xs={12} md={12} lg={12}>
+                <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
                 <dt style={{paddingTop:"0px"}}>
-                  <ComboBox name="idEstado" labelInput="Seleccione"
-                    {...idEstado}
-                    valueProp={'id'}
-                    textProp = {'value'}
-                    labelInput="Seleccione"
-                    data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
+                  <ComboBoxFilter
+                    name="responsableTask"
+                    labelInput="Ingrese un criterio de búsqueda..."
+                    {...responsable}
+                    parentId="dashboardComponentScroll"
+                    onChange={responsable.onChange}
+                    value={responsable.value}
+                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                    onSelect={val => this._updateValue(val)}
+                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -182,14 +190,14 @@ class ModalCreateTask extends Component{
                     max="1000"
                     title="La longitud máxima de caracteres es de 1000"
                     style={{width: '100%', height: '120px'}}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
+                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
             </Row>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={12} lg={12}>
-                <dt><span>Avance (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt><span>Descripción </span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <Textarea
                     {...advance}
@@ -198,7 +206,7 @@ class ModalCreateTask extends Component{
                     max="1000"
                     title="La longitud máxima de caracteres es de 1000"
                     style={{width: '100%', height: '120px'}}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
+                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -248,6 +256,7 @@ function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdi
       idEmployee: taskEdit.clientId,
       idEstado: taskEdit.status,
       id: taskEdit.id,
+      visit: null,
       fecha: moment(taskEdit.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"),
       tarea : taskEdit.task
     }

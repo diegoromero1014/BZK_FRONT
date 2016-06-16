@@ -181,7 +181,7 @@ class ModalTask extends Component {
                     </dt>
                   </Col>
                   <Col xs={6} md={6} lg={6}>
-                    <dt><span>Fecha (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                       <DateTimePickerUi
                         {...fecha}
@@ -194,7 +194,7 @@ class ModalTask extends Component {
                 </Row>
                 <Row>
                   <Col xs={12} md={12} lg={12}>
-                    <dt><span>Descripción de la tarea (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Tarea (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                       <Textarea
                         name="description"
