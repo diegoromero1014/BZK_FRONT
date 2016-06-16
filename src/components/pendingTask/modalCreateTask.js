@@ -41,11 +41,6 @@ const validate = values => {
   }else{
     errors.idEstado = null;
   }
-  if(!values.advance){
-    errors.advance = "Debe ingresar un valor";
-  }else{
-    errors.advance = null;
-  }
   return errors;
 };
 
@@ -135,6 +130,39 @@ class ModalCreateTask extends Component{
             <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={4} lg={4}>
+                <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt style={{paddingTop:"0px"}}>
+                  <DateTimePickerUi
+                    {...fecha}
+                    culture='es'
+                    format={"DD/MM/YYYY"}
+                    time={false}
+                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                  />
+                </dt>
+              </Col>
+              <Col xs={12} md={4} lg={4}>
+                <dt><span>Estado (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt style={{paddingTop:"0px"}}>
+                  <ComboBox name="idEstado" labelInput="Seleccione"
+                    {...idEstado}
+                    valueProp={'id'}
+                    textProp = {'value'}
+                    labelInput="Seleccione"
+                    data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
+                  />
+                </dt>
+              </Col>
+              <Col xs={12} md={3} ld={3}>
+                <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
+                  style={{marginRight:'15px', float:'right', marginTop:'35px'}}>
+                  Editar <i className={'icon edit'}></i>
+                </button>
+              </Col>
+            </Row>
+            <Row style={{padding: "0px 10px 0px 0px"}}>
+              <Col xs={12} md={12} lg={12}>
                 <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <ComboBoxFilter
@@ -147,39 +175,6 @@ class ModalCreateTask extends Component{
                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                     onSelect={val => this._updateValue(val)}
                     disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
-                  />
-                </dt>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Fecha (<span style={{color: "red"}}>*</span>)</span></dt>
-                <dt style={{paddingTop:"0px"}}>
-                  <DateTimePickerUi
-                    {...fecha}
-                    culture='es'
-                    format={"DD/MM/YYYY"}
-                    time={false}
-                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
-                  />
-                </dt>
-              </Col>
-              <Col xs={12} md={3} ld={3}>
-                <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
-                  style={{marginRight:'15px', float:'right', marginTop:'35px'}}>
-                  Editar <i className={'icon edit'}></i>
-                </button>
-              </Col>
-            </Row>
-            <Row style={{padding: "0px 10px 0px 0px"}}>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Estado (<span style={{color: "red"}}>*</span>)</span></dt>
-                <dt style={{paddingTop:"0px"}}>
-                  <ComboBox name="idEstado" labelInput="Seleccione"
-                    {...idEstado}
-                    valueProp={'id'}
-                    textProp = {'value'}
-                    labelInput="Seleccione"
-                    data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -202,7 +197,7 @@ class ModalCreateTask extends Component{
             </Row>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={12} lg={12}>
-                <dt><span>Avance (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt><span>Descripción </span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <Textarea
                     {...advance}

@@ -276,7 +276,7 @@ class FormVisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
+          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
         }
       }, (reason) =>{
       });
