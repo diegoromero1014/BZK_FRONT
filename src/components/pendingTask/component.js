@@ -8,6 +8,7 @@ import {NUMBER_RECORDS,FILTER_STATUS_TASK_ID} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
+import ButtonCreatePendingTaskComponent from './createPendingTask/buttonCreatePendingTaskComponent';
 
 class UserTaskComponent extends Component {
 
@@ -46,6 +47,7 @@ class UserTaskComponent extends Component {
           }}
           idTypeFilter={FILTER_STATUS_TASK_ID}/>
           </Col>
+          <Col xs>  <ButtonCreatePendingTaskComponent/>  </Col>
           </Row>
         </Grid>
         </div>
