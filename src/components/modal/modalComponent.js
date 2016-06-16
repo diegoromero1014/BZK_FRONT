@@ -9,6 +9,7 @@ import {clearValuesAdressessKeys} from '../selectsComponent/actions';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../shareholder/shareholderDetail/componentShareHolderDetail';
 import ModalTask from '../visit/tasks/modalTask';
+import ModalCreateTask from '../pendingTask/modalCreateTask';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -48,6 +49,9 @@ class ModalComponentDialog extends Component {
           break;
         case views.VIEW_TASK:
           cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal}/>
+          break;
+        case views.VIEW_TASK_ADMIN:
+          cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal}/>
           break;
       }
 
