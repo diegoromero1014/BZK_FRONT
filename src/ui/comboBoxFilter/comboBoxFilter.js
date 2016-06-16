@@ -9,7 +9,7 @@ class comboBoxFilter extends Component {
    }
 
    render() {
-       const {nameInput, labelInput, data, touched, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, onSelect, value} = this.props;
+       const {nameInput, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, onSelect, value} = this.props;
        if( touched && invalid ){
          scrollTo(parentId);
        }
@@ -27,6 +27,7 @@ class comboBoxFilter extends Component {
                    placeholder="Ingrese un criterio de búsqueda..."
                    onKeyPress={onKeyPress}
                    onSelect={onSelect}
+                   disabled={disabled}
                  />
                  <i className="search icon"></i>
                </div>
