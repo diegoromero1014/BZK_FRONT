@@ -29,7 +29,8 @@ class TaskVisit extends Component{
           <Col xs={11} md={11} lg={11} style={{paddingLeft: "30px"}}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "0px", marginBottom: "5px"}}>
               <i className="browser icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Pendientes</span>
+              <span style={{fontSize: "20px"}}> Pendientes </span>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
             </div>
           </Col>
         </Row>

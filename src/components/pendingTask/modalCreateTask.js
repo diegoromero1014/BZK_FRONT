@@ -11,6 +11,7 @@ import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import {SHAREHOLDER_ID_TYPE} from '../selectsComponent/constants';
+import {createPendingTaskNew} from './createPendingTask/actions'
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -115,7 +116,26 @@ class ModalCreateTask extends Component{
   }
 
   _handleEditTask(){
-
+    const {createPendingTaskNew} = this.props;
+    const {fields:{responsable, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
+    var messageBody = {
+      "client": window.localStorage.getItem('idClientSelected'),
+      "task": tarea.value,
+      "advance" : advance.value ,
+      "closingDate" : fecha.value,
+      "employeeName": responsable.value,
+      "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+    }
+    console.log("messageBody create task", messageBody);
+    createPendingTaskNew(messageBody).then((data) => {
+        if((_.get(data, 'payload.data.status') === 200)){
+            this.setState({showEx: true});
+          } else {
+            this.setState({showEr: true});
+        }
+        }, (reason) => {
+          this.setState({showEr: true});
+      });
   }
 
   render(){
@@ -214,11 +234,18 @@ class ModalCreateTask extends Component{
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          <button
-            type="submit"
-            className="btn btn-primary modal-button-edit"
-            disabled={this.state.isEditable ? '' : 'disabled'}
-            >{'Guardar'}</button>
+          <Row xs={12} md={12} lg={12}>
+            <Col xs={6} md={10} lg={10} style={{textAlign:"left", varticalAlign: "middle", marginLeft:"0px"}}>
+                <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>dsfdsfdsfdsf</span>
+            </Col>
+            <Col xs={6} md={2} lg={2}>
+              <button
+                type="submit"
+                className="btn btn-primary modal-button-edit"
+                disabled={this.state.isEditable ? '' : 'disabled'}
+                >{'Guardar'}</button>
+            </Col>
+          </Row>
         </div>
         <SweetAlert
           type= "success"
@@ -242,7 +269,8 @@ class ModalCreateTask extends Component{
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     filterUsersBanco,
-    getMasterDataFields
+    getMasterDataFields,
+    createPendingTaskNew
   }, dispatch);
 }
 
