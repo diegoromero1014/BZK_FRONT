@@ -57,6 +57,7 @@ class FormVisita extends Component{
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
     this._changeTypeVisit = this._changeTypeVisit.bind(this);
     this._changeDateVisit = this._changeDateVisit.bind(this);
+    this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
     this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
   }
 
@@ -250,6 +251,15 @@ class FormVisita extends Component{
     });
   }
 
+  _changeDateVisitOnBlur(value){
+    var date = value.target.value;
+    if(date === '' || date === undefined || date === null){
+      this.setState({
+        dateVisitError: "Debe seleccionar una opción"
+      });
+    }
+  }
+  
   _downloadFileShoppingMap(){
     //const {downloadFilesPdf} = this.props;
     //downloadFilesPdf("fileShoppingMap");
@@ -352,7 +362,7 @@ class FormVisita extends Component{
                 touched={true}
                 error={this.state.dateVisitError}
                 onChange={val => this._changeDateVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={val => this._changeDateVisitOnBlur(val)}
               />
             </dt>
           </Col>
