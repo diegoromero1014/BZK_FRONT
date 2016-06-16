@@ -195,10 +195,10 @@ class FormVisita extends Component{
           "documentStatus": typeButtonClick
         }
         createVisti(visitJson).then((data)=> {
-          if((_.get(data, 'payload.validateLogin') === 'false')){
+          if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
-            if( (_.get(data, 'payload.status') === 200) ){
+            if( (_.get(data, 'payload.data.status') === 200) ){
               typeMessage = "success";
               titleMessage = "Creación visita";
               message = "Señor usuario, la visita se creó de forma exitosa.";
@@ -259,7 +259,7 @@ class FormVisita extends Component{
       });
     }
   }
-  
+
   _downloadFileShoppingMap(){
     //const {downloadFilesPdf} = this.props;
     //downloadFilesPdf("fileShoppingMap");
