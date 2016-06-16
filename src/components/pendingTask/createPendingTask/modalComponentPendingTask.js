@@ -7,7 +7,7 @@ import {reduxForm} from 'redux-form';
 import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
-//import {createPendingTaskNew} from './actions.js';
+import {createPendingTaskNew} from './actions.js';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -100,16 +100,16 @@ class ModalComponentPendingTask extends Component {
   }
 
   _handleCreatePendingTask(){
-    const {createContactNew,contactsByClientFindServer,createContactReducer} = this.props;
+    const {createPendingTaskNew} = this.props;
     const {fields:{responsable, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
     var messageBody = {
-      "client": window.localStorage.getItem('idClientSelected'),
-      "task": tipoTratamiendo.value,
-      "advance" : tipoGenero.value ,
-      "closingDate" : tipoDocumento.value,
-      "employeeName": numeroDocumento.value,
-      "employeeId":primerNombre.value
+      "clientId": window.localStorage.getItem('idClientSelected'),
+      "task": tarea.value,
+      "advance" : advance.value ,
+      "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
+      "employeeName": responsable.value
     }
+    console.log(messageBody);
     createPendingTaskNew(messageBody).then((data) => {
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({showEx: true});
@@ -131,24 +131,7 @@ class ModalComponentPendingTask extends Component {
               <Row>
                   <Col xs>
                   <dl style={{width: '100%'}}>
-                    <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dd>
-                    <ComboBoxFilter
-                      name="responsableTask"
-                      labelInput="Ingrese un criterio de búsqueda..."
-                      {...responsable}
-                      parentId="dashboardComponentScroll"
-                      onChange={responsable.onChange}
-                      value={responsable.value}
-                      onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                      onSelect={val => this._updateValue(val)}
-                    />
-                    </dd>
-                  </dl>
-                  </Col>
-                  <Col xs>
-                  <dl style={{width: '100%'}}>
-                    <dt><span>Fecha (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de cierre(<span style={{color: "red"}}>*</span>)</span></dt>
                     <dd>  <DateTimePickerUi
                         {...fecha}
                         culture='es'
@@ -159,7 +142,7 @@ class ModalComponentPendingTask extends Component {
                   </Col>
                   <Col xs>
                   <dl style={{width: '100%'}}>
-                    <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
+                    <dt><span>Estado</span></dt>
                     <dd><InputComponent
                       name="numeroDocumento"
                       max="25"
@@ -168,8 +151,26 @@ class ModalComponentPendingTask extends Component {
                   </dl>
                   </Col>
               </Row>
-              <Row style={{padding: "0px 10px 0px 0px"}}>
-              <Col xs={12} md={12} lg={12}>
+              <Row>
+              <Col xs>
+              <dl style={{width: '100%'}}>
+                <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dd>
+                <ComboBoxFilter
+                  name="responsableTask"
+                  labelInput="Ingrese un criterio de búsqueda..."
+                  {...responsable}
+                  parentId="dashboardComponentScroll"
+                  onChange={responsable.onChange}
+                  value={responsable.value}
+                  onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                  onSelect={val => this._updateValue(val)}
+                />
+                </dd>
+              </dl>
+              </Col></Row>
+              <Row>
+              <Col xs>
                 <dt>
                   <div style={{width: "100%", float: "left"}}>
                   <span title="La longitud máxima del campo es de 150 caracteres">Tarea (<span style={{color: "red"}}>*</span>)</span>
@@ -185,11 +186,11 @@ class ModalComponentPendingTask extends Component {
                 />
               </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 0px 0px"}}>
-                <Col xs={12} md={12} lg={12}>
+                <Row>
+                <Col xs>
                   <dt>
                     <div style={{width: "100%", float: "left"}}>
-                      <span title="La longitud máxima del campo es de 150 caracteres">Avance</span>
+                      <span title="La longitud máxima del campo es de 150 caracteres">Observaciones</span>
                     </div>
                   </dt>
                   <Textarea
@@ -220,7 +221,7 @@ class ModalComponentPendingTask extends Component {
              type= "error"
              show={this.state.showEr}
              title="Error creando la tarea"
-             text="Señor usuario, ocurrió un error creando la tare."
+             text="Señor usuario, ocurrió un error creando la tarea."
              onConfirm={() => this.setState({showEr:false})}
              />
         </form>
@@ -230,7 +231,8 @@ class ModalComponentPendingTask extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    filterUsersBanco
+    filterUsersBanco,
+    createPendingTaskNew
   }, dispatch);
 }
 
