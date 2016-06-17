@@ -19,7 +19,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance"];
+const fields = ["idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
@@ -39,6 +39,11 @@ const validate = values => {
     errors.tarea = "Debe ingresar un valor";
   }else{
     errors.tarea = null;
+  }
+  if(!values.idEstado){
+      errors.idEstado = "Debe ingresar un valor";
+  }else{
+      errors.idEstado = null;
   }
   return errors;
 };
@@ -79,8 +84,9 @@ class ModalComponentPendingTask extends Component {
   }
 
   updateKeyValueUsersBanco(e){
-    const {fields: {responsable}, filterUsersBanco} = this.props;
+    const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
     const selector =  $('.ui.search.responsable');
+    idEmployee.onChange(null);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
@@ -96,6 +102,7 @@ class ModalComponentPendingTask extends Component {
               ],
               onSelect : function(event) {
                   responsable.onChange(event.title);
+                  idEmployee.onChange(event.idUsuario);
                   return 'default';
               }
             });
@@ -110,16 +117,16 @@ class ModalComponentPendingTask extends Component {
 
   _handleCreatePendingTask(){
     const {createPendingTaskNew} = this.props;
-    const {fields:{responsable, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
+    const {fields:{responsable, fecha,idEmployee, idEstado, tarea, advance},handleSubmit,error}= this.props;
     var messageBody = {
       "clientId": window.localStorage.getItem('idClientSelected'),
       "task": tarea.value,
       "advance" : advance.value,
       "status": idEstado.value,
       "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
-      "employeeName": responsable.value
+      "employeeName": responsable.value,
+      "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
     }
-    console.log(messageBody);
     createPendingTaskNew(messageBody).then((data) => {
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({showEx: true});
@@ -141,7 +148,7 @@ class ModalComponentPendingTask extends Component {
               <Row>
                   <Col xs>
                   <dl style={{width: '100%'}}>
-                    <dt><span>Fecha de cierre(<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dd>  <DateTimePickerUi
                         {...fecha}
                         culture='es'
@@ -152,12 +159,11 @@ class ModalComponentPendingTask extends Component {
                   </Col>
                   <Col xs>
                   <dl style={{width: '100%'}}>
-                    <dt><span>Estado</span></dt>
-                    <dd><ComboBox name="estado" labelInput="Seleccione"
+                    <dt><span>Estado (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dd><ComboBox name="idEstado" labelInput="Seleccione"
                     {...idEstado}
                     valueProp={'id'}
                     textProp = {'value'}
-                    parentId="modalComponentScroll"
                     data={selectsReducer.get(TASK_STATUS) || []}
                     /></dd>
                   </dl>

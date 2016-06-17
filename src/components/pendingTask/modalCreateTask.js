@@ -86,7 +86,7 @@ class ModalCreateTask extends Component{
               ],
               onSelect : function(event) {
                   responsable.onChange(event.title);
-                  idEmployee.onChange(event.id);
+                  idEmployee.onChange(event.idUsuario);
                   return 'default';
               }
             });

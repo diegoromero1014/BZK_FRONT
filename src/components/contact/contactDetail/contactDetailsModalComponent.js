@@ -127,13 +127,9 @@ class ContactDetailsModalComponent extends Component {
 
   /* Carga la información del contacto */
   componentWillMount() {
-    const {getMasterDataFields, getContactDetails, contactId, _uploadProvinces, _uploadCities} = this.props;
+    const {getMasterDataFields, getContactDetails, contactId, _uploadProvinces,contactObject, _uploadCities} = this.props;
     const that = this;
     const {fields: {contactFunctions, contactHobbies, contactSports,contactLineOfBusiness}} = this.props;
-    contactFunctions.onChange('');
-    contactHobbies.onChange('');
-    contactSports.onChange('');
-    contactLineOfBusiness.onChange('');
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
                         FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     getContactDetails(contactId, window.localStorage.getItem('idClientSelected'))
@@ -146,6 +142,10 @@ class ContactDetailsModalComponent extends Component {
       if (contact.province !== undefined && contact.province !== null) {
         that._uploadCitiesByProvinceId(contact.province);
       }
+      contactLineOfBusiness.onChange(JSON.parse('["'+_.join(contact.lineOfBusiness, '","')+'"]'));
+      contactFunctions.onChange(JSON.parse('["'+_.join(contact.function, '","')+'"]'));
+      contactHobbies.onChange(JSON.parse('["'+_.join(contact.hobbies, '","')+'"]'));
+      contactSports.onChange(JSON.parse('["'+_.join(contact.sports, '","')+'"]'));
     });
   }
 
@@ -321,7 +321,7 @@ class ContactDetailsModalComponent extends Component {
       "sports" : JSON.parse('[' + ((contactSports.value)?contactSports.value:"") +']'),
       "typeOfContact": contactTypeOfContact.value !== undefined ? contactTypeOfContact.value : null,
       "shippingInformation": null,
-      "lineOfBusiness" : JSON.parse('[' + ((contactLineOfBusiness.value)?contactLineOfBusiness.value:"") +']'),
+      "lineOfBusiness" : JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value:"") +']'),
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
       "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
     }
@@ -857,10 +857,10 @@ function mapStateToProps({contactDetail, selectsReducer}, ownerProps) {
        contactMobileNumber:contact.mobileNumber,
        contactEmailAddress:contact.emailAddress,
        contactTypeOfContact:contact.typeOfContact,
-       contactLineOfBusiness:JSON.parse('["'+_.join(contact.lineOfBusiness, '","')+'"]'),
-       contactFunctions:JSON.parse('["'+_.join(contact.function, '","')+'"]'),
-       contactHobbies:JSON.parse('["'+_.join(contact.hobbies, '","')+'"]'),
-       contactSports:JSON.parse('["'+_.join(contact.sports, '","')+'"]')
+       contactLineOfBusiness:'',
+       contactFunctions:'',
+       contactHobbies:'',
+       contactSports:''
      }
    };
  } else {
