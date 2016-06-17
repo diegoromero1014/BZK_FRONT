@@ -9,9 +9,12 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import {createPendingTaskNew} from './actions.js';
 import InputComponent from '../../../ui/input/inputComponent';
+import {getMasterDataFields} from '../../selectsComponent/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {NUMBER_RECORDS} from '../constants';
+import {FILTER_STATUS_TASK_ID} from '../../selectsComponent/constants';
+
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -57,6 +60,12 @@ class ModalComponentPendingTask extends Component {
   _updateValue(value){
     const{fields: {responsable}, contactsByClient} = this.props;
       responsable.onChange(value);
+  }
+
+  componentWillMount(){
+    const{getMasterDataFields} = this.props;
+    this.props.resetForm();
+    getMasterDataFields([FILTER_STATUS_TASK_ID]);
   }
 
   _closeCreate(){
@@ -105,7 +114,8 @@ class ModalComponentPendingTask extends Component {
     var messageBody = {
       "clientId": window.localStorage.getItem('idClientSelected'),
       "task": tarea.value,
-      "advance" : advance.value ,
+      "advance" : advance.value,
+      "status": idEstado.value,
       "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
       "employeeName": responsable.value
     }
@@ -143,10 +153,12 @@ class ModalComponentPendingTask extends Component {
                   <Col xs>
                   <dl style={{width: '100%'}}>
                     <dt><span>Estado</span></dt>
-                    <dd><InputComponent
-                      name="numeroDocumento"
-                      max="25"
-                      type="text"
+                    <dd><ComboBox name="estado" labelInput="Seleccione"
+                    {...idEstado}
+                    valueProp={'id'}
+                    textProp = {'value'}
+                    parentId="modalComponentScroll"
+                    data={selectsReducer.get(FILTER_STATUS_TASK_ID) || []}
                     /></dd>
                   </dl>
                   </Col>
@@ -232,7 +244,8 @@ class ModalComponentPendingTask extends Component {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     filterUsersBanco,
-    createPendingTaskNew
+    createPendingTaskNew,
+    getMasterDataFields
   }, dispatch);
 }
 

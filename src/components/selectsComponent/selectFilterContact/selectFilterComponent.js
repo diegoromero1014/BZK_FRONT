@@ -59,7 +59,7 @@ class SelectFilterComponent extends Component{
       }else if(idTypeFilter == FILTER_STATUS_VISIT_ID){
         data=[{id:'0', value:'Guardado como borrador'},{id:'1',value:'Guardado como definitivo'}];
       }else if(idTypeFilter == FILTER_STATUS_TASK_ID){
-        data=[{id:'1', value:'Pendiente'},{id:'2',value:'Cerrado'}];
+        data= selectsReducer.get('dataTypeTaskType');
       }
       return(
           <Combobox
