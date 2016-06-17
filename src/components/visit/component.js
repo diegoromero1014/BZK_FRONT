@@ -8,6 +8,7 @@ import {NUMBER_RECORDS,FILTER_STATUS_VISIT_ID} from './constants';
 import {visitByClientFindServer,clearVisit} from './actions';
 import ListVisitComponent from './listVisitComponent';
 import PaginationVisitComponent from './paginationVisitComponent';
+import {updateTitleNavBar} from '../navBar/actions';
 
 class VisitComponent extends Component {
 
@@ -30,6 +31,8 @@ class VisitComponent extends Component {
   }
 
   _createVisit(){
+      const {updateTitleNavBar} = this.props;
+      updateTitleNavBar("Informe de visita/reunión");
       redirectUrl("/dashboard/visita");
   }
 
@@ -83,13 +86,16 @@ class VisitComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-  visitByClientFindServer,clearVisit
+    visitByClientFindServer,
+    clearVisit,
+    updateTitleNavBar
   }, dispatch);
 }
 
-function mapStateToProps({visitReducer}, ownerProps){
+function mapStateToProps({visitReducer, navBar}, ownerProps){
     return {
-        visitReducer
+        visitReducer,
+        navBar
     };
 }
 

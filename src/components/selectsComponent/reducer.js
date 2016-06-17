@@ -106,7 +106,7 @@ export default (state = initialState, action) => {
         case constants.CERTIFICATION_STATUS:
             var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
             return state.set('dataTypeCertificationStatus', masterDataDetailEntries);
-        case constants.FILTER_STATUS_TASK_ID:
+        case constants.TASK_STATUS:
                 var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
         return state.set('dataTypeTaskType', masterDataDetailEntries);
         case constants.CLEAR_VALUES_COUNTRY:

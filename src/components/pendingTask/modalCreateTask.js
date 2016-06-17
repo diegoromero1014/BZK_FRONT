@@ -10,7 +10,10 @@ import {filterUsersBanco} from '../participantsVisitPre/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {getMasterDataFields} from '../selectsComponent/actions';
-import {SHAREHOLDER_ID_TYPE} from '../selectsComponent/constants';
+import {TASK_STATUS} from '../selectsComponent/constants';
+import {createPendingTaskNew} from './createPendingTask/actions'
+import {clearUserTask, tasksByClientFindServer} from './actions';
+import {NUMBER_RECORDS} from './constants';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -67,10 +70,10 @@ class ModalCreateTask extends Component{
   updateKeyValueUsersBanco(e){
     const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
     const selector =  $('.ui.search.responsable');
+    idEmployee.onChange(null);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
-        idEmployee.onChange(null);
         selector.toggleClass('loading');
         filterUsersBanco(responsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -83,7 +86,7 @@ class ModalCreateTask extends Component{
               ],
               onSelect : function(event) {
                   responsable.onChange(event.title);
-                  idEmployee.onChange(idEmployee.id);
+                  idEmployee.onChange(event.id);
                   return 'default';
               }
             });
@@ -98,13 +101,15 @@ class ModalCreateTask extends Component{
 
   componentWillMount(){
     const{getMasterDataFields} = this.props;
-    getMasterDataFields([SHAREHOLDER_ID_TYPE]);
+    getMasterDataFields([TASK_STATUS]);
   }
 
   _closeViewOrEditTask() {
-    const {isOpen} = this.props;
+    const {isOpen, clearUserTask, tasksByClientFindServer} = this.props;
     this.setState({isEditable: false, taskEdited: false, showErrtask: false});
     isOpen();
+    clearUserTask();
+    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
     this.props.resetForm();
   }
 
@@ -115,13 +120,33 @@ class ModalCreateTask extends Component{
   }
 
   _handleEditTask(){
-
+    const {createPendingTaskNew} = this.props;
+    const {fields:{id, responsable, idEmployee, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
+    var messageBody = {
+      "id": id.value,
+      "clientId": window.localStorage.getItem('idClientSelected'),
+      "task": tarea.value,
+      "advance" : advance.value,
+      "status" : idEstado.value,
+      "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
+      "employeeName": responsable.value,
+      "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+    }
+    console.log("messageBody", messageBody);
+    createPendingTaskNew(messageBody).then((data) => {
+        if((_.get(data, 'payload.data.status') === 200)){
+            this.setState({taskEdited: true});
+          } else {
+            this.setState({showErrtask: true});
+        }
+        }, (reason) => {
+          this.setState({showErrtask: true});
+      });
   }
 
   render(){
-    const {fields: {responsable, fecha, idEstado, tarea, advance, visit},
+    const {fields: {responsable, fecha, idEstado, tarea, advance},
         taskEdit, selectsReducer, handleSubmit} = this.props;
-    console.log("taskEdit", taskEdit);
     return  (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -137,7 +162,7 @@ class ModalCreateTask extends Component{
                     culture='es'
                     format={"DD/MM/YYYY"}
                     time={false}
-                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -149,7 +174,7 @@ class ModalCreateTask extends Component{
                     valueProp={'id'}
                     textProp = {'value'}
                     labelInput="Seleccione"
-                    data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
+                    data={selectsReducer.get(TASK_STATUS) || []}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
@@ -174,7 +199,7 @@ class ModalCreateTask extends Component{
                     value={responsable.value}
                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                     onSelect={val => this._updateValue(val)}
-                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -190,7 +215,7 @@ class ModalCreateTask extends Component{
                     max="1000"
                     title="La longitud máxima de caracteres es de 1000"
                     style={{width: '100%', height: '120px'}}
-                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -206,7 +231,7 @@ class ModalCreateTask extends Component{
                     max="1000"
                     title="La longitud máxima de caracteres es de 1000"
                     style={{width: '100%', height: '120px'}}
-                    disabled={this.state.isEditable && visit.value !== null && visit.value !== undefined ? '' : 'disabled'}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
                   />
                 </dt>
               </Col>
@@ -214,11 +239,18 @@ class ModalCreateTask extends Component{
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          <button
-            type="submit"
-            className="btn btn-primary modal-button-edit"
-            disabled={this.state.isEditable ? '' : 'disabled'}
-            >{'Guardar'}</button>
+          <Row xs={12} md={12} lg={12}>
+            <Col xs={6} md={10} lg={10} style={{textAlign:"left", varticalAlign: "middle", marginLeft:"0px"}}>
+                <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>dsfdsfdsfdsf</span>
+            </Col>
+            <Col xs={6} md={2} lg={2}>
+              <button
+                type="submit"
+                className="btn btn-primary modal-button-edit"
+                disabled={this.state.isEditable ? '' : 'disabled'}
+                >{'Guardar'}</button>
+            </Col>
+          </Row>
         </div>
         <SweetAlert
           type= "success"
@@ -242,7 +274,10 @@ class ModalCreateTask extends Component{
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     filterUsersBanco,
-    getMasterDataFields
+    getMasterDataFields,
+    createPendingTaskNew,
+    clearUserTask,
+    tasksByClientFindServer
   }, dispatch);
 }
 
@@ -255,8 +290,8 @@ function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdi
       responsable: taskEdit.responsable,
       idEmployee: taskEdit.clientId,
       idEstado: taskEdit.status,
+      advance: taskEdit.advance,
       id: taskEdit.id,
-      visit: null,
       fecha: moment(taskEdit.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"),
       tarea : taskEdit.task
     }

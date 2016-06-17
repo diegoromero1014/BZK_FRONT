@@ -12,6 +12,7 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import {consultList,getMasterDataFields} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
+import {updateTitleNavBar} from '../navBar/actions';
 
 const fields =["team","certificationStatus"];
 
@@ -37,6 +38,8 @@ class ClientsFind extends Component {
       clearClients();
       getMasterDataFields([constants.CERTIFICATION_STATUS]);
       consultList(constants.TEAM_FOR_EMPLOYEE);
+      const {updateTitleNavBar} = this.props;
+      updateTitleNavBar("Mis clientes");
     }
   }
 
@@ -167,14 +170,16 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     changePage,
     changeKeyword,
-    consultList
+    consultList,
+    updateTitleNavBar
   }, dispatch);
 }
 
-function mapStateToProps({clientR,selectsReducer},{fields}){
+function mapStateToProps({clientR, selectsReducer, navBar},{fields}){
   return {
     clientR,
-    selectsReducer
+    selectsReducer,
+    navBar
   };
 }
 

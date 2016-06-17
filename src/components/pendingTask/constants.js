@@ -7,4 +7,4 @@ export const ORDER_COLUMN_TASK = "ORDER_COLUMN_TASK";
 export const CLEAR_USER_TASK_PAGINATOR = "CLEAR_USER_TASK_PAGINATOR";
 export const CLEAR_USER_TASK_ORDER = "CLEAR_USER_TASK_ORDER";
 export const CLEAR_USER_TASK_CREAR = "CLEAR_USER_TASK_CREAR";
-export const FILTER_STATUS_TASK_ID = "taskStatus";
+export const TASK_STATUS = "taskStatus";

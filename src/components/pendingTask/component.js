@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {tasksByClientFindServer, clearUserTask} from './actions';
 import {Combobox} from 'react-widgets';
-import {NUMBER_RECORDS,FILTER_STATUS_TASK_ID} from './constants';
+import {NUMBER_RECORDS,TASK_STATUS} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
@@ -45,7 +45,7 @@ class UserTaskComponent extends Component {
           <SelectFilterContact config={{
               onChange: (value) => this.setState({value1: value.id})
           }}
-          idTypeFilter={FILTER_STATUS_TASK_ID}/>
+          idTypeFilter={TASK_STATUS}/>
           </Col>
           <Col xs>  <ButtonCreatePendingTaskComponent/>  </Col>
           </Row>

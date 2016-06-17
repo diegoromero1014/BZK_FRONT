@@ -13,7 +13,7 @@ import {getMasterDataFields} from '../../selectsComponent/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {NUMBER_RECORDS} from '../constants';
-import {FILTER_STATUS_TASK_ID} from '../../selectsComponent/constants';
+import {TASK_STATUS} from '../../selectsComponent/constants';
 
 import _ from 'lodash';
 import $ from 'jquery';
@@ -65,7 +65,7 @@ class ModalComponentPendingTask extends Component {
   componentWillMount(){
     const{getMasterDataFields} = this.props;
     this.props.resetForm();
-    getMasterDataFields([FILTER_STATUS_TASK_ID]);
+    getMasterDataFields([TASK_STATUS]);
   }
 
   _closeCreate(){
@@ -158,7 +158,7 @@ class ModalComponentPendingTask extends Component {
                     valueProp={'id'}
                     textProp = {'value'}
                     parentId="modalComponentScroll"
-                    data={selectsReducer.get(FILTER_STATUS_TASK_ID) || []}
+                    data={selectsReducer.get(TASK_STATUS) || []}
                     /></dd>
                   </dl>
                   </Col>
