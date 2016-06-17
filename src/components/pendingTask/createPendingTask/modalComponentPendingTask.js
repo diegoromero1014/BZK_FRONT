@@ -11,6 +11,7 @@ import {createPendingTaskNew} from './actions.js';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import {clearUserTask, tasksByClientFindServer} from '../actions';
 import {NUMBER_RECORDS} from '../constants';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -60,11 +61,13 @@ class ModalComponentPendingTask extends Component {
   }
 
   _closeCreate(){
-    const{isOpen} = this.props;
+    const{isOpen, clearUserTask, tasksByClientFindServer} = this.props;
     //clearSearchContact();
     this.props.resetForm();
     this.setState({showEx: false});
     isOpen();
+    clearUserTask();
+    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
     //clearContactOrder();
     //clearContactCreate();
   }
@@ -232,7 +235,9 @@ class ModalComponentPendingTask extends Component {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     filterUsersBanco,
-    createPendingTaskNew
+    createPendingTaskNew,
+    clearUserTask,
+    tasksByClientFindServer
   }, dispatch);
 }
 
