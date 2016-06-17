@@ -130,7 +130,7 @@ class ListTasks extends Component {
         </Row>
         : ''}
         {tasks.size > 0 ?
-          <Row style={disabled === '' || disabled === undefined ? {marginTop: '31px'} : {}}>
+          <Row style={disabled === '' || disabled === undefined ? {marginTop: '20px'} : {}}>
             <Col xs>
               <table className="ui striped table">
                 <thead>

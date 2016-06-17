@@ -15,6 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
+import RaitingInternal from '../../clientInformation/ratingInternal';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -58,6 +59,7 @@ class FormEdit extends Component{
     this._changeTypeVisit = this._changeTypeVisit.bind(this);
     this._changeDateVisit = this._changeDateVisit.bind(this);
     this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
+    this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
   }
 
   _editVisit() {
@@ -65,6 +67,11 @@ class FormEdit extends Component{
       showMessage: false,
       isEditable: !this.state.isEditable
     });
+  }
+
+  _downloadFileShoppingMap(){
+    //const {downloadFilesPdf} = this.props;
+    //downloadFilesPdf("fileShoppingMap");
   }
 
   _clickSeletedTab(tab){
@@ -113,18 +120,18 @@ class FormEdit extends Component{
   }
 
   _submitCreateVisita(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer, tasks} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
     var errorInForm = false;
 
-    if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
+    if(this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
       errorInForm = true;
       this.setState({
         typeVisitError: "Debe seleccionar una opción"
       });
     }
     console.log("this.state.dateVisit", this.state.dateVisit);
-    if( this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
+    if(this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
       errorInForm = true;
       this.setState({
         dateVisitError: "Debe seleccionar una opción"
@@ -132,12 +139,6 @@ class FormEdit extends Component{
     }
 
     if(!errorInForm){
-      if( this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
-        errorInForm = true;
-        this.setState({
-          dateVisitError: "Debe seleccionar una opción"
-        });
-      }
     //  var participantsBanco = _.filter(participants.toArray(), ['tipoParticipante', 'banco']);
 
     //_.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector')
@@ -206,41 +207,55 @@ class FormEdit extends Component{
         if( dataOthers.length > 0 && dataOthers[0] === undefined ){
           dataOthers = [];
         }*/
+        var tareas = [];
+        _.map(tasks.toArray(),
+          function(task){
+              var data = {
+                "id": null,
+                "task": task.tarea,
+                "employee": task.idResponsable,
+                "employeeName": task.responsable,
+                "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+              }
+              tareas.push(data);
+          }
+        );
+
         var visitJson = {
           "id": detailVisit.data.id,
           "client": window.localStorage.getItem('idClientSelected'),
-          "visitTime": moment(fechaVisita.value, "DD/MM/YYYY").format('x'),
+          "visitTime": moment(this.state.dateVisit, "DD/MM/YYYY HH:mm").format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers === 0 ? null : dataOthers,
           "comments": desarrolloGeneral.value,
-          "visitType": tipoVisita.value,
+          "visitType": this.state.typeVisit,
+          "userTasks": tareas,
           "documentStatus": typeButtonClick
         }
-        console.log("visitJson", visitJson);
+
         const {createVisti} = this.props;
 
         createVisti(visitJson).then((data)=> {
-          console.log("Respuesta = ", data);
           if(data.payload.data.validateLogin === 'false'){
             redirectUrl("/login");
           } else {
             if(data.payload.data.status === 200){
               typeMessage = "success";
-              titleMessage = "Creación visita";
-              message = "Señor usuario, la visita se creó de forma exitosa.";
+              titleMessage = "Edición visita";
+              message = "Señor usuario, la visita se editó de forma exitosa.";
               this.setState({showMessageCreateVisit :true});
             } else {
               typeMessage = "error";
-              titleMessage = "Creación visita";
-              message = "Señor usuario, ocurrió un error creando la visita.";
+              titleMessage = "Edición visita";
+              message = "Señor usuario, ocurrió un error editando la visita.";
               this.setState({showMessageCreateVisit :true});
             }
           }
         }, (reason) =>{
           typeMessage = "error";
-          titleMessage = "Creación visita";
-          message = "Señor usuario, ocurrió un error creando la visita.";
+          titleMessage = "Edición visita";
+          message = "Señor usuario, ocurrió un error editando la visita.";
           this.setState({showMessageCreateVisit :true});
         });
       } else {
@@ -254,7 +269,7 @@ class FormEdit extends Component{
   }
 
   _onCloseButton(){
-    message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
+    message = "¿Está seguro que desea salir de la pantalla de edición de visita?";
     titleMessage = "Confirmación salida";
     this.setState({showConfirm :true});
   }
@@ -288,6 +303,11 @@ class FormEdit extends Component{
     detailVisit(id).then((result) => {
       const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
       var part = result.payload.data.data;
+
+      this.setState({
+        typeVisit: part.visitType,
+        dateVisit: moment(part.visitTime, "x").format('DD/MM/YYYY HH:mm')
+      });
 
       //Adicionar participantes por parte del cliente
       _.forIn(part.participatingContacts, function(value, key) {
@@ -370,18 +390,6 @@ class FormEdit extends Component{
     });
   }
 
-  componentDidMount(){
-    const {visitReducer} = this.props;
-    const detailVisit = visitReducer.get('detailVisit');
-    if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
-      var visitTime = detailVisit.data.visitTime;
-      this.setState({
-        typeVisit: detailVisit.data.visitType,
-        dateVisit: moment(visitTime, "x").format('DD/MM/YYYY HH:mm')
-      });
-    }
-  }
-
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
     selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
@@ -413,7 +421,7 @@ class FormEdit extends Component{
     }
     return(
       <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
-        style={{backgroundColor: "#FFFFFF", marginTop: "2px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
+        style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
             <div>
@@ -432,15 +440,18 @@ class FormEdit extends Component{
                 <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
                   className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
               }
+              <div style={{width: "150px", display: "inline-flex"}}>
+                <span style={{marginLeft: "10px"}}><RaitingInternal valueRaiting={infoClient.internalRatingKey}/></span>
+              </div>
             </div>
           </div>
         </header>
-        <Row style={{padding: "10px 10px 0px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={10} sm={10} md={10} lg={10}>
             <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
           </Col>
           <Col xs={2} sm={2} md={2} lg={2}>
-            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-10px'}}>Editar <i className={'icon edit'}></i></button>
+            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
           </Col>
         </Row>
         <Row style={{padding: "10px 10px 10px 20px"}}>
@@ -448,7 +459,7 @@ class FormEdit extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="browser icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "22px"}}> Información general</span>
+              <span style={{fontSize: "20px"}}> Datos de la reunión</span>
             </div>
           </Col>
         </Row>
@@ -525,7 +536,12 @@ class FormEdit extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "22px"}}> Desarrollo general de la reunión  </span>
+              <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i onClick={this._downloadFileShoppingMap}
+                style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
+                title="Descargar pdf mapa de compras"
+                className="red file pdf outline icon"></i>
             </div>
           </Col>
         </Row>
@@ -584,11 +600,11 @@ class FormEdit extends Component{
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px -117px", position:"fixed"} : {display: "none"}}>
-              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
-            </button>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px 67px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+            </button>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
             </button>
             <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
