@@ -17,9 +17,7 @@ class NavBarComponent extends Component {
 
     render() {
       const {navBar} = this.props;
-      console.log("navBar", navBar);
       const titleNavBar = navBar.get('titleNavBar');
-      console.log("titleNavBar", titleNavBar);
       const pageTitleEl = "";
       return (
           <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
