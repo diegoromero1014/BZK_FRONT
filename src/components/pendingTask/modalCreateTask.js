@@ -105,10 +105,9 @@ class ModalCreateTask extends Component{
   }
 
   _closeViewOrEditTask() {
-    const {isOpen, clearUserTask, tasksByClientFindServer} = this.props;
+    const {isOpen, tasksByClientFindServer} = this.props;
     this.setState({isEditable: false, taskEdited: false, showErrtask: false});
     isOpen();
-    clearUserTask();
     tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
     this.props.resetForm();
   }
@@ -289,7 +288,7 @@ function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdi
     initialValues: {
       responsable: taskEdit.responsable,
       idEmployee: taskEdit.clientId,
-      idEstado: taskEdit.status,
+      idEstado: taskEdit.idStatus,
       advance: taskEdit.advance,
       id: taskEdit.id,
       fecha: moment(taskEdit.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"),
