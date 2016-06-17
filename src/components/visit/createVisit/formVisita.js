@@ -16,6 +16,7 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
+import RaitingInternal from '../../clientInformation/ratingInternal';
 import {consultParameterServer, createVisti} from '../actions';
 import SweetAlert from 'sweetalert-react';
 import {downloadFilesPdf} from '../../clientInformation/actions';
@@ -315,6 +316,9 @@ class FormVisita extends Component{
                 <span style={{borderRadius: "2px", fontSize: "15px", height: "30px", display: "inline !important", textTransform: "none !important", marginLeft: "10px", backgroundColor: "#3498db"}}
                   className="label label-important bounceIn animated aec-normal" >AEC: No aplica</span>
               }
+              <div style={{width: "150px", display: "inline-flex"}}>
+                <span style={{marginLeft: "10px"}}><RaitingInternal valueRaiting={infoClient.internalRatingKey}/></span>
+              </div>
             </div>
           </div>
         </header>

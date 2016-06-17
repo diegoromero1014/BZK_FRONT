@@ -5,3 +5,10 @@ export function toggleMenu() {
         type: actions.TOGGLE_MENU
     }
 }
+
+export function updateTitleNavBar(title){
+  return {
+    type: actions.UPDATE_TITLE_NAV_BAR,
+    newTitle: title
+  }
+}

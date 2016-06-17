@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {consultInfoClient} from './actions';
 import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
+import {updateTitleNavBar} from '../navBar/actions';
 import $ from 'jquery';
 
 class ComponentClientInformation extends Component{
@@ -15,6 +16,8 @@ class ComponentClientInformation extends Component{
 
   componentWillMount(){
     $(window).scrollTop(0);
+    const {updateTitleNavBar} = this.props;
+    updateTitleNavBar("Mis clientes");
   }
 
   render(){
@@ -94,13 +97,15 @@ class ComponentClientInformation extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    consultInfoClient
+    consultInfoClient,
+    updateTitleNavBar
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion},ownerProps) {
+function mapStateToProps({clientInformacion, navBar},ownerProps) {
   return {
-    clientInformacion
+    clientInformacion,
+    navBar
   };
 }
 
