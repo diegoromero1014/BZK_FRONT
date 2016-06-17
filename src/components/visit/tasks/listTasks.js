@@ -86,7 +86,6 @@ class ListTasks extends Component {
   }
 
   _viewDetailsTask(taskDetails){
-    console.log("taskDetails", taskDetails);
     var actions = {
       actionView: true,
       task: taskDetails,

@@ -130,7 +130,6 @@ class FormEdit extends Component{
         typeVisitError: "Debe seleccionar una opción"
       });
     }
-    console.log("this.state.dateVisit", this.state.dateVisit);
     if(this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "" ){
       errorInForm = true;
       this.setState({
@@ -145,7 +144,6 @@ class FormEdit extends Component{
       var dataClient = [], dataBanco = [], dataOthers = [];
 
       _.forEach(participants.toArray(), function(value, key) {
-        console.log("value", value);
         if(_.isEqual(value.tipoParticipante, 'client')){
           var contactParticipantCliente = null;
           if(value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined){
@@ -662,7 +660,6 @@ function mapDispatchToProps(dispatch){
 
 function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
-    console.log("detailVisit", detailVisit);
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
       var createdTimestamp = detailVisit.data.createdTimestamp;

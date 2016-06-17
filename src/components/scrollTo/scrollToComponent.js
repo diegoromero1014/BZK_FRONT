@@ -24,7 +24,6 @@ export const ScrollTo = Child => class extends Component {
 
       render() {
           const {child, children} = this.props;
-          console.log(this.state);
           return (
             <div ref="scrollComp">
               <Child scrollTo={this.scrollTo} {...this.props} coords={...this.state}/>
