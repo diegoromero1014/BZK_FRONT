@@ -8,6 +8,7 @@ import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import {createPendingTaskNew} from './actions.js';
+import {clearUserTaskOrder,clearUserTaskCreate,tasksByClientFindServer} from '../actions.js';
 import InputComponent from '../../../ui/input/inputComponent';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -74,13 +75,12 @@ class ModalComponentPendingTask extends Component {
   }
 
   _closeCreate(){
-    const{isOpen} = this.props;
-    //clearSearchContact();
+    const{isOpen,clearUserTaskOrder,clearUserTaskCreate} = this.props;
     this.props.resetForm();
     this.setState({showEx: false});
     isOpen();
-    //clearContactOrder();
-    //clearContactCreate();
+    clearUserTaskOrder();
+    clearUserTaskCreate();
   }
 
   updateKeyValueUsersBanco(e){
@@ -116,7 +116,7 @@ class ModalComponentPendingTask extends Component {
   }
 
   _handleCreatePendingTask(){
-    const {createPendingTaskNew} = this.props;
+    const {createPendingTaskNew,tasksByClientFindServer} = this.props;
     const {fields:{responsable, fecha,idEmployee, idEstado, tarea, advance},handleSubmit,error}= this.props;
     var messageBody = {
       "clientId": window.localStorage.getItem('idClientSelected'),
@@ -130,6 +130,7 @@ class ModalComponentPendingTask extends Component {
     createPendingTaskNew(messageBody).then((data) => {
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({showEx: true});
+            tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
           } else {
             this.setState({showEr: true});
         }
@@ -251,7 +252,10 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     filterUsersBanco,
     createPendingTaskNew,
-    getMasterDataFields
+    getMasterDataFields,
+    clearUserTaskOrder,
+    tasksByClientFindServer,
+    clearUserTaskCreate
   }, dispatch);
 }
 
