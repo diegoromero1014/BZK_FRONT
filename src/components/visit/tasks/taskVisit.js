@@ -6,6 +6,9 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {deleteTask, clearTasks} from './actions';
 import ListTasks from './listTasks';
 
+const titleHelpTask = "En esta sección se podrán registrar las tareas que quedaron de la reunión.\n" +
+        "Estas quedarán automáticamente creadas en la pestaña de tareas y desde allí se deberá " +
+        " hacer el seguimiento de las mismas, registrar las observaciones y el estado (pendiente, cerrada, cancelada).";
 class TaskVisit extends Component{
 
   constructor(props) {
@@ -30,7 +33,7 @@ class TaskVisit extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "0px", marginBottom: "5px"}}>
               <i className="browser icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Pendientes </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleHelpTask}/>
             </div>
           </Col>
         </Row>
