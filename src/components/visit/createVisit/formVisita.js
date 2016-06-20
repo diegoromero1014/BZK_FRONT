@@ -30,6 +30,40 @@ var titleMessage = "";
 var message = "";
 var typeButtonClick;
 
+const titleConslusionsVisit = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
+    " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
+    "Si en la visita se presentó una propuesta de negocio al cliente, se deberá indicar ¿qué tan real es el " +
+    " interés del cliente en nuestra propuesta? Para dar respuesta a esta pregunta tenga en cuenta las " +
+    " dimensiones del “Mapa de Proceso de Compra del Cliente”, utilícelo como una herramienta de chequeo " +
+    " (ver pdf).";
+
+const titleOthersParticipants ="En esta sección se podrán ingresar los otros participantes que asistieron a la " +
+    " reunión, tanto participantes por parte del Grupo Bancolombia como del cliente.\n" +
+    "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
+    " y haga clic en el botón  “+ agregar participante”.";
+
+const titleBancParticipants = "En esta sección se podrán adicionar como “participantes en la reunión " +
+    "por parte del cliente” a personas que estén creadas como usuarios en Biztrack.\n\n" +
+    "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
+    "“Otros participantes en la reunión”.";
+
+const titleClientParticipants = "En esta sección se podrán adicionar como “participantes en la reunión por parte del cliente” a personas que estén creadas como contactos del cliente en Biztrack.\n" +
+    "Si desea adicionar un participante y que este no quede como contacto del cliente en Biztrack haga uso de la sección “Otros participantes en la reunión”.\n\n" +
+    "Agregar un participante en la reunión por parte del cliente:\n\n" +
+    "1. Haga clic en la campo “Nombre” e ingrese el nombre del contacto.\n" +
+    "2. Seleccione el contacto que desea registrar como participante.\n" +
+    "3. Haga clic en el botón “+ agregar participante”.\n\n" +
+    "Nota:\n" +
+    "Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n\n" +
+    "1. Guardar como borrador el informe de visita.\n" +
+    "2. Ir la pestaña de “contactos” y completar estos campos en el contacto.\n" +
+    "3. Retomar la edición del informe de visita y agregar el contacto.\n" +
+    "3. Retomar la edición del informe de visita y agregar el contacto.\n\n" +
+    "Crear un contacto:\n" +
+    "Si desea crear un contacto para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos obligatorios, no olvide los campos “cargo”, “estilo social” y “actitud frente al grupo”.\n" +
+    "Por último, repita los 3 pasos mencionados para agregar participante.\n" +
+    "El contacto quedará creado en la base de contactos de Biztrack.";
+
 const validate = values => {
   var errors = {};
     return errors;
@@ -48,7 +82,9 @@ class FormVisita extends Component{
       showConfirm: false,
       activeItemTabBanc: '',
       activeItemTabClient: 'active',
-      activeItemTabOther: ''
+      activeItemTabOther: '',
+      conclusionsVisit: "",
+      conclusionsVisitError: null,
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButtonPublished = this._onClickButtonPublished.bind(this);
@@ -60,6 +96,7 @@ class FormVisita extends Component{
     this._changeDateVisit = this._changeDateVisit.bind(this);
     this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
     this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
+    this._changeConclusionsVisit = this._changeConclusionsVisit.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -117,6 +154,12 @@ class FormVisita extends Component{
       errorInForm = true;
       this.setState({
         dateVisitError: "Debe seleccionar una opción"
+      });
+    }
+    if( this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        conclusionsVisitError: "Debe ingresar un valor"
       });
     }
 
@@ -191,7 +234,7 @@ class FormVisita extends Component{
           "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
           "userTasks": tareas,
-          "comments": desarrolloGeneral.value,
+          "comments": this.state.conclusionsVisit,
           "visitType": this.state.typeVisit,
           "documentStatus": typeButtonClick
         }
@@ -248,6 +291,14 @@ class FormVisita extends Component{
     this.setState({
       dateVisit: value,
       dateVisitError: null
+    });
+  }
+
+  _changeConclusionsVisit(value){
+    console.log("value", value.target.value);
+    this.setState({
+      conclusionsVisit: value.target.value,
+      conclusionsVisitError: null
     });
   }
 
@@ -376,15 +427,15 @@ class FormVisita extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleClientParticipants}/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleBancParticipants}/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleOthersParticipants}/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -405,7 +456,7 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleConslusionsVisit}/>
               <i onClick={this._downloadFileShoppingMap}
                 style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
                 title="Descargar pdf mapa de compras"
@@ -416,10 +467,13 @@ class FormVisita extends Component{
         <Row style={{padding: "0px 10px 10px 20px"}}>
         <Col xs={12} md={12} lg={12}>
           <Textarea
-            {...desarrolloGeneral}
             name="desarrolloGeneral"
             type="text"
             max="3500"
+            value={this.state.conclusionsVisit}
+            touched={true}
+            error={this.state.conclusionsVisitError}
+            onChange={val => this._changeConclusionsVisit(val)}
             title="La longitud máxima de caracteres es de 3500"
             style={{width: '100%', height: '178px'}}
           />
