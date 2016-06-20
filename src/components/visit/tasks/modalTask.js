@@ -243,7 +243,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
-  console.log("modal", taskEdit);
   if(taskEdit !== undefined){
     return {
       participants,

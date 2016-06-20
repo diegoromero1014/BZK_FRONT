@@ -238,7 +238,6 @@ class FormVisita extends Component{
   }
 
   _changeTypeVisit(value){
-    console.log("Type visit", value);
     this.setState({
       typeVisit: value,
       typeVisitError: null

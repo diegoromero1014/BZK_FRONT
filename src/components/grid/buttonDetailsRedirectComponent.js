@@ -1,8 +1,8 @@
-import React, {
-  Component,
-  PropTypes
-} from 'react';
+import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
+import {updateTitleNavBar} from '../navBar/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -12,8 +12,9 @@ class ButtonDetailsRedirectComponent extends Component {
   }
 
   _detailVisit(){
-      const {actionsRedirect} = this.props;
-      redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+    const {actionsRedirect, updateTitleNavBar} = this.props;
+    updateTitleNavBar("Informe de visita/reunión");
+    redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }
 
   render(){
@@ -30,5 +31,16 @@ ButtonDetailsRedirectComponent.propTypes = {
   actionsRedirect: PropTypes.object
 };
 
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    updateTitleNavBar
+  }, dispatch);
+}
 
-export default ButtonDetailsRedirectComponent;
+function mapStateToProps({navBar}, ownerProps){
+    return {
+        navBar
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonDetailsRedirectComponent);

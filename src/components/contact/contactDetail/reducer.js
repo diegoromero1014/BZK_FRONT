@@ -10,7 +10,6 @@ export default (state = initialContactDetail, action) => {
         case GET_CONTACT_DETAILS:
         	const response = action.payload.data;
             return state.withMutations(map => {
-                // console.log('Respuesta del reducer -> ');
                 map.set('contactDetailList', JSON.parse(response.contactDetail));
             });
             break;
