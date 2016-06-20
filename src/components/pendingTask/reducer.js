@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN_TASK, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
+import {CLEAR_USER_TASK_CREATE,CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN_TASK, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -37,6 +37,12 @@ export default (state = initialState, action) => {
               .set('columnTask',"c.closingDate");
           });
           case CLEAR_USER_TASK_PAGINATOR:
+          return state.withMutations(map => {
+              map
+              .set('page', 1)
+              .set('limInf', 0)
+          });
+          case CLEAR_USER_TASK_CREATE:
           return state.withMutations(map => {
               map
               .set('page', 1)
