@@ -138,9 +138,6 @@ class FormEdit extends Component{
     }
 
     if(!errorInForm){
-    //  var participantsBanco = _.filter(participants.toArray(), ['tipoParticipante', 'banco']);
-
-    //_.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector')
       var dataClient = [], dataBanco = [], dataOthers = [];
 
       _.forEach(participants.toArray(), function(value, key) {
@@ -176,35 +173,7 @@ class FormEdit extends Component{
         }
       });
 
-      if(dataBanco.length > 0){
-        /*var dataClient = _.map(participants.toArray(),
-          function(participant){
-            if(_.isEqual(participant.tipoParticipante, 'client')){
-              return _.assign({}, {
-                "id": null,
-                "contact": participant.idParticipante
-              });
-            }
-          }
-        );
-        if( dataClient.length > 0 && dataClient[0] === undefined ){
-          dataClient = [];
-        }
-        var dataOthers = _.map(participants.toArray(),
-          function(participant){
-            if(_.isEqual(participant.tipoParticipante, 'other') ){
-              return _.assign({}, {
-                "id": null,
-                "name": participant.nombreParticipante,
-                "position": participant.cargo,
-                "company": participant.empresa
-              });
-            }
-          }
-        );
-        if( dataOthers.length > 0 && dataOthers[0] === undefined ){
-          dataOthers = [];
-        }*/
+      if(dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT){
         var tareas = [];
         _.map(tasks.toArray(),
           function(task){
@@ -382,7 +351,8 @@ class FormEdit extends Component{
 
     consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
       if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
-        dateVisitLastReview = moment(JSON.parse(data.payload.data.parameter).value, "YYYY/DD/MM").locale('es').format("DD MMMM YYYY");
+        dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
+        dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
       }
     }, (reason) =>{
     });
@@ -391,6 +361,7 @@ class FormEdit extends Component{
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
     selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
+    const ownerDraft = visitReducer.get('ownerDraft');
     const detailVisit = visitReducer.get('detailVisit');
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
@@ -592,13 +563,13 @@ class FormEdit extends Component{
         <Row>
           <Col xs={12} md={12} lg={12}>
             <div style={{textAlign:"left", marginTop:"20px", marginBottom:"20px", marginLeft:"20px", color: "#818282"}}>
-            <h4 className="form-item" style={{color: "#818282"}}>Fecha última revisión formato visita: <span style={{color: "#818282"}}>{dateVisitLastReview}</span></h4>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{dateVisitLastReview}</span>
             </div>
           </Col>
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>

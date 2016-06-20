@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT,PDF} from './constants';
+  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT, PDF, OWNER_DRAFT} from './constants';
 import axios from 'axios';
 
 export function createVisti(jsonVisit){
@@ -122,7 +122,6 @@ export function clearVisitOrder(){
   };
 }
 
-
 export function orderColumnVisit(orderVisit,columnVisit){
   return {
     type: ORDER_COLUMN_VISIT,
@@ -155,4 +154,11 @@ export function detailVisit(idVisit){
     type: GET_DETAIL_VISIT,
     payload: request
   }
+}
+
+export function changeOwnerDraft(ownerDraft){
+  return {
+    type: OWNER_DRAFT,
+    ownerDraft: ownerDraft
+  };
 }
