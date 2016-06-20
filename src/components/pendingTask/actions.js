@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN_TASK, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
+import {CLEAR_USER_TASK_CREATE,CLEAR_USER_TASK_ORDER, CLEAR_USER_TASK_CREAR, ORDER_COLUMN_TASK, GET_USER_TASK_LIST_CLIENT, CHANGE_KEYWORD_USERTASK, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK, CLEAR_USER_TASK_PAGINATOR} from './constants';
 import axios from 'axios';
 
 export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder, order,status) {
@@ -65,6 +65,12 @@ export function clearUserTaskPaginator() {
 export function clearUserTaskOrder() {
     return {
         type: CLEAR_USER_TASK_ORDER
+    };
+}
+
+export function clearUserTaskCreate() {
+    return {
+        type: CLEAR_USER_TASK_CREATE
     };
 }
 

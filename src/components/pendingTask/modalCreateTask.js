@@ -131,6 +131,7 @@ class ModalCreateTask extends Component{
       "employeeName": responsable.value,
       "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
     }
+    console.log("messageBody", messageBody);
     createPendingTaskNew(messageBody).then((data) => {
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({taskEdited: true});
@@ -289,14 +290,12 @@ function mapDispatchToProps(dispatch){
 }
 
 function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdit}){
-  console.log("taskEdit", taskEdit);
   return {
     tasksByClient,
     selectsReducer,
     participants,
     initialValues: {
       responsable: taskEdit.responsable,
-      idEmployee: taskEdit.clientId,
       idEstado: taskEdit.idStatus,
       advance: taskEdit.advance,
       id: taskEdit.id,
