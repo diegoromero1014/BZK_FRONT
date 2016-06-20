@@ -89,7 +89,7 @@ class ListParticipantesCliente extends Component {
   render() {
     this._getValuesParticipantClient();
     return (
-      <div className="ui divided selection list" style={{paddingRight: '23px', height: "240px", overflow: 'scroll'}}>
+      <div className="ui divided selection list" style={{paddingRight: '23px', height: "160px", overflow: 'scroll'}}>
         {arrayValueClient.map(this._mapValuesData)}
         <SweetAlert
           type= "warning"

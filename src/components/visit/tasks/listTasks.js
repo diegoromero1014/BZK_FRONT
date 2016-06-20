@@ -137,7 +137,7 @@ class ListTasks extends Component {
                     <th></th>
                     <th>Responsable</th>
                     <th>Fecha de cierre</th>
-                    <th>Descripción</th>
+                    <th>Tarea</th>
                     <th></th>
                   </tr>
                 </thead>

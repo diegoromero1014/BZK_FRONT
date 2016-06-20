@@ -93,7 +93,7 @@ class ListParticipantesOtros extends Component {
   render() {
     this._getValuesParticipantOther();
     return (
-      <div className="ui divided selection list" style={{paddingRight: '23px', height: "240px", overflow: 'scroll'}}>
+      <div className="ui divided selection list" style={{paddingRight: '23px', height: "160px", overflow: 'scroll'}}>
         {arrayValueOther.map(this._mapValuesData)}
         <SweetAlert
           type= "warning"
