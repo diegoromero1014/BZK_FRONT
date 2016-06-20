@@ -18,7 +18,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit"];
+const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateVisit"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
@@ -144,7 +144,7 @@ class ModalCreateTask extends Component{
   }
 
   render(){
-    const {fields: {responsable, fecha, idEstado, tarea, advance},
+    const {fields: {responsable, fecha, idEstado, tarea, advance, dateVisit},
         taskEdit, selectsReducer, handleSubmit} = this.props;
     return  (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
@@ -238,18 +238,27 @@ class ModalCreateTask extends Component{
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          <Row xs={12} md={12} lg={12}>
-            <Col xs={6} md={10} lg={10} style={{textAlign:"left", varticalAlign: "middle", marginLeft:"0px"}}>
-                <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>dsfdsfdsfdsf</span>
-            </Col>
-            <Col xs={6} md={2} lg={2}>
-              <button
-                type="submit"
-                className="btn btn-primary modal-button-edit"
-                disabled={this.state.isEditable ? '' : 'disabled'}
-                >{'Guardar'}</button>
-            </Col>
-          </Row>
+
+          {dateVisit.value !== null ?
+            <Row xs={12} md={12} lg={12}>
+              <Col xs={6} md={10} lg={10} style={{textAlign:"left", varticalAlign: "middle", marginLeft:"0px"}}>
+                  <span style={{fontWeight: "bold", color: "#818282"}}>Pendiente de la visita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{dateVisit.value}</span>
+              </Col>
+              <Col xs={6} md={2} lg={2}>
+                <button
+                  type="submit"
+                  className="btn btn-primary modal-button-edit"
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                  >{'Guardar'}</button>
+              </Col>
+            </Row>
+            :
+            <button
+              type="submit"
+              className="btn btn-primary modal-button-edit"
+              disabled={this.state.isEditable ? '' : 'disabled'}
+              >{'Guardar'}</button>
+          }
         </div>
         <SweetAlert
           type= "success"
@@ -281,6 +290,7 @@ function mapDispatchToProps(dispatch){
 }
 
 function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdit}){
+  console.log("taskEdit", taskEdit);
   return {
     tasksByClient,
     selectsReducer,
@@ -292,7 +302,8 @@ function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdi
       advance: taskEdit.advance,
       id: taskEdit.id,
       fecha: moment(taskEdit.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"),
-      tarea : taskEdit.task
+      tarea : taskEdit.task,
+      dateVisit : taskEdit.dateVisit === null ? null :  moment(taskEdit.dateVisit, 'YYYY-MM-DD HH:mm:ss').format("DD MMM YYYY hh:mm a")
     }
   }
 }
