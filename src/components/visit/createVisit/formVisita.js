@@ -372,7 +372,7 @@ class FormVisita extends Component{
             </div>
           </div>
         </header>
-        <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+        <span style={{marginLeft: "20px"}}>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -382,7 +382,7 @@ class FormVisita extends Component{
             </div>
           </Col>
         </Row>
-        <Row style={{padding: "0px 10px 20px 20px"}}>
+        <Row style={{padding: "0px 23px 20px 20px"}}>
           <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
             <dt>
               <span>Tipo de reunión (</span><span style={{color: "red"}}>*</span>)
@@ -422,7 +422,7 @@ class FormVisita extends Component{
           </Col>
         </Row>
 
-        <Row style={{padding: "20px 10px 10px 20px", paddingRight: '23px'}}>
+        <Row style={{padding: "20px 23px 20px 20px"}}>
           <Col xs>
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
@@ -450,10 +450,10 @@ class FormVisita extends Component{
           </Col>
         </Row>
 
-        <Row style={{padding: "30px 10px 20px 20px"}}>
+        <Row style={{padding: "20px 23px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
+              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleConslusionsVisit}/>
@@ -464,7 +464,7 @@ class FormVisita extends Component{
             </div>
           </Col>
         </Row>
-        <Row style={{padding: "0px 10px 10px 20px"}}>
+        <Row style={{padding: "0px 23px 20px 20px"}}>
         <Col xs={12} md={12} lg={12}>
           <Textarea
             name="desarrolloGeneral"

@@ -122,7 +122,7 @@ class ListTasks extends Component {
     const {tasks, disabled} = this.props;
     const modalTitle = 'Pendiente Detalle';
     return (
-      <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial',marginLeft:'20px',marginRight: '25px',marginTop: '20px'}}>
+      <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         {disabled === '' || disabled === undefined ?
         <Row xs={12} md={12} lg={12}>
           <BotonCreateTaskComponent/>

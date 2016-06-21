@@ -79,6 +79,8 @@ class ListPendingTaskComponent extends Component {
           "clientContactId": value.idClientContact
         }
       };
+      var task = value.task;
+      _.set(value,'tasks',task.length > 50 ? task.substring(0, 50) + "..." : task);
       _.set(value, 'actions',  {
         actionView: true,
         id: value,
@@ -103,6 +105,10 @@ class ListPendingTaskComponent extends Component {
       {
         title: "",
         key:"actions"
+      },
+      {
+        title: "Tarea",
+        key:"tasks"
       },
       {
         title: "Responsable",
