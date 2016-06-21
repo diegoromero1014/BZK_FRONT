@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
+import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED,  TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {consultParameterServer, createVisti} from '../actions';
 import SweetAlert from 'sweetalert-react';
@@ -29,40 +29,6 @@ var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;
-
-const titleConslusionsVisit = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
-    " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
-    "Si en la visita se presentó una propuesta de negocio al cliente, se deberá indicar ¿qué tan real es el " +
-    " interés del cliente en nuestra propuesta? Para dar respuesta a esta pregunta tenga en cuenta las " +
-    " dimensiones del “Mapa de Proceso de Compra del Cliente”, utilícelo como una herramienta de chequeo " +
-    " (ver pdf).";
-
-const titleOthersParticipants ="En esta sección se podrán ingresar los otros participantes que asistieron a la " +
-    " reunión, tanto participantes por parte del Grupo Bancolombia como del cliente.\n" +
-    "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
-    " y haga clic en el botón  “+ agregar participante”.";
-
-const titleBancParticipants = "En esta sección se podrán adicionar como “participantes en la reunión " +
-    "por parte del cliente” a personas que estén creadas como usuarios en Biztrack.\n\n" +
-    "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
-    "“Otros participantes en la reunión”.";
-
-const titleClientParticipants = "En esta sección se podrán adicionar como “participantes en la reunión por parte del cliente” a personas que estén creadas como contactos del cliente en Biztrack.\n" +
-    "Si desea adicionar un participante y que este no quede como contacto del cliente en Biztrack haga uso de la sección “Otros participantes en la reunión”.\n\n" +
-    "Agregar un participante en la reunión por parte del cliente:\n\n" +
-    "1. Haga clic en la campo “Nombre” e ingrese el nombre del contacto.\n" +
-    "2. Seleccione el contacto que desea registrar como participante.\n" +
-    "3. Haga clic en el botón “+ agregar participante”.\n\n" +
-    "Nota:\n" +
-    "Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n\n" +
-    "1. Guardar como borrador el informe de visita.\n" +
-    "2. Ir la pestaña de “contactos” y completar estos campos en el contacto.\n" +
-    "3. Retomar la edición del informe de visita y agregar el contacto.\n" +
-    "3. Retomar la edición del informe de visita y agregar el contacto.\n\n" +
-    "Crear un contacto:\n" +
-    "Si desea crear un contacto para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos obligatorios, no olvide los campos “cargo”, “estilo social” y “actitud frente al grupo”.\n" +
-    "Por último, repita los 3 pasos mencionados para agregar participante.\n" +
-    "El contacto quedará creado en la base de contactos de Biztrack.";
 
 const validate = values => {
   var errors = {};
@@ -427,15 +393,15 @@ class FormVisita extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleClientParticipants}/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_CLIENT_PARTICIPANTS}/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleBancParticipants}/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_BANC_PARTICIPANTS}/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={titleOthersParticipants}/>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_OTHERS_PARTICIPANTS}/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -456,7 +422,7 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleConslusionsVisit}/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={TITLE_CONCLUSIONS_VISIT}/>
               <i onClick={this._downloadFileShoppingMap}
                 style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
                 title="Descargar pdf mapa de compras"

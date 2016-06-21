@@ -16,7 +16,7 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import RaitingInternal from '../../clientInformation/ratingInternal';
-import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED} from '../constants';
+import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {addTask} from '../tasks/actions';
@@ -47,7 +47,9 @@ class FormEdit extends Component{
       isEditable: false,
       activeItemTabBanc: '',
       activeItemTabClient: 'active',
-      activeItemTabOther: ''
+      activeItemTabOther: '',
+      conclusionsVisit: "",
+      conclusionsVisitError: null,
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._onClickButton = this._onClickButton.bind(this);
@@ -60,6 +62,7 @@ class FormEdit extends Component{
     this._changeDateVisit = this._changeDateVisit.bind(this);
     this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
     this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
+    this._changeConclusionsVisit = this._changeConclusionsVisit.bind(this);
   }
 
   _editVisit() {
@@ -136,6 +139,12 @@ class FormEdit extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
+    if( this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "" ){
+      errorInForm = true;
+      this.setState({
+        conclusionsVisitError: "Debe ingresar un valor"
+      });
+    }
 
     if(!errorInForm){
       var dataClient = [], dataBanco = [], dataOthers = [];
@@ -195,7 +204,7 @@ class FormEdit extends Component{
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers === 0 ? null : dataOthers,
-          "comments": desarrolloGeneral.value,
+          "comments": this.state.conclusionsVisit,
           "visitType": this.state.typeVisit,
           "userTasks": tareas,
           "documentStatus": typeButtonClick
@@ -263,6 +272,13 @@ class FormEdit extends Component{
     }
   }
 
+  _changeConclusionsVisit(value){
+    this.setState({
+      conclusionsVisit: value.target.value,
+      conclusionsVisitError: null
+    });
+  }
+
   componentWillMount(){
     const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
     this.setState({idVisit : id});
@@ -273,7 +289,8 @@ class FormEdit extends Component{
 
       this.setState({
         typeVisit: part.visitType,
-        dateVisit: moment(part.visitTime, "x").format('DD/MM/YYYY HH:mm')
+        dateVisit: moment(part.visitTime, "x").format('DD/MM/YYYY HH:mm'),
+        conclusionsVisit: part.comments
       });
 
       //Adicionar participantes por parte del cliente
@@ -478,15 +495,15 @@ class FormEdit extends Component{
             <div className="ui top attached tabular menu">
               <a className={`${this.state.activeItemTabClient} item`}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_CLIENT_PARTICIPANTS}/>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_BANC_PARTICIPANTS}/>
               </a>
               <a className={`${this.state.activeItemTabOther} item`}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+                <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_OTHERS_PARTICIPANTS}/>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -506,7 +523,7 @@ class FormEdit extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={TITLE_CONCLUSIONS_VISIT}/>
               <i onClick={this._downloadFileShoppingMap}
                 style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
                 title="Descargar pdf mapa de compras"
@@ -517,10 +534,13 @@ class FormEdit extends Component{
           <Row style={{padding: "0px 23px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <Textarea
-              {...desarrolloGeneral}
               name="desarrolloGeneral"
               type="text"
               max="3500"
+              value={this.state.conclusionsVisit}
+              touched={true}
+              error={this.state.conclusionsVisitError}
+              onChange={val => this._changeConclusionsVisit(val)}
               title="La longitud máxima de caracteres es de 3500"
               style={{width: '100%', height: '178px'}}
               disabled={this.state.isEditable ? '' : 'disabled'}
