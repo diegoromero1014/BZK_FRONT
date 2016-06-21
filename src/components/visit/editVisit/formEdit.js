@@ -299,10 +299,10 @@ class FormEdit extends Component{
           cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
           : ' - ' + value.contactPositionName,
           empresa: '',
-          estiloSocial: value.socialStyle === null || value.socialStyle === undefined || value.socialStyle === '' ? ''
-          : ' - ' + value.socialStyle,
-          actitudBanco: value.attitudeOverGroup === null || value.attitudeOverGroup === undefined || value.attitudeOverGroup === '' ? ''
-          : ' - ' + value.attitudeOverGroup,
+          estiloSocial: value.socialStyleName === null || value.socialStyleName === undefined || value.socialStyleName === '' ? ''
+          : ' - ' + value.socialStyleName,
+          actitudBanco: value.attitudeOverGroupName === null || value.attitudeOverGroupName === undefined || value.attitudeOverGroupName === '' ? ''
+          : ' - ' + value.attitudeOverGroupName,
           fecha: Date.now(),
           uuid,
         }
