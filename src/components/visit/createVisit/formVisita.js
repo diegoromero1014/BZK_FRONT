@@ -122,12 +122,6 @@ class FormVisita extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
-    if( this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "" ){
-      errorInForm = true;
-      this.setState({
-        conclusionsVisitError: "Debe ingresar un valor"
-      });
-    }
 
     if( !errorInForm ){
       var dataBanco =[];
