@@ -9,6 +9,7 @@ import {visitByClientFindServer,clearVisit} from './actions';
 import ListVisitComponent from './listVisitComponent';
 import PaginationVisitComponent from './paginationVisitComponent';
 import {updateTitleNavBar} from '../navBar/actions';
+import ButtonCreateDownloadVisitModal from './downloadVisits/buttonCreateDownloadVisitModal';
 
 class VisitComponent extends Component {
 
@@ -79,6 +80,7 @@ class VisitComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
+          <ButtonCreateDownloadVisitModal />
        </div>
     );
   }

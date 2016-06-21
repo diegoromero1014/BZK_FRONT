@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT} from './constants';
+import {PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -60,6 +60,8 @@ export default (state = initialState, action) => {
       return state.set('status', "200");
     case OWNER_DRAFT:
       return state.set('ownerDraft', action.ownerDraft);
+    case GET_CSV_VISIT_BY_CLIENT:
+      return state.set('status', "200");
     default:
       return state;
   }

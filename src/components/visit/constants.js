@@ -42,3 +42,4 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 "c. Retomar la edición del informe y agregar el contacto\n\n" +
 "Crear contacto:\n" +
 "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
+export const GET_CSV_VISIT_BY_CLIENT = "GET_CSV_VISIT_BY_CLIENT";
