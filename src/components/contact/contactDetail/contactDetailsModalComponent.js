@@ -10,11 +10,12 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {downloadFileSocialStyle} from '../actions';
+import {downloadFilePDF} from '../actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact, clearClienEdit} from './actions';
 import {contactsByClientFindServer,clearContactOrder,clearContactCreate} from '../actions';
+import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NUMBER_RECORDS} from '../constants';
@@ -150,8 +151,8 @@ class ContactDetailsModalComponent extends Component {
   }
 
   _downloadFileSocialStyle(){
-    const {downloadFileSocialStyle} = this.props;
-    downloadFileSocialStyle();
+    const {downloadFilePDF} = this.props;
+    downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
   }
 
   /* Cambio en los valores */
@@ -821,7 +822,7 @@ function mapDispatchToProps(dispatch) {
     consultListWithParameterUbication,
     contactsByClientFindServer,
     clearClienEdit,
-    downloadFileSocialStyle
+    downloadFilePDF
   }, dispatch);
 }
 

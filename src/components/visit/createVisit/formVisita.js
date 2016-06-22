@@ -16,10 +16,11 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED,  TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
+import {FILE_OPTION_SHOPPING_MAP} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {consultParameterServer, createVisti} from '../actions';
+import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
-import {downloadFilesPdf} from '../../clientInformation/actions';
 import moment from 'moment';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
@@ -272,8 +273,8 @@ class FormVisita extends Component{
   }
 
   _downloadFileShoppingMap(){
-    //const {downloadFilesPdf} = this.props;
-    //downloadFilesPdf("fileShoppingMap");
+    const {downloadFilePdf} = this.props;
+    downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
   }
 
   componentWillMount(){
@@ -498,7 +499,7 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     consultParameterServer,
     createVisti,
-    downloadFilesPdf
+    downloadFilePdf
   }, dispatch);
 }
 

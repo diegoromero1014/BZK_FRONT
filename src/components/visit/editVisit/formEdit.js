@@ -17,8 +17,10 @@ import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
+import {FILE_OPTION_SHOPPING_MAP} from '../../../constantsGlobal';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
+import {downloadFilePdf} from '../../clientInformation/actions';
 import {addTask} from '../tasks/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -73,8 +75,8 @@ class FormEdit extends Component{
   }
 
   _downloadFileShoppingMap(){
-    //const {downloadFilesPdf} = this.props;
-    //downloadFilesPdf("fileShoppingMap");
+    const {downloadFilePdf} = this.props;
+    downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
   }
 
   _clickSeletedTab(tab){
@@ -639,7 +641,8 @@ function mapDispatchToProps(dispatch){
     addParticipant,
     detailVisit,
     filterUsersBanco,
-    addTask
+    addTask,
+    downloadFilePdf
   }, dispatch);
 }
 

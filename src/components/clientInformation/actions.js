@@ -28,8 +28,8 @@ export function consultInfoClient(){
   }
 }
 
-export function downloadFilesPdf(typeFile){
-  window.open(APP_URL + "/downloadFileSocialStyle", '_blank', '');
+export function downloadFilePdf(idFileDownload){
+  window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
 }
 
 export function changeCheckInfoClient(check){

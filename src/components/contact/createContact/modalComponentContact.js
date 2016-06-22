@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {toggleModalContact,createContactNew,searchContact,clearSearchContact} from './actions';
 import {clearContactDelete} from '../actions';
-import {contactsByClientFindServer,clearContactOrder,clearContactCreate, downloadFileSocialStyle} from '../actions'
+import {contactsByClientFindServer,clearContactOrder,clearContactCreate, downloadFilePDF} from '../actions'
 import {NUMBER_RECORDS} from '../constants';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
@@ -18,6 +18,7 @@ import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {consultDataSelect,consultList,consultListWithParameterUbication,getMasterDataFields} from '../../selectsComponent/actions';
+import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {FILTER_CITY,FILTER_PROVINCE,CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP} from '../../selectsComponent/constants';
 
 const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependencia","tipoEstiloSocial","tipoCargo","tipoActitud", "tipoContacto",
@@ -125,8 +126,8 @@ class ModalComponentContact extends Component {
     }
 
     _downloadFileSocialStyle(){
-      const {downloadFileSocialStyle} = this.props;
-      downloadFileSocialStyle();
+      const {downloadFilePDF} = this.props;
+      downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
     }
 
     _close(){
@@ -737,7 +738,7 @@ function mapDispatchToProps(dispatch) {
         clearContactCreate,
         clearContactOrder,
         consultList,
-        downloadFileSocialStyle
+        downloadFilePDF
     }, dispatch);
 }
 
