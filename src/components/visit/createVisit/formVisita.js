@@ -382,19 +382,18 @@ class FormVisita extends Component{
             </dt>
           </Col>
         </Row>
-
         <Row style={{padding: "20px 23px 20px 20px"}}>
           <Col xs>
-            <div className="ui top attached tabular menu">
-              <a className={`${this.state.activeItemTabClient} item`}
+            <div className="ui top attached tabular menu" style={{width:"100%"}}>>
+              <a className={`${this.state.activeItemTabClient} item`} style={{width:"33%"}}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
                 <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_CLIENT_PARTICIPANTS}/>
               </a>
-              <a className={`${this.state.activeItemTabBanc} item`}
+              <a className={`${this.state.activeItemTabBanc} item`} style={{width:"40%"}}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
                 <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_BANC_PARTICIPANTS}/>
               </a>
-              <a className={`${this.state.activeItemTabOther} item`}
+              <a className={`${this.state.activeItemTabOther} item`} style={{width:"27%"}}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
                 <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_OTHERS_PARTICIPANTS}/>
               </a>
