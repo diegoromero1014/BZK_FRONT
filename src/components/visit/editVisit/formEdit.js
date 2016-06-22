@@ -497,7 +497,7 @@ class FormEdit extends Component{
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
                 <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_BANC_PARTICIPANTS}/>
               </a>
-              <a className={`${this.state.activeItemTabOther} item`} style={{width:"27%"}}
+              <a className={`${this.state.activeItemTabOther} item`} style={{width:"26%"}}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
                 <i className="help circle icon blue"style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_OTHERS_PARTICIPANTS}/>
               </a>
