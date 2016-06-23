@@ -30,7 +30,7 @@ class BotonCreateContactComponent extends Component {
   render() {
     const {typeButton} = this.props;
     return (
-          <Col xs={2} sm={2} md={typeButton === 1 ? 4 : 1} lg={typeButton === 1 ? 4 : 1} style={typeButton === 1 ? {marginLeft: '-30px'} : {}}>
+          <Col xs={2} sm={2} md={typeButton === 1 ? 4 : 1} lg={typeButton === 1 ? 4 : 1} style={typeButton === 1 ? {marginRight: '14px'} : {}}>
           { typeButton === 1 ?
             <button className="btn btn-primary" type="button" title="Crear contacto" style={typeButton === 1 ? {marginTop: "20px"} : {float: "right"}} onClick={this.openModal}>
               Crear contacto

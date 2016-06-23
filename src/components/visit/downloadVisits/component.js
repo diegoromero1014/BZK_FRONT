@@ -68,7 +68,7 @@ class DownloadVisits extends Component {
 					</div>
 				</div>
 				<div className="modalBt4-footer modal-footer">
-					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadVisits}>{'Descagar '}<i className="file excel outline icon"></i></button>
+					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadVisits}>{'Descargar '}<i className="file excel outline icon"></i></button>
 				</div>
 			</div>
 		);
