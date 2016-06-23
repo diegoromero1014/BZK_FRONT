@@ -21,24 +21,14 @@ class DownloadVisits extends Component {
 	}
 
 	_checkCheckBox(event) {
-		//console.log('this -> ', this);
-		//console.log('event -> ', event);
-		//event.preventDefault();
-		//console.log('name -> ', event.target.name);
 		if (event.target.name === 'participatingContacts') {
-			console.log('Se cambio el estado de hasParticipatingContacts');
 			this.setState({hasParticipatingContacts: !this.state.hasParticipatingContacts});
-			//event.target.checked = this.state.hasParticipatingContacts ? 'checked' : '';
 		}
 		if (event.target.name === 'participatingEmployees') {
-			console.log('Se cambio el estado de hasParticipatingEmployees');
 			this.setState({hasParticipatingEmployees: !this.state.hasParticipatingEmployees});
-			//event.target.checked = this.state.hasParticipatingEmployees ? 'checked' : '';
 		}
 		if (event.target.name == 'relatedEmployees') {
-			console.log('Se cambio el estado de hasRelatedEmployees');
 			this.setState({hasRelatedEmployees: !this.state.hasRelatedEmployees});
-			//event.target.checked = this.state.hasRelatedEmployees ? 'checked' : '';
 		}
 	}
 

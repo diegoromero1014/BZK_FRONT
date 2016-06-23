@@ -192,11 +192,10 @@ class FormEdit extends Component{
               tareas.push(data);
           }
         );
-
         var visitJson = {
           "id": detailVisit.data.id,
           "client": window.localStorage.getItem('idClientSelected'),
-          "visitTime": moment(this.state.dateVisit, "DD/MM/YYYY HH:mm").format('x'),
+          "visitTime": moment(this.state.dateVisit).format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers === 0 ? null : dataOthers,
@@ -285,7 +284,7 @@ class FormEdit extends Component{
 
       this.setState({
         typeVisit: part.visitType,
-        dateVisit: moment(part.visitTime, "x").format('DD/MM/YYYY HH:mm'),
+        dateVisit: new Date(moment(part.visitTime, "x")),
         conclusionsVisit: part.comments
       });
 

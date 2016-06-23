@@ -13,14 +13,18 @@ class dateTimePickerComponent extends Component {
   }
   _onChange(date, strDate){
     const {onChange, format} = this.props;
-    onChange(moment(strDate, format));
+    onChange(strDate);
   }
 
   render(){
-    const {touched, error, value} = this.props;
+    const {touched, error, value, time} = this.props;
     return (
       <div>
-        <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null: moment(value, "DD/MM/YYYY hh:mm a").toDate()} />
+        { time ?
+          <DateTimePicker {...this.props} />
+          :
+          <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null: moment(value, "DD/MM/YYYY").toDate()}/>
+        }
         {
           touched && error &&
           <div>

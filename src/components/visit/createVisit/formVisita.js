@@ -44,7 +44,7 @@ class FormVisita extends Component{
       showErrorSaveVisit: false,
       typeVisit: "",
       typeVisitError: null,
-      dateVisit: "",
+      dateVisit: new Date(),
       dateVisitError: null,
       showConfirm: false,
       activeItemTabBanc: '',
@@ -190,7 +190,7 @@ class FormVisita extends Component{
         var visitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
-          "visitTime": this.state.dateVisit.format('x'),
+          "visitTime": moment(this.state.dateVisit).format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
           "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
@@ -256,7 +256,6 @@ class FormVisita extends Component{
   }
 
   _changeConclusionsVisit(value){
-    console.log("value", value.target.value);
     this.setState({
       conclusionsVisit: value.target.value,
       conclusionsVisitError: null

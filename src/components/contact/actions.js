@@ -38,7 +38,6 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
 }
 
 export function downloadFilePDF(idFileDownload){
-  console.log("idFileDownload", idFileDownload);
   window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
 }
 

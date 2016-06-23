@@ -18,7 +18,6 @@ export function createPendingTaskNew(json){
       },
       messageBody: json
     }
-    console.log(json);
   var request = axios.post(APP_URL + "/saveUserTask", jsonCreate);
   return {
     type: actions.CREATE_PENDING,
