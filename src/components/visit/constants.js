@@ -28,7 +28,7 @@ export const TITLE_OTHERS_PARTICIPANTS ="En esta sección se podrán ingresar lo
     "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
     " y haga clic en el botón  “+ agregar participante”.";
 export const TITLE_BANC_PARTICIPANTS = "En esta sección se podrán adicionar como “participantes en la reunión " +
-    "por parte del Grupo Bancolombia a personas que estén creadas como usuarios en Biztrack.\n\n" +
+    "por parte del Grupo Bancolombia” a personas que estén creadas como usuarios en Biztrack.\n\n" +
     "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
     "“Otros participantes en la reunión”.";
 export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar como “participantes en la reunión por parte del cliente” a los contactos del cliente en Biztrack. Si desea adicionar un participante y que este no quede como contacto haga uso de la sección “Otros participantes en la reunión”\n\n" +

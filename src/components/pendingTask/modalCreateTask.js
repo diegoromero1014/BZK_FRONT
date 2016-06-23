@@ -221,7 +221,7 @@ class ModalCreateTask extends Component{
             </Row>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={12} lg={12}>
-                <dt><span>Descripción </span></dt>
+                <dt><span>Observaciones</span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <Textarea
                     {...advance}
