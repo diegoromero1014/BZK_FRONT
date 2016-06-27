@@ -319,7 +319,8 @@ class FormEdit extends Component{
           nombreParticipante: value.employeeName,
           cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
           : ' - ' + value.positionName,
-          empresa: '',
+          empresa: value.lineBusinessName === null || value.lineBusinessName === undefined || value.lineBusinessName === '' ? ''
+          : ' - ' + value.lineBusinessName,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
