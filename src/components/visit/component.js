@@ -16,6 +16,7 @@ class VisitComponent extends Component {
   constructor(props){
      super(props);
     this._createVisit = this._createVisit.bind(this);
+    this._createPreVisit = this._createPreVisit.bind(this);
     this.state= {
        value1: ""
     };
@@ -35,6 +36,12 @@ class VisitComponent extends Component {
       const {updateTitleNavBar} = this.props;
       updateTitleNavBar("Informe de visita/reunión");
       redirectUrl("/dashboard/visita");
+  }
+
+  _createPreVisit(){
+      const {updateTitleNavBar} = this.props;
+      updateTitleNavBar("Informe de Previsita");
+      redirectUrl("/dashboard/previsita");
   }
 
   render() {
@@ -60,6 +67,9 @@ class VisitComponent extends Component {
           <Col xs>
           <button className="btn btn-primary" type="button" title="Crear reunión" style={{marginTop: '21px'}} onClick={this._createVisit}>
             <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+          </button>
+          <button className="btn btn-primary" type="button" title="Crear pre" style={{marginTop: '21px'}} onClick={this._createPreVisit}>
+            Crear pre
           </button>
         </Col>
           </Row>

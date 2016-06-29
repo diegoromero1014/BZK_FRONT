@@ -2,9 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../../globalComponents/actions';
-import FormEdit from './formEdit';
+import HeaderPrevisita from '../headerPrevisita';
+import FormEditPrevisita from './formEditPrevisita';
 
-class EditVisit extends Component{
+class EditPrevisit extends Component{
+
+  constructor(props){
+    super(props);
+  }
 
   componentWillMount(){
     const {clientInformacion} = this.props;
@@ -18,7 +23,8 @@ class EditVisit extends Component{
     const {params: {id}} = this.props;
     return(
       <div>
-        <FormEdit id={id}/>
+        <HeaderPrevisita/>
+        <FormEditPrevisita id={2323} />
       </div>
     );
   }
@@ -35,4 +41,4 @@ function mapStateToProps({clientInformacion}, ownerProps){
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditVisit);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPrevisit);

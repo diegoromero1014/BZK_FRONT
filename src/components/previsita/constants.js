@@ -1,0 +1,1 @@
+export const PROPUEST_OF_BUSINESS = 5051323;

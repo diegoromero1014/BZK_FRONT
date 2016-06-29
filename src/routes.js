@@ -12,6 +12,7 @@ import ComponentClientInformation from './components/clientInformation/component
 import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';
 import Previsita from './components/previsita/createPrevisita/createPrevisita';
+import EditPrevisita from './components/previsita/editPrevisit/editPrevisit';
 import Visit from './components/visit/createVisit/createVisit';
 import VisitEdit from './components/visit/editVisit/editVisit';
 import uiTester from './ui/uiTester';
@@ -38,6 +39,7 @@ export default (
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="previsita" component={Previsita}></Route>
+                <Route path="editPrevisita" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
             </Route>

@@ -10,6 +10,8 @@ import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';
 import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
+import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../constantsGlobal';
+import {downloadFilePDF} from '../contact/actions'
 import {NUMBER_CONTACTS} from './constants';
 import _ from 'lodash';
 
@@ -30,6 +32,7 @@ class ParticipantesCliente extends Component{
       this._addParticipantClient = this._addParticipantClient.bind(this);
       this._updateValue = this._updateValue.bind(this);
       this._submitValores = this._submitValores.bind(this);
+      this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
   }
 
   _addParticipantClient() {
@@ -71,6 +74,11 @@ class ParticipantesCliente extends Component{
           showEmptyParticipant: true
         });
       }
+  }
+
+  _downloadFileSocialStyle(){
+    const {downloadFilePDF} = this.props;
+    downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
   }
 
   componentWillMount(){
@@ -155,7 +163,13 @@ class ParticipantesCliente extends Component{
             </Col>
             <Row style={{padding: "5px 10px 0px 10px"}}>
               <Col xs={12} md={6} lg={6}>
-                <dt><span>Estilo social</span></dt>
+                <dt>
+                  <span>Estilo social </span>
+                  <i onClick={this._downloadFileSocialStyle}
+                    style={{marginLeft: "2px", cursor: "pointer", fontSize: "13px"}}
+                    title="Descargar archivo de estilo social"
+                    className="red file pdf outline icon"></i>
+                </dt>
                 <dt>
                   <Input
                     name="estiloSocial"
@@ -223,7 +237,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addParticipant,
         contactsByClientFindServer,
-        clearParticipants
+        clearParticipants,
+        downloadFilePDF
     }, dispatch);
 }
 

@@ -16,6 +16,7 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS} from '../constants';
+import {pdfDescarga} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -37,11 +38,13 @@ const validate = values => {
     return errors;
 };
 
-class FormPrevisita extends Component{
+class FormEditPrevisita extends Component{
 
   constructor(props) {
     super(props);
     this.state = {
+      idPrevisit: "",
+      isEditable: "",
       showErrorSavePreVisit: false,
       typePreVisit: "",
       typePreVisitError: null,
@@ -86,6 +89,20 @@ class FormPrevisita extends Component{
     this._changeImpacto = this._changeImpacto.bind(this);
     this._changeNuevoModo = this._changeNuevoModo.bind(this);
     this._changeNuestraSolucion = this._changeNuestraSolucion.bind(this);
+    this._editPreVisit = this._editPreVisit.bind(this);
+    this._onClickPDF = this._onClickPDF.bind(this);
+  }
+
+  _editPreVisit() {
+    this.setState({
+      showMessage: false,
+      isEditable: !this.state.isEditable
+    });
+  }
+
+  _onClickPDF(){
+    const {pdfDescarga} = this.props;
+    pdfDescarga(window.localStorage.getItem('idClientSelected'),this.state.idVisit);
   }
 
   _closeMessageCreatePreVisit(){
@@ -392,7 +409,9 @@ class FormPrevisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields} = this.props;
+    const {clientInformacion, getMasterDataFields, id, detailPrevisit} = this.props;
+    console.log("id previsita", id);
+    this.setState({idPrevisit : id});
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
@@ -408,7 +427,14 @@ class FormPrevisita extends Component{
     return(
       <form onSubmit={handleSubmit(this._submitCreatePrevisita)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          </Col>
+          <Col xs={2} sm={2} md={2} lg={2}>
+            <button type="button" onClick={this._editPreVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+          </Col>
+        </Row>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -434,6 +460,7 @@ class FormPrevisita extends Component{
               onBlur={() => console.log("")}
               parentId="dashboardComponentScroll"
               data={selectsReducer.get(PREVISIT_TYPE) || []}
+              disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </div>
         </Col>
@@ -450,7 +477,9 @@ class FormPrevisita extends Component{
                 touched={true}
                 error={this.state.datePreVisitError}
                 onChange={val => this._changeDatePreVisit(val)}
-                onBlur={val => this._changeDatePreVisitOnBlur(val)}/>
+                onBlur={val => this._changeDatePreVisitOnBlur(val)}
+                disabled={this.state.isEditable ? '' : 'disabled'}
+              />
             </dt>
           </Col>
           <Col xs={6} md={3} lg={3}>
@@ -461,6 +490,7 @@ class FormPrevisita extends Component{
                 type="text"
                 title="La longitud máxima de caracteres es de 150"
                 max="150"
+                disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
           </Col>
@@ -483,13 +513,13 @@ class FormPrevisita extends Component{
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
-                <ParticipantesCliente />
+                <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'} />
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`} data-tab="second">
-                <ParticipantesBancolombia />
+                <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'} />
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`} data-tab="third">
-                <ParticipantesOtros />
+                <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'} />
             </div>
           </Col>
         </Row>
@@ -515,6 +545,7 @@ class FormPrevisita extends Component{
               onChange={val => this._changeTargetPrevisit(val)}
               title="La longitud máxima de caracteres es de 3500"
               style={{width: '100%', height: '178px'}}
+              disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </Col>
         </Row>
@@ -558,6 +589,7 @@ class FormPrevisita extends Component{
                   nuestraSolucionTouch={this.state.nuestraSolucionTouch}
                   nuestraSolucionError={this.state.nuestraSolucionError}
                   onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
             </Row>
@@ -585,17 +617,21 @@ class FormPrevisita extends Component{
               onChange={val => this._changePendingPrevisit(val)}
               title="La longitud máxima de caracteres es de 3500"
               style={{width: '100%', height: '178px'}}
+              disabled={this.state.isEditable ? '' : 'disabled'}
             />
           </Col>
         </Row>
 
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 250px", position:"fixed"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
+            </button>
+            <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
             </button>
             <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
@@ -634,7 +670,8 @@ class FormPrevisita extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getMasterDataFields
+    getMasterDataFields,
+    pdfDescarga
   }, dispatch);
 }
 
@@ -650,4 +687,4 @@ export default reduxForm({
   form: 'submitValidation',
   fields,
   validate
-}, mapStateToProps, mapDispatchToProps)(FormPrevisita);
+}, mapStateToProps, mapDispatchToProps)(FormEditPrevisita);

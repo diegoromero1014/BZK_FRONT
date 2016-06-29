@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import HeaderPrevisita from './headerPrevisita';
+import HeaderPrevisita from '../headerPrevisita';
 import FormPrevisita from './formPrevisita';
 import {redirectUrl} from '../../globalComponents/actions';
 
@@ -16,8 +16,6 @@ class CreatePrevisita extends Component{
   }
 
   render(){
-    const {clientInformacion} = this.props;
-    const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <div>
         <HeaderPrevisita/>

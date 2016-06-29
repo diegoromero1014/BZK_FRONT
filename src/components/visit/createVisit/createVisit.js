@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../../globalComponents/actions';
-import HeaderPrevisita from '../../previsita/createPrevisita/headerPrevisita';
 import FormVisita from './formVisita';
 
 class CreateVisit extends Component{
@@ -16,8 +15,6 @@ class CreateVisit extends Component{
   }
 
   render(){
-    const {clientInformacion} = this.props;
-    const infoClient = clientInformacion.get('responseClientInfo');
     return(
       <div>
         <FormVisita/>
