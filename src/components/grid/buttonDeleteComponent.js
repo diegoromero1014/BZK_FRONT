@@ -6,7 +6,8 @@ import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
 import {visitByClientFindServer,clearVisitOrder} from '../visit/actions';
-import {DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
+import {clearPrevisit, previsitByClientFindServer} from '../previsita/actions';
+import {DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 
@@ -67,7 +68,7 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {visitByClientFindServer,contactsByClientFindServer,clearVisitOrder,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        const {previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,clearVisitOrder,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
         if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -83,6 +84,9 @@ class ButtonDeleteComponent extends Component{
           }else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
             clearVisitOrder();
               visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
+          }else if (actionsDelete.typeDelete === DELETE_TYPE_PREVISIT){
+            clearPrevisit();
+            previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
           }
       }
       this.setState({showEx:false, showEr: false,show: false});
@@ -138,7 +142,9 @@ function mapDispatchToProps(dispatch) {
     deleteServer,contactsByClientFindServer,clearContactCreate,
     shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
     visitByClientFindServer,
+    previsitByClientFindServer,
     clearVisitOrder,
+    clearPrevisit,
     deleteParticipant,
     deleteTask
   }, dispatch);
