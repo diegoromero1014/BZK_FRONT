@@ -102,4 +102,3 @@ export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
     columnPrevisit: columnPrevisit
   };
 }
->>>>>>> f67a18f7f4e9d70b78fbc4c012c7e24b72f7f8aa
