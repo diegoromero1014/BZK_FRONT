@@ -16,6 +16,7 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS} from '../constants';
+import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -105,7 +106,9 @@ class FormPrevisita extends Component{
   _changeTypePreVisit(value){
     const {selectsReducer} = this.props;
     const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(value)]);
-    valueTypePrevisit = typeSeleted[0].id;
+    if(typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined){
+      valueTypePrevisit = typeSeleted[0].key;
+    }
     this.setState({
       typePreVisit: parseInt(value),
       typePreVisitError: null,
@@ -240,7 +243,7 @@ class FormPrevisita extends Component{
   }
 
   _submitCreatePrevisita(){
-    const { participants } = this.props;
+    const {participants, createPrevisit} = this.props;
     var errorInForm = false;
     if( this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "" ){
       errorInForm = true;
@@ -256,7 +259,7 @@ class FormPrevisita extends Component{
     }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo
-    if( parseInt(valueTypePrevisit) === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED){
+    if( valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED){
       if( this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "" ){
         errorInForm = true;
         this.setState({
@@ -365,21 +368,26 @@ class FormPrevisita extends Component{
         var previsitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
-          "visitTime": moment(this.state.datePreVisit).format('x'),
+          "visitTime": parseInt(moment(this.state.datePreVisit).format('x')),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco.length === 0 ? null : dataBanco,
           "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
-          "targetPrevisit": this.state.targetPrevisit,
-          "visitType": this.state.typePreVisit,
-          "pendingPrevisit": this.state.pendingPrevisit,
-          "acondicionamiento": this.state.acondicionamiento,
-          "replanteamiento": this.state.replanteamiento,
-          "ahogamiento": this.state.ahogamiento,
-          "impacto": this.state.impacto,
-          "nuevoModo": this.state.nuevoModo,
-          "nuestraSolucion": this.state.nuestraSolucion
+          "principalObjective": this.state.targetPrevisit,
+          "documentType": this.state.typePreVisit,
+          "observations": this.state.pendingPrevisit,
+          "conditioning": this.state.acondicionamiento,
+          "rethinking": this.state.replanteamiento,
+          "rationalDrowning": this.state.ahogamiento,
+          "emotionalImpact": this.state.impacto,
+          "newWay": this.state.nuevoModo,
+          "ourSolution": this.state.nuestraSolucion
         }
         console.log("previsitJson", previsitJson);
+        createPrevisit(previsitJson).then((data)=> {
+          console.log("then data", data);
+        }, (reason) =>{
+          console.log("error then data");
+        });
       } else {
         this.setState({showErrorSaveVisit :true});
       }
@@ -519,7 +527,7 @@ class FormPrevisita extends Component{
           </Col>
         </Row>
 
-        {this.state.typePreVisit === PROPUEST_OF_BUSINESS &&
+        {valueTypePrevisit === PROPUEST_OF_BUSINESS &&
           <div>
             <Row style={{padding: "10px 10px 20px 20px"}}>
               <Col xs={12} md={12} lg={12}>
@@ -634,7 +642,8 @@ class FormPrevisita extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getMasterDataFields
+    getMasterDataFields,
+    createPrevisit
   }, dispatch);
 }
 
