@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
 import {changeOwnerDraft} from '../visit/actions';
+import {changeOwnerDraftPrevisit} from '../previsita/actions';
 import {updateTitleNavBar} from '../navBar/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
@@ -13,9 +14,14 @@ class ButtonDetailsRedirectComponent extends Component {
   }
 
   _detailVisit(){
-    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft} = this.props;
-    updateTitleNavBar("Informe de visita/reunión");
-    changeOwnerDraft(actionsRedirect.ownerDraft);
+    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit} = this.props;
+    if( actionsRedirect.typeClickDetail === "visita" ){
+      updateTitleNavBar("Informe de visita/reunión");
+      changeOwnerDraft(actionsRedirect.ownerDraft);
+    } else if( actionsRedirect.typeClickDetail === "previsita" ){
+      updateTitleNavBar("Informe de previsita");
+      changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
+    }
     redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }
 
@@ -38,7 +44,8 @@ ButtonDetailsRedirectComponent.propTypes = {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     updateTitleNavBar,
-    changeOwnerDraft
+    changeOwnerDraft,
+    changeOwnerDraftPrevisit
   }, dispatch);
 }
 

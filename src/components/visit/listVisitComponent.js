@@ -111,7 +111,8 @@ class ListVisitComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              ownerDraft: value.idStatusDocument, 
+              typeClickDetail: "visita",
+              ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });

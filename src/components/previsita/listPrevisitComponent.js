@@ -99,6 +99,7 @@ class ListPrevisitComponent extends Component {
 			_.set(value, 'actionsRedirect', {
 				actionView: true,
 				id: value.id,
+				typeClickDetail: "previsita",
 				ownerDraft: value.idStatusDocument,
 				urlRedirect: '/dashboard/previsitaEditar',
 				component: 'VIEW_PREVISIT'

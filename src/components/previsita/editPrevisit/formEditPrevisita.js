@@ -49,7 +49,6 @@ class FormEditPrevisita extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      idPrevisit: "",
       isEditable: "",
       showErrorSavePreVisit: false,
       typePreVisit: "",
@@ -110,8 +109,8 @@ class FormEditPrevisita extends Component{
   }
 
   _onClickPDF(){
-    const {pdfDescarga} = this.props;
-    pdfDescarga(window.localStorage.getItem('idClientSelected'),this.state.idVisit);
+    const {pdfDescarga, id} = this.props;
+    pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
   }
 
   _closeMessageCreatePreVisit(){
@@ -135,24 +134,12 @@ class FormEditPrevisita extends Component{
     this.setState({
       typePreVisit: parseInt(value),
       typePreVisitError: null,
-      acondicionamiento: "",
       acondicionamientoTouch: false,
-      acondicionamientoError: "",
-      replanteamiento: "",
       replanteamientoTouch: false,
-      replanteamientoError: "",
-      ahogamiento: "",
       ahogamientoTouch: false,
-      ahogamientoError: "",
-      impacto: "",
       impactoTouch: false,
-      impactoError: "",
-      nuevoModo: "",
       nuevoModoTouch: false,
-      nuevoModoError: "",
-      nuestraSolucion: "",
       nuestraSolucionTouch: false,
-      nuestraSolucionError: "",
     });
   }
 
@@ -416,7 +403,6 @@ class FormEditPrevisita extends Component{
         }
         console.log("previsitJson edit", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
-          console.log("then data", data);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -451,7 +437,6 @@ class FormEditPrevisita extends Component{
 
   componentWillMount(){
     const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
-    this.setState({idPrevisit : id});
     valueTypePrevisit = null;
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
@@ -461,7 +446,6 @@ class FormEditPrevisita extends Component{
       detailPrevisit(id).then((result) => {
         const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
         var part = result.payload.data.data;
-        console.log("part prevista", part);
         valueTypePrevisit = part.keyDocumentType;
         this.setState({
           typePreVisit: part.documentType,
@@ -556,6 +540,7 @@ class FormEditPrevisita extends Component{
   render(){
     const { fields:{acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
       clientInformacion, selectsReducer, handleSubmit, previsitReducer} = this.props;
+    const ownerDraft = previsitReducer.get('ownerDraft');
     const detailPrevisit = previsitReducer.get('detailPrevisit');
     if(detailPrevisit !== undefined && detailPrevisit !== null && detailPrevisit !== '' && !_.isEmpty(detailPrevisit)){
       createdBy = detailPrevisit.data.createdByName;
@@ -807,7 +792,7 @@ class FormEditPrevisita extends Component{
 
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+            <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
               <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
             </button>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
@@ -823,10 +808,10 @@ class FormEditPrevisita extends Component{
         </div>
         <SweetAlert
          type="error"
-         show={this.state.showErrorSaveVisit}
+         show={this.state.showErrorSavePreVisit}
          title="Error participantes"
          text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia y otro por parte del cliente."
-         onConfirm={() => this.setState({showErrorSaveVisit:false})}
+         onConfirm={() => this.setState({showErrorSavePreVisit:false})}
          />
         <SweetAlert
          type={typeMessage}

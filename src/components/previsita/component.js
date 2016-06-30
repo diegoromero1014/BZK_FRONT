@@ -10,6 +10,7 @@ import PaginationPreVisitComponent from './paginationPrevisitComponent';
 import {previsitByClientFindServer, clearPrevisit} from './actions';
 import {downloadFilePdf} from '../clientInformation/actions';
 import {FILE_OPTION_PRE_VISIT_GUIDE} from '../../constantsGlobal';
+import {updateTitleNavBar} from '../navBar/actions';
 
 class PrevisitComponent extends Component {
 
@@ -23,7 +24,9 @@ class PrevisitComponent extends Component {
   }
 
   _createPrevisita() {
-      redirectUrl("/dashboard/previsita");
+    const {updateTitleNavBar} = this.props;
+    updateTitleNavBar("Informe de previsita");
+    redirectUrl("/dashboard/previsita");
   }
 
   componentWillMount() {
@@ -89,7 +92,7 @@ class PrevisitComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit, downloadFilePdf
+    previsitByClientFindServer, clearPrevisit, downloadFilePdf, updateTitleNavBar
   }, dispatch);
 }
 

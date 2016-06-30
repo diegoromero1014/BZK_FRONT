@@ -1,11 +1,11 @@
 import {APP_URL} from '../../constantsGlobal';
 import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER,
-  ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT, GET_DETAIL_PREVISIT} from './constants';
+  ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT, GET_DETAIL_PREVISIT, OWNER_DRAFT} from './constants';
 import axios from 'axios';
 import * as constants from './constants';
 
-export function pdfDescarga(idclient, idVisit){
-  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idPreVisit="+idVisit+"&language=es");
+export function pdfDescarga(idclient, idPrevisit){
+  window.open(APP_URL + "/pdfReportPreVisit?idClient="+idclient+"&idPrevisit="+idPrevisit+"&language=es");
 }
 
 export function createPrevisit(jsonVisit){
@@ -93,6 +93,13 @@ export function clearPrevisitPaginator() {
 export function clearPrevisitOrder() {
   return {
     type: CLEAR_PREVISIT_ORDER
+  };
+}
+
+export function changeOwnerDraftPrevisit(ownerDraft){
+  return {
+    type: OWNER_DRAFT,
+    ownerDraft: ownerDraft
   };
 }
 
