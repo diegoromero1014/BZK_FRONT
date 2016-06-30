@@ -452,6 +452,7 @@ class FormEditPrevisita extends Component{
   componentWillMount(){
     const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
     this.setState({idPrevisit : id});
+    valueTypePrevisit = null;
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");

@@ -432,6 +432,7 @@ class FormPrevisita extends Component{
   componentWillMount(){
     const {clientInformacion, getMasterDataFields} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
+    valueTypePrevisit = null;
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
