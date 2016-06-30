@@ -1,4 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
+import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT} from './constants';
 import axios from 'axios';
 import * as constants from './constants';
 
@@ -30,28 +31,75 @@ export function createPrevisit(jsonVisit){
   }
 }
 
-/*export function detailVisit(idVisit){
+export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
-         "id": idVisit
-     }
-  }
+      "clientId": clientId,
+      "groupId":"",
+      "pageNum": pageNum,
+      "maxRows" : maxRows,
+      "columnOrder": columnOrder,
+      "order": order,
+      "statusDocumentId":statusDocumentId
+    }
+  };
 
-  var request = axios.post(APP_URL + "/visitDocumentDetail", json);
-  return{
-    type: GET_DETAIL_VISIT,
+  var request = axios.post(APP_URL + "/listClientPrevisits", json);
+  return {
+    type: GET_PREVISIT_LIST,
     payload: request
-  }
-}*/
+  };
+}
+
+export function changePage(page) {
+  return {
+    type: CHANGE_PAGE,
+    currentPage: page
+  };
+}
+
+export function limitiInf(limInf) {
+  return {
+    type: LIMITE_INF,
+    limInfe: limInf
+  };
+}
+
+export function clearPrevisit() {
+  return {
+    type: CLEAR_PREVISIT
+  };
+}
+
+export function clearPrevisitPaginator() {
+  return {
+    type: CLEAR_PREVISIT_PAGINATOR
+  };
+}
+
+export function clearPrevisitOrder() {
+  return {
+    type: CLEAR_PREVISIT_ORDER
+  };
+}
+
+export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
+  return {
+    type: ORDER_COLUMN_PREVISIT,
+    orderPrevisit: orderPrevisit,
+    columnPrevisit: columnPrevisit
+  };
+}
+>>>>>>> f67a18f7f4e9d70b78fbc4c012c7e24b72f7f8aa

@@ -18,6 +18,7 @@ import deleteGridReducer from '../components/grid/reducer';
 import createContactReducer from '../components/contact/createContact/reducer';
 import createShareholderReducer from '../components/shareholder/createShareholder/reducer';
 import editShareholderReducer from '../components/shareholder/shareholderDetail/reducer';
+import previsitReducer from '../components/previsita/reducer';
 import visitReducer from '../components/visit/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import taskReducer from '../components/visit/tasks/reducer';
@@ -45,6 +46,7 @@ export default combineReducers({
     createContactReducer:createContactReducer,
     createShareholder: createShareholderReducer,
     editShareholderReducer: editShareholderReducer,
+    previsitReducer: previsitReducer,
     visitReducer: visitReducer,
     participants: participantsReducer,
     tasks: taskReducer,
