@@ -143,13 +143,6 @@ class FormPrevisita extends Component{
     });
   }
 
-  _changeLugarPreVisit(value){
-    this.setState({
-      lugarPrevisit: value,
-      lugarPrevisitError: null
-    });
-  }
-
   _changeDatePreVisitOnBlur(value){
     var date = value.target.value;
     if(date === '' || date === undefined || date === null){
@@ -157,6 +150,13 @@ class FormPrevisita extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
+  }
+
+  _changeLugarPreVisit(value){
+    this.setState({
+      lugarPrevisit: value,
+      lugarPrevisitError: null
+    });
   }
 
   _changeTargetPrevisit(value){
@@ -394,7 +394,7 @@ class FormPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
-        console.log("previsitJson", previsitJson);
+        //console.log("previsitJson", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
           console.log("then data", data);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){

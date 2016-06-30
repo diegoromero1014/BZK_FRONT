@@ -10,7 +10,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 let v1 = '';
 
 class ListPrevisitComponent extends Component {
-	
+
 	constructor(props) {
 	  super(props);
 	  this._renderCellView = this._renderCellView.bind(this);
@@ -57,7 +57,7 @@ class ListPrevisitComponent extends Component {
 		return [{
 			title: "",
 			key: "actionsRedirect"
-		}, 
+		},
 		{
 			title: "Tipo de reunión",
 			key: "typePrevisit"
@@ -100,7 +100,7 @@ class ListPrevisitComponent extends Component {
 				actionView: true,
 				id: value.id,
 				ownerDraft: value.idStatusDocument,
-				urlRedirect: '/dashboard/previsitEditar',
+				urlRedirect: '/dashboard/previsitaEditar',
 				component: 'VIEW_PREVISIT'
 			});
 			let datePrevisitFormat = moment(value.datePrevisit).locale('es');

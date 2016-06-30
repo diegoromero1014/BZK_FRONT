@@ -16,7 +16,8 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS} from '../constants';
-import {pdfDescarga} from '../actions';
+import {addParticipant} from '../../participantsVisitPre/actions';
+import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -32,6 +33,11 @@ var titleMessage = "";
 var message = "";
 var typeButtonClick;
 var valueTypePrevisit = null;
+
+var fechaModString = '';
+var fechaCreateString = '';
+var createdBy = '';
+var updatedBy = '';
 
 const validate = values => {
     const errors = {};
@@ -50,6 +56,8 @@ class FormEditPrevisita extends Component{
       typePreVisitError: null,
       datePreVisit: new Date(),
       datePreVisitError: null,
+      lugarPrevisit: "",
+      lugarPrevisitError: false,
       showConfirm: false,
       activeItemTabBanc: '',
       activeItemTabClient: 'active',
@@ -91,6 +99,7 @@ class FormEditPrevisita extends Component{
     this._changeNuestraSolucion = this._changeNuestraSolucion.bind(this);
     this._editPreVisit = this._editPreVisit.bind(this);
     this._onClickPDF = this._onClickPDF.bind(this);
+    this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
   }
 
   _editPreVisit() {
@@ -122,7 +131,7 @@ class FormEditPrevisita extends Component{
   _changeTypePreVisit(value){
     const {selectsReducer} = this.props;
     const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(value)]);
-    valueTypePrevisit = typeSeleted[0].id;
+    valueTypePrevisit = typeSeleted[0].key;
     this.setState({
       typePreVisit: parseInt(value),
       typePreVisitError: null,
@@ -161,6 +170,13 @@ class FormEditPrevisita extends Component{
         dateVisitError: "Debe seleccionar una opción"
       });
     }
+  }
+
+  _changeLugarPreVisit(value){
+    this.setState({
+      lugarPrevisit: value,
+      lugarPrevisitError: null
+    });
   }
 
   _changeTargetPrevisit(value){
@@ -257,7 +273,7 @@ class FormEditPrevisita extends Component{
   }
 
   _submitCreatePrevisita(){
-    const { participants } = this.props;
+    const { participants, createPrevisit, id } = this.props;
     var errorInForm = false;
     if( this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "" ){
       errorInForm = true;
@@ -273,7 +289,7 @@ class FormEditPrevisita extends Component{
     }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo
-    if( parseInt(valueTypePrevisit) === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED){
+    if( valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED){
       if( this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "" ){
         errorInForm = true;
         this.setState({
@@ -380,25 +396,50 @@ class FormEditPrevisita extends Component{
           dataOthers = [];
         }
         var previsitJson = {
-          "id": null,
+          "id": id,
           "client": window.localStorage.getItem('idClientSelected'),
-          "visitTime": moment(this.state.datePreVisit).format('x'),
+          "visitTime": parseInt(moment(this.state.datePreVisit).format('x')),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco.length === 0 ? null : dataBanco,
           "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
-          "targetPrevisit": this.state.targetPrevisit,
-          "visitType": this.state.typePreVisit,
-          "pendingPrevisit": this.state.pendingPrevisit,
-          "acondicionamiento": this.state.acondicionamiento,
-          "replanteamiento": this.state.replanteamiento,
-          "ahogamiento": this.state.ahogamiento,
-          "impacto": this.state.impacto,
-          "nuevoModo": this.state.nuevoModo,
-          "nuestraSolucion": this.state.nuestraSolucion
+          "principalObjective": this.state.targetPrevisit,
+          "documentType": this.state.typePreVisit,
+          "visitLocation": this.state.lugarPrevisit,
+          "observations": this.state.pendingPrevisit,
+          "conditioning": this.state.acondicionamiento,
+          "rethinking": this.state.replanteamiento,
+          "rationalDrowning": this.state.ahogamiento,
+          "emotionalImpact": this.state.impacto,
+          "newWay": this.state.nuevoModo,
+          "ourSolution": this.state.nuestraSolucion,
+          "documentStatus": typeButtonClick
         }
-        console.log("previsitJson", previsitJson);
+        console.log("previsitJson edit", previsitJson);
+        createPrevisit(previsitJson).then((data)=> {
+          console.log("then data", data);
+          if((_.get(data, 'payload.data.validateLogin') === 'false')){
+            redirectUrl("/login");
+          } else {
+            if( (_.get(data, 'payload.data.status') === 200) ){
+              typeMessage = "success";
+              titleMessage = "Edición previsita";
+              message = "Señor usuario, la previsita se editó de forma exitosa.";
+              this.setState({showMessageCreatePreVisit :true});
+            } else {
+              typeMessage = "error";
+              titleMessage = "Edición previsita";
+              message = "Señor usuario, ocurrió un error editando la previsita.";
+              this.setState({showMessageCreatePreVisit :true});
+            }
+          }
+        }, (reason) =>{
+          typeMessage = "error";
+          titleMessage = "Edición previsita";
+          message = "Señor usuario, ocurrió un error editando la previsita.";
+          this.setState({showMessageCreatePreVisit :true});
+        });
       } else {
-        this.setState({showErrorSaveVisit :true});
+        this.setState({showErrorSavePreVisit :true});
       }
     } else {
       typeMessage = "error";
@@ -409,20 +450,124 @@ class FormEditPrevisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields, id, detailPrevisit} = this.props;
-    console.log("id previsita", id);
+    const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
     this.setState({idPrevisit : id});
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
       getMasterDataFields([PREVISIT_TYPE]);
+      detailPrevisit(id).then((result) => {
+        const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
+        var part = result.payload.data.data;
+        console.log("part prevista", part);
+        valueTypePrevisit = part.keyDocumentType;
+        this.setState({
+          typePreVisit: part.documentType,
+          datePreVisit: new Date(moment(part.visitTime, "x")),
+          targetPrevisit: part.principalObjective === null ? "" : part.principalObjective,
+          pendingPrevisit: part.observations  === null ? "" : part.observations,
+          lugarPrevisit: part.visitLocation  === null ? "" : part.visitLocation,
+          acondicionamiento: part.conditioning  === null ? "" : part.conditioning,
+          replanteamiento: part.rethinking  === null ? "" : part.rethinking,
+          ahogamiento: part.rationalDrowning  === null ? "" : part.rationalDrowning,
+          impacto: part.emotionalImpact  === null ? "" : part.emotionalImpact,
+          nuevoModo: part.newWay  === null ? "" : part.newWay,
+          nuestraSolucion: part.ourSolution  === null ? "" : part.ourSolution
+        });
+
+        //Adicionar participantes por parte del cliente
+        _.forIn(part.participatingContacts, function(value, key) {
+          var contactClient = contactsByClient.get('contacts');
+          const uuid = _.uniqueId('participanClient_');
+          var contactSelected = _.get(_.filter(contactClient, ['id', parseInt(value.contact)]), '[0]');
+          var clientParticipant = {
+            tipoParticipante: 'client',
+            idParticipante: value.id,
+            nombreParticipante: value.contactName,
+            cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+            : ' - ' + value.contactPositionName,
+            empresa: '',
+            estiloSocial: value.socialStyleName === null || value.socialStyleName === undefined || value.socialStyleName === '' ? ''
+            : ' - ' + value.socialStyleName,
+            actitudBanco: value.attitudeOverGroupName === null || value.attitudeOverGroupName === undefined || value.attitudeOverGroupName === '' ? ''
+            : ' - ' + value.attitudeOverGroupName,
+            fecha: Date.now(),
+            uuid,
+          }
+          addParticipant(clientParticipant);
+        });
+
+        //Adicionar participantes por parte de bancolombia
+        _.forIn(part.participatingEmployees, function(value, key) {
+          const uuid = _.uniqueId('participanBanco_');
+          var clientParticipant = {
+            tipoParticipante: 'banco',
+            idParticipante: value.id,
+            nombreParticipante: value.employeeName,
+            cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+            : ' - ' + value.positionName,
+            empresa: value.lineBusinessName === null || value.lineBusinessName === undefined || value.lineBusinessName === '' ? ''
+            : ' - ' + value.lineBusinessName,
+            estiloSocial: '',
+            actitudBanco: '',
+            fecha: Date.now(),
+            uuid,
+          }
+          addParticipant(clientParticipant);
+        });
+
+        //Adicionar otros participantes
+        _.forIn(part.relatedEmployees, function(value, key) {
+          const uuid = _.uniqueId('participanOther_');
+          var otherParticipant = {
+            tipoParticipante: 'other',
+            idParticipante: value.id,
+            nombreParticipante: value.name,
+            cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+            : ' - ' + value.position,
+            empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+            : ' - ' + value.company,
+            estiloSocial: '',
+            actitudBanco: '',
+            fecha: Date.now(),
+            uuid,
+          }
+          addParticipant(otherParticipant);
+        });
+
+        //Adicionar tareas
+        _.forIn(part.userTasks, function(value, key) {
+          const uuid = _.uniqueId('task_');
+          var task = {
+            uuid,
+            tarea: value.task,
+            idResponsable: value.employee,
+            responsable: value.employeeName,
+            fecha: moment(value.closingDate).format('DD/MM/YYYY')
+          }
+          addTask(task);
+        });
+      });
     }
   }
 
   render(){
     const { fields:{acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
-      clientInformacion, selectsReducer, handleSubmit} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, previsitReducer} = this.props;
+    const detailPrevisit = previsitReducer.get('detailPrevisit');
+    if(detailPrevisit !== undefined && detailPrevisit !== null && detailPrevisit !== '' && !_.isEmpty(detailPrevisit)){
+      createdBy = detailPrevisit.data.createdByName;
+      updatedBy = detailPrevisit.data.updatedByName;
+      if(detailPrevisit.data.updatedTimestamp !== null){
+        var fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp, "x").locale('es');
+        fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+      }
+      if(detailPrevisit.data.createdTimestamp !== null){
+        var fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp, "x").locale('es');
+        fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
+      }
+    }
 
     return(
       <form onSubmit={handleSubmit(this._submitCreatePrevisita)} className="my-custom-tab"
@@ -486,10 +631,14 @@ class FormEditPrevisita extends Component{
             <dt><span>Lugar</span></dt>
             <dt style={{marginRight:"17px"}}>
               <Input
+                value={this.state.lugarPrevisit}
+                touched={true}
+                error={this.state.lugarPrevisitError}
                 name="txtLugar"
                 type="text"
                 title="La longitud máxima de caracteres es de 150"
                 max="150"
+                onChange={val => this._changeLugarPreVisit(val)}
                 disabled={this.state.isEditable ? '' : 'disabled'}
               />
             </dt>
@@ -550,7 +699,7 @@ class FormEditPrevisita extends Component{
           </Col>
         </Row>
 
-        {this.state.typePreVisit === PROPUEST_OF_BUSINESS &&
+        {valueTypePrevisit === PROPUEST_OF_BUSINESS &&
           <div>
             <Row style={{padding: "10px 10px 20px 20px"}}>
               <Col xs={12} md={12} lg={12}>
@@ -622,6 +771,39 @@ class FormEditPrevisita extends Component{
           </Col>
         </Row>
 
+        <Row style={{padding: "10px 10px 0px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
+            : '' }
+            </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
+            : '' }
+          </Col>
+        </Row>
+        <Row style={{padding: "5px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+          </Col>
+        </Row>
+
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
@@ -671,15 +853,19 @@ class FormEditPrevisita extends Component{
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     getMasterDataFields,
-    pdfDescarga
+    pdfDescarga,
+    detailPrevisit,
+    addParticipant,
+    createPrevisit
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, participants }, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, participants, previsitReducer }, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
-      participants
+      participants,
+      previsitReducer
     };
 }
 

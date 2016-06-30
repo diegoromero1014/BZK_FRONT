@@ -1,5 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT} from './constants';
+import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER,
+  ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT, GET_DETAIL_PREVISIT} from './constants';
 import axios from 'axios';
 import * as constants from './constants';
 
@@ -101,4 +102,30 @@ export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
     orderPrevisit: orderPrevisit,
     columnPrevisit: columnPrevisit
   };
+}
+
+export function detailPrevisit(idPrevisit){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+    },
+    "messageBody": {
+         "id": idPrevisit
+     }
+  }
+
+  var request = axios.post(APP_URL + "/preVisitDocumentDetail", json);
+  return{
+    type: GET_DETAIL_PREVISIT,
+    payload: request
+  }
 }
