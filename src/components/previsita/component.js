@@ -8,12 +8,15 @@ import ListPrevisitComponent from './listPrevisitComponent';
 import {NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID} from './constants';
 import PaginationPreVisitComponent from './paginationPrevisitComponent';
 import {previsitByClientFindServer, clearPrevisit} from './actions';
+import {downloadFilePdf} from '../clientInformation/actions';
+import {FILE_OPTION_PRE_VISIT_GUIDE} from '../../constantsGlobal';
 
 class PrevisitComponent extends Component {
 
   constructor(props) {
      super(props);
      this._createPrevisita = this._createPrevisita.bind(this);
+     this._downloadFilePrevisitGuide = this._downloadFilePrevisitGuide.bind(this);
      this.state= {
        value1: ""
     };
@@ -31,6 +34,11 @@ class PrevisitComponent extends Component {
       clearPrevisit();
       previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
     }
+  }
+
+  _downloadFilePrevisitGuide() {
+    const {downloadFilePdf} = this.props;
+    downloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE);
   }
 
   render() {
@@ -54,6 +62,7 @@ class PrevisitComponent extends Component {
                 <button className="btn btn-primary" type="button" title="Crear previsita" style={{marginTop: "21px"}} onClick={this._createPrevisita}>
                   <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
+                <i title="Informe de previsita guía" className="red file pdf outline icon" onClick={this._downloadFilePrevisitGuide} style={{cursor: "pointer", fontSize: "18px"}}></i>
               </Col>
             </Row>
           </Grid>
@@ -80,7 +89,7 @@ class PrevisitComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit
+    previsitByClientFindServer, clearPrevisit, downloadFilePdf
   }, dispatch);
 }
 
