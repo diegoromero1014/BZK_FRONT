@@ -54,8 +54,6 @@ class FormVisita extends Component{
       conclusionsVisitError: null,
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
-    this._onClickButtonPublished = this._onClickButtonPublished.bind(this);
-    this._onClickButtonDraft = this._onClickButtonDraft.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
@@ -225,14 +223,6 @@ class FormVisita extends Component{
         this.setState({showErrorSaveVisit :true});
       }
     }
-  }
-
-  _onClickButtonPublished(buttonClick){
-    typeButtonClick = buttonClick;
-  }
-
-  _onClickButtonDraft(buttonClick){
-    typeButtonClick = buttonClick;
   }
 
   _onCloseButton(){

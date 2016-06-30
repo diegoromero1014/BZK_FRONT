@@ -48,6 +48,8 @@ class FormPrevisita extends Component{
       typePreVisitError: null,
       datePreVisit: new Date(),
       datePreVisitError: null,
+      lugarPrevisit: "",
+      lugarPrevisitError: false,
       showConfirm: false,
       activeItemTabBanc: '',
       activeItemTabClient: 'active',
@@ -87,6 +89,7 @@ class FormPrevisita extends Component{
     this._changeImpacto = this._changeImpacto.bind(this);
     this._changeNuevoModo = this._changeNuevoModo.bind(this);
     this._changeNuestraSolucion = this._changeNuestraSolucion.bind(this);
+    this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
   }
 
   _closeMessageCreatePreVisit(){
@@ -137,6 +140,13 @@ class FormPrevisita extends Component{
     this.setState({
       datePreVisit: value,
       datePreVisitError: null
+    });
+  }
+
+  _changeLugarPreVisit(value){
+    this.setState({
+      lugarPrevisit: value,
+      lugarPrevisitError: null
     });
   }
 
@@ -374,22 +384,42 @@ class FormPrevisita extends Component{
           "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
           "principalObjective": this.state.targetPrevisit,
           "documentType": this.state.typePreVisit,
+          "visitLocation": this.state.lugarPrevisit,
           "observations": this.state.pendingPrevisit,
           "conditioning": this.state.acondicionamiento,
           "rethinking": this.state.replanteamiento,
           "rationalDrowning": this.state.ahogamiento,
           "emotionalImpact": this.state.impacto,
           "newWay": this.state.nuevoModo,
-          "ourSolution": this.state.nuestraSolucion
+          "ourSolution": this.state.nuestraSolucion,
+          "documentStatus": typeButtonClick
         }
         console.log("previsitJson", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
           console.log("then data", data);
+          if((_.get(data, 'payload.data.validateLogin') === 'false')){
+            redirectUrl("/login");
+          } else {
+            if( (_.get(data, 'payload.data.status') === 200) ){
+              typeMessage = "success";
+              titleMessage = "Creación previsita";
+              message = "Señor usuario, la previsita se creó de forma exitosa.";
+              this.setState({showMessageCreatePreVisit :true});
+            } else {
+              typeMessage = "error";
+              titleMessage = "Creación previsita";
+              message = "Señor usuario, ocurrió un error creando la previsita.";
+              this.setState({showMessageCreatePreVisit :true});
+            }
+          }
         }, (reason) =>{
-          console.log("error then data");
+          typeMessage = "error";
+          titleMessage = "Creación previsita";
+          message = "Señor usuario, ocurrió un error creando la previsita.";
+          this.setState({showMessageCreateVisit :true});
         });
       } else {
-        this.setState({showErrorSaveVisit :true});
+        this.setState({showErrorSavePreVisit :true});
       }
     } else {
       typeMessage = "error";
@@ -465,10 +495,14 @@ class FormPrevisita extends Component{
             <dt><span>Lugar</span></dt>
             <dt style={{marginRight:"17px"}}>
               <Input
+                value={this.state.lugarPrevisit}
+                touched={true}
+                error={this.state.lugarPrevisitError}
                 name="txtLugar"
                 type="text"
                 title="La longitud máxima de caracteres es de 150"
                 max="150"
+                onChange={val => this._changeLugarPreVisit(val)}
               />
             </dt>
           </Col>
@@ -615,7 +649,7 @@ class FormPrevisita extends Component{
          show={this.state.showErrorSaveVisit}
          title="Error participantes"
          text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia y otro por parte del cliente."
-         onConfirm={() => this.setState({showErrorSaveVisit:false})}
+         onConfirm={() => this.setState({showErrorSavePreVisit:false})}
          />
         <SweetAlert
          type={typeMessage}
