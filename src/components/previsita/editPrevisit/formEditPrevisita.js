@@ -134,12 +134,24 @@ class FormEditPrevisita extends Component{
     this.setState({
       typePreVisit: parseInt(value),
       typePreVisitError: null,
+      acondicionamiento: "",
       acondicionamientoTouch: false,
+      acondicionamientoError: "",
+      replanteamiento: "",
       replanteamientoTouch: false,
+      replanteamientoError: "",
+      ahogamiento: "",
       ahogamientoTouch: false,
+      ahogamientoError: "",
+      impacto: "",
       impactoTouch: false,
+      impactoError: "",
+      nuevoModo: "",
       nuevoModoTouch: false,
+      nuevoModoError: "",
+      nuestraSolucion: "",
       nuestraSolucionTouch: false,
+      nuestraSolucionError: "",
     });
   }
 
