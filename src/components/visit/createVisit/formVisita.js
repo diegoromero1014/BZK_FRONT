@@ -299,8 +299,8 @@ class FormVisita extends Component{
   }
 
   _consultInfoPrevisit(){
-    console.log("Ennntrooooooo");
-    const {detailPrevisit, addParticipant} = this.props;
+    const {detailPrevisit, addParticipant, clearParticipants} = this.props;
+    clearParticipants();
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
       this.setState({
@@ -369,11 +369,10 @@ class FormVisita extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      clientInformacion, selectsReducer, handleSubmit,visitReducer} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, visitReducer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     //Verifico si la visita se asocia a una previsita, para así cargar los datos
-    console.log("visitReducer.get idPrevisit", visitReducer.get("idPrevisit"));
     if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' && visitReducer.get("idPrevisit") > 0 ){
       if( idPrevisitSeleted !== visitReducer.get("idPrevisit") ){
         idPrevisitSeleted = visitReducer.get("idPrevisit");
