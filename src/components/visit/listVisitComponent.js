@@ -86,13 +86,13 @@ class ListVisitComponent extends Component {
         title: "",
         key:"delete"
       },
-
     ]
   }
 
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de la reunión?";
+
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -115,6 +115,7 @@ class ListVisitComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
+              typeClickDetail: "visita",
               ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"

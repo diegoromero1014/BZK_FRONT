@@ -1,10 +1,11 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT} from './constants';
+import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER,
+  ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT, GET_DETAIL_PREVISIT, OWNER_DRAFT} from './constants';
 import axios from 'axios';
 import * as constants from './constants';
 
-export function pdfDescarga(idclient, idVisit){
-  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idPreVisit="+idVisit+"&language=es");
+export function pdfDescarga(idclient, idPrevisit){
+  window.open(APP_URL + "/pdfReportPreVisit?idClient="+idclient+"&idPrevisit="+idPrevisit+"&language=es");
 }
 
 export function createPrevisit(jsonVisit){
@@ -95,10 +96,43 @@ export function clearPrevisitOrder() {
   };
 }
 
+export function changeOwnerDraftPrevisit(ownerDraft){
+  return {
+    type: OWNER_DRAFT,
+    ownerDraft: ownerDraft
+  };
+}
+
 export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
   return {
     type: ORDER_COLUMN_PREVISIT,
     orderPrevisit: orderPrevisit,
     columnPrevisit: columnPrevisit
   };
+}
+
+export function detailPrevisit(idPrevisit){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+    },
+    "messageBody": {
+         "id": idPrevisit
+     }
+  }
+
+  var request = axios.post(APP_URL + "/preVisitDocumentDetail", json);
+  return{
+    type: GET_DETAIL_PREVISIT,
+    payload: request
+  }
 }

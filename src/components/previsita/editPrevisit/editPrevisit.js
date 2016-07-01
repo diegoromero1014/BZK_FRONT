@@ -24,7 +24,7 @@ class EditPrevisit extends Component{
     return(
       <div>
         <HeaderPrevisita/>
-        <FormEditPrevisita id={2323} />
+        <FormEditPrevisita id={id} />
       </div>
     );
   }

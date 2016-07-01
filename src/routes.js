@@ -39,7 +39,7 @@ export default (
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="previsita" component={Previsita}></Route>
-                <Route path="editPrevisita" component={EditPrevisita}></Route>
+                <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
             </Route>
