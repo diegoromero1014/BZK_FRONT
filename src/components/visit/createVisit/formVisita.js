@@ -23,6 +23,7 @@ import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
+import {detailPrevisit} from '../../previsita/actions';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
@@ -31,6 +32,7 @@ var typeMessage = "success";
 var titleMessage = "";
 var message = "";
 var typeButtonClick;
+var idPrevisitSeleted = null;
 
 const validate = values => {
   var errors = {};
@@ -63,6 +65,7 @@ class FormVisita extends Component{
     this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
     this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
     this._changeConclusionsVisit = this._changeConclusionsVisit.bind(this);
+    this._consultInfoPrevisit = this._consultInfoPrevisit.bind(this);
   }
 
   _closeMessageCreateVisit(){
@@ -285,12 +288,27 @@ class FormVisita extends Component{
     }
   }
 
+  _consultInfoPrevisit(){
+    console.log("Entrooooooooo");
+    const {detailPrevisit} = this.props;
+    detailPrevisit(idPrevisitSeleted).then((result) => {
+      var previsitConsult = result.payload.data.data;
+      console.log("previsitConsult", previsitConsult);
+    });
+  }
+
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
       clientInformacion, selectsReducer, handleSubmit,visitReducer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     console.log(visitReducer.get("idPrevisit"));
+    if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' ){
+      if( idPrevisitSeleted !== visitReducer.get("idPrevisit") ){
+        idPrevisitSeleted = visitReducer.get("idPrevisit");
+        this._consultInfoPrevisit();
+      }
+    }
     var showAECNoAplica = false;
     var showAECNivel = true;
     if( aecStatus === undefined || aecStatus === null ){
@@ -494,7 +512,8 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     consultParameterServer,
     createVisti,
-    downloadFilePdf
+    downloadFilePdf,
+    detailPrevisit
   }, dispatch);
 }
 

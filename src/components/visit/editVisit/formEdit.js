@@ -16,8 +16,8 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import RaitingInternal from '../../clientInformation/ratingInternal';
-import {LAST_VISIT_REVIEW, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
-import {FILE_OPTION_SHOPPING_MAP} from '../../../constantsGlobal';
+import {LAST_VISIT_REVIEW, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../constants';
+import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED} from '../../../constantsGlobal';
 import {consultParameterServer, createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
@@ -204,7 +204,6 @@ class FormEdit extends Component{
           "userTasks": tareas,
           "documentStatus": typeButtonClick
         }
-
         const {createVisti} = this.props;
 
         createVisti(visitJson).then((data)=> {
