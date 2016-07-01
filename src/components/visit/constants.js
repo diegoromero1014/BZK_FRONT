@@ -16,3 +16,4 @@ export const GET_DETAIL_VISIT = "GET_DETAIL_VISIT";
 export const PDF = "PDF";
 export const OWNER_DRAFT = "OWNER_DRAFT";
 export const CHANGE_IDPREVISIT = "CHANGE_IDPREVISIT";
+export const CLEAR_IDPREVISIT = "CLEAR_IDPREVISIT";

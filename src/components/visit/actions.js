@@ -1,6 +1,7 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CHANGE_IDPREVISIT,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT, PDF, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
+  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT, PDF, OWNER_DRAFT,
+  GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT } from './constants';
 import axios from 'axios';
 
 export function createVisti(jsonVisit){
@@ -101,6 +102,12 @@ export function changeIdPrevisit(idPrevisit){
   return{
     type: CHANGE_IDPREVISIT,
     idPrevisit: idPrevisit
+  }
+}
+
+export function clearIdPrevisit(){
+  return{
+    type: CLEAR_IDPREVISIT
   }
 }
 

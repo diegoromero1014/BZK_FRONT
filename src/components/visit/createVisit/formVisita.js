@@ -25,6 +25,8 @@ import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
 import {addParticipant} from '../../participantsVisitPre/actions';
+import {clearIdPrevisit} from '../actions';
+
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
@@ -112,7 +114,7 @@ class FormVisita extends Component{
 
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, tasks, createVisti} = this.props;
+      participants, tasks, createVisti, clearIdPrevisit} = this.props;
     var errorInForm = false;
     if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
       errorInForm = true;
@@ -217,6 +219,8 @@ class FormVisita extends Component{
               titleMessage = "Creación visita";
               message = "Señor usuario, ocurrió un error creando la visita.";
               this.setState({showMessageCreateVisit :true});
+              idPrevisitSeleted = null;
+              clearIdPrevisit();
             }
           }
         }, (reason) =>{
@@ -273,12 +277,13 @@ class FormVisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
+    const {clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     idPrevisitSeleted = null;
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
+      clearIdPrevisit();
       getMasterDataFields([VISIT_TYPE]);
       consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -365,11 +370,13 @@ class FormVisita extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     //Verifico si la visita se asocia a una previsita, para así cargar los datos
-    if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' ){
+    if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' && visitReducer.get("idPrevisit") > 0 ){
       if( idPrevisitSeleted !== visitReducer.get("idPrevisit") ){
         idPrevisitSeleted = visitReducer.get("idPrevisit");
         this._consultInfoPrevisit();
       }
+    } else {
+      idPrevisitSeleted = null;
     }
     var showAECNoAplica = false;
     var showAECNivel = true;
@@ -576,7 +583,8 @@ function mapDispatchToProps(dispatch){
     createVisti,
     downloadFilePdf,
     detailPrevisit,
-    addParticipant
+    addParticipant,
+    clearIdPrevisit
   }, dispatch);
 }
 
