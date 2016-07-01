@@ -22,6 +22,7 @@ import {consultParameterServer, createVisti} from '../actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
+import ButtonAssociateComponent from './associateVisit';
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
@@ -286,9 +287,10 @@ class FormVisita extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      clientInformacion, selectsReducer, handleSubmit} = this.props;
+      clientInformacion, selectsReducer, handleSubmit,visitReducer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
+    console.log(visitReducer.get("idPrevisit"));
     var showAECNoAplica = false;
     var showAECNivel = true;
     if( aecStatus === undefined || aecStatus === null ){
@@ -322,7 +324,12 @@ class FormVisita extends Component{
             </div>
           </div>
         </header>
-        <span style={{marginLeft: "20px"}}>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          </Col>
+          <ButtonAssociateComponent/>
+        </Row>
         <Row style={{padding: "10px 10px 10px 20px"}}>
           <Col xs={12} md={12} lg={12}>
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>

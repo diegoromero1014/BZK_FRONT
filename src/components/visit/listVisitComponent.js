@@ -79,6 +79,10 @@ class ListVisitComponent extends Component {
         key:"statusDocument"
       },
       {
+        title: "Previsita",
+        key: "actionsPdf"
+      },
+      {
         title: "",
         key:"delete"
       },
@@ -116,6 +120,12 @@ class ListVisitComponent extends Component {
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });
+            if(value.idPrevisit != null && value.idPrevisit != 0){
+              _.set(value, 'actionsPdf', {
+                title: "previsita",
+                urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es"
+              });
+            }
             var dateVisitFormat = moment(value.dateVisit).locale('es');
              _.set(value, 'dateVisitFormat',dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a"));
             if(value.idStatusDocument === 0){

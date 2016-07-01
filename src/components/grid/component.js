@@ -9,6 +9,7 @@ import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
 import ModalComponent from '../modal/modalComponent';
 import ButtonDetailsRedirectComponent from './buttonDetailsRedirectComponent';
+import PdfLinkComponent from './pdfLinkComponent';
 
 class GridComponent extends Component {
 
@@ -32,6 +33,8 @@ class GridComponent extends Component {
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else if(value.key == 'actionsRedirect'){
               cell= <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
+            }else if(value.key == 'actionsPdf' &&  _.get(row, value.key)){
+              cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} styles={value.style} />
             }

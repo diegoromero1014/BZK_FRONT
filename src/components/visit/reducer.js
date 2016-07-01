@@ -1,11 +1,12 @@
 import Immutable from 'immutable';
-import {PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
+import {CHANGE_IDPREVISIT,PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
     visitList: [],
     rowCount:0,
     limInf : 0,
+    idPrevisit : 0,
     page:1,
     columnVisit: 'vd.visitTime',
     orderVisit : 1,
@@ -25,6 +26,8 @@ export default (state = initialState, action) => {
       });
     case CHANGE_PAGE:
       return state.set('page', action.currentPage);
+    case CHANGE_IDPREVISIT:
+        return state.set('idPrevisit', action.idPrevisit);
     case LIMITE_INF:
       return state.set('limInf', action.limInfe);
     case ORDER_COLUMN_VISIT:

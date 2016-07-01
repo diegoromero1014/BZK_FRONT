@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
+import {CHANGE_IDPREVISIT,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,
   CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,CONSULT_LAST_VISIT_REVIEW, CREATE_VISIT, GET_DETAIL_VISIT, PDF, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
 import axios from 'axios';
 
@@ -94,6 +94,13 @@ export function changePage(page){
   return{
     type: CHANGE_PAGE,
     currentPage: page
+  }
+}
+
+export function changeIdPrevisit(idPrevisit){
+  return{
+    type: CHANGE_IDPREVISIT,
+    idPrevisit: idPrevisit
   }
 }
 
