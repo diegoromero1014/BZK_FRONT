@@ -24,7 +24,7 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
-import {addParticipant} from '../../participantsVisitPre/actions';
+import {addParticipant, clearParticipants} from '../../participantsVisitPre/actions';
 import {clearIdPrevisit} from '../actions';
 
 
@@ -114,7 +114,7 @@ class FormVisita extends Component{
 
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, tasks, createVisti, clearIdPrevisit} = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants} = this.props;
     var errorInForm = false;
     if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
       errorInForm = true;
@@ -221,6 +221,7 @@ class FormVisita extends Component{
               this.setState({showMessageCreateVisit :true});
               idPrevisitSeleted = null;
               clearIdPrevisit();
+              clearParticipants();
             }
           }
         }, (reason) =>{
@@ -277,8 +278,9 @@ class FormVisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit} = this.props;
+    const {clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
+    clearParticipants();
     idPrevisitSeleted = null;
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
@@ -297,6 +299,7 @@ class FormVisita extends Component{
   }
 
   _consultInfoPrevisit(){
+    console.log("Ennntrooooooo");
     const {detailPrevisit, addParticipant} = this.props;
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
@@ -370,6 +373,7 @@ class FormVisita extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     //Verifico si la visita se asocia a una previsita, para así cargar los datos
+    console.log("visitReducer.get idPrevisit", visitReducer.get("idPrevisit"));
     if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' && visitReducer.get("idPrevisit") > 0 ){
       if( idPrevisitSeleted !== visitReducer.get("idPrevisit") ){
         idPrevisitSeleted = visitReducer.get("idPrevisit");
@@ -584,7 +588,8 @@ function mapDispatchToProps(dispatch){
     downloadFilePdf,
     detailPrevisit,
     addParticipant,
-    clearIdPrevisit
+    clearIdPrevisit,
+    clearParticipants
   }, dispatch);
 }
 
