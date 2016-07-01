@@ -446,6 +446,7 @@ class FormEditPrevisita extends Component{
       detailPrevisit(id).then((result) => {
         const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
         var part = result.payload.data.data;
+        console.log("info = ", part);
         valueTypePrevisit = part.keyDocumentType;
         this.setState({
           typePreVisit: part.documentType,
@@ -463,12 +464,11 @@ class FormEditPrevisita extends Component{
 
         //Adicionar participantes por parte del cliente
         _.forIn(part.participatingContacts, function(value, key) {
-          var contactClient = contactsByClient.get('contacts');
           const uuid = _.uniqueId('participanClient_');
-          var contactSelected = _.get(_.filter(contactClient, ['id', parseInt(value.contact)]), '[0]');
+          console.log("value =", value);
           var clientParticipant = {
             tipoParticipante: 'client',
-            idParticipante: value.id,
+            idParticipante: value.contact,
             nombreParticipante: value.contactName,
             cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
             : ' - ' + value.contactPositionName,
@@ -480,6 +480,7 @@ class FormEditPrevisita extends Component{
             fecha: Date.now(),
             uuid,
           }
+          console.log("clientParticipant", clientParticipant);
           addParticipant(clientParticipant);
         });
 
@@ -488,7 +489,7 @@ class FormEditPrevisita extends Component{
           const uuid = _.uniqueId('participanBanco_');
           var clientParticipant = {
             tipoParticipante: 'banco',
-            idParticipante: value.id,
+            idParticipante: value.employee,
             nombreParticipante: value.employeeName,
             cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
             : ' - ' + value.positionName,
@@ -588,7 +589,7 @@ class FormEditPrevisita extends Component{
               touched={true}
               error={this.state.typePreVisitError}
               onChange={val => this._changeTypePreVisit(val)}
-              onBlur={() => console.log("")}
+              onBlur={() => console.log('')}
               parentId="dashboardComponentScroll"
               data={selectsReducer.get(PREVISIT_TYPE) || []}
               disabled={this.state.isEditable ? '' : 'disabled'}

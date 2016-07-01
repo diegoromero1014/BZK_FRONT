@@ -290,9 +290,7 @@ class FormEdit extends Component{
 
       //Adicionar participantes por parte del cliente
       _.forIn(part.participatingContacts, function(value, key) {
-        var contactClient = contactsByClient.get('contacts');
         const uuid = _.uniqueId('participanClient_');
-        var contactSelected = _.get(_.filter(contactClient, ['id', parseInt(value.contact)]), '[0]');
         var clientParticipant = {
           tipoParticipante: 'client',
           idParticipante: value.id,
