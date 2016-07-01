@@ -133,7 +133,7 @@ class TabClientInfo extends Component{
             <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
           </li>
           <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>PreVisitas</a>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
           </li>
           <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
