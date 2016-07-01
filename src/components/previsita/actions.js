@@ -1,6 +1,4 @@
 import {APP_URL} from '../../constantsGlobal';
-import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER,
-  ORDER_COLUMN_PREVISIT, CLEAR_PREVISIT, GET_DETAIL_PREVISIT, OWNER_DRAFT} from './constants';
 import axios from 'axios';
 import * as constants from './constants';
 
@@ -59,53 +57,53 @@ export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrd
 
   var request = axios.post(APP_URL + "/listClientPrevisits", json);
   return {
-    type: GET_PREVISIT_LIST,
+    type: constants.GET_PREVISIT_LIST,
     payload: request
   };
 }
 
 export function changePage(page) {
   return {
-    type: CHANGE_PAGE,
+    type: constants.CHANGE_PAGE,
     currentPage: page
   };
 }
 
 export function limitiInf(limInf) {
   return {
-    type: LIMITE_INF,
+    type: constants.LIMITE_INF,
     limInfe: limInf
   };
 }
 
 export function clearPrevisit() {
   return {
-    type: CLEAR_PREVISIT
+    type: constants.CLEAR_PREVISIT
   };
 }
 
 export function clearPrevisitPaginator() {
   return {
-    type: CLEAR_PREVISIT_PAGINATOR
+    type: constants.CLEAR_PREVISIT_PAGINATOR
   };
 }
 
 export function clearPrevisitOrder() {
   return {
-    type: CLEAR_PREVISIT_ORDER
+    type: constants.CLEAR_PREVISIT_ORDER
   };
 }
 
 export function changeOwnerDraftPrevisit(ownerDraft){
   return {
-    type: OWNER_DRAFT,
+    type: constants.OWNER_DRAFT,
     ownerDraft: ownerDraft
   };
 }
 
 export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
   return {
-    type: ORDER_COLUMN_PREVISIT,
+    type: constants.ORDER_COLUMN_PREVISIT,
     orderPrevisit: orderPrevisit,
     columnPrevisit: columnPrevisit
   };
@@ -132,7 +130,35 @@ export function detailPrevisit(idPrevisit){
 
   var request = axios.post(APP_URL + "/preVisitDocumentDetail", json);
   return{
-    type: GET_DETAIL_PREVISIT,
+    type: constants.GET_DETAIL_PREVISIT,
     payload: request
   }
+}
+
+export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "clientId": clientId,
+      "hasParticipatingContacts":  hasParticipatingContacts,
+      "hasParticipatingEmployees": hasParticipatingEmployees,
+      "hasRelatedEmployees": hasRelatedEmployees
+    }
+  };
+  let request = axios.post(APP_URL + "/getCsvPreVisitsByClient", json);
+  return {
+    type: constants.GET_CSV_PREVISIT_BY_CLIENT,
+    payload: request
+  };
 }

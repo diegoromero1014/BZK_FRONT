@@ -7,6 +7,7 @@ import SelectFilterContact from '../selectsComponent/selectFilterContact/selectF
 import ListPrevisitComponent from './listPrevisitComponent';
 import {NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID} from './constants';
 import PaginationPreVisitComponent from './paginationPrevisitComponent';
+import ButtonCreateDownloadPreVisitModal from './downloadPrevisits/buttonCreateDownloadPrevisitModal';
 import {previsitByClientFindServer, clearPrevisit} from './actions';
 import {downloadFilePdf} from '../clientInformation/actions';
 import {FILE_OPTION_PRE_VISIT_GUIDE} from '../../constantsGlobal';
@@ -85,6 +86,7 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
+        <ButtonCreateDownloadPreVisitModal />
       </div>
     );
   }

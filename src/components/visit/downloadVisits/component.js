@@ -88,4 +88,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DownloadVisits);
-//export default DownloadVisits;
