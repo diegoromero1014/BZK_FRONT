@@ -79,16 +79,20 @@ class ListVisitComponent extends Component {
         key:"statusDocument"
       },
       {
+        title: "Previsita",
+        key: "actionsPdf"
+      },
+      {
         title: "",
         key:"delete"
       },
+
     ]
   }
 
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de la reunión?";
-
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -111,10 +115,16 @@ class ListVisitComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              ownerDraft: value.idStatusDocument, 
+              ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });
+            if(value.idPrevisit != null && value.idPrevisit != 0){
+              _.set(value, 'actionsPdf', {
+                title: "previsita",
+                urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es"
+              });
+            }
             var dateVisitFormat = moment(value.dateVisit).locale('es');
              _.set(value, 'dateVisitFormat',dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a"));
             if(value.idStatusDocument === 0){

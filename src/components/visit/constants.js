@@ -15,3 +15,4 @@ export const LAST_VISIT_REVIEW = "last_visit_review";
 export const GET_DETAIL_VISIT = "GET_DETAIL_VISIT";
 export const PDF = "PDF";
 export const OWNER_DRAFT = "OWNER_DRAFT";
+export const CHANGE_IDPREVISIT = "CHANGE_IDPREVISIT";
