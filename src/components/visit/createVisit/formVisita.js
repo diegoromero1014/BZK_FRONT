@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import {LAST_VISIT_REVIEW} from '../constants';
+import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
 import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {consultParameterServer, createVisti} from '../actions';
@@ -48,7 +48,6 @@ class FormVisita extends Component{
     super(props);
     this.state = {
       showErrorSaveVisit: false,
-      typeVisit: "",
       typeVisitError: null,
       dateVisit: new Date(),
       dateVisitError: null,
@@ -299,11 +298,13 @@ class FormVisita extends Component{
   }
 
   _consultInfoPrevisit(){
-    const {detailPrevisit, addParticipant, clearParticipants} = this.props;
+    const {detailPrevisit, addParticipant, clearParticipants, selectsReducer} = this.props;
     clearParticipants();
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
+      const typeVisitSeleted = _.filter(selectsReducer.get(VISIT_TYPE), ['key', KEY_TYPE_VISIT]);
       this.setState({
+        typeVisit: typeVisitSeleted[0].id,
         dateVisit: new Date(moment(previsitConsult.visitTime, "x"))
       });
 
