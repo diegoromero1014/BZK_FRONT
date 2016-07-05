@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
-import {CHANGE_IDPREVISIT,PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT} from './constants';
+import {CHANGE_IDPREVISIT,PDF,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,
+  CLEAR_VISIT_CREATE,GET_VISIT_LIST_CLIENT,CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT,
+  GET_DETAIL_VISIT, OWNER_DRAFT, GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -28,6 +30,8 @@ export default (state = initialState, action) => {
       return state.set('page', action.currentPage);
     case CHANGE_IDPREVISIT:
         return state.set('idPrevisit', action.idPrevisit);
+    case CLEAR_IDPREVISIT:
+        return state.set('idPrevisit', 0);
     case LIMITE_INF:
       return state.set('limInf', action.limInfe);
     case ORDER_COLUMN_VISIT:

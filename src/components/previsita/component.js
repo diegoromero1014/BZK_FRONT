@@ -7,6 +7,7 @@ import SelectFilterContact from '../selectsComponent/selectFilterContact/selectF
 import ListPrevisitComponent from './listPrevisitComponent';
 import {NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID} from './constants';
 import PaginationPreVisitComponent from './paginationPrevisitComponent';
+import ButtonCreateDownloadPreVisitModal from './downloadPrevisits/buttonCreateDownloadPrevisitModal';
 import {previsitByClientFindServer, clearPrevisit} from './actions';
 import {downloadFilePdf} from '../clientInformation/actions';
 import {FILE_OPTION_PRE_VISIT_GUIDE} from '../../constantsGlobal';
@@ -65,7 +66,7 @@ class PrevisitComponent extends Component {
                 <button className="btn btn-primary" type="button" title="Crear previsita" style={{marginTop: "21px"}} onClick={this._createPrevisita}>
                   <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
-                <i title="Informe de previsita guía" className="red file pdf outline icon" onClick={this._downloadFilePrevisitGuide} style={{cursor: "pointer", fontSize: "18px"}}></i>
+                <i title="Informe de previsita guía" className="red file pdf outline icon" onClick={this._downloadFilePrevisitGuide} style={{cursor: "pointer", fontSize: "18px",position: 'relative', top: '15px'}}></i>
               </Col>
             </Row>
           </Grid>
@@ -85,6 +86,7 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
+        <ButtonCreateDownloadPreVisitModal />
       </div>
     );
   }

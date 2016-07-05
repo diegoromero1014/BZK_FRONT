@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import {getCsvVisitsByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {APP_URL} from '../../../constantsGlobal';
+import {getCsvPreVisitsByClient} from '../actions';
 
-class DownloadVisits extends Component {
-
+class DownloadPrevisits extends Component {
+	
 	constructor(props) {
 	  super(props);
 
 	  this._checkCheckBox = this._checkCheckBox.bind(this);
-	  this._downloadVisits = this._downloadVisits.bind(this);
+	  this._downloadPreVisits = this._downloadPreVisits.bind(this);
 	  this.state = {
 	  	hasParticipatingContacts: false,
 	  	hasParticipatingEmployees: false,
@@ -32,9 +32,9 @@ class DownloadVisits extends Component {
 		}
 	}
 
-	_downloadVisits() {
-		const {getCsvVisitsByClient, isOpen} = this.props;
-		getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+	_downloadPreVisits() {
+		const {getCsvPreVisitsByClient, isOpen} = this.props;
+		getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 			if (data.payload.data.status == 200) {
 				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
 				isOpen();
@@ -45,9 +45,9 @@ class DownloadVisits extends Component {
 	render() {
 		return (
 			<div>
-				<div style={{height: 'auto'}}className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
-					<span>{'En esta sección podrá descargar algunos campos  de los "informes de visita/reunión" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
+						<span>{'En esta sección podrá descargar algunos campos de los "informes de previsita del cliente.\n Seleccione los campos que desea descargar a excel:"'}</span>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
 							<div className="item"><input name="participatingContacts" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del cliente'}</div>
 							<div className="item"><input name="participatingEmployees" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del Grupo Bancolombia'}</div>
@@ -66,25 +66,25 @@ class DownloadVisits extends Component {
 							<li>{'Tipo de reunión'}</li>
 						</ul>
 					</div>
-				</div>
-				<div className="modalBt4-footer modal-footer">
-					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadVisits}>{'Descargar '}<i className="file excel outline icon"></i></button>
-				</div>
+					</div>
+					<div className="modalBt4-footer modal-footer">
+						<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadPreVisits}>{'Descargar '}<i className="file excel outline icon"></i></button>
+					</div>
 			</div>
 		);
 	}
 }
 
-function mapStateToProps({visitReducer}, ownerProps) {
+function mapStateToProps({previsitReducer}, ownerProps) {
   return {
-    visitReducer
+    previsitReducer
   };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getCsvVisitsByClient
+        getCsvPreVisitsByClient
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadVisits);
+export default connect(mapStateToProps, mapDispatchToProps)(DownloadPrevisits);

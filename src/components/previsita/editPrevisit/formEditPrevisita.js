@@ -135,11 +135,16 @@ class FormEditPrevisita extends Component{
       typePreVisit: parseInt(value),
       typePreVisitError: null,
       acondicionamientoTouch: false,
+      acondicionamientoError: "",
       replanteamientoTouch: false,
+      replanteamientoError: "",
       ahogamientoTouch: false,
+      ahogamientoError: "",
       impactoTouch: false,
+      impactoError: "",
       nuevoModoTouch: false,
-      nuestraSolucionTouch: false,
+      nuevoModoError: "",
+      nuestraSolucionTouch: false
     });
   }
 
@@ -401,7 +406,6 @@ class FormEditPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
-        console.log("previsitJson edit", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
@@ -446,7 +450,6 @@ class FormEditPrevisita extends Component{
       detailPrevisit(id).then((result) => {
         const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
         var part = result.payload.data.data;
-        console.log("info = ", part);
         valueTypePrevisit = part.keyDocumentType;
         this.setState({
           typePreVisit: part.documentType,
@@ -465,7 +468,6 @@ class FormEditPrevisita extends Component{
         //Adicionar participantes por parte del cliente
         _.forIn(part.participatingContacts, function(value, key) {
           const uuid = _.uniqueId('participanClient_');
-          console.log("value =", value);
           var clientParticipant = {
             tipoParticipante: 'client',
             idParticipante: value.contact,
@@ -480,7 +482,6 @@ class FormEditPrevisita extends Component{
             fecha: Date.now(),
             uuid,
           }
-          console.log("clientParticipant", clientParticipant);
           addParticipant(clientParticipant);
         });
 
@@ -543,6 +544,7 @@ class FormEditPrevisita extends Component{
       clientInformacion, selectsReducer, handleSubmit, previsitReducer} = this.props;
     const ownerDraft = previsitReducer.get('ownerDraft');
     const detailPrevisit = previsitReducer.get('detailPrevisit');
+    fechaModString = '';
     if(detailPrevisit !== undefined && detailPrevisit !== null && detailPrevisit !== '' && !_.isEmpty(detailPrevisit)){
       createdBy = detailPrevisit.data.createdByName;
       updatedBy = detailPrevisit.data.updatedByName;
@@ -572,14 +574,14 @@ class FormEditPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="browser icon" style={{fontSize: "20px"}}/>
-              <span style={{fontSize: "20px"}}> Datos de la visita/reunión</span>
+              <span style={{fontSize: "20px"}}> Datos de visita</span>
             </div>
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
         <Col xs={6} md={3} lg={3}>
           <div style={{paddingRight: "15px"}}>
-            <dt><span>Tipo de la visita (</span><span style={{color: "red"}}>*</span>)</dt>
+            <dt><span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)</dt>
             <ComboBox
               name="tipoVisita"
               labelInput="Seleccione..."

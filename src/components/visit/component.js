@@ -10,6 +10,7 @@ import ListVisitComponent from './listVisitComponent';
 import PaginationVisitComponent from './paginationVisitComponent';
 import {updateTitleNavBar} from '../navBar/actions';
 import ButtonCreateDownloadVisitModal from './downloadVisits/buttonCreateDownloadVisitModal';
+import {clearIdPrevisit} from './actions';
 
 class VisitComponent extends Component {
 
@@ -32,7 +33,8 @@ class VisitComponent extends Component {
   }
 
   _createVisit(){
-      const {updateTitleNavBar} = this.props;
+      const {updateTitleNavBar, clearIdPrevisit} = this.props;
+      clearIdPrevisit();
       updateTitleNavBar("Informe de visita/reunión");
       redirectUrl("/dashboard/visita");
   }
@@ -90,7 +92,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     visitByClientFindServer,
     clearVisit,
-    updateTitleNavBar
+    updateTitleNavBar,
+    clearIdPrevisit
   }, dispatch);
 }
 

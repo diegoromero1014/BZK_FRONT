@@ -453,14 +453,17 @@ class FormPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
               <i className="browser icon" style={{fontSize: "20px"}}/>
-              <span style={{fontSize: "20px"}}> Datos de la visita/reunión</span>
+              <span style={{fontSize: "20px"}}> Datos de visita</span>
             </div>
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
         <Col xs={6} md={3} lg={3}>
           <div style={{paddingRight: "15px"}}>
-            <dt><span>Tipo de la visita (</span><span style={{color: "red"}}>*</span>)</dt>
+            <dt>
+              <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
+              <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+            </dt>
             <ComboBox
               name="tipoVisita"
               labelInput="Seleccione..."

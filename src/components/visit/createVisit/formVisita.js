@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import {LAST_VISIT_REVIEW} from '../constants';
+import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
 import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {consultParameterServer, createVisti} from '../actions';
@@ -24,6 +24,9 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
+import {addParticipant, clearParticipants} from '../../participantsVisitPre/actions';
+import {clearIdPrevisit} from '../actions';
+
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
@@ -45,7 +48,6 @@ class FormVisita extends Component{
     super(props);
     this.state = {
       showErrorSaveVisit: false,
-      typeVisit: "",
       typeVisitError: null,
       dateVisit: new Date(),
       dateVisitError: null,
@@ -111,7 +113,7 @@ class FormVisita extends Component{
 
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, tasks, createVisti} = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants} = this.props;
     var errorInForm = false;
     if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
       errorInForm = true;
@@ -199,7 +201,8 @@ class FormVisita extends Component{
           "userTasks": tareas,
           "comments": this.state.conclusionsVisit,
           "visitType": this.state.typeVisit,
-          "documentStatus": typeButtonClick
+          "documentStatus": typeButtonClick,
+          "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
         createVisti(visitJson).then((data)=> {
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
@@ -215,6 +218,9 @@ class FormVisita extends Component{
               titleMessage = "Creación visita";
               message = "Señor usuario, ocurrió un error creando la visita.";
               this.setState({showMessageCreateVisit :true});
+              idPrevisitSeleted = null;
+              clearIdPrevisit();
+              clearParticipants();
             }
           }
         }, (reason) =>{
@@ -271,11 +277,14 @@ class FormVisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
+    const {clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
+    clearParticipants();
+    idPrevisitSeleted = null;
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
+      clearIdPrevisit();
       getMasterDataFields([VISIT_TYPE]);
       consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -289,25 +298,89 @@ class FormVisita extends Component{
   }
 
   _consultInfoPrevisit(){
-    console.log("Entrooooooooo");
-    const {detailPrevisit} = this.props;
+    const {detailPrevisit, addParticipant, clearParticipants, selectsReducer} = this.props;
+    clearParticipants();
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
-      console.log("previsitConsult", previsitConsult);
+      const typeVisitSeleted = _.filter(selectsReducer.get(VISIT_TYPE), ['key', KEY_TYPE_VISIT]);
+      this.setState({
+        typeVisit: typeVisitSeleted[0].id,
+        dateVisit: new Date(moment(previsitConsult.visitTime, "x"))
+      });
+
+      //Adicionar participantes por parte del cliente
+      _.forIn(previsitConsult.participatingContacts, function(value, key) {
+        const uuid = _.uniqueId('participanClient_');
+        var clientParticipant = {
+          tipoParticipante: 'client',
+          idParticipante: value.contact,
+          nombreParticipante: value.contactName,
+          cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+          : ' - ' + value.contactPositionName,
+          empresa: '',
+          estiloSocial: value.socialStyleName === null || value.socialStyleName === undefined || value.socialStyleName === '' ? ''
+          : ' - ' + value.socialStyleName,
+          actitudBanco: value.attitudeOverGroupName === null || value.attitudeOverGroupName === undefined || value.attitudeOverGroupName === '' ? ''
+          : ' - ' + value.attitudeOverGroupName,
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(clientParticipant);
+      });
+
+      //Adicionar participantes por parte de bancolombia
+      _.forIn(previsitConsult.participatingEmployees, function(value, key) {
+        const uuid = _.uniqueId('participanBanco_');
+        var clientParticipant = {
+          tipoParticipante: 'banco',
+          idParticipante: value.employee,
+          nombreParticipante: value.employeeName,
+          cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+          : ' - ' + value.positionName,
+          empresa: value.lineBusinessName === null || value.lineBusinessName === undefined || value.lineBusinessName === '' ? ''
+          : ' - ' + value.lineBusinessName,
+          estiloSocial: '',
+          actitudBanco: '',
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(clientParticipant);
+      });
+
+      //Adicionar otros participantes
+      _.forIn(previsitConsult.relatedEmployees, function(value, key) {
+        const uuid = _.uniqueId('participanOther_');
+        var otherParticipant = {
+          tipoParticipante: 'other',
+          idParticipante: value.id,
+          nombreParticipante: value.name,
+          cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+          : ' - ' + value.position,
+          empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+          : ' - ' + value.company,
+          estiloSocial: '',
+          actitudBanco: '',
+          fecha: Date.now(),
+          uuid,
+        }
+        addParticipant(otherParticipant);
+      });
     });
   }
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      clientInformacion, selectsReducer, handleSubmit,visitReducer} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, visitReducer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
-    console.log(visitReducer.get("idPrevisit"));
-    if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' ){
+    //Verifico si la visita se asocia a una previsita, para así cargar los datos
+    if( visitReducer.get("idPrevisit") !== null && visitReducer.get("idPrevisit") !== undefined && visitReducer.get("idPrevisit") !== '' && visitReducer.get("idPrevisit") > 0 ){
       if( idPrevisitSeleted !== visitReducer.get("idPrevisit") ){
         idPrevisitSeleted = visitReducer.get("idPrevisit");
         this._consultInfoPrevisit();
       }
+    } else {
+      idPrevisitSeleted = null;
     }
     var showAECNoAplica = false;
     var showAECNivel = true;
@@ -513,7 +586,10 @@ function mapDispatchToProps(dispatch){
     consultParameterServer,
     createVisti,
     downloadFilePdf,
-    detailPrevisit
+    detailPrevisit,
+    addParticipant,
+    clearIdPrevisit,
+    clearParticipants
   }, dispatch);
 }
 
