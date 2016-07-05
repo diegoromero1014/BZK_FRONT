@@ -45,7 +45,7 @@ class InfoFinanciera extends Component{
               <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ventas anuales</span></th>
               <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Activos</span></th>
               <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Pasivos</span></th>
-              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ingresos operacionales</span></th>
+              <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ingresos operacionales mensuales</span></th>
             </tr>
           </thead>
           <tbody>
@@ -61,8 +61,8 @@ class InfoFinanciera extends Component{
         <table style={{width: "100%", marginTop: "15px"}}>
           <thead>
           <tr>
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ingresos no operacionales</span></th>
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Egresos</span></th>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ingresos no operacionales mensuales</span></th>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Egresos mensuales</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Fecha de ventas anuales</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}></span></th>
           </tr>
