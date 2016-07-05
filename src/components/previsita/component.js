@@ -66,9 +66,9 @@ class PrevisitComponent extends Component {
                 <button className="btn btn-primary" type="button" title="Crear previsita" style={{marginTop: "21px"}} onClick={this._createPrevisita}>
                   <i className="plus icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
-                <button className="btn btn-primary" type="button" title="Caso práctico previsita" onClick={this._downloadFilePrevisitGuide}>
+                <button className="btn btn-primary" style={{marginTop: '20px',marginLeft: '15px'}}type="button" title="Caso práctico previsita" onClick={this._downloadFilePrevisitGuide}>
                   <span>{'Caso práctico'} </span>
-                  <i title="Informe de previsita guía" className="red file pdf outline icon" style={{cursor: "pointer", fontSize: "18px",position: 'relative', top: '15px'}}></i>
+                  <i title="Informe de previsita guía" className="file pdf outline icon" style={{cursor: "pointer", position: 'relative'}}></i>
                 </button>
               </Col>
             </Row>
