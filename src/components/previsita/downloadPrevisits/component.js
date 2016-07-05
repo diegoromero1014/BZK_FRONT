@@ -47,7 +47,7 @@ class DownloadPrevisits extends Component {
 			<div>
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
-						<span>{'En esta sección podrá descargar algunos campos de los "informes de previsita del cliente.\n Seleccione los campos que desea descargar a excel:"'}</span>
+						<span>{'En esta sección podrá descargar algunos campos de los informes de previsita del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
 							<div className="item"><input name="participatingContacts" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del cliente'}</div>
 							<div className="item"><input name="participatingEmployees" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del Grupo Bancolombia'}</div>
