@@ -75,7 +75,7 @@ class ListPrevisitComponent extends Component {
 	}
 
 	_renderCellView(data) {
-		const mensaje = "Señor usuario ¿está seguro que desea eliminar la previsita?";
+		const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de previsita?";
 
 		return _.forOwn(data, function(value, key) {
 			let json1 = {

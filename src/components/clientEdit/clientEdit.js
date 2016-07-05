@@ -802,7 +802,7 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Ingresos operacionales (</span><span style={{color: "red"}}>*</span>)
+                <span>Ingresos operacionales mensuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
                 <Input
@@ -812,7 +812,7 @@ class clientEdit extends Component{
                   min={0}
                   max="16"
                   type="text"
-                  placeholder="Ingrese los ingresos operacionales"
+                  placeholder="Ingrese los ingresos operacionales mensuales"
                   {...operatingIncome}
                   value={operatingIncome.value}
                   onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
@@ -821,7 +821,7 @@ class clientEdit extends Component{
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Ingresos no operacionales (</span><span style={{color: "red"}}>*</span>)
+                <span>Ingresos no operacionales mensuales (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
                 <Input
@@ -831,7 +831,7 @@ class clientEdit extends Component{
                   max="16"
                   type="text"
                   onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                  placeholder="Ingrese los ingresos no operacionales"
+                  placeholder="Ingrese los ingresos no operacionales mensuales"
                   {...nonOperatingIncome}
                   value={nonOperatingIncome.value}
                   onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
@@ -842,7 +842,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Egresos (</span><span style={{color: "red"}}>*</span>)
+                <span>Egresos mensuales(</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt>
                 <Input
@@ -852,7 +852,7 @@ class clientEdit extends Component{
                   max="16"
                   type="text"
                   onChange={val => this._onChangeValue("expenses", val)}
-                  placeholder="Ingrese los egresos"
+                  placeholder="Ingrese los egresos mensuales"
                   {...expenses}
                   value={expenses.value}
                   onBlur={val => this._handleBlurValueNumber(1, expenses ,expenses.value)}
