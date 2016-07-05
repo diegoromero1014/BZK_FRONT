@@ -38,6 +38,7 @@ class ButtonAssociateComponent extends Component {
         const {previsitReducer,changeIdPrevisit} = this.props;
 	      const data = previsitReducer.get('previsitList');
         return data.map((value, index) => {
+          var dateVisitFormat = moment(value.datePrevisit).locale('es');
           return (
             <a className="item" key={index}>
             <div className="ui prueba slider checkbox"
@@ -48,7 +49,7 @@ class ButtonAssociateComponent extends Component {
               }}
             >
             <input type="radio" name="frequency"/>
-            <label>{value.datePrevisit}</label>
+            <label>dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a")</label>
             </div>
             </a>
           );
@@ -106,7 +107,7 @@ class ButtonAssociateComponent extends Component {
                         confirmButtonColor= '#DD6B55'
                         confirmButtonText= 'Sí, estoy seguro!'
                         cancelButtonText = "Cancelar"
-                        text="Señor usuario, seguro que desea asociar la previsita seleccionada?"
+                        text="Señor usuario ¿seguro que desea asociar la previsita seleccionada?"
                         showCancelButton= {true}
                         onCancel= {() => this.setState({show: false })}
                         onConfirm={() => this._associtate()}/>
