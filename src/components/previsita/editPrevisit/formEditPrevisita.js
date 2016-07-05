@@ -279,6 +279,12 @@ class FormEditPrevisita extends Component{
         datePreVisitError: "Debe seleccionar una opción"
       });
     }
+    if( this.state.lugarPrevisit === null || this.state.lugarPrevisit === undefined || this.state.lugarPrevisit === "" ){
+      errorInForm = true;
+      this.setState({
+        lugarPrevisitError: "Debe ingresar un valor"
+      });
+    }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo
     if( valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED){
@@ -617,7 +623,7 @@ class FormEditPrevisita extends Component{
             </dt>
           </Col>
           <Col xs={6} md={3} lg={3}>
-            <dt><span>Lugar</span></dt>
+            <dt><span>Lugar (</span><span style={{color: "red"}}>*</span>)</dt>
             <dt style={{marginRight:"17px"}}>
               <Input
                 value={this.state.lugarPrevisit}
