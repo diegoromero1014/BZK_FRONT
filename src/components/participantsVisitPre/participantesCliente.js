@@ -165,8 +165,9 @@ class ParticipantesCliente extends Component{
               <Col xs={12} md={6} lg={6}>
                 <dt>
                   <span>Estilo social </span>
+                  <i className="help circle icon blue" style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}} title="Mensaje"/>
                   <i onClick={this._downloadFileSocialStyle}
-                    style={{marginLeft: "2px", cursor: "pointer", fontSize: "13px"}}
+                    style={{marginLeft: "0px", cursor: "pointer", fontSize: "13px"}}
                     title="Descargar archivo de estilo social"
                     className="red file pdf outline icon"></i>
                 </dt>
