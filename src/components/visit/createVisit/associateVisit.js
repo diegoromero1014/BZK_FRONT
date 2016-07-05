@@ -8,6 +8,8 @@ import Modal from 'react-modal';
 import $ from 'jquery';
 import _ from 'lodash';
 import SweetAlert from 'sweetalert-react';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 
 class ButtonAssociateComponent extends Component {
@@ -39,20 +41,21 @@ class ButtonAssociateComponent extends Component {
 	      const data = previsitReducer.get('previsitList');
         return data.map((value, index) => {
           var dateVisitFormat = moment(value.datePrevisit).locale('es');
-          return (
-            <a className="item" key={index}>
-            <div className="ui prueba slider checkbox"
-              ref={checkbox => {
-                $(checkbox).checkbox({
-                  onChecked: () => this._idPrevisit(value.id)
-                });
-              }}
-            >
-            <input type="radio" name="frequency"/>
-            <label>dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a")</label>
-            </div>
-            </a>
-          );
+            return (
+              <a className="item" key={index}>
+              <div className="ui prueba slider checkbox"
+                ref={checkbox => {
+                  $(checkbox).checkbox({
+                    onChecked: () => this._idPrevisit(value.id)
+                  });
+                }}
+              >
+              <input type="radio" name="frequency"/>
+                <label>{dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a")}</label>
+              </div>
+              </a>
+            );
+
         });
     }
 
@@ -79,7 +82,13 @@ class ButtonAssociateComponent extends Component {
 
   render() {
     const {changeIdPrevisit,visitReducer} = this.props;
-
+    let visibleTable = 'none';
+    let visibleMessage = 'block';
+    const {previsitReducer} = this.props;
+    if(previsitReducer.get('rowCount') !== 0) {
+      visibleTable = 'block';
+      visibleMessage = 'none';
+    }
     return (
       <Col xs={2} sm={2} md={2} lg={2}>
           <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Asociar previsita</button>
@@ -97,8 +106,10 @@ class ButtonAssociateComponent extends Component {
                           </button>
                       </div>
                       <form>
-                      <div className="ui divided selection list" style={{margin: '20px 20px 20px 20px',border: '1px solid',borderColor: '#DDDDDD'}}>
+                      <div className="ui divided selection list" style={{margin: '20px 20px 20px 20px',border: '1px solid',borderColor: '#DDDDDD',display: visibleTable}}>
                           {this._renderRow()}
+                      </div>
+                      <div style= {{display: visibleMessage,margin: '20px 20px 20px 20px'}}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado previsitas a asociar</span>
                       </div>
                       <SweetAlert
                         type= "warning"
