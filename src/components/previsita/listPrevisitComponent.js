@@ -63,7 +63,7 @@ class ListPrevisitComponent extends Component {
 			key: "typePrevisit"
 		}, {
 			title: "Fecha de reunión",
-			key: "datePrevisit",
+			key: "datePrevisitFormat",
 			orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display:this.state.orderD}} onClick={() => this._orderColumn(0,"pvd.visitTime")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"pvd.visitTime")}></i></span>
 		}, {
 			title: "Estado del documento",
