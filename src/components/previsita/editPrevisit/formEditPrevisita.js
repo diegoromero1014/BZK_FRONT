@@ -38,6 +38,7 @@ var fechaModString = '';
 var fechaCreateString = '';
 var createdBy = '';
 var updatedBy = '';
+var firstLoadInfo = false;
 
 const validate = values => {
     const errors = {};
@@ -131,21 +132,36 @@ class FormEditPrevisita extends Component{
     const {selectsReducer} = this.props;
     const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(value)]);
     valueTypePrevisit = typeSeleted[0].key;
-    this.setState({
-      typePreVisit: parseInt(value),
-      typePreVisitError: null,
-      acondicionamientoTouch: false,
-      acondicionamientoError: "",
-      replanteamientoTouch: false,
-      replanteamientoError: "",
-      ahogamientoTouch: false,
-      ahogamientoError: "",
-      impactoTouch: false,
-      impactoError: "",
-      nuevoModoTouch: false,
-      nuevoModoError: "",
-      nuestraSolucionTouch: false
-    });
+    if( firstLoadInfo ){
+      this.setState({
+        typePreVisit: parseInt(value),
+        typePreVisitError: null,
+        acondicionamiento: "",
+        acondicionamientoTouch: false,
+        acondicionamientoError: "",
+        replanteamiento: "",
+        replanteamientoTouch: false,
+        replanteamientoError: "",
+        ahogamiento: "",
+        ahogamientoTouch: false,
+        ahogamientoError: "",
+        impacto: "",
+        impactoTouch: false,
+        impactoError: "",
+        nuevoModo: "",
+        nuevoModoTouch: false,
+        nuevoModoError: "",
+        nuestraSolucion: "",
+        nuestraSolucionTouch: false,
+        nuestraSolucionError: ""
+      });
+    } else {
+      firstLoadInfo = true;
+      this.setState({
+        typePreVisit: parseInt(value)
+      });
+    }
+
   }
 
   _changeDatePreVisit(value){
@@ -446,6 +462,7 @@ class FormEditPrevisita extends Component{
   }
 
   componentWillMount(){
+    firstLoadInfo = false;
     const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
     valueTypePrevisit = null;
     const infoClient = clientInformacion.get('responseClientInfo');
@@ -587,7 +604,10 @@ class FormEditPrevisita extends Component{
         <Row style={{padding: "0px 10px 20px 20px"}}>
         <Col xs={6} md={3} lg={3}>
           <div style={{paddingRight: "15px"}}>
-            <dt><span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)</dt>
+            <dt>
+              <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
+              <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+            </dt>
             <ComboBox
               name="tipoVisita"
               labelInput="Seleccione..."
