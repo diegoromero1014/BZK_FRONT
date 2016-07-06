@@ -64,6 +64,7 @@ class DownloadPrevisits extends Component {
 							<li>{'Célula'}</li>
 							<li>{'Fecha de la reunión'}</li>
 							<li>{'Tipo de reunión'}</li>
+							<li>{'Lugar'}</li>
 						</ul>
 					</div>
 					</div>
