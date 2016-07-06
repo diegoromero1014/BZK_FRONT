@@ -11,6 +11,10 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
+var labelPrevistVist = "En esta sección podrá asociar un informe de previsita (registrado previamente) "
+    + "al informe de visita que se esté realizando.\n Asociar una previsita a la visita te permitirá llevar "
+    + "trazabilidad entre los informes y se diligenciará automáticamente la información de los participantes, "
+    + "fecha y hora de la visita";
 
 class ButtonAssociateComponent extends Component {
 
@@ -96,7 +100,7 @@ class ButtonAssociateComponent extends Component {
                 isOpen={this.state.modalIsOpen}
                 onRequestClose={this.closeModal}
                 className="modalBt4-fade modal fade contact-detail-modal in">
-                <div className="modalBt4-dialog modalBt4-sm">
+                <div className="modalBt4-dialog">
                     <div className="modalBt4-content modal-content">
                       <div className="modalBt4-header modal-header">
                           <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Asociar previsita</h4>
@@ -106,9 +110,13 @@ class ButtonAssociateComponent extends Component {
                           </button>
                       </div>
                       <form>
+                      <div style= {{display: visibleTable, margin: '20px 20px 20px 20px'}}>
+                        <span style={{fontWeight: 'normal', color: '#4C5360'}}>{labelPrevistVist}</span>
+                      </div>
                       <div className="ui divided selection list" style={{margin: '20px 20px 20px 20px',border: '1px solid',borderColor: '#DDDDDD',display: visibleTable}}>
                           {this._renderRow()}
                       </div>
+
                       <div style= {{display: visibleMessage,margin: '20px 20px 20px 20px'}}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado previsitas a asociar</span>
                       </div>
                       <SweetAlert
