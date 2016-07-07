@@ -15,6 +15,7 @@ import {consultDataSelect, consultListWithParameterUbication, getMasterDataField
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
+import * as constants from './constants';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -79,6 +80,7 @@ class ModalComponentShareholder extends Component {
     this._onChangeTypeShareholder = this._onChangeTypeShareholder.bind(this);
     this._handleCreateShareholder = this._handleCreateShareholder.bind(this);
     this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+    this._selectTypeOfPerson = this._selectTypeOfPerson.bind(this);
     this.state = {
        showMessage:false,
        noExiste : 'hidden',
@@ -163,6 +165,24 @@ class ModalComponentShareholder extends Component {
       titleMessage = "Campos obligatorios";
       message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
       this.setState({showMessage: true});
+    }
+  }
+
+  _selectTypeOfPerson(val) {
+    console.log('Cambió el tipo de persona');
+    console.log(this);
+    console.log('val -> ', val);
+    if(parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_PJ || parseInt(val) === constants.TYPE_OF_DOCUMENT_NIT) {
+      console.log('Tipo de persona Juridca');
+      this._onChangeTypeShareholder(constants.TYPE_OF_PERSON_PN);
+    }
+    if (parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_PN || parseInt(val) === constants.TYPE_OF_DOCUMENT_DIPLOMATIC_CARD
+      || parseInt(val) === constants.TYPE_OF_DOCUMENT_CITIZENCHIP_CARD || parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_CITIZENCHIP_CARD
+      || parseInt(val) === constants.TYPE_OF_DOCUMENT_PASSPORT || parseInt(val) === constants.TYPE_OF_DOCUMENT_CIVIL_REGISTRATION
+      || parseInt(val) === constants.TYPE_OF_DOCUMENT_IDENTITY_CARD) {
+
+      console.log('Tipo de persona natural');
+    this._onChangeTypeShareholder(constants.TYPE_OF_PERSON_PJ);
     }
   }
 
@@ -278,6 +298,7 @@ class ModalComponentShareholder extends Component {
                       textProp = {'value'}
                       labelInput="Seleccione"
                       data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
+                      onChange={val => this._selectTypeOfPerson(val)}
                     />
                     </dd>
                   </dl>
@@ -309,6 +330,7 @@ class ModalComponentShareholder extends Component {
                     valueProp={'id'}
                     textProp = {'value'}
                     labelInput="Seleccione"
+                    disabled="disabled"
                     onChange={val => this._onChangeTypeShareholder(val)}
                     data={selectsReducer.get("dataTypeShareholdersType") || []}
                   />
@@ -399,8 +421,8 @@ class ModalComponentShareholder extends Component {
                   <Textarea
                     name="observaciones"
                     type="text"
-                    max="150"
-                    title="La longitud máxima de caracteres es de 150"
+                    max="1000"
+                    title="La longitud máxima de caracteres es de 1,000"
                     style={{width: '100%', height: '100%'}}
                     {...observaciones}
                   />

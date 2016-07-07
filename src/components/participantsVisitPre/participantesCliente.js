@@ -20,6 +20,10 @@ const validate = values => {
     return errors
 };
 
+var titleMessageSocialStyle = "Si la reunión será atendida por varias personas por parte del cliente ¿tiene "
+    + "adaptada la conversación a los intereses y preocupaciones principales de cada uno? ¿Conoce cuáles son "
+    + "esos intereses y preocupaciones?";
+
 var disabledButtonCreate= '';
 class ParticipantesCliente extends Component{
 
@@ -165,7 +169,7 @@ class ParticipantesCliente extends Component{
               <Col xs={12} md={6} lg={6}>
                 <dt>
                   <span>Estilo social </span>
-                  <i className="help circle icon blue" style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}} title="Mensaje"/>
+                  <i className="help circle icon blue" style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}} title={titleMessageSocialStyle}/>
                   <i onClick={this._downloadFileSocialStyle}
                     style={{marginLeft: "0px", cursor: "pointer", fontSize: "13px"}}
                     title="Descargar archivo de estilo social"

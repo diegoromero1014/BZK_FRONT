@@ -24,7 +24,21 @@ import moment from 'moment';
 const fields = [];
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
       "campos. Recuerde que lo importante es la necesidad del cliente, por lo cual no debe hablar de Bancolombia hasta cuando se expone la solución a la situación del cliente.\n" +
-      "No es necesario haber asistido previamente a la formación Challenger, el formato entrega las herramientas necesarias para su construcción."
+      "No es necesario haber asistido previamente a la formación Challenger, el formato entrega las herramientas necesarias para su construcción.";
+
+var titleMessagePendient = "En este campo se deberá registrar los pendientes quejas o reclamos que tenga el cliente y que podrán ser motivo de conversación en la reunión.";
+
+var titleMessageTarget = "En este campo deberá registrar de manera clara cual es propósito de la reunión.\n\n" +
+      "Si el tipo de visita es “propuesta comercial”, antes de responder deberá hacerse  las siguientes preguntas y/o reflexiones:\n\n" +
+      "1. ¿Cuál es el insight (enseñanza) que desea llevarle al cliente?\n" +
+      "a. ¿Por qué esta enseñanza hará pensar de manera distinta al cliente?\n" +
+      "b. ¿Cómo crees que esta enseñanza llevará al cliente a la acción?\n" +
+      "c. ¿Cómo esta enseñanza conduce hacia una solución que tiene el Grupo Bancolombia?\n\n" +
+      "2. ¿Cuáles son los resultados esperados y en cuánto tiempo se verán materializados?";
+
+var titleMessageTypePrevisit = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
+            "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
+
 var dateVisitLastReview;
 var showMessageCreatePreVisit= false;
 var typeMessage = "success";
@@ -32,6 +46,9 @@ var titleMessage = "";
 var message = "";
 var typeButtonClick;
 var valueTypePrevisit = null;
+var idTypeVisitAux = null;
+var idTypeVisitAuxTwo = null;
+var contollerErrorChangeType = false;
 
 const validate = values => {
     const errors = {};
@@ -51,6 +68,7 @@ class FormPrevisita extends Component{
       lugarPrevisit: "",
       lugarPrevisitError: false,
       showConfirm: false,
+      showConfirmChangeTypeVisit: false,
       activeItemTabBanc: '',
       activeItemTabClient: 'active',
       activeItemTabOther: '',
@@ -90,6 +108,8 @@ class FormPrevisita extends Component{
     this._changeNuevoModo = this._changeNuevoModo.bind(this);
     this._changeNuestraSolucion = this._changeNuestraSolucion.bind(this);
     this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
+    this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
+    this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
   }
 
   _closeMessageCreatePreVisit(){
@@ -107,13 +127,31 @@ class FormPrevisita extends Component{
   }
 
   _changeTypePreVisit(value){
+    if( value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType ){
+      contollerErrorChangeType = true;
+      idTypeVisitAux = value;
+      this.setState({
+        showConfirmChangeTypeVisit: true
+      });
+    }
+  }
+
+  _closeCancelConfirmChanType(){
+    contollerErrorChangeType = false;
+    this.setState({showConfirmChangeTypeVisit: false });
+  }
+
+  _closeConfirmChangeType(){
+    contollerErrorChangeType = false;
     const {selectsReducer} = this.props;
-    const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(value)]);
+    idTypeVisitAuxTwo = idTypeVisitAux;
+    const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
     if(typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined){
       valueTypePrevisit = typeSeleted[0].key;
     }
     this.setState({
-      typePreVisit: parseInt(value),
+      typePreVisit: parseInt(idTypeVisitAux),
+      showConfirmChangeTypeVisit: false,
       typePreVisitError: null,
       acondicionamiento: "",
       acondicionamientoTouch: false,
@@ -468,7 +506,7 @@ class FormPrevisita extends Component{
           <div style={{paddingRight: "15px"}}>
             <dt>
               <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
-              <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}} title={titleMessageTypePrevisit}/>
             </dt>
             <ComboBox
               name="tipoVisita"
@@ -552,7 +590,7 @@ class FormPrevisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Objetivo de la reunión </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleMessageTarget}/>
             </div>
           </Col>
         </Row>
@@ -622,7 +660,7 @@ class FormPrevisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Pendientes, quejas y reclamos </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title="Mensaje"/>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleMessagePendient}/>
             </div>
           </Col>
         </Row>
@@ -679,6 +717,17 @@ class FormPrevisita extends Component{
            showCancelButton= {true}
            onCancel= {() => this.setState({showConfirm: false })}
            onConfirm={this._closeConfirmCloseVisit}/>
+         <SweetAlert
+           type= "warning"
+           show={this.state.showConfirmChangeTypeVisit}
+           title="Tipo de visita"
+           text="Señor usuario, si cambia el “Tipo de visita” la información diligenciada en la sección Metodología Challenger se borrará. ¿Estás seguro que desea cambiar el Tipo de visita? "
+           confirmButtonColor= '#DD6B55'
+           confirmButtonText= 'Sí, estoy seguro!'
+           cancelButtonText = "Cancelar"
+           showCancelButton= {true}
+           onCancel= {this._closeCancelConfirmChanType}
+           onConfirm={this._closeConfirmChangeType}/>
       </form>
     );
   }
