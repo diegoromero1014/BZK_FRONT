@@ -388,7 +388,6 @@ class FormPrevisita extends Component{
       if( dataBanco.length > 0 && dataBanco[0] === undefined ){
         dataBanco = [];
       }
-
       var dataClient = [];
       _.map(participants.toArray(),
         function(participant){
@@ -404,7 +403,6 @@ class FormPrevisita extends Component{
       if( dataClient.length > 0 && dataClient[0] === undefined ){
         dataClient = [];
       }
-
       //Valido que haya por los menos 1 usuairo por parte del banco y por parte del cliente o si
       //la previsita se está guardando como borrador
       if( (dataBanco.length > 0 && dataClient.length > 0) || typeButtonClick === SAVE_DRAFT ){
@@ -446,7 +444,6 @@ class FormPrevisita extends Component{
         }
         //console.log("previsitJson", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
-          console.log("then data", data);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -704,7 +701,7 @@ class FormPrevisita extends Component{
         </div>
         <SweetAlert
          type="error"
-         show={this.state.showErrorSaveVisit}
+         show={this.state.showErrorSavePreVisit}
          title="Error participantes"
          text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia y otro por parte del cliente."
          onConfirm={() => this.setState({showErrorSavePreVisit:false})}
