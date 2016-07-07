@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
+import Textarea from '../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import {createProspect} from './actions';
 import * as constants from '../selectsComponent/constants';
@@ -285,11 +286,13 @@ class FormCreateProspect extends Component{
           <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
               <dt><span>Breve descripción de la empresa</span></dt>
-              <textarea
-                {...descriptionCompany}
+              <Textarea
+                name="description"
+                type="text"
                 style={{width: "100%"}}
                 maxLength="250"
                 rows="4"
+                {...descriptionCompany}
               />
             </div>
           </Col>

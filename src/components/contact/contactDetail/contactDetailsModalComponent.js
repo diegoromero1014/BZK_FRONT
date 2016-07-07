@@ -113,6 +113,7 @@ class ContactDetailsModalComponent extends Component {
     this._onchangeValue = this._onchangeValue.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
+    this._genero = this._genero.bind(this);
     this._uploadProvincesByCountryId = this._uploadProvincesByCountryId.bind(this);
     this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
     this._editContact = this._editContact.bind(this);
@@ -121,6 +122,7 @@ class ContactDetailsModalComponent extends Component {
     this.state = {
       contactEdited: false,
       isEditable: false,
+      generoData:[],
       showEr:false,
     };
     momentLocalizer(moment);
@@ -153,6 +155,24 @@ class ContactDetailsModalComponent extends Component {
   _downloadFileSocialStyle(){
     const {downloadFilePDF} = this.props;
     downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+  }
+
+
+  _genero(val){
+    const {fields: {contactTitle,contactGender},selectsReducer} = this.props;
+    var femenino = ['Señora','Señorita','Doctora'];
+    var masculino = ['Señor','Doctor','Padre'];
+    var genero;
+    var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
+    if(_.indexOf(femenino,tratamiento)  != -1){
+      genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
+    }else if(_.indexOf(masculino,tratamiento) != -1){
+      genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
+    }else{
+      genero = selectsReducer.get(FILTER_GENDER);
+    }
+    contactGender.onChange('');
+    this.setState({generoData : genero});
   }
 
   /* Cambio en los valores */
@@ -384,6 +404,7 @@ class ContactDetailsModalComponent extends Component {
                       name="contactTitle"
                       labelInput="Seleccione"
                       {...contactTitle}
+                      onChange={val => this._genero(val)}
                       disabled={this.state.isEditable ? '' : 'disabled'}
                       valueProp={'id'}
                       textProp={'value'}
@@ -403,7 +424,7 @@ class ContactDetailsModalComponent extends Component {
                       valueProp={'id'}
                       textProp={'value'}
                       parentId="modalEditCotact"
-                      data={selectsReducer.get(FILTER_GENDER) || []}
+                      data={this.state.generoData ? this.state.generoData : selectsReducer.get(FILTER_GENDER)}
                     />
                   </dd>
                 </Col>
