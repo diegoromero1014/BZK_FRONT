@@ -14,7 +14,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 var labelPrevistVist = "En esta sección podrá asociar un informe de previsita (registrado previamente) "
     + "al informe de visita que se esté realizando.\n Asociar una previsita a la visita te permitirá llevar "
     + "trazabilidad entre los informes y se diligenciará automáticamente la información de los participantes, "
-    + "fecha y hora de la visita";
+    + "fecha y hora de la visita.";
 
 class ButtonAssociateComponent extends Component {
 

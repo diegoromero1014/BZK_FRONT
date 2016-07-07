@@ -150,11 +150,17 @@ class FormEditPrevisita extends Component{
 
   _changeTypePreVisit(value){
     if( value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType && firstLoadInfo ){
-      contollerErrorChangeType = true;
-      idTypeVisitAux = value;
-      this.setState({
-        showConfirmChangeTypeVisit: true
-      });
+      if( valueTypePrevisit === PROPUEST_OF_BUSINESS ){
+        contollerErrorChangeType = true;
+        idTypeVisitAux = value;
+        this.setState({
+          showConfirmChangeTypeVisit: true
+        });
+      } else {
+        contollerErrorChangeType = true;
+        idTypeVisitAux = value;
+        this._closeConfirmChangeType();
+      }
     } else {
       firstLoadInfo = true;
     }

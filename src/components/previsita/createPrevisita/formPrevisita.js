@@ -127,13 +127,22 @@ class FormPrevisita extends Component{
   }
 
   _changeTypePreVisit(value){
-    if( value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType ){
-      contollerErrorChangeType = true;
-      idTypeVisitAux = value;
-      this.setState({
-        showConfirmChangeTypeVisit: true
-      });
-    }
+      if( value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType ){
+        console.log("idTypeVisitAux", idTypeVisitAux);
+        console.log("valueTypePrevisit", valueTypePrevisit);
+        if( idTypeVisitAux !== null && valueTypePrevisit !== null && valueTypePrevisit === PROPUEST_OF_BUSINESS ){
+          contollerErrorChangeType = true;
+          idTypeVisitAux = value;
+          this.setState({
+            showConfirmChangeTypeVisit: true
+          });
+        } else {
+          console.log("Entro por acá");
+          contollerErrorChangeType = true;
+          idTypeVisitAux = value;
+          this._closeConfirmChangeType();
+        }
+      }
   }
 
   _closeCancelConfirmChanType(){
