@@ -128,8 +128,6 @@ class FormPrevisita extends Component{
 
   _changeTypePreVisit(value){
       if( value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType ){
-        console.log("idTypeVisitAux", idTypeVisitAux);
-        console.log("valueTypePrevisit", valueTypePrevisit);
         if( idTypeVisitAux !== null && valueTypePrevisit !== null && valueTypePrevisit === PROPUEST_OF_BUSINESS ){
           contollerErrorChangeType = true;
           idTypeVisitAux = value;
@@ -137,7 +135,6 @@ class FormPrevisita extends Component{
             showConfirmChangeTypeVisit: true
           });
         } else {
-          console.log("Entro por acá");
           contollerErrorChangeType = true;
           idTypeVisitAux = value;
           this._closeConfirmChangeType();
@@ -483,6 +480,10 @@ class FormPrevisita extends Component{
   }
 
   componentWillMount(){
+    valueTypePrevisit = null;
+    idTypeVisitAux = null;
+    idTypeVisitAuxTwo = null;
+    contollerErrorChangeType = false;
     const {clientInformacion, getMasterDataFields} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     valueTypePrevisit = null;
