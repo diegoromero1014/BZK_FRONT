@@ -103,11 +103,13 @@ class ModalComponentContact extends Component {
         this._onChangeCountry = this._onChangeCountry.bind(this);
         this._onChangeProvince = this._onChangeProvince.bind(this);
         this._searchContact = this._searchContact.bind(this);
+        this._genero = this._genero.bind(this);
         this._onClickLimpiar = this._onClickLimpiar.bind(this);
         this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
         this.state = {
            showEx:false,
            showEr:false,
+           generoData:[],
            showErrorYa: false,
            noExiste : 'hidden',
            disabled : '',
@@ -133,6 +135,24 @@ class ModalComponentContact extends Component {
     _close(){
       this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
       this.setState({showErrorYa:false});
+    }
+
+    _genero(val){
+      const {fields: {tipoTratamiendo,tipoGenero},selectsReducer} = this.props;
+      var femenino = ['Señora','Señorita','Doctora'];
+      var masculino = ['Señor','Doctor','Padre'];
+      var genero;
+      var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
+      if(_.indexOf(femenino,tratamiento)  != -1){
+        genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
+      }else if(_.indexOf(masculino,tratamiento) != -1){
+        genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
+      }else{
+        genero = selectsReducer.get(FILTER_GENDER);
+      }
+      this.setState({disabledDep : ''});
+      tipoGenero.onChange('');
+      this.setState({generoData : genero});
     }
 
     _onChangeCountry(val){
@@ -301,6 +321,7 @@ class ModalComponentContact extends Component {
                                   <dt><span>Tratamiento (<span style={{color: 'red'}}>*</span>)</span></dt>
                                   <dd><ComboBox name="tipoTratamiendo" labelInput="Seleccione"
                                   {...tipoTratamiendo}
+                                  onChange={val => this._genero(val)}
                                   valueProp={'id'}
                                   textProp = {'value'}
                                   parentId="modalComponentScroll"
@@ -312,11 +333,12 @@ class ModalComponentContact extends Component {
                                 <dl style={{width: '100%'}}>
                                   <dt><span>Género (<span style={{color: 'red'}}>*</span>)</span></dt>
                                   <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
+                                  disabled = {this.state.disabledDep}
                                   {...tipoGenero}
                                   valueProp={'id'}
                                   textProp = {'value'}
                                   parentId="modalComponentScroll"
-                                  data={selectsReducer.get(FILTER_GENDER) || []}
+                                  data={this.state.generoData}
                                   /></dd>
                                 </dl>
                                 </Col>
