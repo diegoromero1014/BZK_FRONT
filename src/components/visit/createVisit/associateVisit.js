@@ -25,6 +25,7 @@ class ButtonAssociateComponent extends Component {
       this._renderRow = this._renderRow.bind(this);
       this._associtate = this._associtate.bind(this);
       this._idPrevisit = this._idPrevisit.bind(this);
+      this._cancel = this._cancel.bind(this);
       this.state = {
         show: false,
         idPrevisit : 0,
@@ -38,6 +39,11 @@ class ButtonAssociateComponent extends Component {
     const {previsitByClientFindServer, clearPrevisit,previsitReducer} = this.props;
     clearPrevisit();
     previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 5, "pvd.visitTime", 1, "");
+  }
+
+  _cancel(){
+    this.setState({show: false });
+    $('.prueba.checkbox').checkbox('set unchecked');
   }
 
   _renderRow(){
@@ -128,7 +134,7 @@ class ButtonAssociateComponent extends Component {
                         cancelButtonText = "Cancelar"
                         text="Señor usuario ¿seguro que desea asociar la previsita seleccionada?"
                         showCancelButton= {true}
-                        onCancel= {() => this.setState({show: false })}
+                        onCancel= {() => this._cancel()}
                         onConfirm={() => this._associtate()}/>
                         <SweetAlert
                          type= "success"
