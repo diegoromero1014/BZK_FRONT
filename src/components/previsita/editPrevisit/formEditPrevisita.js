@@ -310,7 +310,7 @@ class FormEditPrevisita extends Component{
   }
 
   _onCloseButton(){
-    message = "¿Está seguro que desea salir de la pantalla de creación de previsita?";
+    message = "¿Está seguro que desea salir de la pantalla de edición de previsita?";
     titleMessage = "Confirmación salida";
     this.setState({showConfirm :true});
   }
