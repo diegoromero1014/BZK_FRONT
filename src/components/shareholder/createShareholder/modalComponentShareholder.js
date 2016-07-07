@@ -86,6 +86,8 @@ class ModalComponentShareholder extends Component {
        noExiste : 'hidden',
        disabled : '',
        botonBus : 'block',
+       typeShareholder : [],
+       disabledPer:'disabled',
        valueTypeShareholder: ""
     }
   }
@@ -124,14 +126,14 @@ class ModalComponentShareholder extends Component {
     this.props.resetForm();
     direccion.onChange('');
     observaciones.onChange('');
-    this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block'});
+    this.setState({disabled : '', noExiste: 'hidden', botonBus: 'block',disabledPer:'disabled'});
   }
 
   componentWillMount(){
     const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
     clearValuesAdressess();
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
+    getMasterDataFields([SHAREHOLDER_TYPE,CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -169,21 +171,23 @@ class ModalComponentShareholder extends Component {
   }
 
   _selectTypeOfPerson(val) {
-    console.log('Cambió el tipo de persona');
-    console.log(this);
-    console.log('val -> ', val);
-    if(parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_PJ || parseInt(val) === constants.TYPE_OF_DOCUMENT_NIT) {
-      console.log('Tipo de persona Juridca');
-      this._onChangeTypeShareholder(constants.TYPE_OF_PERSON_PN);
-    }
-    if (parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_PN || parseInt(val) === constants.TYPE_OF_DOCUMENT_DIPLOMATIC_CARD
-      || parseInt(val) === constants.TYPE_OF_DOCUMENT_CITIZENCHIP_CARD || parseInt(val) === constants.TYPE_OF_DOCUMENT_FOREIGN_CITIZENCHIP_CARD
-      || parseInt(val) === constants.TYPE_OF_DOCUMENT_PASSPORT || parseInt(val) === constants.TYPE_OF_DOCUMENT_CIVIL_REGISTRATION
-      || parseInt(val) === constants.TYPE_OF_DOCUMENT_IDENTITY_CARD) {
+    const {fields: {tipoDocumento, tipoPersona}, selectsReducer} = this.props;
 
-      console.log('Tipo de persona natural');
-    this._onChangeTypeShareholder(constants.TYPE_OF_PERSON_PJ);
+    let pj_options = ['ID Extranjero PJ no residente en Colombia', 'NIT'];
+    let pn_options = ['ID Extranjero PN no residente en Colombia', 'Carné diplomático', 'Cédula de ciudadanía', 'Cédula de extranjeria', 'Pasaporte', 'Registro civil', 'Tarjeta de identidad'];
+    let typeOfPerson;
+    let typeOfDocumentSelected = _.get(_.filter(selectsReducer.get(SHAREHOLDER_ID_TYPE), ['id', parseInt(val)]), '[0].key');
+    console.log('Tipo de documento seleccionado -> ', typeOfDocumentSelected);
+    if (_.indexOf(pj_options, typeOfDocumentSelected) != -1) {
+      typeOfPerson = _.filter(selectsReducer.get(SHAREHOLDER_TYPE), ['key', 'PJ']);
+      console.log('Se selecciona tipo de persona PJ');
+    } else if (_.indexOf(pn_options, typeOfDocumentSelected) != -1) {
+      typeOfPerson = _.filter(selectsReducer.get(SHAREHOLDER_TYPE), ['key', 'PN']);
+      console.log('Se selecciona tipo de persona PN');
     }
+    tipoPersona.onChange('');
+    this.setState({disabledPer:''});
+    this.setState({typeShareholder:typeOfPerson});
   }
 
   _onChangeTypeShareholder(val){
@@ -330,9 +334,9 @@ class ModalComponentShareholder extends Component {
                     valueProp={'id'}
                     textProp = {'value'}
                     labelInput="Seleccione"
-                    disabled="disabled"
+                    disabled={this.state.disabledPer}
                     onChange={val => this._onChangeTypeShareholder(val)}
-                    data={selectsReducer.get("dataTypeShareholdersType") || []}
+                    data = {this.state.typeShareholder}
                   />
                 </Col>
                 <Col xs={12} md={4} lg={4}>
