@@ -122,7 +122,7 @@ class ListVisitComponent extends Component {
             });
             if(value.idPrevisit != null && value.idPrevisit != 0){
               _.set(value, 'actionsPdf', {
-                title: "previsita",
+                title: "Ver >>",
                 urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es"
               });
             }
