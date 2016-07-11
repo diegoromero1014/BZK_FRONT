@@ -310,7 +310,7 @@ class FormEditPrevisita extends Component{
   }
 
   _onCloseButton(){
-    message = "¿Está seguro que desea salir de la pantalla de creación de previsita?";
+    message = "¿Está seguro que desea salir de la pantalla de edición de previsita?";
     titleMessage = "Confirmación salida";
     this.setState({showConfirm :true});
   }
@@ -503,8 +503,11 @@ class FormEditPrevisita extends Component{
 
   componentWillMount(){
     firstLoadInfo = false;
-    const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
     valueTypePrevisit = null;
+    idTypeVisitAux = null;
+    idTypeVisitAuxTwo = null;
+    contollerErrorChangeType = false;
+    const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
