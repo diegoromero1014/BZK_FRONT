@@ -9,6 +9,7 @@ import {pipelineByClientFindServer,clearPipeline} from './actions';
 import ListPipelineComponent from './listPipelineComponent';
 import PaginationPipelineComponent from './paginationPipelineComponent';
 import {updateTitleNavBar} from '../navBar/actions';
+import ButtonDownloadPipelineComponent from './downloadPipeline/buttonDownloadPipelineComponent';
 
 class PipelineComponent extends Component {
 
@@ -73,6 +74,7 @@ class PipelineComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
+          <ButtonDownloadPipelineComponent/>
        </div>
     );
   }
