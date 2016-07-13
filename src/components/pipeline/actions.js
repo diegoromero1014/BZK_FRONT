@@ -73,3 +73,28 @@ export function orderColumnPipeline(orderPipeline, columnPipeline) {
     columnPipeline: columnPipeline
   };
 }
+
+export function getCsvPipelineByClient(clientId) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "clientId": clientId
+    }
+  };
+  let request = axios.post(APP_URL + "/getCsvPipelineClient", json);
+  return {
+    type: constants.GET_CSV_PIPELINE_BY_CLIENT,
+    payload: request
+  };
+}

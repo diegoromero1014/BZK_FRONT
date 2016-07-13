@@ -48,10 +48,12 @@ class PrevisitComponent extends Component {
   render() {
     let visibleTable = 'none';
     let visibleMessage = 'block';
+    let visibleDownload = 'none';
     const {previsitReducer} = this.props;
     if(previsitReducer.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
+      visibleDownload = 'block';
     }
     return (
       <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
@@ -89,7 +91,7 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
-        <ButtonCreateDownloadPreVisitModal />
+        <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
       </div>
     );
   }

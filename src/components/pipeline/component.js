@@ -35,9 +35,11 @@ class PipelineComponent extends Component {
     const {pipelineReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
+    let visibleDownload = 'none';
     if(pipelineReducer.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
+      visibleDownload = 'block';
     }
     return (
       <div className = "tab-pane quickZoomIn animated"
@@ -74,7 +76,7 @@ class PipelineComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          <ButtonDownloadPipelineComponent/>
+          <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
        </div>
     );
   }

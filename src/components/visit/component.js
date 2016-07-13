@@ -43,9 +43,11 @@ class VisitComponent extends Component {
     const {visitReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
+    let visibleDownload = 'none';
     if(visitReducer.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
+      visibleDownload = 'block';
     }
     return (
       <div className = "tab-pane quickZoomIn animated"
@@ -82,7 +84,7 @@ class VisitComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          <ButtonCreateDownloadVisitModal />
+          <ButtonCreateDownloadVisitModal visibleDownload={visibleDownload}/>
        </div>
     );
   }
