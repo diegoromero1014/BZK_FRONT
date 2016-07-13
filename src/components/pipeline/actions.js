@@ -73,3 +73,27 @@ export function orderColumnPipeline(orderPipeline, columnPipeline) {
     columnPipeline: columnPipeline
   };
 }
+
+export function createEditPipeline(jsonPipeline){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": jsonPipeline
+  }
+
+  var request = axios.post(APP_URL + "/savePipeline", json);
+  return{
+    type: constants.CREATE_EDIT_PIPELINE,
+    payload: request
+  }
+}
