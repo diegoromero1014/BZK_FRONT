@@ -8,15 +8,15 @@ export function createVisti(jsonVisit){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": jsonVisit
   }
@@ -28,24 +28,23 @@ export function createVisti(jsonVisit){
   }
 }
 
-
 export function pdfDescarga(idclient, idVisit){
-window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es");
+  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es");
 }
 
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,order,statusDocumentId){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
       "clientId": clientId,
@@ -69,15 +68,15 @@ export function consultParameterServer(tagConsult){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
       "name": tagConsult
@@ -148,18 +147,18 @@ export function detailVisit(idVisit){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
-         "id": idVisit
+       "id": idVisit
      }
   }
 

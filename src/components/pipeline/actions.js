@@ -91,10 +91,33 @@ export function getCsvPipelineByClient(clientId) {
     "messageBody": {
       "clientId": clientId
     }
-  };
+  }
   let request = axios.post(APP_URL + "/getCsvPipelineClient", json);
   return {
     type: constants.GET_CSV_PIPELINE_BY_CLIENT,
     payload: request
-  };
+}
+}
+
+export function createEditPipeline(jsonPipeline){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": jsonPipeline
+  }
+  var request = axios.post(APP_URL + "/savePipeline", json);
+  return{
+    type: constants.CREATE_EDIT_PIPELINE,
+    payload: request
+  }
 }
