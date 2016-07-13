@@ -71,6 +71,8 @@ class SelectFilterComponent extends Component{
         }];
       } else if(idTypeFilter === TASK_STATUS) {
         data= selectsReducer.get('dataTypeTaskType');
+      }else if(idTypeFilter == FILTER_STATUS_PIPELINE_ID){
+        data=[{id:'0', value:'Guardado como borrador'},{id:'1',value:'Guardado como definitivo'}];
       }
       return(
           <Combobox

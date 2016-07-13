@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import {GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PREVISIT,
-  CLEAR_PREVISIT, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT} from './constants';
+  CLEAR_PREVISIT,CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -49,6 +49,11 @@ export default (state = initialState, action) => {
             map.set('orderPrevisit', 1)
                 .set('columnPrevisit', 'pvd.visitTime');
         });
+    case CLEAR_PREVISIT_PAGINATOR:
+            return state.withMutations(map => {
+                map.set('page', 1)
+                    .set('limInf', 0)
+            });
     default:
     	return state;
     }

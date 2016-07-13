@@ -37,3 +37,4 @@ export const TASK_STATUS = "taskStatus";
 export const PREVISIT_TYPE = "previsitType";
 export const PIPELINE_STATUS = "pipelineStatus";
 export const FILTER_STATUS_TASK_ID ="FILTER_STATUS_TASK_ID";
+export const FILTER_STATUS_PIPELINE_ID = "FILTER_STATUS_PIPELINE_ID";

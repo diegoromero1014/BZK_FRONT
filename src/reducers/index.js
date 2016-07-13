@@ -20,6 +20,7 @@ import createShareholderReducer from '../components/shareholder/createShareholde
 import editShareholderReducer from '../components/shareholder/shareholderDetail/reducer';
 import previsitReducer from '../components/previsita/reducer';
 import visitReducer from '../components/visit/reducer';
+import pipelineReducer from '../components/pipeline/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import taskReducer from '../components/visit/tasks/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
@@ -54,5 +55,5 @@ export default combineReducers({
     tasksByClient: tasksByClientReducer,
     tabReducer: tabReducer,
     taskReducerCreate: taskReducerCreate,
-    viewManagementReducer: viewManagementReducer
+    pipelineReducer:pipelineReducer
 });

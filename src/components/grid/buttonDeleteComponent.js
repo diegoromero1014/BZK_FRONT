@@ -5,9 +5,10 @@ import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';
 import {contactsByClientFindServer,clearContactCreate,clearContactOrder} from '../contact/actions';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../shareholder/actions';
-import {visitByClientFindServer,clearVisitOrder} from '../visit/actions';
-import {clearPrevisit, previsitByClientFindServer} from '../previsita/actions';
-import {DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
+import {visitByClientFindServer,clearVisitOrder,clearVisitPaginator} from '../visit/actions';
+import {pipelineByClientFindServer,clearPipelineOrder,clearPipelinePaginator} from '../pipeline/actions';
+import {clearPrevisitOrder,clearPrevisitPaginator, previsitByClientFindServer} from '../previsita/actions';
+import {DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 
@@ -68,8 +69,8 @@ class ButtonDeleteComponent extends Component{
     }
 
     _closeDelete(){
-        const {previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,clearVisitOrder,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
-        if(this.state.showEx){
+        const {clearPipelineOrder,clearPipelinePaginator,pipelineByClientFindServer,clearPrevisitOrder,clearPrevisitPaginator,clearVisitOrder,clearVisitPaginator,previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        if(this.state.showEx == true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
             clearContactOrder();
@@ -83,10 +84,16 @@ class ButtonDeleteComponent extends Component{
               shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"sh.sharePercentage",1,"","");
           }else if(actionsDelete.typeDelete === DELETE_TYPE_VISIT){
             clearVisitOrder();
-              visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
+            clearVisitPaginator();
+            visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_PREVISIT){
-            clearPrevisit();
+            clearPrevisitOrder();
+            clearPrevisitPaginator();
             previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+          }else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE){
+            clearPipelineOrder();
+            clearPipelinePaginator();
+            pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "");
           }
       }
       this.setState({showEx:false, showEr: false,show: false});
@@ -143,8 +150,13 @@ function mapDispatchToProps(dispatch) {
     shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder,clearContactOrder,
     visitByClientFindServer,
     previsitByClientFindServer,
+    pipelineByClientFindServer,
     clearVisitOrder,
-    clearPrevisit,
+    clearVisitPaginator,
+    clearPrevisitOrder,
+    clearPrevisitPaginator,
+    clearPipelineOrder,
+    clearPipelinePaginator,
     deleteParticipant,
     deleteTask
   }, dispatch);
