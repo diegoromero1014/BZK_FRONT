@@ -38,7 +38,7 @@ class SearchUserTaskComponent extends Component {
   }
 
   _handleChangeKeyword(e) {
-    if(e.keyCode == 13 || e.which == 13) {
+    if(e.keyCode === 13 || e.which === 13) {
       this._handleUserTasksByClientsFind(e);
     } else {
       this.setState({

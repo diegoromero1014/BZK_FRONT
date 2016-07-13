@@ -31,7 +31,7 @@ class Pagination extends Component{
           <div style={{borderTop:"2px solid #D9DEDF", width:"100%", marginTop:"15px", paddingTop: "15px", paddingBottom:"15px"}}>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
-                {page != 1 ? <li onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
+                {page !== 1 ? <li onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
                 {firstPage <= lastPage ?
                   <li><a className={page === firstPage ? "active" :"" } onClick={() => {this._handlePaginar(firstPage)}}>{firstPage}</a></li>
                 : ''}
@@ -53,7 +53,7 @@ class Pagination extends Component{
                 {firstPage + 6 <= lastPage ?
                   <li><a className={page === firstPage + 6 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 6)}}>{firstPage + 6}</a></li>
                 : ''}
-                {page != lastPage ?
+                {page !== lastPage ?
                   <li onClick={() => {this._handlePaginar(page + 1)}}><a>»</a></li>
                 : ''}
               </ul>

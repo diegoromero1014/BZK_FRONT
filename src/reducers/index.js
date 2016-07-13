@@ -25,6 +25,7 @@ import taskReducer from '../components/visit/tasks/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
 import tabReducer from '../components/clientDetailsInfo/reducer';
 import taskReducerCreate from '../components/pendingTask/createPendingTask/reducer';
+import viewManagementReducer from '../components/viewManagement/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -52,5 +53,6 @@ export default combineReducers({
     tasks: taskReducer,
     tasksByClient: tasksByClientReducer,
     tabReducer: tabReducer,
-    taskReducerCreate: taskReducerCreate
+    taskReducerCreate: taskReducerCreate,
+    viewManagementReducer: viewManagementReducer
 });

@@ -16,6 +16,7 @@ import EditPrevisita from './components/previsita/editPrevisit/editPrevisit';
 import Visit from './components/visit/createVisit/createVisit';
 import VisitEdit from './components/visit/editVisit/editVisit';
 import uiTester from './ui/uiTester';
+import ViewManagement from './components/viewManagement/viewManagement';
 
 class App extends Component {
     render() {
@@ -34,6 +35,7 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
+                <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>

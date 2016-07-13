@@ -143,9 +143,9 @@ class ModalComponentContact extends Component {
       var masculino = ['Señor','Doctor','Padre'];
       var genero;
       var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
-      if(_.indexOf(femenino,tratamiento)  != -1){
+      if(_.indexOf(femenino,tratamiento)  !== -1){
         genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
-      }else if(_.indexOf(masculino,tratamiento) != -1){
+      }else if(_.indexOf(masculino,tratamiento) !== -1){
         genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
       }else{
         genero = selectsReducer.get(FILTER_GENDER);

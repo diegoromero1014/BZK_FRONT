@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {consultDataSelect} from '../actions';
 import {Combobox} from 'react-widgets';
-import {TASK_STATUS,FILTER_STATUS_VISIT_ID,SHAREHOLDER_TYPE,SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY} from '../constants';
+import {TASK_STATUS,FILTER_STATUS_VISIT_ID,SHAREHOLDER_TYPE,SHAREHOLDER_KIND,CLIENT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID,FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, PIPELINE_STATUS} from '../constants';
 import {FILTER_STATUS_PREVISIT_ID} from '../../previsita/constants';
 
 
@@ -33,33 +33,35 @@ class SelectFilterComponent extends Component{
         data = selectsReducer.get('dataTypeDocument');
       } else if (idTypeFilter === FILTER_FUNCTION_ID){
           data = selectsReducer.get('dataTypeFunction');
+      } else if (idTypeFilter === PIPELINE_STATUS){
+          data = selectsReducer.get('dataPipelineStatus');
       }else if(idTypeFilter === FILTER_TYPE_CONTACT_ID) {
           data = selectsReducer.get('dataTypeContact');
       }else if(idTypeFilter === FILTER_TYPE_LBO_ID) {
           data = selectsReducer.get('dataTypeLBO');
-      } else if (idTypeFilter == FILTER_GENDER) {
+      } else if (idTypeFilter === FILTER_GENDER) {
         data = selectsReducer.get('dataTypeGender');
-      } else if (idTypeFilter == FILTER_TITLE) {
+      } else if (idTypeFilter === FILTER_TITLE) {
         data = selectsReducer.get('dataTypeTitle');
-      } else if (idTypeFilter == FILTER_CONTACT_POSITION) {
+      } else if (idTypeFilter === FILTER_CONTACT_POSITION) {
         data = selectsReducer.get('dataTypeContactPosition');
-      } else if (idTypeFilter == FILTER_DEPENDENCY) {
+      } else if (idTypeFilter === FILTER_DEPENDENCY) {
         data = selectsReducer.get('dataTypeDependency');
-      } else if (idTypeFilter == FILTER_SOCIAL_STYLE) {
+      } else if (idTypeFilter === FILTER_SOCIAL_STYLE) {
         data = selectsReducer.get('dataTypeSocialStyle');
-      } else if (idTypeFilter == FILTER_COUNTRY) {
+      } else if (idTypeFilter === FILTER_COUNTRY) {
         data = selectsReducer.get('dataTypeCountry');
-      } else if (idTypeFilter == FILTER_PROVINCE) {
+      } else if (idTypeFilter === FILTER_PROVINCE) {
         data = selectsReducer.get('dataTypeProvince');
-      } else if (idTypeFilter == FILTER_CITY) {
+      } else if (idTypeFilter === FILTER_CITY) {
         data = selectsReducer.get('dataTypeCity');
-      } else if (idTypeFilter == SHAREHOLDER_KIND) {
+      } else if (idTypeFilter === SHAREHOLDER_KIND) {
         data = selectsReducer.get('dataTypeShareholdersKind');
-      }else if (idTypeFilter == SHAREHOLDER_TYPE) {
+      }else if (idTypeFilter === SHAREHOLDER_TYPE) {
         data = selectsReducer.get('dataTypeShareholdersType');
-      }else if(idTypeFilter == FILTER_STATUS_VISIT_ID){
+      }else if(idTypeFilter === FILTER_STATUS_VISIT_ID){
         data=[{id:'0', value:'Guardado como borrador'},{id:'1',value:'Guardado como definitivo'}];
-      } else if(idTypeFilter == FILTER_STATUS_PREVISIT_ID) {
+      } else if(idTypeFilter === FILTER_STATUS_PREVISIT_ID) {
         data = [{
           id: '0',
           value: 'Guardado como borrador'
@@ -67,7 +69,7 @@ class SelectFilterComponent extends Component{
           id: '1',
           value: 'Guardado como definitivo'
         }];
-      } else if(idTypeFilter == TASK_STATUS) {
+      } else if(idTypeFilter === TASK_STATUS) {
         data= selectsReducer.get('dataTypeTaskType');
       }
       return(

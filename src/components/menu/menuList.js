@@ -11,6 +11,11 @@ const menuItems = [
         link: "/dashboard/portafolio"
     },*/
     {
+        text: "Vista gerencial",
+        icon: "bar chart icon",
+        link: "/dashboard/viewManagement"
+    },
+    {
         text: "Mis clientes",
         icon: "building icon",
         link: "/dashboard/clients"

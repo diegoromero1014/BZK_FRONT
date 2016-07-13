@@ -27,13 +27,13 @@ class GridComponent extends Component {
   _renderCell(row, headers,modalTitle){
       return headers.map((value, idx) => {
             var cell;
-            if(value.key == 'actions'){
+            if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
-            }else if(value.key == 'delete' &&  _.get(row, value.key)){
+            }else if(value.key === 'delete' &&  _.get(row, value.key)){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
-            }else if(value.key == 'actionsRedirect'){
+            }else if(value.key === 'actionsRedirect'){
               cell= <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
-            }else if(value.key == 'actionsPdf' &&  _.get(row, value.key)){
+            }else if(value.key === 'actionsPdf' &&  _.get(row, value.key)){
               cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} styles={value.style} />

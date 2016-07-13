@@ -69,7 +69,7 @@ class ButtonDeleteComponent extends Component{
 
     _closeDelete(){
         const {previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,clearVisitOrder,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
-        if(this.state.showEx == true){
+        if(this.state.showEx){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
             clearContactOrder();

@@ -34,7 +34,7 @@ class SearchBarClient extends Component{
   _handleChangeKeyword(e){
     const {changeKeyword} = this.props;
     changeKeyword(e.target.value);
-    if(e.keyCode == 13 || e.which == 13){
+    if(e.keyCode === 13 || e.which === 13){
       this._handleClientsFind(e);
     }
   }

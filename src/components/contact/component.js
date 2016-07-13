@@ -85,7 +85,7 @@ class ContactComponent extends Component {
               <Col xs> <ListContactComponent
                 value1={this.state.value1}
                 value2={this.state.value2}
-                value3={this.state.value3}/ >
+                value3={this.state.value3}/>
                 <PaginationContactComponent value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}

@@ -41,6 +41,25 @@
 
 }
 
+.div-head-chart{
+	color: black;
+	background-color: #f5f5f5;
+	border-radius: 4px 4px 0px 0px;
+	height: 40px;
+	border: 1px solid #D4D4D4;
+	margin: 0px 30px 0px 30px;
+}
+
+.div-body-chart{
+	color: black;
+	background-color: white;
+	border-radius: 0px 0px 4px 4px;
+	height: 40px;
+	border: 1px solid #D4D4D4;
+	margin: -1px 30px 10px 30px;
+	text-align: -webkit-center;
+}
+
 .legend-item-bullet {
 	background-color: $color-dark;
 }

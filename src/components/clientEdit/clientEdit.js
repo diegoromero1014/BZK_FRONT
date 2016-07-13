@@ -221,7 +221,7 @@ class clientEdit extends Component{
 
   _onChangeGroupEconomic(e){
     const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
-    if(e.keyCode == 13 || e.which == 13){
+    if(e.keyCode === 13 || e.which === 13){
       e.preventDefault();
       economicGroupsByKeyword(keywordFindEconomicGroup.value);
       groupEconomic.onChange('')
@@ -239,7 +239,7 @@ class clientEdit extends Component{
   _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
-     if (validos.indexOf(val.toString().charAt(i)) != -1){
+     if (validos.indexOf(val.toString().charAt(i)) !== -1){
         output += val.toString().charAt(i)
       }
     }

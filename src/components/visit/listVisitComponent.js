@@ -120,7 +120,7 @@ class ListVisitComponent extends Component {
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"
             });
-            if(value.idPrevisit != null && value.idPrevisit != 0){
+            if(value.idPrevisit !== null && value.idPrevisit !== 0){
               _.set(value, 'actionsPdf', {
                 title: "Ver >>",
                 urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es"

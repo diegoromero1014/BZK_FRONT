@@ -28,7 +28,8 @@ const initialState = Immutable.Map({
   dataTypeShareholdersType:[],
   dataTypeTeams:[],
   dataTypeCertificationStatus:[],
-  dataTypeTaskType:[]
+  dataTypeTaskType:[],
+  dataPipelineStatus:[]
 });
 
 
@@ -40,6 +41,9 @@ export default (state = initialState, action) => {
         case constants.FILTER_FUNCTION_ID:
           var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
           return state.set("dataTypeFunction", masterDataDetailEntries);
+        case constants.PIPELINE_STATUS:
+          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
+          return state.set("dataPipelineStatus", masterDataDetailEntries);
         case constants.FILTER_TYPE_CONTACT_ID:
           var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
           return state.set("dataTypeContact", masterDataDetailEntries);
