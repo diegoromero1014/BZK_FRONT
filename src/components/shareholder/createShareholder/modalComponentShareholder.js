@@ -96,7 +96,7 @@ class ModalComponentShareholder extends Component {
     //Elimino los caracteres no validos
     if(val !== null && val !== '' && val !== undefined){
       for (var i=0, output='', validos="0123456789."; i< val.length; i++){
-       if (validos.indexOf(val.charAt(i)) != -1){
+       if (validos.indexOf(val.charAt(i)) !== -1){
           output += val.charAt(i)
         }
       }
@@ -177,13 +177,10 @@ class ModalComponentShareholder extends Component {
     let pn_options = ['ID Extranjero PN no residente en Colombia', 'Carné diplomático', 'Cédula de ciudadanía', 'Cédula de extranjeria', 'Pasaporte', 'Registro civil', 'Tarjeta de identidad'];
     let typeOfPerson;
     let typeOfDocumentSelected = _.get(_.filter(selectsReducer.get(SHAREHOLDER_ID_TYPE), ['id', parseInt(val)]), '[0].key');
-    console.log('Tipo de documento seleccionado -> ', typeOfDocumentSelected);
-    if (_.indexOf(pj_options, typeOfDocumentSelected) != -1) {
+    if (_.indexOf(pj_options, typeOfDocumentSelected) !== -1) {
       typeOfPerson = _.filter(selectsReducer.get(SHAREHOLDER_TYPE), ['key', 'PJ']);
-      console.log('Se selecciona tipo de persona PJ');
-    } else if (_.indexOf(pn_options, typeOfDocumentSelected) != -1) {
+    } else if (_.indexOf(pn_options, typeOfDocumentSelected) !== -1) {
       typeOfPerson = _.filter(selectsReducer.get(SHAREHOLDER_TYPE), ['key', 'PN']);
-      console.log('Se selecciona tipo de persona PN');
     }
     tipoPersona.onChange('');
     this.setState({disabledPer:''});

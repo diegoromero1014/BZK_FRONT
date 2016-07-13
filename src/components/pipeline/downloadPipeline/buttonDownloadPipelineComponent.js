@@ -15,7 +15,7 @@ class ButtonDownloadPipelineComponent extends Component {
 	_downloadPipeline() {
 		const {getCsvPipelineByClient,clearPipeline} = this.props;
 		getCsvPipelineByClient(window.localStorage.getItem('idClientSelected')).then(function(data) {
-			if (data.payload.data.status == 200) {
+			if (data.payload.data.status === 200) {
 				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
 			}
 		});

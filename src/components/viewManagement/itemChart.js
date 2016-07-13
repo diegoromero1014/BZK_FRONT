@@ -16,7 +16,7 @@ class ItemChart extends Component{
   }
 
   _clickDownloadExcel(itemSeleted){
-    console.log("itemSeleted download", itemSeleted);
+    //console.log("itemSeleted download", itemSeleted);
   }
 
   render(){

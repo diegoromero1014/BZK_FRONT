@@ -55,5 +55,6 @@ export default combineReducers({
     tasksByClient: tasksByClientReducer,
     tabReducer: tabReducer,
     taskReducerCreate: taskReducerCreate,
-    pipelineReducer:pipelineReducer
+    pipelineReducer:pipelineReducer,
+    viewManagementReducer: viewManagementReducer
 });
