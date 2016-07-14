@@ -18,6 +18,7 @@ class PipelineComponent extends Component {
     this.state= {
        value1: ""
     };
+    this._createPipeline = this._createPipeline.bind(this);
   }
 
   componentWillMount(){
@@ -28,6 +29,12 @@ class PipelineComponent extends Component {
       clearPipeline();
       pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"");
     }
+  }
+
+  _createPipeline() {
+    const {updateTitleNavBar} = this.props;
+    updateTitleNavBar('Informe pipeline');
+    redirectUrl('/dashboard/pipeline');
   }
 
 
@@ -54,7 +61,7 @@ class PipelineComponent extends Component {
           idTypeFilter={FILTER_STATUS_PIPELINE_ID}/>
           </Col>
           <Col xs>
-          <button className="btn btn-primary" type="button" title="Crear pipeline" style={{marginTop: '21px'}}>
+          <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{marginTop: '21px'}}>
             <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
           </button>
         </Col>

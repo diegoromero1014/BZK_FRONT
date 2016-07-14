@@ -17,6 +17,7 @@ import Visit from './components/visit/createVisit/createVisit';
 import VisitEdit from './components/visit/editVisit/editVisit';
 import uiTester from './ui/uiTester';
 import ViewManagement from './components/viewManagement/viewManagement';
+import Pipeline from './components/pipeline/createPipeline/createPipeline';
 
 class App extends Component {
     render() {
@@ -44,6 +45,7 @@ export default (
                 <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
+                <Route path="pipeline" component={Pipeline}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

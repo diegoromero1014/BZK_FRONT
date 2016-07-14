@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS, CLEAR_VALUES_COUNTRY_KEY } from './constants';
+import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS, PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS } from './constants';
 
 export function consultDataSelect(field){
   const json = {
@@ -166,4 +166,73 @@ export function economicGroupsByKeyword(keyword){
     type: ECONOMIC_GROUPS,
     payload: request
   }
+}
+
+export function getPipelineProducts() {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {}
+  };
+  let request = axios.post(APP_URL + "/productList", json);
+  return {
+    type: PIPELINE_PRODUCTS,
+    payload: request
+  };
+}
+
+export function getPipelineCurrencies() {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {}
+  };
+  let request = axios.post(APP_URL + "/currencyList", json);
+  return {
+    type: PIPELINE_CURRENCIES,
+    payload: request
+  };
+}
+
+export function getClientNeeds() {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {}
+  };
+  let request = axios.post(APP_URL + "/clientNeedList", json);
+  return {
+    type: PIPELINE_CLIENT_NEEDS,
+    payload: request
+  };
 }
