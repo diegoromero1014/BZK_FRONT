@@ -2,6 +2,10 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import _ from 'lodash';
 
+function defaultData (action, path) {
+  return _.get(action, path, []);
+}
+
 const initialState = Immutable.Map({
   dataTypeDocument: [],
   dataTypeFunction: [],
@@ -36,83 +40,57 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
         case constants.CLIENT_ID_TYPE:
-          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set("dataTypeDocument", masterDataDetailEntries);
+          return state.set("dataTypeDocument", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_FUNCTION_ID:
-          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set("dataTypeFunction", masterDataDetailEntries);
+          return state.set("dataTypeFunction", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.PIPELINE_STATUS:
-          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set("dataPipelineStatus", masterDataDetailEntries);
+          return state.set("dataPipelineStatus", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_TYPE_CONTACT_ID:
-          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set("dataTypeContact", masterDataDetailEntries);
+          return state.set("dataTypeContact", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_TYPE_LBO_ID:
-          var masterDataDetailEntries =  action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set("dataTypeLBO", masterDataDetailEntries);
+          return state.set("dataTypeLBO", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CIIU:
-          var ciiuValueObjects =  action.payload.data.messageBody.ciiuValueObjects;
-          return state.set("dataCIIU", ciiuValueObjects);
+          return state.set("dataCIIU", defaultData(action, 'payload.data.messageBody.ciiuValueObjects'));
         case constants.SUB_CIIU:
-          var subCiiuValueObjects =  action.payload.data.messageBody.subCiiuValueObjects;
-          return state.set("dataSubCIIU", subCiiuValueObjects);
+          return state.set("dataSubCIIU", defaultData(action, 'payload.data.messageBody.subCiiuValueObjects'));
         case constants.FILTER_GENDER:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeGender', masterDataDetailEntries);
+          return state.set('dataTypeGender', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_TITLE:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeTitle', masterDataDetailEntries);
+          return state.set('dataTypeTitle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_DEPENDENCY:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeDependency', masterDataDetailEntries);
+          return state.set('dataTypeDependency', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CONTACT_POSITION:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeContactPosition', masterDataDetailEntries);
+          return state.set('dataTypeContactPosition', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_SOCIAL_STYLE:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeSocialStyle', masterDataDetailEntries);
+          return state.set('dataTypeSocialStyle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_COUNTRY:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeCountry', masterDataDetailEntries);
+          return state.set('dataTypeCountry', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_PROVINCE:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeProvince', masterDataDetailEntries);
+          return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeCity', masterDataDetailEntries);
+          return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_HOBBIES:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeHobbies', masterDataDetailEntries);
+          return state.set('dataTypeHobbies', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_SPORTS:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeSports', masterDataDetailEntries);
+          return state.set('dataTypeSports', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_ATTITUDE_OVER_GROUP:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeAttitudeOverGroup', masterDataDetailEntries);
+          return state.set('dataTypeAttitudeOverGroup', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TEAM_FOR_EMPLOYEE:
-          var teamValueObjects = action.payload.data.teamValueObjects;
-          return state.set('teamValueObjects', teamValueObjects);
+          return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
         case constants.TYPE_NOTES:
-          var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-          return state.set('dataTypeNotes', masterDataDetailEntries);
+          return state.set('dataTypeNotes',  defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.ECONOMIC_GROUPS:
-          var masterDataEconomicGroups = action.payload.data.messageBody.economicGroupValueObjects;
-          return state.set('dataEconomicGroup', masterDataEconomicGroups);
+          return state.set('dataEconomicGroup',  defaultData(action, 'payload.data.messageBody.economicGroupValueObjects'));
         case constants.SHAREHOLDER_KIND:
-            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set('dataTypeShareholdersKind', masterDataDetailEntries);
+            return state.set('dataTypeShareholdersKind', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SHAREHOLDER_TYPE:
-            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set('dataTypeShareholdersType', masterDataDetailEntries);
+            return state.set('dataTypeShareholdersType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TEAM_FOR_EMPLOYEE:
-            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set('dataTypeTeams', masterDataDetailEntries);
+            return state.set('dataTypeTeams', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CERTIFICATION_STATUS:
-            var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-            return state.set('dataTypeCertificationStatus', masterDataDetailEntries);
+            return state.set('dataTypeCertificationStatus', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TASK_STATUS:
-                var masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
-        return state.set('dataTypeTaskType', masterDataDetailEntries);
+        return state.set('dataTypeTaskType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CLEAR_VALUES_COUNTRY:
           return state.withMutations( map => {
             map
