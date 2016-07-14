@@ -59,14 +59,10 @@ class SelectFilterComponent extends Component{
         data = selectsReducer.get('dataTypeShareholdersKind');
       }else if (idTypeFilter === SHAREHOLDER_TYPE) {
         data = selectsReducer.get('dataTypeShareholdersType');
-      }else if(idTypeFilter === FILTER_STATUS_VISIT_ID){
+      }else if(idTypeFilter === FILTER_STATUS_VISIT_ID || idTypeFilter === FILTER_STATUS_PREVISIT_ID || idTypeFilter === FILTER_STATUS_PIPELINE_ID){
         data = defaultData;
-      } else if(idTypeFilter === FILTER_STATUS_PREVISIT_ID) {
-        data = defaultData
       } else if(idTypeFilter === TASK_STATUS) {
         data = selectsReducer.get('dataTypeTaskType');
-      }else if(idTypeFilter === FILTER_STATUS_PIPELINE_ID){
-        data = defaultData;
       }
       return(
           <Combobox
