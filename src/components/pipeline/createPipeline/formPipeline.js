@@ -10,8 +10,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-  TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL} from '../constants';
 import {createEditPipeline} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
@@ -22,7 +21,9 @@ import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 
-const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths"];
+const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
+    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
+    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability"];
 
 var dateVisitLastReview;
 let showMessageCreatePipeline= false;
@@ -37,6 +38,36 @@ var contollerErrorChangeType = false;
 
 const validate = values => {
     const errors = {};
+    if (!values.businessStatus) {
+      errors.businessStatus = OPTION_REQUIRED;
+    } else {
+      errors.businessStatus = null;
+    }
+    if (!values.value) {
+      errors.value = VALUE_REQUIERED;
+    } else {
+      errors.value = null;
+    }
+    if (!values.currency) {
+      errors.currency = OPTION_REQUIRED;
+    } else {
+      errors.currency = null;
+    }
+    if (!values.need) {
+      errors.need = OPTION_REQUIRED;
+    } else {
+      errors.need = null;
+    }
+    if (!values.startDate) {
+      errors.startDate = VALUE_REQUIERED;
+    } else {
+      errors.startDate = null;
+    }
+    if (!values.endDate) {
+      errors.endDate = VALUE_REQUIERED;
+    } else {
+      errors.endDate = null;
+    }
     return errors;
 };
 
@@ -45,32 +76,6 @@ class FormPipeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
-      businessStatus: "",
-      businessWeek: "",
-      currency: "",
-      employeeResponsible: "",
-      indexing: "",
-      endDate: "",
-      need: "",
-      observations: "",
-      product: "",
-      priority: "",
-      registeredCountry: "",
-      startDate: "",
-      client: "",
-      documentStatus: "",
-      probability: "",
-
-      businessStatusError: false,
-      currencyError: false,
-      needError: false,
-      valueError: false,
-      startDateError: false,
-      endDateError: false,
-      productError: false,
-      currencyChanged: false,
-
       showMessageCreatePipeline: false,
       //showErrorSavePipeline: false,
       showConfirm: false
@@ -78,16 +83,12 @@ class FormPipeline extends Component {
     
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
     this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
-    this._changeProduct = this._changeProduct.bind(this);
-    this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
-    this._changeValue = this._changeValue.bind(this);
-    this._changeNeed = this._changeNeed.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
-    this._onBlurEvent = this._onBlurEvent.bind(this);
-    this._onFocusEvent = this._onFocusEvent.bind(this);
-    this._changeTargetObservations = this._changeTargetObservations.bind(this);
+    this._onCloseButton = this._onCloseButton.bind(this);
+    this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
+    this._changeCurrency = this._changeCurrency.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -104,13 +105,6 @@ class FormPipeline extends Component {
     }
   }
 
-  /**
-   * @param value
-   */
-  _changeProduct(value) {
-    this.setState({ product: value });
-  }
-
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
       this.setState({currencyChanged: true});
@@ -118,17 +112,6 @@ class FormPipeline extends Component {
       this.setState({currencyError: "debe seleccionar una opción"});
     }
     this.setState({currency: value});
-  }
-
-  _changeValue(value) {
-    this.setState({
-      value: value,
-      valueError: null
-    });
-  }
-
-  _changeTargetObservations(value) {
-    this.setState({observations: value});
   }
 
   _handleBlurValueNumber(typeValidation ,valuReduxForm, val) {
@@ -179,20 +162,6 @@ class FormPipeline extends Component {
           valuReduxForm.onChange("");
         }
       }
-    }
-  }
-
-  _changeBusinessStatus(value) {
-    if (value === '' || value === undefined || value === null) {
-      this.setState({
-        businessStatusError: "Debe seleccionar una opción"
-      });
-    }
-  }
-
-  _changeNeed(value) {
-    if (value === '' || value === undefined || value === null) {
-      this.setState({needError: 'Debe seleccionar una opción'});
     }
   }
 
@@ -256,93 +225,63 @@ class FormPipeline extends Component {
     this.setState({showConfirm :true});
   }
 
-  _closeConfirmCloseVisit() {
+  _closeConfirmClosePipeline() {
     this.setState({showConfirm: false });
     redirectUrl("/dashboard/clientInformation");
   }
 
   _submitCreatePipeline() {
-    const {fields: {idUsuario, commision, roe}, createEditPipeline} = this.props;
-    var errorInForm = false;
-    if( this.state.businessStatus === null || this.state.businessStatus === undefined || this.state.businessStatus === "" ) {
-      errorInForm = true;
-      this.setState({
-        businessStatusError: "Debe seleccionar una opción"
-      });
-    }
-    if( this.state.currency === null || this.state.currency === undefined || this.state.currency === "" ) {
-      errorInForm = true;
-      this.setState({
-        currencyError: "Debe seleccionar una opción"
-      });
-    }
-    if (this.state.startDate === null || this.state.startDate === undefined || this.state.startDate === "") {
-      errorInForm = true;
-      this.setState({
-        startDateError: "Debe ingresar un valor"
-      });
-    }
-    if (this.state.endDate === null || this.state.endDate === undefined || this.state.endDate === "") {
-      errorInForm = true;
-      this.setState({
-        endDateError: "Debe ingresar un valor"
-      });
-    }
+    const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
+      businessWeek, currency, indexing, endDate, need, observations, product,
+      priority, registeredCountry, startDate, client, documentStatus, probability
+    }, createEditPipeline} = this.props;
 
-    if( !errorInForm ) {
-      //if(typeButtonClick === SAVE_DRAFT ) {
-        let pipelineJson = {
-          "id": null,
-          "client": window.localStorage.getItem('idClientSelected'),
-          "documentStatus": typeButtonClick,
-          "product": this.state.product,
-          "businessStatus": this.state.businessStatus,
-          "employeeResponsible": idUsuario.value,
-          "currency": this.state.currency,
-          "indexing": this.state.indexing,
-          "commission": commision.value,
-          "businessWeek": this.state.businessWeek,
-          "need": this.state.need,
-          "priority": this.state.priority,
-          "roe": roe.value,
-          "registeredCountry": this.state.registeredCountry,
-          "observations": this.state.observations,
-          "termInMonths": this.state.termInMonths,
-          "value": this.state.value,
-          "startDate": parseInt(moment(this.state.startDate).format('x')),
-          "endDate": parseInt(moment(this.state.endDate).format('x'))
-        };
-        createEditPipeline(pipelineJson).then((data)=> {
-          if((_.get(data, 'payload.data.validateLogin') === 'false')) {
-            redirectUrl("/login");
+      let pipelineJson = {
+        "id": null,
+        "client": window.localStorage.getItem('idClientSelected'),
+        "documentStatus": typeButtonClick,
+        "product": product.value,
+        "businessStatus": businessStatus.value,
+        "employeeResponsible": idUsuario.value,
+        "currency": currency.value,
+        "indexing": indexing.value,
+        "commission": commission.value,
+        "businessWeek": businessWeek.value,
+        "need": need.value,
+        "priority": priority.value,
+        "roe": roe.value,
+        "registeredCountry": registeredCountry.value,
+        "observations": observations.value,
+        "termInMonths": termInMonths.value,
+        "value": value.value,
+        "startDate": parseInt(moment(this.state.startDate).format('x')),
+        "endDate": parseInt(moment(this.state.endDate).format('x'))
+      };
+      
+      console.log('Objeto a guardar -> ', pipelineJson);
+
+      createEditPipeline(pipelineJson).then((data)=> {
+        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+          redirectUrl("/login");
+        } else {
+          if( (_.get(data, 'payload.data.status') === 200) ) {
+            typeMessage = "success";
+            titleMessage = "Creación pipeline";
+            message = "Señor usuario, el pipeline se creó de forma exitosa.";
+            this.setState({showMessageCreatePipeline :true});
           } else {
-            if( (_.get(data, 'payload.data.status') === 200) ) {
-              typeMessage = "success";
-              titleMessage = "Creación pipeline";
-              message = "Señor usuario, el pipeline se creó de forma exitosa.";
-              this.setState({showMessageCreatePipeline :true});
-            } else {
-              typeMessage = "error";
-              titleMessage = "Creación pipeline";
-              message = "Señor usuario, ocurrió un error creando el pipeline.";
-              this.setState({showMessageCreatePipeline :true});
-            }
+            typeMessage = "error";
+            titleMessage = "Creación pipeline";
+            message = "Señor usuario, ocurrió un error creando el pipeline.";
+            this.setState({showMessageCreatePipeline :true});
           }
-        }, (reason) =>{
-          typeMessage = "error";
-          titleMessage = "Creación pipeline";
-          message = "Señor usuario, ocurrió un error creando del pipeline.";
-          this.setState({showMessageCreatePipeline :true});
-        });
-      //} else {
-      //  this.setState({showErrorSavePipeline :true});
-      //}
-    } else {
-      typeMessage = "error";
-      titleMessage = "Campos obligatorios";
-      message = "Señor usuario, debe ingresar todos los campos obligatorios.";
-      this.setState({showMessageCreatePipeline :true});
-    }
+        }
+      }, (reason) =>{
+        typeMessage = "error";
+        titleMessage = "Creación pipeline";
+        message = "Señor usuario, ocurrió un error creando del pipeline.";
+        this.setState({showMessageCreatePipeline :true});
+      });
   }
 
   updateKeyValueUsersBanco(e) {
@@ -377,7 +316,7 @@ class FormPipeline extends Component {
     }
   }
 
-  _updateValue(value){
+  _updateValue(value) {
     const{fields: {idUsuario, nameUsuario, cargoUsuario}, contactsByClient} = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
@@ -413,22 +352,11 @@ class FormPipeline extends Component {
     }
   }
 
-  _onBlurEvent(formData, value) {
-    console.log('OnBlurEvent formData -> ', formData);
-    console.log('OnBlurEvent value -> ', value);
-    let cleanData = numeral(value).format('0,0[.0000]');
-    formData.onChange(cleanData);
-  }
-
-  _onFocusEvent(formData, value) {
-    console.log('OnFocusEvent formData -> ', formData);
-    console.log('OnFocusEvent value -> ', value);
-    let cleanData = numeral(value).format('0');
-    formData.onChange(cleanData);
-  }
-
   render() {
-    const { fields:{nameUsuario, idUsuario, value, commission, roe, termInMonths}, clientInformacion, selectsReducer, handleSubmit} = this.props;
+    const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+              businessWeek, currency, indexing, endDate, need, observations, product,
+              priority, registeredCountry, startDate, client, documentStatus, probability},
+          clientInformacion, selectsReducer, handleSubmit} = this.props;
 
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
@@ -455,12 +383,8 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'product'}
-                value={this.state.product}
-                touched={true}
-                error={this.state.productError}
-                onChange={val => this._changeProduct(val)}
-                onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...product}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('pipelineProducts') || []}
               />
             </div>
@@ -475,12 +399,8 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                value={this.state.businessStatus}
-                touched={true}
-                error={this.state.businessStatusError}
-                onChange={val => this._changeBusinessStatus(val)}
-                onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...businessStatus}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_STATUS) || []}
               />
             </div>
@@ -522,12 +442,8 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                value={this.state.indexing}
-                touched={true}
-                //error={this.state.typePreVisitError}
-                //onChange={val => this._changeTypePreVisit(val)}
-                //onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...indexing}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_INDEXING) || []}
               />
             </div>
@@ -541,33 +457,26 @@ class FormPipeline extends Component {
                 name="commission"
                 type="text"
                 {...commission}
-                //onChange={val => this._handleBlurValueNumber(REAL, commission, val)}
-                onBlur={val => this._onBlurEvent(commission, val)}
-                onFocus={val => this._onFocusEvent(commission, val)}
                 max="7"
+                parentId="dashboardComponentScroll"
               />
             </div>
           </Col>
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Negocio de la semana</span>
+                <span>ROE</span>
               </dt>
-              <ComboBox
-                name="tipoVisita"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                value={this.state.typePreVisit}
-                touched={true}
-                error={this.state.typePreVisitError}
-                onChange={val => this._changeTypePreVisit(val)}
-                onBlur={() => console.log("")}
+              <Input
+                name="roe"
+                type="text"
+                {...roe}
                 parentId="dashboardComponentScroll"
-                data={[{id: true, value: 'Si'}, {id:false, value: 'No'}]}
+                onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, roe, val)}
               />
             </div>
           </Col>
+          
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
@@ -580,11 +489,7 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'need'}
-                value={this.state.need}
-                touched={true}
-                error={this.state.needError}
-                onChange={val => this._changeNeed(val)}
-                onBlur={() => console.log("")}
+                {...need}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get('pipelineClientNeeds') || []}
               />
@@ -600,31 +505,12 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                value={this.state.priority}
-                touched={true}
-                //error={this.state.typePreVisitError}
-                //onChange={val => this._changeTypePreVisit(val)}
-                //onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...priority}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_PRIORITY) || []}
               />
             </div>
           </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{paddingRight: "15px"}}>
-              <dt>
-                <span>ROE</span>
-              </dt>
-              <Input
-                name="roe"
-                type="text"
-                {...roe}
-                onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, roe, val)}
-              />
-            </div>
-          </Col>
-        </Row>
-        <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
@@ -635,38 +521,29 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'value'}
-                value={this.state.registeredCountry}
-                touched={true}
-                //error={this.state.typePreVisitError}
-                //onChange={val => this._changeTypePreVisit(val)}
-                //onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...registeredCountry}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get(FILTER_COUNTRY) || []}
               />
             </div>
           </Col>
         </Row>
-        <Row style={{padding: "20px 23px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
-              <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Observaciones </span>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Negocio de la semana</span>
+              </dt>
+              <ComboBox
+                name="businessWeek"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...businessWeek}
+                parentId="dashboardComponentScroll"
+                data={[{id: true, value: 'Si'}, {id:false, value: 'No'}]}
+              />
             </div>
-          </Col>
-        </Row>
-        <Row style={{padding: "0px 23px 20px 20px"}}>
-          <Col xs={12} md={12} lg={12}>
-            <Textarea
-              name="observations"
-              type="text"
-              max="3500"
-              value={this.state.observations}
-              touched={true}
-              onChange={val => this._changeTargetObservations(val)}
-              title="La longitud máxima de caracteres es de 3500"
-              style={{width: '100%', height: '178px'}}
-            />
           </Col>
         </Row>
         <Row style={{padding: "20px 23px 20px 20px"}}>
@@ -689,12 +566,8 @@ class FormPipeline extends Component {
                 labelInput="Seleccione..."
                 valueProp={'id'}
                 textProp={'code'}
-                value={this.state.currency}
-                touched={true}
-                error={this.state.currencyError}
-                onChange={val => this._changeCurrency(val)}
-                onBlur={() => console.log("")}
-                //parentId="dashboardComponentScroll"
+                {...currency}
+                parentId="dashboardComponentScroll"
                 data={selectsReducer.get('pipelineCurrencies') || []}
               />
             </div>
@@ -708,6 +581,7 @@ class FormPipeline extends Component {
                 name="value"
                 type="text"
                 {...value}
+                parentId="dashboardComponentScroll"
                 onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, value, val)}
               />
             </div>
@@ -721,6 +595,7 @@ class FormPipeline extends Component {
                 name="termInMonths"
                 type="text"
                 {...termInMonths}
+                parentId="dashboardComponentScroll"
                 onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, termInMonths, val)}
                 max="4"
               />
@@ -735,13 +610,9 @@ class FormPipeline extends Component {
             <dt>
               <DateTimePickerUi
                 culture='es'
-                format={"DD/MM/YYYY hh:mm a"}
-                time={true}
-                value={this.state.startDate}
-                touched={true}
-                error={this.state.startDateError}
-                onChange={val => this._changeDatePreVisit(val)}
-                onBlur={val => this._changeDatePreVisitOnBlur(val)}
+                format={DATE_FORMAT}
+                time={false}
+                {...startDate}
               />
             </dt>
           </Col>
@@ -751,15 +622,33 @@ class FormPipeline extends Component {
             </dt>
             <dt>
               <DateTimePickerUi
+                {...endDate}
                 culture='es'
-                format={"DD/MM/YYYY hh:mm a"}
-                time={true}
-                value={this.state.endDate}
-                touched={true}
-                error={this.state.endDateError}
-                onChange={val => this._changeDatePreVisit(val)}
-                onBlur={val => this._changeDatePreVisitOnBlur(val)}/>
+                format={DATE_FORMAT}
+                time={false}
+              />
             </dt>
+          </Col>
+        </Row>
+        <Row style={{padding: "20px 23px 20px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+              <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
+              <i className="book icon" style={{fontSize: "18px"}}/>
+              <span style={{fontSize: "20px"}}> Observaciones </span>
+            </div>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 23px 20px 20px"}}>
+          <Col xs={12} md={12} lg={12}>
+            <Textarea
+              name="observations"
+              type="text"
+              max="3500"
+              {...observations}
+              title="La longitud máxima de caracteres es de 3500"
+              style={{width: '100%', height: '178px'}}
+            />
           </Col>
         </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
@@ -801,7 +690,7 @@ class FormPipeline extends Component {
           cancelButtonText = "Cancelar"
           showCancelButton= {true}
           onCancel= {() => this.setState({showConfirm: false })}
-          onConfirm={this._closeConfirmCloseVisit}
+          onConfirm={this._closeConfirmClosePipeline}
         />
         <SweetAlert
           type= "warning"
