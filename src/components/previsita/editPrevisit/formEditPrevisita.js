@@ -15,7 +15,8 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {PROPUEST_OF_BUSINESS} from '../constants';
+import {consultParameterServer} from '../../../actionsGlobal';
+import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {addParticipant} from '../../participantsVisitPre/actions';
 import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
@@ -23,6 +24,7 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 
 const fields = [];
+var datePrevisitLastReview;
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
       "campos. Recuerde que lo importante es la necesidad del cliente, por lo cual no debe hablar de Bancolombia hasta cuando se expone la solución a la situación del cliente.\n" +
       "No es necesario haber asistido previamente a la formación Challenger, el formato entrega las herramientas necesarias para su construcción.";
@@ -507,7 +509,7 @@ class FormEditPrevisita extends Component{
     idTypeVisitAux = null;
     idTypeVisitAuxTwo = null;
     contollerErrorChangeType = false;
-    const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant} = this.props;
+    const {clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
@@ -516,6 +518,7 @@ class FormEditPrevisita extends Component{
       detailPrevisit(id).then((result) => {
         const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
         var part = result.payload.data.data;
+        datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
         valueTypePrevisit = part.keyDocumentType;
         this.setState({
           typePreVisit: part.documentType,
@@ -828,7 +831,13 @@ class FormEditPrevisita extends Component{
             />
           </Col>
         </Row>
-
+        <Row>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{datePrevisitLastReview}</span>
+            </div>
+          </Col>
+        </Row>
         <Row style={{padding: "10px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
@@ -925,7 +934,8 @@ function mapDispatchToProps(dispatch){
     pdfDescarga,
     detailPrevisit,
     addParticipant,
-    createPrevisit
+    createPrevisit,
+    consultParameterServer
   }, dispatch);
 }
 

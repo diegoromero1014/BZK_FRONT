@@ -18,7 +18,8 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
 import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
-import {consultParameterServer, createVisti} from '../actions';
+import {createVisti} from '../actions';
+import {consultParameterServer} from '../../../actionsGlobal';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';

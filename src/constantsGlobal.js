@@ -4,7 +4,7 @@ export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
 export const FILE_OPTION_REPORT_VISIT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
 export const FILE_OPTION_PRE_VISIT_GUIDE = 4;
-
+export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 
@@ -39,7 +39,7 @@ let API_URL;
 if (process.env.NODE_ENV === "production") {
     API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";
 } else {
-    API_URL = "http://localhost:8087/Centricity";
+    API_URL = "http://localhost:8084/Centricity";
 }
 
 export const APP_URL = API_URL;
