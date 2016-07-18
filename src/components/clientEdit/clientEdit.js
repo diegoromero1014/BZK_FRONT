@@ -237,6 +237,7 @@ class clientEdit extends Component{
   }
 
   _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    var pattern;
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
      if (validos.indexOf(val.toString().charAt(i)) !== -1){
@@ -249,7 +250,7 @@ class clientEdit extends Component{
        Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
     */
     if( typeValidation === 2 ){ //Realizo simplemente el formateo
-      var pattern = /(-?\d+)(\d{3})/;
+      pattern = /(-?\d+)(\d{3})/;
       while (pattern.test(val)){
         val = val.replace(pattern, "$1,$2");
       }
@@ -257,7 +258,7 @@ class clientEdit extends Component{
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
       if( value >= 0 ){
-        var pattern = /(-?\d+)(\d{3})/;
+        pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
         }
@@ -286,7 +287,7 @@ class clientEdit extends Component{
         redirectUrl("/dashboard/clientInformation");
       }else{
         const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
+        infoClient = clientInformacion.get('responseClientInfo');
         getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
         .then((data) => {
           if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){

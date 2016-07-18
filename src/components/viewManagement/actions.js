@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE,GET_CSV_PIPELINE, CONSULT_PIPELINE} from './constants';
+import {TAB_SELETED_ACTIVE, GET_CSV_PIPELINE,CONSULT_PIPELINE, CONSULT_CURRENCY} from './constants';
 
 export function changeTabSeletedChartView(tabSeleted){
   return{
@@ -9,7 +9,7 @@ export function changeTabSeletedChartView(tabSeleted){
   }
 }
 
-export function consultInformationPipeline(idStatusPipeline){
+export function consultInformationPipeline(idStatusPipeline, idCurrency){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -26,7 +26,8 @@ export function consultInformationPipeline(idStatusPipeline){
     "messageBody": {
       "startDate": null,
       "endDate": null,
-      "idStatusPipeline": idStatusPipeline === undefined || idStatusPipeline === '' ? null : idStatusPipeline
+      "idStatusPipeline": idStatusPipeline === undefined || idStatusPipeline === '' ? null : idStatusPipeline,
+      "idCurrency": idCurrency === undefined || idCurrency === '' ? null : idCurrency
     }
   }
 
@@ -60,4 +61,27 @@ export function getCsvPipeline(year) {
     type: GET_CSV_PIPELINE,
     payload: request
 }
+
+export function consultCurrencys(){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+    },
+    "messageBody": ""
+  }
+
+  var request = axios.post(APP_URL + "/getCurrencyData", json);
+  return{
+    type: CONSULT_CURRENCY,
+    payload: request
+  }
 }
