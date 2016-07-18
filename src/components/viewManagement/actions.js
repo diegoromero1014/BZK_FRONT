@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV_PIPELINE,CONSULT_PIPELINE, CONSULT_CURRENCY} from './constants';
+import {TAB_SELETED_ACTIVE, GET_CSV_PIPELINE,CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
 
 export function changeTabSeletedChartView(tabSeleted){
   return{
@@ -67,6 +67,7 @@ export function getCsvPipeline(year) {
   return {
     type: GET_CSV_PIPELINE,
     payload: request
+  }
 }
 
 export function consultCurrencys(){
