@@ -2,12 +2,21 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {changeTabSeletedChartView} from './actions';
+import {changeTabSeletedChartView,getCsvPipeline} from './actions';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
+import {TYPE_YEAR,TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
+import {APP_URL} from '../../constantsGlobal';
 
 class ItemChart extends Component{
 
   constructor(props){
     super(props);
+    this.state= {
+    valueyear: "",
+    item : ""};
+    momentLocalizer(moment);
   }
 
   _clickSectionChart(itemSeleted){
@@ -16,7 +25,15 @@ class ItemChart extends Component{
   }
 
   _clickDownloadExcel(itemSeleted){
-    //console.log("itemSeleted download", itemSeleted);
+    if(itemSeleted === TAB_PIPELINE){
+      var year = this.state.valueyear != '' ? this.state.valueyear : moment().year();
+      const {getCsvPipeline} = this.props;
+      getCsvPipeline(year).then(function(data) {
+        if (data.payload.data.status === 200) {
+          window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+        }
+      });
+    }
   }
 
   render(){
@@ -34,6 +51,9 @@ class ItemChart extends Component{
         <div
           style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
           borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
+          <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
+              onChange: (value) => this.setState({valueyear: value.id, item:itemSeleted})
+          }}/>
           <i className='green file excel outline icon'
             title="Descargar información en formato CSV"
             onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
@@ -47,7 +67,8 @@ class ItemChart extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    changeTabSeletedChartView
+    changeTabSeletedChartView,
+    getCsvPipeline
   }, dispatch);
 }
 
