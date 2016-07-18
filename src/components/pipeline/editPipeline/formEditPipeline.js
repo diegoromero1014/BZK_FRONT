@@ -23,7 +23,7 @@ import numeral from 'numeral';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
-    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability",
+    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName"
     ];
 
@@ -31,6 +31,7 @@ let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
+let datePipelineLastReview;
 
 const validate = values => {
     const errors = {};
@@ -63,11 +64,6 @@ const validate = values => {
       errors.endDate = VALUE_REQUIERED;
     } else {
       errors.endDate = null;
-    }
-    if(values.endDate && values.startDate){
-      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
-        errors.startDate = DATE_START_AFTER;
-      }
     }
     return errors;
 };
@@ -301,14 +297,14 @@ class FormEditPipeline extends Component {
 		}
 		getPipelineById(id);
 	}
-
+	
 	render() {
 		const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, product,
               priority, registeredCountry, startDate, client, documentStatus, probability,
-          		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName},
+          		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
           clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
-
+			
 		const pipeline = pipelineReducer.get('detailPipeline');
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
@@ -428,7 +424,7 @@ class FormEditPipeline extends Component {
 				      />
 				    </div>
 				  </Col>
-
+				  
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
@@ -527,7 +523,7 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Valor (</span><span style={{color: "red"}}>*</span>)
+				        <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
 				      </dt>
 				      <Input
 				        name="value"
@@ -606,7 +602,7 @@ class FormEditPipeline extends Component {
 				<Row>
 		          <Col xs={12} md={12} lg={12}>
 		            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{''}</span>
+		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{reviewedDate.value}</span>
 		            </div>
 		          </Col>
 		        </Row>
@@ -730,7 +726,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		    createdTimestamp: moment(pipeline.createdTimestamp).format(DATETIME_FORMAT),
 		    updatedTimestamp: moment(pipeline.updatedTimestamp).format(DATETIME_FORMAT),
 		    createdByName: pipeline.createdByName,
-		    updatedByName: pipeline.updatedByName
+		    updatedByName: pipeline.updatedByName,
+		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format("DD MMM YYYY")
 	      }
 	    };
 	} else {

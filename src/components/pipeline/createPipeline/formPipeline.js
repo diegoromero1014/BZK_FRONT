@@ -10,9 +10,10 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
-import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL} from '../constants';
+import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT} from '../../../constantsGlobal';
+import {consultParameterServer} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -21,13 +22,14 @@ import $ from 'jquery';
 import numeral from 'numeral';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
+    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product", "reviewedDate",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability"];
 
 let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
+let datePipelineLastReview;
 
 const validate = values => {
     const errors = {};
@@ -61,11 +63,6 @@ const validate = values => {
     } else {
       errors.endDate = null;
     }
-    if(values.endDate && values.startDate){
-      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
-        errors.startDate = DATE_START_AFTER;
-      }
-    }
     return errors;
 };
 
@@ -78,7 +75,7 @@ class FormPipeline extends Component {
       //showErrorSavePipeline: false,
       showConfirm: false
     }
-
+    
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
     this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -87,7 +84,6 @@ class FormPipeline extends Component {
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
-    //this._onClickPDF = this._onClickPDF.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -104,7 +100,7 @@ class FormPipeline extends Component {
     }
   }
 
-
+  
 
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
@@ -200,9 +196,10 @@ class FormPipeline extends Component {
         "termInMonths": termInMonths.value,
         "value": numeral(value.value).format('0'),
         "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-        "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+        "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
+        "reviewedDate": parseInt(moment(datePipelineLastReview, DATE_FORMAT).format('x'))
       };
-
+      
       console.log('Objeto a guardar -> ', pipelineJson);
 
       createEditPipeline(pipelineJson).then((data)=> {
@@ -280,7 +277,7 @@ class FormPipeline extends Component {
   }
 
   componentWillMount() {
-    const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} = this.props;
+    const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     getPipelineProducts();
     getPipelineCurrencies();
@@ -289,16 +286,14 @@ class FormPipeline extends Component {
         redirectUrl("/dashboard/clientInformation");
     } else {
       getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
-/*
       consultParameterServer(LAST_PIPELINE_REVIEW).then((data)=> {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
-          datePrevisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          datePrevisitLastReview = moment(datePrevisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+          datePipelineLastReview = JSON.parse(data.payload.data.parameter).value;
+          datePipelineLastReview = moment(datePipelineLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
         }
       }, (reason) =>{
       });
-      */
     }
   }
 
@@ -311,7 +306,7 @@ class FormPipeline extends Component {
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-
+        
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -426,7 +421,7 @@ class FormPipeline extends Component {
               />
             </div>
           </Col>
-
+          
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
@@ -525,7 +520,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Valor (</span><span style={{color: "red"}}>*</span>)
+                <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
                 name="value"
@@ -601,6 +596,13 @@ class FormPipeline extends Component {
             />
           </Col>
         </Row>
+        <Row>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{datePipelineLastReview}</span>
+            </div>
+          </Col>
+        </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -646,7 +648,7 @@ function mapDispatchToProps(dispatch) {
     getClientNeeds,
     createEditPipeline,
     filterUsersBanco,
-
+    consultParameterServer
   }, dispatch);
 }
 
