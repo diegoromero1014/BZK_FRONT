@@ -4,65 +4,57 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import SelectFilter from '../../selectsComponent/selectFilterContact/selectFilterComponent';
 import {getMasterDataFields} from '../../selectsComponent/actions';
+import {NUMERAL_MONTH} from '../constants';
 import {PIPELINE_STATUS} from '../../selectsComponent/constants';
-import {XYPlot, XAxis, YAxis, VerticalGridLines, VerticalBarSeries , HorizontalGridLines,
-  LineSeries, Crosshair} from 'react-vis';
 import SweetAlert from 'sweetalert-react';
-import {consultInformationPipeline} from '../actions';
+import {Combobox} from 'react-widgets';
+import {consultInformationPipeline, consultCurrencys} from '../actions';
+import BarSeries from './barSeries';
 import numeral from 'numeral';
 import moment from 'moment';
 import _ from 'lodash';
+
+var colors = [];
+var defaultValueData = [{x: '', y: 0}];
 
 class ViewChartPipeline extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      crosshairValues: [],
       statePipelineValue: null,
+      idCurrency: null,
       showErrorLoadChart: false,
-      data: [{x: '', y: 0}]
+      data: defaultValueData,
+      labels: ["0"],
+      contValues: ["0"]
     };
     this._changeStatePipeline = this._changeStatePipeline.bind(this);
-
-    this._crosshairValues = [];
     this._consultInfoPipeline = this._consultInfoPipeline.bind(this);
     this._refreshChartPipeline = this._refreshChartPipeline.bind(this);
-    this._onMouseLeave = this._onMouseLeave.bind(this);
-    this._onNearestXs = [ this._onNearestX.bind(this, 0) ];
-  }
-
-  /**
-   * Event handler for onNearestX.
-   * @param {number} seriesIndex Index of the series.
-   * @param {Object} value Selected value.
-   * @private
-   */
-  _onNearestX(seriesIndex, value) {
-    this._crosshairValues = this._crosshairValues.concat();
-    this._crosshairValues[seriesIndex] = value;
-    value.y = '$' + numeral(value.y).format('0,000');
-    this.setState({crosshairValues: this._crosshairValues});
-  }
-
-  /**
-   * Event handler for onMouseLeave.
-   * @private
-   */
-  _onMouseLeave() {
-    this._crosshairValues = [];
-    this.setState({crosshairValues: this._crosshairValues});
+    this._changeCurrency = this._changeCurrency.bind(this);
   }
 
   _changeStatePipeline(value){
     this.setState({
       statePipelineValue: value
     });
-    this._consultInfoPipeline(value.id);
+    this._consultInfoPipeline(value.id, this.state.idCurrency);
+  }
+
+  _changeCurrency(value){
+    this.setState({
+      idCurrency: value
+    });
+    const idStatus = this.state.statePipelineValue === null || this.state.statePipelineValue === undefined ? null : this.state.statePipelineValue.id;
+    this._consultInfoPipeline(idStatus, value);
   }
 
   componentWillMount(){
-    const {selectsReducer, getMasterDataFields} = this.props;
-    this._consultInfoPipeline(null);
+    const {selectsReducer, getMasterDataFields, consultCurrencys} = this.props;
+    this._consultInfoPipeline(null, null);
+    consultCurrencys().then( (response) => {
+    }, (reason) => {
+    });
   }
 
   _refreshChartPipeline(){
@@ -71,9 +63,10 @@ class ViewChartPipeline extends Component{
     this._consultInfoPipeline(id);
   }
 
-  _consultInfoPipeline(idstatus){
+  _consultInfoPipeline(idStatus, idCurrency){
     const {consultInformationPipeline} = this.props;
-    consultInformationPipeline(idstatus).then((response) => {
+    this.setState({ data: defaultValueData});
+    consultInformationPipeline(idStatus, idCurrency).then((response) => {
       if((_.get(response, 'payload.data.validateLogin') === 'false')){
         redirectUrl("/login");
       } else {
@@ -81,16 +74,23 @@ class ViewChartPipeline extends Component{
         if((_.get(response, 'payload.data.status') === 500)){
           this.setState({showErrorLoadChart :true});
         } else {
-
+          var dataListComplete = [];
           var dataAux = [];
-          _.map(_.get(response, 'payload.data.data.listValoresPipeline'), object => {
-            var fecha = moment(object[0], 'YYYY-MM').locale('es').format('YYYY MMM');
-            dataAux.push({x: fecha + " (" + object[2] + " reg.)", y: object[1]});
+          _.map(_.get(response, 'payload.data.data.hashValuesPipeline'), objects => {
+            var monthSum = 0;
+            objects.forEach(function(object){
+              var fecha = moment(object[0], 'YYYY-MM').locale('es').format('YYYY MMM');
+              dataAux.push({x: fecha, y: object[1], z: object[2]});
+              if( monthSum === NUMERAL_MONTH ){
+                monthSum = 0;
+                dataListComplete.push(dataAux);
+                dataAux = [];
+              }
+              monthSum++;
+            });
           });
-          this.setState({
-            data: dataAux
-          });
-
+          const labels = _.chain(response).get('payload.data.data.hashValuesPipeline', {0:[]}).keys().value();
+          this.setState({ data: dataListComplete, labels: labels});
         }
       }
     }, (reason) => {
@@ -99,7 +99,8 @@ class ViewChartPipeline extends Component{
   }
 
   render(){
-    const {selectsReducer} = this.props;
+    const {selectsReducer, viewManagementReducer} = this.props;
+    const {data, labels} = this.state;
     return(
       <Row xs={12} md={12} lg={12}>
         <Col xs={12} md={12} lg={12} style={{backgroundColor: "white", paddingTop: '20px', paddingBottom: '20px', display: 'block'}}>
@@ -109,7 +110,7 @@ class ViewChartPipeline extends Component{
                 onClick={this._refreshChartPipeline}>Refrescar gráfica</a>
           </Col>
           <Col xs={12} md={12} lg={12} className="div-body-chart modalBt4-body" style={{height: '430px'}}>
-            <Col xs={6} md={6} lg={6} style={{marginBottom: "10px"}}>
+            <Col xs={6} md={6} lg={6} style={{marginBottom: "10px", float: 'right'}}>
               <div style={{textAlign: 'left'}}>
                 <dt><span>Estado</span></dt>
               </div>
@@ -119,24 +120,22 @@ class ViewChartPipeline extends Component{
                   idTypeFilter={PIPELINE_STATUS}
                 />
               </dt>
+
+              <div style={{textAlign: 'left', marginTop: "15px"}}>
+                <dt><span>Moneda</span></dt>
+              </div>
+              <dt style={{textAlign: 'left'}}>
+                <Combobox
+                  valueField='id'
+                  textField='code'
+                  data={viewManagementReducer.get('valuesCurrency')}
+                  onChange={val => this._changeCurrency(val.id)}
+                  minLength={3}
+                  filter='contains'
+                />
+              </dt>
             </Col>
-            <div style={{overflowX: 'auto'}}>
-              <XYPlot
-                onMouseLeave={this._onMouseLeave}
-                margin={{left:80, top: 20, right: 20, bottom: 40}}
-                xType="ordinal"
-                width={900}
-                height={350}>
-                <VerticalGridLines />
-                <HorizontalGridLines />
-                <XAxis />
-                <YAxis />
-                <VerticalBarSeries
-                  onNearestX={this._onNearestXs[0]}
-                  data={this.state.data}/>
-                  <Crosshair values={this.state.crosshairValues}/>
-              </XYPlot>
-            </div>
+            <BarSeries items={data} defaultData={defaultValueData} labels={labels}/>
           </Col>
         </Col>
         <SweetAlert
@@ -155,13 +154,15 @@ class ViewChartPipeline extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getMasterDataFields,
-    consultInformationPipeline
+    consultInformationPipeline,
+    consultCurrencys
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer},ownerProps) {
+function mapStateToProps({selectsReducer, viewManagementReducer},ownerProps) {
   return {
-    selectsReducer
+    selectsReducer,
+    viewManagementReducer
   };
 }
 

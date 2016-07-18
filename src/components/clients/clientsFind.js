@@ -70,8 +70,7 @@ class ClientsFind extends Component {
     const {fields: {certificationStatus,team}} = this.props;
     const {clientsFindServer,clientR,changePage} = this.props;
     var keyword = clientR.get('keyword');
-    var limInf = (1 - 1) * NUMBER_RECORDS;
-    clientsFindServer(keyword, limInf, NUMBER_RECORDS,certificationStatus.value,team.value);
+    clientsFindServer(keyword, 0, NUMBER_RECORDS,certificationStatus.value,team.value);
     changePage(1);
   }
 
