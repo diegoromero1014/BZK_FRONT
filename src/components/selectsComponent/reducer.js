@@ -33,7 +33,10 @@ const initialState = Immutable.Map({
   dataTypeTeams:[],
   dataTypeCertificationStatus:[],
   dataTypeTaskType:[],
-  dataPipelineStatus:[]
+  dataPipelineStatus:[],
+  pipelineProducts: [],
+  pipelineCurrencies: [],
+  pipelineClientNeeds: []
 });
 
 
@@ -115,6 +118,15 @@ export default (state = initialState, action) => {
               map.set(key, values);
             });
           });
+        case constants.PIPELINE_PRODUCTS:
+          const products = action.payload.data.messageBody.productValueObjects;
+          return state.set('pipelineProducts', products);
+        case constants.PIPELINE_CURRENCIES:
+          const currencies = action.payload.data.messageBody.currencyList;
+          return state.set('pipelineCurrencies', currencies);
+        case constants.PIPELINE_CLIENT_NEEDS:
+          const clientNeeds = action.payload.data.messageBody.clientNeedValueObjects;
+          return state.set('pipelineClientNeeds', clientNeeds);
         default:
           return state;
   }
