@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
 import {changeOwnerDraft} from '../visit/actions';
 import {changeOwnerDraftPrevisit} from '../previsita/actions';
+import {changeOwnerDraftPipeline} from '../pipeline/actions';
 import {updateTitleNavBar} from '../navBar/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
@@ -21,6 +22,9 @@ class ButtonDetailsRedirectComponent extends Component {
     } else if( actionsRedirect.typeClickDetail === "previsita" ){
       updateTitleNavBar("Informe de previsita");
       changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
+    } else if (actionsRedirect.typeClickDetail === "pipeline") {
+      updateTitleNavBar("Informe de pipeline");
+      changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
     }
     redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }

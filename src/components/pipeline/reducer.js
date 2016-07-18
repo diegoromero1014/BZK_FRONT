@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import {GET_PIPELINE_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PIPELINE,
-  CLEAR_PIPELINE, CLEAR_PIPELINE_ORDER,CLEAR_PIPELINE_PAGINATOR} from './constants';
+  CLEAR_PIPELINE, CLEAR_PIPELINE_ORDER,CLEAR_PIPELINE_PAGINATOR, GET_PIPELINE, OWNER_DRAFT} from './constants';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -10,7 +10,7 @@ const initialState = Immutable.Map({
     page: 1,
     columnPrevisit: 'pe.startDate',
     orderPrevisit : 1,
-    detailPrevisit: {},
+    detailPipeline: {},
     ownerDraft: 0
 });
 
@@ -52,6 +52,10 @@ export default (state = initialState, action) => {
             map.set('orderPipeline', 1)
                 .set('columnPipeline', 'pe.startDate');
         });
+    case GET_PIPELINE:
+        return state.set('detailPipeline', action.payload.data.data);
+    case OWNER_DRAFT:
+        return state.set('ownerDraft', action.ownerDraft);
     default:
     	return state;
     }
