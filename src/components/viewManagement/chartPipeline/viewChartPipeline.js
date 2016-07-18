@@ -8,7 +8,7 @@ import {NUMERAL_MONTH} from '../constants';
 import {PIPELINE_STATUS} from '../../selectsComponent/constants';
 import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
-import {consultInformationPipeline, consultCurrencys} from '../actions';
+import {consultInformationPipeline, consultCurrencys, changeLoadChart} from '../actions';
 import BarSeries from './barSeries';
 import numeral from 'numeral';
 import moment from 'moment';
@@ -64,13 +64,14 @@ class ViewChartPipeline extends Component{
   }
 
   _consultInfoPipeline(idStatus, idCurrency){
-    const {consultInformationPipeline} = this.props;
+    const {consultInformationPipeline, changeLoadChart} = this.props;
+    changeLoadChart(true);
     this.setState({ data: defaultValueData});
     consultInformationPipeline(idStatus, idCurrency).then((response) => {
+      changeLoadChart(false);
       if((_.get(response, 'payload.data.validateLogin') === 'false')){
         redirectUrl("/login");
       } else {
-
         if((_.get(response, 'payload.data.status') === 500)){
           this.setState({showErrorLoadChart :true});
         } else {
@@ -94,6 +95,7 @@ class ViewChartPipeline extends Component{
         }
       }
     }, (reason) => {
+      changeLoadChart(false);
       this.setState({showErrorLoadChart :true});
     })
   }
@@ -155,7 +157,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getMasterDataFields,
     consultInformationPipeline,
-    consultCurrencys
+    consultCurrencys,
+    changeLoadChart
   }, dispatch);
 }
 

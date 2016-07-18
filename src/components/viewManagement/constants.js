@@ -1,5 +1,6 @@
 export const CONSULT_PIPELINE = "CONSULT_PIPELINE";
 export const CONSULT_CURRENCY = "CONSULT_CURRENCY";
+export const LOAD_CHART = "LOAD_CHART";
 export const TAB_SELETED_ACTIVE = 0;
 export const TAB_PREVISIT = 1;
 export const TAB_VISIT = 2;

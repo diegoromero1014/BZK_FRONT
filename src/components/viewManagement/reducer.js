@@ -1,10 +1,11 @@
 import Immutable from 'immutable';
-import {TAB_SELETED_ACTIVE, CONSULT_PIPELINE, CONSULT_CURRENCY} from './constants';
+import {TAB_SELETED_ACTIVE, CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
 
 const initialState = Immutable.Map({
     tabSeleted: 0,
     valuesPipelineConsult: [],
-    valuesCurrency: []
+    valuesCurrency: [],
+    loadChart: false
 });
 
 export default (state = initialState, action) => {
@@ -15,6 +16,8 @@ export default (state = initialState, action) => {
         return state.set('valuesPipelineConsult', action.payload.data);
     case CONSULT_CURRENCY:
         return state.set('valuesCurrency', action.payload.data.data);
+    case LOAD_CHART:
+        return state.set('loadChart', action.loadChart);
     default:
       return state;
   }

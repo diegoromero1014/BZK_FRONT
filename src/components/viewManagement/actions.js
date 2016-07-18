@@ -1,11 +1,18 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, CONSULT_PIPELINE, CONSULT_CURRENCY} from './constants';
+import {TAB_SELETED_ACTIVE, CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
 
 export function changeTabSeletedChartView(tabSeleted){
   return{
     type: TAB_SELETED_ACTIVE,
     tabSeleted: tabSeleted
+  }
+}
+
+export function changeLoadChart(loadChart){
+  return{
+    type: LOAD_CHART,
+    loadChart: loadChart
   }
 }
 
