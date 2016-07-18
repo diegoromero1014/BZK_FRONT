@@ -10,7 +10,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL} from '../constants';
 import {createEditPipeline} from '../actions';
 import SweetAlert from 'sweetalert-react';
@@ -61,6 +61,11 @@ const validate = values => {
     } else {
       errors.endDate = null;
     }
+    if(values.endDate && values.startDate){
+      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+        errors.startDate = DATE_START_AFTER;
+      }
+    }
     return errors;
 };
 
@@ -73,7 +78,7 @@ class FormPipeline extends Component {
       //showErrorSavePipeline: false,
       showConfirm: false
     }
-    
+
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
     this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -82,7 +87,7 @@ class FormPipeline extends Component {
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
-    this._onClickPDF = this._onClickPDF.bind(this);
+    //this._onClickPDF = this._onClickPDF.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -99,7 +104,7 @@ class FormPipeline extends Component {
     }
   }
 
-  
+
 
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
@@ -197,7 +202,7 @@ class FormPipeline extends Component {
         "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
         "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
       };
-      
+
       console.log('Objeto a guardar -> ', pipelineJson);
 
       createEditPipeline(pipelineJson).then((data)=> {
@@ -306,7 +311,7 @@ class FormPipeline extends Component {
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        
+
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -421,7 +426,7 @@ class FormPipeline extends Component {
               />
             </div>
           </Col>
-          
+
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
