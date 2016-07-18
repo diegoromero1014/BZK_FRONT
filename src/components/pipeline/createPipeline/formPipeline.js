@@ -63,6 +63,11 @@ const validate = values => {
     } else {
       errors.endDate = null;
     }
+    if(values.endDate && values.startDate){
+      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+        errors.startDate = DATE_START_AFTER;
+      }
+    }
     return errors;
 };
 
@@ -75,7 +80,7 @@ class FormPipeline extends Component {
       //showErrorSavePipeline: false,
       showConfirm: false
     }
-    
+
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
     this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -100,7 +105,7 @@ class FormPipeline extends Component {
     }
   }
 
-  
+
 
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
@@ -199,7 +204,7 @@ class FormPipeline extends Component {
         "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
         "reviewedDate": parseInt(moment(datePipelineLastReview, DATE_FORMAT).format('x'))
       };
-      
+
       console.log('Objeto a guardar -> ', pipelineJson);
 
       createEditPipeline(pipelineJson).then((data)=> {
@@ -306,7 +311,7 @@ class FormPipeline extends Component {
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        
+
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -421,7 +426,7 @@ class FormPipeline extends Component {
               />
             </div>
           </Col>
-          
+
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>

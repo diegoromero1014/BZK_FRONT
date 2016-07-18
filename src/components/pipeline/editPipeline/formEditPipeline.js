@@ -65,6 +65,11 @@ const validate = values => {
     } else {
       errors.endDate = null;
     }
+    if(values.endDate && values.startDate){
+      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+        errors.startDate = DATE_START_AFTER;
+      }
+    }
     return errors;
 };
 
@@ -297,14 +302,14 @@ class FormEditPipeline extends Component {
 		}
 		getPipelineById(id);
 	}
-	
+
 	render() {
 		const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, product,
               priority, registeredCountry, startDate, client, documentStatus, probability,
           		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
           clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
-			
+
 		const pipeline = pipelineReducer.get('detailPipeline');
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
@@ -424,7 +429,7 @@ class FormEditPipeline extends Component {
 				      />
 				    </div>
 				  </Col>
-				  
+
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
