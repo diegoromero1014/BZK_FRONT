@@ -100,8 +100,13 @@ class ModalCreateTask extends Component{
   }
 
   componentWillMount(){
-    const{getMasterDataFields} = this.props;
+    const{fields: {idEstado}, taskEdit, getMasterDataFields} = this.props;
     getMasterDataFields([TASK_STATUS]);
+    if( taskEdit !== undefined && taskEdit !== null && taskEdit !== "" ){
+      setTimeout(function(){
+        idEstado.onChange(taskEdit.idStatus);
+      }, 500)
+    }
   }
 
   _closeViewOrEditTask() {

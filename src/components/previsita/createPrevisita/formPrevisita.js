@@ -444,7 +444,6 @@ class FormPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
-        //console.log("previsitJson", previsitJson);
         createPrevisit(previsitJson).then((data)=> {
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
