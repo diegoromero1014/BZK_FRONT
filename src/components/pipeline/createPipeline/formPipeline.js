@@ -558,7 +558,7 @@ class FormPipeline extends Component {
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
             <dt>
-              <span>Fecha de inicio - DD/MM/YYY (</span><span style={{color: "red"}}>*</span>)
+              <span>Fecha de inicio - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
             </dt>
             <dt>
               <DateTimePickerUi
@@ -571,7 +571,7 @@ class FormPipeline extends Component {
           </Col>
           <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
             <dt>
-              <span>Fecha de finalización - DD/MM/YYY (</span><span style={{color: "red"}}>*</span>)
+              <span>Fecha de finalización - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
             </dt>
             <dt>
               <DateTimePickerUi
