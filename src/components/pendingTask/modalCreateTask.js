@@ -131,7 +131,6 @@ class ModalCreateTask extends Component{
       "employeeName": responsable.value,
       "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
     }
-    console.log("messageBody", messageBody);
     createPendingTaskNew(messageBody).then((data) => {
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({taskEdited: true});
