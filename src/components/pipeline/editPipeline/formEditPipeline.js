@@ -10,7 +10,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
 import {consultParameterServer} from '../../../actionsGlobal';
@@ -68,6 +68,8 @@ const validate = values => {
     if(values.endDate && values.startDate){
       if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
         errors.startDate = DATE_START_AFTER;
+      } else {
+        errors.startDate = null;
       }
     }
     return errors;
