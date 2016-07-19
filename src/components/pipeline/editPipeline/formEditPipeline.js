@@ -387,7 +387,8 @@ class FormEditPipeline extends Component {
 				        <span>Empleado responsable</span>
 				      </dt>
 				      <dt>
-				        <div className="ui search fluid">
+				        <div className="ui search participantBanc fluid">
+				          {/* <div className="ui icon input"> */}
 				            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
 				              style={{borderRadius: "3px"}}
 				              autoComplete="off"
@@ -400,6 +401,7 @@ class FormEditPipeline extends Component {
 				              onSelect={val => this._updateValue(val)}
 				              disabled={this.state.isEditable ? '' : 'disabled'}
 				            />
+				          {/* </div> */}
 				        </div>
 				      </dt>
 				    </div>
