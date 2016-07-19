@@ -15,7 +15,7 @@ class ButtonDetailsRedirectComponent extends Component {
   }
 
   _detailVisit(){
-    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit} = this.props;
+    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline} = this.props;
     if( actionsRedirect.typeClickDetail === "visita" ){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
@@ -49,7 +49,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     updateTitleNavBar,
     changeOwnerDraft,
-    changeOwnerDraftPrevisit
+    changeOwnerDraftPrevisit,
+    changeOwnerDraftPipeline
   }, dispatch);
 }
 

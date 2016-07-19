@@ -10,7 +10,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
 import {consultParameterServer} from '../../../actionsGlobal';
@@ -23,7 +23,7 @@ import numeral from 'numeral';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
-    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability", "reviewedDate",
+    "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName"
     ];
 
@@ -79,7 +79,7 @@ class FormEditPipeline extends Component {
 		super(props);
 		this.state = {
 		  showMessageCreatePipeline: false,
-		  //showErrorSavePipeline: false,
+		  isEditable: false,
 		  showConfirm: false
 		}
 
@@ -91,6 +91,8 @@ class FormEditPipeline extends Component {
 		this._onCloseButton = this._onCloseButton.bind(this);
 		this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
 		this._changeCurrency = this._changeCurrency.bind(this);
+		this._editPipeline = this._editPipeline.bind(this);
+		this._onClickPDF = this._onClickPDF.bind(this);
 	}
 
 	_closeMessageCreatePipeline() {
@@ -108,8 +110,8 @@ class FormEditPipeline extends Component {
 	}
 
 	_onClickPDF() {
-	    const {pdfDescarga} = this.props;
-	    pdfDescarga(window.localStorage.getItem('idClientSelected'),this.state.idVisit);
+	    const {pdfDescarga, fields: {id}} = this.props;
+	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id.value);
 	 }
 
 	_changeCurrency(value) {
@@ -184,7 +186,7 @@ class FormEditPipeline extends Component {
 	_submitCreatePipeline() {
 		const {initialValues, fields: {id, idUsuario, value, commission, roe, termInMonths, businessStatus,
 		  businessWeek, currency, indexing, endDate, need, observations, product,
-		  priority, registeredCountry, startDate, client, documentStatus, probability
+		  priority, registeredCountry, startDate, client, documentStatus
 		}, createEditPipeline} = this.props;
 
 		let pipelineJson = {
@@ -283,13 +285,19 @@ class FormEditPipeline extends Component {
 		}
 	}
 
+	_editPipeline() {
+    this.setState({
+      isEditable: !this.state.isEditable
+    });
+  }
+
 	componentWillMount() {
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
 			getClientNeeds, getPipelineById, id,
 			fields: {
 				nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
     			businessWeek, currency, indexing, endDate, need, observations, product,
-    			priority, registeredCountry, startDate, client, documentStatus, probability
+    			priority, registeredCountry, startDate, client, documentStatus
 			}} = this.props;
 		const infoClient = clientInformacion.get('responseClientInfo');
 		getPipelineProducts();
@@ -302,20 +310,29 @@ class FormEditPipeline extends Component {
 		}
 		getPipelineById(id);
 	}
-
+	
 	render() {
-		const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+		const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, product,
-              priority, registeredCountry, startDate, client, documentStatus, probability,
+              priority, registeredCountry, startDate, client, documentStatus,
           		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
           clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
-
+			
 		const pipeline = pipelineReducer.get('detailPipeline');
+		const ownerDraft = pipelineReducer.get('ownerDraft');
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
 
-				<span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+				{/* <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span> */}
+				<Row style={{padding: "5px 10px 0px 20px"}}>
+		          <Col xs={10} sm={10} md={10} lg={10}>
+		            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+		          </Col>
+		          <Col xs={2} sm={2} md={2} lg={2}>
+		            <button type="button" onClick={this._editPipeline} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+		          </Col>
+		        </Row>
 				<Row style={{padding: "10px 10px 20px 20px"}}>
 				  <Col xs={12} md={12} lg={12}>
 				    <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -339,6 +356,7 @@ class FormEditPipeline extends Component {
 				        {...product}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get('pipelineProducts') || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -355,6 +373,7 @@ class FormEditPipeline extends Component {
 				        {...businessStatus}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get(PIPELINE_STATUS) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -398,6 +417,7 @@ class FormEditPipeline extends Component {
 				        {...indexing}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get(PIPELINE_INDEXING) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -412,6 +432,7 @@ class FormEditPipeline extends Component {
 				        {...commission}
 				        max="7"
 				        parentId="dashboardComponentScroll"
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -426,10 +447,11 @@ class FormEditPipeline extends Component {
 				        {...roe}
 				        parentId="dashboardComponentScroll"
 				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, roe, val)}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
-
+				  
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
@@ -445,6 +467,7 @@ class FormEditPipeline extends Component {
 				        {...need}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get('pipelineClientNeeds') || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -461,6 +484,7 @@ class FormEditPipeline extends Component {
 				        {...priority}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get(PIPELINE_PRIORITY) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -477,6 +501,7 @@ class FormEditPipeline extends Component {
 				        {...registeredCountry}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get(FILTER_COUNTRY) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -495,6 +520,7 @@ class FormEditPipeline extends Component {
 				        {...businessWeek}
 				        parentId="dashboardComponentScroll"
 				        data={[{id: true, value: 'Si'}, {id:false, value: 'No'}]}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -522,6 +548,7 @@ class FormEditPipeline extends Component {
 				        {...currency}
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get('pipelineCurrencies') || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -536,6 +563,7 @@ class FormEditPipeline extends Component {
 				        {...value}
 				        parentId="dashboardComponentScroll"
 				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, value, val)}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -551,6 +579,7 @@ class FormEditPipeline extends Component {
 				        parentId="dashboardComponentScroll"
 				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, termInMonths, val)}
 				        max="4"
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
@@ -566,6 +595,7 @@ class FormEditPipeline extends Component {
 				        format={DATE_FORMAT}
 				        time={false}
 				        {...startDate}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </dt>
 				  </Col>
@@ -579,6 +609,7 @@ class FormEditPipeline extends Component {
 				        culture='es'
 				        format={DATE_FORMAT}
 				        time={false}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </dt>
 				  </Col>
@@ -601,6 +632,7 @@ class FormEditPipeline extends Component {
 				      {...observations}
 				      title="La longitud máxima de caracteres es de 3500"
 				      style={{width: '100%', height: '178px'}}
+				      disabled={this.state.isEditable ? '' : 'disabled'}
 				    />
 				  </Col>
 				</Row>
@@ -645,10 +677,10 @@ class FormEditPipeline extends Component {
 		        </Row>
 				<div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
 				  <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
+				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
 				      <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
 				    </button>
-				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{float:"right", margin:"8px 0px 0px 250px", position:"fixed"}}>
+				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}  style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
 				      <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
 				    </button>
 				    <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
@@ -705,13 +737,14 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	      pipelineReducer,
 	      pdfDescarga,
 	      consultParameterServer,
+
 	      initialValues: {
 	      	id: pipeline.id,
 	      	businessStatus: pipeline.businessStatus,
 		    businessWeek: pipeline.businessWeek,
 		    commission: pipeline.commission,
 		    currency: pipeline.currency,
-		    employeeResponsible: pipeline.employeeResponsible,
+		    idUsuario: pipeline.employeeResponsible,
 		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
 		    indexing: pipeline.indexing,
 		    need: pipeline.need,
@@ -732,7 +765,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		    updatedTimestamp: moment(pipeline.updatedTimestamp).format(DATETIME_FORMAT),
 		    createdByName: pipeline.createdByName,
 		    updatedByName: pipeline.updatedByName,
-		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format("DD MMM YYYY")
+		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
 	      }
 	    };
 	} else {
