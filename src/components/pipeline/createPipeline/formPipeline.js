@@ -12,7 +12,7 @@ import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {consultParameterServer} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -63,9 +63,11 @@ const validate = values => {
     } else {
       errors.endDate = null;
     }
-    if(values.endDate && values.startDate){
+    if(values.endDate && values.startDate) {
       if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
         errors.startDate = DATE_START_AFTER;
+      } else {
+        errors.startDate = null;
       }
     }
     return errors;
