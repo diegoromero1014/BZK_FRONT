@@ -64,7 +64,9 @@ const validate = values => {
       errors.endDate = null;
     }
     if(values.endDate && values.startDate) {
-      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+      var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
+  		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
+      if( startDate > endDate){
         errors.startDate = DATE_START_AFTER;
       } else {
         errors.startDate = null;
@@ -79,8 +81,8 @@ class FormPipeline extends Component {
     super(props);
     this.state = {
       showMessageCreatePipeline: false,
-      //showErrorSavePipeline: false,
-      showConfirm: false
+      showConfirm: false,
+      employeeResponsible: false
     }
 
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -92,6 +94,7 @@ class FormPipeline extends Component {
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
+    this._handleTermInMonths = this._handleTermInMonths.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -172,6 +175,16 @@ class FormPipeline extends Component {
     valuReduxForm.onChange(output);
   }
 
+  _handleTermInMonths(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    valuReduxForm.onChange(output);
+  }
+
   _onCloseButton() {
     message = "¿Está seguro que desea salir de la pantalla de creación de pipeline?";
     titleMessage = "Confirmación salida";
@@ -186,34 +199,35 @@ class FormPipeline extends Component {
   _submitCreatePipeline() {
     const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
       businessWeek, currency, indexing, endDate, need, observations, product,
-      priority, registeredCountry, startDate, client, documentStatus, probability
+      priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario
     }, createEditPipeline} = this.props;
 
-      console.log('datePipelineLastReview -> ', datePipelineLastReview);
-
+    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
+      this.setState({
+        employeeResponsible: true
+      });
+    }else {
       let pipelineJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
         "documentStatus": typeButtonClick,
         "product": product.value,
         "businessStatus": businessStatus.value,
-        "employeeResponsible": idUsuario.value,
+        "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
         "currency": currency.value,
         "indexing": indexing.value,
-        "commission": commission.value,
+        "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
         "businessWeek": businessWeek.value,
         "need": need.value,
         "priority": priority.value,
-        "roe": roe.value,
+        "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
         "registeredCountry": registeredCountry.value,
         "observations": observations.value,
         "termInMonths": termInMonths.value,
-        "value": numeral(value.value).format('0'),
+        "value": value.value === undefined ? null : numeral(value.value).format('0'),
         "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
         "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
       };
-
-      console.log('Objeto a guardar -> ', pipelineJson);
 
       createEditPipeline(pipelineJson).then((data)=> {
         if((_.get(data, 'payload.data.validateLogin') === 'false')) {
@@ -237,10 +251,14 @@ class FormPipeline extends Component {
         message = "Señor usuario, ocurrió un error creando del pipeline.";
         this.setState({showMessageCreatePipeline :true});
       });
+    }
   }
 
   updateKeyValueUsersBanco(e) {
     const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
+    var self = this;
+    idUsuario.onChange('');
+    console.log("idUsuario.value", idUsuario.value);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -260,6 +278,9 @@ class FormPipeline extends Component {
               onSelect : function(event) {
                   nameUsuario.onChange(event.title);
                   idUsuario.onChange(event.idUsuario);
+                  self.setState({
+                    employeeResponsible: false
+                  });
                   return 'default';
               }
             });
@@ -317,7 +338,6 @@ class FormPipeline extends Component {
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -383,6 +403,14 @@ class FormPipeline extends Component {
                   </div>
                   <div className="results"></div>
                 </div>
+                {
+                  this.state.employeeResponsible &&
+                  <div>
+                      <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                      </div>
+                  </div>
+                }
               </dt>
             </div>
           </Col>
@@ -559,8 +587,7 @@ class FormPipeline extends Component {
                 {...termInMonths}
                 max="4"
                 parentId="dashboardComponentScroll"
-                onBlur={val => this._handleBlurValueNumber(1, termInMonths, termInMonths.value, false)}
-                onFocus={val => this._handleFocusValueNumber(termInMonths, termInMonths.value)}
+                onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
               />
             </div>
           </Col>
