@@ -121,3 +121,39 @@ export function createEditPipeline(jsonPipeline){
     payload: request
   }
 }
+
+export function getPipelineById(pipelineId) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "id": pipelineId
+    }
+  };
+  let request = axios.post(APP_URL + "/pipelineDetails", json);
+  return {
+    type: constants.GET_PIPELINE,
+    payload: request
+  };
+}
+
+export function pdfDescarga(idclient, idPipeline) {
+  window.open(APP_URL + "/pdfReportPipeline?idClient=" + idclient + "&idPipeline=" + idPipeline + "&language=es");
+}
+
+export function changeOwnerDraftPipeline(ownerDraft) {
+  return {
+    type: constants.OWNER_DRAFT,
+    ownerDraft: ownerDraft
+  };
+}

@@ -35,8 +35,10 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
+export const DATE_START_AFTER = "La fecha inicial es superior a la final";
 export const DATE_FORMAT = "DD/MM/YYYY";
 export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
+export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {

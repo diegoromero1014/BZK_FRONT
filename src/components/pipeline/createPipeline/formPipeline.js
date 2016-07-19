@@ -10,10 +10,10 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT} from '../../../constantsGlobal';
-import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL} from '../constants';
+import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
-import Challenger from '../../methodologyChallenger/component';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
+import {consultParameterServer} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -22,19 +22,14 @@ import $ from 'jquery';
 import numeral from 'numeral';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
+    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product", "reviewedDate",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability"];
 
-var dateVisitLastReview;
-let showMessageCreatePipeline= false;
-var typeMessage = "success";
-var titleMessage = "";
-var message = "";
+let typeMessage = "success";
+let titleMessage = "";
+let message = "";
 let typeButtonClick;
-var valueTypePrevisit = null;
-var idTypeVisitAux = null;
-var idTypeVisitAuxTwo = null;
-var contollerErrorChangeType = false;
+let datePipelineLastReview;
 
 const validate = values => {
     const errors = {};
@@ -67,6 +62,11 @@ const validate = values => {
       errors.endDate = VALUE_REQUIERED;
     } else {
       errors.endDate = null;
+    }
+    if(values.endDate && values.startDate){
+      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+        errors.startDate = DATE_START_AFTER;
+      }
     }
     return errors;
 };
@@ -105,6 +105,8 @@ class FormPipeline extends Component {
     }
   }
 
+  
+
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
       this.setState({currencyChanged: true});
@@ -122,8 +124,6 @@ class FormPipeline extends Component {
       }
     }
     val = output;
-    console.log('valuReduxForm -> ', valuReduxForm.value);
-    console.log('val ->', val);
 
     if (val.length < 29) {
 
@@ -165,60 +165,6 @@ class FormPipeline extends Component {
     }
   }
 
-  _closeCancelConfirmChanType() {
-    contollerErrorChangeType = false;
-    this.setState({showConfirmChangeTypeVisit: false });
-  }
-
-  _closeConfirmChangeType() {
-    contollerErrorChangeType = false;
-    const {selectsReducer} = this.props;
-    idTypeVisitAuxTwo = idTypeVisitAux;
-    /*const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
-    if(typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
-      valueTypePrevisit = typeSeleted[0].key;
-    }*/
-    this.setState({
-      typePreVisit: parseInt(idTypeVisitAux),
-      showConfirmChangeTypeVisit: false,
-      typePreVisitError: null,
-      acondicionamiento: "",
-      acondicionamientoTouch: false,
-      acondicionamientoError: "",
-      replanteamiento: "",
-      replanteamientoTouch: false,
-      replanteamientoError: "",
-      ahogamiento: "",
-      ahogamientoTouch: false,
-      ahogamientoError: "",
-      impacto: "",
-      impactoTouch: false,
-      impactoError: "",
-      nuevoModo: "",
-      nuevoModoTouch: false,
-      nuevoModoError: "",
-      nuestraSolucion: "",
-      nuestraSolucionTouch: false,
-      nuestraSolucionError: "",
-    });
-  }
-
-  _changeDatePreVisit(value) {
-    this.setState({
-      datePreVisit: value,
-      datePreVisitError: null
-    });
-  }
-
-  _changeDatePreVisitOnBlur(value) {
-    var date = value.target.value;
-    if(date === '' || date === undefined || date === null) {
-      this.setState({
-        dateVisitError: "Debe seleccionar una opción"
-      });
-    }
-  }
-
   _onCloseButton() {
     message = "¿Está seguro que desea salir de la pantalla de creación de pipeline?";
     titleMessage = "Confirmación salida";
@@ -236,6 +182,8 @@ class FormPipeline extends Component {
       priority, registeredCountry, startDate, client, documentStatus, probability
     }, createEditPipeline} = this.props;
 
+      console.log('datePipelineLastReview -> ', datePipelineLastReview);
+      
       let pipelineJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
@@ -253,9 +201,9 @@ class FormPipeline extends Component {
         "registeredCountry": registeredCountry.value,
         "observations": observations.value,
         "termInMonths": termInMonths.value,
-        "value": value.value,
-        "startDate": parseInt(moment(this.state.startDate).format('x')),
-        "endDate": parseInt(moment(this.state.endDate).format('x'))
+        "value": numeral(value.value).format('0'),
+        "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
+        "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
       };
       
       console.log('Objeto a guardar -> ', pipelineJson);
@@ -335,20 +283,23 @@ class FormPipeline extends Component {
   }
 
   componentWillMount() {
-    //valueTypePrevisit = null;
-    idTypeVisitAux = null;
-    idTypeVisitAuxTwo = null;
-    contollerErrorChangeType = false;
-    const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} = this.props;
+    const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     getPipelineProducts();
     getPipelineCurrencies();
     getClientNeeds();
-    //valueTypePrevisit = null;
     if(_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
     } else {
       getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
+      consultParameterServer(LAST_PIPELINE_REVIEW).then((data)=> {
+        if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
+          data.payload.data.parameter !== undefined ){
+          datePipelineLastReview = JSON.parse(data.payload.data.parameter).value;
+          datePipelineLastReview = moment(datePipelineLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+        }
+      }, (reason) =>{
+      });
     }
   }
 
@@ -575,7 +526,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Valor (</span><span style={{color: "red"}}>*</span>)
+                <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
                 name="value"
@@ -651,6 +602,13 @@ class FormPipeline extends Component {
             />
           </Col>
         </Row>
+        <Row>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{datePipelineLastReview}</span>
+            </div>
+          </Col>
+        </Row>
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -664,15 +622,6 @@ class FormPipeline extends Component {
             </button>
           </div>
         </div>
-        {/*
-        <SweetAlert
-          type="error"
-          show={this.state.showErrorSavePipeline}
-          title="Error participantes"
-          text="Señor usuario, para guardar un pipeline como mínimo debe agregar un participante por parte del Grupo Bancolombia y otro por parte del cliente."
-          onConfirm={() => this.setState({showErrorSavePipeline:false})}
-        />
-        */}
         <SweetAlert
           type={typeMessage}
           show={this.state.showMessageCreatePipeline}
@@ -692,18 +641,6 @@ class FormPipeline extends Component {
           onCancel= {() => this.setState({showConfirm: false })}
           onConfirm={this._closeConfirmClosePipeline}
         />
-        <SweetAlert
-          type= "warning"
-          show={this.state.showConfirmChangeTypeVisit}
-          title="Tipo de visita"
-          text="Señor usuario, si cambia el “Tipo de visita” la información diligenciada en la sección Metodología Challenger se borrará. ¿Estás seguro que desea cambiar el Tipo de visita? "
-          confirmButtonColor= '#DD6B55'
-          confirmButtonText= 'Sí, estoy seguro!'
-          cancelButtonText = "Cancelar"
-          showCancelButton= {true}
-          onCancel= {this._closeCancelConfirmChanType}
-          onConfirm={this._closeConfirmChangeType}
-        />
       </form>
     );
   }
@@ -716,7 +653,8 @@ function mapDispatchToProps(dispatch) {
     getPipelineCurrencies,
     getClientNeeds,
     createEditPipeline,
-    filterUsersBanco
+    filterUsersBanco,
+    consultParameterServer
   }, dispatch);
 }
 

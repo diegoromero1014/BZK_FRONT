@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
 import {changeOwnerDraft} from '../visit/actions';
 import {changeOwnerDraftPrevisit} from '../previsita/actions';
+import {changeOwnerDraftPipeline} from '../pipeline/actions';
 import {updateTitleNavBar} from '../navBar/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
@@ -14,13 +15,16 @@ class ButtonDetailsRedirectComponent extends Component {
   }
 
   _detailVisit(){
-    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit} = this.props;
+    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline} = this.props;
     if( actionsRedirect.typeClickDetail === "visita" ){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
     } else if( actionsRedirect.typeClickDetail === "previsita" ){
       updateTitleNavBar("Informe de previsita");
       changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
+    } else if (actionsRedirect.typeClickDetail === "pipeline") {
+      updateTitleNavBar("Informe de pipeline");
+      changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
     }
     redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }
@@ -45,7 +49,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     updateTitleNavBar,
     changeOwnerDraft,
-    changeOwnerDraftPrevisit
+    changeOwnerDraftPrevisit,
+    changeOwnerDraftPipeline
   }, dispatch);
 }
 

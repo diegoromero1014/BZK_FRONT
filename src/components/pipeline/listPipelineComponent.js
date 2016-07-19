@@ -120,10 +120,11 @@ class ListPipelineComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              typeClickDetail: "visita",
+              typeClickDetail: "pipeline",
               ownerDraft: value.idStatusDocument,
-              urlRedirect: "/dashboard/visitaEditar",
-              component : "VIEW_VISIT"
+              urlRedirect: "/dashboard/pipelineEdit",
+              component: "VIEW_PIPELINE"
+              //component : "VIEW_VISIT"
             });
             var datePipelineStartFormat = moment(value.startDate).locale('es');
             _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));
@@ -142,7 +143,7 @@ class ListPipelineComponent extends Component {
   }
 
   render() {
-    const modalTitle = 'Visita Detalle';
+    const modalTitle = 'Pipeline Detalle';
     const {pipelineReducer} = this.props;
     const data = pipelineReducer.get('pipelineList');
     return (
