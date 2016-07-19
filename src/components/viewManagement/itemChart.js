@@ -57,7 +57,7 @@ class ItemChart extends Component{
           <i className='green file excel outline icon'
             title="Descargar información en formato CSV"
             onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-            style={{fontSize: "18px", marginLeft: "20px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>
+            style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>
         </div>
       </Col>
     );

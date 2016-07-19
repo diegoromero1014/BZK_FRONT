@@ -324,6 +324,17 @@ class FormEditPipeline extends Component {
 		const pipeline = pipelineReducer.get('detailPipeline');
 		const ownerDraft = pipelineReducer.get('ownerDraft');
 
+		let fechaModString = '';
+		if(updatedTimestamp.value !== null) {
+			let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
+			fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+		}
+		let fechaCreateString = '';
+		if(createdTimestamp.value !== null) {
+			let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
+			fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
+  		}
+
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -655,12 +666,12 @@ class FormEditPipeline extends Component {
 		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
 		          </Col>
 		          <Col xs={6} md={3} lg={3}>
-		            {updatedBy !== null ?
+		            {updatedBy.value !== null ?
 		              <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
 		            : '' }
 		            </Col>
 		          <Col xs={6} md={3} lg={3}>
-		            {updatedBy !== null ?
+		            {updatedBy.value !== null ?
 		              <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
 		            : '' }
 		          </Col>
@@ -670,13 +681,17 @@ class FormEditPipeline extends Component {
 		            <span style={{marginLeft: "0px", color: "#818282"}}>{createdByName.value}</span>
 		          </Col>
 		          <Col xs={6} md={3} lg={3}>
-		            <span style={{marginLeft: "0px", color: "#818282"}}>{createdTimestamp.value}</span>
+		            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
 		          </Col>
 		          <Col xs={6} md={3} lg={3}>
-		            <span style={{marginLeft: "0px", color: "#818282"}}>{updatedByName.value}</span>
+		          	{updatedBy.value !== null ?
+		          		<span style={{marginLeft: "0px", color: "#818282"}}>{updatedByName.value}</span>
+		          	: ''}
 		          </Col>
 		          <Col xs={6} md={3} lg={3}>
-		            <span style={{marginLeft: "0px", color: "#818282"}}>{updatedTimestamp.value}</span>
+		          	{updatedBy.value !== null ?
+		          		<span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+		          	: ''}
 		          </Col>
 		        </Row>
 				<div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
@@ -766,8 +781,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		    documentStatus: pipeline.documentStatus,
 		    createdBy: pipeline.createdBy,
 		    updatedBy: pipeline.updatedBy,
-		    createdTimestamp: moment(pipeline.createdTimestamp).format(DATETIME_FORMAT),
-		    updatedTimestamp: moment(pipeline.updatedTimestamp).format(DATETIME_FORMAT),
+		    createdTimestamp: pipeline.createdTimestamp,
+		    updatedTimestamp: pipeline.updatedTimestamp,
 		    createdByName: pipeline.createdByName,
 		    updatedByName: pipeline.updatedByName,
 		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
