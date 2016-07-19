@@ -20,7 +20,7 @@ class inputComponent extends Component {
   }
 
   render() {
-      const {nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value} = this.props;
+      const {nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus} = this.props;
       if( touched && error ){
         $(`.ui.input.${name} [type=text]`).focus();
       }
@@ -36,6 +36,7 @@ class inputComponent extends Component {
                     placeholder={placeholder}
                     onBlur={onBlur}
                     onKeyPress={onKey}
+                    onFocus={onFocus}
                     value={value || ''} />
               </div>
               {

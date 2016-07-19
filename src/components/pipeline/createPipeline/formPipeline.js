@@ -10,7 +10,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
+import {PROPUEST_OF_BUSINESS, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {consultParameterServer} from '../../../actionsGlobal';
@@ -88,6 +88,7 @@ class FormPipeline extends Component {
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+    this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
@@ -107,8 +108,6 @@ class FormPipeline extends Component {
     }
   }
 
-
-
   _changeCurrency(value) {
     if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
       this.setState({currencyChanged: true});
@@ -118,7 +117,7 @@ class FormPipeline extends Component {
     this.setState({currency: value});
   }
 
-  _handleBlurValueNumber(typeValidation ,valuReduxForm, val) {
+  _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
      if (validos.indexOf(val.toString().charAt(i)) != -1){
@@ -127,44 +126,50 @@ class FormPipeline extends Component {
     }
     val = output;
 
-    if (val.length < 29) {
+    /* Si typeValidation = 2 es por que el valor puede ser negativo
+       Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+    */
+    var decimal = '';
+    if(val.includes(".")){
+      var vectorVal = val.split(".");
+      if(allowsDecimal){
+        val = vectorVal[0] + '.';
+        if(vectorVal.length > 1){
+          decimal = vectorVal[1].substring(0, 4);
+        }
+      }else{
+        val = vectorVal[0];
+      }
+    }
 
-      /* Si typeValidation = 2 es por que el valor puede ser negativo
-         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
-      */
-      if( typeValidation === INTEGER ) { //Realizo simplemente el formateo
-        var pattern = /(-?\d+)(\d{3})/;
+    if( typeValidation === 2 ) { //Realizo simplemente el formateo
+      var pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(val)){
+        val = val.replace(pattern, "$1,$2");
+      }
+      valuReduxForm.onChange(val + decimal);
+    } else { //Valido si el valor es negativo o positivo
+      var value = numeral(valuReduxForm.value).format('0');
+      if( value >= 0 ){
+        pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
         }
-        valuReduxForm.onChange(val);
-      } else if (typeValidation === REAL) {
-
-        if (val.length < 10) { // -0,000.0000
-
-          //var value = numeral(valuReduxForm.value).format('0');
-          val = numeral(val).format('0,0[.]0000');
-          //var pattern = /(-?\d+)(\d{3})/;
-          //while(pattern.test(val)) {
-          //  val = val.replace(pattern, "$1,$2");
-          //}
-          valuReduxForm.onChange(val);
-
-        }
-
-      } else { //Valido si el valor es negativo o positivo
-        var value = numeral(valuReduxForm.value).format('0');
-        if( value >= 0 ){
-          var pattern = /(-?\d+)(\d{3})/;
-          while (pattern.test(val)){
-            val = val.replace(pattern, "$1,$2");
-          }
-          valuReduxForm.onChange(val);
-        } else {
-          valuReduxForm.onChange("");
-        }
+        valuReduxForm.onChange(val + decimal);
+      } else {
+        valuReduxForm.onChange("");
       }
     }
+  }
+
+  _handleFocusValueNumber(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    valuReduxForm.onChange(output);
   }
 
   _onCloseButton() {
@@ -279,8 +284,6 @@ class FormPipeline extends Component {
     if( userSelected !== null && userSelected !== undefined ){
       idUsuario.onChange(userSelected.id);
       nameUsuario.onChange(userSelected.nameComplet);
-      //cargoUsuario.onChange(userSelected.contactPosition);
-      //empresaUsuario.onChange(userSelected.company);
     }
   }
 
@@ -410,8 +413,10 @@ class FormPipeline extends Component {
                 name="commission"
                 type="text"
                 {...commission}
-                max="7"
+                max="10"
                 parentId="dashboardComponentScroll"
+                onBlur={val => this._handleBlurValueNumber(2, commission, commission.value, true)}
+                onFocus={val => this._handleFocusValueNumber(commission, commission.value)}
               />
             </div>
           </Col>
@@ -424,8 +429,10 @@ class FormPipeline extends Component {
                 name="roe"
                 type="text"
                 {...roe}
+                max="10"
                 parentId="dashboardComponentScroll"
-                onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, roe, val)}
+                onBlur={val => this._handleBlurValueNumber(1, roe, roe.value, true)}
+                onFocus={val => this._handleFocusValueNumber(roe, roe.value)}
               />
             </div>
           </Col>
@@ -534,8 +541,10 @@ class FormPipeline extends Component {
                 name="value"
                 type="text"
                 {...value}
+                max="30"
                 parentId="dashboardComponentScroll"
-                onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, value, val)}
+                onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
+                onFocus={val => this._handleFocusValueNumber(value, value.value)}
               />
             </div>
           </Col>
@@ -548,9 +557,10 @@ class FormPipeline extends Component {
                 name="termInMonths"
                 type="text"
                 {...termInMonths}
-                parentId="dashboardComponentScroll"
-                onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, termInMonths, val)}
                 max="4"
+                parentId="dashboardComponentScroll"
+                onBlur={val => this._handleBlurValueNumber(1, termInMonths, termInMonths.value, false)}
+                onFocus={val => this._handleFocusValueNumber(termInMonths, termInMonths.value)}
               />
             </div>
           </Col>
