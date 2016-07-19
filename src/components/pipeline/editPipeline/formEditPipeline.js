@@ -6,6 +6,7 @@ import {redirectUrl} from '../../globalComponents/actions';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
@@ -322,6 +323,7 @@ class FormEditPipeline extends Component {
 			
 		const pipeline = pipelineReducer.get('detailPipeline');
 		const ownerDraft = pipelineReducer.get('ownerDraft');
+
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -385,21 +387,19 @@ class FormEditPipeline extends Component {
 				        <span>Empleado responsable</span>
 				      </dt>
 				      <dt>
-				        <div className="ui search participantBanc fluid">
-				          <div className="ui icon input" style={{width: "100%"}}>
-				            <input className="prompt" id="inputParticipantBanc"
+				        <div className="ui search fluid">
+				            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
 				              style={{borderRadius: "3px"}}
 				              autoComplete="off"
 				              type="text"
+				              {...nameUsuario}
 				              value={nameUsuario.value}
 				              onChange={nameUsuario.onChange}
 				              placeholder="Ingrese un criterio de búsqueda..."
 				              onKeyPress={this.updateKeyValueUsersBanco}
 				              onSelect={val => this._updateValue(val)}
+				              disabled={this.state.isEditable ? '' : 'disabled'}
 				            />
-				            <i className="search icon"></i>
-				          </div>
-				          <div className="results"></div>
 				        </div>
 				      </dt>
 				    </div>
@@ -747,6 +747,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		    commission: pipeline.commission,
 		    currency: pipeline.currency,
 		    idUsuario: pipeline.employeeResponsible,
+		    nameUsuario: pipeline.employeeResponsibleName,
 		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
 		    indexing: pipeline.indexing,
 		    need: pipeline.need,
