@@ -13,7 +13,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 
 let v1 = "";
-
+let v2= "";
 
 class ListPipelineComponent extends Component {
 
@@ -38,10 +38,12 @@ class ListPipelineComponent extends Component {
 
   componentWillReceiveProps(nextProps){
       const {
-          value1
+          value1,
+          value2
       } = nextProps;
-      if ((v1 !== nextProps.value1)){
+      if ((v1 !== nextProps.value1) || (v1 !== nextProps.value2)){
       v1 = nextProps.value1;
+      v2 =nextProps.value2;
       const {clearPipelineOrder} = this.props;
       clearPipelineOrder();
       this._orderColumn(1,"pe.startDate");
@@ -58,7 +60,7 @@ class ListPipelineComponent extends Component {
     const {pipelineByClientFindServer,orderColumnPipeline,clearPipelinePaginator} = this.props;
     clearPipelinePaginator();
     orderColumnPipeline(orderPipeline,columnPipeline);
-    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnPipeline,orderPipeline,v1);
+    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnPipeline,orderPipeline,v1,v2);
 }
   _renderHeaders(){
     return [

@@ -13,3 +13,4 @@ export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
 export const GET_PIPELINE = "GET_PIPELINE";
 export const LAST_PIPELINE_REVIEW = "last_previsit_review";
 export const OWNER_DRAFT = "OWNER_DRAFT";
+export const PIPELINE_STATUS = "pipelineStatus";
