@@ -30,6 +30,9 @@ let titleMessage = "";
 let message = "";
 let typeButtonClick;
 let datePipelineLastReview;
+let idCurrencyAux = null;
+let idCurrencyAuxTwo = null;
+let contollerErrorChangeType = false;
 
 const validate = values => {
     const errors = {};
@@ -82,7 +85,8 @@ class FormPipeline extends Component {
     this.state = {
       showMessageCreatePipeline: false,
       showConfirm: false,
-      employeeResponsible: false
+      employeeResponsible: false,
+      showConfirmChangeCurrency: false
     }
 
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -95,6 +99,9 @@ class FormPipeline extends Component {
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
     this._handleTermInMonths = this._handleTermInMonths.bind(this);
+    this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
+    this._cleanForm = this._cleanForm.bind(this);
+    this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -111,13 +118,50 @@ class FormPipeline extends Component {
     }
   }
 
-  _changeCurrency(value) {
-    if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
-      this.setState({currencyChanged: true});
-    } else {
-      this.setState({currencyError: "debe seleccionar una opción"});
+  _cleanForm() {
+    const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+    businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
+    priority, registeredCountry, startDate, client, documentStatus, probability}} = this.props;
+
+    nameUsuario.onChange('');
+    idUsuario.onChange('');
+    value.onChange('');
+    commission.onChange('');
+    roe.onChange('');
+    termInMonths.onChange('');
+    businessStatus.onChange('');
+    businessWeek.onChange('');
+    currency.onChange('');
+    indexing.onChange('');
+    endDate.onChange('');
+    need.onChange('');
+    observations.onChange('');
+    product.onChange('');
+    reviewedDate.onChange('');
+    priority.onChange('');
+    registeredCountry.onChange('');
+    startDate.onChange('');
+    client.onChange('');
+    documentStatus.onChange('');
+    probability.onChange('');
+  }
+
+  _changeCurrency(currencyValue) {
+    console.log('value -> ', currencyValue);
+    const {fields: {value}} = this.props;
+    if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
+      contollerErrorChangeType = true;
+      idCurrencyAux = currencyValue;
+      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
+        titleMessage = "Tipo de moneda";
+        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
+        this.setState({
+          showConfirmChangeCurrency: true
+        });
+      } else {
+        this._closeConfirmChangeCurrency();
+      }
     }
-    this.setState({currency: value});
   }
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
@@ -196,6 +240,25 @@ class FormPipeline extends Component {
     redirectUrl("/dashboard/clientInformation");
   }
 
+  _closeCancelConfirmChanCurrency() {
+    console.log('_closeCancelConfirmChanCurrency');
+    contollerErrorChangeType = false;
+    this.setState({
+      showConfirmChangeCurrency: false
+    });
+  }
+
+  _closeConfirmChangeCurrency() {
+    console.log('_closeConfirmChangeCurrency');
+    contollerErrorChangeType = false;
+    const {fields: {value}} = this.props;
+    idCurrencyAuxTwo = idCurrencyAux;
+    value.onChange('');
+    this.setState({
+      showConfirmChangeCurrency: false,
+    });
+  }
+
   _submitCreatePipeline() {
     const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
       businessWeek, currency, indexing, endDate, need, observations, product,
@@ -238,6 +301,7 @@ class FormPipeline extends Component {
             titleMessage = "Creación pipeline";
             message = "Señor usuario, el pipeline se creó de forma exitosa.";
             this.setState({showMessageCreatePipeline :true});
+            //this._cleanForm();
           } else {
             typeMessage = "error";
             titleMessage = "Creación pipeline";
@@ -557,6 +621,7 @@ class FormPipeline extends Component {
                 {...currency}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get('pipelineCurrencies') || []}
+                onChange={val => this._changeCurrency(val)}
               />
             </div>
           </Col>
@@ -679,6 +744,18 @@ class FormPipeline extends Component {
           showCancelButton= {true}
           onCancel= {() => this.setState({showConfirm: false })}
           onConfirm={this._closeConfirmClosePipeline}
+        />
+        <SweetAlert
+          type="warning"
+          show={this.state.showConfirmChangeCurrency}
+          title={titleMessage}
+          text={message}
+          confirmButtonColor= '#DD6B55'
+          confirmButtonText= 'Sí, estoy seguro!'
+          cancelButtonText = "Cancelar"
+          showCancelButton= {true}
+          onCancel= {this._closeCancelConfirmChanCurrency}
+          onConfirm={this._closeConfirmChangeCurrency}
         />
       </form>
     );
