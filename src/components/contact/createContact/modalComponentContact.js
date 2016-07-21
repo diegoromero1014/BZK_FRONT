@@ -616,7 +616,7 @@ class ModalComponentContact extends Component {
                         <Row>
                           <Col xs>
                           <dl style={{width: '100%'}}>
-                            <dt><span>Entidad /línea de negocio</span></dt>
+                            <dt><span>Entidad / Línea de negocio</span></dt>
                             <dd><MultipleSelect name="tipoEntidad" labelInput="Seleccione"
                             {...tipoEntidad}
                             valueProp={'id'}
