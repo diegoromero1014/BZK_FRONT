@@ -357,6 +357,12 @@ class FormEditPipeline extends Component {
 	    });
 	}
 
+  componentWillReceiveProps(nextProps){
+    this.setState({
+	      isEditable: false
+	    });
+  }
+
 	componentWillMount() {
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
 			getClientNeeds, getPipelineById, id,
