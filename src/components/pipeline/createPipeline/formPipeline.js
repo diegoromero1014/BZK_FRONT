@@ -241,6 +241,10 @@ class FormPipeline extends Component {
 
   _closeCancelConfirmChanCurrency() {
     contollerErrorChangeType = false;
+    const {fields: {currency}} = this.props;
+    if (idCurrencyAuxTwo != null) {
+      currency.value = idCurrencyAuxTwo;
+    }
     this.setState({
       showConfirmChangeCurrency: false
     });

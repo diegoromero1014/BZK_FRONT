@@ -220,9 +220,11 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeCancelConfirmChanCurrency() {
-		const {fields: {currency}} = this.props;
-		currency.onChange(idCurrencyAuxTwo);
     	contollerErrorChangeType = false;
+    	const {fields: {currency}} = this.props;
+    	if (idCurrencyAuxTwo != null) {
+	      currency.value = idCurrencyAuxTwo;
+	    }
     	this.setState({
       		showConfirmChangeCurrency: false
     	});
@@ -246,7 +248,6 @@ class FormEditPipeline extends Component {
 		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
 		}, createEditPipeline} = this.props;
 
-		console.log("nameUsuario.value = ", nameUsuario.value);
 	    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
 	      this.setState({
 	        employeeResponsible: true
