@@ -111,16 +111,12 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeMessageCreatePipeline() {
+		this.setState({
+			showMessageCreatePipeline: false
+		});
 		if( typeMessage === "success" ) {
-		  this.setState({
-		    showMessageCreatePipeline: false,
-		    dateVisit: ""
-		  });
+		  this._cleanForm();
 		  redirectUrl("/dashboard/clientInformation");
-		} else {
-		  this.setState({
-		    showMessageCreatePipeline: false
-		  });
 		}
 	}
 
@@ -130,22 +126,21 @@ class FormEditPipeline extends Component {
 	 }
 
 	_changeCurrency(currencyValue) {
-    console.log('value -> ', currencyValue);
-    const {fields: {value}} = this.props;
-    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
-      contollerErrorChangeType = true;
-      idCurrencyAux = currencyValue;
-      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
-        titleMessage = "Tipo de moneda";
-        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
-        this.setState({
-          showConfirmChangeCurrency: true
-        });
-      } else {
-        this._closeConfirmChangeCurrency();
-      }
-    }
-  }
+	    const {fields: {value}} = this.props;
+	    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
+	      contollerErrorChangeType = true;
+	      idCurrencyAux = currencyValue;
+	      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
+	        titleMessage = "Tipo de moneda";
+	        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
+	        this.setState({
+	          showConfirmChangeCurrency: true
+	        });
+	      } else {
+	        this._closeConfirmChangeCurrency();
+	      }
+	    }
+	}
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
     //Elimino los caracteres no validos
@@ -224,19 +219,21 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeCancelConfirmChanCurrency() {
-    console.log('_closeCancelConfirmChanCurrency');
-    contollerErrorChangeType = false;
-    this.setState({
-      showConfirmChangeCurrency: false
-    });
-  }
+		const {fields: {currency}} = this.props;
+		currency.onChange(idCurrencyAuxTwo);
+    	contollerErrorChangeType = false;
+    	this.setState({
+      		showConfirmChangeCurrency: false
+    	});
+  	}
 
   _closeConfirmChangeCurrency() {
-    console.log('_closeConfirmChangeCurrency');
     contollerErrorChangeType = false;
     const {fields: {value}} = this.props;
+    if (idCurrencyAuxTwo != null) {
+      value.onChange('');
+    }
     idCurrencyAuxTwo = idCurrencyAux;
-    value.onChange('');
     this.setState({
       showConfirmChangeCurrency: false,
     });
@@ -248,64 +245,63 @@ class FormEditPipeline extends Component {
 		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
 		}, createEditPipeline} = this.props;
 
-	console.log("nameUsuario.value = ", nameUsuario.value);
-    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
-      this.setState({
-        employeeResponsible: true
-      });
-    }else {
-  		let pipelineJson = {
-  		"id": id.value,
-  		"client": window.localStorage.getItem('idClientSelected'),
-  		"documentStatus": typeButtonClick,
-  		"product": product.value,
-  		"businessStatus": businessStatus.value,
-  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
-  		"currency": currency.value,
-  		"indexing": indexing.value,
-  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-  		"businessWeek": businessWeek.value,
-  		"need": need.value,
-  		"priority": priority.value,
-  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-  		"registeredCountry": registeredCountry.value,
-  		"observations": observations.value,
-  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
-  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
-  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
-  		};
+		console.log("nameUsuario.value = ", nameUsuario.value);
+	    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
+	      this.setState({
+	        employeeResponsible: true
+	      });
+	    }else {
+	  		let pipelineJson = {
+	  		"id": id.value,
+	  		"client": window.localStorage.getItem('idClientSelected'),
+	  		"documentStatus": typeButtonClick,
+	  		"product": product.value,
+	  		"businessStatus": businessStatus.value,
+	  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+	  		"currency": currency.value,
+	  		"indexing": indexing.value,
+	  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+	  		"businessWeek": businessWeek.value,
+	  		"need": need.value,
+	  		"priority": priority.value,
+	  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+	  		"registeredCountry": registeredCountry.value,
+	  		"observations": observations.value,
+	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
+	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
+	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
+	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+	  		};
 
-  	  createEditPipeline(pipelineJson).then((data)=> {
-  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
-  	      redirectUrl("/login");
-  	    } else {
-  	      if( (_.get(data, 'payload.data.status') === 200) ) {
-  	        typeMessage = "success";
-  	        titleMessage = "Edición pipeline";
-  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
-  	        this.setState({showMessageCreatePipeline :true});
-  	      } else {
-  	        typeMessage = "error";
-  	        titleMessage = "Edición pipeline";
-  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
-  	        this.setState({showMessageCreatePipeline :true});
-  	      }
-  	    }
-  	  }, (reason) =>{
-  	    typeMessage = "error";
-  	    titleMessage = "Edición pipeline";
-  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
-  	    this.setState({showMessageCreatePipeline :true});
-  	  });
-    }
+	  	  createEditPipeline(pipelineJson).then((data)=> {
+	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+	  	      redirectUrl("/login");
+	  	    } else {
+	  	      if( (_.get(data, 'payload.data.status') === 200) ) {
+	  	        typeMessage = "success";
+	  	        titleMessage = "Edición pipeline";
+	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
+	  	        this.setState({showMessageCreatePipeline :true});
+	  	      } else {
+	  	        typeMessage = "error";
+	  	        titleMessage = "Edición pipeline";
+	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
+	  	        this.setState({showMessageCreatePipeline :true});
+	  	      }
+	  	    }
+	  	  }, (reason) =>{
+	  	    typeMessage = "error";
+	  	    titleMessage = "Edición pipeline";
+	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
+	  	    this.setState({showMessageCreatePipeline :true});
+	  	  });
+	    }
 	}
 
 	updateKeyValueUsersBanco(e) {
 		const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
-    var self = this;
-    idUsuario.onChange('');
-    console.log("idUsuario.value", idUsuario.value);
+    	var self = this;
+    	idUsuario.onChange('');
 		if(e.keyCode == 13 || e.which == 13){
 		  e.preventDefault();
 		  if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -356,10 +352,10 @@ class FormEditPipeline extends Component {
 	}
 
 	_editPipeline() {
-    this.setState({
-      isEditable: !this.state.isEditable
-    });
-  }
+		this.setState({
+	      isEditable: !this.state.isEditable
+	    });
+	}
 
 	componentWillMount() {
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,

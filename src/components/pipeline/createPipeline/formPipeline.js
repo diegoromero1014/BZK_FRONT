@@ -9,8 +9,8 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
-import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {PROPUEST_OF_BUSINESS, LAST_PIPELINE_REVIEW} from '../constants';
+import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
+import {LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {consultParameterServer} from '../../../actionsGlobal';
@@ -87,7 +87,7 @@ class FormPipeline extends Component {
       showConfirm: false,
       employeeResponsible: false,
       showConfirmChangeCurrency: false
-    }
+    };
 
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
     this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
@@ -104,24 +104,22 @@ class FormPipeline extends Component {
     this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
   }
 
+  // TODO: Revisar la asignación del state
+  // Colcar aquí el limpiar el formulario
   _closeMessageCreatePipeline() {
+    this.setState({
+      showMessageCreatePipeline: false
+    });
     if( typeMessage === "success" ) {
-      this.setState({
-        showMessageCreatePipeline: false,
-        dateVisit: ""
-      });
+      this._cleanForm();
       redirectUrl("/dashboard/clientInformation");
-    } else {
-      this.setState({
-        showMessageCreatePipeline: false
-      });
     }
   }
 
   _cleanForm() {
     const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
     businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
-    priority, registeredCountry, startDate, client, documentStatus, probability}} = this.props;
+    priority, registeredCountry, startDate, client, documentStatus}} = this.props;
 
     nameUsuario.onChange('');
     idUsuario.onChange('');
@@ -143,11 +141,12 @@ class FormPipeline extends Component {
     startDate.onChange('');
     client.onChange('');
     documentStatus.onChange('');
-    probability.onChange('');
+    contollerErrorChangeType = false;
+    idCurrencyAux = null;
+    idCurrencyAuxTwo = null;
   }
 
   _changeCurrency(currencyValue) {
-    console.log('value -> ', currencyValue);
     const {fields: {value}} = this.props;
     if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
       contollerErrorChangeType = true;
@@ -241,7 +240,6 @@ class FormPipeline extends Component {
   }
 
   _closeCancelConfirmChanCurrency() {
-    console.log('_closeCancelConfirmChanCurrency');
     contollerErrorChangeType = false;
     this.setState({
       showConfirmChangeCurrency: false
@@ -249,13 +247,14 @@ class FormPipeline extends Component {
   }
 
   _closeConfirmChangeCurrency() {
-    console.log('_closeConfirmChangeCurrency');
     contollerErrorChangeType = false;
     const {fields: {value}} = this.props;
+    if (idCurrencyAuxTwo != null) {
+      value.onChange('');
+    }
     idCurrencyAuxTwo = idCurrencyAux;
-    value.onChange('');
     this.setState({
-      showConfirmChangeCurrency: false,
+      showConfirmChangeCurrency: false
     });
   }
 
@@ -301,7 +300,6 @@ class FormPipeline extends Component {
             titleMessage = "Creación pipeline";
             message = "Señor usuario, el pipeline se creó de forma exitosa.";
             this.setState({showMessageCreatePipeline :true});
-            //this._cleanForm();
           } else {
             typeMessage = "error";
             titleMessage = "Creación pipeline";
@@ -322,7 +320,6 @@ class FormPipeline extends Component {
     const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
     var self = this;
     idUsuario.onChange('');
-    console.log("idUsuario.value", idUsuario.value);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
