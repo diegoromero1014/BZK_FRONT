@@ -499,7 +499,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Interés/Comisión</span>
+                <span>Interés / Comisión</span>
               </dt>
               <Input
                 name="commission"

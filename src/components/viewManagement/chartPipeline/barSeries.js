@@ -89,7 +89,7 @@ class BarSerires extends Component{
       <div style={{overflowX: 'auto'}}>
         <XYPlot
           onMouseLeave={this._onMouseLeave}
-          margin={{left:80, top: 20, right: 20, bottom: 40}}
+          margin={{left:130, top: 20, right: 20, bottom: 40}}
           xType="ordinal"
           width={900}
           height={400}>

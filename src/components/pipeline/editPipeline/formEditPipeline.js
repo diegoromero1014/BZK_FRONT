@@ -93,21 +93,20 @@ class FormEditPipeline extends Component {
       	  showConfirmChangeCurrency: false
 		};
 
-		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
-		this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
-		this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
-		this._updateValue = this._updateValue.bind(this);
-		this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
-		this._onCloseButton = this._onCloseButton.bind(this);
-		this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
-		this._changeCurrency = this._changeCurrency.bind(this);
-		this._editPipeline = this._editPipeline.bind(this);
-		this._onClickPDF = this._onClickPDF.bind(this);
+  		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
+  		this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
+  		this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
+  		this._updateValue = this._updateValue.bind(this);
+  		this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+  		this._onCloseButton = this._onCloseButton.bind(this);
+  		this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
+  		this._changeCurrency = this._changeCurrency.bind(this);
+  		this._editPipeline = this._editPipeline.bind(this);
+  		this._onClickPDF = this._onClickPDF.bind(this);
     	this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     	this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
     	this._handleTermInMonths = this._handleTermInMonths.bind(this);
     	this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
-    	this._cleanForm = this._cleanForm.bind(this);
     	this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
 	}
 
@@ -129,34 +128,6 @@ class FormEditPipeline extends Component {
 	    const {pdfDescarga, fields: {id}} = this.props;
 	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id.value);
 	 }
-
-	 _cleanForm() {
-	    const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-	    businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
-	    priority, registeredCountry, startDate, client, documentStatus, probability}} = this.props;
-
-	    nameUsuario.onChange('');
-	    idUsuario.onChange('');
-	    value.onChange('');
-	    commission.onChange('');
-	    roe.onChange('');
-	    termInMonths.onChange('');
-	    businessStatus.onChange('');
-	    businessWeek.onChange('');
-	    currency.onChange('');
-	    indexing.onChange('');
-	    endDate.onChange('');
-	    need.onChange('');
-	    observations.onChange('');
-	    product.onChange('');
-	    reviewedDate.onChange('');
-	    priority.onChange('');
-	    registeredCountry.onChange('');
-	    startDate.onChange('');
-	    client.onChange('');
-	    documentStatus.onChange('');
-	    probability.onChange('');
-	  }
 
 	_changeCurrency(currencyValue) {
     console.log('value -> ', currencyValue);
@@ -314,7 +285,6 @@ class FormEditPipeline extends Component {
   	        titleMessage = "Edición pipeline";
   	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
   	        this.setState({showMessageCreatePipeline :true});
-  	        this._cleanForm();
   	      } else {
   	        typeMessage = "error";
   	        titleMessage = "Edición pipeline";
@@ -539,7 +509,8 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Interés/Comisión</span>
+
+				        <span>Interés / Comisión</span>
 				      </dt>
 				      <Input
 				        name="commission"
@@ -865,7 +836,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer}, ownerProps) {
+function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer}, pathParameter) {
 	const pipeline = pipelineReducer.get('detailPipeline');
 	if (pipeline) {
 		if (pipeline.currency !== null && pipeline.currency !== '') {
@@ -873,45 +844,57 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		} else {
 			idCurrencyAuxTwo = null;
 		}
-		return {
-	      clientInformacion,
-	      selectsReducer,
-	      contactsByClient,
-	      pipelineReducer,
-	      pdfDescarga,
-	      consultParameterServer,
 
-	      initialValues: {
-	      	id: pipeline.id,
-	      	businessStatus: pipeline.businessStatus,
-		    businessWeek: pipeline.businessWeek,
-		    commission: fomatInitialStateNumber(pipeline.commission),
-		    currency: pipeline.currency,
-		    idUsuario: pipeline.employeeResponsible,
-		    nameUsuario: pipeline.employeeResponsibleName,
-		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
-		    indexing: pipeline.indexing,
-		    need: pipeline.need,
-		    observations: pipeline.observations,
-		    product: pipeline.product,
-		    priority: pipeline.priority,
-		    roe: fomatInitialStateNumber(pipeline.roe),
-		    registeredCountry: pipeline.registeredCountry,
-		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
-		    pipelineStatus: pipeline.pipelineStatus,
-		    termInMonths: pipeline.termInMonths,
-		    value: fomatInitialStateNumber(pipeline.value),
-		    client: pipeline.client,
-		    documentStatus: pipeline.documentStatus,
-		    createdBy: pipeline.createdBy,
-		    updatedBy: pipeline.updatedBy,
-		    createdTimestamp: pipeline.createdTimestamp,
-		    updatedTimestamp: pipeline.updatedTimestamp,
-		    createdByName: pipeline.createdByName,
-		    updatedByName: pipeline.updatedByName,
-		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
-	      }
-	    };
+    if( pipeline.id === parseInt(pathParameter.id) ){
+      return {
+  	      clientInformacion,
+  	      selectsReducer,
+  	      contactsByClient,
+  	      pipelineReducer,
+  	      pdfDescarga,
+  	      consultParameterServer,
+
+  	      initialValues: {
+        	id: pipeline.id,
+        	businessStatus: pipeline.businessStatus,
+  		    businessWeek: pipeline.businessWeek,
+  		    commission: fomatInitialStateNumber(pipeline.commission),
+  		    currency: pipeline.currency,
+  		    idUsuario: pipeline.employeeResponsible,
+  		    nameUsuario: pipeline.employeeResponsibleName,
+  		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
+  		    indexing: pipeline.indexing,
+  		    need: pipeline.need,
+  		    observations: pipeline.observations === null ? '' : pipeline.observations,
+  		    product: pipeline.product,
+  		    priority: pipeline.priority,
+  		    roe: fomatInitialStateNumber(pipeline.roe),
+  		    registeredCountry: pipeline.registeredCountry,
+  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
+  		    pipelineStatus: pipeline.pipelineStatus,
+  		    termInMonths: pipeline.termInMonths,
+  		    value: fomatInitialStateNumber(pipeline.value),
+  		    client: pipeline.client,
+  		    documentStatus: pipeline.documentStatus,
+  		    createdBy: pipeline.createdBy,
+  		    updatedBy: pipeline.updatedBy,
+  		    createdTimestamp: pipeline.createdTimestamp,
+  		    updatedTimestamp: pipeline.updatedTimestamp,
+  		    createdByName: pipeline.createdByName,
+  		    updatedByName: pipeline.updatedByName,
+  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
+  	      }
+  	    };
+    } else {
+      return {
+  	      clientInformacion,
+  	      selectsReducer,
+  	      contactsByClient,
+  	      pipelineReducer,
+  	      pdfDescarga,
+  	      consultParameterServer
+  	    };
+    }
 	} else {
 		return {
 	      clientInformacion,
