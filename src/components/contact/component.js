@@ -65,7 +65,7 @@ class ContactComponent extends Component {
                 }}
                 idTypeFilter={FILTER_FUNCTION_ID}/>
             </Col>
-            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Entidad/Línea de negocio:</span>
+            <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Entidad / Línea de negocio:</span>
                 <SelectFilterContact config={{
                     onChange: (value) => this.setState({value2: value.id})
                 }}
