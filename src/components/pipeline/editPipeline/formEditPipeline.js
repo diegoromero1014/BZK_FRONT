@@ -127,11 +127,6 @@ class FormEditPipeline extends Component {
 	 }
 
 	_changeCurrency(currencyValue) {
-		console.log('_changeCurrency(' + currencyValue + ')');
-		console.log('idCurrencyAux -> ', idCurrencyAux);
-		console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
-		console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
-		console.log('isEditable -> ', this.state.isEditable);
 	    const {fields: {value}} = this.props;
 	    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
 	      contollerErrorChangeType = true;
@@ -225,10 +220,6 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeCancelConfirmChanCurrency() {
-		console.log('_closeCancelConfirmChanCurrency');
-		console.log('idCurrencyAux -> ', idCurrencyAux);
-		console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
-		console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
     	contollerErrorChangeType = false;
     	const {fields: {currency}} = this.props;
     	if (idCurrencyAuxTwo != null) {
@@ -240,10 +231,6 @@ class FormEditPipeline extends Component {
   	}
 
   _closeConfirmChangeCurrency() {
-  	console.log('_closeConfirmChangeCurrency');
-  	console.log('idCurrencyAux -> ', idCurrencyAux);
-	console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
-	console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
     contollerErrorChangeType = false;
     const {fields: {value}} = this.props;
     if (idCurrencyAuxTwo != null) {
@@ -261,7 +248,6 @@ class FormEditPipeline extends Component {
 		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
 		}, createEditPipeline} = this.props;
 
-		console.log("nameUsuario.value = ", nameUsuario.value);
 	    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
 	      this.setState({
 	        employeeResponsible: true
