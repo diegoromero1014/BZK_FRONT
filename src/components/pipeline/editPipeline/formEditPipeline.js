@@ -33,6 +33,9 @@ let titleMessage = "";
 let message = "";
 let typeButtonClick;
 let datePipelineLastReview;
+let idCurrencyAux = null;
+let idCurrencyAuxTwo = null;
+let contollerErrorChangeType = false;
 
 const validate = values => {
     const errors = {};
@@ -67,7 +70,9 @@ const validate = values => {
       errors.endDate = null;
     }
     if(values.endDate && values.startDate){
-      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+      var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
+  		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
+      if( startDate > endDate){
         errors.startDate = DATE_START_AFTER;
       } else {
         errors.startDate = null;
@@ -83,8 +88,10 @@ class FormEditPipeline extends Component {
 		this.state = {
 		  showMessageCreatePipeline: false,
 		  isEditable: false,
-		  showConfirm: false
-		}
+		  showConfirm: false,
+      	  employeeResponsible: false,
+      	  showConfirmChangeCurrency: false
+		};
 
 		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
 		this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
@@ -96,6 +103,12 @@ class FormEditPipeline extends Component {
 		this._changeCurrency = this._changeCurrency.bind(this);
 		this._editPipeline = this._editPipeline.bind(this);
 		this._onClickPDF = this._onClickPDF.bind(this);
+    	this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+    	this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
+    	this._handleTermInMonths = this._handleTermInMonths.bind(this);
+    	this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
+    	this._cleanForm = this._cleanForm.bind(this);
+    	this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
 	}
 
 	_closeMessageCreatePipeline() {
@@ -117,66 +130,119 @@ class FormEditPipeline extends Component {
 	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id.value);
 	 }
 
-	_changeCurrency(value) {
-		if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
-		  this.setState({currencyChanged: true});
-		} else {
-		  this.setState({currencyError: "debe seleccionar una opción"});
-		}
-		this.setState({currency: value});
-	}
+	 _cleanForm() {
+	    const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+	    businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
+	    priority, registeredCountry, startDate, client, documentStatus, probability}} = this.props;
 
-	_handleBlurValueNumber(typeValidation ,valuReduxForm, val) {
-		//Elimino los caracteres no validos
-		for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
-		 if (validos.indexOf(val.toString().charAt(i)) != -1){
-		    output += val.toString().charAt(i)
-		  }
-		}
-		val = output;
+	    nameUsuario.onChange('');
+	    idUsuario.onChange('');
+	    value.onChange('');
+	    commission.onChange('');
+	    roe.onChange('');
+	    termInMonths.onChange('');
+	    businessStatus.onChange('');
+	    businessWeek.onChange('');
+	    currency.onChange('');
+	    indexing.onChange('');
+	    endDate.onChange('');
+	    need.onChange('');
+	    observations.onChange('');
+	    product.onChange('');
+	    reviewedDate.onChange('');
+	    priority.onChange('');
+	    registeredCountry.onChange('');
+	    startDate.onChange('');
+	    client.onChange('');
+	    documentStatus.onChange('');
+	    probability.onChange('');
+	  }
 
-		if (val.length < 29) {
+	_changeCurrency(currencyValue) {
+    console.log('value -> ', currencyValue);
+    const {fields: {value}} = this.props;
+    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
+      contollerErrorChangeType = true;
+      idCurrencyAux = currencyValue;
+      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
+        titleMessage = "Tipo de moneda";
+        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
+        this.setState({
+          showConfirmChangeCurrency: true
+        });
+      } else {
+        this._closeConfirmChangeCurrency();
+      }
+    }
+  }
 
-		  /* Si typeValidation = 2 es por que el valor puede ser negativo
-		     Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
-		  */
-		  if( typeValidation === INTEGER ) { //Realizo simplemente el formateo
-		    var pattern = /(-?\d+)(\d{3})/;
-		    while (pattern.test(val)){
-		      val = val.replace(pattern, "$1,$2");
-		    }
-		    valuReduxForm.onChange(val);
-		  } else if (typeValidation === REAL) {
+  _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    val = output;
 
-		    if (val.length < 10) { // -0,000.0000
+    /* Si typeValidation = 2 es por que el valor puede ser negativo
+       Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+    */
+    var decimal = '';
+    if(val.includes(".")){
+      var vectorVal = val.split(".");
+      if(allowsDecimal){
+        val = vectorVal[0] + '.';
+        if(vectorVal.length > 1){
+          decimal = vectorVal[1].substring(0, 4);
+        }
+      }else{
+        val = vectorVal[0];
+      }
+    }
 
-		      //var value = numeral(valuReduxForm.value).format('0');
-		      val = numeral(val).format('0,0[.]0000');
-		      //var pattern = /(-?\d+)(\d{3})/;
-		      //while(pattern.test(val)) {
-		      //  val = val.replace(pattern, "$1,$2");
-		      //}
-		      valuReduxForm.onChange(val);
+    if( typeValidation === 2 ) { //Realizo simplemente el formateo
+      var pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(val)){
+        val = val.replace(pattern, "$1,$2");
+      }
+      valuReduxForm.onChange(val + decimal);
+    } else { //Valido si el valor es negativo o positivo
+      var value = numeral(valuReduxForm.value).format('0');
+      if( value >= 0 ){
+        pattern = /(-?\d+)(\d{3})/;
+        while (pattern.test(val)){
+          val = val.replace(pattern, "$1,$2");
+        }
+        valuReduxForm.onChange(val + decimal);
+      } else {
+        valuReduxForm.onChange("");
+      }
+    }
+  }
 
-		    }
+  _handleFocusValueNumber(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    valuReduxForm.onChange(output);
+  }
 
-		  } else { //Valido si el valor es negativo o positivo
-		    var value = numeral(valuReduxForm.value).format('0');
-		    if( value >= 0 ){
-		      var pattern = /(-?\d+)(\d{3})/;
-		      while (pattern.test(val)){
-		        val = val.replace(pattern, "$1,$2");
-		      }
-		      valuReduxForm.onChange(val);
-		    } else {
-		      valuReduxForm.onChange("");
-		    }
-		  }
-		}
-	}
+  _handleTermInMonths(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    valuReduxForm.onChange(output);
+  }
 
 	_onCloseButton() {
-		message = "¿Está seguro que desea salir de la pantalla de creación de pipeline?";
+		message = "¿Está seguro que desea salir de la pantalla de edición de pipeline?";
 		titleMessage = "Confirmación salida";
 		this.setState({showConfirm :true});
 	}
@@ -186,60 +252,90 @@ class FormEditPipeline extends Component {
 		redirectUrl("/dashboard/clientInformation");
 	}
 
+	_closeCancelConfirmChanCurrency() {
+    console.log('_closeCancelConfirmChanCurrency');
+    contollerErrorChangeType = false;
+    this.setState({
+      showConfirmChangeCurrency: false
+    });
+  }
+
+  _closeConfirmChangeCurrency() {
+    console.log('_closeConfirmChangeCurrency');
+    contollerErrorChangeType = false;
+    const {fields: {value}} = this.props;
+    idCurrencyAuxTwo = idCurrencyAux;
+    value.onChange('');
+    this.setState({
+      showConfirmChangeCurrency: false,
+    });
+  }
+
 	_submitCreatePipeline() {
 		const {initialValues, fields: {id, idUsuario, value, commission, roe, termInMonths, businessStatus,
 		  businessWeek, currency, indexing, endDate, need, observations, product,
-		  priority, registeredCountry, startDate, client, documentStatus
+		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
 		}, createEditPipeline} = this.props;
 
-		let pipelineJson = {
-		"id": id.value,
-		"client": window.localStorage.getItem('idClientSelected'),
-		"documentStatus": typeButtonClick,
-		"product": product.value,
-		"businessStatus": businessStatus.value,
-		"employeeResponsible": idUsuario.value,
-		"currency": currency.value,
-		"indexing": indexing.value,
-		"commission": commission.value,
-		"businessWeek": businessWeek.value,
-		"need": need.value,
-		"priority": priority.value,
-		"roe": roe.value,
-		"registeredCountry": registeredCountry.value,
-		"observations": observations.value,
-		"termInMonths": termInMonths.value,
-		"value": numeral(value.value).format('0'),
-		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
-		};
+	console.log("nameUsuario.value = ", nameUsuario.value);
+    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
+      this.setState({
+        employeeResponsible: true
+      });
+    }else {
+  		let pipelineJson = {
+  		"id": id.value,
+  		"client": window.localStorage.getItem('idClientSelected'),
+  		"documentStatus": typeButtonClick,
+  		"product": product.value,
+  		"businessStatus": businessStatus.value,
+  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+  		"currency": currency.value,
+  		"indexing": indexing.value,
+  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+  		"businessWeek": businessWeek.value,
+  		"need": need.value,
+  		"priority": priority.value,
+  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+  		"registeredCountry": registeredCountry.value,
+  		"observations": observations.value,
+  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
+  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
+  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
+  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+  		};
 
-	  createEditPipeline(pipelineJson).then((data)=> {
-	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
-	      redirectUrl("/login");
-	    } else {
-	      if( (_.get(data, 'payload.data.status') === 200) ) {
-	        typeMessage = "success";
-	        titleMessage = "Creación pipeline";
-	        message = "Señor usuario, el pipeline se creó de forma exitosa.";
-	        this.setState({showMessageCreatePipeline :true});
-	      } else {
-	        typeMessage = "error";
-	        titleMessage = "Creación pipeline";
-	        message = "Señor usuario, ocurrió un error creando el pipeline.";
-	        this.setState({showMessageCreatePipeline :true});
-	      }
-	    }
-	  }, (reason) =>{
-	    typeMessage = "error";
-	    titleMessage = "Creación pipeline";
-	    message = "Señor usuario, ocurrió un error creando del pipeline.";
-	    this.setState({showMessageCreatePipeline :true});
-	  });
+  	  createEditPipeline(pipelineJson).then((data)=> {
+  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+  	      redirectUrl("/login");
+  	    } else {
+  	      if( (_.get(data, 'payload.data.status') === 200) ) {
+  	        typeMessage = "success";
+  	        titleMessage = "Edición pipeline";
+  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
+  	        this.setState({showMessageCreatePipeline :true});
+  	        this._cleanForm();
+  	      } else {
+  	        typeMessage = "error";
+  	        titleMessage = "Edición pipeline";
+  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
+  	        this.setState({showMessageCreatePipeline :true});
+  	      }
+  	    }
+  	  }, (reason) =>{
+  	    typeMessage = "error";
+  	    titleMessage = "Edición pipeline";
+  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
+  	    this.setState({showMessageCreatePipeline :true});
+  	  });
+    }
 	}
 
 	updateKeyValueUsersBanco(e) {
 		const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
+    var self = this;
+    idUsuario.onChange('');
+    console.log("idUsuario.value", idUsuario.value);
 		if(e.keyCode == 13 || e.which == 13){
 		  e.preventDefault();
 		  if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -259,6 +355,9 @@ class FormEditPipeline extends Component {
 		          onSelect : function(event) {
 		              nameUsuario.onChange(event.title);
 		              idUsuario.onChange(event.idUsuario);
+                  self.setState({
+                    employeeResponsible: false
+                  });
 		              return 'default';
 		          }
 		        });
@@ -283,8 +382,6 @@ class FormEditPipeline extends Component {
 		if( userSelected !== null && userSelected !== undefined ){
 		  idUsuario.onChange(userSelected.id);
 		  nameUsuario.onChange(userSelected.nameComplet);
-		  //cargoUsuario.onChange(userSelected.contactPosition);
-		  //empresaUsuario.onChange(userSelected.company);
 		}
 	}
 
@@ -313,17 +410,16 @@ class FormEditPipeline extends Component {
 		}
 		getPipelineById(id);
 	}
-	
+
 	render() {
 		const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, product,
               priority, registeredCountry, startDate, client, documentStatus,
           		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
           clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
-			
+
 		const pipeline = pipelineReducer.get('detailPipeline');
 		const ownerDraft = pipelineReducer.get('ownerDraft');
-
 		let fechaModString = '';
 		if(updatedTimestamp.value !== null) {
 			let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
@@ -338,9 +434,7 @@ class FormEditPipeline extends Component {
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-
-				{/* <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span> */}
-				<Row style={{padding: "5px 10px 0px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
 		          <Col xs={10} sm={10} md={10} lg={10}>
 		            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
 		          </Col>
@@ -399,7 +493,6 @@ class FormEditPipeline extends Component {
 				      </dt>
 				      <dt>
 				        <div className="ui search participantBanc fluid">
-				          {/* <div className="ui icon input"> */}
 				            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
 				              style={{borderRadius: "3px"}}
 				              autoComplete="off"
@@ -412,8 +505,15 @@ class FormEditPipeline extends Component {
 				              onSelect={val => this._updateValue(val)}
 				              disabled={this.state.isEditable ? '' : 'disabled'}
 				            />
-				          {/* </div> */}
 				        </div>
+                {
+                  this.state.employeeResponsible &&
+                  <div>
+                      <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                      </div>
+                  </div>
+                }
 				      </dt>
 				    </div>
 				  </Col>
@@ -445,9 +545,11 @@ class FormEditPipeline extends Component {
 				        name="commission"
 				        type="text"
 				        {...commission}
-				        max="7"
+                max="10"
 				        parentId="dashboardComponentScroll"
 				        disabled={this.state.isEditable ? '' : 'disabled'}
+                onBlur={val => this._handleBlurValueNumber(2, commission, commission.value, true)}
+                onFocus={val => this._handleFocusValueNumber(commission, commission.value)}
 				      />
 				    </div>
 				  </Col>
@@ -460,13 +562,15 @@ class FormEditPipeline extends Component {
 				        name="roe"
 				        type="text"
 				        {...roe}
+                max="10"
 				        parentId="dashboardComponentScroll"
-				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, roe, val)}
+                onBlur={val => this._handleBlurValueNumber(1, roe, roe.value, true)}
+                onFocus={val => this._handleFocusValueNumber(roe, roe.value)}
 				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
 				  </Col>
-				  
+
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
@@ -564,6 +668,7 @@ class FormEditPipeline extends Component {
 				        parentId="dashboardComponentScroll"
 				        data={selectsReducer.get('pipelineCurrencies') || []}
 				        disabled={this.state.isEditable ? '' : 'disabled'}
+				        onChange={val => this._changeCurrency(val)}
 				      />
 				    </div>
 				  </Col>
@@ -576,8 +681,10 @@ class FormEditPipeline extends Component {
 				        name="value"
 				        type="text"
 				        {...value}
+                max="30"
 				        parentId="dashboardComponentScroll"
-				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, value, val)}
+                onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
+                onFocus={val => this._handleFocusValueNumber(value, value.value)}
 				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
 				    </div>
@@ -591,10 +698,10 @@ class FormEditPipeline extends Component {
 				        name="termInMonths"
 				        type="text"
 				        {...termInMonths}
+                max="4"
 				        parentId="dashboardComponentScroll"
-				        onChange={val => this._handleBlurValueNumber(POSITIVE_INTEGER, termInMonths, val)}
-				        max="4"
 				        disabled={this.state.isEditable ? '' : 'disabled'}
+                onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
 				      />
 				    </div>
 				  </Col>
@@ -602,7 +709,7 @@ class FormEditPipeline extends Component {
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
 				    <dt>
-				      <span>Fecha de inicio - DD/MM/YYY (</span><span style={{color: "red"}}>*</span>)
+				      <span>Fecha de inicio - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
 				    </dt>
 				    <dt>
 				      <DateTimePickerUi
@@ -616,7 +723,7 @@ class FormEditPipeline extends Component {
 				  </Col>
 				  <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
 				    <dt>
-				      <span>Fecha de finalización - DD/MM/YYY (</span><span style={{color: "red"}}>*</span>)
+				      <span>Fecha de finalización - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
 				    </dt>
 				    <dt>
 				      <DateTimePickerUi
@@ -729,6 +836,18 @@ class FormEditPipeline extends Component {
 				  onCancel= {() => this.setState({showConfirm: false })}
 				  onConfirm={this._closeConfirmClosePipeline}
 				/>
+				<SweetAlert
+		          type="warning"
+		          show={this.state.showConfirmChangeCurrency}
+		          title={titleMessage}
+		          text={message}
+		          confirmButtonColor= '#DD6B55'
+		          confirmButtonText= 'Sí, estoy seguro!'
+		          cancelButtonText = "Cancelar"
+		          showCancelButton= {true}
+		          onCancel= {this._closeCancelConfirmChanCurrency}
+		          onConfirm={this._closeConfirmChangeCurrency}
+		        />
 			</form>
 		);
 	}
@@ -749,6 +868,11 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer}, ownerProps) {
 	const pipeline = pipelineReducer.get('detailPipeline');
 	if (pipeline) {
+		if (pipeline.currency !== null && pipeline.currency !== '') {
+			idCurrencyAuxTwo = pipeline.currency;
+		} else {
+			idCurrencyAuxTwo = null;
+		}
 		return {
 	      clientInformacion,
 	      selectsReducer,
@@ -761,7 +885,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	      	id: pipeline.id,
 	      	businessStatus: pipeline.businessStatus,
 		    businessWeek: pipeline.businessWeek,
-		    commission: pipeline.commission,
+		    commission: fomatInitialStateNumber(pipeline.commission),
 		    currency: pipeline.currency,
 		    idUsuario: pipeline.employeeResponsible,
 		    nameUsuario: pipeline.employeeResponsibleName,
@@ -771,12 +895,12 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 		    observations: pipeline.observations,
 		    product: pipeline.product,
 		    priority: pipeline.priority,
-		    roe: pipeline.roe,
+		    roe: fomatInitialStateNumber(pipeline.roe),
 		    registeredCountry: pipeline.registeredCountry,
 		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
 		    pipelineStatus: pipeline.pipelineStatus,
 		    termInMonths: pipeline.termInMonths,
-		    value: pipeline.value,
+		    value: fomatInitialStateNumber(pipeline.value),
 		    client: pipeline.client,
 		    documentStatus: pipeline.documentStatus,
 		    createdBy: pipeline.createdBy,
@@ -798,6 +922,26 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	      consultParameterServer
 	  	};
 	}
+}
+
+function fomatInitialStateNumber(val){
+  var decimal = '';
+  if(val !== undefined && val !== null && val !== ''){
+    val = val.toString();
+    if(val.includes(".")){
+      var vectorVal = val.split(".");
+      val = vectorVal[0] + '.';
+      if(vectorVal.length > 1){
+        decimal = vectorVal[1].substring(0, 4);
+      }
+    }
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(val + "")){
+      val = val.toString().replace(pattern, "$1,$2");
+    }
+    return val + decimal;
+  }
+  return '';
 }
 
 export default reduxForm({

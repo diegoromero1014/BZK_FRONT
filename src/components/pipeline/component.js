@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
-import {NUMBER_RECORDS,FILTER_STATUS_PIPELINE_ID} from './constants';
+import {NUMBER_RECORDS,FILTER_STATUS_PIPELINE_ID,PIPELINE_STATUS} from './constants';
 import {pipelineByClientFindServer,clearPipeline} from './actions';
 import ListPipelineComponent from './listPipelineComponent';
 import PaginationPipelineComponent from './paginationPipelineComponent';
@@ -16,7 +16,8 @@ class PipelineComponent extends Component {
   constructor(props){
     super(props);
     this.state= {
-       value1: ""
+       value1: "",
+       value2: ""
     };
     this._createPipeline = this._createPipeline.bind(this);
   }
@@ -27,7 +28,7 @@ class PipelineComponent extends Component {
     }else{
       const {pipelineByClientFindServer,clearPipeline} = this.props;
       clearPipeline();
-      pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"");
+      pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"","");
     }
   }
 
@@ -60,6 +61,12 @@ class PipelineComponent extends Component {
           }}
           idTypeFilter={FILTER_STATUS_PIPELINE_ID}/>
           </Col>
+          <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Estado del negocio:</span>
+          <SelectFilterContact config={{
+              onChange: (value) => this.setState({value2: value.id})
+          }}
+          idTypeFilter={PIPELINE_STATUS}/>
+          </Col>
           <Col xs>
           <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{marginTop: '21px'}}>
             <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
@@ -72,9 +79,9 @@ class PipelineComponent extends Component {
             <Row>
               <Col xs>
               <ListPipelineComponent
-                value1={this.state.value1}/>
+                value1={this.state.value1} value2={this.state.value2}/>
                 <PaginationPipelineComponent
-                  value1={this.state.value1}/>
+                  value1={this.state.value1} value2={this.state.value2}/>
               </Col>
             </Row>
           </Grid>

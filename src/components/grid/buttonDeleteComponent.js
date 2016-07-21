@@ -93,7 +93,7 @@ class ButtonDeleteComponent extends Component{
           }else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE){
             clearPipelineOrder();
             clearPipelinePaginator();
-            pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "");
+            pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "","");
           }
       }
       this.setState({showEx:false, showEr: false,show: false});

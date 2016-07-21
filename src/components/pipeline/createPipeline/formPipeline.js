@@ -30,6 +30,9 @@ let titleMessage = "";
 let message = "";
 let typeButtonClick;
 let datePipelineLastReview;
+let idCurrencyAux = null;
+let idCurrencyAuxTwo = null;
+let contollerErrorChangeType = false;
 
 const validate = values => {
     const errors = {};
@@ -64,7 +67,9 @@ const validate = values => {
       errors.endDate = null;
     }
     if(values.endDate && values.startDate) {
-      if( moment(values.startDate, 'DD/MM/YYYY').isAfter(values.endDate) ){
+      var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
+  		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
+      if( startDate > endDate){
         errors.startDate = DATE_START_AFTER;
       } else {
         errors.startDate = null;
@@ -79,8 +84,9 @@ class FormPipeline extends Component {
     super(props);
     this.state = {
       showMessageCreatePipeline: false,
-      //showErrorSavePipeline: false,
-      showConfirm: false
+      showConfirm: false,
+      employeeResponsible: false,
+      showConfirmChangeCurrency: false
     }
 
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -92,6 +98,10 @@ class FormPipeline extends Component {
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
+    this._handleTermInMonths = this._handleTermInMonths.bind(this);
+    this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
+    this._cleanForm = this._cleanForm.bind(this);
+    this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
   }
 
   _closeMessageCreatePipeline() {
@@ -108,13 +118,50 @@ class FormPipeline extends Component {
     }
   }
 
-  _changeCurrency(value) {
-    if (value !== null && value !== undefined && value !== '' && this.state.currency !== '') {
-      this.setState({currencyChanged: true});
-    } else {
-      this.setState({currencyError: "debe seleccionar una opción"});
+  _cleanForm() {
+    const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+    businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
+    priority, registeredCountry, startDate, client, documentStatus, probability}} = this.props;
+
+    nameUsuario.onChange('');
+    idUsuario.onChange('');
+    value.onChange('');
+    commission.onChange('');
+    roe.onChange('');
+    termInMonths.onChange('');
+    businessStatus.onChange('');
+    businessWeek.onChange('');
+    currency.onChange('');
+    indexing.onChange('');
+    endDate.onChange('');
+    need.onChange('');
+    observations.onChange('');
+    product.onChange('');
+    reviewedDate.onChange('');
+    priority.onChange('');
+    registeredCountry.onChange('');
+    startDate.onChange('');
+    client.onChange('');
+    documentStatus.onChange('');
+    probability.onChange('');
+  }
+
+  _changeCurrency(currencyValue) {
+    console.log('value -> ', currencyValue);
+    const {fields: {value}} = this.props;
+    if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
+      contollerErrorChangeType = true;
+      idCurrencyAux = currencyValue;
+      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
+        titleMessage = "Tipo de moneda";
+        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
+        this.setState({
+          showConfirmChangeCurrency: true
+        });
+      } else {
+        this._closeConfirmChangeCurrency();
+      }
     }
-    this.setState({currency: value});
   }
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
@@ -172,6 +219,16 @@ class FormPipeline extends Component {
     valuReduxForm.onChange(output);
   }
 
+  _handleTermInMonths(valuReduxForm, val){
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++){
+     if (validos.indexOf(val.toString().charAt(i)) != -1){
+        output += val.toString().charAt(i)
+      }
+    }
+    valuReduxForm.onChange(output);
+  }
+
   _onCloseButton() {
     message = "¿Está seguro que desea salir de la pantalla de creación de pipeline?";
     titleMessage = "Confirmación salida";
@@ -183,37 +240,57 @@ class FormPipeline extends Component {
     redirectUrl("/dashboard/clientInformation");
   }
 
+  _closeCancelConfirmChanCurrency() {
+    console.log('_closeCancelConfirmChanCurrency');
+    contollerErrorChangeType = false;
+    this.setState({
+      showConfirmChangeCurrency: false
+    });
+  }
+
+  _closeConfirmChangeCurrency() {
+    console.log('_closeConfirmChangeCurrency');
+    contollerErrorChangeType = false;
+    const {fields: {value}} = this.props;
+    idCurrencyAuxTwo = idCurrencyAux;
+    value.onChange('');
+    this.setState({
+      showConfirmChangeCurrency: false,
+    });
+  }
+
   _submitCreatePipeline() {
     const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
       businessWeek, currency, indexing, endDate, need, observations, product,
-      priority, registeredCountry, startDate, client, documentStatus, probability
+      priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario
     }, createEditPipeline} = this.props;
 
-      console.log('datePipelineLastReview -> ', datePipelineLastReview);
-
+    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
+      this.setState({
+        employeeResponsible: true
+      });
+    }else {
       let pipelineJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
         "documentStatus": typeButtonClick,
         "product": product.value,
         "businessStatus": businessStatus.value,
-        "employeeResponsible": idUsuario.value,
+        "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
         "currency": currency.value,
         "indexing": indexing.value,
-        "commission": commission.value,
+        "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
         "businessWeek": businessWeek.value,
         "need": need.value,
         "priority": priority.value,
-        "roe": roe.value,
+        "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
         "registeredCountry": registeredCountry.value,
         "observations": observations.value,
         "termInMonths": termInMonths.value,
-        "value": numeral(value.value).format('0'),
+        "value": value.value === undefined ? null : numeral(value.value).format('0'),
         "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
         "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
       };
-
-      console.log('Objeto a guardar -> ', pipelineJson);
 
       createEditPipeline(pipelineJson).then((data)=> {
         if((_.get(data, 'payload.data.validateLogin') === 'false')) {
@@ -224,6 +301,7 @@ class FormPipeline extends Component {
             titleMessage = "Creación pipeline";
             message = "Señor usuario, el pipeline se creó de forma exitosa.";
             this.setState({showMessageCreatePipeline :true});
+            //this._cleanForm();
           } else {
             typeMessage = "error";
             titleMessage = "Creación pipeline";
@@ -237,10 +315,14 @@ class FormPipeline extends Component {
         message = "Señor usuario, ocurrió un error creando del pipeline.";
         this.setState({showMessageCreatePipeline :true});
       });
+    }
   }
 
   updateKeyValueUsersBanco(e) {
     const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
+    var self = this;
+    idUsuario.onChange('');
+    console.log("idUsuario.value", idUsuario.value);
     if(e.keyCode == 13 || e.which == 13){
       e.preventDefault();
       if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -260,6 +342,9 @@ class FormPipeline extends Component {
               onSelect : function(event) {
                   nameUsuario.onChange(event.title);
                   idUsuario.onChange(event.idUsuario);
+                  self.setState({
+                    employeeResponsible: false
+                  });
                   return 'default';
               }
             });
@@ -317,7 +402,6 @@ class FormPipeline extends Component {
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12}>
@@ -383,6 +467,14 @@ class FormPipeline extends Component {
                   </div>
                   <div className="results"></div>
                 </div>
+                {
+                  this.state.employeeResponsible &&
+                  <div>
+                      <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                      </div>
+                  </div>
+                }
               </dt>
             </div>
           </Col>
@@ -529,6 +621,7 @@ class FormPipeline extends Component {
                 {...currency}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get('pipelineCurrencies') || []}
+                onChange={val => this._changeCurrency(val)}
               />
             </div>
           </Col>
@@ -559,8 +652,7 @@ class FormPipeline extends Component {
                 {...termInMonths}
                 max="4"
                 parentId="dashboardComponentScroll"
-                onBlur={val => this._handleBlurValueNumber(1, termInMonths, termInMonths.value, false)}
-                onFocus={val => this._handleFocusValueNumber(termInMonths, termInMonths.value)}
+                onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
               />
             </div>
           </Col>
@@ -652,6 +744,18 @@ class FormPipeline extends Component {
           showCancelButton= {true}
           onCancel= {() => this.setState({showConfirm: false })}
           onConfirm={this._closeConfirmClosePipeline}
+        />
+        <SweetAlert
+          type="warning"
+          show={this.state.showConfirmChangeCurrency}
+          title={titleMessage}
+          text={message}
+          confirmButtonColor= '#DD6B55'
+          confirmButtonText= 'Sí, estoy seguro!'
+          cancelButtonText = "Cancelar"
+          showCancelButton= {true}
+          onCancel= {this._closeCancelConfirmChanCurrency}
+          onConfirm={this._closeConfirmChangeCurrency}
         />
       </form>
     );

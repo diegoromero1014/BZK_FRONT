@@ -17,7 +17,7 @@ class CreatePipeline extends Component {
       showAECNivel = false;
     }
     return(
-      <div style={{backgroundColor: "#FFFFFF", width: "100%"}}>
+      <div style={{backgroundColor: "#FFFFFF", width: "100%", marginTop: "0px", paddingTop:"10px"}}>
         <header className="header-client-detail" >
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
             <div>

@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
 
-export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId) {
+export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, pipelineStatus) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -23,7 +23,8 @@ export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrd
       "maxRows" : maxRows,
       "columnOrder": columnOrder,
       "order": order,
-      "statusDocumentId":statusDocumentId
+      "statusDocumentId":statusDocumentId,
+      "pipelineStatus":pipelineStatus
     }
   };
 

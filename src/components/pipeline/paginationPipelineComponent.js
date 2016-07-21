@@ -6,6 +6,7 @@ import {NUMBER_RECORDS} from './constants';
 
 
 let v1 = "";
+let v2= "";
 
 class PaginationPipelineComponent extends Component{
 
@@ -24,8 +25,9 @@ class PaginationPipelineComponent extends Component{
     const {
         value1
     } = nextProps;
-    if ((v1 !== nextProps.value1)){
+    if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
+      v2 =nextProps.value2;
       const {clearPipelineOrder} = this.props;
       clearPipelineOrder();
       this._handlePipelineByClientsFind(0);
@@ -42,7 +44,7 @@ class PaginationPipelineComponent extends Component{
 
   _handlePipelineByClientsFind(limInf){
     const {pipelineByClientFindServer,pipelineReducer} = this.props;
-    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),limInf,NUMBER_RECORDS,pipelineReducer.get('columnPipeline'),pipelineReducer.get('orderPipeline'),v1);
+    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),limInf,NUMBER_RECORDS,pipelineReducer.get('columnPipeline'),pipelineReducer.get('orderPipeline'),v1,v2);
   }
 
   render(){
