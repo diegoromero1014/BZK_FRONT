@@ -147,6 +147,10 @@ class FormPipeline extends Component {
   }
 
   _changeCurrency(currencyValue) {
+    console.log('_changeCurrency(' + currencyValue + ')');
+    console.log('idCurrencyAux -> ', idCurrencyAux);
+    console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
+    console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
     const {fields: {value}} = this.props;
     if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
       contollerErrorChangeType = true;
@@ -240,13 +244,25 @@ class FormPipeline extends Component {
   }
 
   _closeCancelConfirmChanCurrency() {
+    console.log('_closeCancelConfirmChanCurrency');
+    console.log('idCurrencyAux -> ', idCurrencyAux);
+    console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
+    console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
     contollerErrorChangeType = false;
+    const {fields: {currency}} = this.props;
+    if (idCurrencyAuxTwo != null) {
+      currency.onChange(idCurrencyAuxTwo);
+    }
     this.setState({
       showConfirmChangeCurrency: false
     });
   }
 
   _closeConfirmChangeCurrency() {
+    console.log('_closeConfirmChangeCurrency');
+    console.log('idCurrencyAux -> ', idCurrencyAux);
+    console.log('idCurrencyAuxTwo -> ', idCurrencyAuxTwo);
+    console.log('contollerErrorChangeType -> ', contollerErrorChangeType);
     contollerErrorChangeType = false;
     const {fields: {value}} = this.props;
     if (idCurrencyAuxTwo != null) {
