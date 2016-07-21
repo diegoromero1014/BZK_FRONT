@@ -112,11 +112,12 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeMessageCreatePipeline() {
+    console.log("dsfdsfdsf");
 		this.setState({
 			showMessageCreatePipeline: false
 		});
+    console.log("typeMessage", typeMessage);
 		if( typeMessage === "success" ) {
-		  this._cleanForm();
 		  redirectUrl("/dashboard/clientInformation");
 		}
 	}
@@ -284,7 +285,6 @@ class FormEditPipeline extends Component {
 	  	        titleMessage = "Edición pipeline";
 	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
 	  	        this.setState({showMessageCreatePipeline :true});
-              redirectUrl("/dashboard/clientInformation");
 	  	      } else {
 	  	        typeMessage = "error";
 	  	        titleMessage = "Edición pipeline";
@@ -380,9 +380,9 @@ class FormEditPipeline extends Component {
 		getPipelineById(id);
     setTimeout(function(){
       this.setState({
-         updateValuesReceive: !this.state.updateValuesReceive
+         updateValuesReceive: true
       });
-    }, 1000);
+    }, 1300);
 	}
 
 	render() {
