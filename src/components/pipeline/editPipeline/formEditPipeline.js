@@ -360,14 +360,6 @@ class FormEditPipeline extends Component {
 	    });
 	}
 
-  componentWillReceiveProps(nextProps){
-    setTimeout(function(){
-      this.setState({
-         updateValuesReceive: !this.state.updateValuesReceive
-      });
-    }, 1000);
-  }
-
 	componentWillMount() {
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
 			getClientNeeds, getPipelineById, id,
@@ -386,6 +378,11 @@ class FormEditPipeline extends Component {
 		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
 		}
 		getPipelineById(id);
+    setTimeout(function(){
+      this.setState({
+         updateValuesReceive: !this.state.updateValuesReceive
+      });
+    }, 1000);
 	}
 
 	render() {
