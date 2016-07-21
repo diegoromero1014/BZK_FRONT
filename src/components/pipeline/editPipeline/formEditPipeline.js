@@ -134,10 +134,9 @@ class FormEditPipeline extends Component {
 		console.log('isEditable -> ', this.state.isEditable);
 	    const {fields: {value}} = this.props;
 	    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
-	      
+	      contollerErrorChangeType = true;
 	      idCurrencyAux = currencyValue;
 	      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
-	      	contollerErrorChangeType = true;
 	        titleMessage = "Tipo de moneda";
 	        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
 	        this.setState({
@@ -233,7 +232,7 @@ class FormEditPipeline extends Component {
     	contollerErrorChangeType = false;
     	const {fields: {currency}} = this.props;
     	if (idCurrencyAuxTwo != null) {
-	      currency.onChange(idCurrencyAuxTwo);
+	      currency.value = idCurrencyAuxTwo;
 	    }
     	this.setState({
       		showConfirmChangeCurrency: false

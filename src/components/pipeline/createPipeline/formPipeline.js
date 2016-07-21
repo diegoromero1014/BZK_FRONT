@@ -251,7 +251,7 @@ class FormPipeline extends Component {
     contollerErrorChangeType = false;
     const {fields: {currency}} = this.props;
     if (idCurrencyAuxTwo != null) {
-      currency.onChange(idCurrencyAuxTwo);
+      currency.value = idCurrencyAuxTwo;
     }
     this.setState({
       showConfirmChangeCurrency: false
