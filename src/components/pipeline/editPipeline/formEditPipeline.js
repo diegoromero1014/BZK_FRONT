@@ -89,8 +89,9 @@ class FormEditPipeline extends Component {
 		  showMessageCreatePipeline: false,
 		  isEditable: false,
 		  showConfirm: false,
-      	  employeeResponsible: false,
-      	  showConfirmChangeCurrency: false
+  	  employeeResponsible: false,
+  	  showConfirmChangeCurrency: false,
+      updateValuesReceive: false
 		};
 
   		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -359,7 +360,7 @@ class FormEditPipeline extends Component {
 
   componentWillReceiveProps(nextProps){
     this.setState({
-	      isEditable: false
+	      updateValuesReceive: true
 	    });
   }
 
