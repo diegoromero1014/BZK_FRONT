@@ -23,7 +23,6 @@ export default (state = initialState, action) => {
         return state.delete(index);
     case SET_NOTES:
         const notes = action.notes;
-        const list = Immutable.List(notes);
         return state.withMutations(list => {
 
           notes.map(item => {

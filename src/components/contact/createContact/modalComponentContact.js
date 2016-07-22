@@ -203,11 +203,7 @@ class ModalComponentContact extends Component {
                 clearSearchContact();
                 this.props.resetForm();
                 this.setState({showErrorYa: true});
-              }else if(!(_.get(data, 'payload.data.findContact'))){
-                this.setState({disabled : 'disabled'});
-                this.setState({noExiste : 'visible'});
-                this.setState({botonBus : 'none'});
-              } else if ((_.get(data, 'payload.data.findContact'))){
+              } else {
                 this.setState({disabled : 'disabled'});
                 this.setState({noExiste : 'visible'});
                 this.setState({botonBus : 'none'});
@@ -276,7 +272,6 @@ class ModalComponentContact extends Component {
         const {initialValues, fields:{id,tipoDocumento,numeroDocumento,tipoTratamiendo,tipoGenero,tipoCargo,tipoDependencia,tipoEstiloSocial,tipoActitud,tipoPais,tipoContacto,
         primerNombre,segundoNombre,primerApellido, segundoApellido,fechaNacimiento,direccion,barrio,
         codigoPostal,telefono,extension,celular,correo,tipoEntidad,tipoFuncion,tipoHobbie, tipoDeporte,pais,departamento,ciudad},handleSubmit,error}= this.props;
-        const status = modalStatus ? "Verdadero" : "Falso";
         return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
                       <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
                       <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica contacto</span></dt>

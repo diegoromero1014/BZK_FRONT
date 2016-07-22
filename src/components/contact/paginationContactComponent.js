@@ -55,7 +55,6 @@ class PaginationContactComponent extends Component{
   render(){
     const {contactsByClient, config} = this.props;
     var page = contactsByClient.get('page');
-    var limInf = contactsByClient.get('limInf');
     var firstPage = 1;
     if(page > 7){
       firstPage = page - 6;

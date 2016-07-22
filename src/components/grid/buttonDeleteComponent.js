@@ -27,50 +27,51 @@ class ButtonDeleteComponent extends Component{
   }
 
   _onConfirmDelete(e){
-    const {actionsDelete, deleteServer, participants, tasks} = this.props;
-    if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW){
-          deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
-            if((_.get(data, 'payload.status') === 200)){
-                this.setState({showEx: true});
-              } else {
-                this.setState({showEr: true});
-            }
-            }, (reason) => {
-              this.setState({showEr: true});
+   const {actionsDelete, deleteServer, participants, tasks} = this.props;
+   if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW){
+      deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
+        if((_.get(data, 'payload.status') === 200)){
+            this.setState({showEx: true});
+          } else {
+            this.setState({showEr: true});
+        }
+        }, (reason) => {
+          this.setState({showEr: true});
+      });
+    } else {
+      var indexDelete;
+      if(actionsDelete.typeDelete === DELETE_PARTICIPANT_VIEW){
+        this.setState({show: false});
+        const {deleteParticipant} = this.props;
+        if( actionsDelete.tipo === "client" || actionsDelete.tipo === "banco" ){
+          indexDelete = participants.findIndex(function(item){
+            return item.idParticipante === actionsDelete.id;
           });
-        } else {
-        if(actionsDelete.typeDelete === DELETE_PARTICIPANT_VIEW){
+          deleteParticipant(indexDelete);
+        } else if( actionsDelete.tipo === "other" ){
+          indexDelete = participants.findIndex(function(item){
+            if( item.tipoParticipante === 'other' ){
+              return item.nombreParticipante === actionsDelete.nombre;
+            }
+          });
+          deleteParticipant(indexDelete);
+        }
+      } else {
+        if(actionsDelete.typeDelete === DELETE_TASK_VIEW){
           this.setState({show: false});
-          const {deleteParticipant} = this.props;
-          if( actionsDelete.tipo === "client" || actionsDelete.tipo === "banco" ){
-            var indexDelete = participants.findIndex(function(item){
-              return item.idParticipante === actionsDelete.id;
-            });
-            deleteParticipant(indexDelete);
-          } else if( actionsDelete.tipo === "other" ){
-            var indexDelete = participants.findIndex(function(item){
-              if( item.tipoParticipante === 'other' ){
-                return item.nombreParticipante === actionsDelete.nombre;
-              }
-            });
-            deleteParticipant(indexDelete);
-          }
-        }else{
-          if(actionsDelete.typeDelete === DELETE_TASK_VIEW){
-            this.setState({show: false});
-            const {deleteTask} = this.props;
-            var indexDelete = tasks.findIndex(function(item){
-              return item.uuid === actionsDelete.id;
-            });
-            deleteTask(indexDelete);
-          }
+          const {deleteTask} = this.props;
+          indexDelete = tasks.findIndex(function(item){
+            return item.uuid === actionsDelete.id;
+          });
+          deleteTask(indexDelete);
         }
       }
     }
+  }
 
     _closeDelete(){
         const {clearPipelineOrder,clearPipelinePaginator,pipelineByClientFindServer,clearPrevisitOrder,clearPrevisitPaginator,clearVisitOrder,clearVisitPaginator,previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
-        if(this.state.showEx == true){
+        if(this.state.showEx === true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
             clearContactOrder();

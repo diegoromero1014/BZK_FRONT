@@ -69,8 +69,7 @@ class ClientsFind extends Component {
   _handleClientsFind(){
     const {fields: {certificationStatus,team}} = this.props;
     const {clientsFindServer,clientR,changePage} = this.props;
-    var keyword = clientR.get('keyword');
-    clientsFindServer(keyword, 0, NUMBER_RECORDS,certificationStatus.value,team.value);
+    clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,certificationStatus.value,team.value);
     changePage(1);
   }
 

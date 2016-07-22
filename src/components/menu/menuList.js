@@ -48,7 +48,7 @@ class MenuList extends Component {
     render() {
         const currentDate = moment().locale('es');
         return (
-            <div style={{overflow: "hidden", overflow: "hidden", height: "100%"}}>
+            <div style={{overflow: "hidden", height: "100%"}}>
               <div className="page-sidebar-wrapper" style={{width: "100%", height: "100%", overflow: "hidden"}}>
                 <ul style={{width: "100%"}}>
                     <a id="news-menu-item" className="news-menu-item menu-item">
