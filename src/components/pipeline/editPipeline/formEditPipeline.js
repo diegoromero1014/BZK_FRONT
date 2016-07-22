@@ -142,7 +142,7 @@ class FormEditPipeline extends Component {
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
-     if (validos.indexOf(val.toString().charAt(i)) != -1){
+     if (validos.indexOf(val.toString().charAt(i)) !== -1){
         output += val.toString().charAt(i)
       }
     }
@@ -187,7 +187,7 @@ class FormEditPipeline extends Component {
   _handleFocusValueNumber(valuReduxForm, val){
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
-     if (validos.indexOf(val.toString().charAt(i)) != -1){
+     if (validos.indexOf(val.toString().charAt(i)) !== -1){
         output += val.toString().charAt(i)
       }
     }
@@ -197,7 +197,7 @@ class FormEditPipeline extends Component {
   _handleTermInMonths(valuReduxForm, val){
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++){
-     if (validos.indexOf(val.toString().charAt(i)) != -1){
+     if (validos.indexOf(val.toString().charAt(i)) !== -1){
         output += val.toString().charAt(i)
       }
     }
@@ -221,7 +221,7 @@ class FormEditPipeline extends Component {
     	});
     	contollerErrorChangeType = false;
     	const {fields: {currency}} = this.props;
-    	if (idCurrencyAux != null) {
+    	if (idCurrencyAux !== null) {
 	      	currency.onChange(idCurrencyAux);
 	    }
 
@@ -233,7 +233,7 @@ class FormEditPipeline extends Component {
     });
     contollerErrorChangeType = false;
     const {fields: {value, currency}} = this.props;
-    if (idCurrencyAux != null) {
+    if (idCurrencyAux !== null) {
       value.onChange('');
     }
     idCurrencyAux = currency.value;
@@ -301,7 +301,7 @@ class FormEditPipeline extends Component {
 		const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
     	var self = this;
     	idUsuario.onChange('');
-		if(e.keyCode == 13 || e.which == 13){
+		if(e.keyCode === 13 || e.which === 13){
 		  e.preventDefault();
 		  if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
 		    $('.ui.search.participantBanc').toggleClass('loading');
@@ -328,8 +328,8 @@ class FormEditPipeline extends Component {
 		        });
 		        $('.ui.search.participantBanc').toggleClass('loading');
 		        $('#inputParticipantBanc').focus();
-		      }, (reason) => {
-		    });
+		      }
+        );
 		  }
 		}
 	}
