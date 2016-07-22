@@ -31,7 +31,6 @@ let message = "";
 let typeButtonClick;
 let datePipelineLastReview;
 let idCurrencyAux = null;
-let idCurrencyAuxTwo = null;
 let contollerErrorChangeType = false;
 
 const validate = values => {
@@ -143,22 +142,22 @@ class FormPipeline extends Component {
     documentStatus.onChange('');
     contollerErrorChangeType = false;
     idCurrencyAux = null;
-    idCurrencyAuxTwo = null;
   }
 
   _changeCurrency(currencyValue) {
     const {fields: {value}} = this.props;
-    if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && currencyValue !== idCurrencyAuxTwo && !contollerErrorChangeType) {
+    if (idCurrencyAux == null) {
+        idCurrencyAux = parseInt(currencyValue);
+      }
+    if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
       contollerErrorChangeType = true;
-      idCurrencyAux = currencyValue;
-      if (idCurrencyAux !== null && idCurrencyAuxTwo !== null && value.value !== '') {
+
+      if (idCurrencyAux !== null && value.value !== '') {
         titleMessage = "Tipo de moneda";
         message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
         this.setState({
           showConfirmChangeCurrency: true
         });
-      } else {
-        this._closeConfirmChangeCurrency();
       }
     }
   }
@@ -240,26 +239,28 @@ class FormPipeline extends Component {
   }
 
   _closeCancelConfirmChanCurrency() {
-    contollerErrorChangeType = false;
-    const {fields: {currency}} = this.props;
-    if (idCurrencyAuxTwo != null) {
-      currency.value = idCurrencyAuxTwo;
-    }
     this.setState({
       showConfirmChangeCurrency: false
     });
+    contollerErrorChangeType = false;
+    const {fields: {currency}} = this.props;
+    if (idCurrencyAux != null) {
+      currency.onChange(idCurrencyAux);
+    }
+    
   }
 
   _closeConfirmChangeCurrency() {
-    contollerErrorChangeType = false;
-    const {fields: {value}} = this.props;
-    if (idCurrencyAuxTwo != null) {
-      value.onChange('');
-    }
-    idCurrencyAuxTwo = idCurrencyAux;
     this.setState({
       showConfirmChangeCurrency: false
     });
+    contollerErrorChangeType = false;
+    const {fields: {value, currency}} = this.props;
+    if (idCurrencyAux != null) {
+      value.onChange('');
+    }
+    idCurrencyAux = currency.value;
+    
   }
 
   _submitCreatePipeline() {
