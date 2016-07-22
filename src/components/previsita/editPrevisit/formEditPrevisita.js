@@ -663,7 +663,7 @@ class FormEditPrevisita extends Component{
               touched={true}
               error={this.state.typePreVisitError}
               onChange={val => this._changeTypePreVisit(val)}
-              onBlur={() => console.log('')}
+              onBlur={() => ''}
               parentId="dashboardComponentScroll"
               data={selectsReducer.get(PREVISIT_TYPE) || []}
               disabled={this.state.isEditable ? '' : 'disabled'}

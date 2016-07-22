@@ -445,7 +445,7 @@ class FormVisita extends Component{
                 touched={true}
                 error={this.state.typeVisitError}
                 onChange={val => this._changeTypeVisit(val)}
-                onBlur={() => console.log("")}
+                onBlur={() => ''}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(VISIT_TYPE) || []}
               />
