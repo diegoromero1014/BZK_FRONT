@@ -90,7 +90,7 @@ class ModalTask extends Component {
     updateKeyValueUsersBanco(e){
       const {fields: {responsable}, filterUsersBanco} = this.props;
       const selector =  $('.ui.search.responsable');
-      if(e.keyCode == 13 || e.which == 13){
+      if(e.keyCode === 13 || e.which === 13){
         e.preventDefault();
         if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
           selector.toggleClass('loading');
@@ -111,8 +111,7 @@ class ModalTask extends Component {
               selector.toggleClass('loading');
               selector.search('search local', responsable.value);
               selector.focus();
-            }, (reason) => {
-          });
+            });
         }
       }
     }
@@ -156,7 +155,6 @@ class ModalTask extends Component {
     render() {
         const {modalStatus, selectsReducer} = this.props;
         const {initialValues, fields:{responsable, fecha, tarea}, handleSubmit, error}= this.props;
-        const status = modalStatus ? "Verdadero" : "Falso";
         return (
           <form onSubmit={handleSubmit(this._handleCreateTask)}>
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"

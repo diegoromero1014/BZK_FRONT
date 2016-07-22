@@ -63,12 +63,10 @@ export default (state = initialState, action) => {
         });
     case GET_DETAIL_VISIT:
       return state.set('detailVisit', action.payload.data);
-    case PDF:
+    case GET_CSV_VISIT_BY_CLIENT:
       return state.set('status', "200");
     case OWNER_DRAFT:
       return state.set('ownerDraft', action.ownerDraft);
-    case GET_CSV_VISIT_BY_CLIENT:
-      return state.set('status', "200");
     default:
       return state;
   }
