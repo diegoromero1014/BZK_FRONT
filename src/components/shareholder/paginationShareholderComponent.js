@@ -49,7 +49,6 @@ class PaginationShareholderComponent extends Component{
   render(){
     const {shareholdersReducer, config} = this.props;
     var page = shareholdersReducer.get('page');
-    var limInf = shareholdersReducer.get('limInf');
     var firstPage = 1;
     if(page > 7){
       firstPage = page - 6;

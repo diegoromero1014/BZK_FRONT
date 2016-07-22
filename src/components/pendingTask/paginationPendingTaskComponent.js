@@ -46,7 +46,6 @@ class PaginationPendingTaskComponent extends Component {
   render() {
     const {tasksByClient, config} = this.props;
     var page = tasksByClient.get('page');
-    var limInf = tasksByClient.get('limInf');
     var firstPage = 1;
     if(page > 7) {
       firstPage = page - 6;

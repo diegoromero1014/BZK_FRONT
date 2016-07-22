@@ -55,7 +55,6 @@ class ShareholderComponent extends Component {
                   });
                 }
               }
-            }, (reason) => {
             }
         );
     }

@@ -57,7 +57,7 @@ export function updateCertificateNoShareholder(valueCertificate){
     }
   }
 
-  var request = axios.post(APP_URL + "/updateCertificateNotShareholder", json);
+  axios.post(APP_URL + "/updateCertificateNotShareholder", json);
   return{
     type: UPDATE_CERTIFICATE_NO_SHAREHOLDER,
     payload: valueCertificate

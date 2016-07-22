@@ -200,7 +200,7 @@ class FormEdit extends Component{
           "visitTime": moment(this.state.dateVisit).format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
-          "relatedEmployees": dataOthers === 0 ? null : dataOthers,
+          "relatedEmployees": dataOthers.length === 0 ? null : dataOthers,
           "comments": this.state.conclusionsVisit,
           "visitType": this.state.typeVisit,
           "userTasks": tareas,
@@ -366,7 +366,6 @@ class FormEdit extends Component{
         dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
         dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
       }
-    }, (reason) =>{
     });
   }
 

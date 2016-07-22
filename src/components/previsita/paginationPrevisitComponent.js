@@ -45,7 +45,6 @@ class PaginationPrevisitComponent extends Component {
 	render() {
 		const {previsitReducer, config} = this.props;
 		const page = previsitReducer.get('page');
-		const limInf = previsitReducer.get('limInf');
 		let firstPage = 1;
 		if (page > 7) {
 			firstPage = page - 6;

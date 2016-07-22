@@ -81,7 +81,7 @@ class ComponentShareHolderDetail extends Component {
     //Elimino los caracteres no validos
     if(val !== null && val !== '' && val !== undefined){
       for (var i=0, output='', validos="0123456789."; i< val.length; i++){
-       if (validos.indexOf(val.charAt(i)) != -1){
+       if (validos.indexOf(val.charAt(i)) !== -1){
           output += val.charAt(i)
         }
       }

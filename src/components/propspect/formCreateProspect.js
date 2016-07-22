@@ -92,6 +92,7 @@ class FormCreateProspect extends Component{
 
 
   _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+    var pattern;
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="-0123456789"; i< val.length; i++){
      if (validos.indexOf(val.charAt(i)) !== -1){
@@ -104,7 +105,7 @@ class FormCreateProspect extends Component{
        Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
     */
     if( typeValidation === 2 ){ //Realizo simplemente el formateo
-      var pattern = /(-?\d+)(\d{3})/;
+      pattern = /(-?\d+)(\d{3})/;
       while (pattern.test(val)){
         val = val.replace(pattern, "$1,$2");
       }
@@ -112,7 +113,7 @@ class FormCreateProspect extends Component{
     } else { //Valido si el valor es negativo o positivo
       var value = numeral(valuReduxForm.value).format('0');
       if( value >= 0 ){
-        var pattern = /(-?\d+)(\d{3})/;
+        pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
         }

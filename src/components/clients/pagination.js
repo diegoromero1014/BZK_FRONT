@@ -10,7 +10,6 @@ class Pagination extends Component{
     const {clientsFindServer} = this.props;
     const {changePage} = this.props;
     const {clientR,valueCertification,valueTeam} = this.props;
-    var keyword = clientR.get('keyword');
     var limInf = (page - 1) * NUMBER_RECORDS;
     clientsFindServer(clientR.get('keyword'), limInf, NUMBER_RECORDS,valueCertification,valueTeam);
     changePage(page);

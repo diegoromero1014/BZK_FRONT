@@ -33,8 +33,8 @@ class SearchShareholderComponent extends Component {
   }
 
   _handleChangeKeyword(e){
-    if(e.keyCode == 13 || e.which == 13){
-      this._handleShareholderByClientsFind(e);
+    if(e.keyCode === 13 || e.which === 13){
+      this._handleShareholderByClientsFind();
     }else{
       this.setState({
         keywordShareholder: e.target.value

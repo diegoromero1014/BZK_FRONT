@@ -27,7 +27,6 @@ const initialState = Immutable.Map({
   dataTypeAttitudeOverGroup: [],
   dataEconomicGroup: [],
   dataTypeNotes: [],
-  dataEconomicGroup: [],
   dataTypeShareholdersKind : [],
   dataTypeShareholdersType:[],
   dataTypeTeams:[],
@@ -85,15 +84,13 @@ export default (state = initialState, action) => {
         case constants.ECONOMIC_GROUPS:
           return state.set('dataEconomicGroup',  defaultData(action, 'payload.data.messageBody.economicGroupValueObjects'));
         case constants.SHAREHOLDER_KIND:
-            return state.set('dataTypeShareholdersKind', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+          return state.set('dataTypeShareholdersKind', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SHAREHOLDER_TYPE:
-            return state.set('dataTypeShareholdersType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-        case constants.TEAM_FOR_EMPLOYEE:
-            return state.set('dataTypeTeams', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+          return state.set('dataTypeShareholdersType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CERTIFICATION_STATUS:
-            return state.set('dataTypeCertificationStatus', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+          return state.set('dataTypeCertificationStatus', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TASK_STATUS:
-        return state.set('dataTypeTaskType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+          return state.set('dataTypeTaskType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CLEAR_VALUES_COUNTRY:
           return state.withMutations( map => {
             map

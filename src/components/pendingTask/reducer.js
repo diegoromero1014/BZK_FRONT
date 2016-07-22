@@ -36,13 +36,7 @@ export default (state = initialState, action) => {
               .set('orderTask', 0)
               .set('columnTask',"c.closingDate");
           });
-          case CLEAR_USER_TASK_PAGINATOR:
-          return state.withMutations(map => {
-              map
-              .set('page', 1)
-              .set('limInf', 0)
-          });
-          case CLEAR_USER_TASK_CREATE:
+          case CLEAR_USER_TASK_PAGINATOR || CLEAR_USER_TASK_CREATE:
           return state.withMutations(map => {
               map
               .set('page', 1)

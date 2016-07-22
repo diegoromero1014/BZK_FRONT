@@ -20,7 +20,7 @@ export const scrollToComponent = (ChildComponent) => {
 
         componentDidMount() {
             var combo = this.refs[name];
-            var comboRect = combo.getBoundingClientRect();
+            combo.getBoundingClientRect();
         }
 
         render() {

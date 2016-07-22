@@ -93,8 +93,7 @@ class ModalCreateTask extends Component{
             selector.toggleClass('loading');
             selector.search('search local', responsable.value);
             selector.focus();
-          }, (reason) => {
-        });
+          });
       }
     }
   }

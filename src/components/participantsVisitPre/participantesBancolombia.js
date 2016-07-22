@@ -133,8 +133,7 @@ class ParticipantesBancolombia extends Component{
             });
             $('.ui.search.participantBanc').toggleClass('loading');
             $('#inputParticipantBanc').focus();
-          }, (reason) => {
-        });
+          });
       }
     }
   }

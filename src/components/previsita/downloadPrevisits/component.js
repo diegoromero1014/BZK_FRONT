@@ -7,7 +7,7 @@ import {APP_URL} from '../../../constantsGlobal';
 import {getCsvPreVisitsByClient} from '../actions';
 
 class DownloadPrevisits extends Component {
-	
+
 	constructor(props) {
 	  super(props);
 
@@ -27,7 +27,7 @@ class DownloadPrevisits extends Component {
 		if (event.target.name === 'participatingEmployees') {
 			this.setState({hasParticipatingEmployees: !this.state.hasParticipatingEmployees});
 		}
-		if (event.target.name == 'relatedEmployees') {
+		if (event.target.name === 'relatedEmployees') {
 			this.setState({hasRelatedEmployees: !this.state.hasRelatedEmployees});
 		}
 	}
@@ -35,7 +35,7 @@ class DownloadPrevisits extends Component {
 	_downloadPreVisits() {
 		const {getCsvPreVisitsByClient, isOpen} = this.props;
 		getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
-			if (data.payload.data.status == 200) {
+			if (data.payload.data.status === 200) {
 				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
 				isOpen();
 			}

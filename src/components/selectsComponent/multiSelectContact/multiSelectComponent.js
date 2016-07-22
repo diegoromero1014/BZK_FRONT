@@ -17,7 +17,7 @@ class MultiSelectComponent extends Component{
     consultDataSelect(idTypeFilter);
   }
 
-  render(){ 
+  render(){
       const {
           selectsReducer,
           idTypeFilter,
@@ -28,9 +28,9 @@ class MultiSelectComponent extends Component{
         data = selectsReducer.get('dataTypeFunction');
       } else if(idTypeFilter === FILTER_TYPE_LBO_ID) {
         data = selectsReducer.get('dataTypeLBO');
-      } else if (idTypeFilter == FILTER_HOBBIES) {
+      } else if (idTypeFilter === FILTER_HOBBIES) {
         data = selectsReducer.get('dataTypeHobbies');
-      } else if (idTypeFilter == FILTER_SPORTS) {
+      } else if (idTypeFilter === FILTER_SPORTS) {
         data = selectsReducer.get('dataTypeSports');
       }
       return(
