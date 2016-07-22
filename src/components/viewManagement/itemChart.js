@@ -26,7 +26,7 @@ class ItemChart extends Component{
 
   _clickDownloadExcel(itemSeleted){
     if(itemSeleted === TAB_PIPELINE){
-      var year = this.state.valueyear != '' ? this.state.valueyear : moment().year();
+      var year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
       const {getCsvPipeline} = this.props;
       getCsvPipeline(year).then(function(data) {
         if (data.payload.data.status === 200) {

@@ -388,7 +388,6 @@ class FormEditPipeline extends Component {
           		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
           clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
 
-		const pipeline = pipelineReducer.get('detailPipeline');
 		const ownerDraft = pipelineReducer.get('ownerDraft');
 		let fechaModString = '';
 		if(updatedTimestamp.value !== null) {

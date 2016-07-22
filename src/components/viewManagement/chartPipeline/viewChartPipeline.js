@@ -52,9 +52,7 @@ class ViewChartPipeline extends Component{
   componentWillMount(){
     const {selectsReducer, getMasterDataFields, consultCurrencys} = this.props;
     this._consultInfoPipeline(null, null);
-    consultCurrencys().then( (response) => {
-    }, (reason) => {
-    });
+    consultCurrencys();
   }
 
   _refreshChartPipeline(){

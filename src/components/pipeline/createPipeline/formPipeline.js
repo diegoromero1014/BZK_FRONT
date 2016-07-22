@@ -390,7 +390,6 @@ class FormPipeline extends Component {
           datePipelineLastReview = JSON.parse(data.payload.data.parameter).value;
           datePipelineLastReview = moment(datePipelineLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
         }
-      }, (reason) =>{
       });
     }
   }
