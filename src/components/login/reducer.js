@@ -33,17 +33,15 @@ export default (state = initialState, action) => {
             .set('error', false)
         });
       }
-    break;
+      break;
 
     case CHANGE_STATUS_LOGIN:
-    return state.set("status", "unloggerIn");
-
-    case CHANGE_STATUS_LOGIN:
-    return state.withMutations( map => {
-      map
-        .set('errorServerNoFound', false)
-        .set('error', false)
-    });
+      return state.withMutations( map => {
+        map
+          .set('errorServerNoFound', false)
+          .set('error', false)
+          .set('status', "unloggerIn")
+      });
 
     default:
         return state.set("status", "unloggerIn");

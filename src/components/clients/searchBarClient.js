@@ -42,13 +42,11 @@ class SearchBarClient extends Component{
   _handleClientsFind(e){
     const {clientsFindServer, valueTeam,valueCertification} = this.props;
     const {clientR} = this.props;
-    var keyword = clientR.get('keyword');
-    if(keyword === '' || keyword === undefined){
+    if(clientR.get('keyword') === '' || clientR.get('keyword') === undefined){
       this.setState({showEr: true});
     }else{
       const {changePage} = this.props;
-      var limInf = (1 - 1) * NUMBER_RECORDS;
-      clientsFindServer(keyword, limInf, NUMBER_RECORDS,valueCertification,valueTeam);
+      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,valueCertification,valueTeam);
       changePage(1);
     }
   }

@@ -55,6 +55,10 @@ class FormLogin extends Component{
       }
     })
     .catch(err => {
+      this.setState({
+        messageErrorServidor: true,
+        messageUsuarioIncorrecto: false
+      });
     });
   }
 

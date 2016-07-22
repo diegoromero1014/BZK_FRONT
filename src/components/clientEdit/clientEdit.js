@@ -287,7 +287,6 @@ class clientEdit extends Component{
         redirectUrl("/dashboard/clientInformation");
       }else{
         const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
-        infoClient = clientInformacion.get('responseClientInfo');
         getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
         .then((data) => {
           if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
