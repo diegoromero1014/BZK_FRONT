@@ -112,11 +112,9 @@ class FormEditPipeline extends Component {
 	}
 
 	_closeMessageCreatePipeline() {
-    console.log("dsfdsfdsf");
 		this.setState({
 			showMessageCreatePipeline: false
 		});
-    console.log("typeMessage", typeMessage);
 		if( typeMessage === "success" ) {
 		  redirectUrl("/dashboard/clientInformation");
 		}
@@ -226,7 +224,7 @@ class FormEditPipeline extends Component {
     	if (idCurrencyAux != null) {
 	      	currency.onChange(idCurrencyAux);
 	    }
-    	
+
   	}
 
   _closeConfirmChangeCurrency() {
