@@ -13,10 +13,7 @@ class TextareaComponent extends Component {
 
   _onEnter(e){
   var tecla = e.keyCode ? e.keyCode : e.which;
-//  var patron = /[A-Za-zñÑ0-9'"!?¡¿()#%$áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛÑñäëïöüÄËÏÖÜ\s\t]/; // 4
-  var te = String.fromCharCode(tecla);
-//!patron.test(te)
-  if(tecla == 13){
+  if(tecla === 13){
       e.preventDefault();
     }
   }

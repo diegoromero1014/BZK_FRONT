@@ -649,8 +649,6 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
     const detailVisit = visitReducer.get('detailVisit');
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
-      var createdTimestamp = detailVisit.data.createdTimestamp;
-      var updatedTimestamp = detailVisit.data.updatedTimestamp;
       return {
         initialValues:{
           tipoVisita: detailVisit.data.visitType,

@@ -38,7 +38,6 @@ class comboBoxComponent extends Component {
      const selector = $(`.ui.selection.dropdown.${name}`);
      selector.dropdown('clear');
      this._setUsed(false);
-     const placeholder = labelInput;
      selector.dropdown('set text', labelInput);
    }
 
