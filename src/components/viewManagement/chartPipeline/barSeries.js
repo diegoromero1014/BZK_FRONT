@@ -56,7 +56,7 @@ class BarSerires extends Component{
     return values.map((v, i) => {
       return {
         title: `${labels[i]}`,
-        value: v.y + " - Registros: " + v.z
+        value: v.y + " - Registros" + (v.z !== undefined ? (': ' + v.z) : '')
       };
     });
   }
