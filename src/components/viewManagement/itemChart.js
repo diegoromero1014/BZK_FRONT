@@ -24,13 +24,16 @@ class ItemChart extends Component{
     changeTabSeletedChartView(itemSeleted);
   }
 
-  _clickDownloadExcel(itemSeleted){
+  _clickDownloadExcel(itemSeleted) {
    let year;
    let url;
-    if(itemSeleted === TAB_PIPELINE){
+    if(itemSeleted === TAB_PIPELINE) {
        year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
        url = '/getCsvPipeline';
-    }else if(itemSeleted === TAB_VISIT){
+    } else if (itemSeleted === TAB_PREVISIT) {
+      year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+      url = '/getCsvPreVisits';
+    } else if(itemSeleted === TAB_VISIT){
       year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
       url = '/getCsvVisits';
     }
