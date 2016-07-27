@@ -7,6 +7,7 @@ import {updateTitleNavBar} from '../navBar/actions';
 import ItemChart from './ItemChart';
 import ViewChartPipeline from './chartPipeline/viewChartPipeline';
 import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
+import ViewChartVisit from './chartVisit/viewChartVisit';
 import {TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
 import _ from 'lodash';
 
@@ -75,6 +76,7 @@ class ViewManagement extends Component{
         </div>
         { tabSeletedReducer === TAB_PIPELINE && <ViewChartPipeline /> }
         { tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit /> }
+        { tabSeletedReducer === TAB_VISIT && <ViewChartVisit /> }
         {isLoadChart &&
           <div className="ui active inverted dimmer">
             <div className="ui text loader">Cargando gráfica</div>
