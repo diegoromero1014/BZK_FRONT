@@ -9,3 +9,4 @@ export const TAB_BUSINESS = 4;
 export const GET_CSV = "GET_CSV";
 export const TYPE_YEAR = "TYPE_YEAR";
 export const NUMERAL_MONTH = 5;
+export const CONSULT_PREVISIT = "CONSULT_PREVISIT";

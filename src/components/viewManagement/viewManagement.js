@@ -6,17 +6,18 @@ import {redirectUrl} from '../globalComponents/actions';
 import {updateTitleNavBar} from '../navBar/actions';
 import ItemChart from './ItemChart';
 import ViewChartPipeline from './chartPipeline/viewChartPipeline';
+import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import {TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
 import _ from 'lodash';
 
 const itemsChart = [
-  /*{
+  {
       text: "Previsitas",
       icon: "bar chart icon",
       styleColor: "#337ab7",
       tab: TAB_PREVISIT
-  },*/
-  {
+  },
+ {
       text: "Visitas",
       icon: "bar chart icon",
       styleColor: "#5cb85c",
@@ -73,6 +74,7 @@ class ViewManagement extends Component{
           </Row>
         </div>
         { tabSeletedReducer === TAB_PIPELINE && <ViewChartPipeline /> }
+        { tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit /> }
         {isLoadChart &&
           <div className="ui active inverted dimmer">
             <div className="ui text loader">Cargando gráfica</div>
