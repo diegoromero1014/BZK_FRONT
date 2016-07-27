@@ -10,3 +10,4 @@ export const GET_CSV = "GET_CSV";
 export const TYPE_YEAR = "TYPE_YEAR";
 export const NUMERAL_MONTH = 5;
 export const CONSULT_PREVISIT = "CONSULT_PREVISIT";
+export const CONSULT_VISIT = "CONSULT_VISIT";

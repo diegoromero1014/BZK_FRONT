@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_PREVISIT,CONSULT_CURRENCY, LOAD_CHART} from './constants';
+import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_PREVISIT,CONSULT_VISIT,CONSULT_CURRENCY, LOAD_CHART} from './constants';
 export function changeTabSeletedChartView(tabSeleted){
   return{
     type: TAB_SELETED_ACTIVE,
@@ -69,6 +69,32 @@ export function consultInformationPrevisit() {
   let request = axios.post(APP_URL + "/portfolioPrevisit", json);
   return {
     type: CONSULT_PREVISIT,
+    payload: request
+  };
+};
+
+export function consultInformationVisit() {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "startDate": null,
+      "endDate": null
+    }
+  };
+  let request = axios.post(APP_URL + "/portfolioVisit", json);
+  return {
+    type: CONSULT_VISIT,
     payload: request
   };
 };
