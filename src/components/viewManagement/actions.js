@@ -44,6 +44,9 @@ export function consultInformationPipeline(idStatusPipeline, idCurrency){
   }
 }
 
+/**
+ * Action para llamar al servicio de cantidad de previsitas.
+ */
 export function consultInformationPrevisit() {
   const json = {
     "messageHeader": {
