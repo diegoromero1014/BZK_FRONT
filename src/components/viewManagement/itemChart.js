@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {changeTabSeletedChartView,getCsvPipeline} from './actions';
+import {changeTabSeletedChartView,getCsv} from './actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
@@ -25,15 +25,21 @@ class ItemChart extends Component{
   }
 
   _clickDownloadExcel(itemSeleted){
+   let year;
+   let url;
     if(itemSeleted === TAB_PIPELINE){
-      var year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
-      const {getCsvPipeline} = this.props;
-      getCsvPipeline(year).then(function(data) {
-        if (data.payload.data.status === 200) {
-          window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-        }
-      });
+       year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+       url = '/getCsvPipeline';
+    }else if(itemSeleted === TAB_VISIT){
+      year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+      url = '/getCsvVisits';
     }
+    const {getCsv} = this.props;
+    getCsv(year,url).then(function(data) {
+      if (data.payload.data.status === 200) {
+        window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+      }
+    });
   }
 
   render(){
@@ -68,7 +74,7 @@ class ItemChart extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     changeTabSeletedChartView,
-    getCsvPipeline
+    getCsv
   }, dispatch);
 }
 

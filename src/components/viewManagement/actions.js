@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV_PIPELINE,CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
+import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
 
 export function changeTabSeletedChartView(tabSeleted){
   return{
@@ -45,7 +45,7 @@ export function consultInformationPipeline(idStatusPipeline, idCurrency){
   }
 }
 
-export function getCsvPipeline(year) {
+export function getCsv(year,url) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -63,9 +63,9 @@ export function getCsvPipeline(year) {
       "year": year
     }
   }
-  let request = axios.post(APP_URL + "/getCsvPipeline", json);
+  let request = axios.post(APP_URL + url, json);
   return {
-    type: GET_CSV_PIPELINE,
+    type: GET_CSV,
     payload: request
   }
 }

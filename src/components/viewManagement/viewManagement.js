@@ -15,13 +15,13 @@ const itemsChart = [
       icon: "bar chart icon",
       styleColor: "#337ab7",
       tab: TAB_PREVISIT
-  },
+  },*/
   {
       text: "Visitas",
       icon: "bar chart icon",
       styleColor: "#5cb85c",
       tab: TAB_VISIT
-  },*/
+  },
   {
       text: "Pipeline",
       icon: "bar chart icon",
