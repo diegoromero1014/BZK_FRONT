@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import {UPDATE_NOTE, CREATE_NOTE, DELETE_NOTE, SET_NOTES, CLEAR_NOTES} from './constants';
 import _ from 'lodash';
 
-
 const initialState = Immutable.List();
 
 export default (state = initialState, action) => {
@@ -24,16 +23,13 @@ export default (state = initialState, action) => {
     case SET_NOTES:
         const notes = action.notes;
         return state.withMutations(list => {
-
           notes.map(item => {
             const uid = _.uniqueId('note_');
-            list.push(
-              {
+            list.push({
                 uid,
                 body: item.note,
                 combo: String(item.typeOfNote)
-              }
-            )
+              })
           });
       });
     case CLEAR_NOTES:

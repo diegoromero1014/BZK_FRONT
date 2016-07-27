@@ -7,12 +7,10 @@ class Notas extends Component{
   }
 
   render(){
-    const {typeOfNoteKey} = this.props;
-    const {note} = this.props;
-    const {index} = this.props;
+    const {typeOfNoteKey, index, note} = this.props;
     return(
       <div>
-        <h3 className="sub-header" style={{borderBottom: "solid 1px"}}>Nota {index}</h3>
+        <h3 className="sub-header" style={{borderBottom: "solid 1px", marginTop: "10px"}}>Nota {index}</h3>
         <table style={{width: "100%"}}>
             <thead>
               <tr>

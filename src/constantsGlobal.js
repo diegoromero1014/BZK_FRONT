@@ -35,16 +35,19 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
+export const DATE_REQUIERED = "Debe seleccionar un día";
 export const DATE_START_AFTER = "La fecha inicial es superior a la final";
 export const DATE_FORMAT = "DD/MM/YYYY";
 export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
 export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
+export const ONLY_POSITIVE_INTEGER = 1;
+export const ALLOWS_NEGATIVE_INTEGER = 2;
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
     API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";
 } else {
-    API_URL = "http://localhost:8087/Centricity";
+    API_URL = "http://localhost:8084/Centricity";
 }
 
 export const APP_URL = API_URL;
