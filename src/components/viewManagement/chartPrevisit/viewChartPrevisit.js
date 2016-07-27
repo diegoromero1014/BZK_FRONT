@@ -16,7 +16,8 @@ import _ from 'lodash';
 let defaultValueData = [{x: '', y: 0}];
 
 /**
- * 
+ * Componente que consulta y grafica las previsitas que estan guardadas como definitivo
+ * y agrupadas por mes desde el mes actual hasta seis meses atras.
  * @extends Component
  */
 class ViewChartPrevisit extends Component {
@@ -35,23 +36,25 @@ class ViewChartPrevisit extends Component {
 	}
 
 	componentWillMount() {
-		console.log('componentWillMount');
 		this._consultInfoPrevisit();
 	}
 
+	/**
+	 * Función para refrescar la gráfica al momento de seleccionar la opción de refrescar en la interfaz.
+	 */
 	_refreshChart() {
-		console.log('_refreshChart');
 		this._consultInfoPrevisit();
 	}
 
+	/**
+	 * Función para llamar al action de previsitas y graficar los datos en la gráfica de previsitas.
+	 */
 	_consultInfoPrevisit() {
-		console.log('_consultInfoPrevisit');
 		const { consultInformationPrevisit, changeLoadChart } = this.props;
 		changeLoadChart(true);
 		this.setState({data: defaultValueData});
 		consultInformationPrevisit().then((response) => {
 			changeLoadChart(false);
-			console.log('response -> ', response);
 			if ( (_.get(response, 'payload.data.validateLogin') == 'false') ) {
 				redirectUrl("/login");
 			} else {
@@ -62,13 +65,9 @@ class ViewChartPrevisit extends Component {
 					let dataAux = [];
 					_.map(_.get(response, 'payload.data.data.hashValues'), objects => {
 						let monthSum = 0;
-						console.log('objects -> ', objects);
 						objects.forEach(function(object) {
-							console.log('object -> ', object);
 							let date = moment(object[0], 'YYYY-MM').locale('es').format('YYYY MMM');
-							console.log('date -> ', date);
 							dataAux.push({x: date, y: object[1]});
-							console.log('dataAux -> ', dataAux);
 							if (monthSum === NUMERAL_MONTH) {
 								monthSum = 0;
 								dataListComplete.push(dataAux);
@@ -78,8 +77,6 @@ class ViewChartPrevisit extends Component {
 						});
 					});
 					const labels = _.chain(response).get('payload.data.data.hashValues.PUBLISHED', {0: []}).keys().value();
-					console.log('labels -> ', labels);
-					console.log('dataListComplete -> ', dataListComplete);
 					this.setState({data: dataListComplete, labels: labels});
 				}
 			}
@@ -90,7 +87,6 @@ class ViewChartPrevisit extends Component {
 	}
 
 	render() {
-		console.log('render');
 		const {data, labels} = this.state;
 		return (
 			<Row xs={12} md={12} lg={12}>
