@@ -60,6 +60,7 @@ class DownloadPrevisits extends Component {
 							<li>{'Tipo de documento'}</li>
 							<li>{'Número de documento'}</li>
 							<li>{'Razón social'}</li>
+							<li>{'Grupo económico'}</li>
 							<li>{'Gerente de cuenta'}</li>
 							<li>{'Célula'}</li>
 							<li>{'Fecha de la reunión'}</li>

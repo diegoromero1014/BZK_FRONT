@@ -3,7 +3,7 @@ import {Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteNote, updateNote, addNote} from './actions';
-import {consultDataSelect} from '../selectsComponent/actions';
+import {getMasterDataFields} from '../selectsComponent/actions';
 import {CLIENT_ID_TYPE, TYPE_NOTES} from '../selectsComponent/constants';
 import Note from './noteItem';
 import _ from 'lodash';
@@ -32,8 +32,8 @@ class NotesClient extends Component {
     }
 
     componentWillMount() {
-        const {consultDataSelect} = this.props;
-        consultDataSelect(TYPE_NOTES);
+        const {getMasterDataFields} = this.props;
+        getMasterDataFields([TYPE_NOTES]);
     }
 
     _addNote() {
@@ -49,7 +49,7 @@ class NotesClient extends Component {
             key={note.uid}
             body={note.body}
             combo={note.combo}
-            data={selectsReducer.get('dataTypeNotes')}
+            data={selectsReducer.get(TYPE_NOTES)}
         />
     }
 
@@ -84,7 +84,7 @@ class NotesClient extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        consultDataSelect,
+        getMasterDataFields,
         deleteNote,
         updateNote,
         addNote

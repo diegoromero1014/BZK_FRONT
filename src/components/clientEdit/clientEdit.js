@@ -9,6 +9,8 @@ import SelectTypeDocument from '../selectsComponent/selectTypeDocument/component
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
+import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO} from './constants';
+import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
@@ -17,7 +19,7 @@ import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import NotesClient from '../notes/notesClient';
-import {setNotes, crearNotes} from '../notes/actions';
+import {setNotes, crearNotes, deleteNote} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
@@ -34,116 +36,120 @@ const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "cit
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
     "centroDecision", "necesitaLME", "groupEconomic", "keywordFindEconomicGroup", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
 
-//Establece si el cliente a editar es prospecto o no, para controlar las validaciones de campos
+//Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
 //Controla la validación en las notas
 var errorNote = false;
+//Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
+var oldJustifyGeren = '';
+//Controla si es la primer vea que se setea información en el campo justificationForNoRM
+var infoJustificationForNoRM = true;
 
 const validate = values => {
     const errors = {}
 
     if (!values.idCIIU) {
-      errors.idCIIU = "Debe seleccionar una opción";
+      errors.idCIIU = OPTION_REQUIRED;
     } else {
       errors.idCIIU = null;
     }
     if (!values.idSubCIIU) {
-      errors.idSubCIIU = "Debe seleccionar una opción";
+      errors.idSubCIIU = OPTION_REQUIRED;
     } else {
       errors.idSubCIIU = null;
     }
     if (!values.address) {
-      errors.address = "Debe ingresar un valor";
+      errors.address = VALUE_REQUIERED;
     } else {
       errors.address = null;
     }
     if (!values.telephone) {
-      errors.telephone = "Debe ingresar un valor";
+      errors.telephone = VALUE_REQUIERED;
     } else {
       errors.telephone = null;
     }
     if (!values.annualSales) {
-      errors.annualSales = "Debe ingresar un valor";
+      errors.annualSales = VALUE_REQUIERED;
     } else {
       errors.annualSales = null;
     }
     if (!values.country) {
-      errors.country = "Debe seleccionar un valor";
+      errors.country = OPTION_REQUIRED;
     } else {
       errors.country = null;
     }
     if (!values.province) {
-      errors.province = "Debe seleccionar un valor";
+      errors.province = OPTION_REQUIRED;
     } else {
       errors.province = null;
     }
     if (!values.city) {
-      errors.city = "Debe ingresar un valor";
+      errors.city = OPTION_REQUIRED;
     } else {
       errors.city = null;
     }
     if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
-      errors.dateSalesAnnuals = "Debe seleccionar un día";
+      errors.dateSalesAnnuals = DATE_REQUIERED;
     } else {
       errors.dateSalesAnnuals = null;
     }
     if (!values.liabilities) {
-      errors.liabilities = "Debe ingresar un valor";
+      errors.liabilities = VALUE_REQUIERED;
     } else {
       errors.liabilities = null;
     }
     if (!values.assets) {
-      errors.assets = "Debe ingresar un valor";
+      errors.assets = VALUE_REQUIERED;
     } else {
       errors.assets = null;
     }
     if (!values.operatingIncome) {
-      errors.operatingIncome = "Debe ingresar un valor";
+      errors.operatingIncome = VALUE_REQUIERED;
     } else {
       errors.operatingIncome = null;
     }
     if (!values.nonOperatingIncome) {
-      errors.nonOperatingIncome = "Debe ingresar un valor";
+      errors.nonOperatingIncome = VALUE_REQUIERED;
     } else {
       errors.nonOperatingIncome = null;
     }
     if (!values.expenses) {
-      errors.expenses = "Debe ingresar un valor";
+      errors.expenses = VALUE_REQUIERED;
     } else {
       errors.expenses = null;
     }
     if (!values.marcGeren && !isProspect) {
-      errors.marcGeren = "Debe seleccionar un valor";
+      errors.marcGeren = OPTION_REQUIRED;
     } else {
       errors.marcGeren = null;
     }
     if (values.marcGeren === 'false' && !values.justifyNoGeren) {
-      errors.justifyNoGeren = "Debe seleccionar un valor";
+      errors.justifyNoGeren = OPTION_REQUIRED;
     } else {
       errors.justifyNoGeren = null;
     }
     if (!values.centroDecision && !isProspect) {
-      errors.centroDecision = "Debe seleccionar un valor";
+      errors.centroDecision = OPTION_REQUIRED;
     } else {
       errors.centroDecision = null;
     }
     if (!values.necesitaLME && !isProspect) {
-      errors.necesitaLME = "Debe seleccionar un valor";
+      errors.necesitaLME = OPTION_REQUIRED;
     } else {
       errors.necesitaLME = null;
     }
     if (values.necesitaLME === 'false' && !values.justifyNoLME) {
-      errors.justifyNoLME = "Debe seleccionar un valor";
+      errors.justifyNoLME = OPTION_REQUIRED;
     } else {
       errors.justifyNoLME = null;
     }
     if (!values.reportVirtual) {
-      errors.reportVirtual = "Debe seleccionar un valor";
+      errors.reportVirtual = OPTION_REQUIRED;
     } else {
       errors.reportVirtual = null;
     }
     if (!values.extractsVirtual) {
-      errors.extractsVirtual = "Debe seleccionar un valor";
+      errors.extractsVirtual = OPTION_REQUIRED;
     } else {
       errors.extractsVirtual = null;
     }
@@ -172,6 +178,7 @@ function SelectsJustificacion(props) {
           {...props.justify}
           data={props.data}
           parentId="dashboardComponentScroll"
+          onChange={props.onChange}
         />
       </dt>
     </Col>;
@@ -187,7 +194,8 @@ class clientEdit extends Component{
     this.state = {
       show: false,
       showEx:false,
-      showEr:false
+      showEr:false,
+      showErNotes: false
     };
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
@@ -199,6 +207,9 @@ class clientEdit extends Component{
     this._closeSuccess = this._closeSuccess.bind(this);
     this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
     this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
+    this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
+    this._onChangeJustifyNoLME = this._onChangeJustifyNoLME.bind(this);
+    this._onChangeJustifyExCliente = this._onChangeJustifyExCliente.bind(this);
   }
 
   _closeWindow(){
@@ -211,7 +222,7 @@ class clientEdit extends Component{
   }
 
   _closeError(){
-    this.setState({show: false, showEx:false, showEr: false});
+    this.setState({show: false, showEx:false, showEr: false, showErNotes: false});
   }
 
   _closeSuccess(){
@@ -230,13 +241,60 @@ class clientEdit extends Component{
     }
   }
 
+  _onChangeJustifyNoGeren(val){
+    const {selectsReducer, clientInformacion, notes} = this.props;
+    var infoClient = clientInformacion.get('responseClientInfo');
+    if(!infoJustificationForNoRM){
+      var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
+      var keyJustify = _.get(_.filter(dataJustifyNoGeren, ['id', parseInt(val)]), '[0].key');
+      if(keyJustify === KEY_DESMONTE){
+        oldJustifyGeren = KEY_DESMONTE;
+        if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
+          const {setNotes, selectsReducer} = this.props;
+          var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+          var idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+          var noteObligatory = [];
+          noteObligatory.push({
+            typeOfNote: idExcepcionNoGerenciado,
+            typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
+            note: ''
+          });
+          setNotes(noteObligatory);
+        }
+      }
+      if(oldJustifyGeren === KEY_DESMONTE && keyJustify !== KEY_DESMONTE){
+        oldJustifyGeren = val;
+        const {selectsReducer, deleteNote} = this.props;
+        var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+        var idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+        var notas = notes.toArray();
+        notas.forEach(function(note){
+          if(idExcepcionNoGerenciado === parseInt(note.combo)){
+            deleteNote(note.uid);
+          }
+        });
+      }
+    }else{
+      infoJustificationForNoRM = false;
+      if(val === infoClient.justificationForNoRM){
+        oldJustifyGeren = KEY_DESMONTE;
+      }
+    }
+  }
+
+  _onChangeJustifyNoLME(val){
+  }
+
+  _onChangeJustifyExCliente(val){
+  }
+
   _handleGroupEconomicFind(){
     const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
     economicGroupsByKeyword(keywordFindEconomicGroup.value);
     groupEconomic.onChange('')
   }
 
-  _handleBlurValueNumber(typeValidation ,valuReduxForm, val){
+  _handleBlurValueNumber(typeValidation, valuReduxForm, val){
     var pattern;
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
@@ -246,16 +304,13 @@ class clientEdit extends Component{
     }
     val = output;
 
-    /* Si typeValidation = 2 es por que el valor puede ser negativo
-       Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
-    */
-    if( typeValidation === 2 ){ //Realizo simplemente el formateo
+    if( typeValidation === ALLOWS_NEGATIVE_INTEGER ){
       pattern = /(-?\d+)(\d{3})/;
       while (pattern.test(val)){
         val = val.replace(pattern, "$1,$2");
       }
       valuReduxForm.onChange(val);
-    } else { //Valido si el valor es negativo o positivo
+    } else {
       var value = numeral(valuReduxForm.value).format('0');
       if( value >= 0 ){
         pattern = /(-?\d+)(\d{3})/;
@@ -265,42 +320,6 @@ class clientEdit extends Component{
         valuReduxForm.onChange(val);
       } else {
         valuReduxForm.onChange("");
-      }
-    }
-  }
-
-  componentWillMount(){
-    errorNote = false;
-    const {clientInformacion, clearValuesAdressess, setNotes, crearNotes} = this.props;
-    clearValuesAdressess();
-    crearNotes();
-    var infoClient = clientInformacion.get('responseClientInfo');
-    if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
-      const {setNotes} = this.props;
-      setNotes(infoClient.notes);
-    }
-
-    if(window.localStorage.getItem('sessionToken') === ""){
-      redirectUrl("/login");
-    }else{
-      if(_.isEmpty(infoClient)){
-        redirectUrl("/dashboard/clientInformation");
-      }else{
-        const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
-        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
-        .then((data) => {
-          if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
-            consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
-            consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
-          }
-          }, (reason) => {
-            this.setState({showEx: true});
-        });
-        consultList(constants.CIIU);
-
-        if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
-          economicGroupsByKeyword(infoClient.economicGroupKey);
-        }
       }
     }
   }
@@ -348,105 +367,151 @@ class clientEdit extends Component{
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
-    const {notes} = this.props;
+    const {fields: {justifyNoGeren}, notes, selectsReducer} = this.props;
     var notesArray = [];
+    var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+    var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
+    var existNoteExceptionNoGeren = false;
     notes.map(map => {
+      if(map.combo === idExcepcionNoGerenciado){
+        existNoteExceptionNoGeren = true;
+      }
       var noteItem = {
         "typeOfNote": map.combo,
         "note": map.body
       }
       notesArray.push(noteItem);
     });
-
-    notesArray.forEach(function(note){
-      if(_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)){
-        errorNote = true;
-      }
-    });
-    if(!errorNote){
-      const {
-      fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
-        district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-        liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-        centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
-        error, handleSubmit, selectsReducer, clientInformacion} = this.props;
-      var infoClient = clientInformacion.get('responseClientInfo');
-      if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
-        var jsonCreateProspect= {
-          "id": infoClient.id,
-          "clientIdNumber": infoClient.clientIdNumber,
-          "clientName": infoClient.clientName,
-          "clientStatus": infoClient.clientStatus,
-          "riskRating": infoClient.riskRating,
-          "isProspect": infoClient.isProspect,
-          "ciiu": idCIIU.value,
-          "commercialRelationshipType": infoClient.commercialRelationshipType,
-          "countryOfOrigin": infoClient.countryOfOrigin,
-          "isDecisionCenter": centroDecision.value,
-          "economicGroup": groupEconomic.value,
-          "internalRating": infoClient.internalRating,
-          "isic": infoClient.isic,
-          "ratingHistory": infoClient.ratingHistory,
-          "registrationKey": infoClient.registrationKey,
-          "riskGroup": infoClient.riskGroup,
-          "segment": infoClient.segment,
-          "subCiiu": idSubCIIU.value,
-          "subSegment": infoClient.subSegment,
-          "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
-          "countryOfMainMarket": infoClient.countryOfMainMarket,
-          "relationshipStatus": infoClient.relationshipStatus,
-          "typeOfClient":infoClient.typeOfClient,
-          "status":infoClient.status,
-          "isCreditNeeded":necesitaLME.value,
-          "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-          "salesUpadateDate" : dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'): null,
-          "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-          "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-          "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-          "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-          "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
-          "localMarket":infoClient.localMarket,
-          "marketLeader":infoClient.marketLeader,
-          "territory":infoClient.territory,
-          "actualizationDate": infoClient.actualizationDate,
-          "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
-          "justificationForLostClient": justifyExClient.value,
-          "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
-          "isVirtualStatement": extractsVirtual.value,
-          "lineOfBusiness": infoClient.lineOfBusiness,
-          "isManagedByRm": marcGeren.value,
-          "addresses":[
-            {
-              "typeOfAddress": 41,
-              "address":address.value,
-              "country":country.value,
-              "province":province.value,
-              "city":city.value,
-              "neighborhood":neighborhood.value,
-              "isPrincipalAddress": reportVirtual.value,
-              "phoneNumber":telephone.value,
-              "postalCode":infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
-            }],
-          "notes":notesArray,
-          "description": description.value,
-          "clientIdType": infoClient.clientIdType,
-          "celulaId": infoClient.celulaId,
-          "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
-       }
-         const {createProspect} = this.props;
-         createProspect(jsonCreateProspect)
-         .then((data) => {
-           if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-               this.setState({showEx: true});
-             } else {
+    var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
+    var idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
+    if(idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren){
+      this.setState({showErNotes: true});
+    }else{
+      notesArray.forEach(function(note){
+        if(_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)){
+          errorNote = true;
+        }
+      });
+      if(!errorNote){
+        const {
+        fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
+          district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+          liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
+          centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
+          error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+        var infoClient = clientInformacion.get('responseClientInfo');
+        if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
+          var jsonCreateProspect= {
+            "id": infoClient.id,
+            "clientIdNumber": infoClient.clientIdNumber,
+            "clientName": infoClient.clientName,
+            "clientStatus": infoClient.clientStatus,
+            "riskRating": infoClient.riskRating,
+            "isProspect": infoClient.isProspect,
+            "ciiu": idCIIU.value,
+            "commercialRelationshipType": infoClient.commercialRelationshipType,
+            "countryOfOrigin": infoClient.countryOfOrigin,
+            "isDecisionCenter": centroDecision.value,
+            "economicGroup": groupEconomic.value,
+            "internalRating": infoClient.internalRating,
+            "isic": infoClient.isic,
+            "ratingHistory": infoClient.ratingHistory,
+            "registrationKey": infoClient.registrationKey,
+            "riskGroup": infoClient.riskGroup,
+            "segment": infoClient.segment,
+            "subCiiu": idSubCIIU.value,
+            "subSegment": infoClient.subSegment,
+            "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
+            "countryOfMainMarket": infoClient.countryOfMainMarket,
+            "relationshipStatus": infoClient.relationshipStatus,
+            "typeOfClient":infoClient.typeOfClient,
+            "status":infoClient.status,
+            "isCreditNeeded":necesitaLME.value,
+            "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+            "salesUpadateDate" : dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x'): null,
+            "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
+            "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
+            "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
+            "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
+            "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+            "localMarket":infoClient.localMarket,
+            "marketLeader":infoClient.marketLeader,
+            "territory":infoClient.territory,
+            "actualizationDate": infoClient.actualizationDate,
+            "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
+            "justificationForLostClient": justifyExClient.value,
+            "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
+            "isVirtualStatement": extractsVirtual.value,
+            "lineOfBusiness": infoClient.lineOfBusiness,
+            "isManagedByRm": marcGeren.value,
+            "addresses":[
+              {
+                "typeOfAddress": 41,
+                "address":address.value,
+                "country":country.value,
+                "province":province.value,
+                "city":city.value,
+                "neighborhood":neighborhood.value,
+                "isPrincipalAddress": reportVirtual.value,
+                "phoneNumber":telephone.value,
+                "postalCode":infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
+              }],
+            "notes":notesArray,
+            "description": description.value,
+            "clientIdType": infoClient.clientIdType,
+            "celulaId": infoClient.celulaId,
+            "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
+         }
+           const {createProspect} = this.props;
+           createProspect(jsonCreateProspect)
+           .then((data) => {
+             if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+                 this.setState({showEx: true});
+               } else {
+                 this.setState({showEr: true});
+             }
+             }, (reason) => {
                this.setState({showEr: true});
-           }
-           }, (reason) => {
-             this.setState({showEr: true});
-         });
+           });
+        }
       }
     }
   };
+
+  componentWillMount(){
+    errorNote = false;
+    infoJustificationForNoRM = true;
+    const {clientInformacion, clearValuesAdressess, setNotes, crearNotes, selectsReducer} = this.props;
+    clearValuesAdressess();
+    crearNotes();
+    var infoClient = clientInformacion.get('responseClientInfo');
+    if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
+      const {setNotes} = this.props;
+      setNotes(infoClient.notes);
+    }
+    if(window.localStorage.getItem('sessionToken') === ""){
+      redirectUrl("/login");
+    }else{
+      if(_.isEmpty(infoClient)){
+        redirectUrl("/dashboard/clientInformation");
+      }else{
+        const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
+        getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT, constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES])
+        .then((data) => {
+          if(infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null){
+            consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+            consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
+          }
+          }, (reason) => {
+            this.setState({showEx: true});
+        });
+        consultList(constants.CIIU);
+        if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
+          economicGroupsByKeyword(infoClient.economicGroupKey);
+        }
+      }
+    }
+  }
 
   render(){
     const {
@@ -454,7 +519,10 @@ class clientEdit extends Component{
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
       centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
-      error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+      error, handleSubmit, selectsReducer, clientInformacion, notes} = this.props;
+    if(notes.toArray().length === 0){
+      errorNote = false;
+    }
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
     return(
@@ -748,7 +816,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese las ventas anuales"
                   {...annualSales}
                   value={annualSales.value}
-                  onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
+                  onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
                 />
               </dt>
             </Col>
@@ -775,7 +843,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese los activos"
                   {...assets}
                   value={assets.value}
-                  onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
+                  onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
                 />
               </dt>
             </Col>
@@ -796,7 +864,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese los pasivos"
                   {...liabilities}
                   value={liabilities.value}
-                  onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
+                  onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
                 />
               </dt>
             </Col>
@@ -815,7 +883,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese los ingresos operacionales mensuales"
                   {...operatingIncome}
                   value={operatingIncome.value}
-                  onBlur={val => this._handleBlurValueNumber(2, operatingIncome ,operatingIncome.value)}
+                  onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome ,operatingIncome.value)}
                 />
               </dt>
             </Col>
@@ -834,7 +902,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese los ingresos no operacionales mensuales"
                   {...nonOperatingIncome}
                   value={nonOperatingIncome.value}
-                  onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome ,nonOperatingIncome.value)}
+                  onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome ,nonOperatingIncome.value)}
                 />
               </dt>
             </Col>
@@ -855,7 +923,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese los egresos mensuales"
                   {...expenses}
                   value={expenses.value}
-                  onBlur={val => this._handleBlurValueNumber(1, expenses ,expenses.value)}
+                  onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses ,expenses.value)}
                 />
               </dt>
             </Col>
@@ -948,6 +1016,7 @@ class clientEdit extends Component{
               justify={justifyNoGeren}
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
+              onChange={val => this._onChangeJustifyNoGeren(val)}
             />
             <Col xs={12} md={4} lg={4}>
               <dt>
@@ -995,6 +1064,7 @@ class clientEdit extends Component{
               justify={justifyNoLME}
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
+              onChange={val => this._onChangeJustifyNoLME(val)}
             />
             <SelectsJustificacion
               visible={'false'}
@@ -1007,6 +1077,7 @@ class clientEdit extends Component{
               justify={justifyExClient}
               obligatory={false}
               data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
+              onChange={val => this._onChangeJustifyExCliente(val)}
             />
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
@@ -1061,6 +1132,13 @@ class clientEdit extends Component{
           text="Señor usuario, ocurrió un error editando del cliente."
           onConfirm={() => this._closeError()}
           />
+          <SweetAlert
+           type= "error"
+           show={this.state.showErNotes}
+           title="Error editando cliente"
+           text='Señor usuario, debe crear al menos una nota de tipo "Excepción no gerenciado".'
+           onConfirm={() => this._closeError()}
+           />
         </form>
     );
   }
@@ -1075,6 +1153,7 @@ function mapDispatchToProps(dispatch) {
     economicGroupsByKeyword,
     getMasterDataFields,
     setNotes,
+    deleteNote,
     crearNotes,
     createProspect,
     clearValuesAdressess

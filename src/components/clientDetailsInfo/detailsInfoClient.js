@@ -119,7 +119,7 @@ class DetailsInfoClient extends Component{
               <tbody>
                 <tr>
                   <td>
-                    <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                    <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "0px"}}>
                       <i className="file outline icon" style={{fontSize: "25px"}}></i>
                       <span className="title-middle"> Notas</span>
                     </dl>
