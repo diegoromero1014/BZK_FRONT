@@ -7,6 +7,9 @@ export const FILE_OPTION_PRE_VISIT_GUIDE = 4;
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
+export const REQUEST_ERROR = 500;
+export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
+export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
