@@ -3,8 +3,12 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {TAB_PREVISIT} from '../../viewManagement/constants';
+import {getCsv} from '../../viewManagement/actions';
 import {APP_URL} from '../../../constantsGlobal';
 import {getCsvPreVisitsByClient} from '../actions';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 class DownloadPrevisits extends Component {
 
@@ -33,13 +37,25 @@ class DownloadPrevisits extends Component {
 	}
 
 	_downloadPreVisits() {
-		const {getCsvPreVisitsByClient, isOpen} = this.props;
-		getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
-			if (data.payload.data.status === 200) {
-				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-				isOpen();
-			}
-		});
+		let year;
+		let url;
+		const { getCsvPreVisitsByClient, isOpen, itemSeletedModal, yearModal, getCsv } = this.props;
+		if (itemSeletedModal === TAB_PREVISIT) {
+			year = yearModal !== '' ? yearModal : moment().year();
+			url = '/getCsvPreVisits';
+			getCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+				if (data.payload.data.status === 200) {
+					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+				}
+			});
+		} else {
+			getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+				if (data.payload.data.status === 200) {
+					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+					isOpen();
+				}
+			});
+		}
 	}
 
 	render() {
@@ -85,7 +101,8 @@ function mapStateToProps({previsitReducer}, ownerProps) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getCsvPreVisitsByClient
+        getCsvPreVisitsByClient,
+        getCsv
     }, dispatch);
 }
 
