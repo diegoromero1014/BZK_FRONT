@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import ModalDownloadVisit from '../visit/downloadVisits/component';
+import ModalDownloadPreVisit from '../previsita/downloadPrevisits/component';
 import Modal from 'react-modal';
+import {TAB_VISIT, TAB_PREVISIT} from './constants';
 
 class ButtonDownloadModal extends Component {
 
@@ -22,7 +24,7 @@ class ButtonDownloadModal extends Component {
   }
 
 	render() {
-    const {itemSeleted, year} = this.props;
+    const { itemSeleted, year } = this.props;
 		return (
 			<div>
       <i className='green file excel outline icon'
@@ -39,7 +41,8 @@ class ButtonDownloadModal extends Component {
                 <span className="sr-only">Close</span>
               </button>
             </div>
-            <ModalDownloadVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />
+            {itemSeleted === TAB_VISIT && <ModalDownloadVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
+            {itemSeleted === TAB_PREVISIT && <ModalDownloadPreVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
           </div>
         </div>
       </Modal>
