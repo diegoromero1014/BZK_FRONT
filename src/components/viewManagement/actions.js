@@ -99,7 +99,7 @@ export function consultInformationVisit() {
   };
 };
 
-export function getCsv(year,url) {
+export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -114,7 +114,10 @@ export function getCsv(year,url) {
       "isSuccessful": true
     },
     "messageBody": {
-      "year": year
+      "year": year,
+      "hasParticipatingContacts":  hasParticipatingContacts,
+      "hasParticipatingEmployees": hasParticipatingEmployees,
+      "hasRelatedEmployees": hasRelatedEmployees
     }
   }
   let request = axios.post(APP_URL + url, json);
