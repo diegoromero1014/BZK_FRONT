@@ -11,62 +11,25 @@ class TeamAssistants extends Component {
     super(props);
   }
 
-  componentWillMount(){
-  }
-
   render(){
+    const {name, position, email, company} = this.props;
     return (
           <div>
-            <div className="client-card" style={{width:"260px"}}>
+            <div className="client-card" style={{width:"250px", float:"left"}}>
               <div className="celula-card-top">
                 <div className="celula-card-top-left">
-                  <div className="celula-title">Juan Perez</div>
-                  <div className="celula-name">Analista desarrollador</div>
-                  <div className="celula-title">Ingeniería Aplicaciones y Software</div>
+                  <div className="celula-title">{name}</div>
+                  <div className="celula-name">{position}</div>
+                  <div className="celula-title">{company}</div>
                 </div>
               </div>
               <div className="celula-card-bottom" style={{backgroundColor:"#B0E0E6"}}>
-                <i className="mail right icon blue" style={{marginTop:"-15px"}} title="juan@ias.com.co"></i>
-              </div>
-            </div>
-            <div className="client-card" style={{width:"260px"}}>
-              <div className="celula-card-top">
-                <div className="celula-card-top-left">
-                  <div className="celula-title">Wilfer Salazar</div>
-                  <div className="celula-name">Analista</div>
-                  <div className="celula-title">I.A.S</div>
-                </div>
-              </div>
-              <div className="celula-card-bottom" style={{backgroundColor:"#B0E0E6"}}>
-                <i className="mail right icon blue" style={{marginTop:"-15px"}} title="wilfer@ias.com.co"></i>
-              </div>
-            </div>
-            <div className="client-card" style={{width:"260px"}}>
-              <div className="celula-card-top">
-                <div className="celula-card-top-left">
-                  <div className="celula-title">Tatiana Montoya</div>
-                  <div className="celula-name">Desarrolladora</div>
-                  <div className="celula-title">Bancolombia S.A</div>
-                </div>
-              </div>
-              <div className="celula-card-bottom" style={{backgroundColor:"#B0E0E6"}}>
-                <i className="mail right icon blue" style={{marginTop:"-15px"}} title="tmontoya@bancolombia.com.co"></i>
+                <i className="mail right icon blue" style={{marginTop:"-15px"}} title={email}></i>
               </div>
             </div>
           </div>
     );
   }
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-    }, dispatch);
-}
-
-function mapStateToProps({selectsReducer}, ownerProps) {
-  return {
-    selectsReducer
-  };
 }
 
 export default TeamAssistants;

@@ -27,6 +27,7 @@ import tasksByClientReducer from '../components/pendingTask/reducer';
 import tabReducer from '../components/clientDetailsInfo/reducer';
 import taskReducerCreate from '../components/pendingTask/createPendingTask/reducer';
 import viewManagementReducer from '../components/viewManagement/reducer';
+import teamParticipantsReducer from '../components/clientTeam/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -56,5 +57,6 @@ export default combineReducers({
     tabReducer: tabReducer,
     taskReducerCreate: taskReducerCreate,
     pipelineReducer:pipelineReducer,
-    viewManagementReducer: viewManagementReducer
+    viewManagementReducer: viewManagementReducer,
+    teamParticipantsReducer: teamParticipantsReducer
 });

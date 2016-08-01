@@ -31,9 +31,6 @@ class ItemChart extends Component{
     if(itemSeleted === TAB_PIPELINE) {
        year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
        url = '/getCsvPipeline';
-    } else if (itemSeleted === TAB_PREVISIT) {
-      year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
-      url = '/getCsvPreVisits';
     }
     const {getCsv} = this.props;
     getCsv(year,url,false,false,false).then(function(data) {
@@ -61,15 +58,16 @@ class ItemChart extends Component{
           <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
               onChange: (value) => this.setState({valueyear: value.id})
           }}/>
-          { itemSeleted === TAB_VISIT &&   <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted}/> }
+          { itemSeleted === TAB_VISIT &&   <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
           { itemSeleted === TAB_PIPELINE &&  <i className='green file excel outline icon'
                       title="Descargar información en formato CSV"
                       onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
                       style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
-          { itemSeleted === TAB_PREVISIT &&  <i className='green file excel outline icon'
+          { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
+          {/* itemSeleted === TAB_PREVISIT &&  <i className='green file excel outline icon'
                       title="Descargar información en formato CSV"
                       onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
+                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>*/}
         </div>
       </Col>
     );
