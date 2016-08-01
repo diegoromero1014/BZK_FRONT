@@ -148,7 +148,8 @@ class FormPipeline extends Component {
     const {fields: {value}} = this.props;
     if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
-      }
+    }
+
     if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
       contollerErrorChangeType = true;
 
@@ -158,7 +159,19 @@ class FormPipeline extends Component {
         this.setState({
           showConfirmChangeCurrency: true
         });
+      } else {
+        idCurrencyAux = parseInt(currencyValue);
+        contollerErrorChangeType = false;
+        this.setState({
+          showConfirmChangeCurrency: false
+        });
       }
+    } else {
+      idCurrencyAux = parseInt(currencyValue);
+      contollerErrorChangeType = false;
+      this.setState({
+          showConfirmChangeCurrency: false
+      });
     }
   }
 
@@ -260,7 +273,6 @@ class FormPipeline extends Component {
       value.onChange('');
     }
     idCurrencyAux = currency.value;
-
   }
 
   _submitCreatePipeline() {
@@ -273,7 +285,7 @@ class FormPipeline extends Component {
       this.setState({
         employeeResponsible: true
       });
-    }else {
+    } else {
       let pipelineJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
@@ -710,7 +722,7 @@ class FormPipeline extends Component {
         <Row>
           <Col xs={12} md={12} lg={12}>
             <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{datePipelineLastReview}</span>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato pipeline: </span><span style={{marginLeft: "0px", color: "#818282"}}>{datePipelineLastReview}</span>
             </div>
           </Col>
         </Row>

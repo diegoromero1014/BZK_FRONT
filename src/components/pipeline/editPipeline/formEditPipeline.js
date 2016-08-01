@@ -34,7 +34,6 @@ let message = "";
 let typeButtonClick;
 let datePipelineLastReview;
 let idCurrencyAux = null;
-//let idCurrencyAuxTwo = null;
 let contollerErrorChangeType = false;
 
 const validate = values => {
@@ -70,13 +69,13 @@ const validate = values => {
       errors.endDate = null;
     }
     if(values.endDate && values.startDate){
-      var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
+      	var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
   		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
-      if( startDate > endDate){
-        errors.startDate = DATE_START_AFTER;
-      } else {
-        errors.startDate = null;
-      }
+		if( startDate > endDate){
+			errors.startDate = DATE_START_AFTER;
+		} else {
+			errors.startDate = null;
+		}
     }
     return errors;
 };
@@ -86,12 +85,12 @@ class FormEditPipeline extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		  showMessageCreatePipeline: false,
-		  isEditable: false,
-		  showConfirm: false,
-  	  employeeResponsible: false,
-  	  showConfirmChangeCurrency: false,
-      updateValuesReceive: false
+			showMessageCreatePipeline: false,
+			isEditable: false,
+			showConfirm: false,
+			employeeResponsible: false,
+			showConfirmChangeCurrency: false//,
+      		//updateValuesReceive: false
 		};
 
   		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -127,6 +126,9 @@ class FormEditPipeline extends Component {
 
 	_changeCurrency(currencyValue) {
 	    const {fields: {value}} = this.props;
+	    if (idCurrencyAux == null) {
+	        idCurrencyAux = parseInt(currencyValue);
+	    }
 	    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
 	      contollerErrorChangeType = true;
 	      if (idCurrencyAux !== null && value.value !== '') {
@@ -135,7 +137,19 @@ class FormEditPipeline extends Component {
 	        this.setState({
 	          showConfirmChangeCurrency: true
 	        });
+	      } else {
+	      	idCurrencyAux = parseInt(currencyValue);
+	        contollerErrorChangeType = false;
+	        this.setState({
+	          showConfirmChangeCurrency: false
+	        });
 	      }
+	    } else {
+	    	idCurrencyAux = parseInt(currencyValue);
+			contollerErrorChangeType = false;
+			this.setState({
+			  showConfirmChangeCurrency: false
+			});
 	    }
 	}
 
@@ -236,7 +250,7 @@ class FormEditPipeline extends Component {
     if (idCurrencyAux !== null) {
       value.onChange('');
     }
-    idCurrencyAux = currency.value;
+    idCurrencyAux = parseInt(currency.value);
   }
 
 	_submitCreatePipeline() {
@@ -249,7 +263,7 @@ class FormEditPipeline extends Component {
 	      this.setState({
 	        employeeResponsible: true
 	      });
-	    }else {
+	    } else {
 	  		let pipelineJson = {
 	  		"id": id.value,
 	  		"client": window.localStorage.getItem('idClientSelected'),
@@ -270,9 +284,9 @@ class FormEditPipeline extends Component {
 	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
 	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
 	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
-	  		};
+	  	};
 
-	  	  createEditPipeline(pipelineJson).then((data)=> {
+	  	createEditPipeline(pipelineJson).then((data)=> {
 	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
 	  	      redirectUrl("/login");
 	  	    } else {
@@ -374,11 +388,11 @@ class FormEditPipeline extends Component {
 		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
 		}
 		getPipelineById(id);
-    setTimeout(function(){
-      this.setState({
-         updateValuesReceive: true
-      });
-    }, 1300);
+    //setTimeout(function(){
+    //  this.setState({
+    //     updateValuesReceive: true
+    //  });
+    //}, 1300);
 	}
 
 	render() {
@@ -403,7 +417,7 @@ class FormEditPipeline extends Component {
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        <Row style={{padding: "5px 10px 0px 20px"}}>
+        		<Row style={{padding: "5px 10px 0px 20px"}}>
 		          <Col xs={10} sm={10} md={10} lg={10}>
 		            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
 		          </Col>
@@ -731,7 +745,7 @@ class FormEditPipeline extends Component {
 				<Row>
 		          <Col xs={12} md={12} lg={12}>
 		            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span style={{marginLeft: "0px", color: "#818282"}}>{reviewedDate.value}</span>
+		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato pipeline: </span><span style={{marginLeft: "0px", color: "#818282"}}>{reviewedDate.value}</span>
 		            </div>
 		          </Col>
 		        </Row>
@@ -838,64 +852,56 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer}, pathParameter) {
 	const pipeline = pipelineReducer.get('detailPipeline');
 	if (pipeline) {
-		if (pipeline.currency !== null && pipeline.currency !== '') {
-			idCurrencyAux = pipeline.currency;
-			//idCurrencyAuxTwo = pipeline.currency;
-		} else {
-			idCurrencyAux = null;
-			//idCurrencyAuxTwo = null;
-		}
+	    if( pipeline.id === parseInt(pathParameter.id) ){
+	      return {
+	  	      clientInformacion,
+	  	      selectsReducer,
+	  	      contactsByClient,
+	  	      pipelineReducer,
+	  	      pdfDescarga,
+	  	      consultParameterServer,
 
-    if( pipeline.id === parseInt(pathParameter.id) ){
-      return {
-  	      clientInformacion,
-  	      selectsReducer,
-  	      contactsByClient,
-  	      pipelineReducer,
-  	      pdfDescarga,
-  	      consultParameterServer,
-
-  	      initialValues: {
-        	id: pipeline.id,
-        	businessStatus: pipeline.businessStatus,
-  		    businessWeek: pipeline.businessWeek,
-  		    commission: fomatInitialStateNumber(pipeline.commission),
-  		    currency: pipeline.currency,
-  		    idUsuario: pipeline.employeeResponsible,
-  		    nameUsuario: pipeline.employeeResponsibleName,
-  		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
-  		    indexing: pipeline.indexing,
-  		    need: pipeline.need,
-  		    observations: pipeline.observations === null ? '' : pipeline.observations,
-  		    product: pipeline.product,
-  		    priority: pipeline.priority,
-  		    roe: fomatInitialStateNumber(pipeline.roe),
-  		    registeredCountry: pipeline.registeredCountry,
-  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
-  		    pipelineStatus: pipeline.pipelineStatus,
-  		    termInMonths: pipeline.termInMonths,
-  		    value: fomatInitialStateNumber(pipeline.value),
-  		    client: pipeline.client,
-  		    documentStatus: pipeline.documentStatus,
-  		    createdBy: pipeline.createdBy,
-  		    updatedBy: pipeline.updatedBy,
-  		    createdTimestamp: pipeline.createdTimestamp,
-  		    updatedTimestamp: pipeline.updatedTimestamp,
-  		    createdByName: pipeline.createdByName,
-  		    updatedByName: pipeline.updatedByName,
-  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
-  	      }
-  	    };
-    } else {
-      return {
-  	      clientInformacion,
-  	      selectsReducer,
-  	      contactsByClient,
-  	      pipelineReducer,
-  	      pdfDescarga,
-  	      consultParameterServer
-  	    };
-    }
+	  	      initialValues: {
+	        	id: pipeline.id,
+	        	businessStatus: pipeline.businessStatus,
+	  		    businessWeek: pipeline.businessWeek,
+	  		    commission: fomatInitialStateNumber(pipeline.commission),
+	  		    currency: pipeline.currency,
+	  		    idUsuario: pipeline.employeeResponsible,
+	  		    nameUsuario: pipeline.employeeResponsibleName,
+	  		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
+	  		    indexing: pipeline.indexing,
+	  		    need: pipeline.need,
+	  		    observations: pipeline.observations === null ? '' : pipeline.observations,
+	  		    product: pipeline.product,
+	  		    priority: pipeline.priority,
+	  		    roe: fomatInitialStateNumber(pipeline.roe),
+	  		    registeredCountry: pipeline.registeredCountry,
+	  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
+	  		    pipelineStatus: pipeline.pipelineStatus,
+	  		    termInMonths: pipeline.termInMonths,
+	  		    value: fomatInitialStateNumber(pipeline.value),
+	  		    client: pipeline.client,
+	  		    documentStatus: pipeline.documentStatus,
+	  		    createdBy: pipeline.createdBy,
+	  		    updatedBy: pipeline.updatedBy,
+	  		    createdTimestamp: pipeline.createdTimestamp,
+	  		    updatedTimestamp: pipeline.updatedTimestamp,
+	  		    createdByName: pipeline.createdByName,
+	  		    updatedByName: pipeline.updatedByName,
+	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
+	  	      }
+	  	    };
+	    } else {
+	      return {
+	  	      clientInformacion,
+	  	      selectsReducer,
+	  	      contactsByClient,
+	  	      pipelineReducer,
+	  	      pdfDescarga,
+	  	      consultParameterServer
+	  	    };
+	    }
 	} else {
 		return {
 	      clientInformacion,

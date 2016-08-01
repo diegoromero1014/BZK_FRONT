@@ -18,3 +18,4 @@ export const CHANGE_IDPREVISIT = "CHANGE_IDPREVISIT";
 export const CLEAR_IDPREVISIT = "CLEAR_IDPREVISIT";
 export const GET_CSV_VISIT_BY_CLIENT = "GET_CSV_VISIT_BY_CLIENT";
 export const KEY_TYPE_VISIT = "Visita";
+export const TAB_VISIT = 2;

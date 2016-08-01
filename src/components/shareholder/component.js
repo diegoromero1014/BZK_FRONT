@@ -1,6 +1,4 @@
-import React, {
-  Component
-} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {clearShareholder,shareholdersByClientFindServer, updateCertificateNoShareholder} from './actions';
 import {changeCheckInfoClient} from '../clientInformation/actions';
@@ -16,6 +14,7 @@ import $ from 'jquery';
 import {redirectUrl} from '../globalComponents/actions';
 
 var enableClickCertificationShareholder = "";
+
 class ShareholderComponent extends Component {
 
   constructor(props){
@@ -28,7 +27,6 @@ class ShareholderComponent extends Component {
         disabledComponents: ""
      };
   }
-
 
   componentWillMount(){
     if( window.localStorage.getItem('sessionToken') === "" ){

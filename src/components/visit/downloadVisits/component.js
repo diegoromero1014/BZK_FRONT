@@ -5,12 +5,16 @@ import {getCsvVisitsByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {APP_URL} from '../../../constantsGlobal';
+import {TAB_VISIT} from '../constants';
+import {getCsv} from '../../viewManagement/actions';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 class DownloadVisits extends Component {
 
 	constructor(props) {
 	  super(props);
-
+  	momentLocalizer(moment);
 	  this._checkCheckBox = this._checkCheckBox.bind(this);
 	  this._downloadVisits = this._downloadVisits.bind(this);
 	  this.state = {
@@ -33,13 +37,26 @@ class DownloadVisits extends Component {
 	}
 
 	_downloadVisits() {
-		const {getCsvVisitsByClient, isOpen} = this.props;
-		getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
-			if (data.payload.data.status === 200) {
-				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-				isOpen();
-			}
-		});
+		let year;
+		let url;
+		const {getCsvVisitsByClient, isOpen,itemSeletedModal,yearModal,getCsv} = this.props;
+		if(TAB_VISIT === itemSeletedModal){
+			year = yearModal !== '' ? yearModal : moment().year();
+		  url = '/getCsvVisits';
+			console.log(this.state.hasParticipatingContacts);
+			getCsv(year,url,this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+					 if (data.payload.data.status === 200) {
+					 	window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+					 }
+				});
+		}else{
+			getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+				if (data.payload.data.status === 200) {
+					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+					isOpen();
+				}
+			});
+		}
 	}
 
 	render() {
@@ -60,6 +77,7 @@ class DownloadVisits extends Component {
 							<li>{'Tipo de documento'}</li>
 							<li>{'Número de documento'}</li>
 							<li>{'Razón social'}</li>
+							<li>{'Grupo económico'}</li>
 							<li>{'Gerente de cuenta'}</li>
 							<li>{'Célula'}</li>
 							<li>{'Fecha de la reunión'}</li>
@@ -83,7 +101,7 @@ function mapStateToProps({visitReducer}, ownerProps) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getCsvVisitsByClient
+        getCsvVisitsByClient,getCsv
     }, dispatch);
 }
 

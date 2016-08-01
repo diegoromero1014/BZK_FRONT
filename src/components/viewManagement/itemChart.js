@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {changeTabSeletedChartView,getCsvPipeline} from './actions';
+import {changeTabSeletedChartView,getCsv} from './actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
 import {TYPE_YEAR,TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
 import {APP_URL} from '../../constantsGlobal';
+import ButtonDownloadModal from './buttonDownloadModal';
 
 class ItemChart extends Component{
 
@@ -24,16 +25,19 @@ class ItemChart extends Component{
     changeTabSeletedChartView(itemSeleted);
   }
 
-  _clickDownloadExcel(itemSeleted){
-    if(itemSeleted === TAB_PIPELINE){
-      var year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
-      const {getCsvPipeline} = this.props;
-      getCsvPipeline(year).then(function(data) {
-        if (data.payload.data.status === 200) {
-          window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-        }
-      });
+  _clickDownloadExcel(itemSeleted) {
+   let year;
+   let url;
+    if(itemSeleted === TAB_PIPELINE) {
+       year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+       url = '/getCsvPipeline';
     }
+    const {getCsv} = this.props;
+    getCsv(year,url,false,false,false).then(function(data) {
+      if (data.payload.data.status === 200) {
+        window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+      }
+    });
   }
 
   render(){
@@ -52,12 +56,18 @@ class ItemChart extends Component{
           style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
           borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
           <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
-              onChange: (value) => this.setState({valueyear: value.id, item:itemSeleted})
+              onChange: (value) => this.setState({valueyear: value.id})
           }}/>
-          <i className='green file excel outline icon'
-            title="Descargar información en formato CSV"
-            onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-            style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>
+          { itemSeleted === TAB_VISIT &&   <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
+          { itemSeleted === TAB_PIPELINE &&  <i className='green file excel outline icon'
+                      title="Descargar información en formato CSV"
+                      onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
+                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
+          { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
+          {/* itemSeleted === TAB_PREVISIT &&  <i className='green file excel outline icon'
+                      title="Descargar información en formato CSV"
+                      onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
+                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>*/}
         </div>
       </Col>
     );
@@ -68,7 +78,7 @@ class ItemChart extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     changeTabSeletedChartView,
-    getCsvPipeline
+    getCsv
   }, dispatch);
 }
 

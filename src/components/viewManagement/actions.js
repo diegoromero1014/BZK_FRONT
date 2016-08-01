@@ -1,7 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV_PIPELINE,CONSULT_PIPELINE, CONSULT_CURRENCY, LOAD_CHART} from './constants';
-
+import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_PREVISIT,CONSULT_VISIT,CONSULT_CURRENCY, LOAD_CHART} from './constants';
 export function changeTabSeletedChartView(tabSeleted){
   return{
     type: TAB_SELETED_ACTIVE,
@@ -45,7 +44,10 @@ export function consultInformationPipeline(idStatusPipeline, idCurrency){
   }
 }
 
-export function getCsvPipeline(year) {
+/**
+ * Action para llamar al servicio de cantidad de previsitas.
+ */
+export function consultInformationPrevisit() {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -60,12 +62,67 @@ export function getCsvPipeline(year) {
       "isSuccessful": true
     },
     "messageBody": {
-      "year": year
+      "startDate": null,
+      "endDate": null
+    }
+  };
+  let request = axios.post(APP_URL + "/portfolioPrevisit", json);
+  return {
+    type: CONSULT_PREVISIT,
+    payload: request
+  };
+};
+
+export function consultInformationVisit() {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "startDate": null,
+      "endDate": null
+    }
+  };
+  let request = axios.post(APP_URL + "/portfolioVisit", json);
+  return {
+    type: CONSULT_VISIT,
+    payload: request
+  };
+};
+
+export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "year": year,
+      "hasParticipatingContacts":  hasParticipatingContacts,
+      "hasParticipatingEmployees": hasParticipatingEmployees,
+      "hasRelatedEmployees": hasRelatedEmployees
     }
   }
-  let request = axios.post(APP_URL + "/getCsvPipeline", json);
+  let request = axios.post(APP_URL + url, json);
   return {
-    type: GET_CSV_PIPELINE,
+    type: GET_CSV,
     payload: request
   }
 }

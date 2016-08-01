@@ -38,6 +38,12 @@ class NoteItem extends Component {
       this.updateValue("body", body);
     }
 
+    componentDidMount(){
+      const {combo, body} = this.props;
+      this.updateValue("combo", combo);
+      this.updateValue("body", body);
+    }
+
     render() {
         const {combo, body, data, index, _onBlurField} = this.props;
         return (

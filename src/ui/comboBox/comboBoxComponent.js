@@ -41,7 +41,6 @@ class comboBoxComponent extends Component {
      selector.dropdown('set text', labelInput);
    }
 
-
    componentWillReceiveProps({value, name, pristine, labelInput}) {
      const selector = $(`.ui.selection.dropdown.${name}`);
      selector.dropdown('refresh');
@@ -80,12 +79,12 @@ class comboBoxComponent extends Component {
    }
 
    mapValuesToDropDown(item, idx) {
-       const {textProp, valueProp, value} = this.props;
-       return (
-           <div className="item" data-value={_.get(item, valueProp)} value={value || this.state.value} key={idx}>
-               {_.get(item, textProp)}
-           </div>
-       );
+     const {textProp, valueProp, value} = this.props;
+     return (
+         <div className="item" data-value={_.get(item, valueProp)} value={value || this.state.value} key={idx}>
+             {_.get(item, textProp)}
+         </div>
+     );
    }
 
    render() {
