@@ -91,7 +91,7 @@ class ViewChartVisit extends Component {
 					type='error'
 					show={this.state.showErrorLoadChart}
 					title="Error cargando información"
-					text="Señor usuario, ocurrió un error tratando de consultar la información del reporte de previsita, por favor intente de nuevo."
+					text="Señor usuario, ocurrió un error tratando de consultar la información del reporte de visita, por favor intente de nuevo."
 					onConfirm={() => this.setState({showErrorLoadChart: false})}
 				/>
 			</Row>
