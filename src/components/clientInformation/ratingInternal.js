@@ -1,7 +1,10 @@
 import React, {Component, PropTypes} from 'react';
+import {VALUE_LIMIT_GREEN, VALUE_LIMIT_ORANGE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED} from './constants';
 import _ from 'lodash';
+
 const valor= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 var raitingReceive = 0;
+var colorFill;
 class RaitingInternal extends Component {
   constructor(props) {
       super(props);
@@ -10,7 +13,7 @@ class RaitingInternal extends Component {
 
   _mapSpanRaiting(item, idx){
       if( item <= raitingReceive ){
-        return <span className="risk-rating-level risk-rating-active" key={idx+1}></span>
+        return <span className="risk-rating-level" style={{backgroundColor: colorFill}} key={idx+1}></span>
       } else {
         return <span className="risk-rating-level" key={idx+1}></span>
       }
@@ -24,6 +27,13 @@ class RaitingInternal extends Component {
     } else {
       valueRaiting = parseInt(valueRaiting.substring(1, valueRaiting.length));
       raitingReceive = valueRaiting;
+      if( raitingReceive <= VALUE_LIMIT_GREEN ){
+        colorFill = COLOR_GREEN;
+      } else if( raitingReceive > VALUE_LIMIT_GREEN && raitingReceive <= VALUE_LIMIT_ORANGE){
+        colorFill = COLOR_ORANGE;
+      } else {
+        colorFill = COLOR_RED;
+      }
     }
     return (
       <div className="risk-rating">
