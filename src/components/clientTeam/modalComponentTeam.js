@@ -91,6 +91,11 @@ class ModalComponentTeam extends Component {
 
   componentWillMount(){
     const {getClientTeam} = this.props;
+    this.setState({
+      teamManagers: [],
+      teamOthers: [],
+      teamAssistants: []
+    });
     getClientTeam(window.localStorage.getItem('idClientSelected')).then((data) => {
       var status = data.payload.data.status;
       var validateLogin = data.payload.data.validateLogin;
