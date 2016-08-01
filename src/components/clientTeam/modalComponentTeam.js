@@ -125,7 +125,6 @@ class ModalComponentTeam extends Component {
         messageError: ERROR_MESSAGE_REQUEST
       });
     });
-    console.log("idclient", window.localStorage.getItem('idClientSelected'));
   }
 
   render(){

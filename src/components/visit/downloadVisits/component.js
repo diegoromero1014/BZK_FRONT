@@ -43,7 +43,6 @@ class DownloadVisits extends Component {
 		if(TAB_VISIT === itemSeletedModal){
 			year = yearModal !== '' ? yearModal : moment().year();
 		  url = '/getCsvVisits';
-			console.log(this.state.hasParticipatingContacts);
 			getCsv(year,url,this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 					 if (data.payload.data.status === 200) {
 					 	window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');

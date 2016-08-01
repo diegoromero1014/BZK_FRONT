@@ -24,7 +24,7 @@ class ViewChartPrevisit extends Component {
 
 	constructor(props) {
 	  super(props);
-	
+
 	  this.state = {
 	  	showErrorLoadChart: false,
 	  	data: defaultValueData,
@@ -55,10 +55,10 @@ class ViewChartPrevisit extends Component {
 		this.setState({data: defaultValueData});
 		consultInformationPrevisit().then((response) => {
 			changeLoadChart(false);
-			if ( (_.get(response, 'payload.data.validateLogin') == 'false') ) {
+			if ( (_.get(response, 'payload.data.validateLogin') === 'false') ) {
 				redirectUrl("/login");
 			} else {
-				if ( (_.get(response, 'payload.data.status') == 500) ) {
+				if ( (_.get(response, 'payload.data.status') === 500) ) {
 					this.setState({showErrorLoadChart: true});
 				} else {
 					let dataListComplete = [];

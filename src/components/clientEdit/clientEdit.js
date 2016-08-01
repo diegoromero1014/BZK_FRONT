@@ -247,12 +247,13 @@ class clientEdit extends Component{
     if(!infoJustificationForNoRM){
       var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
       var keyJustify = _.get(_.filter(dataJustifyNoGeren, ['id', parseInt(val)]), '[0].key');
+      var dataTypeNote, idExcepcionNoGerenciado;
       if(keyJustify === KEY_DESMONTE){
         oldJustifyGeren = KEY_DESMONTE;
         if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
           const {setNotes, selectsReducer} = this.props;
-          var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
-          var idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+          dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+          idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
           var noteObligatory = [];
           noteObligatory.push({
             typeOfNote: idExcepcionNoGerenciado,
@@ -265,8 +266,8 @@ class clientEdit extends Component{
       if(oldJustifyGeren === KEY_DESMONTE && keyJustify !== KEY_DESMONTE){
         oldJustifyGeren = val;
         const {selectsReducer, deleteNote} = this.props;
-        var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
-        var idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+        dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+         idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
         var notas = notes.toArray();
         notas.forEach(function(note){
           if(idExcepcionNoGerenciado === parseInt(note.combo)){
