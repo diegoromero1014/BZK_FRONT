@@ -5,6 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import {updateTitleNavBar} from '../navBar/actions';
 import ItemChart from './ItemChart';
+import {changeTabSeletedChartView} from './actions';
 import ViewChartPipeline from './chartPipeline/viewChartPipeline';
 import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import ViewChartVisit from './chartVisit/viewChartVisit';
@@ -48,7 +49,8 @@ class ViewManagement extends Component{
     if(window.localStorage.getItem('sessionToken') === ""){
       redirectUrl("/login");
     } else {
-      const {updateTitleNavBar} = this.props;
+      const {changeTabSeletedChartView, updateTitleNavBar} = this.props;
+      changeTabSeletedChartView(0);
       updateTitleNavBar("Vista gerencial");
     }
   }
@@ -77,7 +79,7 @@ class ViewManagement extends Component{
         { tabSeletedReducer === TAB_PIPELINE && <ViewChartPipeline /> }
         { tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit /> }
         { tabSeletedReducer === TAB_VISIT && <ViewChartVisit /> }
-        {isLoadChart &&
+        {isLoadChart && tabSeletedReducer !== 0 &&
           <div className="ui active inverted dimmer">
             <div className="ui text loader">Cargando gráfica</div>
           </div>
@@ -90,7 +92,8 @@ class ViewManagement extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    updateTitleNavBar
+    updateTitleNavBar,
+    changeTabSeletedChartView
   }, dispatch);
 }
 
