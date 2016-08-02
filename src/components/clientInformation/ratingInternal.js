@@ -25,9 +25,7 @@ class RaitingInternal extends Component {
       valueRaiting = 0;
       raitingReceive = 0;
     } else {
-      console.log("valueRaiting", valueRaiting);
       var isValidNan = valueRaiting.length === 1 ? parseInt(valueRaiting) : parseInt(valueRaiting.substring(1, valueRaiting.length));
-      console.log("isValidNan", isValidNan);
       if( isValidNan === 'NaN' ){
         raitingReceive = -1;
       } else {
