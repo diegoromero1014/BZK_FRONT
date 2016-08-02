@@ -25,8 +25,12 @@ class RaitingInternal extends Component {
       valueRaiting = 0;
       raitingReceive = 0;
     } else {
-      valueRaiting = parseInt(valueRaiting.substring(1, valueRaiting.length));
-      raitingReceive = valueRaiting;
+      if( valueRaiting.trim() === 'AAA' ){
+        raitingReceive = 12;
+      } else {
+        valueRaiting = parseInt(valueRaiting.substring(1, valueRaiting.length));
+        raitingReceive = valueRaiting;
+      }
       if( raitingReceive <= VALUE_LIMIT_GREEN ){
         colorFill = COLOR_GREEN;
       } else if( raitingReceive > VALUE_LIMIT_GREEN && raitingReceive <= VALUE_LIMIT_ORANGE){
