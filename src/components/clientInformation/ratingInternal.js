@@ -25,24 +25,26 @@ class RaitingInternal extends Component {
       valueRaiting = 0;
       raitingReceive = 0;
     } else {
-      if( valueRaiting.trim() === 'AAA' ){
-        raitingReceive = 12;
+      console.log("valueRaiting", valueRaiting);
+      var isValidNan = valueRaiting.length === 1 ? parseInt(valueRaiting) : parseInt(valueRaiting.substring(1, valueRaiting.length));
+      console.log("isValidNan", isValidNan);
+      if( isValidNan === 'NaN' ){
+        raitingReceive = -1;
       } else {
-        valueRaiting = parseInt(valueRaiting.substring(1, valueRaiting.length));
-        raitingReceive = valueRaiting;
-      }
-      if( raitingReceive <= VALUE_LIMIT_GREEN ){
-        colorFill = COLOR_GREEN;
-      } else if( raitingReceive > VALUE_LIMIT_GREEN && raitingReceive <= VALUE_LIMIT_ORANGE){
-        colorFill = COLOR_ORANGE;
-      } else {
-        colorFill = COLOR_RED;
+        raitingReceive = parseInt(valueRaiting.substring(1, valueRaiting.length));
+        if( raitingReceive <= VALUE_LIMIT_GREEN ){
+          colorFill = COLOR_GREEN;
+        } else if( raitingReceive > VALUE_LIMIT_GREEN && raitingReceive <= VALUE_LIMIT_ORANGE){
+          colorFill = COLOR_ORANGE;
+        } else {
+          colorFill = COLOR_RED;
+        }
       }
     }
     return (
       <div className="risk-rating">
-        <span className='risk-rating-title'>R{valueRaiting}</span>
-        {valor.map(this._mapSpanRaiting)}
+        <span className='risk-rating-title'>{valueRaiting}</span>
+        {raitingReceive > 0 && valor.map(this._mapSpanRaiting)}
       </div>
     );
   }
