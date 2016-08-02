@@ -62,14 +62,6 @@ class FormLogin extends Component{
     });
   }
 
-  /*componentDidUpdate (){
-    const {login} = this.props;
-    if( login.get('status') === "loggedIn" ){
-      saveSessionToken(login.get('responseLogin').sessionToken);
-      redirectUrl("/dashboard/clients");
-    }
-  }*/
-
   componenWillMount(){
     this.state.messageErrorServidor = false;
     this.state.messageUsuarioIncorrecto = false;

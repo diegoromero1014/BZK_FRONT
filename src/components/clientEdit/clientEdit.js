@@ -42,8 +42,10 @@ var isProspect = false;
 var errorNote = false;
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
 var oldJustifyGeren = '';
-//Controla si es la primer vea que se setea información en el campo justificationForNoRM
+//Controla si es la primer vez que se setea información en el campo justificationForNoRM
 var infoJustificationForNoRM = true;
+//Controla si es la primer vez que se setea información en el campo marcGeren
+var infoMarcaGeren = true;
 
 const validate = values => {
     const errors = {}
@@ -241,10 +243,27 @@ class clientEdit extends Component{
     }
   }
 
+  _onChangeMarcGeren(val){
+    if(!infoMarcaGeren && val === 'true'){
+      var dataTypeNote, idExcepcionNoGerenciado;
+      const {selectsReducer, deleteNote, notes} = this.props;
+      dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+      idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+      var notas = notes.toArray();
+      notas.forEach(function(note){
+        if(idExcepcionNoGerenciado === parseInt(note.combo)){
+          deleteNote(note.uid);
+        }
+      });
+    }else {
+      infoMarcaGeren = false;
+    }
+  }
+
   _onChangeJustifyNoGeren(val){
     const {selectsReducer, clientInformacion, notes} = this.props;
     var infoClient = clientInformacion.get('responseClientInfo');
-    if(!infoJustificationForNoRM){
+    if(!infoJustificationForNoRM || infoClient.justificationForNoRM !== val){
       var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
       var keyJustify = _.get(_.filter(dataJustifyNoGeren, ['id', parseInt(val)]), '[0].key');
       var dataTypeNote, idExcepcionNoGerenciado;
@@ -254,20 +273,22 @@ class clientEdit extends Component{
           const {setNotes, selectsReducer} = this.props;
           dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
           idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
-          var noteObligatory = [];
-          noteObligatory.push({
-            typeOfNote: idExcepcionNoGerenciado,
-            typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
-            note: ''
-          });
-          setNotes(noteObligatory);
+          if(notes.size === 0){
+            var noteObligatory = [];
+            noteObligatory.push({
+              typeOfNote: idExcepcionNoGerenciado,
+              typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
+              note: ''
+            });
+            setNotes(noteObligatory);
+          }
         }
       }
       if(oldJustifyGeren === KEY_DESMONTE && keyJustify !== KEY_DESMONTE){
         oldJustifyGeren = val;
         const {selectsReducer, deleteNote} = this.props;
         dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
-         idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+        idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
         var notas = notes.toArray();
         notas.forEach(function(note){
           if(idExcepcionNoGerenciado === parseInt(note.combo)){
@@ -277,9 +298,7 @@ class clientEdit extends Component{
       }
     }else{
       infoJustificationForNoRM = false;
-      if(val === infoClient.justificationForNoRM){
-        oldJustifyGeren = KEY_DESMONTE;
-      }
+      oldJustifyGeren = KEY_DESMONTE;
     }
   }
 
@@ -368,7 +387,7 @@ class clientEdit extends Component{
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
-    const {fields: {justifyNoGeren}, notes, selectsReducer} = this.props;
+    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer} = this.props;
     var notesArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -385,7 +404,7 @@ class clientEdit extends Component{
     });
     var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
     var idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
-    if(idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren){
+    if(marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren){
       this.setState({showErNotes: true});
     }else{
       notesArray.forEach(function(note){
@@ -397,8 +416,8 @@ class clientEdit extends Component{
         const {
         fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
           district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-          liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-          centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
+          liabilities, assets, operatingIncome, nonOperatingIncome, expenses,
+          centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoLME, justifyExClient},
           error, handleSubmit, selectsReducer, clientInformacion} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
@@ -482,6 +501,7 @@ class clientEdit extends Component{
   componentWillMount(){
     errorNote = false;
     infoJustificationForNoRM = true;
+    infoMarcaGeren = true;
     const {clientInformacion, clearValuesAdressess, setNotes, crearNotes, selectsReducer} = this.props;
     clearValuesAdressess();
     crearNotes();
@@ -1002,6 +1022,7 @@ class clientEdit extends Component{
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...marcGeren}
+                  onChange={val => this._onChangeMarcGeren(val)}
                 />
               </dt>
             </Col>
