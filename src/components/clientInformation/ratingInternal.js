@@ -22,7 +22,6 @@ class RaitingInternal extends Component {
   render(){
     var {valueRaiting} = this.props;
     if( valueRaiting === null || valueRaiting === undefined ){
-      valueRaiting = 0;
       raitingReceive = 0;
     } else {
       var isValidNan = valueRaiting.length === 1 ? parseInt(valueRaiting) : parseInt(valueRaiting.substring(1, valueRaiting.length));
