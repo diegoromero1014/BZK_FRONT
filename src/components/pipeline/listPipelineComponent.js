@@ -41,7 +41,7 @@ class ListPipelineComponent extends Component {
           value1,
           value2
       } = nextProps;
-      if ((v1 !== nextProps.value1) || (v1 !== nextProps.value2)){
+      if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
       v1 = nextProps.value1;
       v2 =nextProps.value2;
       const {clearPipelineOrder} = this.props;
