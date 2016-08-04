@@ -18,9 +18,9 @@ class TeamAssistants extends Component {
             <div className="client-card" style={{width:"250px", float:"left"}}>
               <div className="celula-card-top">
                 <div className="celula-card-top-left">
-                  <div className="celula-title">{name}</div>
-                  <div className="celula-name">{position}</div>
-                  <div className="celula-title">{company}</div>
+                  <div className="celula-title">{name.length > 50 ? name.substring(0, 50) + "..." : name}</div>
+                  <div className="celula-name">{position !== null && position.length > 32 ? position.substring(0, 32) + "..." : position}</div>
+                  <div className="celula-title">{company !== null && company.length > 25 ? company.substring(0, 25) + "..." : company}</div>
                 </div>
               </div>
               <div className="celula-card-bottom" style={{backgroundColor:"#B0E0E6"}}>
