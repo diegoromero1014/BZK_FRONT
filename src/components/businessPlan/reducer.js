@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_BUSINESS_PLAN, CLEAR_BUSINESS_PLAN,
+import {GET_BUSINESS_PLAN_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_BUSINESS_PLAN, CLEAR_BUSINESS_PLAN,
   CLEAR_BUSINESS_PLAN_PAGINATOR, CLEAR_BUSINESS_PLAN_ORDER} from './constants';
 
 const initialState = Immutable.Map({
@@ -8,7 +8,7 @@ const initialState = Immutable.Map({
   rowCount: 0,
   limInf : 0,
   page: 1,
-  columnBusinessPlan: 'bp.startDate',
+  columnBusinessPlan: 'bp.businessDate',
   orderBusinessPlan : 1,
   detailBusinessPlan: {},
   ownerDraft: 0
@@ -16,6 +16,14 @@ const initialState = Immutable.Map({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_BUSINESS_PLAN_LIST:
+  		const response = action.payload.data;
+      console.log('response', response);
+  		return state.withMutations(map => {
+  			map.set('status', response.status)
+  			.set('rowCount', response.data.rowCount)
+  			.set('businessPlanList', response.data.rows);
+  	  });
     case CHANGE_PAGE:
         return state.set('page', action.currentPage);
     case LIMITE_INF:
@@ -32,7 +40,7 @@ export default (state = initialState, action) => {
                 .set('businessPlanList', [])
                 .set('rowCount', 0)
                 .set('orderBusinessPlan', 1)
-                .set('columnBusinessPlan', 'bp.startDate');
+                .set('columnBusinessPlan', 'bp.businessDate');
         });
     case CLEAR_BUSINESS_PLAN_PAGINATOR:
           return state.withMutations(map => {
@@ -43,7 +51,7 @@ export default (state = initialState, action) => {
     case CLEAR_BUSINESS_PLAN_ORDER:
         return state.withMutations(map => {
             map.set('orderBusinessPlan', 1)
-                .set('columnBusinessPlan', 'bp.startDate');
+                .set('columnBusinessPlan', 'bp.businessDate');
         });
     default:
       return state;

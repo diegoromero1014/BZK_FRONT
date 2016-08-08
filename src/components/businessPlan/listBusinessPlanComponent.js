@@ -8,9 +8,7 @@ import {NUMBER_RECORDS,DELETE_TYPE_BUSINESS_PLAN} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
-
 let v1 = "";
-let v2= "";
 
 class ListBusinessPlanComponent extends Component {
 
@@ -34,16 +32,12 @@ class ListBusinessPlanComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-      const {
-          value1,
-          value2
-      } = nextProps;
-      if ((v1 !== nextProps.value1) || (v1 !== nextProps.value2)){
+      const {value1} = nextProps;
+      if ( v1 !== nextProps.value1 ){
       v1 = nextProps.value1;
-      v2 =nextProps.value2;
       const {clearBusinessPlanOrder} = this.props;
       clearBusinessPlanOrder();
-      this._orderColumn(1,"bp.startDate");
+      this._orderColumn(1,"bp.businessDate");
     }
   }
 
@@ -57,7 +51,7 @@ class ListBusinessPlanComponent extends Component {
     const {businessPlanByClientFindServer,orderColumnBusinessPlan,clearBusinessPlanPaginator} = this.props;
     clearBusinessPlanPaginator();
     orderColumnBusinessPlan(orderBusinessPlan,columnBusinessPlan);
-    businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnBusinessPlan,orderBusinessPlan,v1,v2);
+    businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnBusinessPlan,orderBusinessPlan,v1,"");
 }
   _renderHeaders(){
     return [
@@ -66,21 +60,12 @@ class ListBusinessPlanComponent extends Component {
         key:"actionsRedirect"
       },
       {
-        title: "Estado del negocio",
-        key:"businessStatus"
+        title: "Objetivo del plan",
+        key:"objective"
       },
       {
-        title: "Necesidad",
-        key:"need"
-      },
-      {
-        title: "Fecha de inicio",
-        key:"datePipelineStartFormat",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"bp.startDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"bp.startDate")}></i></span>
-      },
-      {
-        title: "Fecha de finalización",
-        key:"datePipelineEndFormat"
+        title: "Fecha",
+        key:"date"
       },
       {
         title: "Estado del documento",
@@ -93,10 +78,8 @@ class ListBusinessPlanComponent extends Component {
     ]
   }
 
-
   _renderCellView(data){
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de pipeline?";
-
+    const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de plan de negocio?";
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -119,21 +102,18 @@ class ListBusinessPlanComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              typeClickDetail: "pipeline",
+              typeClickDetail: "businessPlan",
               ownerDraft: value.idStatusDocument,
-              urlRedirect: "/dashboard/pipelineEdit",
-              component: "VIEW_PIPELINE"
-              //component : "VIEW_VISIT"
+              urlRedirect: "/dashboard/businessPlanEdit",
+              component: "VIEW_BUSINESS_PLAN"
             });
-            var datePipelineStartFormat = moment(value.startDate).locale('es');
-            _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));
-             var datePipelineEndFormat = moment(value.endDate).locale('es');
-            _.set(value, 'datePipelineEndFormat',datePipelineEndFormat.format("DD") + " " + datePipelineEndFormat.format("MMM") + " " + datePipelineEndFormat.format("YYYY")+ ", " + datePipelineEndFormat.format("hh:mm a"));
+            var dateBusinessPlanStartFormat = moment(value.startDate).locale('es');
+            _.set(value, 'dateBusinessPlanStartFormat',dateBusinessPlanStartFormat.format("DD") + " " + dateBusinessPlanStartFormat.format("MMM") + " " + dateBusinessPlanStartFormat.format("YYYY")+ ", " + dateBusinessPlanStartFormat.format("hh:mm a"));
             if(value.idStatusDocument === 0){
               _.set(value, 'delete',  {
                 actionDelete: true,
                 urlServer: "/deleteEntity",
-                typeDelete : DELETE_TYPE_PIPELINE,
+                typeDelete : DELETE_TYPE_BUSINESS_PLAN,
                 mensaje: mensaje,
                 json: json1
               });
@@ -142,9 +122,9 @@ class ListBusinessPlanComponent extends Component {
   }
 
   render() {
-    const modalTitle = 'Pipeline Detalle';
-    const {pipelineReducer} = this.props;
-    const data = pipelineReducer.get('pipelineList');
+    const modalTitle = 'Plan de negocios Detalle';
+    const {businessPlanReducer} = this.props;
+    const data = businessPlanReducer.get('businessPlanList');
     return (
       <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>

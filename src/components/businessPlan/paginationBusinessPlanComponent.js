@@ -5,7 +5,6 @@ import {businessPlanByClientFindServer,changePage,limitiInf,clearBusinessPlan,cl
 import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
-let v2= "";
 
 class PaginationBusinessPlanComponent extends Component{
 
@@ -16,19 +15,16 @@ class PaginationBusinessPlanComponent extends Component{
   }
 
   componentWillMount(){
-    const{clearPipeline} = this.props;
-    clearPipeline();
+    const{clearBusinessPlan} = this.props;
+    clearBusinessPlan();
   }
 
   componentWillReceiveProps(nextProps){
-    const {
-        value1
-    } = nextProps;
-    if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2)){
+    const {value1} = nextProps;
+    if (v1 !== nextProps.value1){
       v1 = nextProps.value1;
-      v2 =nextProps.value2;
-      const {clearPipelineOrder} = this.props;
-      clearPipelineOrder();
+      const {clearBusinessPlanOrder} = this.props;
+      clearBusinessPlanOrder();
       this._handleBusinessPlanByClientsFind(0);
       }
   }
@@ -42,8 +38,8 @@ class PaginationBusinessPlanComponent extends Component{
   }
 
   _handleBusinessPlanByClientsFind(limInf){
-    const {pipelineByClientFindServer,businessPlanReducer} = this.props;
-    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), limInf,NUMBER_RECORDS, businessPlanReducer.get('columnBusinessPlan'),businessPlanReducer.get('orderBusinessPlan'),v1,v2);
+    const {businessPlanByClientFindServer, businessPlanReducer} = this.props;
+    businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), limInf,NUMBER_RECORDS, businessPlanReducer.get('columnBusinessPlan'),businessPlanReducer.get('orderBusinessPlan'),v1,"");
   }
 
   render(){

@@ -23,12 +23,11 @@ export function businessPlanByClientFindServer(clientId, pageNum, maxRows, colum
       "maxRows" : maxRows,
       "columnOrder": columnOrder,
       "order": order,
-      "statusDocumentId":statusDocumentId,
-      "pipelineStatus":businessStatus
+      "statusDocumentId":statusDocumentId
     }
   };
 
-  var request = axios.post(APP_URL + "/listClientBusiness", json);
+  var request = axios.post(APP_URL + "/listClientBusinessPlan", json);
   return {
     type: constants.GET_BUSINESS_PLAN_LIST,
     payload: request

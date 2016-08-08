@@ -5,7 +5,7 @@ import {redirectUrl} from '../globalComponents/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import {businessPlanByClientFindServer,clearBusinessPlan} from './actions';
-import {NUMBER_RECORDS, FILTER_STATUS_PIPELINE_ID, PIPELINE_STATUS} from './constants';
+import {NUMBER_RECORDS, FILTER_STATUS_BUSINESS_PLAN_ID} from './constants';
 import ListBusinessPlanComponent from './listBusinessPlanComponent';
 import PaginationBusinessPlanComponent from './paginationBusinessPlanComponent';
 import {updateTitleNavBar} from '../navBar/actions';
@@ -15,8 +15,7 @@ class BusinessPlanComponent extends Component {
   constructor(props){
     super(props);
     this.state= {
-       value1: "",
-       value2: ""
+       value1: ""
     };
     this._createBusinessPlan = this._createBusinessPlan.bind(this);
   }
@@ -27,7 +26,7 @@ class BusinessPlanComponent extends Component {
     }else{
       const {businessPlanByClientFindServer,clearBusinessPlan} = this.props;
       clearBusinessPlan();
-      businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.startDate",1,"","");
+      businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.businessDate",1,"","");
     }
   }
 
@@ -53,6 +52,12 @@ class BusinessPlanComponent extends Component {
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
           <Grid style={{ width: "100%"}}>
             <Row>
+              <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Estado del documento:</span>
+                <SelectFilterContact config={{
+                    onChange: (value) => this.setState({value1: value.id})
+                }}
+                idTypeFilter={FILTER_STATUS_BUSINESS_PLAN_ID}/>
+              </Col>
               <Col xs>
                 <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{marginTop: '21px'}}>
                   <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
@@ -61,6 +66,16 @@ class BusinessPlanComponent extends Component {
             </Row>
           </Grid>
         </div>
+        <Grid style= {{display:visibleTable, width: "100%"}}>
+          <Row>
+            <Col xs>
+              <ListBusinessPlanComponent
+                value1={this.state.value1}/>
+              <PaginationBusinessPlanComponent
+                value1={this.state.value1}/>
+            </Col>
+          </Row>
+        </Grid>
         <Grid style= {{display:visibleMessage, width: "100%"}}>
           <Row center="xs">
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
