@@ -129,6 +129,13 @@ class FormVisita extends Component{
       });
     }
 
+    if ( (this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
+      errorInForm = true;
+      this.setState({
+        conclusionsVisitError: "Debe ingresar la conclusión de la visita"
+      });
+    }
+
     if( !errorInForm ){
       var dataBanco =[];
       _.map(participants.toArray(),
@@ -502,7 +509,7 @@ class FormVisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes </span>
+              <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes (<span style={{color: "red"}}>*</span>)</span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={TITLE_CONCLUSIONS_VISIT}/>
               <i onClick={this._downloadFileShoppingMap}
                 style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
