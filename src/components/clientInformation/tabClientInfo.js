@@ -6,6 +6,7 @@ import ShareholderInfo from '../shareholder/component';
 import PrevisitaInfo from '../previsita/component';
 import VisitaInfo from '../visit/component';
 import PipelineInfo from '../pipeline/component';
+import BusinessPlanInfo from '../businessPlan/component';
 import PendingInfo from '../pendingTask/component';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
@@ -37,6 +38,7 @@ class TabClientInfo extends Component{
     var styleVisits = false;
     var stylePipeline = false;
     let stylePendings = false;
+    let styleBusinessPlan = false;
 
     var backgroundInfo = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
     var backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
@@ -45,6 +47,7 @@ class TabClientInfo extends Component{
     var backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
     let backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
     let backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+    let backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
 
     var tabActive = tabReducer.get('tabSelected');
     if( tabActive === null || tabActive === undefined || tabActive === "" ){
@@ -60,6 +63,7 @@ class TabClientInfo extends Component{
       styleVisits = false;
       stylePendings = false;
       stylePipeline = false;
+      styleBusinessPlan = false;
 
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
@@ -68,6 +72,7 @@ class TabClientInfo extends Component{
       backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     } else if( tabActive === 3 ){
       styleInfo = false;
       styleContacts = false;
@@ -76,6 +81,7 @@ class TabClientInfo extends Component{
       styleVisits = false;
       stylePendings = false;
       stylePipeline = false;
+      styleBusinessPlan = false;
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
@@ -83,6 +89,7 @@ class TabClientInfo extends Component{
       backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     }else if( tabActive === 4 ){
       styleInfo = false;
       styleContacts = false;
@@ -91,6 +98,7 @@ class TabClientInfo extends Component{
       styleVisits = true;
       stylePendings = false;
       stylePipeline = false;
+      styleBusinessPlan = false;
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
@@ -98,6 +106,7 @@ class TabClientInfo extends Component{
       backgroundVisits = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     }else if( tabActive === 5 ){
       styleInfo = false;
       styleContacts = false;
@@ -106,6 +115,7 @@ class TabClientInfo extends Component{
       styleVisits = false;
       stylePendings = false;
       stylePipeline = false;
+      styleBusinessPlan = false;
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
@@ -113,6 +123,7 @@ class TabClientInfo extends Component{
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     } else if (tabActive === 6) {
       styleInfo = false;
       styleContacts = false;
@@ -121,6 +132,7 @@ class TabClientInfo extends Component{
       styleVisits = false;
       stylePendings = true;
       stylePipeline = false;
+      styleBusinessPlan = false;
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
@@ -128,6 +140,7 @@ class TabClientInfo extends Component{
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     }
     else if (tabActive === 7) {
       styleInfo = false;
@@ -137,6 +150,7 @@ class TabClientInfo extends Component{
       styleVisits = false;
       stylePendings = false;
       stylePipeline = true;
+      styleBusinessPlan = false;
       backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
@@ -144,6 +158,25 @@ class TabClientInfo extends Component{
       backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
+    }
+    else if (tabActive === 8) {
+      styleInfo = false;
+      styleContacts = false;
+      styleShareholders = false;
+      stylePrevisitas = false;
+      styleVisits = false;
+      stylePendings = false;
+      stylePipeline = false;
+      styleBusinessPlan = true;
+      backgroundInfo = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundContacts = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundShareholders = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundVisits = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPrevisitas = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
+      backgroundBusinessPlan = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "140px"};
 
     }
     return (
@@ -171,6 +204,9 @@ class TabClientInfo extends Component{
           <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, 7)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Pipeline</a>
           </li>
+          <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, 8)}>
+            <a className="button-link-url" style={{marginRight: "15px"}}>Planes de negocios</a>
+          </li>
   			</ul>
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
@@ -180,6 +216,7 @@ class TabClientInfo extends Component{
           {styleVisits && <VisitaInfo infoClient={infoClient}/>}
           {stylePendings && <PendingInfo infoClient={infoClient} />}
           {stylePipeline && <PipelineInfo infoClient={infoClient} />}
+          {styleBusinessPlan && <BusinessPlanInfo infoClient={infoClient} />}
         </div>
       </div>
     );
