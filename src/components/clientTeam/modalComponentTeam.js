@@ -146,21 +146,24 @@ class ModalComponentTeam extends Component {
                 <div className={`ui bottom attached ${this.state.activeTabManager} tab segment`} data-tab="first" style={{height:"360px", overflowY:"auto"}}>
                   <div className="news-page content">
                     <div className="team-modal">
-                    {this.state.teamManagers.map(this._mapTeamManagers)}
+                      {this.state.teamManagers.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron gerentes.</h4> </div>:
+                        this.state.teamManagers.map(this._mapTeamManagers)}
                     </div>
                   </div>
                 </div>
                 <div className={`ui bottom attached ${this.state.activeTabOthers} tab segment`} data-tab="second" style={{height:"360px", overflowY:"auto"}}>
                   <div className="news-page content">
                     <div className="team-modal">
-                    {this.state.teamOthers.map(this._mapTeamOthers)}
+                      {this.state.teamOthers.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron otros participantes.</h4> </div>:
+                        this.state.teamOthers.map(this._mapTeamOthers)}
                     </div>
                   </div>
                 </div>
                 <div className={`ui bottom attached ${this.state.activeTabAssistants} tab segment`} data-tab="third" style={{height:"360px", overflowY:"auto"}}>
                   <div className="news-page content">
                     <div className="team-modal">
-                    {this.state.teamAssistants.map(this._mapTeamAssistants)}
+                      {this.state.teamAssistants.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron asistentes.</h4> </div>:
+                        this.state.teamAssistants.map(this._mapTeamAssistants)}
                     </div>
                   </div>
                 </div>
