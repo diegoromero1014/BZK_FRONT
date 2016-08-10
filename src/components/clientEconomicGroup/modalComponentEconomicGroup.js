@@ -79,7 +79,9 @@ class ModalComponentEconomicGroup extends Component{
                     <div className="celula-card-top" style={{borderBottom: '0px'}}>
                       <div className="celula-card-top-left">
                         <div className="celula-title">{nameEconomicGroup.length > 60 ? nameEconomicGroup.substring(0, 60) + "..." : nameEconomicGroup}</div>
-                        <div className="celula-name">NIT principal: {nitEconomicGroup}</div>
+                        {nitEconomicGroup !== '' &&
+                          <div className="celula-name">NIT principal: {nitEconomicGroup}</div>
+                        }
                       </div>
                     </div>
                     <div className="celula-card-bottom" style={{backgroundColor:"#B0E0E6", marginTop: '-45px'}}></div>
