@@ -9,7 +9,7 @@ import SelectTypeDocument from '../selectsComponent/selectTypeDocument/component
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO} from './constants';
+import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION} from './constants';
 import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -583,6 +583,7 @@ class clientEdit extends Component{
             <Col xs={12} md={12} lg={12} >
               <dt>
                 <span>Breve descripción de la empresa</span>
+                <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "2px"}} title={TITLE_DESCRIPTION}/>
               </dt>
               <dt>
                 <Textarea
