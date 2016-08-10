@@ -40,11 +40,9 @@ class BusinessPlanComponent extends Component {
     const {businessPlanReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
-    let visibleDownload = 'none';
     if(businessPlanReducer.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
-      visibleDownload = 'block';
     }
     return (
       <div className = "tab-pane quickZoomIn animated"
