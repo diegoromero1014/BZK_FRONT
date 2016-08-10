@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {NUMERAL_MONTH} from '../constants';
 import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
-import {consultInformationVisit, changeLoadChart} from '../actions';
+import {consultInformationBusinessPlans, changeLoadChart} from '../actions';
 import BarSeries from '../chartPipeline/barSeries';
 import numeral from 'numeral';
 import moment from 'moment';
@@ -63,8 +63,8 @@ class ViewChartBusinessPlan extends Component {
   }
 
 	componentWillMount() {
-		const {consultInformationVisit} = this.props;
-		consultInformationVisit(2016).then((response) => {
+		const {consultInformationBusinessPlans} = this.props;
+		consultInformationBusinessPlans(2016).then((response) => {
 			console.log("response", response);
     }, (reason) => {
 			console.log("reason", reason);
@@ -115,7 +115,7 @@ class ViewChartBusinessPlan extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
-		consultInformationVisit,
+		consultInformationBusinessPlans,
 		changeLoadChart
 	}, dispatch);
 };
