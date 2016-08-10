@@ -9,6 +9,7 @@ import {changeTabSeletedChartView} from './actions';
 import ViewChartPipeline from './chartPipeline/viewChartPipeline';
 import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import ViewChartVisit from './chartVisit/viewChartVisit';
+import ViewChartBusinessPlan from './chartBusinessPlan/viewChartBusinessPlan';
 import {TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
 import _ from 'lodash';
 
@@ -31,12 +32,12 @@ const itemsChart = [
       styleColor: "#f0ad4e",
       tab: TAB_PIPELINE
   },
-  /*{
+  {
       text: "Negocios",
       icon: "bar chart icon",
       styleColor: "#d9534f",
       tab: TAB_BUSINESS
-  }*/
+  }
 
 ];
 
@@ -79,6 +80,7 @@ class ViewManagement extends Component{
         { tabSeletedReducer === TAB_PIPELINE && <ViewChartPipeline /> }
         { tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit /> }
         { tabSeletedReducer === TAB_VISIT && <ViewChartVisit /> }
+        { tabSeletedReducer === TAB_BUSINESS && <ViewChartBusinessPlan /> }
         {isLoadChart && tabSeletedReducer !== 0 &&
           <div className="ui active inverted dimmer">
             <div className="ui text loader">Cargando gráfica</div>
