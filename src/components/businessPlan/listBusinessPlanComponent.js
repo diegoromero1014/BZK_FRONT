@@ -65,7 +65,7 @@ class ListBusinessPlanComponent extends Component {
       },
       {
         title: "Fecha",
-        key:"date"
+        key:"businessDate"
       },
       {
         title: "Estado del documento",
@@ -95,7 +95,7 @@ class ListBusinessPlanComponent extends Component {
                       "isSuccessful": true
                 },
                 "messageBody": {
-                "entity":"PIPELINE",
+                "entity":"BUSINESS_PLAN",
                 "id":value.id
                 }
               }
@@ -107,8 +107,8 @@ class ListBusinessPlanComponent extends Component {
               urlRedirect: "/dashboard/businessPlanEdit",
               component: "VIEW_BUSINESS_PLAN"
             });
-            var dateBusinessPlanStartFormat = moment(value.startDate).locale('es');
-            _.set(value, 'dateBusinessPlanStartFormat',dateBusinessPlanStartFormat.format("DD") + " " + dateBusinessPlanStartFormat.format("MMM") + " " + dateBusinessPlanStartFormat.format("YYYY")+ ", " + dateBusinessPlanStartFormat.format("hh:mm a"));
+            var dateBusinessPlanStartFormat = moment(value.businessDate).locale('es');
+            _.set(value, 'businessDate',dateBusinessPlanStartFormat.format("DD") + " " + dateBusinessPlanStartFormat.format("MMM") + " " + dateBusinessPlanStartFormat.format("YYYY")+ ", " + dateBusinessPlanStartFormat.format("hh:mm a"));
             if(value.idStatusDocument === 0){
               _.set(value, 'delete',  {
                 actionDelete: true,

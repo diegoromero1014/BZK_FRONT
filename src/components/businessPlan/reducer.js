@@ -18,7 +18,6 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case GET_BUSINESS_PLAN_LIST:
   		const response = action.payload.data;
-      console.log('response', response);
   		return state.withMutations(map => {
   			map.set('status', response.status)
   			.set('rowCount', response.data.rowCount)

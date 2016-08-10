@@ -26,7 +26,6 @@ export function businessPlanByClientFindServer(clientId, pageNum, maxRows, colum
       "statusDocumentId":statusDocumentId
     }
   };
-
   var request = axios.post(APP_URL + "/listClientBusinessPlan", json);
   return {
     type: constants.GET_BUSINESS_PLAN_LIST,
