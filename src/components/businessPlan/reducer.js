@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import {GET_BUSINESS_PLAN_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_BUSINESS_PLAN, CLEAR_BUSINESS_PLAN,
-  CLEAR_BUSINESS_PLAN_PAGINATOR, CLEAR_BUSINESS_PLAN_ORDER} from './constants';
+  CLEAR_BUSINESS_PLAN_PAGINATOR, CLEAR_BUSINESS_PLAN_ORDER,GET_DETAIL_BUSINESS,OWNER_DRAFT} from './constants';
 
 const initialState = Immutable.Map({
   status: "processed",
@@ -52,6 +52,10 @@ export default (state = initialState, action) => {
             map.set('orderBusinessPlan', 1)
                 .set('columnBusinessPlan', 'bp.businessDate');
         });
+    case GET_DETAIL_BUSINESS:
+      return state.set('detailBusiness', action.payload.data);
+    case OWNER_DRAFT:
+        return state.set('ownerDraft', action.ownerDraft);
     default:
       return state;
   }

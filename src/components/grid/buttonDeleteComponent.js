@@ -8,10 +8,12 @@ import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOr
 import {visitByClientFindServer,clearVisitOrder,clearVisitPaginator} from '../visit/actions';
 import {pipelineByClientFindServer,clearPipelineOrder,clearPipelinePaginator} from '../pipeline/actions';
 import {clearPrevisitOrder,clearPrevisitPaginator, previsitByClientFindServer} from '../previsita/actions';
+import {DELETE_AREA_VIEW,DELETE_NEED_VIEW,DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW,DELETE_TYPE_BUSINESS_PLAN} from './constants';
 import {clearBusinessPlanOrder, clearBusinessPlanPaginator, businessPlanByClientFindServer} from '../businessPlan/actions';
-import {DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW, DELETE_TYPE_BUSINESS_PLAN} from './constants';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
+import {deleteArea} from '../businessPlan/area/actions';
+import {deleteNeed} from '../businessPlan/need/actions';
 
 class ButtonDeleteComponent extends Component{
 
@@ -28,7 +30,7 @@ class ButtonDeleteComponent extends Component{
   }
 
   _onConfirmDelete(e){
-   const {actionsDelete, deleteServer, participants, tasks} = this.props;
+   const {actionsDelete, deleteServer, participants, tasks, areas ,needs} = this.props;
    if(actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW){
       deleteServer(actionsDelete.urlServer,actionsDelete.json,actionsDelete.typeDelete).then((data) => {
         if((_.get(data, 'payload.status') === 200)){
@@ -65,6 +67,22 @@ class ButtonDeleteComponent extends Component{
             return item.uuid === actionsDelete.id;
           });
           deleteTask(indexDelete);
+        }
+        else if(actionsDelete.typeDelete === DELETE_NEED_VIEW){
+          this.setState({show: false});
+          const {deleteNeed} = this.props;
+          indexDelete = needs.findIndex(function(item){
+            return item.uuid === actionsDelete.id;
+          });
+          deleteNeed(indexDelete);
+        }
+        else if(actionsDelete.typeDelete === DELETE_AREA_VIEW){
+          this.setState({show: false});
+          const {deleteArea} = this.props;
+          indexDelete = areas.findIndex(function(item){
+            return item.uuid === actionsDelete.id;
+          });
+          deleteArea(indexDelete);
         }
       }
     }
@@ -171,15 +189,19 @@ function mapDispatchToProps(dispatch) {
     clearBusinessPlanPaginator,
     businessPlanByClientFindServer,
     deleteParticipant,
-    deleteTask
+    deleteTask,
+    deleteNeed,
+    deleteArea
   }, dispatch);
 }
 
-function mapStateToProps({deleteGridReducer, participants, tasks}, ownerProps) {
+function mapStateToProps({deleteGridReducer, participants, tasks, needs,areas}, ownerProps) {
   return {
     deleteGridReducer,
     participants,
-    tasks
+    tasks,
+    needs,
+    areas
   };
 }
 
