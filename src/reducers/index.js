@@ -31,6 +31,7 @@ import taskReducerCreate from '../components/pendingTask/createPendingTask/reduc
 import viewManagementReducer from '../components/viewManagement/reducer';
 import teamParticipantsReducer from '../components/clientTeam/reducer';
 import businessPlanReducer from '../components/businessPlan/reducer';
+import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -64,5 +65,6 @@ export default combineReducers({
     pipelineReducer:pipelineReducer,
     viewManagementReducer: viewManagementReducer,
     teamParticipantsReducer: teamParticipantsReducer,
-    businessPlanReducer: businessPlanReducer
+    businessPlanReducer: businessPlanReducer,
+    clientEconomicGroupReducer: clientEconomicGroupReducer
 });

@@ -8,7 +8,8 @@ import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOr
 import {visitByClientFindServer,clearVisitOrder,clearVisitPaginator} from '../visit/actions';
 import {pipelineByClientFindServer,clearPipelineOrder,clearPipelinePaginator} from '../pipeline/actions';
 import {clearPrevisitOrder,clearPrevisitPaginator, previsitByClientFindServer} from '../previsita/actions';
-import {DELETE_AREA_VIEW,DELETE_NEED_VIEW,DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW} from './constants';
+import {DELETE_AREA_VIEW,DELETE_NEED_VIEW,DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW,DELETE_TYPE_BUSINESS_PLAN} from './constants';
+import {clearBusinessPlanOrder, clearBusinessPlanPaginator, businessPlanByClientFindServer} from '../businessPlan/actions';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 import {deleteArea} from '../businessPlan/area/actions';
@@ -88,7 +89,11 @@ class ButtonDeleteComponent extends Component{
   }
 
     _closeDelete(){
-        const {clearPipelineOrder,clearPipelinePaginator,pipelineByClientFindServer,clearPrevisitOrder,clearPrevisitPaginator,clearVisitOrder,clearVisitPaginator,previsitByClientFindServer, visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer} = this.props;
+        const {clearPipelineOrder,clearPipelinePaginator,pipelineByClientFindServer,clearPrevisitOrder,
+          clearPrevisitPaginator,clearVisitOrder,clearVisitPaginator,previsitByClientFindServer,
+          visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,
+          clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer, clearBusinessPlanOrder,
+          clearBusinessPlanPaginator, businessPlanByClientFindServer} = this.props;
         if(this.state.showEx === true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -113,6 +118,10 @@ class ButtonDeleteComponent extends Component{
             clearPipelineOrder();
             clearPipelinePaginator();
             pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "","");
+          }else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN){
+            clearBusinessPlanOrder();
+            clearBusinessPlanPaginator();
+            businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.businessDate", 1, "","");
           }
       }
       this.setState({showEx:false, showEr: false,show: false});
@@ -176,6 +185,9 @@ function mapDispatchToProps(dispatch) {
     clearPrevisitPaginator,
     clearPipelineOrder,
     clearPipelinePaginator,
+    clearBusinessPlanOrder,
+    clearBusinessPlanPaginator,
+    businessPlanByClientFindServer,
     deleteParticipant,
     deleteTask,
     deleteNeed,

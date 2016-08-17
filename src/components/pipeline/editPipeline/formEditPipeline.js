@@ -120,8 +120,8 @@ class FormEditPipeline extends Component {
 	}
 
 	_onClickPDF() {
-	    const {pdfDescarga, fields: {id}} = this.props;
-	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id.value);
+	    const {pdfDescarga, id} = this.props;
+	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
 	 }
 
 	_changeCurrency(currencyValue) {

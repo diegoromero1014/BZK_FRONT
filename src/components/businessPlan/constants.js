@@ -13,3 +13,4 @@ export const LAST_BUSINESS_REVIEW = "last_businessplan_review";
 export const CREATE_BUSINESS = "CREATE_BUSINESS";
 export const GET_DETAIL_BUSINESS = "GET_DETAIL_BUSINESS";
 export const OWNER_DRAFT="OWNER_DRAFT";
+export const GET_CSV_BUSINESS_PLAN_BY_CLIENT = 'GET_CSV_BUSINESS_PLAN_BY_CLIENT';

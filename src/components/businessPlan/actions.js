@@ -26,7 +26,6 @@ export function businessPlanByClientFindServer(clientId, pageNum, maxRows, colum
       "statusDocumentId":statusDocumentId
     }
   };
-
   var request = axios.post(APP_URL + "/listClientBusinessPlan", json);
   return {
     type: constants.GET_BUSINESS_PLAN_LIST,
@@ -117,14 +116,40 @@ export function detailBusiness(idBusiness){
     "messageBody": {
        "id": idBusiness
      }
-  }
+}
+var request = axios.post(APP_URL + "/businessDetail", json);
+     return{
+       type: constants.GET_DETAIL_BUSINESS,
+       payload: request
+     }
+}
 
-  var request = axios.post(APP_URL + "/businessDetail", json);
-  return{
-    type: constants.GET_DETAIL_BUSINESS,
+export function getCsvBusinessPlanByClient(clientId) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+       "id": idBusiness,
+        "clientId": clientId
+     }
+  }
+  let request = axios.post(APP_URL + "/getCsvBusinessPlanClient", json);
+  return {
+    type: constants.GET_CSV_BUSINESS_PLAN_BY_CLIENT,
     payload: request
   }
 }
+
 
 export function changeOwnerDraft(ownerDraft){
   return {

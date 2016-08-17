@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import ModalComponentTeam from './modalComponentTeam';
+import ModalComponentEconomicGroup from './modalComponentEconomicGroup';
 
-class buttonTeamComponent extends Component {
+class buttonClientEconomicGroup extends Component {
 
   constructor(props){
       super(props);
@@ -25,24 +25,22 @@ class buttonTeamComponent extends Component {
   }
 
   render() {
-    const {toggleModalShareholder, disabled} = this.props;
     return (
         <div>
-          <button className="btn btn-primary" type="button" title="Ver célula" style={{backgroundColor: "#E79C29", borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
-            <i className="users outline icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
+          <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{marginTop: "0px", backgroundColor: "#2671D7", borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
+            <i className="sitemap icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
           </button>
-
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
               <div className="modalBt4-content modal-content">
                 <div className="modalBt4-header modal-header">
-                  <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Célula</h4>
+                  <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Grupo económico</h4>
                   <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                     <span className="sr-only">Close</span>
                   </button>
                 </div>
-                <ModalComponentTeam isOpen={this.closeModal} />
+                <ModalComponentEconomicGroup isOpen={this.closeModal} />
               </div>
             </div>
           </Modal>
@@ -56,10 +54,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({createShareholder}, ownerProps){
+function mapStateToProps({clientEconomicGroupReducer}, ownerProps){
     return {
-        createShareholder
+        clientEconomicGroupReducer
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(buttonTeamComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(buttonClientEconomicGroup);

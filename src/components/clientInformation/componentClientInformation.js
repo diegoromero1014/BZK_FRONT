@@ -8,6 +8,7 @@ import {updateTitleNavBar} from '../navBar/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import $ from 'jquery';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
+import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 
 class ComponentClientInformation extends Component{
   constructor(props) {
@@ -93,7 +94,24 @@ class ComponentClientInformation extends Component{
                 </div>
     					</div>
             </Col>
-            <ButtonTeamComponent />
+            <Col xs={1} md={1} lg={1}>
+              <table style={infoClient.economicGroup !== null ? {height: '100%', width: '50%', float: 'right'} : {height: '50%', width: '50%', float: 'right'}}>
+                <tbody>
+                  <tr>
+                    <td style={{marginTop: "0px", backgroundColor: "#E79C29", borderRadius: "0px"}}>
+                      <ButtonTeamComponent />
+                    </td>
+                  </tr>
+                  {infoClient.economicGroup &&
+                    <tr>
+                      <td style={{marginTop: "0px", backgroundColor: "#2671D7", borderRadius: "0px"}}>
+                        <ButtonEconomicgroup />
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </Col>
           </Row>
         </header>
         <TabClientInfo infoClient={infoClient}/>

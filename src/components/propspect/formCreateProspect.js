@@ -22,6 +22,7 @@ const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ]
+var titleDescription = "Diligencie esta sección respondiendo a la pregunta ¿Qué debería conocer el Grupo Bancolombia de este cliente? (quién es, qué hace, cuáles son sus principales líneas de negocio, productos y servicios que ofrece, sector donde se encuentra, estrategia, países en los que tiene presencia, participación de mercado).";
 var messageConfirm = "Recuerde que una vez creado el prospecto solo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿esta seguro de guardar la información?";
 var titleConfirm = "Confirmación creación";
 var typeConfirm = "create";
@@ -286,7 +287,10 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={12} lg={12} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
-              <dt><span>Breve descripción de la empresa</span></dt>
+              <dt>
+                <span>Breve descripción de la empresa</span>
+                <i className="help circle icon blue" style={{fontSize: "15px", cursor: "pointer", marginLeft: "2px"}} title={titleDescription}/>
+              </dt>
               <Textarea
                 name="description"
                 type="text"
