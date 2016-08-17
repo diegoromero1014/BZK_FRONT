@@ -23,6 +23,8 @@ import visitReducer from '../components/visit/reducer';
 import pipelineReducer from '../components/pipeline/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import taskReducer from '../components/visit/tasks/reducer';
+import needReducer from '../components/businessPlan/need/reducer';
+import areaReducer from '../components/businessPlan/area/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
 import tabReducer from '../components/clientDetailsInfo/reducer';
 import taskReducerCreate from '../components/pendingTask/createPendingTask/reducer';
@@ -54,6 +56,8 @@ export default combineReducers({
     visitReducer: visitReducer,
     participants: participantsReducer,
     tasks: taskReducer,
+    needs:needReducer,
+    areas:areaReducer,
     tasksByClient: tasksByClientReducer,
     tabReducer: tabReducer,
     taskReducerCreate: taskReducerCreate,

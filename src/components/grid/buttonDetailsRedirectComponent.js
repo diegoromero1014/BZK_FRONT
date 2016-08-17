@@ -25,6 +25,9 @@ class ButtonDetailsRedirectComponent extends Component {
     } else if (actionsRedirect.typeClickDetail === "pipeline") {
       updateTitleNavBar("Informe de pipeline");
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
+    } else if (actionsRedirect.typeClickDetail === "businessPlan") {
+      updateTitleNavBar("Informe de plan de negocio");
+      changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
     }
     redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
   }
