@@ -10,14 +10,22 @@ import {TYPE_YEAR,TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './c
 import {APP_URL} from '../../constantsGlobal';
 import ButtonDownloadModal from './buttonDownloadModal';
 
+var styles = {minHeight: "30px",
+height: "30px",
+margin: "0px",
+padding: "7px",
+minWidth: "30px",
+width: "150px"};
+
 class ItemChart extends Component{
 
   constructor(props){
     super(props);
     this.state= {
-    valueyear: "",
+    valueYear: "",
     item : ""};
     momentLocalizer(moment);
+    this._onChangeYear = this._onChangeYear.bind(this);
   }
 
   _clickSectionChart(itemSeleted){
@@ -29,7 +37,7 @@ class ItemChart extends Component{
    let year;
    let url;
     if(itemSeleted === TAB_PIPELINE) {
-       year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+       year = this.state.valueYear !== '' ? this.state.valueYear : moment().year();
        url = '/getCsvPipeline';
     }
     const {getCsv} = this.props;
@@ -39,6 +47,14 @@ class ItemChart extends Component{
       }
     });
   }
+
+  _onChangeYear(value){
+    this.setState({valueYear: value.id})
+  }
+
+	componentDidMount() {
+    this.setState({valueYear: moment().year()});
+	}
 
   render(){
     const {textValue, iconValue, itemSeleted, styleColor} = this.props;
@@ -52,22 +68,25 @@ class ItemChart extends Component{
             <span style={{fontSize: "30px", float: 'right', marginTop: '40px', marginRight: "25px"}} >{textValue}</span>
           </div>
         </div>
-        <div
-          style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
-          borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
-          <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
-              onChange: (value) => this.setState({valueyear: value.id})
-          }}/>
-          { itemSeleted === TAB_VISIT &&   <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
-          { itemSeleted === TAB_PIPELINE &&  <i className='green file excel outline icon'
+        <div style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor, borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
+          <div style={{width:"150px", float:"left", margin:"4px"}}>
+            <SelectYearComponent
+              idTypeFilter={TYPE_YEAR}
+              onChange={val => this._onChangeYear(val)}
+              value={this.state.valueYear}
+              styles={styles}
+            />
+          </div>
+          { itemSeleted === TAB_VISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
+          { itemSeleted === TAB_PIPELINE && <i className='green file excel outline icon'
                       title="Descargar información en formato CSV"
                       onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
                       style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
-          { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueyear} itemSeleted={itemSeleted} /> }
-          {/* itemSeleted === TAB_PREVISIT &&  <i className='green file excel outline icon'
+          { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
+          { itemSeleted === TAB_BUSINESS && <i className='green file excel outline icon'
                       title="Descargar información en formato CSV"
                       onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>*/}
+                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
         </div>
       </Col>
     );
