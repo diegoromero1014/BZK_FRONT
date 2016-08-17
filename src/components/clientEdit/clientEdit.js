@@ -12,6 +12,7 @@ import * as constants from '../selectsComponent/constants';
 import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION} from './constants';
 import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import Input from '../../ui/input/inputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {reduxForm} from 'redux-form';
@@ -23,6 +24,7 @@ import {setNotes, crearNotes, deleteNote} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
+import $ from 'jquery';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -34,7 +36,7 @@ const valuesYesNo = [
 const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province", "neighborhood",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
-    "centroDecision", "necesitaLME", "groupEconomic", "keywordFindEconomicGroup", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
+    "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME", "justifyExClient"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -212,6 +214,7 @@ class clientEdit extends Component{
     this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
     this._onChangeJustifyNoLME = this._onChangeJustifyNoLME.bind(this);
     this._onChangeJustifyExCliente = this._onChangeJustifyExCliente.bind(this);
+    this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
   }
 
   _closeWindow(){
@@ -232,14 +235,79 @@ class clientEdit extends Component{
     redirectUrl("/dashboard/clientInformation");
   }
 
-  _onChangeGroupEconomic(e){
-    const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
-    if(e.keyCode === 13 || e.which === 13){
+  _onChangeGroupEconomic(e) {
+    console.log('_onChangeGroupEconomic');
+    const {fields: {economicGroupName}, economicGroupsByKeyword} = this.props;
+    if(e.keyCode === 13 || e.which === 13) {
+      console.log('e.keyCode -> ', e.keyCode);
       e.preventDefault();
-      economicGroupsByKeyword(keywordFindEconomicGroup.value);
-      groupEconomic.onChange('')
+      economicGroupsByKeyword(economicGroupName.value);
+      economicGroupName.onChange('');
     } else {
-      keywordFindEconomicGroup.onChange(e.target.value);
+      console.log('else');
+      economicGroupName.onChange(e.target.value);
+    }
+  }
+
+  updateKeyValueUsersBanco(e) {
+    console.log('updateKeyValueUsersBanco');
+    const {fields: {groupEconomic, economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
+    console.log('economicGroupName.value -> ', economicGroupName.value);
+    //let self = this;
+    groupEconomic.onChange('');
+    nitPrincipal.onChange('');
+    if(e.keyCode === 13 || e.which === 13) {
+      e.preventDefault();
+      if( economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined ) {
+        $('.ui.search.participantBanc').toggleClass('loading');
+        economicGroupsByKeyword(economicGroupName.value).then((data) => {
+          console.log('Resultados de la búsqueda');
+          console.log('data -> ', data);
+          let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+          let economicGroup2 = _.forEach(economicGroup1, function(data1) {
+            console.log('data1 -> ', data1);
+            data1.title = data1.group;
+            data1.description = data1.group;
+          });
+          $('.ui.search.participantBanc')
+            .search({
+              cache: false,
+              source: economicGroup1,
+              searchFields: [
+                'title',
+                'description',  
+                'id',
+                'relationshipManagerId'
+              ],
+              onSelect : function(event) {
+                console.log('event -> ', event);
+                economicGroupName.onChange(event.group);
+                groupEconomic.onChange(event.id);
+                nitPrincipal.onChange(event.nitPrincipal);
+                return 'default';
+              }
+            });
+            $('.ui.search.participantBanc').toggleClass('loading');
+            $('#inputEconomicGroup').focus();
+          }
+        );
+      }
+    }
+  }
+
+  _updateValue(value) {
+    const{fields: {nitPrincipal, groupEconomic, economicGroupName}, economicGroupsByKeyword} = this.props;
+    //var contactClient = contactsByClient.get('contacts');
+    var userSelected;
+    _.map(contactClient, contact => {
+      if( contact.id.toString() === value ){
+        userSelected = contact;
+        return contact;
+      }
+    });
+    if( userSelected !== null && userSelected !== undefined ){
+      idUsuario.onChange(userSelected.id);
+      nameUsuario.onChange(userSelected.nameComplet);
     }
   }
 
@@ -308,10 +376,10 @@ class clientEdit extends Component{
   _onChangeJustifyExCliente(val){
   }
 
-  _handleGroupEconomicFind(){
-    const {fields: {keywordFindEconomicGroup, groupEconomic}, economicGroupsByKeyword} = this.props;
-    economicGroupsByKeyword(keywordFindEconomicGroup.value);
-    groupEconomic.onChange('')
+  _handleGroupEconomicFind() {
+    const {fields: {groupEconomic}, economicGroupsByKeyword} = this.props;
+    economicGroupsByKeyword(groupEconomic.value);
+    groupEconomic.onChange('');
   }
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val){
@@ -417,7 +485,7 @@ class clientEdit extends Component{
         fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
           district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
           liabilities, assets, operatingIncome, nonOperatingIncome, expenses,
-          centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoLME, justifyExClient},
+          centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient},
           error, handleSubmit, selectsReducer, clientInformacion} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
@@ -502,7 +570,7 @@ class clientEdit extends Component{
     errorNote = false;
     infoJustificationForNoRM = true;
     infoMarcaGeren = true;
-    const {clientInformacion, clearValuesAdressess, setNotes, crearNotes, selectsReducer} = this.props;
+    const {fields: {nitPrincipal, economicGroupName}, clientInformacion, clearValuesAdressess, setNotes, crearNotes, selectsReducer} = this.props;
     clearValuesAdressess();
     crearNotes();
     var infoClient = clientInformacion.get('responseClientInfo');
@@ -527,8 +595,10 @@ class clientEdit extends Component{
             this.setState({showEx: true});
         });
         consultList(constants.CIIU);
-        if(infoClient.economicGroupKey !== null && infoClient.economicGroupKey !== '' && infoClient.economicGroupKey !== undefined && infoClient.economicGroupKey !== "null"){
-          economicGroupsByKeyword(infoClient.economicGroupKey);
+        if(infoClient.economicGroup !== null && infoClient.economicGroup !== '' && infoClient.economicGroup !== undefined && infoClient.economicGroup !== "null") {
+          economicGroupsByKeyword(infoClient.nitPrincipal);
+          nitPrincipal.onChange(infoClient.nitPrincipal);
+          economicGroupName.onChange(infoClient.economicGroupKey);
         }
       }
     }
@@ -539,13 +609,18 @@ class clientEdit extends Component{
     fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren,
-      centroDecision, necesitaLME, groupEconomic, keywordFindEconomicGroup, justifyNoGeren, justifyNoLME, justifyExClient},
+      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient},
       error, handleSubmit, selectsReducer, clientInformacion, notes} = this.props;
     if(notes.toArray().length === 0){
       errorNote = false;
     }
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
+    console.log('groupEconomic.value -> ', groupEconomic.value);
+    console.log('selectsReducer.get(dataEconomicGroup) -> ', selectsReducer.get('dataEconomicGroup'));
+    console.log('get -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal'));
+    console.log('get2 -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0]'));
+
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
           <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
@@ -962,50 +1037,21 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt>
-                <span>Buscar grupo económico</span>
-              </dt>
-              <dt>
-                <div style={{display:"inline-block", width:"85%"}}>
-                  <Input
-                    name="txtGrupoEconomico"
-                    max="50"
-                    placeholder="Ingrese el grupo económico a buscar"
-                    {...keywordFindEconomicGroup}
-                    onKey={this._onChangeGroupEconomic}
-                  />
-                </div>
-                <button id="searchGrupoEconomico" className="btn" title="Buscar grupo económico"
-                  type="button" onClick={this._handleGroupEconomicFind}
-                  style={{backgroundColor:"#E0E2E2", width:"40px", height:"40px", display:"inline", marginLeft:"8px"}}>
-                  <i className="search icon" style={{margin:'0em', fontSize : '1.2em'}}></i>
-                </button>
-              </dt>
-            </Col>
-            <Col xs={12} md={4} lg={4}>
-              <dt>
                 <span>Grupo económico/relación</span>
               </dt>
               <dt>
-                <ComboBox
-                  labelInput="Seleccione..."
-                  {...groupEconomic}
-                  value={groupEconomic.value}
-                  onBlur={groupEconomic.onBlur}
-                  valueProp={'id'}
-                  textProp={'group'}
-                  parentId="dashboardComponentScroll"
-                  data={selectsReducer.get('dataEconomicGroup')}
-                />
-              </dt>
-            </Col>
-            <Col xs={12} md={4} lg={4}>
-              <dt>
-                <span>Nit principal</span>
-              </dt>
-              <dt>
-                <p style={{fontWeight: "normal", marginTop: "8px"}}>
-                  {(!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : ''}
-                </p>
+                <div className="ui search participantBanc fluid">
+                  <ComboBoxFilter className="prompt" id="inputEconomicGroup"
+                    style={{borderRadius: "3px"}}
+                    autoComplete="off"
+                    type="text"
+                    {...economicGroupName}
+                    value={economicGroupName.value}
+                    onChange={this._onChangeGroupEconomic}
+                    placeholder="Ingrese un criterio de búsqueda..."
+                    onKeyPress={this.updateKeyValueUsersBanco}
+                  />
+                </div>
               </dt>
             </Col>
           </Row>
@@ -1215,6 +1261,7 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       justifyExClient: infoClient.justificationForLostClient,
       justifyNoLME: infoClient.justificationForCreditNeed,
       groupEconomic: infoClient.economicGroup
+      //nitPrincipal: infoClient.nitPrincipal
     }
   };
 }

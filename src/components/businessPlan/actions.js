@@ -139,7 +139,6 @@ export function getCsvBusinessPlanByClient(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-       "id": idBusiness,
         "clientId": clientId
      }
   }
