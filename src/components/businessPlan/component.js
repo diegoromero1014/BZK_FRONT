@@ -9,6 +9,7 @@ import {NUMBER_RECORDS, FILTER_STATUS_BUSINESS_PLAN_ID} from './constants';
 import ListBusinessPlanComponent from './listBusinessPlanComponent';
 import PaginationBusinessPlanComponent from './paginationBusinessPlanComponent';
 import {updateTitleNavBar} from '../navBar/actions';
+import ButtonDownloadBusinessPlanComponent from './downloadBusinessPlan/buttonDownloadBusinessPlanComponent';
 
 class BusinessPlanComponent extends Component {
 
@@ -40,9 +41,11 @@ class BusinessPlanComponent extends Component {
     const {businessPlanReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
+    let visibleDownload = 'none';
     if(businessPlanReducer.get('rowCount') !== 0){
       visibleTable = 'block';
       visibleMessage = 'none';
+      visibleDownload = 'block';
     }
     return (
       <div className = "tab-pane quickZoomIn animated"
@@ -79,6 +82,7 @@ class BusinessPlanComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
           </Row>
         </Grid>
+        <ButtonDownloadBusinessPlanComponent visibleDownload={visibleDownload} />
        </div>
     );
   }

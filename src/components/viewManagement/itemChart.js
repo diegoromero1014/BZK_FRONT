@@ -40,6 +40,10 @@ class ItemChart extends Component{
        year = this.state.valueYear !== '' ? this.state.valueYear : moment().year();
        url = '/getCsvPipeline';
     }
+    if ( itemSeleted === TAB_BUSINESS ) {
+      year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
+      url = '/getCsvBusinessPlan';
+    }
     const {getCsv} = this.props;
     getCsv(year,url,false,false,false).then(function(data) {
       if (data.payload.data.status === 200) {

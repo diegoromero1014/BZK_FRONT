@@ -73,3 +73,28 @@ export function orderColumnBusinessPlan(orderBusinessPlan, columnBusinessPlan) {
     columnBusinessPlan: columnBusinessPlan
   };
 }
+
+export function getCsvBusinessPlanByClient(clientId) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "clientId": clientId
+    }
+  }
+  let request = axios.post(APP_URL + "/getCsvBusinessPlanClient", json);
+  return {
+    type: constants.GET_CSV_BUSINESS_PLAN_BY_CLIENT,
+    payload: request
+  }
+}
