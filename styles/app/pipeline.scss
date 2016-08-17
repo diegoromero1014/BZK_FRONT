@@ -60,6 +60,14 @@
 	text-align: -webkit-center;
 }
 
+.div-body-radial-chart{
+	color: black;
+	background-color: white;
+	border-radius: 0px 0px 4px 4px;
+	height: 40px;
+	border: 1px solid #D4D4D4;
+}
+
 .legend-item-bullet {
 	background-color: $color-dark;
 }
@@ -103,16 +111,5 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin-left: 10px;
-
-		/*
-		width: 50px;
-		height: 25px;
-
-		.handle{
-			width: 22px;
-			height: 22px;
-			top: 1px;
-			left: -2px;
-		}*/
 	}
 }
