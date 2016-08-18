@@ -75,6 +75,7 @@ class FormPrevisita extends Component{
       activeItemTabClient: 'active',
       activeItemTabOther: '',
       targetPrevisit: "",
+      targetPrevisitError : null,
       pendingPrevisit: "",
       acondicionamiento: "",
       acondicionamientoTouch: false,
@@ -207,7 +208,8 @@ class FormPrevisita extends Component{
 
   _changeTargetPrevisit(value){
     this.setState({
-      targetPrevisit: value.target.value
+      targetPrevisit: value.target.value,
+      targetPrevisitError: null
     });
   }
 
@@ -317,6 +319,13 @@ class FormPrevisita extends Component{
       errorInForm = true;
       this.setState({
         lugarPrevisitError: "Debe ingresar un valor"
+      });
+    }
+
+    if ( (this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") && typeButtonClick === SAVE_PUBLISHED) {
+      errorInForm = true;
+      this.setState({
+        targetPrevisitError: "Debe ingresar el objetivo de la reunión"
       });
     }
 
@@ -604,7 +613,7 @@ class FormPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Objetivo de la reunión </span>
+              <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span style={{color: "red"}}>*</span>) </span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleMessageTarget}/>
             </div>
           </Col>
@@ -618,6 +627,7 @@ class FormPrevisita extends Component{
               value={this.state.targetPrevisit}
               touched={true}
               onChange={val => this._changeTargetPrevisit(val)}
+              error={this.state.targetPrevisitError}
               title="La longitud máxima de caracteres es de 3500"
               style={{width: '100%', height: '178px'}}
             />

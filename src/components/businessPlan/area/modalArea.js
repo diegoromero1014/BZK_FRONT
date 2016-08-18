@@ -196,7 +196,7 @@ class ModalArea extends Component {
                 </Row>
                 <Row>
                   <Col xs={12} md={12} lg={12}>
-                    <dt><span>Acciones Necesarias (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Acciones necesarias (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                       <Textarea
                         name="actionArea"
@@ -242,7 +242,7 @@ class ModalArea extends Component {
                     </dt>
                   </Col>
                   <Col xs>
-                    <dt><span>Fecha de Solución (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de solución (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                     <DateTimePickerUi
                       culture='es'
@@ -264,14 +264,14 @@ class ModalArea extends Component {
              type="success"
              show={this.state.showSuccessAdd}
              title="Área agregada"
-             text="Señor usuario, el área fue agregada exitosamente"
+             text="Señor usuario, el área fue agregada exitosamente."
              onConfirm={() => this._closeCreate()}
            />
            <SweetAlert
             type="success"
             show={this.state.showSuccessEdit}
             title="Área editada"
-            text="Señor usuario, el área fue editada exitosamente"
+            text="Señor usuario, el área fue editada exitosamente."
             onConfirm={() => this._closeCreate()}
           />
           </form>

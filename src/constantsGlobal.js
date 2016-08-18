@@ -39,6 +39,7 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 "c. Retomar la edición del informe y agregar el contacto\n\n" +
 "Crear contacto:\n" +
 "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
+export const TITLE_OPPORTUNITY_BUSINESS ="Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
 export const DATE_REQUIERED = "Debe seleccionar un día";

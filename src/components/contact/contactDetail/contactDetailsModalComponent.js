@@ -27,6 +27,16 @@ const fields = ["contactId", "contactType", "contactTitle", "contactGender", "co
 
 const validate = values => {
     const errors = {};
+    if(!values.contactPosition){
+      errors.contactPosition = "Debe seleccionar una opción";
+    }else{
+      errors.contactPosition = null;
+    }
+    if(!values.contactDependency){
+      errors.contactDependency = "Debe seleccionar una opción";
+    }else{
+      errors.contactDependency = null;
+    }
     if (!values.contactType) {
       errors.contactType = "Debe seleccionar una opción";
     } else {
@@ -481,7 +491,7 @@ class ContactDetailsModalComponent extends Component {
               </Row>
               <Row>
                 <Col xs={12} sm={12} md={6} lg={4}>
-                  <dt><span>{'Cargo'}</span></dt>
+                  <dt><span>{'Cargo ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <ComboBox
                       name="contactPosition"
@@ -496,7 +506,7 @@ class ContactDetailsModalComponent extends Component {
                   </dd>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
-                  <dt><span>{'Area dependencia'}</span></dt>
+                  <dt><span>{'Area dependencia ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                   <dd>
                     <ComboBox
                       name="contactDependency"

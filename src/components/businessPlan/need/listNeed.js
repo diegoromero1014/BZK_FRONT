@@ -49,10 +49,11 @@ class ListNeed extends Component {
             urlServer: "./component",
             component : "VIEW_NEED"
           },
-          uuid: uuid, needType :needType, needIdType :needIdType, descriptionNeed : descripcionNecesidad,
+          uuid: uuid, needType :needType, needIdType :needIdType, descriptionNeed : descriptionNeed,
           needProduct : needProduct,needIdProduct : needIdProduct, needImplementation : needImplementation,
           statusNeed: statusNeed,needIdImplementation : needIdImplementation,needTask : needTask,needBenefits : needBenefits,
           needIdResponsable: needIdResponsable, needResponsable : needResponsable,needDate: needDate,statusIdNeed: statusIdNeed,
+          descripcionNecesidad :descripcionNecesidad,
           'delete':  {
             typeDelete : DELETE_NEED_VIEW,
             id: uuid,
@@ -108,7 +109,7 @@ class ListNeed extends Component {
                 style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
               </td>
               <td>{needData.needType}</td>
-              <td>{needData.descriptionNeed}</td>
+              <td>{needData.descripcionNecesidad}</td>
               <td>{needData.statusNeed}</td>
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar necesidad"
@@ -119,14 +120,20 @@ class ListNeed extends Component {
   }
 
   render() {
+    var disabledButtonCreate= '';
     this._getValuesNeed();
     const {needs, disabled} = this.props;
+    if(needs.size === 10){
+      disabledButtonCreate = 'disabled';
+    }else{
+      disabledButtonCreate = '';
+    }
     const modalTitle = 'Necesidad Detalle';
     return (
       <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         {disabled === '' || disabled === undefined ?
         <Row xs={12} md={12} lg={12}>
-          <BotonCreateNeed/>
+          <BotonCreateNeed disabled={disabledButtonCreate}/>
         </Row>
         : ''}
         {needs.size > 0 ?
@@ -177,7 +184,7 @@ class ListNeed extends Component {
       <SweetAlert
         type= "warning"
         show={this.state.showConfirmDeleteNeed}
-        title="Eliminación tarea"
+        title="Eliminación necesidad"
         text="¿Señor usuario, está seguro que desea eliminar la necesidad?"
         confirmButtonColor= '#DD6B55'
         confirmButtonText= 'Sí, estoy seguro!'
