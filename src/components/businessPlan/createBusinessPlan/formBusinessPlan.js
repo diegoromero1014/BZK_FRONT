@@ -176,8 +176,6 @@ class FormBusinessPlan extends Component {
         message = "Señor usuario, ocurrió un error creando el plan de negocio.";
         this.setState({showMessageCreateBusiness :true});
       });
-    } else {
-      this.setState({showErrorSaveBusiness :true});
     }
 
   }
@@ -205,7 +203,7 @@ class FormBusinessPlan extends Component {
     var date = value.target.value;
     if(date === '' || date === undefined || date === null){
       this.setState({
-        dateBusinessError: "Debe seleccionar una opción"
+        dateBusinessError: "Debe seleccionar una fecha"
       });
     }
   }

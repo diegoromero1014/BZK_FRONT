@@ -109,7 +109,7 @@ class FormEdit extends Component {
     var date = value.target.value;
     if(date === '' || date === undefined || date === null){
       this.setState({
-        dateBusinessError: "Debe seleccionar una opción"
+        dateBusinessError: "Debe seleccionar una fecha"
       });
     }
   }
@@ -232,10 +232,7 @@ class FormEdit extends Component {
         message = "Señor usuario, ocurrió un error editando el plan de negocio.";
         this.setState({showMessageCreateBusiness :true});
       });
-    } else {
-      this.setState({showErrorSaveBusiness :true});
     }
-
   }
 
   componentWillMount(){
