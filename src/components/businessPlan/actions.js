@@ -124,7 +124,7 @@ var request = axios.post(APP_URL + "/businessDetail", json);
      }
 }
 
-export function getCsvBusinessPlanByClient(clientId) {
+export function getCsvBusinessPlanByClient(clientId, haveNeeds) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -139,7 +139,8 @@ export function getCsvBusinessPlanByClient(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-        "clientId": clientId
+        "clientId": clientId,
+        "haveNeeds": haveNeeds
      }
   }
   let request = axios.post(APP_URL + "/getCsvBusinessPlanClient", json);
@@ -149,6 +150,31 @@ export function getCsvBusinessPlanByClient(clientId) {
   }
 }
 
+export function getCsvBusinessPlan(year, haveNeeds) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+        "year": year,
+        "haveNeeds": haveNeeds
+     }
+  }
+  let request = axios.post(APP_URL + "/getCsvBusinessPlan", json);
+  return {
+    type: constants.GET_CSV_BUSINESS_PLAN,
+    payload: request
+  }
+}
 
 export function changeOwnerDraft(ownerDraft){
   return {

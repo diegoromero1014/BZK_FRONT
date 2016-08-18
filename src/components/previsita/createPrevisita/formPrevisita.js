@@ -322,11 +322,13 @@ class FormPrevisita extends Component{
       });
     }
 
-    if ( (this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") && typeButtonClick === SAVE_PUBLISHED) {
-      errorInForm = true;
-      this.setState({
-        targetPrevisitError: "Debe ingresar el objetivo de la reunión"
-      });
+    if( typeButtonClick === SAVE_PUBLISHED ){
+      if( this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "" ){
+        errorInForm = true;
+        this.setState({
+          targetPrevisitError: "Debe ingresar un valor"
+        });
+      }
     }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo
@@ -613,7 +615,7 @@ class FormPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span style={{color: "red"}}>*</span>) </span>
+              <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span style={{color: "red"}}>*</span>)</span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleMessageTarget}/>
             </div>
           </Col>

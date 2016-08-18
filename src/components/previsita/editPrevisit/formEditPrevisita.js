@@ -346,11 +346,13 @@ class FormEditPrevisita extends Component{
       });
     }
 
-    if ( (this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") && typeButtonClick === SAVE_PUBLISHED) {
-      errorInForm = true;
-      this.setState({
-        targetPrevisitError: "Debe ingresar el objetivo de la reunión"
-      });
+    if( typeButtonClick === SAVE_PUBLISHED ){
+      if( this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "" ){
+        errorInForm = true;
+        this.setState({
+          targetPrevisitError: "Debe ingresar un valor"
+        });
+      }
     }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo

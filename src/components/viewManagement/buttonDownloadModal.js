@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import ModalDownloadVisit from '../visit/downloadVisits/component';
 import ModalDownloadPreVisit from '../previsita/downloadPrevisits/component';
+import ModalDownloadBusinessPlan from '../businessPlan/downloadBusinessPlan/component';
 import Modal from 'react-modal';
-import {TAB_VISIT, TAB_PREVISIT} from './constants';
+import {TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS} from './constants';
 
 class ButtonDownloadModal extends Component {
 
@@ -43,6 +44,7 @@ class ButtonDownloadModal extends Component {
             </div>
             {itemSeleted === TAB_VISIT && <ModalDownloadVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
             {itemSeleted === TAB_PREVISIT && <ModalDownloadPreVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
+            {itemSeleted === TAB_BUSINESS && <ModalDownloadBusinessPlan itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
           </div>
         </div>
       </Modal>

@@ -62,7 +62,7 @@ class ViewChartBusinessPlan extends Component {
 				<td>
 					<div style={{ width:"100%", backgroundColor:this.state.selectedNeed === item.id ? "#E9E8E8" : "#FFFFFF", height:"22px", paddingLeft:"4px", paddingRight:"5px"}}>
 						<div style={{backgroundColor:colors[idx], height:"12px", width:"12px", borderRadius:"2px", float:"left", marginTop:"5px", marginRight:"4px"}}></div>
-						<label style={{float:"left", padding: "0 0 -50px 3px"}}><b>{item.need}:</b> {item.angle} Reg. - {item.percentageNeed}% {idx}</label>
+						<label style={{float:"left", padding: "0 0 -50px 3px"}}><b>{item.need}:</b> {item.angle} Reg. - {item.percentageNeed}%</label>
 					</div>
 				</td>
 			</tr>

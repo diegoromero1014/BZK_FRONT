@@ -40,20 +40,16 @@ class ItemChart extends Component{
        year = this.state.valueYear !== '' ? this.state.valueYear : moment().year();
        url = '/getCsvPipeline';
     }
-    if ( itemSeleted === TAB_BUSINESS ) {
-      year = this.state.valueyear !== '' ? this.state.valueyear : moment().year();
-      url = '/getCsvBusinessPlan';
-    }
     const {getCsv} = this.props;
-    getCsv(year,url,false,false,false).then(function(data) {
+    getCsv(year,url,false,false,false, false).then(function(data) {
       if (data.payload.data.status === 200) {
         window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
       }
     });
   }
 
-  _onChangeYear(value){
-    this.setState({valueYear: value.id})
+  _onChangeYear(value) {
+    this.setState({valueYear: value});
   }
 
 	componentDidMount() {
@@ -87,10 +83,7 @@ class ItemChart extends Component{
                       onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
                       style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
           { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
-          { itemSeleted === TAB_BUSINESS && <i className='green file excel outline icon'
-                      title="Descargar información en formato CSV"
-                      onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
+          { itemSeleted === TAB_BUSINESS && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
         </div>
       </Col>
     );
