@@ -107,8 +107,13 @@ class ListBusinessPlanComponent extends Component {
               urlRedirect: "/dashboard/businessPlanEdit",
               component: "VIEW_BUSINESS_PLAN"
             });
-            var dateBusinessPlanStartFormat = moment(value.businessDate).locale('es');
-            _.set(value, 'businessDate',dateBusinessPlanStartFormat.format("DD") + " " + dateBusinessPlanStartFormat.format("MMM") + " " + dateBusinessPlanStartFormat.format("YYYY")+ ", " + dateBusinessPlanStartFormat.format("hh:mm a"));
+            var dateBusinessPlanStartFormat = "";
+            if( moment(value.businessDate, ['DD MMM YYYY, hh:mm a'], 'es', true).isValid() ){
+              dateBusinessPlanStartFormat = value.businessDate;
+            } else {
+              dateBusinessPlanStartFormat = moment(value.businessDate).locale('es').format('DD MMM YYYY, hh:mm a');
+            }
+            _.set(value, 'businessDate',dateBusinessPlanStartFormat);
             if(value.idStatusDocument === 0){
               _.set(value, 'delete',  {
                 actionDelete: true,

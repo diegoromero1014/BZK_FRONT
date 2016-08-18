@@ -83,6 +83,7 @@ class FormEditPrevisita extends Component{
       activeItemTabClient: 'active',
       activeItemTabOther: '',
       targetPrevisit: "",
+      targetPrevisitError: "",
       pendingPrevisit: "",
       acondicionamiento: "",
       acondicionamientoTouch: false,
@@ -342,6 +343,15 @@ class FormEditPrevisita extends Component{
       this.setState({
         lugarPrevisitError: "Debe ingresar un valor"
       });
+    }
+
+    if( typeButtonClick === SAVE_PUBLISHED ){
+      if( this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "" ){
+        errorInForm = true;
+        this.setState({
+          targetPrevisitError: "Debe ingresar un valor"
+        });
+      }
     }
 
     //Validaciones de la metodología challenger y si estoy guardando como definitivo
@@ -739,7 +749,7 @@ class FormEditPrevisita extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Objetivo de la reunión </span>
+              <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span style={{color: "red"}}>*</span>)</span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleMessageTarget}/>
             </div>
           </Col>
@@ -751,6 +761,7 @@ class FormEditPrevisita extends Component{
               type="text"
               max="3500"
               value={this.state.targetPrevisit}
+              error={this.state.targetPrevisitError}
               touched={true}
               onChange={val => this._changeTargetPrevisit(val)}
               title="La longitud máxima de caracteres es de 3500"
