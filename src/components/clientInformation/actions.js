@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP} from './constants';
 import axios from 'axios';
 
 export function consultInfoClient(){

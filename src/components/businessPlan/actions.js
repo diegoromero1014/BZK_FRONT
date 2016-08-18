@@ -139,7 +139,6 @@ export function getCsvBusinessPlanByClient(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-       "id": idBusiness,
         "clientId": clientId
      }
   }
@@ -156,4 +155,8 @@ export function changeOwnerDraft(ownerDraft){
     type: constants.OWNER_DRAFT,
     ownerDraft: ownerDraft
   };
+}
+
+export function pdfDescarga(clientId, businessPlanId) {
+  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es");
 }

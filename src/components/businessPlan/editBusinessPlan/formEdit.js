@@ -16,7 +16,7 @@ import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer} from '../../../actionsGlobal';
 import moment from 'moment';
-import {detailBusiness} from '../actions';
+import {detailBusiness, pdfDescarga} from '../actions';
 import {addNeed, editNeed} from '../need/actions';
 import {addArea, editArea} from '../area/actions';
 import {createBusiness} from '../actions';
@@ -48,6 +48,7 @@ class FormEdit extends Component {
     this._editBusiness = this._editBusiness.bind(this);
     this._submitCreateBusiness = this._submitCreateBusiness.bind(this);
     this._closeMessageCreateBusiness = this._closeMessageCreateBusiness.bind(this);
+    this._onClickPDF = this._onClickPDF.bind(this);
     this.state = {
       showErrorSaveBusiness : null,
       showConfirm: false,
@@ -82,7 +83,9 @@ class FormEdit extends Component {
     }
   }
 
-  _onClickPDF(){
+  _onClickPDF() {
+    const {pdfDescarga, id} = this.props;
+    pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
   }
 
 
@@ -492,7 +495,7 @@ class FormEdit extends Component {
 }
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getMasterDataFields,consultParameterServer,detailBusiness,addNeed,addArea,createBusiness
+    getMasterDataFields,consultParameterServer,detailBusiness,addNeed,addArea,createBusiness, pdfDescarga
   }, dispatch);
 }
 

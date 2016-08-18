@@ -5,7 +5,8 @@ const initialState = Immutable.Map({
   status: "200",
   validateLogin: true,
   responseClientInfo: {},
-  tabSelected: null
+  tabSelected: null,
+  economicGroup: null
 });
 
 export default(state = initialState, action) => {
