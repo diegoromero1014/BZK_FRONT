@@ -45,7 +45,7 @@ const validate = (values) => {
     errors.statusArea = null;
   }
   if(!values.areaDate){
-    errors.areaDate = "Debe ingresar un valor";
+    errors.areaDate = "Debe seleccionar una fecha";
   }else{
     errors.areaDate = null;
   }

@@ -61,7 +61,7 @@ const validate = (values) => {
     errors.needResponsable = null;
   }
   if(!values.needDate){
-    errors.needDate = "Debe ingresar un valor";
+    errors.needDate = "Debe seleccionar una fecha";
   }else{
     errors.needDate = null;
   }
