@@ -232,7 +232,8 @@ class FormEditPrevisita extends Component{
 
   _changeTargetPrevisit(value){
     this.setState({
-      targetPrevisit: value.target.value
+      targetPrevisit: value.target.value,
+      targetPrevisitError: null
     });
   }
 
