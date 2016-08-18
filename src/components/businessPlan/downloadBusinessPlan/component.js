@@ -32,9 +32,8 @@ class DownloadBusinessPlan extends Component {
 		let year;
 		let url;
 		const {getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
-		console.log('_downloadBusinessPlans');
 		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== '' ? yearModal : moment().year();
+			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
 					 if (data.payload.data.status === 200) {

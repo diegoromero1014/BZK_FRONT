@@ -48,8 +48,8 @@ class ItemChart extends Component{
     });
   }
 
-  _onChangeYear(value){
-    this.setState({valueYear: value.id})
+  _onChangeYear(value) {
+    this.setState({valueYear: value});
   }
 
 	componentDidMount() {
