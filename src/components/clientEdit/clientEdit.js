@@ -236,23 +236,23 @@ class clientEdit extends Component{
   }
 
   _onChangeGroupEconomic(e) {
-    console.log('_onChangeGroupEconomic');
+    //console.log('_onChangeGroupEconomic');
     const {fields: {economicGroupName}, economicGroupsByKeyword} = this.props;
     if(e.keyCode === 13 || e.which === 13) {
-      console.log('e.keyCode -> ', e.keyCode);
+      //console.log('e.keyCode -> ', e.keyCode);
       e.preventDefault();
       economicGroupsByKeyword(economicGroupName.value);
       economicGroupName.onChange('');
     } else {
-      console.log('else');
+      //console.log('else');
       economicGroupName.onChange(e.target.value);
     }
   }
 
   updateKeyValueUsersBanco(e) {
-    console.log('updateKeyValueUsersBanco');
+    //console.log('updateKeyValueUsersBanco');
     const {fields: {groupEconomic, economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
-    console.log('economicGroupName.value -> ', economicGroupName.value);
+    //console.log('economicGroupName.value -> ', economicGroupName.value);
     //let self = this;
     groupEconomic.onChange('');
     nitPrincipal.onChange('');
@@ -261,13 +261,16 @@ class clientEdit extends Component{
       if( economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined ) {
         $('.ui.search.participantBanc').toggleClass('loading');
         economicGroupsByKeyword(economicGroupName.value).then((data) => {
-          console.log('Resultados de la búsqueda');
-          console.log('data -> ', data);
+          //console.log('Resultados de la búsqueda');
+          //console.log('data -> ', data);
           let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
           let economicGroup2 = _.forEach(economicGroup1, function(data1) {
-            console.log('data1 -> ', data1);
-            data1.title = data1.group;
-            data1.description = data1.group;
+            //console.log('data1 -> ', data1);
+            if (data1.group.indexOf('/') != -1) {
+              data1.title = data1.group.split('/')[0];
+            }
+            //data1.title = data1.group;
+            data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
           });
           $('.ui.search.participantBanc')
             .search({
@@ -280,7 +283,7 @@ class clientEdit extends Component{
                 'relationshipManagerId'
               ],
               onSelect : function(event) {
-                console.log('event -> ', event);
+                //console.log('event -> ', event);
                 economicGroupName.onChange(event.group);
                 groupEconomic.onChange(event.id);
                 nitPrincipal.onChange(event.nitPrincipal);
@@ -288,7 +291,11 @@ class clientEdit extends Component{
               }
             });
             $('.ui.search.participantBanc').toggleClass('loading');
-            $('#inputEconomicGroup').focus();
+            //$('[name="marcGeren"]').focus();
+            //$('#inputEconomicGroup').blur();
+            //setTimeout(function() { $('#inputEconomicGroup').focus(); }, 300);
+            //$('#inputEconomicGroup').focus();
+            $('.prompt').focus();
           }
         );
       }
@@ -616,10 +623,10 @@ class clientEdit extends Component{
     }
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
-    console.log('groupEconomic.value -> ', groupEconomic.value);
-    console.log('selectsReducer.get(dataEconomicGroup) -> ', selectsReducer.get('dataEconomicGroup'));
-    console.log('get -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal'));
-    console.log('get2 -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0]'));
+    //console.log('groupEconomic.value -> ', groupEconomic.value);
+    //console.log('selectsReducer.get(dataEconomicGroup) -> ', selectsReducer.get('dataEconomicGroup'));
+    //console.log('get -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal'));
+    //console.log('get2 -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0]'));
 
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
