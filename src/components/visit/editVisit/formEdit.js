@@ -20,7 +20,6 @@ import {LAST_VISIT_REVIEW} from '../constants';
 import {TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED} from '../../../constantsGlobal';
 import {createVisti, detailVisit, pdfDescarga} from '../actions';
-import {consultParameterServer} from '../../../actionsGlobal';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import {addTask} from '../tasks/actions';
@@ -283,12 +282,13 @@ class FormEdit extends Component{
   }
 
   componentWillMount(){
-    const {getMasterDataFields, consultParameterServer, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
+    const {getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
     this.setState({idVisit : id});
     getMasterDataFields([VISIT_TYPE]);
     detailVisit(id).then((result) => {
       const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
       var part = result.payload.data.data;
+      dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
 
       this.setState({
         typeVisit: part.visitType,
@@ -366,13 +366,6 @@ class FormEdit extends Component{
         }
         addTask(task);
       });
-    });
-
-    consultParameterServer(LAST_VISIT_REVIEW).then((data)=> {
-      if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" && data.payload.data.parameter !== undefined ){
-        dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
-        dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
-      }
     });
   }
 
@@ -641,7 +634,6 @@ function mapDispatchToProps(dispatch){
     consultList,
     pdfDescarga,
     getMasterDataFields,
-    consultParameterServer,
     createVisti,
     addParticipant,
     detailVisit,
