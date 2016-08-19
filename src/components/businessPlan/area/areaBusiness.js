@@ -27,7 +27,7 @@ class AreaBusiness extends Component{
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
                 <i className="tasks icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}>Áreas Internas Aliadas </span>
+              <span style={{fontSize: "20px"}}>Áreas internas aliadas </span>
             </div>
           </Col>
         </Row>

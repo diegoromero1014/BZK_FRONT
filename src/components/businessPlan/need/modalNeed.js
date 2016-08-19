@@ -81,14 +81,22 @@ class ModalNeed extends Component {
     this._updateValue = this._updateValue.bind(this);
     this._handleCreateNeed = this._handleCreateNeed.bind(this);
     this._closeCreate = this._closeCreate.bind(this);
+    this._scroll= this._scroll.bind(this);
     this.state = {
       showSuccessAdd:false,
       showSuccessEdit:false,
       showEr:false,
+      employeeResponsible: false,
       prueba:[],
       showErrorYa: false
     }
     momentLocalizer(moment);
+  }
+
+  _scroll(){
+    var element = document.getElementById("fecha")
+    var alignWithTop = true;
+    element.scrollIntoView(alignWithTop);
   }
 
   componentDidMount(){
@@ -132,53 +140,60 @@ class ModalNeed extends Component {
       nameUsuario = needResponsable.value;
       idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
     }
-     if(needEdit !== undefined){
-       needEdit.needIdType = needType.value;
-       needEdit.needType = needC;
-       needEdit.descriptionNeed = descriptionNeed.value;
-       needEdit.needIdProduct = needProduct.value;
-       needEdit.needProduct = productC;
-       needEdit.needIdImplementation = needImplementation.value;
-       needEdit.needImplementation = implementation;
-       needEdit.needTask = needTask.value;
-       needEdit.needBenefits = needBenefits.value;
-       needEdit.needIdResponsable = idUsuario;
-       needEdit.needResponsable = nameUsuario;
-       needEdit.needDate = needDate.value;
-       needEdit.statusIdNeed = statusNeed.value;
-       needEdit.statusNeed=status;
-        editNeed(needEdit);
-        this.setState({
-          showSuccessEdit: true
-        });
-      }else{
-        const uuid = _.uniqueId('need_');
-        var need = {
-          uuid,
-          needIdType: needType.value,
-          needType:needC,
-          descriptionNeed :descriptionNeed.value,
-          needIdProduct:needProduct.value,
-          needProduct:productC,
-          needIdImplementation:needImplementation.value,
-          needImplementation:implementation,
-          needTask:needTask.value,
-          needBenefits:needBenefits.value,
-          needIdResponsable: idUsuario,
-          needResponsable: nameUsuario,
-          needDate: needDate.value,
-          statusIdNeed:statusNeed.value,
-          statusNeed:status
-        }
-        addNeed(need);
-        this.setState({
-          showSuccessAdd: true
-        });
-      }
+    if((needResponsable.value !== '' && needResponsable.value !== undefined && needResponsable.value !== null) && (idEmployee.value === null || idEmployee.value === '' || idEmployee.value === undefined)){
+      this.setState({
+        employeeResponsible: true
+      });
+    }else{
+      if(needEdit !== undefined){
+        needEdit.needIdType = needType.value;
+        needEdit.needType = needC;
+        needEdit.descriptionNeed = descriptionNeed.value;
+        needEdit.needIdProduct = needProduct.value;
+        needEdit.needProduct = productC;
+        needEdit.needIdImplementation = needImplementation.value;
+        needEdit.needImplementation = implementation;
+        needEdit.needTask = needTask.value;
+        needEdit.needBenefits = needBenefits.value;
+        needEdit.needIdResponsable = idUsuario;
+        needEdit.needResponsable = nameUsuario;
+        needEdit.needDate = needDate.value;
+        needEdit.statusIdNeed = statusNeed.value;
+        needEdit.statusNeed=status;
+         editNeed(needEdit);
+         this.setState({
+           showSuccessEdit: true
+         });
+       }else{
+         const uuid = _.uniqueId('need_');
+         var need = {
+           uuid,
+           needIdType: needType.value,
+           needType:needC,
+           descriptionNeed :descriptionNeed.value,
+           needIdProduct:needProduct.value,
+           needProduct:productC,
+           needIdImplementation:needImplementation.value,
+           needImplementation:implementation,
+           needTask:needTask.value,
+           needBenefits:needBenefits.value,
+           needIdResponsable: idUsuario,
+           needResponsable: nameUsuario,
+           needDate: needDate.value,
+           statusIdNeed:statusNeed.value,
+           statusNeed:status
+         }
+         addNeed(need);
+         this.setState({
+           showSuccessAdd: true
+         });
+       }
+    }
   }
 
   updateKeyValueUsersBanco(e){
     const {fields: {needResponsable,idEmployee}, filterUsersBanco} = this.props;
+    var self = this;
     idEmployee.onChange(null);
     const selector =  $('.ui.search.needResponsable');
     if(e.keyCode === 13 || e.which === 13){
@@ -197,6 +212,9 @@ class ModalNeed extends Component {
               onSelect : function(event) {
                   needResponsable.onChange(event.title);
                   idEmployee.onChange(event.idUsuario);
+                  self.setState({
+                    employeeResponsible: false
+                  });
                   return 'default';
               }
             });
@@ -307,7 +325,7 @@ class ModalNeed extends Component {
                 </Row>
                 <Row>
                   <Col xs={12} md={12} lg={12}>
-                    <dt><span>Resultados y/o Beneficios Esperados  (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Resultados y/o Beneficios esperados  (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                       <Textarea
                         name="needBenefits"
@@ -334,13 +352,21 @@ class ModalNeed extends Component {
                       onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                       onSelect={val => this._updateValue(val)}
                     />
+                    {
+                        this.state.employeeResponsible &&
+                        <div>
+                            <div className="ui pointing red basic label">
+                                Debe seleccionar un empleado del banco
+                            </div>
+                        </div>
+                      }
                     </dt>
                   </Col>
                 </Row>
                 <Row>
                   <Col xs>
                     <dt><span>Estado  (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
+                    <dt style={{paddingTop:"0px"}}  onClick={this._scroll}>
                     <ComboBox
                       name="statusNeed"
                       labelInput="Seleccione..."
@@ -353,9 +379,10 @@ class ModalNeed extends Component {
                     </dt>
                   </Col>
                   <Col xs>
-                    <dt><span>Fecha de Solución (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
+                    <dt><span>Fecha de solución (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt style={{paddingTop:"0px"}}  onClick={this._scroll}>
                     <DateTimePickerUi
+                      id='fecha'
                       culture='es'
                       format={"DD/MM/YYYY"}
                       time={false}

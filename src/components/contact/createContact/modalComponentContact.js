@@ -26,6 +26,16 @@ const fields =["id","tipoDocumento","tipoTratamiendo","tipoGenero","tipoDependen
 "codigoPostal","telefono","extension","celular","correo","tipoEntidad", "tipoFuncion","tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
 const errors = {};
 const validate = (values) => {
+    if(!values.tipoCargo){
+      errors.tipoCargo = "Debe seleccionar una opción";
+    }else{
+      errors.tipoCargo = null;
+    }
+    if(!values.tipoDependencia){
+      errors.tipoDependencia = "Debe seleccionar una opción";
+    }else{
+      errors.tipoDependencia = null;
+    }
     if(!values.tipoFuncion){
       errors.tipoFuncion = "Debe seleccionar una opción";
     }else{
@@ -388,7 +398,7 @@ class ModalComponentContact extends Component {
                             <Row style={{visibility: this.state.noExiste}}>
                               <Col xs>
                               <dl style={{width: '100%'}}>
-                                <dt><span>Cargo</span></dt>
+                                <dt><span>Cargo (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd><ComboBox name="tipoCargo" labelInput="Seleccione"
                                 {...tipoCargo}
                                 valueProp={'id'}
@@ -400,7 +410,7 @@ class ModalComponentContact extends Component {
                               </Col>
                               <Col xs>
                               <dl style={{width: '100%'}}>
-                                <dt><span>Área dependencia</span></dt>
+                                <dt><span>Área dependencia (<span style={{color: 'red'}}>*</span>)</span></dt>
                                 <dd><ComboBox name="tipoDependencia" labelInput="Seleccione"
                                 {...tipoDependencia}
                                 valueProp={'id'}

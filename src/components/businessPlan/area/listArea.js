@@ -47,8 +47,8 @@ class ListArea extends Component {
             urlServer: "./component",
             component : "VIEW_AREA"
           },
-          uuid: uuid, areaDes: areaD, actionArea: actionArea, areaResponsable: areaResponsable,areaIdResponsable:areaIdResponsable,
-          areaDate: areaDate, statusIdArea: statusIdArea, statusArea: statusArea,
+          uuid: uuid, areaDes: areaDes, actionArea: actionArea, areaResponsable: areaResponsable,areaIdResponsable:areaIdResponsable,
+          areaDate: areaDate, statusIdArea: statusIdArea, statusArea: statusArea,areaD:areaD,
           'delete':  {
             typeDelete : DELETE_AREA_VIEW,
             id: uuid,
@@ -103,7 +103,7 @@ class ListArea extends Component {
                 onClick={this._viewDetailsArea.bind(this, areaData)}
                 style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
               </td>
-              <td>{areaData.areaDes}</td>
+              <td>{areaData.areaD}</td>
               <td>{areaData.areaResponsable}</td>
               <td>{areaData.statusArea}</td>
               <td  className="collapsing">
@@ -115,14 +115,20 @@ class ListArea extends Component {
   }
 
   render() {
+    var disabledButtonCreate= '';
     this._getValuesArea();
     const {areas, disabled} = this.props;
+    if(areas.size === 10){
+      disabledButtonCreate = 'disabled';
+    }else{
+      disabledButtonCreate = '';
+    }
     const modalTitle = 'Area Detalle';
     return (
       <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         {disabled === '' || disabled === undefined ?
         <Row xs={12} md={12} lg={12}>
-          <BotonCreateArea/>
+          <BotonCreateArea disabled={disabledButtonCreate}/>
         </Row>
         : ''}
         {areas.size > 0 ?

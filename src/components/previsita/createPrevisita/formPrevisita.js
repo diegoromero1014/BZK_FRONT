@@ -75,7 +75,7 @@ class FormPrevisita extends Component{
       activeItemTabClient: 'active',
       activeItemTabOther: '',
       targetPrevisit: "",
-      targetPrevisitError: "",
+      targetPrevisitError : null,
       pendingPrevisit: "",
       acondicionamiento: "",
       acondicionamientoTouch: false,
@@ -627,9 +627,9 @@ class FormPrevisita extends Component{
               type="text"
               max="3500"
               value={this.state.targetPrevisit}
-              error={this.state.targetPrevisitError}
               touched={true}
               onChange={val => this._changeTargetPrevisit(val)}
+              error={this.state.targetPrevisitError}
               title="La longitud máxima de caracteres es de 3500"
               style={{width: '100%', height: '178px'}}
             />

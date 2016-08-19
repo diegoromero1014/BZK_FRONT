@@ -273,7 +273,7 @@ class FormBusinessPlan extends Component {
         </Col>
         <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
           <dt>
-            <span>Objetivo del Plan de Negocios (</span><span style={{color: "red"}}>*</span>)
+            <span>Objetivo del plan de negocios (</span><span style={{color: "red"}}>*</span>)
           </dt>
           <dt>
             <ComboBox
@@ -297,7 +297,7 @@ class FormBusinessPlan extends Component {
             <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
-              <span style={{fontSize: "20px"}}> Oportunidades y Amenazas externas de la Compañía (<span style={{color: "red"}}>*</span>)</span>
+              <span style={{fontSize: "20px"}}> Oportunidades y amenazas externas de la compañía (<span style={{color: "red"}}>*</span>)</span>
               <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={TITLE_OPPORTUNITY_BUSINESS}/>
             </div>
           </Col>
@@ -344,7 +344,7 @@ class FormBusinessPlan extends Component {
            type="error"
            show={this.state.showErrorSaveBusiness}
            title="Error necesidades"
-           text="Señor usuario, para guardar un plan de negocio como definitivo debe agregar como minimo una necesidad."
+           text="Señor usuario, para guardar un plan de negocio como definitivo debe agregar como mínimo una necesidad."
            onConfirm={() => this.setState({showErrorSaveBusiness:false})}
            />
           <SweetAlert
