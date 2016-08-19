@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, UPDATE_ACTIVE_TAB} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, UPDATE_ACTIVE_TAB, CLAER_CLIENT_INFO} from './constants';
 
 const initialState = Immutable.Map({
   status: "200",
@@ -22,6 +22,9 @@ export default(state = initialState, action) => {
 
     case UPDATE_ACTIVE_TAB:
       return state.set("tabSelected", action.payload);
+
+    case CLAER_CLIENT_INFO:
+      return state.set("responseClientInfo", {});
 
     case CHANGE_CHECK_CLIENT:
       const data = action.payload;

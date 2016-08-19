@@ -5,3 +5,4 @@ export const VALUE_LIMIT_ORANGE = 8;
 export const COLOR_GREEN = '#00BF00';
 export const COLOR_ORANGE = 'orange';
 export const COLOR_RED = '#EC5F48';
+export const CLAER_CLIENT_INFO = 'CLAER_CLIENT_INFO';
