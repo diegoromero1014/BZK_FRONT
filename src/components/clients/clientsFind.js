@@ -14,6 +14,7 @@ import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {clearContact} from '../contact/actions';
+import {clearInfoClient} from '../clientInformation/actions';
 
 const fields =["team","certificationStatus"];
 
@@ -35,12 +36,13 @@ class ClientsFind extends Component {
     if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
       redirectUrl("/login");
     } else {
-      const {clearClients,consultList,getMasterDataFields, clearContact} = this.props;
+      const {clearClients,consultList,getMasterDataFields, clearContact, clearInfoClient} = this.props;
       clearClients();
       getMasterDataFields([constants.CERTIFICATION_STATUS]);
       consultList(constants.TEAM_FOR_EMPLOYEE);
       const {updateTitleNavBar} = this.props;
       updateTitleNavBar("Mis clientes");
+      clearInfoClient();
       clearContact();
     }
   }
@@ -172,16 +174,18 @@ function mapDispatchToProps(dispatch){
     changeKeyword,
     consultList,
     updateTitleNavBar,
-    clearContact
+    clearContact,
+    clearInfoClient
   }, dispatch);
 }
 
-function mapStateToProps({clientR, selectsReducer, navBar, contactsByClient},{fields}){
+function mapStateToProps({clientR, selectsReducer, navBar, contactsByClient, clientInformacion},{fields}){
   return {
     clientR,
     selectsReducer,
     navBar,
-    contactsByClient
+    contactsByClient,
+    clientInformacion
   };
 }
 

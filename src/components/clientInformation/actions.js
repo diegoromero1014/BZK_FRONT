@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO} from './constants';
 import axios from 'axios';
 
 export function consultInfoClient(){
@@ -30,6 +30,12 @@ export function consultInfoClient(){
 
 export function downloadFilePdf(idFileDownload){
   window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
+}
+
+export function clearInfoClient(){
+  return {
+    type: CLAER_CLIENT_INFO
+  }
 }
 
 export function changeCheckInfoClient(check){
