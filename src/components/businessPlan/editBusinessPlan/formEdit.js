@@ -289,13 +289,7 @@ class FormEdit extends Component {
           addArea(area);
         });
       });
-      consultParameterServer(LAST_BUSINESS_REVIEW).then((data)=> {
-        if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-          data.payload.data.parameter !== undefined ){
-          dateBusinessLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateBusinessLastReview = moment(dateBusinessLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
-        }
-      });
+
     }
   }
 
@@ -317,6 +311,10 @@ class FormEdit extends Component {
       if(detailBusiness.data.createdTimestamp !== null){
         var fechaCreateDateMoment = moment(detailBusiness.data.createdTimestamp, "x").locale('es');
         fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
+      }
+      if(detailBusiness.data.lastBusinessPlan !== null){
+        var dateBusinessLastReviewD = moment(detailBusiness.data.lastBusinessPlan, "x").locale('es');
+        dateBusinessLastReview = moment(dateBusinessLastReviewD, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
       }
     }
     return(
