@@ -325,6 +325,7 @@ class FormEditPipeline extends Component {
 		        .search({
 		          cache: false,
 		          source: usersBanco,
+              maxResults : 1500,
 		          searchFields: [
 		            'title',
 		            'description',
