@@ -41,7 +41,7 @@ class ItemChart extends Component{
        url = '/getCsvPipeline';
     }
     const {getCsv} = this.props;
-    getCsv(year,url,false,false,false, false).then(function(data) {
+    getCsv(year, url, false, false, false).then(function(data) {
       if (data.payload.data.status === 200) {
         window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
       }
