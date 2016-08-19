@@ -466,7 +466,7 @@ class FormPipeline extends Component {
                 <span>Empleado responsable</span>
               </dt>
               <dt>
-                <div className="ui dropdown search participantBanc fluid">
+                <div className="ui dropdown search participantBanc fluid" style={{border :"0", zIndex : "1", padding : "0"}}>
                   <div className="ui icon input" style={{width: "100%"}}>
                     <input className="prompt" id="inputParticipantBanc"
                       style={{borderRadius: "3px"}}
