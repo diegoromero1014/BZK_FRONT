@@ -77,14 +77,16 @@ class ViewChartBusinessPlan extends Component {
 			var data = response.payload.data.data;
 			var listNeeds = data.listNeeds;
 			numberBusinessPlans = data.numberBusinessPlans;
-			listNeeds.forEach(function(need){
-				dataBusinessAux.push({
-					angle: need[1],
-					id:_.uniqueId('color_'),
-					percentageNeed: need[2],
-					need: need[0]
+			if(listNeeds != null && listNeeds != '' && listNeeds !== undefined){
+				listNeeds.forEach(function(need){
+					dataBusinessAux.push({
+						angle: need[1],
+						id:_.uniqueId('color_'),
+						percentageNeed: need[2],
+						need: need[0]
+					});
 				});
-			});
+			}
 			this.setState({
 				dataBusiness: dataBusinessAux,
 				valueYear: year
