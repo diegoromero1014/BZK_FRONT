@@ -80,6 +80,7 @@ class ModalCreateTask extends Component{
           selector.search({
               cache: false,
               source: usersBanco,
+              maxResults : 1500,
               searchFields: [
                 'title',
                 'description'

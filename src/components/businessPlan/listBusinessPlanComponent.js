@@ -65,6 +65,7 @@ class ListBusinessPlanComponent extends Component {
       },
       {
         title: "Fecha",
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"businessDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"businessDate")}></i></span>,
         key:"businessDate"
       },
       {

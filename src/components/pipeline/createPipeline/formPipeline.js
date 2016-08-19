@@ -347,6 +347,8 @@ class FormPipeline extends Component {
             .search({
               cache: false,
               source: usersBanco,
+              maxResults : 1500,
+              height: '250px',
               searchFields: [
                 'title',
                 'description',
@@ -464,7 +466,7 @@ class FormPipeline extends Component {
                 <span>Empleado responsable</span>
               </dt>
               <dt>
-                <div className="ui search participantBanc fluid">
+                <div className="ui dropdown search participantBanc fluid">
                   <div className="ui icon input" style={{width: "100%"}}>
                     <input className="prompt" id="inputParticipantBanc"
                       style={{borderRadius: "3px"}}
@@ -478,7 +480,7 @@ class FormPipeline extends Component {
                     />
                     <i className="search icon"></i>
                   </div>
-                  <div className="results"></div>
+                  <div className="menu results"></div>
                 </div>
                 {
                   this.state.employeeResponsible &&

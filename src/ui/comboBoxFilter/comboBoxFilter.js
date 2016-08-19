@@ -15,7 +15,7 @@ class comboBoxFilter extends Component {
        }
        return (
            <div>
-             <div className={`styleWidthComponents ui search selection fluid ${name}`}>
+             <div className={`styleWidthComponents ui dropdown search selection fluid ${name}`}>
                <div className="ui icon input" style={{width: "100%"}}>
                  <input className="prompt" id={nameInput}
                    style={{borderRadius: "3px"}}
@@ -31,7 +31,7 @@ class comboBoxFilter extends Component {
                  />
                  <i className="search icon"></i>
                </div>
-               <div className="results"></div>
+               <div className="menu results"></div>
              </div>
                {
                  touched && error &&

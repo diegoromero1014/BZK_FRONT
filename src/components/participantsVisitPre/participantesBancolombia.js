@@ -116,6 +116,7 @@ class ParticipantesBancolombia extends Component{
             .search({
               cache: false,
               source: usersBanco,
+              maxResults : 1500,
               searchFields: [
                 'title',
                 'description',
@@ -169,7 +170,7 @@ class ParticipantesBancolombia extends Component{
             <Col xs={12} md={12} lg={12}>
               <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
               <dt>
-                <div className="ui search participantBanc fluid">
+                <div className="ui dropdown search participantBanc fluid">
                   <div className="ui icon input" style={{width: "100%"}}>
                     <input className="prompt" id="inputParticipantBanc"
                       style={{borderRadius: "3px"}}
@@ -183,7 +184,7 @@ class ParticipantesBancolombia extends Component{
                     />
                     <i className="search icon"></i>
                   </div>
-                  <div className="results"></div>
+                  <div className="menu results"></div>
                 </div>
               </dt>
             </Col>
