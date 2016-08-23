@@ -146,8 +146,11 @@ class FormPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
+    const selector =  $('.ui.search.tipoVisita');
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
+    selector.removeClass('active');
+    selector.removeClass('visible');
   }
 
   _closeConfirmChangeType(){
