@@ -146,11 +146,14 @@ class FormEditPipeline extends Component {
 	      }
 	    } else {
 	    	idCurrencyAux = parseInt(currencyValue);
-			contollerErrorChangeType = false;
-			this.setState({
-			  showConfirmChangeCurrency: false
-			});
+  			contollerErrorChangeType = false;
+  			this.setState({
+  			  showConfirmChangeCurrency: false
+  			});
 	    }
+      var lugarSelector = $('.valueMillions');
+      var input = lugarSelector.find("input");
+      input.focus();
 	}
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {

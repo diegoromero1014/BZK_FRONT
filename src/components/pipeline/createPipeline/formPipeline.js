@@ -173,6 +173,9 @@ class FormPipeline extends Component {
           showConfirmChangeCurrency: false
       });
     }
+    var lugarSelector = $('.valueMillions');
+    var input = lugarSelector.find("input");
+    input.focus();
   }
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
@@ -646,7 +649,7 @@ class FormPipeline extends Component {
                 <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
-                name="value"
+                name="valueMillions"
                 type="text"
                 {...value}
                 max="30"
