@@ -21,6 +21,7 @@ import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
+import $ from 'jquery';
 
 const fields = [];
 var datePrevisitLastReview;
