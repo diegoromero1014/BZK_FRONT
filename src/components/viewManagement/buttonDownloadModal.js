@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import ModalDownloadVisit from '../visit/downloadVisits/component';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import ModalDownloadPreVisit from '../previsita/downloadPrevisits/component';
 import ModalDownloadBusinessPlan from '../businessPlan/downloadBusinessPlan/component';
 import Modal from 'react-modal';
@@ -53,4 +55,16 @@ class ButtonDownloadModal extends Component {
 	};
 }
 
-export default ButtonDownloadModal;
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+  }, dispatch);
+}
+
+function mapStateToProps({viewManagementReducer},ownerProps) {
+  return {
+    viewManagementReducer
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonDownloadModal);

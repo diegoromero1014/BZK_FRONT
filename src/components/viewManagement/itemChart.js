@@ -25,7 +25,6 @@ class ItemChart extends Component{
     valueYear: "",
     item : ""};
     momentLocalizer(moment);
-    this._onChangeYear = this._onChangeYear.bind(this);
   }
 
   _clickSectionChart(itemSeleted){
@@ -48,14 +47,6 @@ class ItemChart extends Component{
     });
   }
 
-  _onChangeYear(value) {
-    this.setState({valueYear: value});
-  }
-
-	componentDidMount() {
-    this.setState({valueYear: moment().year()});
-	}
-
   render(){
     const {textValue, iconValue, itemSeleted, styleColor} = this.props;
     var styleBorderDownload = "1px solid " + styleColor;
@@ -68,15 +59,11 @@ class ItemChart extends Component{
             <span style={{fontSize: "30px", float: 'right', marginTop: '40px', marginRight: "25px"}} >{textValue}</span>
           </div>
         </div>
-        <div style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor, borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
-          <div style={{width:"150px", float:"left", margin:"4px"}}>
-            <SelectYearComponent
-              idTypeFilter={TYPE_YEAR}
-              onChange={val => this._onChangeYear(val)}
-              value={this.state.valueYear}
-              styles={styles}
-            />
-          </div>
+        <div style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
+          borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
+          <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
+            onChange: (value) => this.setState({valueYear: value.id})
+          }}/>
           { itemSeleted === TAB_VISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
           { itemSeleted === TAB_PIPELINE && <i className='green file excel outline icon'
                       title="Descargar información en formato CSV"

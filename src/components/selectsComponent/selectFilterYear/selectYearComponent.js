@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import {Combobox} from 'react-widgets';
 import {TYPE_YEAR} from '../constants';
 import moment from 'moment';
 
@@ -10,7 +10,14 @@ class SelectYearComponent extends Component{
   }
 
   render(){
-      const {selectsReducer, idTypeFilter, defaultValue, onChange, config, disabled, value, styles} = this.props;
+      const {
+          selectsReducer,
+          idTypeFilter,
+          defaultValue,
+          onChange,
+          config,
+          disabled
+      } = this.props;
       var data = [];
       if (idTypeFilter === TYPE_YEAR) {
         var i;
@@ -22,18 +29,19 @@ class SelectYearComponent extends Component{
           }
       }
       return(
-          <ComboBox
-            {...config}
-            styles = {styles}
-            id="year"
-            valueProp={'id'}
-            textProp={'value'}
-            data={data}
-            value={value}
-            onBlur={() => ''}
-            placeholder='Año'
-            onChange={onChange}
-            disabled={disabled}
+          <Combobox
+              style = {{height: '30px',float: 'left',margin: '4px'}}
+              id="year"
+              valueField='id'
+              textField='value'
+              data={data}
+              defaultValue={moment().year() + ""}
+              minLength={3}
+              placeholder='Año'
+              filter='contains'
+              onChange={onChange}
+              disabled={disabled}
+              {...config}
           />
       );
   }
