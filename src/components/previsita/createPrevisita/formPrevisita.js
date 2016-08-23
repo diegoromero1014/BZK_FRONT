@@ -151,6 +151,7 @@ class FormPrevisita extends Component{
     this.setState({showConfirmChangeTypeVisit: false });
     selector.removeClass('active');
     selector.removeClass('visible');
+    $('.right.menu.tipoVisita').css({'display': 'none'});
   }
 
   _closeConfirmChangeType(){

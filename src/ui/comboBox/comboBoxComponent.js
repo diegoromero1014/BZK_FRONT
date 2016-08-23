@@ -98,7 +98,7 @@ class comboBoxComponent extends Component {
                    <input type="hidden" name={nameInput}/>
                    <i className="dropdown icon"/>
                    <div className={`default text ${searchClient}`}>{labelInput}</div>
-                   <div className="right menu">
+                   <div className={`right menu ${name}`}>
                        {_.map(data, this.mapValuesToDropDown)}
                    </div>
                </div>
