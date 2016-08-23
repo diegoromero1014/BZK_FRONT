@@ -147,11 +147,11 @@ class FormPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
-    contollerErrorChangeType = false;
-    this.setState({showConfirmChangeTypeVisit: false });
     var lugarSelector = $('.txtLugar');
     var input = lugarSelector.find("input");
     input.focus();
+    contollerErrorChangeType = false;
+    this.setState({showConfirmChangeTypeVisit: false });
   }
 
   _closeConfirmChangeType(){
@@ -185,9 +185,6 @@ class FormPrevisita extends Component{
       nuestraSolucionTouch: false,
       nuestraSolucionError: "",
     });
-    var lugarSelector = $('.txtLugar');
-    var input = lugarSelector.find("input");
-    input.focus();
   }
 
   _changeDatePreVisit(value){

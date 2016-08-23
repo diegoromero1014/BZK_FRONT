@@ -209,9 +209,6 @@ class FormEditPrevisita extends Component{
       nuestraSolucionTouch: false,
       nuestraSolucionError: "",
     });
-    var lugarSelector = $('.txtLugar');
-    var input = lugarSelector.find("input");
-    input.focus();
   }
 
   _changeDatePreVisit(value){
