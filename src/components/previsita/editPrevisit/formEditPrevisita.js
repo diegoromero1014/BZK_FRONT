@@ -171,12 +171,10 @@ class FormEditPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
-    const selector =  $('.ui.search.tipoVisita');
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
-    selector.removeClass('active');
-    selector.removeClass('visible');
-    $('.right.menu.tipoVisita').css({'display': 'none'});
+    const selector =  $('.ui.search.tipoVisita');
+    selector.blur();
   }
 
   _closeConfirmChangeType(){
@@ -210,6 +208,8 @@ class FormEditPrevisita extends Component{
       nuestraSolucionTouch: false,
       nuestraSolucionError: "",
     });
+    const selector =  $('.ui.search.tipoVisita');
+    selector.blur();
   }
 
   _changeDatePreVisit(value){

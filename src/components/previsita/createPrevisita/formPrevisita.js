@@ -147,18 +147,10 @@ class FormPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
-    console.log("1");
-    const selector =  $('.ui.search.tipoVisita');
-    console.log("2");
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
-    console.log("3");
-    selector.removeClass('active');
-    console.log("4");
-    selector.removeClass('visible');
-    console.log("5");
-    $('.right.menu.tipoVisita').css({'display': 'none'});
-    console.log("6");
+    const selector =  $('.ui.search.tipoVisita');
+    selector.blur();
   }
 
   _closeConfirmChangeType(){
@@ -192,15 +184,8 @@ class FormPrevisita extends Component{
       nuestraSolucionTouch: false,
       nuestraSolucionError: "",
     });
-    console.log("1");
     const selector =  $('.ui.search.tipoVisita');
-    console.log("2");
-    selector.removeClass('active');
-    console.log("4");
-    selector.removeClass('visible');
-    console.log("5");
-    $('.right.menu.tipoVisita').css({'display': 'none'});
-    console.log("6");
+    selector.blur();
   }
 
   _changeDatePreVisit(value){
