@@ -666,9 +666,9 @@ class FormEditPipeline extends Component {
 				        <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
 				      </dt>
 				      <Input
-				        name="value"
+                {...value}
+				        name="valueMillions"
 				        type="text"
-				        {...value}
                 max="30"
 				        parentId="dashboardComponentScroll"
                 onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}

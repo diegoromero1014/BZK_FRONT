@@ -649,9 +649,9 @@ class FormPipeline extends Component {
                 <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
+                {...value}
                 name="valueMillions"
                 type="text"
-                {...value}
                 max="30"
                 parentId="dashboardComponentScroll"
                 onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
