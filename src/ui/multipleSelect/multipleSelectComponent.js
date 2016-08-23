@@ -27,6 +27,7 @@ class MultipleSelectComponent extends Component {
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
+            fullTextSearch : true,
             onChange: function (id, text) {
                 self.touched = true;
                 self.setState({
