@@ -21,6 +21,7 @@ import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
+import $ from 'jquery';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -146,12 +147,10 @@ class FormPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
-    const selector =  $('.ui.search.tipoVisita');
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
-    selector.removeClass('active');
-    selector.removeClass('visible');
-    $('.right.menu.tipoVisita').css({'display': 'none'});
+    const selector =  $('.ui.search.tipoVisita');
+    selector.blur();
   }
 
   _closeConfirmChangeType(){
@@ -185,6 +184,8 @@ class FormPrevisita extends Component{
       nuestraSolucionTouch: false,
       nuestraSolucionError: "",
     });
+    const selector =  $('.ui.search.tipoVisita');
+    selector.blur();
   }
 
   _changeDatePreVisit(value){
