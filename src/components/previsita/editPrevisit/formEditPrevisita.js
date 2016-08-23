@@ -174,7 +174,9 @@ class FormEditPrevisita extends Component{
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
     const selector =  $('.ui.search.tipoVisita');
-    selector.blur();
+    setTimeout(function(){
+      selector.blur();
+    }, 1000);
   }
 
   _closeConfirmChangeType(){
@@ -209,7 +211,9 @@ class FormEditPrevisita extends Component{
       nuestraSolucionError: "",
     });
     const selector =  $('.ui.search.tipoVisita');
-    selector.blur();
+    setTimeout(function(){
+      selector.blur();
+    }, 1000);
   }
 
   _changeDatePreVisit(value){
