@@ -22,6 +22,7 @@ import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
+import $ from 'jquery';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -170,12 +171,11 @@ class FormEditPrevisita extends Component{
   }
 
   _closeCancelConfirmChanType(){
-    const selector =  $('.ui.search.tipoVisita');
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
-    selector.removeClass('active');
-    selector.removeClass('visible');
-    $('.right.menu.tipoVisita').css({'display': 'none'});
+    var lugarSelector = $('.txtLugar');
+    var input = lugarSelector.find("input");
+    input.focus();
   }
 
   _closeConfirmChangeType(){

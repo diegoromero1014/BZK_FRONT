@@ -244,16 +244,12 @@ class clientEdit extends Component{
       economicGroupsByKeyword(economicGroupName.value);
       economicGroupName.onChange('');
     } else {
-      //console.log('else');
       economicGroupName.onChange(e.target.value);
     }
   }
 
   updateKeyValueUsersBanco(e) {
-    //console.log('updateKeyValueUsersBanco');
     const {fields: {groupEconomic, economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
-    //console.log('economicGroupName.value -> ', economicGroupName.value);
-    //let self = this;
     groupEconomic.onChange('');
     nitPrincipal.onChange('');
     if(e.keyCode === 13 || e.which === 13) {
@@ -261,15 +257,9 @@ class clientEdit extends Component{
       if( economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined ) {
         $('.ui.search.participantBanc').toggleClass('loading');
         economicGroupsByKeyword(economicGroupName.value).then((data) => {
-          //console.log('Resultados de la búsqueda');
-          //console.log('data -> ', data);
           let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
           let economicGroup2 = _.forEach(economicGroup1, function(data1) {
-            //console.log('data1 -> ', data1);
-            if (data1.group.indexOf('/') != -1) {
-              data1.title = data1.group.split('/')[0];
-            }
-            //data1.title = data1.group;
+            data1.title = data1.group;
             data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
           });
           $('.ui.search.participantBanc')
@@ -291,10 +281,6 @@ class clientEdit extends Component{
               }
             });
             $('.ui.search.participantBanc').toggleClass('loading');
-            //$('[name="marcGeren"]').focus();
-            //$('#inputEconomicGroup').blur();
-            //setTimeout(function() { $('#inputEconomicGroup').focus(); }, 300);
-            //$('#inputEconomicGroup').focus();
             $('.prompt').focus();
           }
         );
