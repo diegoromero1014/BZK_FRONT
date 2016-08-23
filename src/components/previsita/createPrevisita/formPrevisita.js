@@ -144,12 +144,12 @@ class FormPrevisita extends Component{
           this._closeConfirmChangeType();
         }
       }
+      var lugarSelector = $('.txtLugar');
+      var input = lugarSelector.find("input");
+      input.focus();
   }
 
   _closeCancelConfirmChanType(){
-    var lugarSelector = $('.txtLugar');
-    var input = lugarSelector.find("input");
-    input.focus();
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
   }

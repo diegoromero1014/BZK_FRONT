@@ -168,14 +168,14 @@ class FormEditPrevisita extends Component{
     } else {
       firstLoadInfo = true;
     }
+    var lugarSelector = $('.txtLugar');
+    var input = lugarSelector.find("input");
+    input.focus();
   }
 
   _closeCancelConfirmChanType(){
     contollerErrorChangeType = false;
     this.setState({showConfirmChangeTypeVisit: false });
-    var lugarSelector = $('.txtLugar');
-    var input = lugarSelector.find("input");
-    input.focus();
   }
 
   _closeConfirmChangeType(){
