@@ -268,7 +268,7 @@ class clientEdit extends Component{
               source: economicGroup1,
               searchFields: [
                 'title',
-                'description',  
+                'description',
                 'id',
                 'relationshipManagerId'
               ],
@@ -762,6 +762,7 @@ class clientEdit extends Component{
               <dt>
                 <Textarea
                   name="address"
+                  validateEnter={true}
                   type="text"
                   style={{width: '100%', height: '100%'}}
                   max="250"
