@@ -521,6 +521,7 @@ class ModalComponentContact extends Component {
                                 <dd>
                                 <TextareaComponent
                                   name="direccion"
+                                  validateEnter={true}
                                   type="text"
                                   max="250"
                                   style={{width: '100%', height: '100%'}}

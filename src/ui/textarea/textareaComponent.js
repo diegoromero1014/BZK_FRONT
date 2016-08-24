@@ -5,21 +5,24 @@ import _ from 'lodash';
 class TextareaComponent extends Component {
   constructor(props) {
       super(props);
-      this._onEnter = this._onEnter.bind();
+      this._onEnter = this._onEnter.bind(this);
       this.state = {
           value: ''
       };
   }
 
   _onEnter(e){
-  var tecla = e.keyCode ? e.keyCode : e.which;
-  if(tecla === 13){
-      e.preventDefault();
+    //Solo se envia esta propiedad si qse quiere que el campo de texto no reciba enter
+    const {validateEnter} = this.props;
+    var tecla = e.keyCode ? e.keyCode : e.which;
+    if(tecla === 13 && validateEnter){
+        e.preventDefault();
     }
   }
 
   render() {
-      const {nameInput,value, style,type, placeholder, max, touched, error, name, onChange, min, defaultValue, rows,onKey} = this.props;
+      const {nameInput,value, style,type, placeholder, max, touched, error, name, onChange,
+        min, defaultValue, rows,onKey} = this.props;
       return (
           <div >
               <div className={`styleWidthComponents ui input ${name}`}>

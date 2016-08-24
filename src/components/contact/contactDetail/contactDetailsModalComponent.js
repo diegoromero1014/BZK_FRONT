@@ -635,6 +635,7 @@ class ContactDetailsModalComponent extends Component {
                   <dd>
                     <Textarea className="form-control need-input"
                       {...contactAddress}
+                      validateEnter={true}
                       name="contactAddress"
                       maxLength="250"
                       disabled={this.state.isEditable ? '' : 'disabled'}
