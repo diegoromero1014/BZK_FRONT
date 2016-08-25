@@ -44,14 +44,12 @@ class DownloadPrevisits extends Component {
 			year = yearModal !== '' ? yearModal : moment().year();
 			url = '/getCsvPreVisits';
 			getCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
-				console.log("data", data);
 				if (data.payload.data.status === 200) {
 					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
 				}
 			});
 		} else {
 			getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
-				console.log("data", data);
 				if (data.payload.data.status === 200) {
 					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
 					isOpen();

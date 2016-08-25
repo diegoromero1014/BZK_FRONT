@@ -36,10 +36,10 @@ class DownloadBusinessPlan extends Component {
 			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
-					 if (data.payload.data.status === 200) {
-					 	window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-					 }
-				});
+				 if (data.payload.data.status === 200) {
+				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+				 }
+			});
 		} else {
 			getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
 				if (data.payload.data.status === 200) {
@@ -53,7 +53,7 @@ class DownloadBusinessPlan extends Component {
 	render() {
 		return (
 			<div>
-				<div style={{height: 'auto'}}className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos  de los "informes de plan de negocio" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
 
