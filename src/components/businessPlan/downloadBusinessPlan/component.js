@@ -43,7 +43,7 @@ class DownloadBusinessPlan extends Component {
 		} else {
 			getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
 					isOpen();
 				}
 			});

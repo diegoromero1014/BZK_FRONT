@@ -51,7 +51,7 @@ class DownloadVisits extends Component {
 		}else{
 			getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
 					isOpen();
 				}
 			});
