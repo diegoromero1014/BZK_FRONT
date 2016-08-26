@@ -13,24 +13,12 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 	}
 
 	_downloadBusinessPlans() {
-		let year;
-		let url;
 		const {getCsvBusinessPlanByClient, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
-		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
-		  	url = '/getCsvBusinessPlan';
-			getCsvBusinessPlan(year, null).then(function(data) {
-					 if (data.payload.data.status === 200) {
-					 	window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-					 }
-				});
-		} else {
-			getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), null).then(function(data) {
-				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
-				}
-			});
-		}
+		getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), null).then(function(data) {
+			if (data.payload.data.status === 200) {
+				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+			}
+		});
 	}
 
 	render() {
