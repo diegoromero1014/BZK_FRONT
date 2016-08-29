@@ -16,7 +16,7 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 		const {getCsvBusinessPlanByClient, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
 		getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), null).then(function(data) {
 			if (data.payload.data.status === 200) {
-				window.open(APP_URL + '/getCsvReport?filename=' + data.payload.data.data, '_blank');
+				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
 			}
 		});
 	}
