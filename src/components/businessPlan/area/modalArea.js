@@ -223,6 +223,7 @@ class ModalArea extends Component {
                       parentId="dashboardComponentScroll"
                       onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                       onSelect={val => this._updateValue(val)}
+                      max="50"
                     />
                     </dt>
                   </Col>

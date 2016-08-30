@@ -932,7 +932,7 @@ class FormEditPrevisita extends Component{
            type= "warning"
            show={this.state.showConfirmChangeTypeVisit}
            title="Tipo de visita"
-           text="Señor usuario, si cambia el “Tipo de visita” la información diligenciada en la sección Metodología Challenger se borrará. ¿Estás seguro que desea cambiar el Tipo de visita?"
+           text="Señor usuario, si cambia el “Tipo de visita” la información diligenciada en la sección Metodología Challenger se borrará. ¿Está seguro que desea cambiar el Tipo de visita?"
            confirmButtonColor= '#DD6B55'
            confirmButtonText= 'Sí, estoy seguro!'
            cancelButtonText = "Cancelar"
