@@ -363,6 +363,7 @@ class FormEdit extends Component{
           idResponsable: value.employee,
           responsable: value.employeeName,
           fecha: moment(value.closingDate).format('DD/MM/YYYY')
+          fechaForm: moment(value.closingDate).format('DD/MM/YYYY')
         }
         addTask(task);
       });

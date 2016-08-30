@@ -65,7 +65,6 @@ class ModalTask extends Component {
       if(taskEdit !== undefined){
         responsable.onChange(taskEdit.responsable);
         tarea.onChange(taskEdit.tarea);
-        console.log('taskEdit.fechaForm', taskEdit.fechaForm);
         fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
       }
     }
