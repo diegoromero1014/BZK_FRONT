@@ -1,17 +1,13 @@
 import Immutable from 'immutable';
 import _ from 'lodash';
 
-export function createFieldsStatusSet(fields, order) {
-    let setToReturn = Immutable.OrderedMap();
+export function createErrorsPriority(fields, order) {
+    let errorMap = Immutable.OrderedMap();
     _.map(order, key => {
-        setToReturn = setToReturn.set(key, _.get(fields, key));
+        errorMap = errorMap.set(key, _.get(fields, key));
     });
-    return setToReturn;
-}
-
-export function createErrorsPriority(orderedSet) {
-    const itemKey = orderedSet.findKey(value => value.invalid);
-    return orderedSet
+    const itemKey = errorMap.findKey(value => value.invalid);
+    return errorMap
         .map((item, key) => {
             return _.assign({}, item, {
                 shouldHandleError: item.invalid && _.isEqual(itemKey, key)

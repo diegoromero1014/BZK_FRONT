@@ -14,7 +14,7 @@ export const scrollToComponent = (ChildComponent) => {
             if (this.refs[name] !== null && id) {
                 var combo = this.refs[name];
                 const parentScroll = document.getElementById(id).scrollTop;
-                const diff = combo.getBoundingClientRect().height < 70 ? combo.getBoundingClientRect().height + 70 : combo.getBoundingClientRect().height;
+                const diff = combo.getBoundingClientRect().height < 50 ? combo.getBoundingClientRect().height + 50 : combo.getBoundingClientRect().height;
                 document.getElementById(id).scrollTop = parentScroll + combo.getBoundingClientRect().top - diff;
             }
         }

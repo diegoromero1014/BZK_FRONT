@@ -20,8 +20,8 @@ import {
     consultListWithParameterUbication,
     getMasterDataFields
 } from '../../selectsComponent/actions';
-import {createFieldsStatusSet, createErrorsPriority, shouldHandleError} from './utils';
-import Immutable from 'immutable';
+import {createErrorsPriority, shouldHandleError} from './utils';
+import {OrderedMap} from 'immutable';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {
     FILTER_CITY,
@@ -146,7 +146,7 @@ class ModalComponentContact extends Component {
             botonBus: 'block',
             disabledDep: 'disabled',
             disabledCiu: 'disabled',
-            errorMap: Immutable.OrderedMap()
+            errorMap: OrderedMap()
         };
         momentLocalizer(moment);
     }
@@ -309,7 +309,7 @@ class ModalComponentContact extends Component {
 
     componentWillReceiveProps(props) {
         this.setState({
-            errorMap: createErrorsPriority(createFieldsStatusSet(props.fields, fields))
+            errorMap: createErrorsPriority(props.fields, fields)
         });
     }
 
@@ -326,7 +326,6 @@ class ModalComponentContact extends Component {
         return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                      id="modalComponentScroll">
-                    <pre>{JSON.stringify(this.props.fields)}</pre>
                     <dt className="business-title"><span
                         style={{paddingLeft: '20px'}}>Información básica contacto</span></dt>
                     <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
