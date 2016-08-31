@@ -41,9 +41,10 @@ import {
     FILTER_ATTITUDE_OVER_GROUP
 } from '../../selectsComponent/constants';
 
-const fields = ["id", "tipoDocumento", "tipoTratamiendo", "tipoGenero", "tipoDependencia", "tipoEstiloSocial", "tipoCargo", "tipoActitud", "tipoContacto",
-    "numeroDocumento", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido", "fechaNacimiento", "direccion", "barrio",
-    "codigoPostal", "telefono", "extension", "celular", "correo", "tipoEntidad", "tipoFuncion", "tipoHobbie", "tipoDeporte", "pais", "departamento", "ciudad"];
+const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
+    "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
+    "codigoPostal", "telefono", "extension", "celular", "correo", "tipoContacto", "tipoEntidad", "tipoFuncion", "tipoHobbie", "tipoDeporte"
+];
 const errors = {};
 const validate = (values) => {
     if (!values.tipoCargo) {
