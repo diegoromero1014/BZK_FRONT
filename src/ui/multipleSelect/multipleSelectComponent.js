@@ -49,8 +49,8 @@ class MultipleSelectComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, style, data, touched, invalid, error, name, disabled, scrollTo, parentId} = this.props;
-        if( touched && invalid ){
+        const {nameInput, labelInput, style, data, touched, invalid, error, name, disabled, scrollTo, parentId, shouldHandleUpdate} = this.props;
+        if( touched && invalid && shouldHandleUpdate){
           scrollTo(parentId);
         }
         return (

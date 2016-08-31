@@ -20,8 +20,8 @@ class inputComponent extends Component {
   }
 
   render() {
-      const {nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus} = this.props;
-      if( touched && error ){
+      const {nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate} = this.props;
+      if( touched && error  && shouldHandleUpdate){
         $(`.ui.input.${name} [type=text]`).focus();
       }
       return (
