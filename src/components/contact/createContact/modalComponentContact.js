@@ -125,7 +125,8 @@ class ModalComponentContact extends Component {
            disabled : '',
            botonBus : 'block',
            disabledDep : 'disabled',
-           disabledCiu :'disabled'
+           disabledCiu :'disabled',
+           showCam: false
          }
         momentLocalizer(moment);
     }
@@ -221,6 +222,8 @@ class ModalComponentContact extends Component {
             }, (reason) => {
               this.setState({showEr: true});
           });
+      }else{
+        this.setState({showCam:true});
       }
     }
 
@@ -307,7 +310,6 @@ class ModalComponentContact extends Component {
                                     name="numeroDocumento"
                                     type="text"
                                     max="20"
-                                    placeholder="Ingrese el número de documento"
                                     disabled = {this.state.disabled}
                                     {...numeroDocumento}
                                   /></dd>
@@ -700,6 +702,13 @@ class ModalComponentContact extends Component {
                            text="Señor usuario, ocurrió un error creando el contacto."
                            onConfirm={() => this.setState({showEr:false})}
                            />
+                           <SweetAlert
+                            type= "error"
+                            show={this.state.showCam}
+                            title="Campos obligatorios"
+                            text="Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del contacto."
+                            onConfirm={() => this.setState({showCam:false})}
+                            />
                   </form>
         );
     }
