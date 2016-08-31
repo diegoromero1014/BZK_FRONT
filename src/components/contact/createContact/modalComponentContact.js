@@ -20,7 +20,7 @@ import {
     consultListWithParameterUbication,
     getMasterDataFields
 } from '../../selectsComponent/actions';
-import {createErrorsPriority, shouldHandleError} from './utils';
+import {createErrorsPriority, shouldHandleError} from '../../../utils';
 import {OrderedMap} from 'immutable';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {
@@ -409,6 +409,7 @@ class ModalComponentContact extends Component {
                                             type="text"
                                             max="60"
                                             {...primerNombre}
+                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerNombre')}
                                         /></dd>
                                 </dl>
                             </Col>
@@ -433,6 +434,7 @@ class ModalComponentContact extends Component {
                                         type="text"
                                         max="60"
                                         {...primerApellido}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerApellido')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -458,6 +460,7 @@ class ModalComponentContact extends Component {
                                                   textProp={'value'}
                                                   parentId="modalComponentScroll"
                                                   data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
+                                                  shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoCargo')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -470,6 +473,7 @@ class ModalComponentContact extends Component {
                                                   textProp={'value'}
                                                   parentId="modalComponentScroll"
                                                   data={selectsReducer.get(FILTER_DEPENDENCY) || []}
+                                                  shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoDependencia')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -533,6 +537,7 @@ class ModalComponentContact extends Component {
                                         textProp={'value'}
                                         parentId="modalComponentScroll"
                                         data={selectsReducer.get(FILTER_COUNTRY) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -551,6 +556,7 @@ class ModalComponentContact extends Component {
                                         textProp={'value'}
                                         parentId="modalComponentScroll"
                                         data={selectsReducer.get('dataTypeProvince')}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -566,6 +572,7 @@ class ModalComponentContact extends Component {
                                         textProp={'value'}
                                         parentId="modalComponentScroll"
                                         data={selectsReducer.get('dataTypeCity')}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -584,6 +591,7 @@ class ModalComponentContact extends Component {
                                             onChange={val => this._onchangeValue("direccion", val)}
                                             rows={4}
                                             {...direccion}
+                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'direccion')}
                                         /></dd>
                                 </dl>
                             </Col>
@@ -619,6 +627,7 @@ class ModalComponentContact extends Component {
                                         type="text"
                                         max="30"
                                         {...telefono}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'telefono')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -654,6 +663,7 @@ class ModalComponentContact extends Component {
                                         type="text"
                                         max="150"
                                         {...correo}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'correo')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -673,6 +683,7 @@ class ModalComponentContact extends Component {
                                                   textProp={'value'}
                                                   parentId="modalComponentScroll"
                                                   data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
+                                                  shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoContacto')}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -700,6 +711,7 @@ class ModalComponentContact extends Component {
                                                         textProp={'value'}
                                                         parentId="modalComponentScroll"
                                                         data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
                                     /></dd>
                                 </dl>
                             </Col>
