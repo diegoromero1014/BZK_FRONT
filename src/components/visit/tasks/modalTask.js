@@ -65,7 +65,7 @@ class ModalTask extends Component {
       if(taskEdit !== undefined){
         responsable.onChange(taskEdit.responsable);
         tarea.onChange(taskEdit.tarea);
-        fecha.onChange(moment(taskEdit.fecha, 'DD MMM YYYY').format("DD/MM/YYYY"));
+        fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
       }
     }
 
@@ -133,6 +133,7 @@ class ModalTask extends Component {
         taskEdit.idResponsable = idUsuario;
         taskEdit.responsable = nameUsuario;
         taskEdit.fecha = fecha.value;
+        taskEdit.fechaForm = fecha.value;
         editTask(taskEdit);
         this.setState({
           showSuccessEdit: true
@@ -144,7 +145,8 @@ class ModalTask extends Component {
           tarea: tarea.value,
           idResponsable: idUsuario,
           responsable: nameUsuario,
-          fecha: fecha.value
+          fecha: fecha.value,
+          fechaForm: fecha.value
         }
         addTask(task);
         this.setState({
@@ -249,7 +251,7 @@ function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
       selectsReducer,
       initialValues: {
         responsable: taskEdit.responsable,
-        fecha: moment(taskEdit.fecha, 'DD MMM YYYY').format("DD/MM/YYYY"),
+        fecha: taskEdit.fechaForm,
         tarea : taskEdit.tarea
       }
 

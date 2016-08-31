@@ -13,7 +13,8 @@ export default (state = initialState, action) => {
         tarea: task.tarea,
         idResponsable: task.idResponsable,
         responsable: task.responsable,
-        fecha: task.fecha
+        fecha: task.fecha,
+        fechaForm: task.fechaForm
       });
       return state.push(newTask);
     case constants.DELETE_TASK:
@@ -30,6 +31,7 @@ export default (state = initialState, action) => {
            item.idResponsable = taskEdit.idResponsable;
            item.responsable = taskEdit.responsable;
            item.fecha = taskEdit.fecha;
+           item.fechaForm = taskEdit.fechaForm;
            return item;
         }
       );

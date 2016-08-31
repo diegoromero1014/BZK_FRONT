@@ -2,6 +2,7 @@ import React, {Component,PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import {toggleModal} from './action';
+import {clearClienEdit} from '../contact/contactDetail/actions';
 import {bindActionCreators} from 'redux';
 import * as views from './constants';
 import {clearSearchShareholder} from '../shareholder/shareholderDetail/actions';
@@ -34,7 +35,12 @@ class ModalComponentDialog extends Component {
     }
 
     closeModal(){
+      const {clearClienEdit} = this.props;
+      const actions = this.props.actions
       this.setState({modalIsOpen: false});
+      if( actions.component === views.VIEW_CONTACT ){
+        clearClienEdit();
+      }
     }
 
     _contectViewModal(actions, idx){
@@ -99,7 +105,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
       clearValuesAdressessKeys,
       clearSearchShareholder,
-      toggleModal
+      toggleModal,
+      clearClienEdit
     }, dispatch);
 }
 

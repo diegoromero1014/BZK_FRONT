@@ -40,7 +40,7 @@ class ListTasks extends Component {
     });
     if(tasks.size > 0){
       var data = _.chain(tasks.toArray()).map(task => {
-        const {uuid, responsable, fecha, tarea} = task;
+        const {uuid, responsable, fechaForm, fecha, tarea} = task;
         var descripcionTarea = tarea.length > 120 ? tarea.substring(0, 120) + "..." : tarea;
         var fechaDateMoment = moment(fecha, "DD/MM/YYYY").locale('es');
         var fechaDateMomentString = fechaDateMoment.format("DD") + " " + fechaDateMoment.format("MMM") + " " + fechaDateMoment.format("YYYY");
@@ -51,7 +51,7 @@ class ListTasks extends Component {
             urlServer: "./component",
             component : "VIEW_TASK"
           },
-          uuid: uuid, responsable: responsable, fecha: fechaDateMomentString, tarea: descripcionTarea,
+          uuid: uuid, responsable: responsable, fechaForm: fechaForm, fecha: fechaDateMomentString, tarea: tarea, descripcionTarea: descripcionTarea,
           'delete':  {
             typeDelete : DELETE_TASK_VIEW,
             id: uuid,
@@ -108,7 +108,7 @@ class ListTasks extends Component {
               </td>
               <td>{taskData.responsable}</td>
               <td>{taskData.fecha}</td>
-              <td>{taskData.tarea}</td>
+              <td>{taskData.descripcionTarea}</td>
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar tarea"
                   onClick={this._confirmDeleteTask.bind(this, taskData.uuid)}
