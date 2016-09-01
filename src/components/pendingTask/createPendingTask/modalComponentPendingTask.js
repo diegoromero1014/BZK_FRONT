@@ -184,6 +184,7 @@ class ModalComponentPendingTask extends Component {
                   value={responsable.value}
                   onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                   onSelect={val => this._updateValue(val)}
+                  max="255"
                 />
                 </dd>
               </dl>
