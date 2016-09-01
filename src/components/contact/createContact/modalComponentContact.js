@@ -247,17 +247,11 @@ class ModalComponentContact extends Component {
                     this.setState({botonBus: 'none'});
                 }
             }, (reason) => {
-<<<<<<< HEAD
               this.setState({showEr: true});
           });
       }else{
         this.setState({showCam:true});
       }
-=======
-                this.setState({showEr: true});
-            });
-        }
->>>>>>> 5c3ed92cc70d467d54e6776859ea36821b1d2dab
     }
 
 
@@ -356,8 +350,7 @@ class ModalComponentContact extends Component {
                             </Col>
                             <Col xs>
                                 <dl style={{width: '100%'}}>
-<<<<<<< HEAD
-                                  <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
+                                <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                                   <dd><Input
                                     name="numeroDocumento"
                                     type="text"
@@ -365,17 +358,6 @@ class ModalComponentContact extends Component {
                                     disabled = {this.state.disabled}
                                     {...numeroDocumento}
                                   /></dd>
-=======
-                                    <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                    <dd><Input
-                                        name="numeroDocumento"
-                                        type="text"
-                                        max="20"
-                                        placeholder="Ingrese el número de documento"
-                                        disabled={this.state.disabled}
-                                        {...numeroDocumento}
-                                    /></dd>
->>>>>>> 5c3ed92cc70d467d54e6776859ea36821b1d2dab
                                 </dl>
                             </Col>
                             <Col xs>
@@ -767,7 +749,6 @@ class ModalComponentContact extends Component {
                                 </dl>
                             </Col>
                         </Row>
-<<<<<<< HEAD
                       </div>
                       </div>
                         <div className="modalBt4-footer modal-footer">
@@ -803,37 +784,6 @@ class ModalComponentContact extends Component {
                             onConfirm={() => this.setState({showCam:false})}
                             />
                   </form>
-=======
-                    </div>
-                </div>
-                <div className="modalBt4-footer modal-footer">
-                    <button type="submit" style={{visibility: this.state.noExiste}}
-                            className="btn btn-primary modal-button-edit">Guardar
-                    </button>
-                </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showEx}
-                    title="Creación de contacto"
-                    text="Señor usuario, el contacto se creó de forma exitosa."
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="warning"
-                    title="Advertencia"
-                    show={this.state.showErrorYa}
-                    text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
-                    onConfirm={() => this._close()}
-                />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showEr}
-                    title="Error creando contacto"
-                    text="Señor usuario, ocurrió un error creando el contacto."
-                    onConfirm={() => this.setState({showEr:false})}
-                />
-            </form>
->>>>>>> 5c3ed92cc70d467d54e6776859ea36821b1d2dab
         );
     }
 }
