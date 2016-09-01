@@ -155,9 +155,10 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount() {
-        const {getMasterDataFields, clearSearchContact} = this.props;
+        const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact} = this.props;
         clearSearchContact();
         this.props.resetForm();
+        tipoDocumento.onChange('');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
@@ -245,6 +246,7 @@ class ModalComponentContact extends Component {
                     this.setState({disabled: 'disabled'});
                     this.setState({noExiste: 'visible'});
                     this.setState({botonBus: 'none'});
+                    ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
                 }
             }, (reason) => {
               this.setState({showEr: true});
