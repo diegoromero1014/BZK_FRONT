@@ -203,6 +203,7 @@ class ModalCreateTask extends Component{
                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                     onSelect={val => this._updateValue(val)}
                     disabled={this.state.isEditable ? '' : 'disabled'}
+                    max="255"
                   />
                 </dt>
               </Col>
