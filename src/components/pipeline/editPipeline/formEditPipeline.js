@@ -884,7 +884,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
 	  		    pipelineStatus: pipeline.pipelineStatus,
 	  		    termInMonths: pipeline.termInMonths,
-	  		    value: fomatInitialStateNumber(pipeline.value),
+	  		    value: pipeline.value,
 	  		    client: pipeline.client,
 	  		    documentStatus: pipeline.documentStatus,
 	  		    createdBy: pipeline.createdBy,
