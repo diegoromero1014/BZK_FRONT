@@ -652,7 +652,7 @@ class FormPipeline extends Component {
                 {...value}
                 name="valueMillions"
                 type="text"
-                max="30"
+                max="28"
                 parentId="dashboardComponentScroll"
                 onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
                 onFocus={val => this._handleFocusValueNumber(value, value.value)}
