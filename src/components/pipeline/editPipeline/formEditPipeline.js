@@ -687,7 +687,7 @@ class FormEditPipeline extends Component {
                 {...value}
 				        name="valueMillions"
 				        type="text"
-                max="30"
+                max="28"
 				        parentId="dashboardComponentScroll"
                 onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
                 onFocus={val => this._handleFocusValueNumber(value, value.value)}
@@ -913,7 +913,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
   	  		    createdByName: pipeline.createdByName,
   	  		    updatedByName: pipeline.updatedByName,
   	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-              business: ''
+                            business: ''
 	  	      }
 	  	    };
 	    } else {

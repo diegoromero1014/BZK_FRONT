@@ -64,8 +64,10 @@ class CreatePropspect extends Component{
 
   _onClickButtonChange(){
     prospectInApplication = true;
-    const {clearAllState} = this.props;
+    const {fields: {idType, idNumber}, clearAllState} = this.props;
     clearAllState();
+    idNumber.onChange('');
+    idType.onChange('');
   };
 
   _clickButtonCreateProps(formData){
@@ -104,7 +106,6 @@ class CreatePropspect extends Component{
     if( !validateLogin ){
       //redirectUrl("/login");
     }
-
     return(
       <div style={{marginTop: "10px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>

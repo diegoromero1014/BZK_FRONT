@@ -148,15 +148,18 @@ class ModalComponentContact extends Component {
             botonBus: 'block',
             disabledDep: 'disabled',
             disabledCiu: 'disabled',
-            errorMap: OrderedMap()
+            errorMap: OrderedMap(),
+            showCam: false
+
         };
         momentLocalizer(moment);
     }
 
     componentWillMount() {
-        const {getMasterDataFields, clearSearchContact} = this.props;
+        const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact} = this.props;
         clearSearchContact();
         this.props.resetForm();
+        tipoDocumento.onChange('');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
@@ -244,11 +247,14 @@ class ModalComponentContact extends Component {
                     this.setState({disabled: 'disabled'});
                     this.setState({noExiste: 'visible'});
                     this.setState({botonBus: 'none'});
+                    ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
                 }
             }, (reason) => {
-                this.setState({showEr: true});
-            });
-        }
+              this.setState({showEr: true});
+          });
+      }else{
+        this.setState({showCam:true});
+      }
     }
 
 
@@ -350,15 +356,14 @@ class ModalComponentContact extends Component {
                             </Col>
                             <Col xs>
                                 <dl style={{width: '100%'}}>
-                                    <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                    <dd><Input
-                                        name="numeroDocumento"
-                                        type="text"
-                                        max="20"
-                                        placeholder="Ingrese el número de documento"
-                                        disabled={this.state.disabled}
-                                        {...numeroDocumento}
-                                    /></dd>
+                                <dt><span>Número de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
+                                  <dd><Input
+                                    name="numeroDocumento"
+                                    type="text"
+                                    max="20"
+                                    disabled = {this.state.disabled}
+                                    {...numeroDocumento}
+                                  /></dd>
                                 </dl>
                             </Col>
                             <Col xs>
@@ -750,35 +755,41 @@ class ModalComponentContact extends Component {
                                 </dl>
                             </Col>
                         </Row>
-                    </div>
-                </div>
-                <div className="modalBt4-footer modal-footer">
-                    <button type="submit" style={{visibility: this.state.noExiste}}
-                            className="btn btn-primary modal-button-edit">Guardar
-                    </button>
-                </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showEx}
-                    title="Creación de contacto"
-                    text="Señor usuario, el contacto se creó de forma exitosa."
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="warning"
-                    title="Advertencia"
-                    show={this.state.showErrorYa}
-                    text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
-                    onConfirm={() => this._close()}
-                />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showEr}
-                    title="Error creando contacto"
-                    text="Señor usuario, ocurrió un error creando el contacto."
-                    onConfirm={() => this.setState({showEr:false})}
-                />
-            </form>
+                      </div>
+                      </div>
+                        <div className="modalBt4-footer modal-footer">
+                        <button type="submit" style={{visibility: this.state.noExiste}} className="btn btn-primary modal-button-edit">Guardar
+                        </button>
+                        </div>
+                        <SweetAlert
+                         type= "success"
+                         show={this.state.showEx}
+                         title="Creación de contacto"
+                         text="Señor usuario, el contacto se creó de forma exitosa."
+                         onConfirm={() => this._closeCreate()}
+                         />
+                         <SweetAlert
+                          type= "warning"
+                          title="Advertencia"
+                          show={this.state.showErrorYa}
+                          text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
+                          onConfirm={() => this._close()}
+                          />
+                          <SweetAlert
+                           type= "error"
+                           show={this.state.showEr}
+                           title="Error creando contacto"
+                           text="Señor usuario, ocurrió un error creando el contacto."
+                           onConfirm={() => this.setState({showEr:false})}
+                           />
+                           <SweetAlert
+                            type= "error"
+                            show={this.state.showCam}
+                            title="Campos obligatorios"
+                            text="Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del contacto."
+                            onConfirm={() => this.setState({showCam:false})}
+                            />
+                  </form>
         );
     }
 }
