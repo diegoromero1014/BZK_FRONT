@@ -73,11 +73,11 @@ const validate = values => {
     if(values.endDate && values.startDate){
       	var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
   		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
-		if( startDate > endDate){
-			errors.startDate = DATE_START_AFTER;
-		} else {
-			errors.startDate = null;
-		}
+  		if( startDate > endDate){
+  			errors.startDate = DATE_START_AFTER;
+  		} else {
+  			errors.startDate = null;
+  		}
     }
     return errors;
 };
@@ -91,8 +91,8 @@ class FormEditPipeline extends Component {
 			isEditable: false,
 			showConfirm: false,
 			employeeResponsible: false,
-			showConfirmChangeCurrency: false//,
-      		//updateValuesReceive: false
+			showConfirmChangeCurrency: false,
+      errorBusinessPipeline: null
 		};
 
   		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -269,53 +269,55 @@ class FormEditPipeline extends Component {
 	        employeeResponsible: true
 	      });
 	    } else {
-	  		let pipelineJson = {
-	  		"id": id.value,
-	  		"client": window.localStorage.getItem('idClientSelected'),
-	  		"documentStatus": typeButtonClick,
-	  		"product": product.value,
-	  		"businessStatus": businessStatus.value,
-	  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
-	  		"currency": currency.value,
-	  		"indexing": indexing.value,
-	  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-	  		"businessWeek": businessWeek.value,
-	  		"need": need.value,
-	  		"priority": priority.value,
-	  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-	  		"registeredCountry": registeredCountry.value,
-	  		"observations": observations.value,
-        "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
-	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
-	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
-	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
-	  	};
-      changeStateSaveData(true);
-	  	createEditPipeline(pipelineJson).then((data)=> {
-          changeStateSaveData(false);
-	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
-	  	      redirectUrl("/login");
-	  	    } else {
-	  	      if( (_.get(data, 'payload.data.status') === 200) ) {
-	  	        typeMessage = "success";
-	  	        titleMessage = "Edición pipeline";
-	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
-	  	        this.setState({showMessageCreatePipeline :true});
-	  	      } else {
-	  	        typeMessage = "error";
-	  	        titleMessage = "Edición pipeline";
-	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
-	  	        this.setState({showMessageCreatePipeline :true});
-	  	      }
-	  	    }
-	  	  }, (reason) =>{
-          changeStateSaveData(false);
-	  	    typeMessage = "error";
-	  	    titleMessage = "Edición pipeline";
-	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
-	  	    this.setState({showMessageCreatePipeline :true});
-	  	  });
+        if( this.state.errorBusinessPipeline !== null ){
+          let pipelineJson = {
+  	  		"id": id.value,
+  	  		"client": window.localStorage.getItem('idClientSelected'),
+  	  		"documentStatus": typeButtonClick,
+  	  		"product": product.value,
+  	  		"businessStatus": businessStatus.value,
+  	  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+  	  		"currency": currency.value,
+  	  		"indexing": indexing.value,
+  	  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+  	  		"businessWeek": businessWeek.value,
+  	  		"need": need.value,
+  	  		"priority": priority.value,
+  	  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+  	  		"registeredCountry": registeredCountry.value,
+  	  		"observations": observations.value,
+          "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
+  	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
+  	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
+  	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
+  	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+  	  	};
+        changeStateSaveData(true);
+  	  	createEditPipeline(pipelineJson).then((data)=> {
+            changeStateSaveData(false);
+  	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+  	  	      redirectUrl("/login");
+  	  	    } else {
+  	  	      if( (_.get(data, 'payload.data.status') === 200) ) {
+  	  	        typeMessage = "success";
+  	  	        titleMessage = "Edición pipeline";
+  	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
+  	  	        this.setState({showMessageCreatePipeline :true});
+  	  	      } else {
+  	  	        typeMessage = "error";
+  	  	        titleMessage = "Edición pipeline";
+  	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
+  	  	        this.setState({showMessageCreatePipeline :true});
+  	  	      }
+  	  	    }
+  	  	  }, (reason) =>{
+            changeStateSaveData(false);
+  	  	    typeMessage = "error";
+  	  	    titleMessage = "Edición pipeline";
+  	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
+  	  	    this.setState({showMessageCreatePipeline :true});
+  	  	  });
+        }
 	    }
 	}
 
@@ -402,6 +404,25 @@ class FormEditPipeline extends Component {
     });
 	}
 
+  componentWillReceiveProps(nextProps){
+    const {fields: {business}} = this.props;
+    if(typeButtonClick === SAVE_PUBLISHED){
+      if (business.value !== null && business.value !== undefined && this.state.isEditable) {
+        this.setState({
+          errorBusinessPipeline: OPTION_REQUIRED
+        });
+      } else {
+        this.setState({
+          errorBusinessPipeline: null
+        });
+      }
+    } else {
+      this.setState({
+        errorBusinessPipeline: null
+      });
+    }
+  }
+
 	render() {
 		const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
             businessWeek, currency, indexing, endDate, need, observations, business, product,
@@ -456,6 +477,13 @@ class FormEditPipeline extends Component {
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_BUSINESS) || []}
               />
+              {this.state.errorBusinessPipeline &&
+                <div>
+                  <div className="ui pointing red basic label">
+                    {this.state.errorBusinessPipeline}
+                  </div>
+                </div>
+              }
             </div>
           </Col>
 				  <Col xs={6} md={3} lg={3}>
