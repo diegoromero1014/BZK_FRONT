@@ -19,6 +19,7 @@ import {consultParameterServer} from '../../../actionsGlobal';
 import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
+import {changeStateSaveData} from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import $ from 'jquery';
@@ -305,7 +306,7 @@ class FormPrevisita extends Component{
   }
 
   _submitCreatePrevisita(){
-    const {participants, createPrevisit} = this.props;
+    const {participants, createPrevisit, changeStateSaveData} = this.props;
     var errorInForm = false;
     if( this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "" ){
       errorInForm = true;
@@ -459,7 +460,9 @@ class FormPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
+        changeStateSaveData(true);
         createPrevisit(previsitJson).then((data)=> {
+          changeStateSaveData(false);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -476,6 +479,7 @@ class FormPrevisita extends Component{
             }
           }
         }, (reason) =>{
+          changeStateSaveData(false);
           typeMessage = "error";
           titleMessage = "Creación previsita";
           message = "Señor usuario, ocurrió un error creando la previsita.";
@@ -774,7 +778,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     getMasterDataFields,
     createPrevisit,
-    consultParameterServer
+    consultParameterServer,
+    changeStateSaveData
   }, dispatch);
 }
 

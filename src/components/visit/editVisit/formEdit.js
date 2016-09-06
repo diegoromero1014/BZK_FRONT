@@ -22,6 +22,7 @@ import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED} from '../../../con
 import {createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {addTask} from '../tasks/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -126,7 +127,7 @@ class FormEdit extends Component{
   }
 
   _submitCreateVisita(){
-    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer, tasks} = this.props;
+    const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer, tasks, changeStateSaveData} = this.props;
     const detailVisit = visitReducer.get('detailVisit');
     var errorInForm = false;
 
@@ -213,8 +214,9 @@ class FormEdit extends Component{
           "documentStatus": typeButtonClick
         }
         const {createVisti} = this.props;
-
+        changeStateSaveData(true);
         createVisti(visitJson).then((data)=> {
+          changeStateSaveData(false);
           if(data.payload.data.validateLogin === 'false'){
             redirectUrl("/login");
           } else {
@@ -231,6 +233,7 @@ class FormEdit extends Component{
             }
           }
         }, (reason) =>{
+          changeStateSaveData(false);
           typeMessage = "error";
           titleMessage = "Edición visita";
           message = "Señor usuario, ocurrió un error editando la visita.";
@@ -640,7 +643,8 @@ function mapDispatchToProps(dispatch){
     detailVisit,
     filterUsersBanco,
     addTask,
-    downloadFilePdf
+    downloadFilePdf,
+    changeStateSaveData
   }, dispatch);
 }
 

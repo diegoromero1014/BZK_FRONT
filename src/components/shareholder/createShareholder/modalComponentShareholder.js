@@ -16,6 +16,7 @@ import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLD
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
 import * as constants from './constants';
+import {changeStateSaveData} from '../../dashboard/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -215,7 +216,7 @@ class ModalComponentShareholder extends Component {
     const {fields:{ tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder} = this.props;
+      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData} = this.props;
       var messageBody = {
         "clientId": window.localStorage.getItem('idClientSelected'),
         "shareHolderIdType": tipoDocumento.value,
@@ -238,7 +239,9 @@ class ModalComponentShareholder extends Component {
         "comment" : observaciones .value
       }
 
+      changeStateSaveData(true);
       createShareholder(messageBody).then((data) => {
+        changeStateSaveData(false);
         if((_.get(data, 'payload.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -269,6 +272,7 @@ class ModalComponentShareholder extends Component {
         }
           this.setState({showMessage: true});
       }, (reason) => {
+        changeStateSaveData(false);
         typeMessage="error";
         titleMessage="Error creando accionista";
         message="Señor usuario, ocurrió un error creando el accionista.";
@@ -530,7 +534,8 @@ function mapDispatchToProps(dispatch) {
       consultListWithParameterUbication,
       consultDataSelect,
       createShareholder,
-      shareholdersByClientFindServer
+      shareholdersByClientFindServer,
+      changeStateSaveData
     }, dispatch);
 }
 

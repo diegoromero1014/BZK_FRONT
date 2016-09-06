@@ -14,6 +14,7 @@ import {TASK_STATUS} from '../selectsComponent/constants';
 import {createPendingTaskNew} from './createPendingTask/actions'
 import {clearUserTask, tasksByClientFindServer} from './actions';
 import {NUMBER_RECORDS} from './constants';
+import {changeStateSaveData} from '../dashboard/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -124,7 +125,7 @@ class ModalCreateTask extends Component{
   }
 
   _handleEditTask(){
-    const {createPendingTaskNew} = this.props;
+    const {createPendingTaskNew, changeStateSaveData} = this.props;
     const {fields:{id, responsable, idEmployee, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
     var messageBody = {
       "id": id.value,
@@ -136,13 +137,16 @@ class ModalCreateTask extends Component{
       "employeeName": responsable.value,
       "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
     }
+    changeStateSaveData(true);
     createPendingTaskNew(messageBody).then((data) => {
+      changeStateSaveData(false);
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({taskEdited: true});
           } else {
             this.setState({showErrtask: true});
         }
         }, (reason) => {
+          changeStateSaveData(false);
           this.setState({showErrtask: true});
       });
   }
@@ -289,7 +293,8 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     createPendingTaskNew,
     clearUserTask,
-    tasksByClientFindServer
+    tasksByClientFindServer,
+    changeStateSaveData
   }, dispatch);
 }
 

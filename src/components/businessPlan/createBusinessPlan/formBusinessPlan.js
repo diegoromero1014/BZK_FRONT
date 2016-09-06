@@ -15,6 +15,7 @@ import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../con
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer} from '../../../actionsGlobal';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {createBusiness} from '../actions';
 import moment from 'moment';
 import _ from 'lodash';
@@ -73,7 +74,7 @@ class FormBusinessPlan extends Component {
 
 
   _submitCreateBusiness(){
-    const {needs,areas,createBusiness} = this.props;
+    const {needs, areas, createBusiness, changeStateSaveData} = this.props;
     var errorInForm = false;
     if(typeButtonClick === SAVE_DRAFT){
       if(this.state.dateBusiness === null || this.state.dateBusiness === undefined || this.state.dateBusiness === "" ){
@@ -154,7 +155,9 @@ class FormBusinessPlan extends Component {
         "clientNeedFulfillmentPlan" : needsbB,
         "relatedInternalParties":areasB
       }
+      changeStateSaveData(true);
       createBusiness(businessJson).then((data)=> {
+        changeStateSaveData(false);
         if((_.get(data, 'payload.data.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -171,6 +174,7 @@ class FormBusinessPlan extends Component {
           }
         }
       }, (reason) =>{
+        changeStateSaveData(false);
         typeMessage = "error";
         titleMessage = "Creación plan de negocio";
         message = "Señor usuario, ocurrió un error creando el plan de negocio.";
@@ -371,7 +375,10 @@ class FormBusinessPlan extends Component {
 }
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getMasterDataFields,consultParameterServer,createBusiness
+    getMasterDataFields,
+    consultParameterServer,
+    createBusiness,
+    changeStateSaveData
   }, dispatch);
 }
 

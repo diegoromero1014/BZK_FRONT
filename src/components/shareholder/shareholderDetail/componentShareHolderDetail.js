@@ -15,6 +15,7 @@ import {createShareholder} from '../createShareholder/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER}
 from '../../selectsComponent/constants';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
+import {changeStateSaveData} from '../../dashboard/actions';
 import _ from 'lodash';
 import {redirectUrl} from '../../globalComponents/actions';
 
@@ -131,7 +132,7 @@ class ComponentShareHolderDetail extends Component {
     const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-    tributaryNumber}, shareHolderId, createShareholder, shareholdersByClientFindServer} = this.props;
+    tributaryNumber}, shareHolderId, createShareholder, shareholdersByClientFindServer, changeStateSaveData} = this.props;
 
     var messageBody = {
       "clientId": clientId.value,
@@ -155,7 +156,9 @@ class ComponentShareHolderDetail extends Component {
       "tributaryNumber" : tributaryNumber.value,
       "comment" : comment.value
     }
+    changeStateSaveData(true);
     createShareholder(messageBody).then((data) => {
+      changeStateSaveData(false);
       if((_.get(data, 'payload.validateLogin') === 'false')){
         redirectUrl("/login");
       } else {
@@ -174,13 +177,14 @@ class ComponentShareHolderDetail extends Component {
             shareholdersByClientFindServer(0, clientId.value, NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
           }
         } else {
-            typeMessage="error";
-            titleMessage="Error editando accionista";
-            message="Señor usuario, ocurrió un error editando el accionista.";
+          typeMessage="error";
+          titleMessage="Error editando accionista";
+          message="Señor usuario, ocurrió un error editando el accionista.";
         }
       }
       this.setState({showMessage: true});
     }, (reason) => {
+      changeStateSaveData(false);
       typeMessage="error";
       titleMessage="Error editando accionista";
       message="Señor usuario, ocurrió un error editando el accionista.";
@@ -491,7 +495,8 @@ function mapDispatchToProps(dispatch) {
     consultListWithParameterUbication,
     consultDataSelect,
     shareholdersByClientFindServer,
-    createShareholder
+    createShareholder,
+    changeStateSaveData
   }, dispatch);
 }
 

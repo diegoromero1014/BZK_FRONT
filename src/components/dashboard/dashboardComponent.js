@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import MenuComponent from '../menu/component';
+import {changeStateSaveData} from './actions';
 import NavBarComponent from '../navBar/navBarComponent';
 import {redirectUrl} from '../globalComponents/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
@@ -22,7 +23,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        const {navBar} = this.props;
+        const {navBar, dashboardReducer} = this.props;
         var widthComponent = '70px';
         if(navBar.get('status') === "closed"){
           widthComponent= '70px';
@@ -41,6 +42,11 @@ class Dashboard extends Component {
                       id="dashboardComponentScroll"
                       style={{backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden", marginTop: "3px"}}>
                       {this.props.children}
+                      {dashboardReducer.get('showSaveData') &&
+                        <div className="ui active inverted dimmer">
+                          <div className="ui text loader">Guardando información</div>
+                        </div>
+                      }
                     </div>
                 </div>
             </div>
@@ -50,13 +56,15 @@ class Dashboard extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    changeStateSaveData
   }, dispatch);
 }
 
-function mapStateToProps({login, navBar},ownerProps) {
+function mapStateToProps({login, navBar, dashboardReducer},ownerProps) {
   return {
     login,
-    navBar
+    navBar,
+    dashboardReducer
   };
 }
 

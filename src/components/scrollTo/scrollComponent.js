@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 export const scrollToComponent = (ChildComponent) => {
     const name = _.uniqueId("scrollBox_");
-    console.log(name);
     return class extends Component {
         constructor(props) {
             super(props);

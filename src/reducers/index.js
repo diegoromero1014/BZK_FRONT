@@ -32,6 +32,7 @@ import viewManagementReducer from '../components/viewManagement/reducer';
 import teamParticipantsReducer from '../components/clientTeam/reducer';
 import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
+import dashboardReducer from '../components/dashboard/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -66,5 +67,6 @@ export default combineReducers({
     viewManagementReducer: viewManagementReducer,
     teamParticipantsReducer: teamParticipantsReducer,
     businessPlanReducer: businessPlanReducer,
-    clientEconomicGroupReducer: clientEconomicGroupReducer
+    clientEconomicGroupReducer: clientEconomicGroupReducer,
+    dashboardReducer: dashboardReducer
 });

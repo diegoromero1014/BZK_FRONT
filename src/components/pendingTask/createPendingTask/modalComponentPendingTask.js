@@ -13,6 +13,7 @@ import InputComponent from '../../../ui/input/inputComponent';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {NUMBER_RECORDS} from '../constants';
 import {TASK_STATUS} from '../../selectsComponent/constants';
 
@@ -117,7 +118,7 @@ class ModalComponentPendingTask extends Component {
 
   _handleCreatePendingTask(){
     const {createPendingTaskNew,tasksByClientFindServer} = this.props;
-    const {fields:{responsable, fecha,idEmployee, idEstado, tarea, advance},handleSubmit,error}= this.props;
+    const {fields:{responsable, fecha,idEmployee, idEstado, tarea, advance}, handleSubmit, error, changeStateSaveData}= this.props;
     var messageBody = {
       "clientId": window.localStorage.getItem('idClientSelected'),
       "task": tarea.value,
@@ -127,7 +128,9 @@ class ModalComponentPendingTask extends Component {
       "employeeName": responsable.value,
       "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
     }
+    changeStateSaveData(true);
     createPendingTaskNew(messageBody).then((data) => {
+      changeStateSaveData(false);
         if((_.get(data, 'payload.data.status') === 200)){
             this.setState({showEx: true});
             tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
@@ -135,6 +138,7 @@ class ModalComponentPendingTask extends Component {
             this.setState({showEr: true});
         }
         }, (reason) => {
+          changeStateSaveData(false);
           this.setState({showEr: true});
       });
   }
@@ -255,7 +259,8 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     clearUserTaskOrder,
     tasksByClientFindServer,
-    clearUserTaskCreate
+    clearUserTaskCreate,
+    changeStateSaveData
   }, dispatch);
 }
 

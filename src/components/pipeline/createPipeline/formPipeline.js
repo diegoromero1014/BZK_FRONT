@@ -8,21 +8,23 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
+import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS} from '../../selectsComponent/constants';
 import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {consultParameterServer} from '../../../actionsGlobal';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
+import {changeStateSaveData} from '../../dashboard/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product", "reviewedDate",
+    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product", "reviewedDate",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability"];
 
 let typeMessage = "success";
@@ -280,15 +282,16 @@ class FormPipeline extends Component {
 
   _submitCreatePipeline() {
     const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
-      businessWeek, currency, indexing, endDate, need, observations, product,
+      businessWeek, currency, indexing, endDate, need, observations, business, product,
       priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario
-    }, createEditPipeline} = this.props;
+    }, createEditPipeline, changeStateSaveData} = this.props;
 
     if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
       this.setState({
         employeeResponsible: true
       });
     } else {
+      console.log("business.value", business.value);
       let pipelineJson = {
         "id": null,
         "client": window.localStorage.getItem('idClientSelected'),
@@ -306,12 +309,14 @@ class FormPipeline extends Component {
         "registeredCountry": registeredCountry.value,
         "observations": observations.value,
         "termInMonths": termInMonths.value,
+        "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
         "value": value.value === undefined ? null : numeral(value.value).format('0'),
         "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
         "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
       };
-
+      changeStateSaveData(true);
       createEditPipeline(pipelineJson).then((data)=> {
+        changeStateSaveData(false);
         if((_.get(data, 'payload.data.validateLogin') === 'false')) {
           redirectUrl("/login");
         } else {
@@ -328,6 +333,7 @@ class FormPipeline extends Component {
           }
         }
       }, (reason) =>{
+        changeStateSaveData(false);
         typeMessage = "error";
         titleMessage = "Creación pipeline";
         message = "Señor usuario, ocurrió un error creando del pipeline.";
@@ -400,7 +406,7 @@ class FormPipeline extends Component {
     if(_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
     } else {
-      getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
+      getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS]);
       consultParameterServer(LAST_PIPELINE_REVIEW).then((data)=> {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
@@ -413,7 +419,7 @@ class FormPipeline extends Component {
 
   render() {
     const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-              businessWeek, currency, indexing, endDate, need, observations, product,
+              businessWeek, currency, indexing, endDate, need, observations, business, product,
               priority, registeredCountry, startDate, client, documentStatus, probability},
           clientInformacion, selectsReducer, handleSubmit} = this.props;
 
@@ -431,10 +437,26 @@ class FormPipeline extends Component {
           </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
-          <Col xs={6} md={3} lg={3}>
+          <Col xs={12} md={36} lg={6}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Negocio / Producto</span>
+                <span>Negocio (</span><span style={{color: "red"}}>*</span>)
+              </dt>
+              <MultipleSelect
+                name="business"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...business}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(PIPELINE_BUSINESS) || []}
+              />
+            </div>
+          </Col>
+          <Col xs={12} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Producto</span>
               </dt>
               <ComboBox
                 name="product"
@@ -461,39 +483,6 @@ class FormPipeline extends Component {
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_STATUS) || []}
               />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{paddingRight: "15px"}}>
-              <dt>
-                <span>Empleado responsable</span>
-              </dt>
-              <dt>
-                <div className="ui dropdown search participantBanc fluid" style={{border :"0", zIndex : "1", padding : "0"}}>
-                  <div className="ui icon input" style={{width: "100%"}}>
-                    <input className="prompt" id="inputParticipantBanc"
-                      style={{borderRadius: "3px"}}
-                      autoComplete="off"
-                      type="text"
-                      value={nameUsuario.value}
-                      onChange={nameUsuario.onChange}
-                      placeholder="Ingrese un criterio de búsqueda..."
-                      onKeyPress={this.updateKeyValueUsersBanco}
-                      onSelect={val => this._updateValue(val)}
-                    />
-                    <i className="search icon"></i>
-                  </div>
-                  <div className="menu results"></div>
-                </div>
-                {
-                  this.state.employeeResponsible &&
-                  <div>
-                      <div className="ui pointing red basic label">
-                          Debe seleccionar un empleado del banco
-                      </div>
-                  </div>
-                }
-              </dt>
             </div>
           </Col>
         </Row>
@@ -546,7 +535,39 @@ class FormPipeline extends Component {
               />
             </div>
           </Col>
-
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Empleado responsable</span>
+              </dt>
+              <dt>
+                <div className="ui dropdown search participantBanc fluid" style={{border :"0", zIndex : "1", padding : "0"}}>
+                  <div className="ui icon input" style={{width: "100%"}}>
+                    <input className="prompt" id="inputParticipantBanc"
+                      style={{borderRadius: "3px"}}
+                      autoComplete="off"
+                      type="text"
+                      value={nameUsuario.value}
+                      onChange={nameUsuario.onChange}
+                      placeholder="Ingrese un criterio de búsqueda..."
+                      onKeyPress={this.updateKeyValueUsersBanco}
+                      onSelect={val => this._updateValue(val)}
+                    />
+                    <i className="search icon"></i>
+                  </div>
+                  <div className="menu results"></div>
+                </div>
+                {
+                  this.state.employeeResponsible &&
+                  <div>
+                      <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                      </div>
+                  </div>
+                }
+              </dt>
+            </div>
+          </Col>
         </Row>
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
@@ -646,7 +667,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
+                <span>Valor en millones (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
                 {...value}
@@ -788,7 +809,8 @@ function mapDispatchToProps(dispatch) {
     getClientNeeds,
     createEditPipeline,
     filterUsersBanco,
-    consultParameterServer
+    consultParameterServer,
+    changeStateSaveData
   }, dispatch);
 }
 
