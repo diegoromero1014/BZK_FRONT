@@ -48,7 +48,7 @@ class ListArea extends Component {
             component : "VIEW_AREA"
           },
           uuid: uuid, areaDes: areaDes, actionArea: actionArea, areaResponsable: areaResponsable,areaIdResponsable:areaIdResponsable,
-          areaDate: areaDate, statusIdArea: statusIdArea, statusArea: statusArea,areaD:areaD,
+          areaDate: areaDate,areaFormat: areaFormat,  statusIdArea: statusIdArea, statusArea: statusArea,areaD:areaD,
           'delete':  {
             typeDelete : DELETE_AREA_VIEW,
             id: uuid,

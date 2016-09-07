@@ -256,7 +256,7 @@ class FormBusinessPlan extends Component {
         <Row style={{padding: "0px 23px 20px 20px"}}>
         <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
           <dt>
-            <span>Fecha DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+            <span>Fecha - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
           </dt>
           <dt>
             <DateTimePickerUi

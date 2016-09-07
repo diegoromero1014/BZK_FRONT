@@ -158,7 +158,7 @@ class ModalCreateTask extends Component{
             <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
             <Row style={{padding: "0px 10px 0px 0px"}}>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
+                <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span></dt>
                 <dt style={{paddingTop:"0px"}}>
                   <DateTimePickerUi
                     {...fecha}
