@@ -14,6 +14,7 @@ import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import _ from 'lodash';
 import numeral from 'numeral';
+import {changeStateSaveData} from '../dashboard/actions';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
   from '../selectsComponent/actions';
 import NotesClient from '../notes/notesClient';
@@ -130,7 +131,7 @@ class FormCreateProspect extends Component{
     if( typeConfirm === "create" ){
       const {fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-         nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument
+         nonOperatingIncome, expenses, dateSalesAnnuals, idCelula}, idTupeDocument, numberDocument, changeStateSaveData
        } = this.props;
        var jsonCreateProspect= {
          "clientIdNumber": numberDocument,
@@ -192,14 +193,17 @@ class FormCreateProspect extends Component{
          "clientIdType": idTupeDocument
       }
       const {createProspect} = this.props;
+      changeStateSaveData(true);
       createProspect(jsonCreateProspect)
       .then((data) => {
+        changeStateSaveData(false);
         if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
             this.setState({showEx: true});
           } else {
             this.setState({showEr: true});
         }
         }, (reason) => {
+          changeStateSaveData(false);
           this.setState({showEr: true});
       });
     } else {
@@ -644,7 +648,8 @@ function mapDispatchToProps(dispatch) {
     consultDataSelect,
     consultList,
     consultListWithParameter,
-    consultListWithParameterUbication
+    consultListWithParameterUbication,
+    changeStateSaveData
   }, dispatch);
 }
 

@@ -12,6 +12,7 @@ import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {downloadFilePDF} from '../actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact, clearClienEdit} from './actions';
 import {contactsByClientFindServer,clearContactOrder,clearContactCreate} from '../actions';
@@ -315,7 +316,7 @@ class ContactDetailsModalComponent extends Component {
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
       contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
-    }, error, handleSubmit, selectsReducer,isOpen} = this.props;
+    }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData} = this.props;
     const {contactDetail,contactsByClientFindServer} = this.props;
     const contact = contactDetail.get('contactDetailList');
     const {saveContact} = this.props;
@@ -356,7 +357,9 @@ class ContactDetailsModalComponent extends Component {
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
       "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
     }
+    changeStateSaveData(true);
     saveContact(jsonUpdateContact).then((data) => {
+      changeStateSaveData(false);
       if (_.get(data, 'payload.data.status') === 200) {
         this.setState({contactEdited: true});
         contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
@@ -367,6 +370,7 @@ class ContactDetailsModalComponent extends Component {
           this.setState({showEr: true});
           }
       }, (reason) => {
+        changeStateSaveData(false);
         this.setState({showEr: true});
       });
   }
@@ -854,7 +858,8 @@ function mapDispatchToProps(dispatch) {
     consultListWithParameterUbication,
     contactsByClientFindServer,
     clearClienEdit,
-    downloadFilePDF
+    downloadFilePDF,
+    changeStateSaveData
   }, dispatch);
 }
 

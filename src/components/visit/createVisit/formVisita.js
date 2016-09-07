@@ -26,6 +26,7 @@ import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
 import {addParticipant, clearParticipants} from '../../participantsVisitPre/actions';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {clearIdPrevisit} from '../actions';
 
 
@@ -114,7 +115,7 @@ class FormVisita extends Component{
 
   _submitCreateVisita(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      participants, tasks, createVisti, clearIdPrevisit, clearParticipants} = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData} = this.props;
     var errorInForm = false;
     if( this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "" ){
       errorInForm = true;
@@ -212,7 +213,9 @@ class FormVisita extends Component{
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
+        changeStateSaveData(true);
         createVisti(visitJson).then((data)=> {
+          changeStateSaveData(false);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -232,6 +235,7 @@ class FormVisita extends Component{
             }
           }
         }, (reason) =>{
+          changeStateSaveData(false);
           typeMessage = "error";
           titleMessage = "Creación visita";
           message = "Señor usuario, ocurrió un error creando la visita.";
@@ -596,7 +600,8 @@ function mapDispatchToProps(dispatch){
     detailPrevisit,
     addParticipant,
     clearIdPrevisit,
-    clearParticipants
+    clearParticipants,
+    changeStateSaveData
   }, dispatch);
 }
 

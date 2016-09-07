@@ -11,6 +11,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {reduxForm} from 'redux-form';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
+import {changeStateSaveData} from '../../dashboard/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -258,7 +259,7 @@ class ModalComponentContact extends Component {
 
 
     _handleCreateContact() {
-        const {createContactNew, contactsByClientFindServer, createContactReducer} = this.props;
+        const {createContactNew, contactsByClientFindServer, createContactReducer, changeStateSaveData} = this.props;
         const {
             fields:{
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
@@ -298,7 +299,9 @@ class ModalComponentContact extends Component {
             "socialStyle": tipoEstiloSocial.value,
             "attitudeOverGroup": tipoActitud.value
         }
+        changeStateSaveData(true);
         createContactNew(messageBody).then((data) => {
+          changeStateSaveData(false);
             if ((_.get(data, 'payload.data.status') === 200)) {
                 this.setState({showEx: true});
                 contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
@@ -309,7 +312,8 @@ class ModalComponentContact extends Component {
                 this.setState({showEr: true});
             }
         }, (reason) => {
-            this.setState({showEr: true});
+          changeStateSaveData(false);
+          this.setState({showEr: true});
         });
     }
 
@@ -851,7 +855,8 @@ function mapDispatchToProps(dispatch) {
         clearContactCreate,
         clearContactOrder,
         consultList,
-        downloadFilePDF
+        downloadFilePDF,
+        changeStateSaveData
     }, dispatch);
 }
 

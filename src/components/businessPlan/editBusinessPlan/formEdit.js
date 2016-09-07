@@ -15,14 +15,15 @@ import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../con
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer} from '../../../actionsGlobal';
-import moment from 'moment';
+import {changeStateSaveData} from '../../dashboard/actions';
 import {detailBusiness, pdfDescarga} from '../actions';
 import {addNeed, editNeed} from '../need/actions';
 import {addArea, editArea} from '../area/actions';
 import {createBusiness} from '../actions';
+import numeral from 'numeral';
+import moment from 'moment';
 import _ from 'lodash';
 import $ from 'jquery';
-import numeral from 'numeral';
 
 
 const fields = ["dateBusiness","objectiveBusiness","opportunities"];
@@ -131,7 +132,7 @@ class FormEdit extends Component {
   }
 
   _submitCreateBusiness(){
-    const {needs,areas,createBusiness,businessPlanReducer} = this.props;
+    const {needs, areas, createBusiness, businessPlanReducer, changeStateSaveData} = this.props;
     var errorInForm = false;
       const detailBusiness = businessPlanReducer.get('detailBusiness');
     if(typeButtonClick === SAVE_DRAFT){
@@ -213,7 +214,9 @@ class FormEdit extends Component {
         "clientNeedFulfillmentPlan" : needsbB.length === 0 ? null:needsbB ,
         "relatedInternalParties":areasB.length === 0 ? null :areasB
       }
+      changeStateSaveData(true);
       createBusiness(businessJson).then((data)=> {
+        changeStateSaveData(false);
         if((_.get(data, 'payload.data.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -230,6 +233,7 @@ class FormEdit extends Component {
           }
         }
       }, (reason) =>{
+        changeStateSaveData(false);
         typeMessage = "error";
         titleMessage = "Edición plan de negocio";
         message = "Señor usuario, ocurrió un error editando el plan de negocio.";
@@ -495,7 +499,14 @@ class FormEdit extends Component {
 }
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getMasterDataFields,consultParameterServer,detailBusiness,addNeed,addArea,createBusiness, pdfDescarga
+    getMasterDataFields,
+    consultParameterServer,
+    detailBusiness,
+    addNeed,
+    addArea,
+    createBusiness,
+    pdfDescarga,
+    changeStateSaveData
   }, dispatch);
 }
 

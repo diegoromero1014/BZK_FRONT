@@ -20,6 +20,7 @@ import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {addParticipant} from '../../participantsVisitPre/actions';
 import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
+import {changeStateSaveData} from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import $ from 'jquery';
@@ -329,7 +330,7 @@ class FormEditPrevisita extends Component{
   }
 
   _submitCreatePrevisita(){
-    const { participants, createPrevisit, id } = this.props;
+    const { participants, createPrevisit, changeStateSaveData, id } = this.props;
     var errorInForm = false;
     if( this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "" ){
       errorInForm = true;
@@ -485,7 +486,10 @@ class FormEditPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
+
+        changeStateSaveData(true);
         createPrevisit(previsitJson).then((data)=> {
+          changeStateSaveData(false);
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -502,6 +506,7 @@ class FormEditPrevisita extends Component{
             }
           }
         }, (reason) =>{
+          changeStateSaveData(false);
           typeMessage = "error";
           titleMessage = "Edición previsita";
           message = "Señor usuario, ocurrió un error editando la previsita.";
@@ -951,7 +956,8 @@ function mapDispatchToProps(dispatch){
     detailPrevisit,
     addParticipant,
     createPrevisit,
-    consultParameterServer
+    consultParameterServer,
+    changeStateSaveData
   }, dispatch);
 }
 

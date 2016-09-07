@@ -9,7 +9,8 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY} from '../../selectsComponent/constants';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
@@ -18,12 +19,13 @@ import {consultParameterServer} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
+import {changeStateSaveData} from '../../dashboard/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "product",
+    "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName"
     ];
@@ -71,11 +73,11 @@ const validate = values => {
     if(values.endDate && values.startDate){
       	var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
   		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
-		if( startDate > endDate){
-			errors.startDate = DATE_START_AFTER;
-		} else {
-			errors.startDate = null;
-		}
+  		if( startDate > endDate){
+  			errors.startDate = DATE_START_AFTER;
+  		} else {
+  			errors.startDate = null;
+  		}
     }
     return errors;
 };
@@ -89,8 +91,8 @@ class FormEditPipeline extends Component {
 			isEditable: false,
 			showConfirm: false,
 			employeeResponsible: false,
-			showConfirmChangeCurrency: false//,
-      		//updateValuesReceive: false
+			showConfirmChangeCurrency: false,
+      errorBusinessPipeline: null
 		};
 
   		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -258,59 +260,64 @@ class FormEditPipeline extends Component {
 
 	_submitCreatePipeline() {
 		const {initialValues, fields: {id, idUsuario, value, commission, roe, termInMonths, businessStatus,
-		  businessWeek, currency, indexing, endDate, need, observations, product,
+		  businessWeek, currency, indexing, endDate, need, observations, business, product,
 		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
-		}, createEditPipeline} = this.props;
+		}, createEditPipeline, changeStateSaveData} = this.props;
 
 	    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
 	      this.setState({
 	        employeeResponsible: true
 	      });
 	    } else {
-	  		let pipelineJson = {
-	  		"id": id.value,
-	  		"client": window.localStorage.getItem('idClientSelected'),
-	  		"documentStatus": typeButtonClick,
-	  		"product": product.value,
-	  		"businessStatus": businessStatus.value,
-	  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
-	  		"currency": currency.value,
-	  		"indexing": indexing.value,
-	  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-	  		"businessWeek": businessWeek.value,
-	  		"need": need.value,
-	  		"priority": priority.value,
-	  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-	  		"registeredCountry": registeredCountry.value,
-	  		"observations": observations.value,
-	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
-	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
-	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
-	  	};
-
-	  	createEditPipeline(pipelineJson).then((data)=> {
-	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
-	  	      redirectUrl("/login");
-	  	    } else {
-	  	      if( (_.get(data, 'payload.data.status') === 200) ) {
-	  	        typeMessage = "success";
-	  	        titleMessage = "Edición pipeline";
-	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
-	  	        this.setState({showMessageCreatePipeline :true});
-	  	      } else {
-	  	        typeMessage = "error";
-	  	        titleMessage = "Edición pipeline";
-	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
-	  	        this.setState({showMessageCreatePipeline :true});
-	  	      }
-	  	    }
-	  	  }, (reason) =>{
-	  	    typeMessage = "error";
-	  	    titleMessage = "Edición pipeline";
-	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
-	  	    this.setState({showMessageCreatePipeline :true});
-	  	  });
+        if( this.state.errorBusinessPipeline !== null ){
+          let pipelineJson = {
+  	  		"id": id.value,
+  	  		"client": window.localStorage.getItem('idClientSelected'),
+  	  		"documentStatus": typeButtonClick,
+  	  		"product": product.value,
+  	  		"businessStatus": businessStatus.value,
+  	  		"employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+  	  		"currency": currency.value,
+  	  		"indexing": indexing.value,
+  	  		"commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+  	  		"businessWeek": businessWeek.value,
+  	  		"need": need.value,
+  	  		"priority": priority.value,
+  	  		"roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+  	  		"registeredCountry": registeredCountry.value,
+  	  		"observations": observations.value,
+          "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
+  	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
+  	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
+  	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
+  	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+  	  	};
+        changeStateSaveData(true);
+  	  	createEditPipeline(pipelineJson).then((data)=> {
+            changeStateSaveData(false);
+  	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+  	  	      redirectUrl("/login");
+  	  	    } else {
+  	  	      if( (_.get(data, 'payload.data.status') === 200) ) {
+  	  	        typeMessage = "success";
+  	  	        titleMessage = "Edición pipeline";
+  	  	        message = "Señor usuario, el pipeline se editó de forma exitosa.";
+  	  	        this.setState({showMessageCreatePipeline :true});
+  	  	      } else {
+  	  	        typeMessage = "error";
+  	  	        titleMessage = "Edición pipeline";
+  	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
+  	  	        this.setState({showMessageCreatePipeline :true});
+  	  	      }
+  	  	    }
+  	  	  }, (reason) =>{
+            changeStateSaveData(false);
+  	  	    typeMessage = "error";
+  	  	    titleMessage = "Edición pipeline";
+  	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
+  	  	    this.setState({showMessageCreatePipeline :true});
+  	  	  });
+        }
 	    }
 	}
 
@@ -379,7 +386,7 @@ class FormEditPipeline extends Component {
 			getClientNeeds, getPipelineById, id,
 			fields: {
 				nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-    			businessWeek, currency, indexing, endDate, need, observations, product,
+    			businessWeek, currency, indexing, endDate, need, observations, business, product,
     			priority, registeredCountry, startDate, client, documentStatus
 			}} = this.props;
 		const infoClient = clientInformacion.get('responseClientInfo');
@@ -389,22 +396,39 @@ class FormEditPipeline extends Component {
 		if(_.isEmpty(infoClient)) {
 		    redirectUrl("/dashboard/clientInformation");
 		} else {
-		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY]);
+		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS]);
 		}
-		getPipelineById(id);
-    //setTimeout(function(){
-    //  this.setState({
-    //     updateValuesReceive: true
-    //  });
-    //}, 1300);
+		getPipelineById(id).then(function(data){
+      const pipeline = _.get(data, 'payload.data.data');
+      business.onChange(JSON.parse('["'+_.join(pipeline.pipelineBusiness, '","')+'"]'));
+    });
 	}
+
+  componentWillReceiveProps(nextProps){
+    const {fields: {business}} = this.props;
+    if(typeButtonClick === SAVE_PUBLISHED){
+      if (business.value !== null && business.value !== undefined && this.state.isEditable) {
+        this.setState({
+          errorBusinessPipeline: OPTION_REQUIRED
+        });
+      } else {
+        this.setState({
+          errorBusinessPipeline: null
+        });
+      }
+    } else {
+      this.setState({
+        errorBusinessPipeline: null
+      });
+    }
+  }
 
 	render() {
 		const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-              businessWeek, currency, indexing, endDate, need, observations, product,
-              priority, registeredCountry, startDate, client, documentStatus,
-          		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
-          clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
+            businessWeek, currency, indexing, endDate, need, observations, business, product,
+            priority, registeredCountry, startDate, client, documentStatus,
+        		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
+            clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
 
 		const ownerDraft = pipelineReducer.get('ownerDraft');
 		let fechaModString = '';
@@ -439,10 +463,33 @@ class FormEditPipeline extends Component {
 				  </Col>
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={12} md={36} lg={6}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Negocio (</span><span style={{color: "red"}}>*</span>)
+              </dt>
+              <MultipleSelect
+                name="business"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...business}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(PIPELINE_BUSINESS) || []}
+              />
+              {this.state.errorBusinessPipeline &&
+                <div>
+                  <div className="ui pointing red basic label">
+                    {this.state.errorBusinessPipeline}
+                  </div>
+                </div>
+              }
+            </div>
+          </Col>
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Negocio / Producto</span>
+				        <span>Producto</span>
 				      </dt>
 				      <ComboBox
 				        name="product"
@@ -471,37 +518,6 @@ class FormEditPipeline extends Component {
 				        data={selectsReducer.get(PIPELINE_STATUS) || []}
 				        disabled={this.state.isEditable ? '' : 'disabled'}
 				      />
-				    </div>
-				  </Col>
-				  <Col xs={6} md={3} lg={3}>
-				    <div style={{paddingRight: "15px"}}>
-				      <dt>
-				        <span>Empleado responsable</span>
-				      </dt>
-				      <dt>
-				        <div className="ui search participantBanc fluid">
-				            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
-				              style={{borderRadius: "3px"}}
-				              autoComplete="off"
-				              type="text"
-				              {...nameUsuario}
-				              value={nameUsuario.value}
-				              onChange={nameUsuario.onChange}
-				              placeholder="Ingrese un criterio de búsqueda..."
-				              onKeyPress={this.updateKeyValueUsersBanco}
-				              onSelect={val => this._updateValue(val)}
-				              disabled={this.state.isEditable ? '' : 'disabled'}
-				            />
-				        </div>
-                {
-                  this.state.employeeResponsible &&
-                  <div>
-                      <div className="ui pointing red basic label">
-                          Debe seleccionar un empleado del banco
-                      </div>
-                  </div>
-                }
-				      </dt>
 				    </div>
 				  </Col>
 				</Row>
@@ -558,7 +574,37 @@ class FormEditPipeline extends Component {
 				      />
 				    </div>
 				  </Col>
-
+          <Col xs={6} md={3} lg={3}>
+				    <div style={{paddingRight: "15px"}}>
+				      <dt>
+				        <span>Empleado responsable</span>
+				      </dt>
+				      <dt>
+				        <div className="ui search participantBanc fluid">
+				            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
+				              style={{borderRadius: "3px"}}
+				              autoComplete="off"
+				              type="text"
+				              {...nameUsuario}
+				              value={nameUsuario.value}
+				              onChange={nameUsuario.onChange}
+				              placeholder="Ingrese un criterio de búsqueda..."
+				              onKeyPress={this.updateKeyValueUsersBanco}
+				              onSelect={val => this._updateValue(val)}
+				              disabled={this.state.isEditable ? '' : 'disabled'}
+				            />
+				        </div>
+                {
+                  this.state.employeeResponsible &&
+                  <div>
+                      <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                      </div>
+                  </div>
+                }
+				      </dt>
+				    </div>
+				  </Col>
 				</Row>
 				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
@@ -663,7 +709,7 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Valor en miles (</span><span style={{color: "red"}}>*</span>)
+				        <span>Valor en millones (</span><span style={{color: "red"}}>*</span>)
 				      </dt>
 				      <Input
                 {...value}
@@ -849,7 +895,8 @@ function mapDispatchToProps(dispatch) {
     getClientNeeds,
     createEditPipeline,
     filterUsersBanco,
-    getPipelineById
+    getPipelineById,
+    changeStateSaveData
   }, dispatch);
 }
 
@@ -866,34 +913,35 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      consultParameterServer,
 
 	  	      initialValues: {
-	        	id: pipeline.id,
-	        	businessStatus: pipeline.businessStatus,
-	  		    businessWeek: pipeline.businessWeek,
-	  		    commission: fomatInitialStateNumber(pipeline.commission),
-	  		    currency: pipeline.currency,
-	  		    idUsuario: pipeline.employeeResponsible,
-	  		    nameUsuario: pipeline.employeeResponsibleName,
-	  		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
-	  		    indexing: pipeline.indexing,
-	  		    need: pipeline.need,
-	  		    observations: pipeline.observations === null ? '' : pipeline.observations,
-	  		    product: pipeline.product,
-	  		    priority: pipeline.priority,
-	  		    roe: fomatInitialStateNumber(pipeline.roe),
-	  		    registeredCountry: pipeline.registeredCountry,
-	  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
-	  		    pipelineStatus: pipeline.pipelineStatus,
-	  		    termInMonths: pipeline.termInMonths,
-	  		    value: pipeline.value,
-	  		    client: pipeline.client,
-	  		    documentStatus: pipeline.documentStatus,
-	  		    createdBy: pipeline.createdBy,
-	  		    updatedBy: pipeline.updatedBy,
-	  		    createdTimestamp: pipeline.createdTimestamp,
-	  		    updatedTimestamp: pipeline.updatedTimestamp,
-	  		    createdByName: pipeline.createdByName,
-	  		    updatedByName: pipeline.updatedByName,
-	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)
+  	        	id: pipeline.id,
+  	        	businessStatus: pipeline.businessStatus,
+  	  		    businessWeek: pipeline.businessWeek,
+  	  		    commission: fomatInitialStateNumber(pipeline.commission),
+  	  		    currency: pipeline.currency,
+  	  		    idUsuario: pipeline.employeeResponsible,
+  	  		    nameUsuario: pipeline.employeeResponsibleName,
+  	  		    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
+  	  		    indexing: pipeline.indexing,
+  	  		    need: pipeline.need,
+  	  		    observations: pipeline.observations === null ? '' : pipeline.observations,
+  	  		    product: pipeline.product,
+  	  		    priority: pipeline.priority,
+  	  		    roe: fomatInitialStateNumber(pipeline.roe),
+  	  		    registeredCountry: pipeline.registeredCountry,
+  	  		    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
+  	  		    pipelineStatus: pipeline.pipelineStatus,
+  	  		    termInMonths: pipeline.termInMonths,
+  	  		    value: fomatInitialStateNumber(pipeline.value),
+  	  		    client: pipeline.client,
+  	  		    documentStatus: pipeline.documentStatus,
+  	  		    createdBy: pipeline.createdBy,
+  	  		    updatedBy: pipeline.updatedBy,
+  	  		    createdTimestamp: pipeline.createdTimestamp,
+  	  		    updatedTimestamp: pipeline.updatedTimestamp,
+  	  		    createdByName: pipeline.createdByName,
+  	  		    updatedByName: pipeline.updatedByName,
+  	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
+                            business: ''
 	  	      }
 	  	    };
 	    } else {

@@ -94,7 +94,7 @@ class ViewChartPrevisit extends Component {
 					<Col xs={12} md={12} lg={12} className="div-head-chart" style={{paddingTop: '5px'}}>
 						<span style={{paddingTop: '10px', fontSize: '22px'}}>Informe de previsita</span>
 						<a style={{float: 'right', cursor: 'pointer', textDecoration: 'underline', marginTop: '3px'}}
-							onClick={this._refreshChart}>Regrescar gráfica</a>
+							onClick={this._refreshChart}>Refrescar gráfica</a>
 					</Col>
 					<Col xs={12} md={12} lg={12} className="div-body-chart modalBt4-body" style={{height: '430px'}}>
 						<BarSeries items={data} defaultData={defaultValueData} labels={labels} />

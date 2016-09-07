@@ -22,6 +22,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import NotesClient from '../notes/notesClient';
 import {setNotes, crearNotes, deleteNote} from '../notes/actions';
 import {createProspect} from '../propspect/actions';
+import {changeStateSaveData} from '../dashboard/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -479,7 +480,7 @@ class clientEdit extends Component{
           district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
           liabilities, assets, operatingIncome, nonOperatingIncome, expenses,
           centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient},
-          error, handleSubmit, selectsReducer, clientInformacion} = this.props;
+          error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
           var jsonCreateProspect= {
@@ -544,14 +545,17 @@ class clientEdit extends Component{
             "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
          }
            const {createProspect} = this.props;
+           changeStateSaveData(true);
            createProspect(jsonCreateProspect)
            .then((data) => {
+             changeStateSaveData(false);
              if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
                  this.setState({showEx: true});
                } else {
                  this.setState({showEr: true});
              }
              }, (reason) => {
+               changeStateSaveData(false);
                this.setState({showEr: true});
            });
         }
@@ -1219,7 +1223,8 @@ function mapDispatchToProps(dispatch) {
     deleteNote,
     crearNotes,
     createProspect,
-    clearValuesAdressess
+    clearValuesAdressess,
+    changeStateSaveData
   }, dispatch);
 }
 
