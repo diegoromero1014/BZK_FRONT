@@ -269,7 +269,9 @@ class FormEditPipeline extends Component {
 	        employeeResponsible: true
 	      });
 	    } else {
-        if( this.state.errorBusinessPipeline !== null ){
+        console.log("business.value", business.value);
+        console.log("typeButtonClick", typeButtonClick);
+        if( (business.value !== "" && business.value !== null && business.value !== undefined) || typeButtonClick === SAVE_DRAFT ){
           let pipelineJson = {
   	  		"id": id.value,
   	  		"client": window.localStorage.getItem('idClientSelected'),
@@ -400,17 +402,16 @@ class FormEditPipeline extends Component {
 		}
 		getPipelineById(id).then(function(data){
       const pipeline = _.get(data, 'payload.data.data');
-      business.onChange(JSON.parse('["'+_.join(pipeline.pipelineBusiness, '","')+'"]'));
-      this.setState({
-        errorBusinessPipeline: null
-      });
+      if( pipeline.pipelineBusiness.length > 0 ){
+        business.onChange(JSON.parse('["'+_.join(pipeline.pipelineBusiness, '","')+'"]'));
+      }
     });
 	}
 
   componentWillReceiveProps(nextProps){
     const {fields: {business}} = this.props;
     if(typeButtonClick === SAVE_PUBLISHED){
-      if (business.value !== null && business.value !== undefined && this.state.isEditable) {
+      if (business.value === null || business.value === undefined || business.value === "") {
         this.setState({
           errorBusinessPipeline: OPTION_REQUIRED
         });
