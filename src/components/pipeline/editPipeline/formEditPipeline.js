@@ -401,6 +401,9 @@ class FormEditPipeline extends Component {
 		getPipelineById(id).then(function(data){
       const pipeline = _.get(data, 'payload.data.data');
       business.onChange(JSON.parse('["'+_.join(pipeline.pipelineBusiness, '","')+'"]'));
+      this.setState({
+        errorBusinessPipeline: null
+      });
     });
 	}
 
