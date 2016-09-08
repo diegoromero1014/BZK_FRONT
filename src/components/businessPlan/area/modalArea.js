@@ -77,7 +77,7 @@ class ModalArea extends Component {
       areaResponsable.onChange(areaEdit.areaResponsable);
       idEmployee.onChange(areaEdit.areaIdResponsable);
       statusArea.onChange(areaEdit.statusIdArea);
-      areaDate.onChange(moment(areaEdit.areaDate, 'DD MMM YYYY').format("DD/MM/YYYY"));
+      areaDate.onChange(moment(areaEdit.areaFormat, 'DD/MM/YYYY'));
     }
   }
 
@@ -107,6 +107,8 @@ class ModalArea extends Component {
        areaEdit.actionArea = actionArea.value;
        areaEdit.areaDes = areaDes.value;
        areaEdit.statusIdArea = statusArea.value;
+       areaEdit.areaDate = areaDate.value;
+       areaEdit.areaFormat = areaDate.value;
        areaEdit.statusArea = status;
        areaEdit.areaIdResponsable = idUsuario;
        areaEdit.areaResponsable = nameUsuario;
@@ -123,6 +125,7 @@ class ModalArea extends Component {
           areaIdResponsable: idUsuario,
           areaResponsable: nameUsuario,
           areaDate: areaDate.value,
+          areaFormat : areaDate.value,
           statusIdArea:statusArea.value,
           statusArea:status
         }
@@ -244,7 +247,7 @@ class ModalArea extends Component {
                     </dt>
                   </Col>
                   <Col xs>
-                    <dt><span>Fecha de solución (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                     <DateTimePickerUi
                       culture='es'
@@ -299,7 +302,7 @@ function mapStateToProps({areas, selectsReducer}, {areaEdit}) {
         areaResponsable:areaEdit.areaResponsable,
         idEmployee: areaEdit.areaIdResponsable,
         statusArea:areaEdit.statusIdArea,
-        areaDate: moment(areaEdit.areaDate, 'DD MMM YYYY').format("DD/MM/YYYY")
+        areaDate:areaEdit.areaFormat
       }
 
     }

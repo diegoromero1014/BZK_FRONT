@@ -39,7 +39,7 @@ class ListNeed extends Component {
     var {needs} = this.props;
     if(needs.size > 0){
       var data = _.chain(needs.toArray()).map(need => {
-        const {uuid, needType, needIdType, descriptionNeed,needProduct,needIdProduct, needImplementation,
+        const {uuid, needType, needIdType, needFormat, descriptionNeed,needProduct,needIdProduct, needImplementation,
           statusNeed,needIdImplementation,needTask,needBenefits,needIdResponsable, needResponsable,needDate,statusIdNeed} = need;
         var descripcionNecesidad = descriptionNeed.length > 120 ? descriptionNeed.substring(0, 120) + "..." : descriptionNeed;
         return _.assign({}, {
@@ -52,7 +52,8 @@ class ListNeed extends Component {
           uuid: uuid, needType :needType, needIdType :needIdType, descriptionNeed : descriptionNeed,
           needProduct : needProduct,needIdProduct : needIdProduct, needImplementation : needImplementation,
           statusNeed: statusNeed,needIdImplementation : needIdImplementation,needTask : needTask,needBenefits : needBenefits,
-          needIdResponsable: needIdResponsable, needResponsable : needResponsable,needDate: needDate,statusIdNeed: statusIdNeed,
+          needIdResponsable: needIdResponsable, needResponsable : needResponsable,needDate: needDate,needFormat: needFormat,
+          statusIdNeed: statusIdNeed,
           descripcionNecesidad :descripcionNecesidad,
           'delete':  {
             typeDelete : DELETE_NEED_VIEW,

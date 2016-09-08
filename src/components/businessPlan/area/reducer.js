@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
         areaResponsable: area.areaResponsable,
         areaIdResponsable:area.areaIdResponsable,
         areaDate: area.areaDate,
+        areaFormat: area.areaFormat,
         statusIdArea: area.statusIdArea,
         statusArea: area.statusArea
       });
@@ -36,6 +37,7 @@ export default (state = initialState, action) => {
           item.areaDate = areaEdit.areaDate;
           item.statusIdArea = areaEdit.statusIdArea;
           item.statusArea = areaEdit.statusArea;
+          item.areaFormat= areaEdit.areaFormat;
           return item;
         }
       );

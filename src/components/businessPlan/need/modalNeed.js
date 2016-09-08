@@ -111,7 +111,7 @@ class ModalNeed extends Component {
       idEmployee.onChange(needEdit.needIdResponsable);
       needResponsable.onChange(needEdit.needResponsable);
       statusNeed.onChange(needEdit.statusIdNeed);
-      needDate.onChange(moment(needEdit.needDate, 'DD MMM YYYY').format("DD/MM/YYYY"));
+      needDate.onChange(moment(needEdit.needFormat, 'DD/MM/YYYY'));
     }
   }
 
@@ -158,6 +158,7 @@ class ModalNeed extends Component {
         needEdit.needIdResponsable = idUsuario;
         needEdit.needResponsable = nameUsuario;
         needEdit.needDate = needDate.value;
+        needEdit.needFormat = needDate.value;
         needEdit.statusIdNeed = statusNeed.value;
         needEdit.statusNeed=status;
          editNeed(needEdit);
@@ -180,6 +181,7 @@ class ModalNeed extends Component {
            needIdResponsable: idUsuario,
            needResponsable: nameUsuario,
            needDate: needDate.value,
+           needFormat: needDate.value,
            statusIdNeed:statusNeed.value,
            statusNeed:status
          }
@@ -380,7 +382,7 @@ class ModalNeed extends Component {
                     </dt>
                   </Col>
                   <Col xs>
-                    <dt><span>Fecha de solución (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}  onClick={this._scroll}>
                     <DateTimePickerUi
                       id='fecha'
@@ -440,7 +442,7 @@ function mapStateToProps({needs, selectsReducer}, {needEdit}) {
         needResponsable:needEdit.needResponsable,
         idEmployee: needEdit.needIdResponsable,
         statusNeed:needEdit.statusIdNeed,
-        needDate: moment(needEdit.needDate, 'DD MMM YYYY').format("DD/MM/YYYY")
+        needDate: needEdit.needFormat
       }
 
     }
