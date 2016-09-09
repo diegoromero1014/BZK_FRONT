@@ -57,25 +57,25 @@ class NotesClient extends Component {
         const {notes, error} = this.props;
         return (
             <Row style={{padding: "0px 10px 20px 20px"}}>
-              <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
-                  <button className="btn" style={{margin:"12px 0px 0px 12px", fontSize : '1.5em'}}
-                          type="button"
-                          onClick={this._addNote}
-                  >
-                      <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
-                  </button>
-              </Col>
+                <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
+                    <button className="btn" style={{margin: "12px 0px 0px 12px", fontSize: '1.5em'}}
+                            type="button"
+                            onClick={this._addNote}
+                    >
+                        <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
+                    </button>
+                </Col>
                 <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
-                  {error &&
+                    {error &&
                     <div>
-                      <div className="ui pointing below red basic label">
-                        Debe ingresar todos los campos
-                      </div>
+                        <div className="ui pointing below red basic label">
+                            Debe ingresar todos los campos
+                        </div>
                     </div>
-                  }
-                  <div style={error ? {paddingBottom:"20px", border:"1px solid red", borderRadius:"5px"} : {}}>
-                    {notes.map(this._mapNotesItems)}
-                  </div>
+                    }
+                    <div style={error ? {paddingBottom: "20px", border: "1px solid red", borderRadius: "5px"} : {}}>
+                        {notes.map(this._mapNotesItems)}
+                    </div>
                 </Col>
             </Row>
         );

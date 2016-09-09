@@ -23,15 +23,15 @@ export default (state = initialState, action) => {
     case SET_NOTES:
         const notes = action.notes;
         return state.withMutations(list => {
-          notes.map(item => {
-            const uid = _.uniqueId('note_');
-            list.push({
-                uid,
-                body: item.note,
-                combo: String(item.typeOfNote)
-              })
-          });
-      });
+            notes.map(item => {
+                const uid = _.uniqueId('note_');
+                list.push({
+                    uid,
+                    body: item.note,
+                    combo: String(item.typeOfNote)
+                })
+            });
+        });
     case CLEAR_NOTES:
         return state.clear();
     default:

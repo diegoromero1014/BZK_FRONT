@@ -9,12 +9,12 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": " node node_modules/.bin/better-npm-run build",
+    "build": "better-npm-run build",
     "start": "node server.js"
   },
   "betterScripts": {
     "build": {
-      "command": "node node_modules/.bin/webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.prod.js",
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.prod.js",
       "env": {
         "NODE_ENV": "production"
       }
