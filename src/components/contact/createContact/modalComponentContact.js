@@ -15,32 +15,12 @@ import {changeStateSaveData} from '../../dashboard/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {
-    consultDataSelect,
-    consultList,
-    consultListWithParameterUbication,
-    getMasterDataFields
-} from '../../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createErrorsPriority, shouldHandleError} from '../../../utils';
 import {OrderedMap} from 'immutable';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
-import {
-    FILTER_CITY,
-    FILTER_PROVINCE,
-    CONTACT_ID_TYPE,
-    FILTER_CONTACT_POSITION,
-    FILTER_TITLE,
-    FILTER_GENDER,
-    FILTER_DEPENDENCY,
-    FILTER_COUNTRY,
-    FILTER_TYPE_CONTACT_ID,
-    FILTER_TYPE_LBO_ID,
-    FILTER_FUNCTION_ID,
-    FILTER_HOBBIES,
-    FILTER_SPORTS,
-    FILTER_SOCIAL_STYLE,
-    FILTER_ATTITUDE_OVER_GROUP
-} from '../../selectsComponent/constants';
+import {FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
+    FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP } from '../../selectsComponent/constants';
 
 const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
     "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
@@ -715,14 +695,16 @@ class ModalComponentContact extends Component {
                             <Col xs>
                                 <dl style={{width: '100%'}}>
                                     <dt><span>Función (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                    <dd><MultipleSelect name="tipoFuncion" labelInput="Seleccione"
+                                    <dd>
+                                      <MultipleSelect name="tipoFuncion" labelInput="Seleccione"
                                         {...tipoFuncion}
-                                                        valueProp={'id'}
-                                                        textProp={'value'}
-                                                        parentId="modalComponentScroll"
-                                                        data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
-                                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
-                                    /></dd>
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        parentId="modalComponentScroll"
+                                        data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
+                                        />
+                                    </dd>
                                 </dl>
                             </Col>
                         </Row>

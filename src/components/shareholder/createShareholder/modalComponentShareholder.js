@@ -20,7 +20,6 @@ import {changeStateSaveData} from '../../dashboard/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
 
-
 const fields =["tipoDocumento", "numeroDocumento", "tipoPersona",
       "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
       "primerApellido","segundoApellido", "genero", "razonSocial", "direccion", "porcentajePart",
@@ -30,7 +29,6 @@ const errors = {};
 var typeMessage = "error";
 var titleMessage = "Campos obligatorios";
 var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
-
 
 var valueTypeShareholder;
 

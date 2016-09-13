@@ -49,6 +49,9 @@ export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
 export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
 export const ONLY_POSITIVE_INTEGER = 1;
 export const ALLOWS_NEGATIVE_INTEGER = 2;
+export const MESSAGE_ERROR = "error";
+export const MESSAGE_WARNING = "warning";
+export const MESSAGE_SUCCESS = "success";
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {

@@ -1,6 +1,4 @@
-import React, {
-  Component
-} from 'react';
+import React, {Component} from 'react';
 import SearchContactComponent from './searchContactComponent';
 import ListContactComponent from './listContactComponent';
 import {Row, Grid, Col} from 'react-flexbox-grid';
@@ -24,18 +22,18 @@ class ContactComponent extends Component {
      };
   }
 
-    componentWillMount(){
-      if( window.localStorage.getItem('sessionToken') === "" ){
-        redirectUrl("/login");
-      }else{
-        const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
-        clearContact();
-        contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
-        "",
-        "",
-        "");
-      }
+  componentWillMount(){
+    if( window.localStorage.getItem('sessionToken') === "" ){
+      redirectUrl("/login");
+    }else{
+      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
+      clearContact();
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
+      "",
+      "",
+      "");
     }
+  }
 
   render() {
     const {contactsByClient} = this.props;

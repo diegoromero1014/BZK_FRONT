@@ -12,7 +12,6 @@ import ModalNeed from './modalNeed';
 import _ from 'lodash';
 import moment from 'moment';
 
-
 var arrayValueNeed = [];
 var idNeedSeleted = null;
 
