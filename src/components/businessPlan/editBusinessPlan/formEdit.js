@@ -273,6 +273,7 @@ class FormEdit extends Component {
             needIdResponsable: value.employeeResponsible,
             needResponsable: value.employeeResponsibleName,
             needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+            needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
             statusIdNeed:value.needFulfillmentStatus,
             statusNeed:value.needFulfillmentStatusName
           }
@@ -287,6 +288,7 @@ class FormEdit extends Component {
             areaIdResponsable: value.employeeResponsibleId,
             areaResponsable: value.employeeResponsibleId !== null ? value.employeeResponsibleIdName : value.employeeResponsible,
             areaDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+            areaFormat:moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
             statusIdArea:value.needFulfillmentStatus,
             statusArea:value.actionStatus
           }
@@ -344,7 +346,7 @@ class FormEdit extends Component {
         <Row style={{padding: "0px 23px 20px 20px"}}>
         <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
           <dt>
-            <span>Fecha DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+            <span>Fecha - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
           </dt>
           <dt>
             <DateTimePickerUi

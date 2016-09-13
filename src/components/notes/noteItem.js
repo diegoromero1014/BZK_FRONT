@@ -29,19 +29,19 @@ class NoteItem extends Component {
         deleteNote(index);
     }
 
-    _updateValue(e){
+    _updateValue(e) {
     }
 
-    componentWillMount(){
-      const {combo, body} = this.props;
-      this.updateValue("combo", combo);
-      this.updateValue("body", body);
+    componentWillMount() {
+        const {combo, body} = this.props;
+        this.updateValue("combo", combo);
+        this.updateValue("body", body);
     }
 
-    componentDidMount(){
-      const {combo, body} = this.props;
-      this.updateValue("combo", combo);
-      this.updateValue("body", body);
+    componentDidMount() {
+        const {combo, body} = this.props;
+        this.updateValue("combo", combo);
+        this.updateValue("body", body);
     }
 
     render() {
@@ -82,7 +82,7 @@ class NoteItem extends Component {
                         <button onClick={this._deleteNote}
                                 className="btn btn-sm  btn-danger"
                                 type="button">
-                            <i style={{margin:'0em', fontSize : '1.2em'}} className="trash outline icon"></i>
+                            <i style={{margin: '0em', fontSize: '1.2em'}} className="trash outline icon"></i>
                         </button>
                     </Col>
                 </Row>

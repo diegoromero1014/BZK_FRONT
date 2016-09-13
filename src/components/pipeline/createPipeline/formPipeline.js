@@ -30,7 +30,7 @@ const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termI
 let typeMessage = "success";
 let titleMessage = "";
 let message = "";
-let typeButtonClick;
+let typeButtonClick = null;
 let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
@@ -292,7 +292,7 @@ class FormPipeline extends Component {
         employeeResponsible: true
       });
     } else {
-      if( this.state.errorBusinessPipeline !== null ){
+      if( (business.value !== "" && business.value !== null && business.value !== undefined) || typeButtonClick === SAVE_DRAFT ){
         let pipelineJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
@@ -402,7 +402,7 @@ class FormPipeline extends Component {
   componentWillReceiveProps(nextProps){
     const {fields: {business}} = this.props;
     if(typeButtonClick === SAVE_PUBLISHED){
-      if (business.value !== null && business.value !== undefined) {
+      if ( (business.value === null || business.value === undefined || business.value === "") && typeButtonClick !== null) {
         this.setState({
           errorBusinessPipeline: OPTION_REQUIRED
         });

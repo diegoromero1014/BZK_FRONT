@@ -183,7 +183,7 @@ class ModalTask extends Component {
                     </dt>
                   </Col>
                   <Col xs={6} md={6} lg={6}>
-                    <dt><span>Fecha de cierre (<span style={{color: "red"}}>*</span>)</span></dt>
+                    <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>
                       <DateTimePickerUi
                         {...fecha}

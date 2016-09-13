@@ -23,6 +23,7 @@ export default (state = initialState, action) => {
         needIdResponsable: need.needIdResponsable,
         needResponsable:need.needResponsable,
         needDate:need.needDate,
+        needFormat:need.needFormat,
         statusNeed: need.statusNeed,
         statusIdNeed: need.statusIdNeed
       });
@@ -49,6 +50,7 @@ export default (state = initialState, action) => {
            item.needIdResponsable= needEdit.needIdResponsable;
            item.needResponsable=needEdit.needResponsable;
            item.needDate=needEdit.needDate;
+           item.needFormat = needEdit.needFormat;
            item.statusNeed= needEdit.statusNeed;
            item.statusIdNeed= needEdit.statusIdNeed;
            return item;
