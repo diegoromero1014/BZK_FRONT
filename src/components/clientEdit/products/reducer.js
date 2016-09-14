@@ -13,10 +13,10 @@ export default (state = initialState, action) => {
         name: product.name,
         type: product.type,
         number: product.number,
-        montlyAmount: product.montlyAmount,
+        averageMontlyAmount: product.averageMontlyAmount,
         coin: product.coin,
-        countryProduct: product.countryProduct,
-        cityProduct: product.cityProduct
+        country: product.country,
+        city: product.city
       });
       return state.set(indexProductToUpdate, productToUpdate);
     case CREATE:
@@ -25,10 +25,10 @@ export default (state = initialState, action) => {
           name: product.name,
           type: product.type,
           number: product.number,
-          montlyAmount: product.montlyAmount,
+          averageMontlyAmount: product.averageMontlyAmount,
           coin: product.coin,
-          countryProduct: product.countryProduct,
-          cityProduct: product.cityProduct,
+          country: product.country,
+          city: product.city,
           uid: product.uid
         });
         return state.push(newProduct);
