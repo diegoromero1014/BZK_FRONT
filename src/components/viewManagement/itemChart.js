@@ -42,7 +42,7 @@ class ItemChart extends Component{
     const {getCsv} = this.props;
     getCsv(year, url, false, false, false).then(function(data) {
       if (data.payload.data.status === 200) {
-        window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+        window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
       }
     });
   }

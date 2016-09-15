@@ -45,13 +45,13 @@ class DownloadVisits extends Component {
 		  url = '/getCsvVisits';
 			getCsv(year,url,this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 					 if (data.payload.data.status === 200) {
-					 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+					 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=jghjh', '_blank');
 					 }
 				});
 		}else{
 			getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=lkljkl' , '_blank');
 					isOpen();
 				}
 			});
@@ -61,7 +61,7 @@ class DownloadVisits extends Component {
 	render() {
 		return (
 			<div>
-				<div style={{height: 'auto'}}className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
 					<span>{'En esta sección podrá descargar algunos campos  de los "informes de visita/reunión" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
