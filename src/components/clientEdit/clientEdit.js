@@ -38,9 +38,9 @@ const valuesYesNo = [
 
 const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province", "neighborhood",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
-    "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren",
+    "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
-    "justifyExClient", "taxNAtura", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
+    "justifyExClient", "taxNatura", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
@@ -451,8 +451,10 @@ class clientEdit extends Component{
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
-    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer} = this.props;
+    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer, clientProductReducer} = this.props;
+    console.log("clientProductReducer", clientProductReducer);
     var notesArray = [];
+    var productsArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
     var existNoteExceptionNoGeren = false;
@@ -465,6 +467,10 @@ class clientEdit extends Component{
         "note": map.body
       }
       notesArray.push(noteItem);
+    });
+    clientProductReducer.map(map => {
+      console.log("product = ", map);
+      productsArray.push(_.omit(map, ['uid']))
     });
     var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
     var idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
@@ -480,10 +486,14 @@ class clientEdit extends Component{
         const {
         fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
           district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-          liabilities, assets, operatingIncome, nonOperatingIncome, expenses,
-          centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient},
+          liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, originResource,
+          centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNatura,
+          detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
+          originCityResource, operationsForeignCurrency, otherOperationsForeign},
           error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
+        console.log("originGoods", originGoods.value);
+        console.log("originResource", originResource.value);
         if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
           var jsonCreateProspect= {
             "id": infoClient.id,
@@ -544,7 +554,19 @@ class clientEdit extends Component{
             "description": description.value,
             "clientIdType": infoClient.clientIdType,
             "celulaId": infoClient.celulaId,
-            "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
+            "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
+            "foreignProducts": productsArray,
+            "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
+            "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
+            "taxNatura": taxNatura.value,
+            "detailNonOperatinIncome": detailNonOperatingIncome.value,
+            "otherOriginGoods": otherOriginGoods.value,
+            "otherOriginResource": otherOriginResource.value,
+            "countryOriginId": countryOrigin.value,
+            "originCityResource": originCityResource.value,
+            "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
+            "otherOperationsForeign": otherOperationsForeign.value,
+            "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']')
          }
            const {createProspect} = this.props;
            changeStateSaveData(true);
@@ -608,9 +630,9 @@ class clientEdit extends Component{
   render(){
     const {
     fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
-      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
+      district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNAtura,
+      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNatura,
       detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
       otherOperationsForeign}, error, handleSubmit, selectsReducer, clientInformacion, notes} = this.props;
     if(notes.toArray().length === 0){
@@ -687,7 +709,8 @@ class clientEdit extends Component{
                 <ComboBox
                   name="idTaxNatura"
                   labelInput="Seleccione la naturaleza..."
-                  onBlur={taxNAtura.onBlur}
+                  {...taxNatura}
+                  onBlur={taxNatura.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
@@ -1205,7 +1228,7 @@ class clientEdit extends Component{
                     labelInput="Seleccione"
                     valueProp={'id'}
                     textProp={'value'}
-                    parentId="modalComponentScroll"
+                    parentId="dashboardComponentScroll"
                     data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
                     />
                 </dd>
@@ -1237,7 +1260,7 @@ class clientEdit extends Component{
                     labelInput="Seleccione"
                     valueProp={'id'}
                     textProp={'value'}
-                    parentId="modalComponentScroll"
+                    parentId="dashboardComponentScroll"
                     data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
                     />
                 </dd>
@@ -1321,15 +1344,15 @@ class clientEdit extends Component{
                 <span>¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <dt style={{marginRight:"17px"}}>
-                <ComboBox
-                  name="operationsForeignCurrency"
-                  labelInput="Seleccione..."
+                <MultipleSelect
+                  {...operationsForeigns}
+                  name="operationsForeigns"
+                  labelInput="Seleccione"
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
                   data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
-                  {...operationsForeignCurrency}
-                />
+                  />
               </dt>
             </Col>
           </Row>
@@ -1430,11 +1453,13 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) {
+function mapStateToProps({clientInformacion, selectsReducer, notes, clientProductReducer},ownerProps) {
   const infoClient = clientInformacion.get('responseClientInfo');
+  console.log("infoClient", infoClient);
   return {
     clientInformacion,
     selectsReducer,
+    clientProductReducer,
     notes,
     initialValues:{
       description: infoClient.description,
@@ -1462,16 +1487,17 @@ function mapStateToProps({clientInformacion, selectsReducer, notes},ownerProps) 
       justifyExClient: infoClient.justificationForLostClient,
       justifyNoLME: infoClient.justificationForCreditNeed,
       groupEconomic: infoClient.economicGroup,
-      taxNAtura: '',
-      detailNonOperatingIncome: '',
-      originGoods: '',
-      originResource: '',
-      otherOriginGoods: '',
-      otherOriginResource: '',
-      countryOrigin: '',
-      originCityResource: '',
-      operationsForeignCurrency: '',
-      otherOperationsForeign: ''
+      taxNatura: infoClient.taxNatura,
+      detailNonOperatingIncome: infoClient.detailNonOperatinIncome,
+      originGoods: JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]'),
+      originResource: JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]'),
+      operationsForeigns: JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]'),
+      otherOriginGoods: infoClient.otherOriginGoods,
+      otherOriginResource: infoClient.otherOriginResource,
+      countryOrigin: infoClient.countryOriginId,
+      originCityResource: infoClient.originCityResource,
+      operationsForeignCurrency: infoClient.operationsForeignCurrency === 0 ? false : infoClient.operationsForeignCurrency === 1 ? true : '',
+      otherOperationsForeign: infoClient.otherOperationsForeign
     }
   };
 }
@@ -1486,6 +1512,7 @@ function fomatInitialStateNumber(val){
 
 export default reduxForm({
   form: 'submitValidation',
+  destroyOnUnmount: false,
   fields,
   validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

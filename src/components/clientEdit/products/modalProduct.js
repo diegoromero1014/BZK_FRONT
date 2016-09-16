@@ -14,7 +14,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import numeral from 'numeral';
 
-const fields = ["name", "type", "number", "montlyAmount", "coin", "countryProduct", "cityProduct"];
+const fields = ["name", "type", "number", "averageMontlyAmount", "coin", "country", "city"];
 
 const errors = {};
 
@@ -34,25 +34,25 @@ const validate = (values) => {
   }else{
     errors.number = null;
   }
-  if(!values.montlyAmount){
-    errors.montlyAmount = constants.VALUE_REQUIERED;
+  if(!values.averageMontlyAmount){
+    errors.averageMontlyAmount = constants.VALUE_REQUIERED;
   }else{
-    errors.montlyAmount = null;
+    errors.averageMontlyAmount = null;
   }
   if(!values.coin){
     errors.coin = constants.VALUE_REQUIERED;
   }else{
     errors.coin = null;
   }
-  if(!values.countryProduct){
-    errors.countryProduct = constants.VALUE_REQUIERED;
+  if(!values.country){
+    errors.country = constants.VALUE_REQUIERED;
   }else{
-    errors.countryProduct = null;
+    errors.country = null;
   }
-  if(!values.cityProduct){
-    errors.cityProduct = constants.OPTION_REQUIRED;
+  if(!values.city){
+    errors.city = constants.OPTION_REQUIRED;
   }else{
-    errors.cityProduct = null;
+    errors.city = null;
   }
   return errors;
 };
@@ -116,7 +116,7 @@ class ModalProduct extends Component {
   }
 
   _handleProduct(){
-    const {fields:{name, type, number, montlyAmount, coin, countryProduct, cityProduct}, clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
+    const {fields:{name, type, number, averageMontlyAmount, coin, country, city}, clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
     var uid, titleMessage, textMessage;
     if(productDetail !== null){
       uid = productDetail.uid;
@@ -128,10 +128,10 @@ class ModalProduct extends Component {
       name: name.value,
       type: type.value,
       number: number.value,
-      montlyAmount: montlyAmount.value,
+      averageMontlyAmount: averageMontlyAmount.value,
       coin: coin.value,
-      countryProduct: countryProduct.value,
-      cityProduct: cityProduct.value
+      country: country.value,
+      city: city.value
     };
     if(productDetail !== null){
       updateProduct(product);
@@ -157,7 +157,7 @@ class ModalProduct extends Component {
   }
 
   render() {
-    const {fields:{name, type, number, montlyAmount, coin, countryProduct, cityProduct}, handleSubmit, error, modalStatus, selectsReducer, productDetail} = this.props;
+    const {fields:{name, type, number, averageMontlyAmount, coin, country, city}, handleSubmit, error, modalStatus, selectsReducer, productDetail} = this.props;
     return (
       <form onSubmit={handleSubmit(this._handleProduct)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
@@ -209,8 +209,8 @@ class ModalProduct extends Component {
                   type="text"
                   min={0}
                   max="16"
-                  {...montlyAmount}
-                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, montlyAmount, montlyAmount.value)}
+                  {...averageMontlyAmount}
+                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, averageMontlyAmount, averageMontlyAmount.value)}
                 />
               </Col>
             </Row>
@@ -229,9 +229,9 @@ class ModalProduct extends Component {
                 <ComboBox
                   name="type"
                   labelInput="Seleccione el tipo..."
-                  {...countryProduct}
-                  value={countryProduct.value}
-                  onBlur={countryProduct.onBlur}
+                  {...country}
+                  value={country.value}
+                  onBlur={country.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
@@ -245,10 +245,10 @@ class ModalProduct extends Component {
                   <span>Ciudad (</span><span style={{color: "red"}}>*</span>)
                 </dt>
                 <Input
-                  name="txtCityProduct"
+                  name="txtcity"
                   type="text"
                   max="150"
-                  {...cityProduct}
+                  {...city}
                 />
               </Col>
             </Row>
@@ -280,10 +280,10 @@ function mapStateToProps({selectsReducer, clientProductReducer}, {fields, produc
         name: productDetail.name,
         type: productDetail.type,
         number: productDetail.number,
-        montlyAmount: productDetail.montlyAmount,
+        averageMontlyAmount: productDetail.averageMontlyAmount,
         coin: productDetail.coin,
-        countryProduct: productDetail.countryProduct,
-        cityProduct: productDetail.cityProduct
+        country: productDetail.country,
+        city: productDetail.city
       }
     };
   }else{
@@ -294,10 +294,10 @@ function mapStateToProps({selectsReducer, clientProductReducer}, {fields, produc
         name: '',
         type: '',
         number: '',
-        montlyAmount: '',
+        averageMontlyAmount: '',
         coin: '',
-        countryProduct: '',
-        cityProduct: ''
+        country: '',
+        city: ''
       }
     };
   }
@@ -313,6 +313,7 @@ function mapDispatchToProps(dispatch) {
 
 export default reduxForm({
     form: 'submitValidation',
+    destroyOnUnmount: false,
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(ModalProduct);

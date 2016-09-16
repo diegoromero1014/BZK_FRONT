@@ -61,7 +61,7 @@ class DownloadVisits extends Component {
 	render() {
 		return (
 			<div>
-				<div style={{height: 'auto'}}className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
 					<span>{'En esta sección podrá descargar algunos campos  de los "informes de visita/reunión" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
