@@ -8,6 +8,7 @@ import {redirectUrl} from '../globalComponents/actions';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import {consultDataSelect, consultList} from '../selectsComponent/actions';
+import {SESSION_EXPIRED} from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -54,7 +55,12 @@ class CreatePropspect extends Component{
       redirectUrl("/login");
     }
     const {consultDataSelect, consultList} = this.props;
-    consultDataSelect(constants.CLIENT_ID_TYPE);
+    consultDataSelect(constants.CLIENT_ID_TYPE).then((data) => {
+      console.log("data", data);
+      if( _.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED  ){
+        redirectUrl("/login");
+      }
+    });
     consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 

@@ -6,7 +6,9 @@ import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
 import {updateTitleNavBar} from '../navBar/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
+import {redirectUrl} from '../globalComponents/actions';
 import $ from 'jquery';
+import _ from 'lodash';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 
@@ -14,7 +16,11 @@ class ComponentClientInformation extends Component{
   constructor(props) {
      super(props);
      const {consultInfoClient} = this.props;
-     consultInfoClient();
+     consultInfoClient().then((data) => {
+       if(!_.get(data, 'payload.data.validateLogin')){
+         redirectUrl("/login");
+       }
+     });
   }
 
   componentWillMount(){
@@ -123,7 +129,8 @@ class ComponentClientInformation extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     consultInfoClient,
-    updateTitleNavBar
+    updateTitleNavBar,
+    redirectUrl
   }, dispatch);
 }
 

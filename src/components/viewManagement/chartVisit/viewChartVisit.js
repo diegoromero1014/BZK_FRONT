@@ -7,6 +7,7 @@ import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
 import {consultInformationVisit, changeLoadChart} from '../actions';
 import BarSeries from '../chartPipeline/barSeries';
+import {redirectUrl} from '../../globalComponents/actions';
 import numeral from 'numeral';
 import moment from 'moment';
 import _ from 'lodash';
@@ -42,7 +43,7 @@ class ViewChartVisit extends Component {
 		this.setState({data: defaultValueData});
 		consultInformationVisit().then((response) => {
 			changeLoadChart(false);
-			if ( (_.get(response, 'payload.data.validateLogin') === 'false') ) {
+			if ( !_.get(response, 'payload.data.validateLogin') ) {
 				redirectUrl("/login");
 			} else {
 				if ( (_.get(response, 'payload.data.status') === 500) ) {
@@ -102,7 +103,8 @@ class ViewChartVisit extends Component {
 function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
 		consultInformationVisit,
-		changeLoadChart
+		changeLoadChart,
+		redirectUrl
 	}, dispatch);
 };
 

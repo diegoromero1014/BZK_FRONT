@@ -18,6 +18,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createErrorsPriority, shouldHandleError} from '../../../utils';
 import {OrderedMap} from 'immutable';
+import _ from 'lodash';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP } from '../../selectsComponent/constants';

@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
             map
             .set('status', 'processed')
             .set('countClients', response.countClients)
-            .set('responseClients', JSON.parse(response.listClients));
+            .set('responseClients', response.listClients === undefined ? [] : JSON.parse(response.listClients));
         });
     case actions.CHANGE_PAGE:
       return state.set('page', action.currentPage);

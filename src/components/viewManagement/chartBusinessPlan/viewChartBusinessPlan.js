@@ -7,6 +7,7 @@ import SweetAlert from 'sweetalert-react';
 import {consultInformationBusinessPlans, changeLoadChart} from '../actions';
 import BarSeries from '../chartPipeline/barSeries';
 import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
+import {redirectUrl} from '../../globalComponents/actions';
 import {Combobox} from 'react-widgets';
 import {TYPE_YEAR} from '../constants';
 import numeral from 'numeral';
@@ -74,24 +75,28 @@ class ViewChartBusinessPlan extends Component {
 		numberBusinessPlans = 0;
     changeLoadChart(true);
 		consultInformationBusinessPlans(year).then((response) => {
-			var data = response.payload.data.data;
-			var listNeeds = data.listNeeds;
-			numberBusinessPlans = data.numberBusinessPlans;
-			if(listNeeds != null && listNeeds != '' && listNeeds !== undefined){
-				listNeeds.forEach(function(need){
-					dataBusinessAux.push({
-						angle: need[1],
-						id:_.uniqueId('color_'),
-						percentageNeed: need[2],
-						need: need[0]
+			if ( !_.get(response, 'payload.data.validateLogin') ) {
+				redirectUrl("/login");
+			} else {
+				var data = response.payload.data.data;
+				var listNeeds = data.listNeeds;
+				numberBusinessPlans = data.numberBusinessPlans;
+				if(listNeeds != null && listNeeds != '' && listNeeds !== undefined){
+					listNeeds.forEach(function(need){
+						dataBusinessAux.push({
+							angle: need[1],
+							id:_.uniqueId('color_'),
+							percentageNeed: need[2],
+							need: need[0]
+						});
 					});
+				}
+				this.setState({
+					dataBusiness: dataBusinessAux,
+					valueYear: year
 				});
 			}
-			this.setState({
-				dataBusiness: dataBusinessAux,
-				valueYear: year
-			});
-      changeLoadChart(false);
+			changeLoadChart(false);
     }, (reason) => {
       changeLoadChart(false);
     });
@@ -172,7 +177,8 @@ class ViewChartBusinessPlan extends Component {
 function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
 		consultInformationBusinessPlans,
-		changeLoadChart
+		changeLoadChart,
+		redirectUrl
 	}, dispatch);
 };
 

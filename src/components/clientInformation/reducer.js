@@ -17,7 +17,7 @@ export default(state = initialState, action) => {
           map
           .set('status', status)
           .set('validateLogin', validateLogin)
-          .set('responseClientInfo', JSON.parse(clientInformation));
+          .set('responseClientInfo', clientInformation === undefined || clientInformation === "" ? [] : JSON.parse(clientInformation));
       })
 
     case UPDATE_ACTIVE_TAB:

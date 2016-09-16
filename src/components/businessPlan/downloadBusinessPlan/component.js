@@ -37,13 +37,13 @@ class DownloadBusinessPlan extends Component {
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
 				 if (data.payload.data.status === 200) {
-				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
 				 }
 			});
 		} else {
 			getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data, '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
 					isOpen();
 				}
 			});

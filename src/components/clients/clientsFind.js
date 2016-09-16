@@ -15,6 +15,7 @@ import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {clearContact} from '../contact/actions';
 import {clearInfoClient} from '../clientInformation/actions';
+import {SESSION_EXPIRED} from '../../constantsGlobal';
 
 const fields =["team","certificationStatus"];
 
@@ -38,7 +39,11 @@ class ClientsFind extends Component {
     } else {
       const {clearClients,consultList,getMasterDataFields, clearContact, clearInfoClient} = this.props;
       clearClients();
-      getMasterDataFields([constants.CERTIFICATION_STATUS]);
+      getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
+        if( _.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED  ){
+          redirectUrl("/login");
+        }
+      });
       consultList(constants.TEAM_FOR_EMPLOYEE);
       const {updateTitleNavBar} = this.props;
       updateTitleNavBar("Mis clientes");
@@ -73,7 +78,11 @@ class ClientsFind extends Component {
   _handleClientsFind(){
     const {fields: {certificationStatus,team}} = this.props;
     const {clientsFindServer,clientR,changePage} = this.props;
-    clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,certificationStatus.value,team.value);
+    clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,certificationStatus.value,team.value).then((data) => {
+      if ( !_.get(data, 'payload.data.validateLogin') ) {
+        redirectUrl("/login");
+      }
+    });
     changePage(1);
   }
 

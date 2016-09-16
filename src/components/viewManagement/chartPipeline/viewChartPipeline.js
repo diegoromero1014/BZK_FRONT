@@ -6,6 +6,7 @@ import SelectFilter from '../../selectsComponent/selectFilterContact/selectFilte
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {NUMERAL_MONTH} from '../constants';
 import {PIPELINE_STATUS} from '../../selectsComponent/constants';
+import {redirectUrl} from '../../globalComponents/actions';
 import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
 import {consultInformationPipeline, consultCurrencys, changeLoadChart} from '../actions';
@@ -52,7 +53,11 @@ class ViewChartPipeline extends Component{
   componentWillMount(){
     const {selectsReducer, getMasterDataFields, consultCurrencys} = this.props;
     this._consultInfoPipeline(null, null);
-    consultCurrencys();
+    consultCurrencys().then((data) => {
+      if( !_.get(data, 'payload.data.validateLogin') ){
+        redirectUrl("/login");
+      }
+    });
   }
 
   _refreshChartPipeline(){
@@ -156,7 +161,8 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     consultInformationPipeline,
     consultCurrencys,
-    changeLoadChart
+    changeLoadChart,
+    redirectUrl
   }, dispatch);
 }
 

@@ -6,6 +6,7 @@ import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import SweetAlert from 'sweetalert-react';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
+import _ from 'lodash';
 
 class SearchBarClient extends Component{
 
@@ -46,7 +47,11 @@ class SearchBarClient extends Component{
       this.setState({showEr: true});
     }else{
       const {changePage} = this.props;
-      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,valueCertification,valueTeam);
+      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,valueCertification,valueTeam).then((data) => {
+        if ( !_.get(data, 'payload.data.validateLogin') ) {
+          redirectUrl("/login");
+        }
+      });
       changePage(1);
     }
   }
@@ -76,7 +81,7 @@ class SearchBarClient extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    clientsFindServer, changePage, changeKeyword, updateTabSeleted
+    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl
   }, dispatch);
 }
 
