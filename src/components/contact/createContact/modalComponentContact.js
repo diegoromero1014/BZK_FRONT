@@ -209,34 +209,35 @@ class ModalComponentContact extends Component {
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
     }
 
-    _searchContact() {
-        const {
-            fields:{
-                id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
-            }, handleSubmit, error
-        }= this.props;
-        const {searchContact, clearSearchContact} = this.props;
-        if (tipoDocumento.value && numeroDocumento.value) {
-            searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
-                if ((_.get(data, 'payload.data.isClientContact'))) {
-                    clearSearchContact();
-                    this.props.resetForm();
-                    this.setState({showErrorYa: true});
-                } else {
-                    this.setState({disabled: 'disabled'});
-                    this.setState({noExiste: 'visible'});
-                    this.setState({botonBus: 'none'});
-                    ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
-                }
-            }, (reason) => {
-              this.setState({showEr: true});
-          });
-      }else{
-        this.setState({showCam:true});
-      }
+    _searchContact(e) {
+      e.preventDefault();
+      const {
+          fields:{
+              id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
+              numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+              codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+          }, handleSubmit, error
+      }= this.props;
+      const {searchContact, clearSearchContact} = this.props;
+      if (tipoDocumento.value && numeroDocumento.value) {
+          searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
+              if ((_.get(data, 'payload.data.isClientContact'))) {
+                  clearSearchContact();
+                  this.props.resetForm();
+                  this.setState({showErrorYa: true});
+              } else {
+                  this.setState({disabled: 'disabled'});
+                  this.setState({noExiste: 'visible'});
+                  this.setState({botonBus: 'none'});
+                  ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
+              }
+          }, (reason) => {
+            this.setState({showEr: true});
+        });
+    }else{
+      this.setState({showCam:true});
     }
+  }
 
 
     _handleCreateContact() {

@@ -23,8 +23,8 @@ const valuesYesNo = [
   {'id': true, 'value': "Si"},
   {'id': false, 'value': "No"}
 ]
-var titleDescription = "Diligencie esta sección respondiendo a la pregunta ¿Qué debería conocer el Grupo Bancolombia de este cliente? (quién es, qué hace, cuáles son sus principales líneas de negocio, productos y servicios que ofrece, sector donde se encuentra, estrategia, países en los que tiene presencia, participación de mercado).";
-var messageConfirm = "Recuerde que una vez creado el prospecto solo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿esta seguro de guardar la información?";
+var titleDescription = "Diligencie está sección respondiendo a la pregunta ¿Qué debería conocer el Grupo Bancolombia de este cliente? (quién es, qué hace, cuáles son sus principales líneas de negocio, productos y servicios que ofrece, sector donde se encuentra, estrategia, países en los que tiene presencia, participación de mercado).";
+var messageConfirm = "Recuerde que una vez creado el prospecto sólo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿está seguro de guardar la información?";
 var titleConfirm = "Confirmación creación";
 var typeConfirm = "create";
 
@@ -244,7 +244,7 @@ class FormCreateProspect extends Component{
   }
 
   _submitFormCreateProspect(formData){
-    messageConfirm = "Recuerde que una vez creado el prospecto solo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿esta seguro de guardar la información?";
+    messageConfirm = "Recuerde que una vez creado el prospecto sólo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿está seguro de guardar la información?";
     titleConfirm = "Confirmación creación";
     typeConfirm = "create";
     this.setState({show: true});

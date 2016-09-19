@@ -242,6 +242,11 @@ class FormEdit extends Component{
       } else {
         this.setState({showErrorSaveVisit :true});
       }
+    } else {
+      typeMessage = "error";
+      titleMessage = "Campos obligatorios";
+      message = "Señor usuario, debe ingresar todos los campos obligatorios.";
+      this.setState({showMessageCreateVisit :true});
     }
   }
 
