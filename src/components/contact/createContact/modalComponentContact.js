@@ -17,6 +17,7 @@ import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createErrorsPriority, shouldHandleError} from '../../../utils';
+import {formValidateKeyEnter} from '../../../actionsGlobal';
 import {OrderedMap} from 'immutable';
 import _ from 'lodash';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
@@ -316,7 +317,7 @@ class ModalComponentContact extends Component {
         }, handleSubmit, error
         }= this.props;
 
-        return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
+        return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                      id="modalComponentScroll">
                     <dt className="business-title"><span

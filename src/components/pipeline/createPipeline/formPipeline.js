@@ -13,7 +13,7 @@ import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClie
 import {LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -445,7 +445,7 @@ class FormPipeline extends Component {
           clientInformacion, selectsReducer, handleSubmit} = this.props;
 
     return(
-      <form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>

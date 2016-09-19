@@ -19,7 +19,7 @@ import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
 import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {createVisti} from '../actions';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -405,7 +405,7 @@ class FormVisita extends Component{
       showAECNivel = false;
     }
     return(
-      <form onSubmit={handleSubmit(this._submitCreateVisita)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>

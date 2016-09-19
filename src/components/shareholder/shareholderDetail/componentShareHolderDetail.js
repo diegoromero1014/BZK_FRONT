@@ -16,6 +16,7 @@ import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLD
 from '../../selectsComponent/constants';
 import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
+import {formValidateKeyEnter} from '../../../actionsGlobal';
 import _ from 'lodash';
 import {redirectUrl} from '../../globalComponents/actions';
 
@@ -238,7 +239,7 @@ class ComponentShareHolderDetail extends Component {
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
     return (
-      <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)}>
+      <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica accionista</span></dt>
           <div style={{paddingLeft:'20px',paddingRight:'20px'}}>

@@ -15,7 +15,7 @@ import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -447,7 +447,7 @@ class FormEditPipeline extends Component {
   		}
 
         return(
-			<form onSubmit={handleSubmit(this._submitCreatePipeline)} className="my-custom-tab"
+			<form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         		<Row style={{padding: "5px 10px 0px 20px"}}>
 		          <Col xs={10} sm={10} md={10} lg={10}>
