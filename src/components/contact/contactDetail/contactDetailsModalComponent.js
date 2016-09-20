@@ -11,6 +11,7 @@ import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {downloadFilePDF} from '../actions';
+import {formValidateKeyEnter} from '../../../actionsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
@@ -383,7 +384,7 @@ class ContactDetailsModalComponent extends Component {
       contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
     }, error, handleSubmit, selectsReducer} = this.props;
     return (
-      <form onSubmit={handleSubmit(this._handlerSubmitContact)}>
+      <form onSubmit={handleSubmit(this._handlerSubmitContact)} onKeyPress={val => formValidateKeyEnter(val)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalEditCotact">
           <dt className="business-title" style={{fontSize: '17px'}}>
             <span style={{paddingLeft: '20px'}}>Información básica contacto</span>

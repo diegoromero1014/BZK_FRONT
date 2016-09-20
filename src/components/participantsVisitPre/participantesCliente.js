@@ -90,9 +90,9 @@ class ParticipantesCliente extends Component{
     clearParticipants();
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
-    if( _.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined ){
+    //if( _.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined ){
       contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_CONTACTS,"",0,"","","","");
-    }
+    //}
   }
 
   _updateValue(value){

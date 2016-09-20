@@ -14,7 +14,7 @@ import AreaBusiness from '../area/areaBusiness';
 import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {createBusiness} from '../actions';
 import moment from 'moment';
@@ -245,7 +245,7 @@ class FormBusinessPlan extends Component {
   render() {
     const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit} = this.props;
     return(
-      <form onSubmit={handleSubmit(this._submitCreateBusiness)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 10px 20px"}}>

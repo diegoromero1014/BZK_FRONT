@@ -14,7 +14,7 @@ import AreaBusiness from '../area/areaBusiness';
 import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {detailBusiness, pdfDescarga} from '../actions';
 import {addNeed, editNeed} from '../need/actions';
@@ -324,7 +324,7 @@ class FormEdit extends Component {
       }
     }
     return(
-      <form  onSubmit={handleSubmit(this._submitCreateBusiness)} className="my-custom-tab"
+      <form  onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={10} sm={10} md={10} lg={10}>

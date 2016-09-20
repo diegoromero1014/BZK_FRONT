@@ -106,7 +106,7 @@ export default (state = initialState, action) => {
               .set('dataTypeCity', null)
           });
         case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
-          const masterDataDetailEntries = action.payload.data.messageBody.masterDataDetailEntries;
+          const masterDataDetailEntries = action.payload.data.messageBody === undefined || action.payload.data.messageBody === null ? [] : action.payload.data.messageBody.masterDataDetailEntries;
           const lists = _.groupBy(masterDataDetailEntries, 'field');
           const keys = _.keys(lists);
           return state.withMutations(map => {

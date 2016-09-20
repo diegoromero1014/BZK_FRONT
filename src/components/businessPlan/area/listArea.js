@@ -38,7 +38,7 @@ class ListArea extends Component {
     var {areas} = this.props;
     if(areas.size > 0){
       var data = _.chain(areas.toArray()).map(area => {
-        const {uuid, areaDes, actionArea, areaResponsable,areaIdResponsable ,areaDate ,statusIdArea , statusArea} = area;
+        const {uuid, areaDes, actionArea, areaResponsable,areaIdResponsable ,areaDate ,statusIdArea , statusArea, areaFormat} = area;
         var areaD = areaDes.length > 120 ? areaDes.substring(0, 120) + "..." : areaDes;
         return _.assign({}, {
           'actions':  {

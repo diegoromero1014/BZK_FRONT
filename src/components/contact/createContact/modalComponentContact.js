@@ -17,7 +17,9 @@ import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createErrorsPriority, shouldHandleError} from '../../../utils';
+import {formValidateKeyEnter} from '../../../actionsGlobal';
 import {OrderedMap} from 'immutable';
+import _ from 'lodash';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
 import {FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP } from '../../selectsComponent/constants';
@@ -208,34 +210,35 @@ class ModalComponentContact extends Component {
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
     }
 
-    _searchContact() {
-        const {
-            fields:{
-                id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
-            }, handleSubmit, error
-        }= this.props;
-        const {searchContact, clearSearchContact} = this.props;
-        if (tipoDocumento.value && numeroDocumento.value) {
-            searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
-                if ((_.get(data, 'payload.data.isClientContact'))) {
-                    clearSearchContact();
-                    this.props.resetForm();
-                    this.setState({showErrorYa: true});
-                } else {
-                    this.setState({disabled: 'disabled'});
-                    this.setState({noExiste: 'visible'});
-                    this.setState({botonBus: 'none'});
-                    ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
-                }
-            }, (reason) => {
-              this.setState({showEr: true});
-          });
-      }else{
-        this.setState({showCam:true});
-      }
+    _searchContact(e) {
+      e.preventDefault();
+      const {
+          fields:{
+              id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
+              numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+              codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+          }, handleSubmit, error
+      }= this.props;
+      const {searchContact, clearSearchContact} = this.props;
+      if (tipoDocumento.value && numeroDocumento.value) {
+          searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
+              if ((_.get(data, 'payload.data.isClientContact'))) {
+                  clearSearchContact();
+                  this.props.resetForm();
+                  this.setState({showErrorYa: true});
+              } else {
+                  this.setState({disabled: 'disabled'});
+                  this.setState({noExiste: 'visible'});
+                  this.setState({botonBus: 'none'});
+                  ciudad.onChange( JSON.parse(_.get(data, 'payload.data.contactDetail')).city );
+              }
+          }, (reason) => {
+            this.setState({showEr: true});
+        });
+    }else{
+      this.setState({showCam:true});
     }
+  }
 
 
     _handleCreateContact() {
@@ -314,7 +317,7 @@ class ModalComponentContact extends Component {
         }, handleSubmit, error
         }= this.props;
 
-        return (<form onSubmit={handleSubmit(this._handleCreateContact)}>
+        return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                      id="modalComponentScroll">
                     <dt className="business-title"><span

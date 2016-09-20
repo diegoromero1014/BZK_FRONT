@@ -15,6 +15,7 @@ import {consultDataSelect, consultListWithParameterUbication, getMasterDataField
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
+import {formValidateKeyEnter} from '../../../actionsGlobal';
 import * as constants from './constants';
 import {changeStateSaveData} from '../../dashboard/actions';
 import numeral from 'numeral';
@@ -285,7 +286,7 @@ class ModalComponentShareholder extends Component {
       numeroIdTributaria, observaciones },
       selectsReducer, createShareholder,handleSubmit, error} = this.props;
     return (
-        <form onSubmit={handleSubmit(this._handleCreateShareholder)}>
+        <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val)}>
           <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
             <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica accionista</span></dt>
             <div style={{paddingLeft:'20px',paddingRight:'20px'}}>

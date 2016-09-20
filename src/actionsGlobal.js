@@ -73,3 +73,9 @@ export function consultValueActiveLog(){
      payload: request
    }
 }
+
+export function formValidateKeyEnter(e){
+  if(e.keyCode === 13 || e.which === 13){
+    e.preventDefault();
+  }
+}

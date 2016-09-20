@@ -119,28 +119,32 @@ class ModalComponentPendingTask extends Component {
   _handleCreatePendingTask(){
     const {createPendingTaskNew,tasksByClientFindServer} = this.props;
     const {fields:{responsable, fecha,idEmployee, idEstado, tarea, advance}, handleSubmit, error, changeStateSaveData}= this.props;
-    var messageBody = {
-      "clientId": window.localStorage.getItem('idClientSelected'),
-      "task": tarea.value,
-      "advance" : advance.value,
-      "status": idEstado.value,
-      "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
-      "employeeName": responsable.value,
-      "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
-    }
-    changeStateSaveData(true);
-    createPendingTaskNew(messageBody).then((data) => {
-      changeStateSaveData(false);
-        if((_.get(data, 'payload.data.status') === 200)){
-            this.setState({showEx: true});
-            tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
-          } else {
+    if( moment(fecha.value, 'DD/MM/YYYY').isValid() ){
+      var messageBody = {
+        "clientId": window.localStorage.getItem('idClientSelected'),
+        "task": tarea.value,
+        "advance" : advance.value,
+        "status": idEstado.value,
+        "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
+        "employeeName": responsable.value,
+        "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+      }
+      changeStateSaveData(true);
+      createPendingTaskNew(messageBody).then((data) => {
+        changeStateSaveData(false);
+          if((_.get(data, 'payload.data.status') === 200)){
+              this.setState({showEx: true});
+              tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
+            } else {
+              this.setState({showEr: true});
+          }
+          }, (reason) => {
+            changeStateSaveData(false);
             this.setState({showEr: true});
-        }
-        }, (reason) => {
-          changeStateSaveData(false);
-          this.setState({showEr: true});
-      });
+        });
+    } else {
+      fecha.onChange('');
+    }
   }
 
   render(){

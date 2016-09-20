@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
@@ -523,7 +523,7 @@ class FormPrevisita extends Component{
       clientInformacion, selectsReducer, handleSubmit} = this.props;
 
     return(
-      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>

@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {consultParameterServer} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {addParticipant} from '../../participantsVisitPre/actions';
 import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
@@ -648,7 +648,7 @@ class FormEditPrevisita extends Component{
     }
 
     return(
-      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={10} sm={10} md={10} lg={10}>

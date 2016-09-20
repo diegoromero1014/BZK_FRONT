@@ -128,30 +128,34 @@ class ModalTask extends Component {
         nameUsuario = responsable.value;
         idUsuario = null;
       }
-      if(taskEdit !== undefined){
-        taskEdit.tarea = tarea.value;
-        taskEdit.idResponsable = idUsuario;
-        taskEdit.responsable = nameUsuario;
-        taskEdit.fecha = fecha.value;
-        taskEdit.fechaForm = fecha.value;
-        editTask(taskEdit);
-        this.setState({
-          showSuccessEdit: true
-        });
-      }else{
-        const uuid = _.uniqueId('task_');
-        var task = {
-          uuid,
-          tarea: tarea.value,
-          idResponsable: idUsuario,
-          responsable: nameUsuario,
-          fecha: fecha.value,
-          fechaForm: fecha.value
+      if( moment(fecha.value, 'DD/MM/YYYY').isValid() ){
+        if(taskEdit !== undefined){
+          taskEdit.tarea = tarea.value;
+          taskEdit.idResponsable = idUsuario;
+          taskEdit.responsable = nameUsuario;
+          taskEdit.fecha = fecha.value;
+          taskEdit.fechaForm = fecha.value;
+          editTask(taskEdit);
+          this.setState({
+            showSuccessEdit: true
+          });
+        }else{
+          const uuid = _.uniqueId('task_');
+          var task = {
+            uuid,
+            tarea: tarea.value,
+            idResponsable: idUsuario,
+            responsable: nameUsuario,
+            fecha: fecha.value,
+            fechaForm: fecha.value
+          }
+          addTask(task);
+          this.setState({
+            showSuccessAdd: true
+          });
         }
-        addTask(task);
-        this.setState({
-          showSuccessAdd: true
-        });
+      } else {
+        fecha.onChange('');
       }
     }
 
