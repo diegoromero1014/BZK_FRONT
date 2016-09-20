@@ -127,28 +127,32 @@ class ModalCreateTask extends Component{
   _handleEditTask(){
     const {createPendingTaskNew, changeStateSaveData} = this.props;
     const {fields:{id, responsable, idEmployee, fecha, idEstado, tarea, advance},handleSubmit,error}= this.props;
-    var messageBody = {
-      "id": id.value,
-      "clientId": window.localStorage.getItem('idClientSelected'),
-      "task": tarea.value,
-      "advance" : advance.value,
-      "status" : idEstado.value,
-      "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
-      "employeeName": responsable.value,
-      "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
-    }
-    changeStateSaveData(true);
-    createPendingTaskNew(messageBody).then((data) => {
-      changeStateSaveData(false);
-        if((_.get(data, 'payload.data.status') === 200)){
-            this.setState({taskEdited: true});
-          } else {
+    if( moment(fecha.value, 'DD/MM/YYYY').isValid() ){
+      var messageBody = {
+        "id": id.value,
+        "clientId": window.localStorage.getItem('idClientSelected'),
+        "task": tarea.value,
+        "advance" : advance.value,
+        "status" : idEstado.value,
+        "closingDate" : fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x'): null,
+        "employeeName": responsable.value,
+        "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+      }
+      changeStateSaveData(true);
+      createPendingTaskNew(messageBody).then((data) => {
+        changeStateSaveData(false);
+          if((_.get(data, 'payload.data.status') === 200)){
+              this.setState({taskEdited: true});
+            } else {
+              this.setState({showErrtask: true});
+          }
+          }, (reason) => {
+            changeStateSaveData(false);
             this.setState({showErrtask: true});
-        }
-        }, (reason) => {
-          changeStateSaveData(false);
-          this.setState({showErrtask: true});
-      });
+        });
+    } else {
+      fecha.onChange('');
+    }
   }
 
   render(){

@@ -128,7 +128,6 @@ class ModalTask extends Component {
         nameUsuario = responsable.value;
         idUsuario = null;
       }
-      console.log("moment validate", moment(fecha.value, 'DD/MM/YYYY').isValid() );
       if( moment(fecha.value, 'DD/MM/YYYY').isValid() ){
         if(taskEdit !== undefined){
           taskEdit.tarea = tarea.value;
