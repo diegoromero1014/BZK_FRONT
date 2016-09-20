@@ -270,4 +270,8 @@ function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
   }
 }
 
-export default reduxForm({form : 'submitValidation', fields, validate}, mapStateToProps, mapDispatchToProps)(ModalTask);
+export default reduxForm({
+  form : 'submitValidation',
+  fields,
+  validate
+}, mapStateToProps, mapDispatchToProps)(ModalTask);

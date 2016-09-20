@@ -6,15 +6,15 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
        "clientId": clientId,
