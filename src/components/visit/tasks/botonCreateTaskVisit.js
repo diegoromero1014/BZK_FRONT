@@ -29,7 +29,7 @@ class BotonCreateTaskComponent extends Component {
     return (
       <Col xsOffset={1} mdOffset={9} lgOffset={9} xs={12} md={3} lg={3}>
         <div style={{marginLeft: "17px"}}>
-          <button className="btn btn-primary" onClick={this.openModal} style={{float: 'right',cursor: 'pointer'}}>
+          <button className="btn btn-primary" type="button" onClick={this.openModal} style={{float: 'right',cursor: 'pointer'}}>
             <i className="white plus icon"/> Agregar pendiente
           </button>
           <Modal
