@@ -8,6 +8,7 @@ import {FILTER_STATUS_PREVISIT_ID} from '../../previsita/constants';
 import {FILTER_STATUS_BUSINESS_PLAN_ID} from '../../businessPlan/constants';
 
 const defaultData = [{id:'0', value:'Guardado como borrador'},{id:'1',value:'Guardado como definitivo'}];
+const messages = {emptyList: "No hay datos"};
 class SelectFilterComponent extends Component{
 
   constructor(props){
@@ -18,6 +19,14 @@ class SelectFilterComponent extends Component{
     const {consultDataSelect, idTypeFilter} = this.props;
     consultDataSelect(idTypeFilter);
 
+  }
+
+  messages(){
+    return {
+      open: 'Lista abierta',
+      emptyList:   'En está lista no hay valores',
+      emptyFilter: 'No hay valores que cumplan con el filtro'
+    }
   }
 
   render(){
@@ -75,6 +84,7 @@ class SelectFilterComponent extends Component{
               onChange={onChange}
               defaultValue={defaultValue}
               disabled={disabled}
+              messages={this.messages()}
               {...config}
           />
       );

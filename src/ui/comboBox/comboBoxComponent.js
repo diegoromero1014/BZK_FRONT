@@ -77,7 +77,13 @@ class comboBoxComponent extends Component {
                 onChange(id, text);
             }
         });
+        selector.dropdown('setting', {
+          allowAdditions: false,
+          message: {noResults:'No hay valores que cumplan con el filtro'}
+        });
     }
+
+
 
     mapValuesToDropDown(item, idx) {
         const {textProp, valueProp, value} = this.props;

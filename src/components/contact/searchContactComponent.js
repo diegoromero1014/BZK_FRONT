@@ -28,12 +28,10 @@ class SearchContactComponent extends Component {
       } = nextProps;
       if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
           (v3 !== nextProps.value3)) {
-      v1 = nextProps.value1;
-      v2 = nextProps.value2;
-      v3 = nextProps.value3;
-      const {clearContactOrder} = this.props;
-      clearContactOrder();
-      this._handleContactsByClientsFind();
+        v1 = nextProps.value1;
+        v2 = nextProps.value2;
+        v3 = nextProps.value3;
+        this._handleContactsByClientsFind();
       }
   }
 

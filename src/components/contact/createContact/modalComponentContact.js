@@ -850,6 +850,6 @@ export default reduxForm({
     fields,
     validate,
     onSubmitFail: errors => {
-        console.log(errors);
+        console.log('');
     }
 }, mapStateToProps, mapDispatchToProps)(ModalComponentContact);
