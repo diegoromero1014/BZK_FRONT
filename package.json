@@ -85,7 +85,6 @@
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.9.5",
     "redux-thunk": "^2.0.1",
-    "semantic-ui": "^2.1.8",
-    "sweetalert-react": "^0.4.4"
+    "semantic-ui": "^2.1.8"
   }
 }

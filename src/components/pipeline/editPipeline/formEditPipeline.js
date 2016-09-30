@@ -39,47 +39,47 @@ let idCurrencyAux = null;
 let contollerErrorChangeType = false;
 
 const validate = values => {
-    const errors = {};
-    if (!values.businessStatus) {
-      errors.businessStatus = OPTION_REQUIRED;
-    } else {
-      errors.businessStatus = null;
-    }
-    if (!values.value) {
-      errors.value = VALUE_REQUIERED;
-    } else {
-      errors.value = null;
-    }
-    if (!values.currency) {
-      errors.currency = OPTION_REQUIRED;
-    } else {
-      errors.currency = null;
-    }
-    if (!values.need) {
-      errors.need = OPTION_REQUIRED;
-    } else {
-      errors.need = null;
-    }
-    if (!values.startDate) {
-      errors.startDate = VALUE_REQUIERED;
-    } else {
-      errors.startDate = null;
-    }
-    if (!values.endDate) {
-      errors.endDate = VALUE_REQUIERED;
-    } else {
-      errors.endDate = null;
-    }
-    if(values.endDate && values.startDate){
-      	var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
-  		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
-  		if( startDate > endDate){
-  			errors.startDate = DATE_START_AFTER;
-  		} else {
-  			errors.startDate = null;
-  		}
-    }
-    return errors;
+  const errors = {};
+  if (!values.businessStatus) {
+    errors.businessStatus = OPTION_REQUIRED;
+  } else {
+    errors.businessStatus = null;
+  }
+  if (!values.value) {
+    errors.value = VALUE_REQUIERED;
+  } else {
+    errors.value = null;
+  }
+  if (!values.currency) {
+    errors.currency = OPTION_REQUIRED;
+  } else {
+    errors.currency = null;
+  }
+  if (!values.need) {
+    errors.need = OPTION_REQUIRED;
+  } else {
+    errors.need = null;
+  }
+  if (!values.startDate) {
+    errors.startDate = VALUE_REQUIERED;
+  } else {
+    errors.startDate = null;
+  }
+  if (!values.endDate) {
+    errors.endDate = VALUE_REQUIERED;
+  } else {
+    errors.endDate = null;
+  }
+  if(values.endDate && values.startDate){
+    	var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
+		var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
+		if( startDate > endDate){
+			errors.startDate = DATE_START_AFTER;
+		} else {
+			errors.startDate = null;
+		}
+  }
+  return errors;
 };
 
 class FormEditPipeline extends Component {
@@ -95,21 +95,21 @@ class FormEditPipeline extends Component {
       errorBusinessPipeline: null
 		};
 
-  		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
-  		this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
-  		this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
-  		this._updateValue = this._updateValue.bind(this);
-  		this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
-  		this._onCloseButton = this._onCloseButton.bind(this);
-  		this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
-  		this._changeCurrency = this._changeCurrency.bind(this);
-  		this._editPipeline = this._editPipeline.bind(this);
-  		this._onClickPDF = this._onClickPDF.bind(this);
-    	this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
-    	this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
-    	this._handleTermInMonths = this._handleTermInMonths.bind(this);
-    	this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
-    	this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
+		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
+		this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
+		this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
+		this._updateValue = this._updateValue.bind(this);
+		this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+		this._onCloseButton = this._onCloseButton.bind(this);
+		this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
+		this._changeCurrency = this._changeCurrency.bind(this);
+		this._editPipeline = this._editPipeline.bind(this);
+		this._onClickPDF = this._onClickPDF.bind(this);
+  	this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+  	this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
+  	this._handleTermInMonths = this._handleTermInMonths.bind(this);
+  	this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
+  	this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
 	}
 
 	_closeMessageCreatePipeline() {
@@ -122,40 +122,40 @@ class FormEditPipeline extends Component {
 	}
 
 	_onClickPDF() {
-	    const {pdfDescarga, id} = this.props;
-	    pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+    const {pdfDescarga, id} = this.props;
+    pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
 	 }
 
 	_changeCurrency(currencyValue) {
-	    const {fields: {value}} = this.props;
-	    if (idCurrencyAux == null) {
-	        idCurrencyAux = parseInt(currencyValue);
-	    }
-	    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
-	      contollerErrorChangeType = true;
-	      if (idCurrencyAux !== null && value.value !== '') {
-	        titleMessage = "Tipo de moneda";
-	        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
-	        this.setState({
-	          showConfirmChangeCurrency: true
-	        });
-	      } else {
-	      	idCurrencyAux = parseInt(currencyValue);
-	        contollerErrorChangeType = false;
-	        this.setState({
-	          showConfirmChangeCurrency: false
-	        });
-	      }
-	    } else {
-	    	idCurrencyAux = parseInt(currencyValue);
-  			contollerErrorChangeType = false;
-  			this.setState({
-  			  showConfirmChangeCurrency: false
-  			});
-	    }
-      var lugarSelector = $('.valueMillions');
-      var input = lugarSelector.find("input");
-      input.focus();
+    const {fields: {value}} = this.props;
+    if (idCurrencyAux == null) {
+        idCurrencyAux = parseInt(currencyValue);
+    }
+    if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
+      contollerErrorChangeType = true;
+      if (idCurrencyAux !== null && value.value !== '') {
+        titleMessage = "Tipo de moneda";
+        message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
+        this.setState({
+          showConfirmChangeCurrency: true
+        });
+      } else {
+      	idCurrencyAux = parseInt(currencyValue);
+        contollerErrorChangeType = false;
+        this.setState({
+          showConfirmChangeCurrency: false
+        });
+      }
+    } else {
+    	idCurrencyAux = parseInt(currencyValue);
+			contollerErrorChangeType = false;
+			this.setState({
+			  showConfirmChangeCurrency: false
+			});
+    }
+    var lugarSelector = $('.valueMillions');
+    var input = lugarSelector.find("input");
+    input.focus();
 	}
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
@@ -236,15 +236,14 @@ class FormEditPipeline extends Component {
 
 	_closeCancelConfirmChanCurrency() {
 		this.setState({
-      		showConfirmChangeCurrency: false
-    	});
-    	contollerErrorChangeType = false;
-    	const {fields: {currency}} = this.props;
-    	if (idCurrencyAux !== null) {
-	      	currency.onChange(idCurrencyAux);
-	    }
-
-  	}
+  		showConfirmChangeCurrency: false
+  	});
+  	contollerErrorChangeType = false;
+  	const {fields: {currency}} = this.props;
+  	if (idCurrencyAux !== null) {
+      	currency.onChange(idCurrencyAux);
+    }
+	}
 
   _closeConfirmChangeCurrency() {
   	this.setState({
@@ -288,7 +287,7 @@ class FormEditPipeline extends Component {
   	  		"observations": observations.value,
           "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
   	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
-  	  		"value": value.value === undefined ? null : numeral(value.value).format('0'),
+  	  		"value": value.value === undefined ? null : (value.value).replace(/,/g, ""),
   	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
   	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
   	  	};
@@ -323,8 +322,8 @@ class FormEditPipeline extends Component {
 
 	updateKeyValueUsersBanco(e) {
 		const {fields: {nameUsuario, idUsuario}, filterUsersBanco} = this.props;
-    	var self = this;
-    	idUsuario.onChange('');
+  	var self = this;
+  	idUsuario.onChange('');
 		if(e.keyCode === 13 || e.which === 13){
 		  e.preventDefault();
 		  if( nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined ){
@@ -443,19 +442,19 @@ class FormEditPipeline extends Component {
 		if(createdTimestamp.value !== null) {
 			let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
 			fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
-  		}
+		}
 
         return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
-        		<Row style={{padding: "5px 10px 0px 20px"}}>
-		          <Col xs={10} sm={10} md={10} lg={10}>
-		            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
-		          </Col>
-		          <Col xs={2} sm={2} md={2} lg={2}>
-		            <button type="button" onClick={this._editPipeline} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
-		          </Col>
-		        </Row>
+    		<Row style={{padding: "5px 10px 0px 20px"}}>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          </Col>
+          <Col xs={2} sm={2} md={2} lg={2}>
+            <button type="button" onClick={this._editPipeline} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+          </Col>
+        </Row>
 				<Row style={{padding: "10px 10px 20px 20px"}}>
 				  <Col xs={12} md={12} lg={12}>
 				    <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -546,7 +545,6 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-
 				        <span>Interés / Comisión</span>
 				      </dt>
 				      <Input
@@ -601,9 +599,9 @@ class FormEditPipeline extends Component {
                 {
                   this.state.employeeResponsible &&
                   <div>
-                      <div className="ui pointing red basic label">
-                          Debe seleccionar un empleado del banco
-                      </div>
+                    <div className="ui pointing red basic label">
+                        Debe seleccionar un empleado del banco
+                    </div>
                   </div>
                 }
 				      </dt>
@@ -797,48 +795,48 @@ class FormEditPipeline extends Component {
 				  </Col>
 				</Row>
 				<Row>
-		          <Col xs={12} md={12} lg={12}>
-		            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
-		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato pipeline: </span><span style={{marginLeft: "0px", color: "#818282"}}>{reviewedDate.value}</span>
-		            </div>
-		          </Col>
-		        </Row>
-		        <Row style={{padding: "10px 10px 0px 20px"}}>
-		          <Col xs={6} md={3} lg={3}>
-		            <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
-		          </Col>
-		          <Col xs={6} md={3} lg={3}>
-		            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
-		          </Col>
-		          <Col xs={6} md={3} lg={3}>
-		            {updatedBy.value !== null ?
-		              <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
-		            : '' }
-		            </Col>
-		          <Col xs={6} md={3} lg={3}>
-		            {updatedBy.value !== null ?
-		              <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
-		            : '' }
-		          </Col>
-		        </Row>
-		        <Row style={{padding: "5px 10px 20px 20px"}}>
-		          <Col xs={6} md={3} lg={3}>
-		            <span style={{marginLeft: "0px", color: "#818282"}}>{createdByName.value}</span>
-		          </Col>
-		          <Col xs={6} md={3} lg={3}>
-		            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
-		          </Col>
-		          <Col xs={6} md={3} lg={3}>
-		          	{updatedBy.value !== null ?
-		          		<span style={{marginLeft: "0px", color: "#818282"}}>{updatedByName.value}</span>
-		          	: ''}
-		          </Col>
-		          <Col xs={6} md={3} lg={3}>
-		          	{updatedBy.value !== null ?
-		          		<span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
-		          	: ''}
-		          </Col>
-		        </Row>
+          <Col xs={12} md={12} lg={12}>
+            <div style={{textAlign:"left", marginTop:"0px", marginBottom:"20px", marginLeft:"20px"}}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato pipeline: </span><span style={{marginLeft: "0px", color: "#818282"}}>{reviewedDate.value}</span>
+            </div>
+          </Col>
+        </Row>
+        <Row style={{padding: "10px 10px 0px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy.value !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
+            : '' }
+            </Col>
+          <Col xs={6} md={3} lg={3}>
+            {updatedBy.value !== null ?
+              <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
+            : '' }
+          </Col>
+        </Row>
+        <Row style={{padding: "5px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{createdByName.value}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+          	{updatedBy.value !== null ?
+          		<span style={{marginLeft: "0px", color: "#818282"}}>{updatedByName.value}</span>
+          	: ''}
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+          	{updatedBy.value !== null ?
+          		<span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+          	: ''}
+          </Col>
+        </Row>
 				<div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
 				  <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
 				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
@@ -875,17 +873,17 @@ class FormEditPipeline extends Component {
 				  onConfirm={this._closeConfirmClosePipeline}
 				/>
 				<SweetAlert
-		          type="warning"
-		          show={this.state.showConfirmChangeCurrency}
-		          title={titleMessage}
-		          text={message}
-		          confirmButtonColor= '#DD6B55'
-		          confirmButtonText= 'Sí, estoy seguro!'
-		          cancelButtonText = "Cancelar"
-		          showCancelButton= {true}
-		          onCancel= {this._closeCancelConfirmChanCurrency}
-		          onConfirm={this._closeConfirmChangeCurrency}
-		        />
+          type="warning"
+          show={this.state.showConfirmChangeCurrency}
+          title={titleMessage}
+          text={message}
+          confirmButtonColor= '#DD6B55'
+          confirmButtonText= 'Sí, estoy seguro!'
+          cancelButtonText = "Cancelar"
+          showCancelButton= {true}
+          onCancel= {this._closeCancelConfirmChanCurrency}
+          onConfirm={this._closeConfirmChangeCurrency}
+        />
 			</form>
 		);
 	}
