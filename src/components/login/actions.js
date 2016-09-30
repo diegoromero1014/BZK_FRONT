@@ -1,6 +1,7 @@
 import {APP_URL} from '../../constantsGlobal';
 import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
 import axios from 'axios';
+import $ from 'jquery';
 
 export function validateLogin(username, password){
   const json = {

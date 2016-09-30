@@ -10,7 +10,7 @@ import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION} from './constants';
-import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from '../../constantsGlobal';
+import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, MESSAGE_SAVE_DATA} from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import Input from '../../ui/input/inputComponent';
@@ -545,17 +545,17 @@ class clientEdit extends Component{
             "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null)
          }
            const {createProspect} = this.props;
-           changeStateSaveData(true);
+           changeStateSaveData(true, MESSAGE_SAVE_DATA);
            createProspect(jsonCreateProspect)
            .then((data) => {
-             changeStateSaveData(false);
+             changeStateSaveData(false, "");
              if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
                  this.setState({showEx: true});
                } else {
                  this.setState({showEr: true});
              }
              }, (reason) => {
-               changeStateSaveData(false);
+               changeStateSaveData(false, "");
                this.setState({showEr: true});
            });
         }

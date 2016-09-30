@@ -8,14 +8,14 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../ui/input/inputComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {redirectUrl} from '../../globalComponents/actions';
-import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
+import {PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder} from './actions';
 import {shareholdersByClientFindServer,clearShareholderOrder,clearShareholderCreate} from '../actions';
 import {consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../../selectsComponent/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER} from '../../selectsComponent/constants';
 import {NUMBER_RECORDS} from '../constants';
-import {formValidateKeyEnter} from '../../../actionsGlobal';
+import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import * as constants from './constants';
 import {changeStateSaveData} from '../../dashboard/actions';
 import numeral from 'numeral';
@@ -130,7 +130,8 @@ class ModalComponentShareholder extends Component {
   }
 
   componentWillMount(){
-    const{getMasterDataFields, clearValuesAdressess, consultDataSelect} = this.props;
+    const{getMasterDataFields, clearValuesAdressess, consultDataSelect, nonValidateEnter} = this.props;
+    nonValidateEnter(true);
     clearValuesAdressess();
     this.props.resetForm();
     getMasterDataFields([SHAREHOLDER_TYPE,CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
@@ -238,9 +239,9 @@ class ModalComponentShareholder extends Component {
         "comment" : observaciones .value
       }
 
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createShareholder(messageBody).then((data) => {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         if((_.get(data, 'payload.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -271,7 +272,7 @@ class ModalComponentShareholder extends Component {
         }
           this.setState({showMessage: true});
       }, (reason) => {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         typeMessage="error";
         titleMessage="Error creando accionista";
         message="Señor usuario, ocurrió un error creando el accionista.";
@@ -284,9 +285,9 @@ class ModalComponentShareholder extends Component {
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
       numeroIdTributaria, observaciones },
-      selectsReducer, createShareholder,handleSubmit, error} = this.props;
+      selectsReducer, createShareholder,handleSubmit, error, reducerGlobal} = this.props;
     return (
-        <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val)}>
+        <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
           <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
             <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica accionista</span></dt>
             <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
@@ -535,14 +536,16 @@ function mapDispatchToProps(dispatch) {
       consultDataSelect,
       createShareholder,
       shareholdersByClientFindServer,
-      changeStateSaveData
+      changeStateSaveData,
+      nonValidateEnter
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, createShareholder}, ownerProps) {
+function mapStateToProps({selectsReducer, createShareholder, reducerGlobal}, ownerProps) {
   return {
     selectsReducer,
-    createShareholder
+    createShareholder,
+    reducerGlobal
   };
 }
 

@@ -15,6 +15,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import _ from 'lodash';
 import numeral from 'numeral';
 import {changeStateSaveData} from '../dashboard/actions';
+import {MESSAGE_SAVE_DATA} from '../../constantsGlobal';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
   from '../selectsComponent/actions';
 import NotesClient from '../notes/notesClient';
@@ -193,17 +194,17 @@ class FormCreateProspect extends Component{
          "clientIdType": idTupeDocument
       }
       const {createProspect} = this.props;
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createProspect(jsonCreateProspect)
       .then((data) => {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
             this.setState({showEx: true});
           } else {
             this.setState({showEr: true});
         }
         }, (reason) => {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           this.setState({showEr: true});
       });
     } else {

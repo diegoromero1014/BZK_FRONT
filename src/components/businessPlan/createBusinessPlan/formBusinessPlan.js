@@ -11,7 +11,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
 import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
-import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../constantsGlobal';
+import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
@@ -155,9 +155,9 @@ class FormBusinessPlan extends Component {
         "clientNeedFulfillmentPlan" : needsbB,
         "relatedInternalParties":areasB
       }
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createBusiness(businessJson).then((data)=> {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         if((_.get(data, 'payload.data.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -174,7 +174,7 @@ class FormBusinessPlan extends Component {
           }
         }
       }, (reason) =>{
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         typeMessage = "error";
         titleMessage = "Creación plan de negocio";
         message = "Señor usuario, ocurrió un error creando el plan de negocio.";
@@ -243,9 +243,9 @@ class FormBusinessPlan extends Component {
   }
 
   render() {
-    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit} = this.props;
+    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, reducerGlobal} = this.props;
     return(
-      <form onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 10px 20px"}}>
@@ -382,10 +382,11 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer,needs, areas}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, reducerGlobal, needs, areas}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
+      reducerGlobal,
       needs,
       areas
     };

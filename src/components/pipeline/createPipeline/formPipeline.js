@@ -12,8 +12,8 @@ import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS
 import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline} from '../actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
-import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -315,9 +315,9 @@ class FormPipeline extends Component {
           "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
           "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
         };
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createEditPipeline(pipelineJson).then((data)=> {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           if((_.get(data, 'payload.data.validateLogin') === 'false')) {
             redirectUrl("/login");
           } else {
@@ -334,7 +334,7 @@ class FormPipeline extends Component {
             }
           }
         }, (reason) =>{
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación pipeline";
           message = "Señor usuario, ocurrió un error creando del pipeline.";
@@ -419,7 +419,8 @@ class FormPipeline extends Component {
   }
 
   componentWillMount() {
-    const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
+    const {nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
+    nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     getPipelineProducts();
     getPipelineCurrencies();
@@ -442,10 +443,10 @@ class FormPipeline extends Component {
     const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, business, product,
               priority, registeredCountry, startDate, client, documentStatus, probability},
-          clientInformacion, selectsReducer, handleSubmit} = this.props;
+          clientInformacion, selectsReducer, handleSubmit, reducerGlobal} = this.props;
 
     return(
-      <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
@@ -838,15 +839,17 @@ function mapDispatchToProps(dispatch) {
     createEditPipeline,
     filterUsersBanco,
     consultParameterServer,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, contactsByClient}, ownerProps) {
+function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, reducerGlobal}, ownerProps) {
     return {
       clientInformacion,
       selectsReducer,
-      contactsByClient
+      contactsByClient,
+      reducerGlobal
     };
 }
 

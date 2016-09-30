@@ -5,10 +5,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {TAB_PREVISIT} from '../../viewManagement/constants';
 import {getCsv} from '../../viewManagement/actions';
-import {APP_URL} from '../../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
 import {getCsvPreVisitsByClient} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class DownloadPrevisits extends Component {
 
@@ -39,19 +40,24 @@ class DownloadPrevisits extends Component {
 	_downloadPreVisits() {
 		let year;
 		let url;
-		const { getCsvPreVisitsByClient, isOpen, itemSeletedModal, yearModal, getCsv } = this.props;
+		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSeletedModal, yearModal, getCsv } = this.props;
+		console.log(1);
+		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+		console.log(2);
 		if (itemSeletedModal === TAB_PREVISIT) {
 			year = yearModal !== '' ? yearModal : moment().year();
 			url = '/getCsvPreVisits';
 			getCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+				changeStateSaveData(false, "");
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 				}
 			});
 		} else {
 			getCsvPreVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
+				changeStateSaveData(false, "");
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 					isOpen();
 				}
 			});
@@ -102,6 +108,7 @@ function mapStateToProps({previsitReducer}, ownerProps) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getCsvPreVisitsByClient,
+				changeStateSaveData,
         getCsv
     }, dispatch);
 }

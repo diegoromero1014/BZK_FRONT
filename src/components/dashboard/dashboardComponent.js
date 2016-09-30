@@ -44,7 +44,7 @@ class Dashboard extends Component {
                       {this.props.children}
                       {dashboardReducer.get('showSaveData') &&
                         <div className="ui active inverted dimmer">
-                          <div className="ui text loader">Guardando información</div>
+                          <div className="ui text loader">{dashboardReducer.get('messageData')}</div>
                         </div>
                       }
                     </div>

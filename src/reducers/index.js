@@ -34,6 +34,7 @@ import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
 import dashboardReducer from '../components/dashboard/reducer';
 import clientProductReducer from '../components/clientEdit/products/reducer';
+import reducerGlobal from '../reducerGlobal';
 
 export default combineReducers({
     routing: routerReducer,
@@ -70,5 +71,6 @@ export default combineReducers({
     businessPlanReducer: businessPlanReducer,
     clientEconomicGroupReducer: clientEconomicGroupReducer,
     dashboardReducer: dashboardReducer,
-    clientProductReducer: clientProductReducer
+    clientProductReducer: clientProductReducer,
+    reducerGlobal: reducerGlobal
 });

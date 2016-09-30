@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getCsvBusinessPlan, getCsvBusinessPlanByClient} from '../actions';
 import {TAB_BUSINESS} from '../../viewManagement/constants';
-import {APP_URL} from '../../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class ButtonDownloadBusinessPlanComponent extends Component {
 
@@ -13,10 +14,12 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 	}
 
 	_downloadBusinessPlans() {
-		const {getCsvBusinessPlanByClient, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
+		const {changeStateSaveData, getCsvBusinessPlanByClient, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
+		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
 		getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), null).then(function(data) {
+			changeStateSaveData(false, "");
 			if (data.payload.data.status === 200) {
-				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 			}
 		});
 	}
@@ -38,7 +41,8 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 
 function mapStateToProps({businessPlanReducer}, ownerProps) {
   return {
-    businessPlanReducer
+    businessPlanReducer,
+		changeStateSaveData
   };
 }
 

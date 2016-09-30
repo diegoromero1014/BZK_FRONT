@@ -74,8 +74,15 @@ export function consultValueActiveLog(){
    }
 }
 
-export function formValidateKeyEnter(e){
-  if(e.keyCode === 13 || e.which === 13){
+export function nonValidateEnter(value){
+  return {
+    type: constants.NON_VALIDATE_ENTER,
+    payload: value
+  }
+}
+
+export function formValidateKeyEnter(e, validate){
+  if( (e.keyCode === 13 || e.which === 13) && validate){
     e.preventDefault();
   }
 }

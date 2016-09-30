@@ -90,7 +90,7 @@ class ModalComponentEconomicGroup extends Component{
           <Col xs={12} md={12} lg={12}>
             <div className="news-page content">
               <div className="team-modal">
-                {this.state.clientsEconomicGroup.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron gerentes.</h4> </div>:
+                {this.state.clientsEconomicGroup.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no hay clientes asociados a este grupo económico.</h4> </div>:
                   this.state.clientsEconomicGroup.map(this._mapClientItems)}
               </div>
             </div>

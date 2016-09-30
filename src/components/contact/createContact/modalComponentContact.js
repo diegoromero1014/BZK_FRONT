@@ -17,10 +17,10 @@ import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields} from '../../selectsComponent/actions';
 import {createErrorsPriority, shouldHandleError} from '../../../utils';
-import {formValidateKeyEnter} from '../../../actionsGlobal';
+import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {OrderedMap} from 'immutable';
 import _ from 'lodash';
-import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../../constantsGlobal';
+import {FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP } from '../../selectsComponent/constants';
 
@@ -138,7 +138,8 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount() {
-        const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact} = this.props;
+        const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact, nonValidateEnter} = this.props;
+        nonValidateEnter(true);
         clearSearchContact();
         this.props.resetForm();
         tipoDocumento.onChange('');
@@ -282,9 +283,9 @@ class ModalComponentContact extends Component {
             "socialStyle": tipoEstiloSocial.value,
             "attitudeOverGroup": tipoActitud.value
         }
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
             if ((_.get(data, 'payload.data.status') === 200)) {
                 this.setState({showEx: true});
                 contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
@@ -295,7 +296,7 @@ class ModalComponentContact extends Component {
                 this.setState({showEr: true});
             }
         }, (reason) => {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           this.setState({showEr: true});
         });
     }
@@ -314,10 +315,10 @@ class ModalComponentContact extends Component {
             id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
             primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
             codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
-        }, handleSubmit, error
+        }, handleSubmit, error, reducerGlobal
         }= this.props;
 
-        return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val)}>
+        return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                      id="modalComponentScroll">
                     <dt className="business-title"><span
@@ -779,11 +780,12 @@ class ModalComponentContact extends Component {
     }
 }
 
-function mapStateToProps({createContactReducer, selectsReducer}, {fields}) {
+function mapStateToProps({createContactReducer, selectsReducer, reducerGlobal}, {fields}) {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     if (contactDetail && contactDetail.contactIdentityNumber) {
         return {
             selectsReducer,
+            reducerGlobal,
             initialValues: {
                 id: contactDetail.id,
                 tipoDocumento: contactDetail.contactType,
@@ -819,6 +821,7 @@ function mapStateToProps({createContactReducer, selectsReducer}, {fields}) {
     } else {
         return {
             selectsReducer,
+            reducerGlobal,
             initialValues: {
                 tipoDocumento: '',
                 numeroDocumento: ''
@@ -841,7 +844,8 @@ function mapDispatchToProps(dispatch) {
         clearContactOrder,
         consultList,
         downloadFilePDF,
-        changeStateSaveData
+        changeStateSaveData,
+        nonValidateEnter
     }, dispatch);
 }
 

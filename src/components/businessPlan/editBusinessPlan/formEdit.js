@@ -11,10 +11,10 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
 import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
-import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED} from '../../../constantsGlobal';
+import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
-import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {detailBusiness, pdfDescarga} from '../actions';
 import {addNeed, editNeed} from '../need/actions';
@@ -214,9 +214,9 @@ class FormEdit extends Component {
         "clientNeedFulfillmentPlan" : needsbB.length === 0 ? null:needsbB ,
         "relatedInternalParties":areasB.length === 0 ? null :areasB
       }
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createBusiness(businessJson).then((data)=> {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         if((_.get(data, 'payload.data.validateLogin') === 'false')){
           redirectUrl("/login");
         } else {
@@ -233,7 +233,7 @@ class FormEdit extends Component {
           }
         }
       }, (reason) =>{
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
         typeMessage = "error";
         titleMessage = "Edición plan de negocio";
         message = "Señor usuario, ocurrió un error editando el plan de negocio.";
@@ -243,7 +243,8 @@ class FormEdit extends Component {
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields,consultParameterServer, businessPlanReducer,detailBusiness,id,addNeed,addArea} = this.props;
+    const {nonValidateEnter, clientInformacion, getMasterDataFields,consultParameterServer, businessPlanReducer,detailBusiness,id,addNeed,addArea} = this.props;
+    nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
@@ -304,7 +305,7 @@ class FormEdit extends Component {
     var fechaCreateString = '';
     var createdBy = '';
     var updatedBy = '';
-    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit,businessPlanReducer} = this.props;
+    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal} = this.props;
     const ownerDraft = businessPlanReducer.get('ownerDraft');
     const detailBusiness = businessPlanReducer.get('detailBusiness');
     if(detailBusiness !== undefined && detailBusiness !== null && detailBusiness !== '' && !_.isEmpty(detailBusiness)){
@@ -324,7 +325,7 @@ class FormEdit extends Component {
       }
     }
     return(
-      <form  onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form  onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={10} sm={10} md={10} lg={10}>
@@ -506,15 +507,17 @@ function mapDispatchToProps(dispatch){
     addArea,
     createBusiness,
     pdfDescarga,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer,needs, businessPlanReducer,areas}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       businessPlanReducer,
+      reducerGlobal,
       needs,
       areas
     };

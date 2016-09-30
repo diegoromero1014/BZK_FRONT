@@ -18,12 +18,12 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {LAST_VISIT_REVIEW} from '../constants';
 import {TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED} from '../../../constantsGlobal';
+import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
-import {formValidateKeyEnter} from '../../../actionsGlobal';
+import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {addTask} from '../tasks/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -215,9 +215,9 @@ class FormEdit extends Component{
           "documentStatus": typeButtonClick
         }
         const {createVisti} = this.props;
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createVisti(visitJson).then((data)=> {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           if(data.payload.data.validateLogin === 'false'){
             redirectUrl("/login");
           } else {
@@ -234,7 +234,7 @@ class FormEdit extends Component{
             }
           }
         }, (reason) =>{
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Edición visita";
           message = "Señor usuario, ocurrió un error editando la visita.";
@@ -291,7 +291,8 @@ class FormEdit extends Component{
   }
 
   componentWillMount(){
-    const {getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
+    const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
+    nonValidateEnter(true);
     this.setState({idVisit : id});
     getMasterDataFields([VISIT_TYPE]);
     detailVisit(id).then((result) => {
@@ -381,7 +382,7 @@ class FormEdit extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
-    selectsReducer, handleSubmit, visitReducer, clientInformacion} = this.props;
+    selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal} = this.props;
     const ownerDraft = visitReducer.get('ownerDraft');
     const detailVisit = visitReducer.get('detailVisit');
     const infoClient = clientInformacion.get('responseClientInfo');
@@ -410,7 +411,7 @@ class FormEdit extends Component{
       }
     }
     return(
-      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
@@ -650,11 +651,12 @@ function mapDispatchToProps(dispatch){
     filterUsersBanco,
     addTask,
     downloadFilePdf,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
@@ -672,7 +674,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         contactsByClient,
         participants,
         tasks,
-        clientInformacion
+        clientInformacion,
+        reducerGlobal
       };
     }else{
       return {
@@ -690,7 +693,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         contactsByClient,
         participants,
         tasks,
-        clientInformacion
+        clientInformacion,
+        reducerGlobal
       };
     }
 }

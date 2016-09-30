@@ -1,8 +1,9 @@
 import {SAVE_DATA_LOADING} from './constants';
 
-export function changeStateSaveData(value){
+export function changeStateSaveData(value, message){
   return {
     type: SAVE_DATA_LOADING,
-    value: value
+    value: value,
+    message: message
   }
 }

@@ -14,6 +14,9 @@ export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando 
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
 export const SESSION_EXPIRED = "-2";
+export const MESSAGE_SAVE_DATA = "Guardando información";
+export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
+export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +

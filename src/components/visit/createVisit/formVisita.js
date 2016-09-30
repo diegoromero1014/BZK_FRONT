@@ -16,10 +16,10 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
-import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
+import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {createVisti} from '../actions';
-import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {downloadFilePdf} from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -213,9 +213,9 @@ class FormVisita extends Component{
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createVisti(visitJson).then((data)=> {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -235,7 +235,7 @@ class FormVisita extends Component{
             }
           }
         }, (reason) =>{
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación visita";
           message = "Señor usuario, ocurrió un error creando la visita.";
@@ -294,7 +294,8 @@ class FormVisita extends Component{
   }
 
   componentWillMount(){
-    const {clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants} = this.props;
+    const {nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants} = this.props;
+    nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     clearParticipants();
     idPrevisitSeleted = null;
@@ -386,7 +387,7 @@ class FormVisita extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      clientInformacion, selectsReducer, handleSubmit, visitReducer} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, visitReducer, reducerGlobal} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     //Verifico si la visita se asocia a una previsita, para así cargar los datos
@@ -405,7 +406,7 @@ class FormVisita extends Component{
       showAECNivel = false;
     }
     return(
-      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val), reducerGlobal.get('validateEnter')} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
@@ -606,7 +607,8 @@ function mapDispatchToProps(dispatch){
     addParticipant,
     clearIdPrevisit,
     clearParticipants,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
@@ -616,7 +618,8 @@ function mapStateToProps({clientInformacion, selectsReducer, visitReducer, parti
       selectsReducer,
       visitReducer,
       participants,
-      tasks
+      tasks,
+      reducerGlobal
     };
 }
 

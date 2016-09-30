@@ -7,8 +7,9 @@ import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
 import {TYPE_YEAR,TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
-import {APP_URL} from '../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../constantsGlobal';
 import ButtonDownloadModal from './buttonDownloadModal';
+import {changeStateSaveData} from '../dashboard/actions';
 
 var styles = {minHeight: "30px",
 height: "30px",
@@ -39,10 +40,12 @@ class ItemChart extends Component{
        year = this.state.valueYear !== '' ? this.state.valueYear : moment().year();
        url = '/getCsvPipeline';
     }
-    const {getCsv} = this.props;
+    const {changeStateSaveData, getCsv} = this.props;
+    changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
     getCsv(year, url, false, false, false).then(function(data) {
+      changeStateSaveData(false, "");
       if (data.payload.data.status === 200) {
-        window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+        window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
       }
     });
   }
@@ -81,6 +84,7 @@ class ItemChart extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     changeTabSeletedChartView,
+    changeStateSaveData,
     getCsv
   }, dispatch);
 }

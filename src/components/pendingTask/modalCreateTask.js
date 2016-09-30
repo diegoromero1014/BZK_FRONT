@@ -13,6 +13,7 @@ import {getMasterDataFields} from '../selectsComponent/actions';
 import {TASK_STATUS} from '../selectsComponent/constants';
 import {createPendingTaskNew} from './createPendingTask/actions'
 import {clearUserTask, tasksByClientFindServer} from './actions';
+import {MESSAGE_SAVE_DATA} from '../../constantsGlobal';
 import {NUMBER_RECORDS} from './constants';
 import {changeStateSaveData} from '../dashboard/actions';
 import _ from 'lodash';
@@ -106,7 +107,7 @@ class ModalCreateTask extends Component{
     if( taskEdit !== undefined && taskEdit !== null && taskEdit !== "" ){
       setTimeout(function(){
         idEstado.onChange(taskEdit.idStatus);
-      }, 500)
+      }, 500);
     }
   }
 
@@ -138,16 +139,16 @@ class ModalCreateTask extends Component{
         "employeeName": responsable.value,
         "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
       }
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createPendingTaskNew(messageBody).then((data) => {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
           if((_.get(data, 'payload.data.status') === 200)){
               this.setState({taskEdited: true});
             } else {
               this.setState({showErrtask: true});
           }
           }, (reason) => {
-            changeStateSaveData(false);
+            changeStateSaveData(false, "");
             this.setState({showErrtask: true});
         });
     } else {

@@ -15,6 +15,7 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {NUMBER_RECORDS} from '../constants';
+import {MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {TASK_STATUS} from '../../selectsComponent/constants';
 
 import _ from 'lodash';
@@ -129,9 +130,9 @@ class ModalComponentPendingTask extends Component {
         "employeeName": responsable.value,
         "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
       }
-      changeStateSaveData(true);
+      changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createPendingTaskNew(messageBody).then((data) => {
-        changeStateSaveData(false);
+        changeStateSaveData(false, "");
           if((_.get(data, 'payload.data.status') === 200)){
               this.setState({showEx: true});
               tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
@@ -139,7 +140,7 @@ class ModalComponentPendingTask extends Component {
               this.setState({showEr: true});
           }
           }, (reason) => {
-            changeStateSaveData(false);
+            changeStateSaveData(false, "");
             this.setState({showEr: true});
         });
     } else {

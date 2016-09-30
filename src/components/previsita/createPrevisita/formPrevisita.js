@@ -14,8 +14,8 @@ import ParticipantesCliente from '../../participantsVisitPre/participantesClient
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-  TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
+  TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
@@ -460,9 +460,9 @@ class FormPrevisita extends Component{
           "ourSolution": this.state.nuestraSolucion,
           "documentStatus": typeButtonClick
         }
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createPrevisit(previsitJson).then((data)=> {
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           if((_.get(data, 'payload.data.validateLogin') === 'false')){
             redirectUrl("/login");
           } else {
@@ -479,7 +479,7 @@ class FormPrevisita extends Component{
             }
           }
         }, (reason) =>{
-          changeStateSaveData(false);
+          changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación previsita";
           message = "Señor usuario, ocurrió un error creando la previsita.";
@@ -501,7 +501,8 @@ class FormPrevisita extends Component{
     idTypeVisitAux = null;
     idTypeVisitAuxTwo = null;
     contollerErrorChangeType = false;
-    const {clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
+    const {nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
+    nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     valueTypePrevisit = null;
     if(_.isEmpty(infoClient)){
@@ -520,10 +521,10 @@ class FormPrevisita extends Component{
 
   render(){
     const { fields:{acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
-      clientInformacion, selectsReducer, handleSubmit} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, reducerGlobal} = this.props;
 
     return(
-      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreatePrevisita)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
         <Row style={{padding: "10px 10px 20px 20px"}}>
@@ -779,15 +780,17 @@ function mapDispatchToProps(dispatch){
     getMasterDataFields,
     createPrevisit,
     consultParameterServer,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, participants }, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, participants, reducerGlobal }, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
-      participants
+      participants,
+      reducerGlobal
     };
 }
 

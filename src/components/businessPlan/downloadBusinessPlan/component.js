@@ -4,11 +4,12 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {APP_URL} from '../../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
 import {TAB_BUSINESS} from '../../viewManagement/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class DownloadBusinessPlan extends Component {
 
@@ -31,19 +32,22 @@ class DownloadBusinessPlan extends Component {
 	_downloadBusinessPlans() {
 		let year;
 		let url;
-		const {getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
+		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
+		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
 		if(TAB_BUSINESS === itemSeletedModal) {
 			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
 				 if (data.payload.data.status === 200) {
-				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 				 }
+				 changeStateSaveData(false, "");
 			});
 		} else {
 			getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
+				changeStateSaveData(false, "");
 				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 					isOpen();
 				}
 			});
@@ -92,7 +96,9 @@ function mapStateToProps({businessPlanReducer}, ownerProps) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getCsvBusinessPlanByClient, getCsvBusinessPlan
+        getCsvBusinessPlanByClient,
+				getCsvBusinessPlan,
+				changeStateSaveData
     }, dispatch);
 }
 

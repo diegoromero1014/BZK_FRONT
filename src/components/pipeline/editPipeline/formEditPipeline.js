@@ -12,10 +12,10 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS} from '../../selectsComponent/constants';
 import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER} from '../../../constantsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
-import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -269,8 +269,6 @@ class FormEditPipeline extends Component {
 	        employeeResponsible: true
 	      });
 	    } else {
-        console.log("business.value", business.value);
-        console.log("typeButtonClick", typeButtonClick);
         if( (business.value !== "" && business.value !== null && business.value !== undefined) || typeButtonClick === SAVE_DRAFT ){
           let pipelineJson = {
   	  		"id": id.value,
@@ -294,9 +292,9 @@ class FormEditPipeline extends Component {
   	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
   	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
   	  	};
-        changeStateSaveData(true);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
   	  	createEditPipeline(pipelineJson).then((data)=> {
-            changeStateSaveData(false);
+            changeStateSaveData(false, "");
   	  	    if((_.get(data, 'payload.data.validateLogin') === 'false')) {
   	  	      redirectUrl("/login");
   	  	    } else {
@@ -313,7 +311,7 @@ class FormEditPipeline extends Component {
   	  	      }
   	  	    }
   	  	  }, (reason) =>{
-            changeStateSaveData(false);
+            changeStateSaveData(false, "");
   	  	    typeMessage = "error";
   	  	    titleMessage = "Edición pipeline";
   	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
@@ -385,12 +383,13 @@ class FormEditPipeline extends Component {
 
 	componentWillMount() {
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
-			getClientNeeds, getPipelineById, id,
+			getClientNeeds, getPipelineById, id, nonValidateEnter,
 			fields: {
 				nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
     			businessWeek, currency, indexing, endDate, need, observations, business, product,
     			priority, registeredCountry, startDate, client, documentStatus
 			}} = this.props;
+    nonValidateEnter(true);
 		const infoClient = clientInformacion.get('responseClientInfo');
 		getPipelineProducts();
 		getPipelineCurrencies();
@@ -432,7 +431,7 @@ class FormEditPipeline extends Component {
             businessWeek, currency, indexing, endDate, need, observations, business, product,
             priority, registeredCountry, startDate, client, documentStatus,
         		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
-            clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer} = this.props;
+            clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal} = this.props;
 
 		const ownerDraft = pipelineReducer.get('ownerDraft');
 		let fechaModString = '';
@@ -447,7 +446,7 @@ class FormEditPipeline extends Component {
   		}
 
         return(
-			<form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val)} className="my-custom-tab"
+			<form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         		<Row style={{padding: "5px 10px 0px 20px"}}>
 		          <Col xs={10} sm={10} md={10} lg={10}>
@@ -480,6 +479,7 @@ class FormEditPipeline extends Component {
                 {...business}
                 parentId="dashboardComponentScroll"
                 data={selectsReducer.get(PIPELINE_BUSINESS) || []}
+                disabled={this.state.isEditable ? '' : 'disabled'}
               />
               {this.state.errorBusinessPipeline &&
                 <div>
@@ -900,11 +900,12 @@ function mapDispatchToProps(dispatch) {
     createEditPipeline,
     filterUsersBanco,
     getPipelineById,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer}, pathParameter) {
+function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal}, pathParameter) {
 	const pipeline = pipelineReducer.get('detailPipeline');
 	if (pipeline) {
 	    if( pipeline.id === parseInt(pathParameter.id) ){
@@ -915,6 +916,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      pipelineReducer,
 	  	      pdfDescarga,
 	  	      consultParameterServer,
+            reducerGlobal,
 
 	  	      initialValues: {
   	        	id: pipeline.id,
@@ -955,7 +957,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      contactsByClient,
 	  	      pipelineReducer,
 	  	      pdfDescarga,
-	  	      consultParameterServer
+	  	      consultParameterServer,
+            reducerGlobal
 	  	    };
 	    }
 	} else {
@@ -965,7 +968,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	      contactsByClient,
 	      pipelineReducer,
 	      pdfDescarga,
-	      consultParameterServer
+	      consultParameterServer,
+        reducerGlobal
 	  	};
 	}
 }

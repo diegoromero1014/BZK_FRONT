@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {APP_URL} from '../../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
 import {getCsvPipelineByClient,clearPipeline} from '../actions'
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class ButtonDownloadPipelineComponent extends Component {
 
@@ -13,10 +14,12 @@ class ButtonDownloadPipelineComponent extends Component {
 
 
 	_downloadPipeline() {
-		const {getCsvPipelineByClient,clearPipeline} = this.props;
+		const {changeStateSaveData, getCsvPipelineByClient,clearPipeline} = this.props;
+		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
 		getCsvPipelineByClient(window.localStorage.getItem('idClientSelected')).then(function(data) {
+			changeStateSaveData(false, "");
 			if (data.payload.data.status === 200) {
-				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data + '&sessionToken=' + window.localStorage.getItem('sessionToken'), '_blank');
+				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 			}
 		});
 	}
@@ -38,7 +41,9 @@ class ButtonDownloadPipelineComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    getCsvPipelineByClient,clearPipeline
+    getCsvPipelineByClient,
+		changeStateSaveData, 
+		clearPipeline
   }, dispatch);
 }
 

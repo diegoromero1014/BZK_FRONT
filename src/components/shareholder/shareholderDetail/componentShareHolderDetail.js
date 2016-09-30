@@ -14,9 +14,9 @@ import {consultDataSelect, consultListWithParameterUbication, getMasterDataField
 import {createShareholder} from '../createShareholder/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER}
 from '../../selectsComponent/constants';
-import {PERSONA_NATURAL, PERSONA_JURIDICA} from '../../../constantsGlobal';
+import {PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
-import {formValidateKeyEnter} from '../../../actionsGlobal';
+import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import _ from 'lodash';
 import {redirectUrl} from '../../globalComponents/actions';
 
@@ -157,9 +157,9 @@ class ComponentShareHolderDetail extends Component {
       "tributaryNumber" : tributaryNumber.value,
       "comment" : comment.value
     }
-    changeStateSaveData(true);
+    changeStateSaveData(true, MESSAGE_SAVE_DATA);
     createShareholder(messageBody).then((data) => {
-      changeStateSaveData(false);
+      changeStateSaveData(false, "");
       if((_.get(data, 'payload.validateLogin') === 'false')){
         redirectUrl("/login");
       } else {
@@ -185,7 +185,7 @@ class ComponentShareHolderDetail extends Component {
       }
       this.setState({showMessage: true});
     }, (reason) => {
-      changeStateSaveData(false);
+      changeStateSaveData(false, "");
       typeMessage="error";
       titleMessage="Error editando accionista";
       message="Señor usuario, ocurrió un error editando el accionista.";
@@ -207,8 +207,8 @@ class ComponentShareHolderDetail extends Component {
   }
 
   componentWillMount(){
-    const {shareHolderId, getDetailShareHolder, getMasterDataFields,
-      consultDataSelect} = this.props;
+    const {shareHolderId, getDetailShareHolder, getMasterDataFields, consultDataSelect, nonValidateEnter} = this.props;
+    nonValidateEnter(true);
     this.props.resetForm();
     if(shareHolderId !== undefined && shareHolderId !== null && shareHolderId !== ''){
       getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
@@ -233,13 +233,13 @@ class ComponentShareHolderDetail extends Component {
     const {fields: {id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
     fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
     shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId} = this.props;
+    tributaryNumber}, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId, reducerGlobal} = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
     if(shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined){
         valueTypeShareholder = shareHolderEdit.shareHolderType;
     }
     return (
-      <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val)}>
+      <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información básica accionista</span></dt>
           <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
@@ -498,17 +498,19 @@ function mapDispatchToProps(dispatch) {
     consultDataSelect,
     shareholdersByClientFindServer,
     createShareholder,
-    changeStateSaveData
+    changeStateSaveData,
+    nonValidateEnter
   }, dispatch);
 }
 
-function mapStateToProps({editShareholderReducer, selectsReducer, createShareholder},ownerProps) {
+function mapStateToProps({editShareholderReducer, selectsReducer, createShareholder, reducerGlobal},ownerProps) {
   const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
   if(shareHolderEdit !== undefined && shareHolderEdit !== null && shareHolderEdit !== ''){
     return {
       editShareholderReducer,
       selectsReducer,
       createShareholder,
+      reducerGlobal,
       initialValues:{
         id: shareHolderEdit.id,
         address: shareHolderEdit.address,
@@ -536,6 +538,7 @@ function mapStateToProps({editShareholderReducer, selectsReducer, createSharehol
     return {
       editShareholderReducer,
       selectsReducer,
+      reducerGlobal,
       initialValues:{
         id: '',
         address: '',
