@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {DELETE_PARTICIPANT_VIEW} from './constants';
 import {deleteParticipant} from './actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import _ from 'lodash';
 
 var arrayValueOther = [];

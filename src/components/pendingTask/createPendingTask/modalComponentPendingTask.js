@@ -4,7 +4,7 @@ import {filterUsersBanco} from '../../participantsVisitPre/actions';
 import {bindActionCreators} from 'redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import {createPendingTaskNew} from './actions.js';

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {consultInfoClient} from '../clientInformation/actions';

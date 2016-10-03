@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import {DateTimePicker} from 'react-widgets';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';

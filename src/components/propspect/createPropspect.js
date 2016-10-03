@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';

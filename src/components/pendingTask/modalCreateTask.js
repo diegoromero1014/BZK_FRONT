@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import {Row, Grid, Col} from 'react-flexbox-grid';

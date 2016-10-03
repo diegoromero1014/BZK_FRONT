@@ -7,7 +7,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import $ from 'jquery';
 import _ from 'lodash';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 

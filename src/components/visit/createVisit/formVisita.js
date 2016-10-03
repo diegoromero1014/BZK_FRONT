@@ -21,7 +21,7 @@ import RaitingInternal from '../../clientInformation/ratingInternal';
 import {createVisti} from '../actions';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {downloadFilePdf} from '../../clientInformation/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
