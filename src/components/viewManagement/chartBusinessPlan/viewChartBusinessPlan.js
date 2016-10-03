@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {NUMERAL_MONTH} from '../constants';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import {consultInformationBusinessPlans, changeLoadChart} from '../actions';
 import BarSeries from '../chartPipeline/barSeries';
 import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';

@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {redirectUrl} from '../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 
 class ClientListItem extends Component{
   constructor(props){

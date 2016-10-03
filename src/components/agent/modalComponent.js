@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import {reduxForm} from 'redux-form';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from 'sweetalert';
 import {bindActionCreators} from 'redux';
 import {changeValueActiveLog, consultValueActiveLog} from '../../actionsGlobal';
 import _ from 'lodash';
