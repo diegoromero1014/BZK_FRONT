@@ -612,7 +612,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
