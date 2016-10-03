@@ -3,7 +3,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import {NUMBER_RECORDS} from '../constants';
 import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOrder} from '../actions';
 import {getDetailShareHolder, toggleModalShareholder} from './actions';

@@ -5,7 +5,7 @@ import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {addParticipant, clearParticipants} from './actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';

@@ -15,7 +15,7 @@ import {createEditPipeline} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
 import {changeStateSaveData} from '../../dashboard/actions';

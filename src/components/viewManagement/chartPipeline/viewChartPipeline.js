@@ -7,7 +7,7 @@ import {getMasterDataFields} from '../../selectsComponent/actions';
 import {NUMERAL_MONTH} from '../constants';
 import {PIPELINE_STATUS} from '../../selectsComponent/constants';
 import {redirectUrl} from '../../globalComponents/actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
 import {consultInformationPipeline, consultCurrencys, changeLoadChart} from '../actions';
 import BarSeries from './barSeries';

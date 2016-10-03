@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import {reduxForm} from 'redux-form';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import {REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS} from '../../constantsGlobal';
 import {bindActionCreators} from 'redux';
 import {getClientsEconomicGroup} from './actions';

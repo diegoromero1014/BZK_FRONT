@@ -25,7 +25,7 @@ import {downloadFilePdf} from '../../clientInformation/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {addTask} from '../tasks/actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import _ from 'lodash';
 

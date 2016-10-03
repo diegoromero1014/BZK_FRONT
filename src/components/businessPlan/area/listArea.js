@@ -6,7 +6,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import BotonCreateArea from './botonCreateArea';
 import {DELETE_AREA_VIEW} from './constants';
 import {deleteArea} from './actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import ModalArea from './modalArea';
 import _ from 'lodash';

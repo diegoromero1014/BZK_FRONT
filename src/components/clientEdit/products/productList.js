@@ -6,7 +6,7 @@ import {deleteProduct} from './actions';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {CLIENT_TYPE_PRODUCT, FILTER_COUNTRY} from '../../selectsComponent/constants';
 import * as constants from '../../../constantsGlobal';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
 import ModalProduct from './modalProduct';
 import Modal from 'react-modal';

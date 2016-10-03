@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import numeral from 'numeral';
 import _ from 'lodash';
 

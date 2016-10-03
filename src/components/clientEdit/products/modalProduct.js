@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {reduxForm} from 'redux-form';

@@ -16,7 +16,7 @@ import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMA
 import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
 import {changeStateSaveData} from '../../dashboard/actions';

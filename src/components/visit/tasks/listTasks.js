@@ -6,7 +6,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import BotonCreateTaskComponent from './botonCreateTaskVisit';
 import {DELETE_TASK_VIEW} from './constants';
 import {deleteTask} from './actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import ModalTask from './modalTask';
 import _ from 'lodash';

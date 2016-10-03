@@ -1,5 +1,5 @@
 import React,{Component,PropTypes} from 'react';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteServer} from './actions';

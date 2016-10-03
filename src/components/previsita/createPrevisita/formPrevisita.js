@@ -20,7 +20,7 @@ import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import {changeStateSaveData} from '../../dashboard/actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import $ from 'jquery';
 

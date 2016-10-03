@@ -406,7 +406,7 @@ class FormVisita extends Component{
       showAECNivel = false;
     }
     return(
-      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val), reducerGlobal.get('validateEnter')} className="my-custom-tab"
+      <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
