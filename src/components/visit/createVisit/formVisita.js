@@ -21,7 +21,7 @@ import RaitingInternal from '../../clientInformation/ratingInternal';
 import {createVisti} from '../actions';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {downloadFilePdf} from '../../clientInformation/actions';
-import SweetAlert from 'sweetalert';
+import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import ButtonAssociateComponent from './associateVisit';
 import {detailPrevisit} from '../../previsita/actions';
@@ -612,7 +612,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
