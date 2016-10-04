@@ -381,6 +381,10 @@ class FormEditPipeline extends Component {
 	}
 
 	componentWillMount() {
+    typeButtonClick = null;
+    this.setState({
+      errorBusinessPipeline: null
+    });
 		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
 			getClientNeeds, getPipelineById, id, nonValidateEnter,
 			fields: {
