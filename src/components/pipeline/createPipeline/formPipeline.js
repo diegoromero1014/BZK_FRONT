@@ -425,6 +425,10 @@ class FormPipeline extends Component {
     getPipelineProducts();
     getPipelineCurrencies();
     getClientNeeds();
+    typeButtonClick = null;
+    this.setState({
+      errorBusinessPipeline: null
+    });
     if(_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
     } else {
