@@ -200,7 +200,8 @@ class clientEdit extends Component{
       show: false,
       showEx:false,
       showEr:false,
-      showErNotes: false
+      showErNotes: false,
+      sumErrorsForm: 0
     };
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
@@ -563,6 +564,14 @@ class clientEdit extends Component{
     }
   };
 
+  componentWillReceiveProps(nextProps){
+    const {errors} = nextProps;
+    var errorsArray = _.toArray(errors);
+    this.setState({
+      sumErrorsForm: errorsArray.length
+    });
+  }
+
   componentWillMount(){
     errorNote = false;
     infoJustificationForNoRM = true;
@@ -613,14 +622,13 @@ class clientEdit extends Component{
     }
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
-    //console.log('groupEconomic.value -> ', groupEconomic.value);
-    //console.log('selectsReducer.get(dataEconomicGroup) -> ', selectsReducer.get('dataEconomicGroup'));
-    //console.log('get -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal'));
-    //console.log('get2 -> ', _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0]'));
-
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)}>
-          <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+          { this.state.sumErrorsForm > 0 ?
+            <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
+            :
+            <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
+          }
           <Row style={{padding: "10px 10px 10px 20px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Razón social</span></dt>
@@ -683,13 +691,14 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 0px"}}>
           <Col xs={12} md={3} lg={3} >
             <div style={{paddingLeft: "20px", marginTop: "10px"}}>
-              <dt><span>CIIU (</span><span style={{color: "red"}}>*</span>)</dt>
+              <dt><span>CIIU</span></dt>
               <ComboBox
                 name="idCIIU"
                 labelInput="Seleccione CIIU..."
                 {...idCIIU}
                 onChange={val => this._onChangeCIIU(val)}
                 onBlur={idCIIU.onBlur}
+                touched={true}
                 valueProp={'id'}
                 textProp={'ciiu'}
                 parentId="dashboardComponentScroll"
@@ -707,12 +716,13 @@ class clientEdit extends Component{
           </Col>
           <Col xs={12} md={3} lg={3}>
             <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-              <dt><span>SubCIIU (</span><span style={{color: "red"}}>*</span>)</dt>
+              <dt><span>SubCIIU</span></dt>
               <ComboBox
                 name="idSubCIIU"
                 labelInput="Seleccione subCIIU..."
                 {...idSubCIIU}
                 onBlur={idSubCIIU.onBlur}
+                touched={true}
                 valueProp={'id'}
                 textProp={'subCiiu'}
                 parentId="dashboardComponentScroll"
@@ -761,7 +771,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={12} lg={12} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Dirección (</span><span style={{color: "red"}}>*</span>)
+                <span>Dirección</span>
               </dt>
               <dt>
                 <Textarea
@@ -773,6 +783,7 @@ class clientEdit extends Component{
                   onChange={val => this._onchangeValue("address", val)}
                   placeholder="Ingrese la dirección"
                   {...address}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -780,7 +791,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 0px"}}>
             <Col xs={12} md={4} lg={4} >
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-                <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>País</span></dt>
                 <ComboBox
                   name="country"
                   labelInput="Seleccione país..."
@@ -791,13 +802,14 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
+                  touched={true}
                   data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                   />
               </div>
             </Col>
             <Col xs={12} md={4} lg={4}>
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-                <dt><span>Departamento (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Departamento</span></dt>
                 <ComboBox
                   name="province"
                   labelInput="Seleccione departamento..."
@@ -806,13 +818,14 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
+                  touched={true}
                   data={selectsReducer.get('dataTypeProvince') || []}
                 />
               </div>
             </Col>
             <Col xs={12} md={4} lg={4}>
               <div style={{paddingLeft: "20px", paddingRight: "15px", marginTop: "10px"}}>
-                <dt><span>Ciudad (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Ciudad</span></dt>
                 <ComboBox
                   name="city"
                   labelInput="Seleccione ciudad..."
@@ -820,6 +833,7 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
+                  touched={true}
                   data={selectsReducer.get('dataTypeCity') || []}
                 />
               </div>
@@ -840,7 +854,7 @@ class clientEdit extends Component{
             </Col>
             <Col xs style={{marginLeft:"10px"}}>
               <dt>
-                <span>Teléfono (</span><span style={{color: "red"}}>*</span>)
+                <span>Teléfono</span>
               </dt>
               <dt style={{marginRight:"15px"}}>
                 <Input
@@ -849,6 +863,7 @@ class clientEdit extends Component{
                   max="30"
                   placeholder="Ingrese el teléfono"
                   {...telephone}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -856,7 +871,7 @@ class clientEdit extends Component{
           <Row style={{padding: "10px 0px 20px 20px", width:'100%'}}>
           <Col xs>
             <dt>
-              <span>¿Desea consultar sus extractos de forma virtual? (</span><span style={{color: "red"}}>*</span>)
+              <span>¿Desea consultar sus extractos de forma virtual?</span>
             </dt>
             <dt style={{marginRight:"17px"}}>
               <ComboBox
@@ -872,7 +887,7 @@ class clientEdit extends Component{
           </Col>
             <Col xs style={{marginLeft:"10px"}}>
               <dt>
-                <span>¿Desea recibir su reporte de costos consolidado de forma virtual? (</span><span style={{color: "red"}}>*</span>)
+                <span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span>
               </dt>
               <dt style={{marginRight:"15px"}}>
                 <ComboBox
@@ -883,6 +898,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -899,7 +915,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Ventas anuales (</span><span style={{color: "red"}}>*</span>)
+                <span>Ventas anuales</span>
               </dt>
               <dt>
                 <Input
@@ -912,20 +928,21 @@ class clientEdit extends Component{
                   {...annualSales}
                   value={annualSales.value}
                   onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Fecha de ventas anuales - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                <span>Fecha de ventas anuales - DD/MM/YYYY</span>
               </dt>
               <dt>
-                <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}/>
+                <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals} touched={true}/>
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Activos (</span><span style={{color: "red"}}>*</span>)
+                <span>Activos</span>
               </dt>
               <dt>
                 <Input
@@ -939,6 +956,7 @@ class clientEdit extends Component{
                   {...assets}
                   value={assets.value}
                   onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -946,7 +964,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Pasivos (</span><span style={{color: "red"}}>*</span>)
+                <span>Pasivos</span>
               </dt>
               <dt>
                 <Input
@@ -960,12 +978,13 @@ class clientEdit extends Component{
                   {...liabilities}
                   value={liabilities.value}
                   onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Ingresos operacionales mensuales (</span><span style={{color: "red"}}>*</span>)
+                <span>Ingresos operacionales mensuales</span>
               </dt>
               <dt>
                 <Input
@@ -979,12 +998,13 @@ class clientEdit extends Component{
                   {...operatingIncome}
                   value={operatingIncome.value}
                   onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome ,operatingIncome.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Ingresos no operacionales mensuales (</span><span style={{color: "red"}}>*</span>)
+                <span>Ingresos no operacionales mensuales</span>
               </dt>
               <dt>
                 <Input
@@ -998,6 +1018,7 @@ class clientEdit extends Component{
                   {...nonOperatingIncome}
                   value={nonOperatingIncome.value}
                   onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome ,nonOperatingIncome.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1005,7 +1026,7 @@ class clientEdit extends Component{
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
               <dt>
-                <span>Egresos mensuales(</span><span style={{color: "red"}}>*</span>)
+                <span>Egresos mensuales</span>
               </dt>
               <dt>
                 <Input
@@ -1019,6 +1040,7 @@ class clientEdit extends Component{
                   {...expenses}
                   value={expenses.value}
                   onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses ,expenses.value)}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1068,6 +1090,7 @@ class clientEdit extends Component{
                   data={valuesYesNo}
                   {...marcGeren}
                   onChange={val => this._onChangeMarcGeren(val)}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1084,6 +1107,7 @@ class clientEdit extends Component{
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
               onChange={val => this._onChangeJustifyNoGeren(val)}
+              touched={true}
             />
             <Col xs={12} md={4} lg={4}>
               <dt>
@@ -1098,6 +1122,7 @@ class clientEdit extends Component{
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...centroDecision}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1117,6 +1142,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1132,6 +1158,7 @@ class clientEdit extends Component{
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
               onChange={val => this._onChangeJustifyNoLME(val)}
+              touched={true}
             />
             <SelectsJustificacion
               visible={'false'}
@@ -1145,6 +1172,7 @@ class clientEdit extends Component{
               obligatory={false}
               data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
               onChange={val => this._onChangeJustifyExCliente(val)}
+              touched={true}
             />
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
@@ -1156,24 +1184,19 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <NotesClient error={errorNote}/>
-          <Row>
-            <Col xs={12} md={12} lg={12} style={{paddingTop: "50px"}}>
-              <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-                <button className="btn"
-                    style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}}
-                    type="submit">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
-                </button>
-                <button className="btn btn-secondary modal-button-edit"
-                  onClick={this._closeWindow}
-                  style={{float:"right", margin:"8px 0px 0px 150px", position:"fixed", backgroundColor: "#C1C1C1"}}
-                  type="button">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
-                </button>
-              </div>
-            </Col>
-          </Row>
+          <div style={{marginBottom: "50px"}}>
+            <NotesClient error={errorNote}/>
+          </div>
+          <div className="" style={{marginTop: "50px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+            <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
+              <button className="btn" style={{float:"right", margin:"8px 0px 0px 110px", position:"fixed"}} type="submit">
+                <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
+              </button>
+              <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{float:"right", margin:"8px 0px 0px 250px", position:"fixed", backgroundColor: "#C1C1C1"}} type="button">
+                <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+              </button>
+            </div>
+          </div>
           <SweetAlert
             type= "warning"
             show={this.state.show}
