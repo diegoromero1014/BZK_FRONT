@@ -4,8 +4,11 @@ import UbicationCorrespondence from './ubicationCorrespondence';
 import InfoFinanciera from './infoFinanciera';
 import DataComercial from './dataComercial';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import {seletedButton, validateContactShareholder} from './actions';
+import {BUTTON_UPDATE, BUTTON_EDIT} from './constants';
 import Notas from './notas';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
 
@@ -14,6 +17,7 @@ class DetailsInfoClient extends Component{
     super(props);
 
     this._clickButtonClientEdit = this._clickButtonClientEdit.bind(this);
+    this._clickButtonClientUpdate = this._clickButtonClientUpdate.bind(this);
   }
 
   componentWillMount(){
@@ -32,7 +36,21 @@ class DetailsInfoClient extends Component{
   }
 
   _clickButtonClientEdit(){
+    const {seletedButton} = this.props;
+    seletedButton(BUTTON_EDIT);
     redirectUrl("/dashboard/clientEdit");
+  }
+
+  _clickButtonClientUpdate(){
+    const {seletedButton, validateContactShareholder} = this.props;
+    seletedButton(BUTTON_UPDATE);
+    validateContactShareholder().then( (data) => {
+      if(!_.get(data, 'payload.data.validateLogin')){
+        redirectUrl("/login");
+      } else {
+        redirectUrl("/dashboard/clientEdit");
+      }
+    });
   }
 
   render(){
@@ -136,7 +154,7 @@ class DetailsInfoClient extends Component{
               <a style={{float:"right", margin:"15px 0px 0px 110px", position:"fixed", cursor: "pointer",textDecoration: "underline"}} onClick={this._clickButtonClientEdit}>
                 <span>Editar/Modificar</span>
               </a>
-              <button className="btn" style={{float:"right", margin:"8px 0px 0px 240px", position:"fixed"}} onClick={this._clickButtonClientEdit}>
+              <button className="btn" style={{float:"right", margin:"8px 0px 0px 240px", position:"fixed"}} onClick={this._clickButtonClientUpdate}>
                 <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
               </button>
             </div>
@@ -151,10 +169,17 @@ DetailsInfoClient.PropTypes = {
   infoClient: PropTypes.object.isRequired
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    seletedButton,
+    validateContactShareholder
+  }, dispatch);
+}
+
 function mapStateToProps({navBar}){
   return {
     menuState: navBar.get('status')
   };
 }
 
-export default connect(mapStateToProps)(DetailsInfoClient);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsInfoClient);
