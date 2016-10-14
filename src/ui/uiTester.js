@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {Row, Col} from 'react-flexbox-grid';
 import ComboBox from './comboBox/comboBoxComponent';
 import {reduxForm} from 'redux-form';
-import {addNote} from '../components/notes/actions';
-import NotesClient from '../components/notes/notesClient';
 
 const validate = values => {
     const errors = {}
@@ -33,13 +31,6 @@ const propsComboBox = {
 class uiTester extends Component {
     constructor(props) {
         super(props);
-        this._addNote = this._addNote.bind(this);
-    }
-
-
-    _addNote() {
-        const {addNote} = this.props;
-        addNote();
     }
 
     render() {
@@ -75,4 +66,4 @@ export default reduxForm({
     form: 'test',
     fields: ["combo", "combo1"],
     validate
-}, mapStateToProps, {addNote})(uiTester);
+}, mapStateToProps)(uiTester);

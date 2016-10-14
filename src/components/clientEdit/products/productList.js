@@ -78,9 +78,9 @@ class ProductList extends Component {
                   onClick={() => this._viewDetailsProduct(product)}
                   style={{cursor: "pointer"}} />
               </td>
-              <td>{product.name}</td>
+              <td>{product.name.length > 60 ? product.name.substring(0, 60) + "..." : product.name}</td>
               <td>{_.get(_.filter(selectsReducer.get(CLIENT_TYPE_PRODUCT), ['id', parseInt(product.type)]), '[0].value')}</td>
-              <td>{product.number}</td>
+              <td>{product.number.length > 60 ? product.number.substring(0, 60) + "..." : product.number}</td>
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar producto"
                   onClick={() => this._confirmDeleteProduct(product.uid)}

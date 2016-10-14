@@ -25,6 +25,7 @@ class ActividadEconomica extends Component{
       <table style={{width: "100%"}}>
         <thead>
           <tr>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Naturaleza Tributaria</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>CIIU</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Sector</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>SubCIIU</span></th>
@@ -33,10 +34,11 @@ class ActividadEconomica extends Component{
         </thead>
         <tbody>
           <tr>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.ciiu}</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.sector}</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.subCiiuKey}</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.subSector}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.taxNaturaKey}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.ciiu}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.sector}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.subCiiuKey}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.subSector}</td>
           </tr>
         </tbody>
       </table>

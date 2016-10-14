@@ -16,9 +16,7 @@ import _ from 'lodash';
 import numeral from 'numeral';
 import {changeStateSaveData} from '../dashboard/actions';
 import {MESSAGE_SAVE_DATA} from '../../constantsGlobal';
-import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication}
-  from '../selectsComponent/actions';
-import NotesClient from '../notes/notesClient';
+import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication} from '../selectsComponent/actions';
 
 const valuesYesNo = [
   {'id': true, 'value': "Si"},

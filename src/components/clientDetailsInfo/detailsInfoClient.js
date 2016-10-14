@@ -3,12 +3,15 @@ import ActividadEconomica from './actividadEconomica';
 import UbicationCorrespondence from './ubicationCorrespondence';
 import InfoFinanciera from './infoFinanciera';
 import DataComercial from './dataComercial';
+import DeclarationOfOrigin from './DeclarationOfOrigin';
+import InternationalOperations from './internationalOperations';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {seletedButton, validateContactShareholder} from './actions';
 import {BUTTON_UPDATE, BUTTON_EDIT} from './constants';
 import Notas from './notas';
-import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import Products from './product';
+import {connect} from 'react-redux';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
 
@@ -32,6 +35,19 @@ class DetailsInfoClient extends Component{
         typeOfNoteKey={item.typeOfNoteKey}
         note={item.note}
         key={idx+1}
+    />
+  }
+
+  _mapProductItems(item, idx){
+    return <Products
+            name={item.name}
+            type={item.typeKey}
+            num={item.number}
+            averageMontlyAmount={item.averageMontlyAmount}
+            coin={item.coin}
+            country={item.countryKey}
+            city={item.city}
+            key={idx+1}
     />
   }
 
@@ -64,6 +80,10 @@ class DetailsInfoClient extends Component{
     var {notes} = infoClient;
     if( notes === undefined || notes === null ){
       notes = [];
+    }
+    var {foreignProducts} = infoClient;
+    if( foreignProducts === undefined || foreignProducts === null ){
+      foreignProducts = [];
     }
 
     var paddingDivEdit = "0px";
@@ -147,6 +167,23 @@ class DetailsInfoClient extends Component{
             </table>
           </div>
           {notes.map(this._mapNoteItems)}
+          <DeclarationOfOrigin infoClient={infoClient}/>
+          <InternationalOperations infoClient={infoClient}/>
+          <div className="tab-content-row" style={{marginTop: "30px",borderTop: "1px dotted #cea70b"}}>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "0px"}}>
+                      <i className="payment icon" style={{fontSize: "25px"}}></i>
+                      <span className="title-middle"> Productos</span>
+                    </dl>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {foreignProducts.map(this._mapProductItems)}
         </div>
         {infoClient.haveAccessEdit &&
           <div className="" style={{marginLeft: "-20px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>

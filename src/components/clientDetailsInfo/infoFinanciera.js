@@ -57,7 +57,6 @@ class InfoFinanciera extends Component{
             </tr>
           </tbody>
         </table>
-
         <table style={{width: "100%", marginTop: "15px"}}>
           <thead>
           <tr>
@@ -73,6 +72,18 @@ class InfoFinanciera extends Component{
               <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.expenses)}</td>
               <td style={{width: "25%", verticalAlign: "initial"}}>{salesActualizationDateString}</td>
               <td style={{width: "25%", verticalAlign: "initial"}}></td>
+            </tr>
+          </tbody>
+        </table>
+        <table style={{width: "100%", marginTop: "15px"}}>
+          <thead>
+          <tr>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Detalle de ingresos no operacionales u originados en actividades diferente a la principal</span></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{width: "100%", verticalAlign: "initial"}}>{infoClient.detailNonOperatinIncome}</td>
             </tr>
           </tbody>
         </table>
