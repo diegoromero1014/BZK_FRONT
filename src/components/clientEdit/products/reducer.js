@@ -5,7 +5,7 @@ import _ from 'lodash';
 const initialState = Immutable.List();
 
 export default (state = initialState, action) => {
-    switch (action.type) {
+  switch (action.type) {
     case UPDATE:
       const product = action.product;
       const indexProductToUpdate = state.findIndex(item => item.uid === product.uid);
@@ -33,23 +33,29 @@ export default (state = initialState, action) => {
         });
         return state.push(newProduct);
     case DELETE:
-        const index = state.findIndex(item => item.uid === action.index);
-        return state.delete(index);
+      const index = state.findIndex(item => item.uid === action.index);
+      return state.delete(index);
     case SET:
-        const notes = action.notes;
-        return state.withMutations(list => {
-          notes.map(item => {
-            const uid = _.uniqueId('product_');
-            list.push({
-                uid,
-                body: item.note,
-                combo: String(item.typeOfNote)
-              })
-          });
+      const products = action.products;
+      return state.withMutations(list => {
+        products.map(product => {
+          const uid = _.uniqueId('product_');
+          list.push({
+            uid,
+            name: product.name,
+            type: product.type,
+            number: product.number,
+            averageMontlyAmount: product.averageMontlyAmount,
+            coin: product.coin,
+            country: product.country,
+            city: product.city,
+            uid: product.uid
+          })
+        });
       });
     case CLEAR:
-        return state.clear();
+      return state.clear();
     default:
-        return state;
+      return state;
     }
 }

@@ -21,10 +21,10 @@ export function addProduct(product){
     };
 }
 
-export function setProducts(product){
+export function setProducts(products){
   return {
       type: constants.SET,
-      product
+      products
     };
 }
 

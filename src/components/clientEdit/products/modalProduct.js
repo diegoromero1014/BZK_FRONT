@@ -14,46 +14,11 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import numeral from 'numeral';
 
-const fields = ["name", "type", "number", "averageMontlyAmount", "coin", "country", "city"];
+const fields = ["name", "type", "number", "averageMontlyAmount", "coin", "countryProduct", "city", "foreignProducts"];
 
 const errors = {};
 
 const validate = (values) => {
-  if(!values.name){
-    errors.name = constants.VALUE_REQUIERED;
-  }else{
-    errors.name = null;
-  }
-  if(!values.type){
-    errors.type = constants.OPTION_REQUIRED;
-  }else{
-    errors.type = null;
-  }
-  if(!values.number){
-    errors.number = constants.VALUE_REQUIERED;
-  }else{
-    errors.number = null;
-  }
-  if(!values.averageMontlyAmount){
-    errors.averageMontlyAmount = constants.VALUE_REQUIERED;
-  }else{
-    errors.averageMontlyAmount = null;
-  }
-  if(!values.coin){
-    errors.coin = constants.VALUE_REQUIERED;
-  }else{
-    errors.coin = null;
-  }
-  if(!values.country){
-    errors.country = constants.VALUE_REQUIERED;
-  }else{
-    errors.country = null;
-  }
-  if(!values.city){
-    errors.city = constants.OPTION_REQUIRED;
-  }else{
-    errors.city = null;
-  }
   return errors;
 };
 
@@ -64,17 +29,38 @@ class ModalProduct extends Component {
     this._close = this._close.bind(this);
     this._closeCreate = this._closeCreate.bind(this);
     this._handleProduct = this._handleProduct.bind(this);
+    this._changeName = this._changeName.bind(this);
+    this._changeType = this._changeType.bind(this);
+    this._changeNumber = this._changeNumber.bind(this);
+    this._changeAverageMontlyAmount = this._changeAverageMontlyAmount.bind(this);
+    this._changeCoin = this._changeCoin.bind(this);
+    this._changeCountry = this._changeCountry.bind(this);
+    this._changeCity = this._changeCity.bind(this);
     this.state = {
       showMessage: false,
       typeMessage: '',
       titleMessage: '',
-      textMessage: ''
+      textMessage: '',
+      name: '',
+      nameError: null,
+      type: '',
+      typeError: null,
+      number: '',
+      numberError: null,
+      averageMontlyAmount: '',
+      averageMontlyAmountError: null,
+      coin: '',
+      coinError: null,
+      countryProduct: '',
+      countryError: null,
+      city: '',
+      cityError: null
     };
 
     momentLocalizer(moment);
   }
 
-  _handleBlurValueNumber(typeValidation, valuReduxForm, val){
+  _handleBlurValueNumber(typeValidation, val){
     var pattern;
     //Elimino los caracteres no validos
     for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
@@ -89,17 +75,27 @@ class ModalProduct extends Component {
       while (pattern.test(val)){
         val = val.replace(pattern, "$1,$2");
       }
-      valuReduxForm.onChange(val);
+      this.setState({
+        averageMontlyAmount: val,
+        averageMontlyAmountError: null
+      });
+
     } else {
-      var value = numeral(valuReduxForm.value).format('0');
+      var value = numeral(val).format('0');
       if( value >= 0 ){
         pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)){
           val = val.replace(pattern, "$1,$2");
         }
-        valuReduxForm.onChange(val);
+        this.setState({
+          averageMontlyAmount: val,
+          averageMontlyAmountError: null
+        });
       } else {
-        valuReduxForm.onChange("");
+        this.setState({
+          averageMontlyAmount: "",
+          averageMontlyAmountError: null
+        });
       }
     }
   }
@@ -115,49 +111,173 @@ class ModalProduct extends Component {
     isOpen();
   }
 
+  _changeName(value){
+    this.setState({
+      name: value,
+      nameError: null
+    });
+  }
+
+  _changeType(value){
+    this.setState({
+      type: value,
+      typeError: null
+    });
+  }
+
+  _changeNumber(value){
+    this.setState({
+      number: value,
+      numberError: null
+    });
+  }
+
+  _changeAverageMontlyAmount(value){
+    this.setState({
+      averageMontlyAmount: value,
+      averageMontlyAmountError: null
+    });
+  }
+
+  _changeCoin(value){
+    this.setState({
+      coin: value,
+      coinError: null
+    });
+  }
+
+  _changeCountry(value){
+    this.setState({
+      countryProduct: value,
+      countryError: null
+    });
+  }
+
+  _changeCity(value){
+    this.setState({
+      city: value,
+      cityError: null
+    });
+  }
+
   _handleProduct(){
-    const {fields:{name, type, number, averageMontlyAmount, coin, country, city}, clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
+    const {clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
     var uid, titleMessage, textMessage;
     if(productDetail !== null){
       uid = productDetail.uid;
     } else{
       uid = _.uniqueId('product_');
     }
-    var product = {
-      uid,
-      name: name.value,
-      type: type.value,
-      number: number.value,
-      averageMontlyAmount: averageMontlyAmount.value,
-      coin: coin.value,
-      country: country.value,
-      city: city.value
-    };
-    if(productDetail !== null){
-      updateProduct(product);
-      titleMessage = "Producto actualizado";
-      textMessage = "Señor usuario, el producto se actualizó correctamente.";
-    } else{
-      addProduct(product);
-      titleMessage = "Producto adicionado";
-      textMessage = "Señor usuario, el producto se adicionó correctamente.";
+    var errorInForm = false;
+    console.log("this.state.type", this.state.type);
+
+    if (this.state.name === null || this.state.name === undefined || this.state.name === "") {
+      errorInForm = true;
+      this.setState({
+        nameError: constants.VALUE_REQUIERED
+      });
     }
 
-    this.setState({
-      showMessage: true,
-      typeMessage: constants.MESSAGE_SUCCESS,
-      titleMessage: titleMessage,
-      textMessage: textMessage
-    });
+    if (this.state.type === null || this.state.type === undefined || this.state.type === "") {
+      errorInForm = true;
+      this.setState({
+        typeError: constants.OPTION_REQUIRED
+      });
+    }
+
+    if (this.state.number === null || this.state.number === undefined || this.state.number === "") {
+      errorInForm = true;
+      this.setState({
+        numberError: constants.VALUE_REQUIERED
+      });
+    }
+
+    if (this.state.averageMontlyAmount === null || this.state.averageMontlyAmount === undefined || this.state.averageMontlyAmount === "") {
+      errorInForm = true;
+      this.setState({
+        averageMontlyAmountError: constants.VALUE_REQUIERED
+      });
+    }
+
+    if (this.state.coin === null || this.state.coin === undefined || this.state.coin === "") {
+      errorInForm = true;
+      this.setState({
+        coinError: constants.VALUE_REQUIERED
+      });
+    }
+
+    if (this.state.countryProduct === null || this.state.countryProduct === undefined || this.state.countryProduct === "") {
+      errorInForm = true;
+      this.setState({
+        countryError: constants.OPTION_REQUIRED
+      });
+    }
+
+    if (this.state.city === null || this.state.city === undefined || this.state.city === "") {
+      errorInForm = true;
+      this.setState({
+        cityError: constants.VALUE_REQUIERED
+      });
+    }
+
+    if(!errorInForm){
+      var product = {
+        uid,
+        name: this.state.name,
+        type: this.state.type,
+        number: this.state.number,
+        averageMontlyAmount: numeral(this.state.averageMontlyAmount).format('0'),
+        coin: this.state.coin,
+        country: this.state.countryProduct,
+        city: this.state.city
+      };
+      if(productDetail !== null){
+        updateProduct(product);
+        titleMessage = "Producto actualizado";
+        textMessage = "Señor usuario, el producto se actualizó correctamente.";
+      } else{
+        addProduct(product);
+        titleMessage = "Producto adicionado";
+        textMessage = "Señor usuario, el producto se adicionó correctamente.";
+      }
+
+      this.setState({
+        showMessage: true,
+        typeMessage: constants.MESSAGE_SUCCESS,
+        titleMessage: titleMessage,
+        textMessage: textMessage
+      });
+    }
   }
 
   componentWillMount() {
-    const {getMasterDataFields} = this.props;
+    const {getMasterDataFields, productDetail} = this.props;
     getMasterDataFields([CLIENT_TYPE_PRODUCT, FILTER_COUNTRY]);
+    console.log("productDetail", productDetail);
+
+    if(productDetail !== null){
+      this.setState({
+        name: productDetail.name,
+        nameError: null,
+        type: productDetail.type,
+        typeError: null,
+        number: productDetail.number,
+        numberError: null,
+        averageMontlyAmount: productDetail.averageMontlyAmount,
+        averageMontlyAmountError: null,
+        coin: productDetail.coin,
+        coinError: null,
+        countryProduct: productDetail.country,
+        countryError: null,
+        city: productDetail.city,
+        cityError: null
+      });
+    }
   }
 
   render() {
-    const {fields:{name, type, number, averageMontlyAmount, coin, country, city}, handleSubmit, error, modalStatus, selectsReducer, productDetail} = this.props;
+    const {handleSubmit, error, modalStatus, selectsReducer, productDetail} = this.props;
+
     return (
       <form onSubmit={handleSubmit(this._handleProduct)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
@@ -171,7 +291,10 @@ class ModalProduct extends Component {
                   name="txtName"
                   type="text"
                   max="200"
-                  {...name}
+                  touched={true}
+                  value={this.state.name}
+                  error={this.state.nameError}
+                  onChange={val => this._changeName(val)}
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
@@ -179,13 +302,15 @@ class ModalProduct extends Component {
                 <ComboBox
                   name="type"
                   labelInput="Seleccione el tipo..."
-                  {...type}
-                  value={type.value}
-                  onBlur={type.onBlur}
+                  touched={true}
+                  value={this.state.type}
+                  error={this.state.typeError}
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
+                  onChange={val => this._changeType(val)}
                   data={selectsReducer.get(CLIENT_TYPE_PRODUCT) || []}
+                  onBlur={() => ''}
                   />
               </Col>
             </Row>
@@ -198,7 +323,11 @@ class ModalProduct extends Component {
                   name="txtNumber"
                   type="text"
                   max="200"
-                  {...number}
+                  touched={true}
+                  value={this.state.number}
+                  error={this.state.numberError}
+                  onChange={val => this._changeNumber(val)}
+                  onBlur={() => ''}
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
@@ -209,33 +338,41 @@ class ModalProduct extends Component {
                   type="text"
                   min={0}
                   max="16"
-                  {...averageMontlyAmount}
-                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, averageMontlyAmount, averageMontlyAmount.value)}
+                  touched={true}
+                  value={this.state.averageMontlyAmount}
+                  error={this.state.averageMontlyAmountError}
+                  onChange={val => this._changeAverageMontlyAmount(val)}
+                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, this.state.averageMontlyAmount)}
                 />
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={6} lg={6} >
+              <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
                 <dt><span>Moneda (</span><span style={{color: "red"}}>*</span>)</dt>
                 <Input
                   name="txtCoin"
                   type="text"
                   max="100"
-                  {...coin}
+                  touched={true}
+                  value={this.state.coin}
+                  error={this.state.coinError}
+                  onChange={val => this._changeCoin(val)}
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
                 <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
-                  name="type"
+                  name="country"
                   labelInput="Seleccione el tipo..."
-                  {...country}
-                  value={country.value}
-                  onBlur={country.onBlur}
+                  touched={true}
+                  value={this.state.countryProduct}
+                  error={this.state.countryError}
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
+                  onChange={val => this._changeCountry(val)}
                   data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  onBlur={() => ''}
                   />
               </Col>
             </Row>
@@ -245,10 +382,13 @@ class ModalProduct extends Component {
                   <span>Ciudad (</span><span style={{color: "red"}}>*</span>)
                 </dt>
                 <Input
-                  name="txtcity"
+                  name="txtCityProduct"
                   type="text"
                   max="150"
-                  {...city}
+                  touched={true}
+                  value={this.state.city}
+                  error={this.state.cityError}
+                  onChange={val => this._changeCity(val)}
                 />
               </Col>
             </Row>
@@ -272,35 +412,10 @@ class ModalProduct extends Component {
 }
 
 function mapStateToProps({selectsReducer, clientProductReducer}, {fields, productDetail}) {
-  if(productDetail !== null && productDetail !== undefined){
     return {
       selectsReducer,
-      clientProductReducer,
-      initialValues: {
-        name: productDetail.name,
-        type: productDetail.type,
-        number: productDetail.number,
-        averageMontlyAmount: productDetail.averageMontlyAmount,
-        coin: productDetail.coin,
-        country: productDetail.country,
-        city: productDetail.city
-      }
+      clientProductReducer
     };
-  }else{
-    return {
-      selectsReducer,
-      clientProductReducer,
-      initialValues: {
-        name: '',
-        type: '',
-        number: '',
-        averageMontlyAmount: '',
-        coin: '',
-        country: '',
-        city: ''
-      }
-    };
-  }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -312,8 +427,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
-    destroyOnUnmount: false,
-    fields,
-    validate
+  form: 'submitValidation',
+  destroyOnUnmount: false,
+  fields
 }, mapStateToProps, mapDispatchToProps)(ModalProduct);

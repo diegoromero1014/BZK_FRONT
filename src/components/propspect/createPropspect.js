@@ -109,9 +109,6 @@ class CreatePropspect extends Component{
     } else {
       prospectInApplication = true;
     }
-    if( !validateLogin ){
-      //redirectUrl("/login");
-    }
     return(
       <div style={{marginTop: "10px"}}>
         <span style={{marginLeft: "20px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>

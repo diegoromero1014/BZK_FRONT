@@ -12,7 +12,7 @@ import shareholdersReducer from '../components/shareholder/reducer';
 import propspectReducer from '../components/propspect/reducer';
 import selectsReducer from '../components/selectsComponent/reducer';
 import {reducer as formReducer} from 'redux-form';
-import notesReducer from '../components/notes/reducer';
+import notesReducer from '../components/clientEdit/notes/reducer';
 import contactDetail from '../components/contact/contactDetail/reducer';
 import deleteGridReducer from '../components/grid/reducer';
 import createContactReducer from '../components/contact/createContact/reducer';
