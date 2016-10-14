@@ -1303,7 +1303,7 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <Input
-                  name="txtOroginCityResource"
+                  name="txtOriginCityResource"
                   type="text"
                   max="250"
                   placeholder="Ingrese el detalle"

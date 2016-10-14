@@ -168,10 +168,15 @@ class DetailsInfoClient extends Component{
           {foreignProducts.map(this._mapProductItems)}
         </div>
         {infoClient.haveAccessEdit &&
-          <div className="" style={{marginLeft:"-20px",position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} onClick={this._clickButtonClientEdit}>
-              <span style={{color: "#FFFFFF", padding:"10px"}}>Editar</span>
-            </button>
+          <div className="" style={{marginLeft: "-20px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+            <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
+              <a style={{float:"right", margin:"15px 0px 0px 110px", position:"fixed", cursor: "pointer",textDecoration: "underline"}} onClick={this._clickButtonClientEdit}>
+                <span>Editar/Modificar</span>
+              </a>
+              <button className="btn" style={{float:"right", margin:"8px 0px 0px 240px", position:"fixed"}} onClick={this._clickButtonClientEdit}>
+                <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar</span>
+              </button>
+            </div>
           </div>
         }
       </div>
