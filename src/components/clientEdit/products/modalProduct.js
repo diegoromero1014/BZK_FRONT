@@ -169,8 +169,6 @@ class ModalProduct extends Component {
       uid = _.uniqueId('product_');
     }
     var errorInForm = false;
-    console.log("this.state.type", this.state.type);
-
     if (this.state.name === null || this.state.name === undefined || this.state.name === "") {
       errorInForm = true;
       this.setState({

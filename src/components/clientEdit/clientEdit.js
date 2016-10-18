@@ -41,7 +41,6 @@ let errorContact;
 let errorShareholder;
 let messageAlertSuccess;
 var notesArray = [];
-var productsArray = [];
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -187,7 +186,7 @@ function SelectsJustificacion(props) {
   } else {
     obligatory = <span>{props.title}</span>;
   }
-  if(props.visible === "false"){
+  if(props.visible.toString() === "false"){
     return <Col xs={12} md={4} lg={4}>
       <dt>
         {obligatory}
@@ -435,7 +434,7 @@ class clientEdit extends Component{
   }
 
   _onChangeOperationsForeigns(val){
-    const {fields: {operationsForeigns}} = this.props;
+    /*const {fields: {operationsForeigns}} = this.props;
     console.log("val", val);
     console.log("operationsForeigns", operationsForeigns.value);
     const {selectsReducer} = this.props;
@@ -446,7 +445,7 @@ class clientEdit extends Component{
     if(operationsForeignsSelected.length >= MAXIMUM_OPERATIONS_FOREIGNS){
       console.log("entra aca");
       operationsForeigns.onChange(JSON.parse('["'+_.join(operationsForeignsSelected.pop(), '","')+'"]'));
-    }
+    }*/
 
     //( _.get(_.filter(dataOperationsForeigns, ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector'
   }
@@ -497,13 +496,18 @@ class clientEdit extends Component{
       fields: {description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, address, country, city, province, neighborhood,
         district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
         liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, originResource,
-        centroDecision, necesitaLME, groupEconomic, justifyNoLME, productsArray, justifyExClient, taxNature,
+        centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
         detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
         originCityResource, operationsForeignCurrency, otherOperationsForeign},
-        error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData} = this.props;
-        console.log("taxNatura", taxNatura);
+        error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer} = this.props;
+        console.log("taxNature", taxNature);
+      var productsArray = [];
+      clientProductReducer.map(map => {
+        productsArray.push(_.omit(map, ['uid']))
+      });
       var infoClient = clientInformacion.get('responseClientInfo');
       if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
+        console.log("productsArray _saveClient", productsArray);
         var jsonCreateProspect= {
           "id": infoClient.id,
           "clientIdNumber": infoClient.clientIdNumber,
@@ -541,9 +545,9 @@ class clientEdit extends Component{
           "marketLeader":infoClient.marketLeader,
           "territory":infoClient.territory,
           "actualizationDate": infoClient.actualizationDate,
-          "justificationForNoRM": marcGeren.value === 'false' ? justifyNoGeren.value : '',
+          "justificationForNoRM": marcGeren.value.toString() === 'false' ? justifyNoGeren.value : '',
           "justificationForLostClient": justifyExClient.value,
-          "justificationForCreditNeed": necesitaLME.value === 'false' ? justifyNoLME.value : '',
+          "justificationForCreditNeed": necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
           "isVirtualStatement": extractsVirtual.value,
           "lineOfBusiness": infoClient.lineOfBusiness,
           "isManagedByRm": marcGeren.value,
@@ -620,9 +624,8 @@ class clientEdit extends Component{
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
-    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer, clientProductReducer} = this.props;
+    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer} = this.props;
     notesArray = [];
-    productsArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
     var existNoteExceptionNoGeren = false;
@@ -635,9 +638,6 @@ class clientEdit extends Component{
         "note": map.body
       }
       notesArray.push(noteItem);
-    });
-    clientProductReducer.map(map => {
-      productsArray.push(_.omit(map, ['uid']))
     });
     var dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
     var idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
@@ -1427,7 +1427,6 @@ class clientEdit extends Component{
                   max="250"
                   placeholder="Ingrese el detalle"
                   {...otherOriginResource}
-                  touched={true}
                 />
               </dt>
             </Col>
