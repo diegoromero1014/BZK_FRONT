@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -13,14 +14,6 @@ import * as constants from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import numeral from 'numeral';
-
-const fields = ["name", "type", "number", "averageMontlyAmount", "coin", "countryProduct", "city", "foreignProducts"];
-
-const errors = {};
-
-const validate = (values) => {
-  return errors;
-};
 
 class ModalProduct extends Component {
 
@@ -106,7 +99,6 @@ class ModalProduct extends Component {
 
   _closeCreate() {
     const {isOpen} = this.props;
-    this.props.resetForm();
     this.setState({showMessage: false});
     isOpen();
   }
@@ -160,7 +152,8 @@ class ModalProduct extends Component {
     });
   }
 
-  _handleProduct(){
+  _handleProduct(e){
+    e.preventDefault();
     const {clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
     var uid, titleMessage, textMessage;
     if(productDetail !== null){
@@ -274,10 +267,10 @@ class ModalProduct extends Component {
   }
 
   render() {
-    const {handleSubmit, error, modalStatus, selectsReducer, productDetail} = this.props;
+    const {modalStatus, selectsReducer, productDetail} = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this._handleProduct)}>
+      <form onSubmit={this._handleProduct.bind(this)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
           <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
             <Row>
@@ -424,8 +417,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-export default reduxForm({
-  form: 'submitValidation',
-  destroyOnUnmount: false,
-  fields
-}, mapStateToProps, mapDispatchToProps)(ModalProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalProduct);
