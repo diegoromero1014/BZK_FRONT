@@ -35,7 +35,7 @@ class DeclarationOfOrigin extends Component{
             <span style={{width: "25%", verticalAlign: "initial"}}>{infoClient.otherOriginGoods}</span>
           </Col>
         </Row>
-        <Row style={{paddingTop: "10px"}}>
+        <Row style={{paddingTop: "20px"}}>
           <Col xs={8} md={8} lg={8} style={{paddingRight: "20px"}}>
             <span style={{fontWeight: "bold", color: "#4C5360"}}>Origen de recursos</span>
           </Col>
@@ -51,7 +51,7 @@ class DeclarationOfOrigin extends Component{
             <span style={{width: "25%", verticalAlign: "initial"}}>{infoClient.otherOriginResource}</span>
           </Col>
         </Row>
-        <Row style={{paddingTop: "10px"}}>
+        <Row style={{paddingTop: "20px"}}>
           <Col xs={8} md={8} lg={8} style={{paddingRight: "20px"}}>
             <span style={{fontWeight: "bold", color: "#4C5360"}}>País de origen</span>
           </Col>

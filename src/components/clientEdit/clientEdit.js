@@ -10,9 +10,9 @@ import SelectTypeDocument from '../selectsComponent/selectTypeDocument/component
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION} from './constants';
+import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION, MAXIMUM_OPERATIONS_FOREIGNS} from './constants';
 import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, MESSAGE_SAVE_DATA} from '../../constantsGlobal';
-import {BUTTON_UPDATE} from '../clientDetailsInfo/constants';
+import {BUTTON_UPDATE, BUTTON_EDIT} from '../clientDetailsInfo/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import MultipleSelect from '../../ui/multipleSelect/multipleSelectComponent';
@@ -226,6 +226,7 @@ class clientEdit extends Component{
     this._saveClient = this._saveClient.bind(this);
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
+    this._onChangeOperationsForeigns = this._onChangeOperationsForeigns.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
     this._closeWindow = this._closeWindow.bind(this);
@@ -431,6 +432,23 @@ class clientEdit extends Component{
     }
   }
 
+  _onChangeOperationsForeigns(val){
+    const {fields: {operationsForeigns}} = this.props;
+    console.log("val", val);
+    console.log("operationsForeigns", operationsForeigns.value);
+    const {selectsReducer} = this.props;
+    var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
+    var operationsForeignsSelected = _.split(val, ',');
+    console.log("operationsForeignsSelected", operationsForeignsSelected);
+    console.log("elimina", operationsForeignsSelected.pop());
+    if(operationsForeignsSelected.length >= MAXIMUM_OPERATIONS_FOREIGNS){
+      console.log("entra aca");
+      operationsForeigns.onChange(JSON.parse('["'+_.join(operationsForeignsSelected.pop(), '","')+'"]'));
+    }
+
+    //( _.get(_.filter(dataOperationsForeigns, ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector'
+  }
+
   //Detecta el cambio en el select de country para ejecutar la consulta de province
   _onChangeCountry(val){
     const {clientInformacion} = this.props;
@@ -472,7 +490,6 @@ class clientEdit extends Component{
     this._saveClient(2);
   }
 
-  //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _saveClient(typeSave){
     const {
       fields: {description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, address, country, city, province, neighborhood,
@@ -482,6 +499,7 @@ class clientEdit extends Component{
         detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
         originCityResource, operationsForeignCurrency, otherOperationsForeign},
         error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData} = this.props;
+        console.log("taxNatura", taxNatura);
       var infoClient = clientInformacion.get('responseClientInfo');
       if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
         var jsonCreateProspect= {
@@ -562,9 +580,9 @@ class clientEdit extends Component{
          createProspect(jsonCreateProspect)
          .then((data) => {
            if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-             if( typeSave === 1 ){
+             if( typeSave === BUTTON_EDIT ){
                changeStateSaveData(false, "");
-               messageAlertSuccess = "Señor usuario, su cliente ha sido modificado exitosamente, pero su fecha de actualización no ha sido cambiada.";
+               messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
                this.setState({showEx: true});
              } else {
                updateClient().then( (data) => {
@@ -573,7 +591,7 @@ class clientEdit extends Component{
                    redirectUrl("/login");
                  } else {
                    if( _.get(data, 'payload.data.data.codeTransaction') === 200 ){
-                     messageAlertSuccess = "Señor usuario, su cliente ha sido actualizado exitosamente. ";
+                     messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
                      this.setState({showEx: true});
                    } else {
                      const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
@@ -593,6 +611,7 @@ class clientEdit extends Component{
       }
   }
 
+  //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
     const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer, clientProductReducer} = this.props;
@@ -630,7 +649,7 @@ class clientEdit extends Component{
             showConfirmSave: true
           });
         } else {
-          this._saveClient(1);
+          this._saveClient(BUTTON_EDIT);
         }
       }
     }
@@ -782,7 +801,7 @@ class clientEdit extends Component{
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
                 <dt><span>Naturaleza tributaria</span></dt>
                 <ComboBox
-                  name="idTaxNatura"
+                  name="idtaxNatura"
                   labelInput="Seleccione la naturaleza..."
                   {...taxNatura}
                   onBlur={taxNatura.onBlur}
@@ -1311,22 +1330,24 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <Row style={{padding: "0px 10px 10px 20px"}}>
+          <Row style={{padding: "0px 10px 0px 0px"}}>
             <Col xs={12} md={6} lg={6}>
               <dl style={{width: '100%'}}>
-                <dt><span>Origen de bienes</span></dt>
-                <dd>
-                  <MultipleSelect
-                    {...originGoods}
-                    name="multiOriginGoods"
-                    labelInput="Seleccione"
-                    valueProp={'id'}
-                    textProp={'value'}
-                    parentId="dashboardComponentScroll"
-                    data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
-                    touched={true}
-                    />
-                </dd>
+                <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                  <dt><span>Origen de bienes</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      {...originGoods}
+                      name="multiOriginGoods"
+                      labelInput="Seleccione"
+                      valueProp={'id'}
+                      textProp={'value'}
+                      parentId="dashboardComponentScroll"
+                      data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
+                      touched={true}
+                      />
+                  </dd>
+                </div>
               </dl>
             </Col>
             <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
@@ -1345,22 +1366,24 @@ class clientEdit extends Component{
               </dt>
             </Col>
           </Row>
-          <Row style={{padding: "0px 10px 10px 20px"}}>
+          <Row style={{padding: "0px 10px 0px 0px"}}>
             <Col xs={12} md={6} lg={6}>
               <dl style={{width: '100%'}}>
-                <dt><span>Origen de recursos</span></dt>
-                <dd>
-                  <MultipleSelect
-                    {...originResource}
-                    name="multiOriginResource"
-                    labelInput="Seleccione"
-                    valueProp={'id'}
-                    textProp={'value'}
-                    parentId="dashboardComponentScroll"
-                    data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
-                    touched={true}
-                    />
-                </dd>
+                <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                  <dt><span>Origen de recursos</span></dt>
+                  <dd>
+                    <MultipleSelect
+                      {...originResource}
+                      name="multiOriginResource"
+                      labelInput="Seleccione"
+                      valueProp={'id'}
+                      textProp={'value'}
+                      parentId="dashboardComponentScroll"
+                      data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
+                      touched={true}
+                      />
+                  </dd>
+                </div>
               </dl>
             </Col>
             <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
@@ -1453,6 +1476,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
                   data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
+                  onChange={val => this._onChangeOperationsForeigns(val)}
                   touched={true}
                   />
               </dt>
