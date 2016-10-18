@@ -180,16 +180,10 @@ const validate = values => {
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
-  var obligatory;
-  if (props.obligatory) {
-    obligatory = <span>{props.title}</span>;
-  } else {
-    obligatory = <span>{props.title}</span>;
-  }
   if(props.visible.toString() === "false"){
     return <Col xs={12} md={4} lg={4}>
       <dt>
-        {obligatory}
+        {props.title}
       </dt>
       <dt>
         <ComboBox
@@ -1427,6 +1421,7 @@ class clientEdit extends Component{
                   max="250"
                   placeholder="Ingrese el detalle"
                   {...otherOriginResource}
+                  touched={true}
                 />
               </dt>
             </Col>
