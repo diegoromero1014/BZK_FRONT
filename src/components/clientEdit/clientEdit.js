@@ -3,7 +3,7 @@ import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {consultInfoClient} from '../clientInformation/actions';
-import {seletedButton, showHideModalErros, sendErrorsUpdate} from '../clientDetailsInfo/actions';
+import {seletedButton, sendErrorsUpdate} from '../clientDetailsInfo/actions';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
@@ -39,8 +39,9 @@ import $ from 'jquery';
 let idButton;
 let errorContact;
 let errorShareholder;
-let notesArray;
 let messageAlertSuccess;
+var notesArray = [];
+var productsArray = [];
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -53,7 +54,7 @@ const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "cit
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
-    "justifyExClient", "taxNatura", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
+    "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
@@ -217,6 +218,7 @@ class clientEdit extends Component{
     this.state = {
       show: false,
       showConfirmSave: false,
+      showErrorUpdate: false,
       showEx:false,
       showEr:false,
       showErNotes: false,
@@ -250,7 +252,7 @@ class clientEdit extends Component{
   }
 
   _closeError(){
-    this.setState({show: false, showEx:false, showEr: false, showErNotes: false});
+    this.setState({show: false, showEx:false, showEr: false, showErNotes: false, showErrorUpdate: false});
   }
 
   _closeSuccess(){
@@ -478,7 +480,7 @@ class clientEdit extends Component{
       fields: {description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, address, country, city, province, neighborhood,
         district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
         liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, originResource,
-        centroDecision, necesitaLME, groupEconomic, justifyNoLME, productsArray, justifyExClient, taxNatura,
+        centroDecision, necesitaLME, groupEconomic, justifyNoLME, productsArray, justifyExClient, taxNature,
         detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
         originCityResource, operationsForeignCurrency, otherOperationsForeign},
         error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData} = this.props;
@@ -547,7 +549,7 @@ class clientEdit extends Component{
           "foreignProducts": productsArray,
           "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
           "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
-          "taxNatura": taxNatura.value,
+          "taxNature": taxNature.value,
           "detailNonOperatinIncome": detailNonOperatingIncome.value,
           "otherOriginGoods": otherOriginGoods.value,
           "otherOriginResource": otherOriginResource.value,
@@ -557,8 +559,8 @@ class clientEdit extends Component{
           "otherOperationsForeign": otherOperationsForeign.value,
           "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']')
        }
-         const {createProspect, updateClient, showHideModalErros, sendErrorsUpdate} = this.props;
-         changeStateSaveData(true);
+         const {createProspect, updateClient, sendErrorsUpdate} = this.props;
+         changeStateSaveData(true, MESSAGE_SAVE_DATA);
          createProspect(jsonCreateProspect)
          .then((data) => {
            if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
@@ -572,22 +574,26 @@ class clientEdit extends Component{
                  if(!_.get(data, 'payload.data.validateLogin')){
                    redirectUrl("/login");
                  } else {
+                   console.log("data", data);
                    if( _.get(data, 'payload.data.data.codeTransaction') === 200 ){
                      messageAlertSuccess = "Señor usuario, su cliente ha sido actualizado exitosamente. ";
                      this.setState({showEx: true});
                    } else {
                      const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
                      sendErrorsUpdate(messageErrors);
-                     showHideModalErros(true);
+                     this.setState({
+                       showErrorUpdate: true
+                     })
                    }
                  }
                });
              }
            } else {
+             changeStateSaveData(false, "");
              this.setState({showEr: true});
            }
          }, (reason) => {
-           changeStateSaveData(false);
+           changeStateSaveData(false, "");
            this.setState({showEr: true});
        });
       }
@@ -596,8 +602,8 @@ class clientEdit extends Component{
   _submitEditClient(){
     errorNote = false;
     const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer, clientProductReducer} = this.props;
-    var notesArray = [];
-    var productsArray = [];
+    notesArray = [];
+    productsArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
     var existNoteExceptionNoGeren = false;
@@ -635,6 +641,14 @@ class clientEdit extends Component{
       }
     }
   };
+
+  componentWillReceiveProps(nextProps){
+    const {errors} = nextProps;
+    var errorsArray = _.toArray(errors);
+    this.setState({
+      sumErrorsForm: errorsArray.length
+    });
+  }
 
   componentWillMount(){
     errorNote = false;
@@ -684,40 +698,56 @@ class clientEdit extends Component{
     }
   }
 
+  _mapMessageErros(error, index){
+    return  <div style={{marginTop: '5px'}}>
+              <span key={index} style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}}>
+                {error}
+              </span>
+            </div>
+  }
+
   render(){
     const {
     fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNatura,
+      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
       detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
       otherOperationsForeign}, error, handleSubmit, tabReducer, selectsReducer, clientInformacion, notes} = this.props;
     if(notes.toArray().length === 0){
       errorNote = false;
     }
+    const errors = tabReducer.get('errorsMessage');
     errorContact = tabReducer.get('errorConstact');
     errorShareholder = tabReducer.get('errorShareholder');
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor:"#FFFFFF"}}>
-          { this.state.sumErrorsForm > 0 ?
-            <div>
-              <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
-            </div>
-            :
-            <div>
-              <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
-            </div>
-          }
-          { idButton === BUTTON_UPDATE ?
-            <div>
-              <BottonContactAdmin errorContact={errorContact} />
-              <BottonShareholderAdmin errorShareholder={errorShareholder} />
-            </div>
-            :
-            <div></div>
-          }
+          <Row>
+            <Col xs={12} md={6} lg={6}>
+              { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
+                <div>
+                  <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
+                </div>
+                :
+                <div>
+                  <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
+                </div>
+              }
+              { idButton === BUTTON_UPDATE ?
+                <div>
+                  <BottonContactAdmin errorContact={errorContact} />
+                  <BottonShareholderAdmin errorShareholder={errorShareholder} />
+                </div>
+                :
+                <div></div>
+              }
+            </Col>
+            <Col xs={12} md={6} lg={6}>
+              {errors.map(this._mapMessageErros)}
+            </Col>
+          </Row>
           <Row style={{padding: "10px 10px 10px 20px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Razón social</span></dt>
@@ -782,10 +812,10 @@ class clientEdit extends Component{
               <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
                 <dt><span>Naturaleza tributaria</span></dt>
                 <ComboBox
-                  name="idTaxNatura"
+                  name="idtaxNature"
                   labelInput="Seleccione la naturaleza..."
-                  {...taxNatura}
-                  onBlur={taxNatura.onBlur}
+                  {...taxNature}
+                  onBlur={taxNature.onBlur}
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
@@ -1530,9 +1560,16 @@ class clientEdit extends Component{
            type= "success"
            show={this.state.showEx}
            title="Edición de cliente"
-           text="Señor usuario, el cliente se editó de forma exitosa. Si desea actualizar al cliente y modificar la fecha de actualización, haga clic en el botón actualizar."
+           text={messageAlertSuccess}
            onConfirm={() => this._closeSuccess()}
          />
+         <SweetAlert
+          type= "error"
+          show={this.state.showErrorUpdate}
+          title="Error actualizando cliente"
+          text="Señor usuario, ocurrió un error actualizando cliente, en la parte superior del formulario se encuentra una descripción del porque no se pudo realizar la operación."
+          onConfirm={() => this._closeError()}
+          />
          <SweetAlert
           type= "error"
           show={this.state.showEr}
@@ -1570,7 +1607,6 @@ function mapDispatchToProps(dispatch) {
     changeStateSaveData,
     seletedButton,
     updateClient,
-    showHideModalErros,
     sendErrorsUpdate
   }, dispatch);
 }
@@ -1609,7 +1645,7 @@ function mapStateToProps({clientInformacion, selectsReducer, clientProductReduce
       justifyExClient: infoClient.justificationForLostClient,
       justifyNoLME: infoClient.justificationForCreditNeed,
       groupEconomic: infoClient.economicGroup,
-      taxNatura: infoClient.taxNatura,
+      taxNature: infoClient.taxNature,
       detailNonOperatingIncome: infoClient.detailNonOperatinIncome,
       originGoods: '',
       originResource: '',
