@@ -247,6 +247,8 @@ class clientEdit extends Component{
   }
 
   _onConfirmExit(){
+    const {sendErrorsUpdate} = this.props;
+    sendErrorsUpdate([]);
     this.setState({show: false });
     redirectUrl("/dashboard/clientInformation");
   }
@@ -256,6 +258,8 @@ class clientEdit extends Component{
   }
 
   _closeSuccess(){
+    const {sendErrorsUpdate} = this.props;
+    sendErrorsUpdate([]);
     this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clientInformation");
   }
@@ -661,6 +665,11 @@ class clientEdit extends Component{
     }
   };
 
+  clickDescripcionErrors(){
+    $('.title.errors').toggleClass('active');
+    $('.content.errors').toggleClass('active');
+  }
+
   componentWillReceiveProps(nextProps){
     const {errors} = nextProps;
     var errorsArray = _.toArray(errors);
@@ -674,7 +683,7 @@ class clientEdit extends Component{
     infoJustificationForNoRM = true;
     infoMarcaGeren = true;
     const {fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns},
-            clientInformacion, clearValuesAdressess, setNotes, clearNotes, selectsReducer, clearProducts, setProducts, tabReducer} = this.props;
+            clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer, clearProducts, setProducts, tabReducer} = this.props;
     idButton = tabReducer.get('seletedButton');
     clearValuesAdressess();
     clearNotes();
@@ -690,6 +699,7 @@ class clientEdit extends Component{
       redirectUrl("/login");
     }else{
       if(_.isEmpty(infoClient)){
+        sendErrorsUpdate([]);
         redirectUrl("/dashboard/clientInformation");
       }else{
         const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
@@ -718,8 +728,8 @@ class clientEdit extends Component{
   }
 
   _mapMessageErros(error, index){
-    return  <div style={{marginTop: '5px'}}>
-              <span key={index} style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}}>
+    return  <div>
+              <span key={index} style={{marginLeft: "20px", fontSize: "12pt"}}>
                 {error}
               </span>
             </div>
@@ -744,7 +754,7 @@ class clientEdit extends Component{
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor:"#FFFFFF"}}>
           <Row>
-            <Col xs={12} md={6} lg={6}>
+            <Col xs={12} md={6} lg={6} style={{marginTop: '10px'}}>
               { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
                 <div>
                   <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
@@ -763,9 +773,21 @@ class clientEdit extends Component{
                 <div></div>
               }
             </Col>
-            <Col xs={12} md={6} lg={6}>
-              {errors.map(this._mapMessageErros)}
-            </Col>
+            { errors.length > 0 ?
+              <Col xs={12} md={6} lg={6}>
+                <div className="ui accordion">
+                  <div className="active title errors" onClick={this.clickDescripcionErrors}>
+                    <i className="dropdown icon"></i>
+                    <span style={{color: "red", fontSize: "12pt"}}> Descripción errores</span>
+                  </div>
+                  <div className="active content errors" style={{marginLeft: '10px', marginTop: '-10px'}}>
+                    {errors.map(this._mapMessageErros)}
+                  </div>
+                </div>
+              </Col>
+              :
+              <div></div>
+            }
           </Row>
           <Row style={{padding: "10px 10px 10px 20px"}}>
             <Col xs={12} md={4} lg={4}>
@@ -1587,7 +1609,7 @@ class clientEdit extends Component{
            onConfirm={() => this._closeSuccess()}
          />
          <SweetAlert
-          type= "error"
+          type= "warning"
           show={this.state.showErrorUpdate}
           title="Error actualizando cliente"
           text="Señor usuario, ocurrió un error actualizando cliente, en la parte superior del formulario se encuentra una descripción del porque no se pudo realizar la operación."
