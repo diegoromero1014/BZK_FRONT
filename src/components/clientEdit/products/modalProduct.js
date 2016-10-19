@@ -46,7 +46,7 @@ class ModalProduct extends Component {
       coinError: null,
       countryProduct: '',
       countryError: null,
-      city: '',
+      cityProduct: '',
       cityError: null
     };
 
@@ -147,7 +147,7 @@ class ModalProduct extends Component {
 
   _changeCity(value){
     this.setState({
-      city: value,
+      cityProduct: value,
       cityError: null
     });
   }
@@ -204,7 +204,7 @@ class ModalProduct extends Component {
       });
     }
 
-    if (this.state.city === null || this.state.city === undefined || this.state.city === "") {
+    if (this.state.cityProduct === null || this.state.cityProduct === undefined || this.state.cityProduct === "") {
       errorInForm = true;
       this.setState({
         cityError: constants.VALUE_REQUIERED
@@ -220,7 +220,7 @@ class ModalProduct extends Component {
         averageMontlyAmount: numeral(this.state.averageMontlyAmount).format('0'),
         coin: this.state.coin,
         country: this.state.countryProduct,
-        city: this.state.city
+        city: this.state.cityProduct
       };
       if(productDetail !== null){
         updateProduct(product);
@@ -260,7 +260,7 @@ class ModalProduct extends Component {
         coinError: null,
         countryProduct: productDetail.country,
         countryError: null,
-        city: productDetail.city,
+        cityProduct: productDetail.city,
         cityError: null
       });
     }
@@ -353,7 +353,7 @@ class ModalProduct extends Component {
               <Col xs={12} md={6} lg={6} >
                 <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
                 <ComboBox
-                  name="country"
+                  name="countryProduct"
                   labelInput="Seleccione el tipo..."
                   touched={true}
                   value={this.state.countryProduct}
@@ -377,7 +377,7 @@ class ModalProduct extends Component {
                   type="text"
                   max="150"
                   touched={true}
-                  value={this.state.city}
+                  value={this.state.cityProduct}
                   error={this.state.cityError}
                   onChange={val => this._changeCity(val)}
                 />

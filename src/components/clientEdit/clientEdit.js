@@ -435,12 +435,12 @@ class clientEdit extends Component{
     var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
     var operationsForeignsSelected = _.split(val, ',');
     console.log("operationsForeignsSelected", operationsForeignsSelected);
-    console.log("elimina", operationsForeignsSelected.pop());
     if(operationsForeignsSelected.length >= MAXIMUM_OPERATIONS_FOREIGNS){
-      console.log("entra aca");
-      operationsForeigns.onChange(JSON.parse('["'+_.join(operationsForeignsSelected.pop(), '","')+'"]'));
-    }*/
-
+      operationsForeignsSelected.pop();
+      console.log("entra aca", operationsForeignsSelected);
+      operationsForeigns.onChange(operationsForeigns.value);
+    }
+*/
     //( _.get(_.filter(dataOperationsForeigns, ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector'
   }
 
@@ -695,6 +695,8 @@ class clientEdit extends Component{
             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
           }
+          console.log("infoClient.operationsForeigns => ", infoClient.operationsForeigns);
+          console.log("infoCliente.operationsForeigns Modificado => ", JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
             originGoods.onChange(JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]'));
             originResource.onChange(JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]'));
             operationsForeigns.onChange(JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
@@ -1499,8 +1501,9 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
-                  data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
                   onChange={val => this._onChangeOperationsForeigns(val)}
+                  onBlur={operationsForeigns.onBlur}
+                  data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
                   touched={true}
                   />
               </dt>
