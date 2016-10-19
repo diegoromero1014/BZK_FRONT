@@ -23,23 +23,41 @@ class MultipleSelectComponent extends Component {
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name, defaultValue} = this.props;
+        const {onChange, onBlur, name, defaultValue, maxSelections} = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
-        selector.dropdown({
-            fullTextSearch : true,
-            onChange: function (id, text) {
-                self.touched = true;
-                self.setState({
-                    value: id
-                });
-                onBlur(id, text);
-                onChange(id, text);
-            }
-        });
+        if(maxSelections !== null && maxSelections !== undefined && maxSelections !== ''){
+          selector.dropdown({
+              fullTextSearch : true,
+              maxSelections: 3,
+              onChange: function (id, text) {
+                  self.touched = true;
+                  self.setState({
+                      value: id
+                  });
+                  onBlur(id, text);
+                  onChange(id, text);
+              }
+          });
+        } else{
+          selector.dropdown({
+              fullTextSearch : true,
+              onChange: function (id, text) {
+                  self.touched = true;
+                  self.setState({
+                      value: id
+                  });
+                  onBlur(id, text);
+                  onChange(id, text);
+              }
+          });
+        }
         selector.dropdown('setting', {
           allowAdditions: false,
-          message: {noResults:'No hay valores que cumplan con el filtro'}
+          message: {
+            maxSelections : 'Máximo 3 opciones',
+            noResults:'No hay valores que cumplan con el filtro'
+          }
         });
     }
 
