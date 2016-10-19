@@ -8,10 +8,13 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
-import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
+import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication,
+  getMasterDataFields, clearValuesAdressess} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION, MAXIMUM_OPERATIONS_FOREIGNS} from './constants';
-import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, MESSAGE_SAVE_DATA} from '../../constantsGlobal';
+import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION, MAXIMUM_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
+  KEY_OPTION_OTHER_ORIGIN_GOODS, KEY_OPTION_OTHER_ORIGIN_RESOURCE} from './constants';
+import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER,
+  MESSAGE_SAVE_DATA} from '../../constantsGlobal';
 import {BUTTON_UPDATE, BUTTON_EDIT} from '../clientDetailsInfo/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
@@ -180,16 +183,10 @@ const validate = values => {
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
-  var obligatory;
-  if (props.obligatory) {
-    obligatory = <span>{props.title}</span>;
-  } else {
-    obligatory = <span>{props.title}</span>;
-  }
   if(props.visible.toString() === "false"){
     return <Col xs={12} md={4} lg={4}>
       <dt>
-        {obligatory}
+        {props.title}
       </dt>
       <dt>
         <ComboBox
@@ -222,12 +219,17 @@ class clientEdit extends Component{
       showEr:false,
       showErNotes: false,
       sumErrorsForm: false,
-      messageError: ''
+      messageError: '',
+      otherOperationsForeignEnable: 'disabled',
+      otherOriginGoodsEnable: 'disabled',
+      otherOriginResourceEnable: 'disabled'
     };
     this._saveClient = this._saveClient.bind(this);
     this._submitEditClient = this._submitEditClient.bind(this);
     this._onChangeCIIU = this._onChangeCIIU.bind(this);
     this._onChangeOperationsForeigns = this._onChangeOperationsForeigns.bind(this);
+    this._onChangeOriginGoods = this._onChangeOriginGoods.bind(this);
+    this._onChangeOriginResource = this._onChangeOriginResource.bind(this);
     this._onChangeCountry = this._onChangeCountry.bind(this);
     this._onChangeProvince = this._onChangeProvince.bind(this);
     this._closeWindow = this._closeWindow.bind(this);
@@ -438,20 +440,54 @@ class clientEdit extends Component{
   }
 
   _onChangeOperationsForeigns(val){
-    /*const {fields: {operationsForeigns}} = this.props;
-    console.log("val", val);
-    console.log("operationsForeigns", operationsForeigns.value);
-    const {selectsReducer} = this.props;
+    const {fields:{otherOperationsForeign}, selectsReducer} = this.props;
     var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
+    var idOptionOther = _.get(_.filter(dataOperationsForeigns, ['key', KEY_OPTION_OTHER_OPERATIONS_FOREIGNS]), '[0].id');
     var operationsForeignsSelected = _.split(val, ',');
-    console.log("operationsForeignsSelected", operationsForeignsSelected);
-    console.log("elimina", operationsForeignsSelected.pop());
-    if(operationsForeignsSelected.length >= MAXIMUM_OPERATIONS_FOREIGNS){
-      console.log("entra aca");
-      operationsForeigns.onChange(JSON.parse('["'+_.join(operationsForeignsSelected.pop(), '","')+'"]'));
-    }*/
+    if(idOptionOther === undefined || _.indexOf(operationsForeignsSelected, idOptionOther.toString()) === -1){
+      otherOperationsForeign.onChange('');
+      this.setState({
+        otherOperationsForeignEnable: 'disabled'
+      });
+    }else{
+      this.setState({
+        otherOperationsForeignEnable: ''
+      });
+    }
+  }
 
-    //( _.get(_.filter(dataOperationsForeigns, ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector'
+  _onChangeOriginGoods(val){
+    const {fields:{otherOriginGoods}, selectsReducer} = this.props;
+    var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
+    var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
+    if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
+    var originGoodsSelected = _.split(val, ',');
+      otherOriginGoods.onChange('');
+      this.setState({
+        otherOriginGoodsEnable: 'disabled'
+      });
+    }else{
+      this.setState({
+        otherOriginGoodsEnable: ''
+      });
+    }
+  }
+
+  _onChangeOriginResource(val){
+    const {fields:{otherOriginResource}, selectsReducer} = this.props;
+    var dataOriginResource = selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE);
+    var idOptionOther = _.get(_.filter(dataOriginResource, ['key', KEY_OPTION_OTHER_ORIGIN_RESOURCE]), '[0].id');
+    var originResourceSelected = _.split(val, ',');
+    if(idOptionOther === undefined || _.indexOf(originResourceSelected, idOptionOther.toString()) === -1){
+      otherOriginResource.onChange('');
+      this.setState({
+        otherOriginResourceEnable: 'disabled'
+      });
+    }else{
+      this.setState({
+        otherOriginResourceEnable: ''
+      });
+    }
   }
 
   //Detecta el cambio en el select de country para ejecutar la consulta de province
@@ -504,14 +540,12 @@ class clientEdit extends Component{
         detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
         originCityResource, operationsForeignCurrency, otherOperationsForeign},
         error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer} = this.props;
-        console.log("taxNature", taxNature);
       var productsArray = [];
       clientProductReducer.map(map => {
         productsArray.push(_.omit(map, ['uid']))
       });
       var infoClient = clientInformacion.get('responseClientInfo');
       if(moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined){
-        console.log("productsArray _saveClient", productsArray);
         var jsonCreateProspect= {
           "id": infoClient.id,
           "clientIdNumber": infoClient.clientIdNumber,
@@ -600,13 +634,16 @@ class clientEdit extends Component{
                  if(!_.get(data, 'payload.data.validateLogin')){
                    redirectUrl("/login");
                  } else {
-                   console.log("data", data);
                    if( _.get(data, 'payload.data.data.codeTransaction') === 200 ){
                      messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
                      this.setState({showEx: true});
                    } else {
-                     const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
-                     sendErrorsUpdate(messageErrors);
+                     if( _.get(data, 'payload.data.data.detailsResponse') === null ){
+                       sendErrorsUpdate([]);
+                     } else {
+                       const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
+                       sendErrorsUpdate(messageErrors);
+                     }
                      this.setState({
                        showErrorUpdate: true
                      })
@@ -711,9 +748,9 @@ class clientEdit extends Component{
             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
           }
-            originGoods.onChange(JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]'));
-            originResource.onChange(JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]'));
-            operationsForeigns.onChange(JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
+          originGoods.onChange(JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]'));
+          originResource.onChange(JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]'));
+          operationsForeigns.onChange(JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
           }, (reason) => {
           this.setState({showEx: true});
         });
@@ -1396,7 +1433,9 @@ class clientEdit extends Component{
                       textProp={'value'}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
+                      onChange={val => this._onChangeOriginGoods(val)}
                       touched={true}
+                      maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
                       />
                   </dd>
                 </div>
@@ -1413,6 +1452,7 @@ class clientEdit extends Component{
                   max="250"
                   placeholder="Ingrese el detalle"
                   {...otherOriginGoods}
+                  disabled={this.state.otherOriginGoodsEnable}
                   touched={true}
                 />
               </dt>
@@ -1432,7 +1472,9 @@ class clientEdit extends Component{
                       textProp={'value'}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
+                      onChange={val => this._onChangeOriginResource(val)}
                       touched={true}
+                      maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
                       />
                   </dd>
                 </div>
@@ -1449,6 +1491,8 @@ class clientEdit extends Component{
                   max="250"
                   placeholder="Ingrese el detalle"
                   {...otherOriginResource}
+                  disabled={this.state.otherOriginResourceEnable}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1526,9 +1570,11 @@ class clientEdit extends Component{
                   valueProp={'id'}
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
-                  data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
                   onChange={val => this._onChangeOperationsForeigns(val)}
+                  onBlur={operationsForeigns.onBlur}
+                  data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
                   touched={true}
+                  maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
                   />
               </dt>
             </Col>
@@ -1545,6 +1591,7 @@ class clientEdit extends Component{
                   max="250"
                   placeholder="Ingrese cuál"
                   {...otherOperationsForeign}
+                  disabled={this.state.otherOperationsForeignEnable}
                   touched={true}
                 />
               </dt>
@@ -1612,7 +1659,7 @@ class clientEdit extends Component{
           type= "warning"
           show={this.state.showErrorUpdate}
           title="Error actualizando cliente"
-          text="Señor usuario, ocurrió un error actualizando cliente, en la parte superior del formulario se encuentra una descripción del porque no se pudo realizar la operación."
+          text="Señor usuario, la información se guardó exitosamente, pero no se actualizó el cliente, en la parte superior del formulario se encuentra una descripción de porqué no se pudo realizar la operación."
           onConfirm={() => this._closeError()}
           />
          <SweetAlert

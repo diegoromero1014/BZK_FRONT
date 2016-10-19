@@ -330,11 +330,11 @@ class ModalComponentContact extends Component {
                                     <dt><span>Tipo de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                                     <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
                                         {...tipoDocumento}
-                                                  disabled={this.state.disabled}
-                                                  valueProp={'id'}
-                                                  textProp={'value'}
-                                                  parentId="modalComponentScroll"
-                                                  data={selectsReducer.get(CONTACT_ID_TYPE) || []}
+                                        disabled={this.state.disabled}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        parentId="modalComponentScroll"
+                                        data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                     /></dd>
                                 </dl>
                             </Col>
