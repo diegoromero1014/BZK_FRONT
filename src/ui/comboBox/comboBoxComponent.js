@@ -97,7 +97,6 @@ class comboBoxComponent extends Component {
     render() {
         const {nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId, searchClient, styles, shouldHandleUpdate} = this.props;
         if (touched && invalid && shouldHandleUpdate) {
-            console.log('true error', labelInput, name);
             scrollTo(parentId);
         }
         return (

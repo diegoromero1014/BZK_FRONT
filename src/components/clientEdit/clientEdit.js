@@ -465,8 +465,8 @@ class clientEdit extends Component{
     const {fields:{otherOriginGoods}, selectsReducer} = this.props;
     var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
     var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
-    if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
     var originGoodsSelected = _.split(val, ',');
+    if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
       otherOriginGoods.onChange('');
       this.setState({
         otherOriginGoodsEnable: 'disabled'
