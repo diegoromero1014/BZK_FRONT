@@ -15,7 +15,7 @@ import {KEY_DESMONTE, KEY_EXCEPCION_NO_GERENCIADO, TITLE_DESCRIPTION, MAXIMUM_OP
   KEY_OPTION_OTHER_ORIGIN_GOODS, KEY_OPTION_OTHER_ORIGIN_RESOURCE} from './constants';
 import {OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_SAVE_DATA} from '../../constantsGlobal';
-import {BUTTON_UPDATE, BUTTON_EDIT} from '../clientDetailsInfo/constants';
+import {BUTTON_UPDATE, BUTTON_EDIT, UPDATE} from '../clientDetailsInfo/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import MultipleSelect from '../../ui/multipleSelect/multipleSelectComponent';
@@ -214,8 +214,8 @@ class clientEdit extends Component{
     this.state = {
       show: false,
       showConfirmSave: false,
-      showErrorUpdate: false,
       showEx:false,
+      showExitoSaveNotUpdate: false,
       showEr:false,
       showErNotes: false,
       sumErrorsForm: false,
@@ -236,6 +236,7 @@ class clientEdit extends Component{
     this._onConfirmExit = this._onConfirmExit.bind(this);
     this._closeError = this._closeError.bind(this);
     this._closeSuccess = this._closeSuccess.bind(this);
+    this._closeSuccessSaveUpdate = this._closeSuccessSaveUpdate.bind(this);
     this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
     this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
     this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
@@ -256,7 +257,7 @@ class clientEdit extends Component{
   }
 
   _closeError(){
-    this.setState({show: false, showEx:false, showEr: false, showErNotes: false, showErrorUpdate: false});
+    this.setState({show: false, showEx:false, showEr: false, showErNotes: false});
   }
 
   _closeSuccess(){
@@ -264,6 +265,10 @@ class clientEdit extends Component{
     sendErrorsUpdate([]);
     this.setState({show: false, showEx:false, showEr: false});
     redirectUrl("/dashboard/clientInformation");
+  }
+
+  _closeSuccessSaveUpdate(){
+    this.setState({showExitoSaveNotUpdate: false});
   }
 
   _onChangeGroupEconomic(e) {
@@ -521,14 +526,14 @@ class clientEdit extends Component{
     this.setState({
       showConfirmSave: false
     });
-    this._saveClient(1);
+    this._saveClient(BUTTON_EDIT);
   }
 
   _onConfirmSaveAllClient(){
     this.setState({
       showConfirmSave: false
     });
-    this._saveClient(2);
+    this._saveClient(BUTTON_UPDATE);
   }
 
   _saveClient(typeSave){
@@ -629,7 +634,7 @@ class clientEdit extends Component{
                messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
                this.setState({showEx: true});
              } else {
-               updateClient().then( (data) => {
+               updateClient(UPDATE).then( (data) => {
                  changeStateSaveData(false, "");
                  if(!_.get(data, 'payload.data.validateLogin')){
                    redirectUrl("/login");
@@ -644,8 +649,9 @@ class clientEdit extends Component{
                        const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
                        sendErrorsUpdate(messageErrors);
                      }
+                     messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
                      this.setState({
-                       showErrorUpdate: true
+                       showExitoSaveNotUpdate: true
                      })
                    }
                  }
@@ -701,11 +707,6 @@ class clientEdit extends Component{
       }
     }
   };
-
-  clickDescripcionErrors(){
-    $('.title.errors').toggleClass('active');
-    $('.content.errors').toggleClass('active');
-  }
 
   componentWillReceiveProps(nextProps){
     const {errors} = nextProps;
@@ -783,49 +784,52 @@ class clientEdit extends Component{
     if(notes.toArray().length === 0){
       errorNote = false;
     }
-    const errors = tabReducer.get('errorsMessage');
     errorContact = tabReducer.get('errorConstact');
     errorShareholder = tabReducer.get('errorShareholder');
     var infoClient = clientInformacion.get('responseClientInfo');
     isProspect = infoClient.isProspect;
     return(
         <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor:"#FFFFFF"}}>
-          <Row>
-            <Col xs={12} md={6} lg={6} style={{marginTop: '10px'}}>
-              { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
-                <div>
-                  <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
-                </div>
-                :
-                <div>
-                  <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
-                </div>
-              }
-              { idButton === BUTTON_UPDATE ?
-                <div>
-                  <BottonContactAdmin errorContact={errorContact} />
-                  <BottonShareholderAdmin errorShareholder={errorShareholder} />
-                </div>
+          <div>
+            <p style={{paddingTop: '10px'}}></p>
+            <Row xs={12} md={12} lg={12} style={{border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '116px'}}>
+              <Col xs={12} md={6} lg={6} style={{marginTop: '24px'}}>
+                { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
+                  <div>
+                    <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
+                  </div>
+                  :
+                  <div>
+                    <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
+                  </div>
+                }
+                { idButton === BUTTON_UPDATE ?
+                  <div>
+                    <BottonContactAdmin errorContact={errorContact} />
+                    <BottonShareholderAdmin errorShareholder={errorShareholder} />
+                  </div>
+                  :
+                  <div></div>
+                }
+              </Col>
+              { tabReducer.get('errorsMessage').length > 0 ?
+                <Col xs={12} md={6} lg={6}>
+                  <div className="ui accordion">
+                    <div className="active title errors">
+                      <span style={{color: "red", fontSize: "12pt", marginLeft: '28px'}}> Descripción errores</span>
+                    </div>
+                    <div className="scroll errors" style={{height: '80px', overflow: 'scroll', width: '100%'}}>
+                      <div className="active content errors" style={{marginLeft: '10px', marginTop: '-8px', paddingTop: '5px'}}>
+                        {tabReducer.get('errorsMessage').map(this._mapMessageErros)}
+                      </div>
+                    </div>
+                  </div>
+                </Col>
                 :
                 <div></div>
               }
-            </Col>
-            { errors.length > 0 ?
-              <Col xs={12} md={6} lg={6}>
-                <div className="ui accordion">
-                  <div className="active title errors" onClick={this.clickDescripcionErrors}>
-                    <i className="dropdown icon"></i>
-                    <span style={{color: "red", fontSize: "12pt"}}> Descripción errores</span>
-                  </div>
-                  <div className="active content errors" style={{marginLeft: '10px', marginTop: '-10px'}}>
-                    {errors.map(this._mapMessageErros)}
-                  </div>
-                </div>
-              </Col>
-              :
-              <div></div>
-            }
-          </Row>
+            </Row>
+          </div>
           <Row style={{padding: "10px 10px 10px 20px"}}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Razón social</span></dt>
@@ -1655,13 +1659,13 @@ class clientEdit extends Component{
            text={messageAlertSuccess}
            onConfirm={() => this._closeSuccess()}
          />
-         <SweetAlert
-          type= "warning"
-          show={this.state.showErrorUpdate}
-          title="Error actualizando cliente"
-          text="Señor usuario, la información se guardó exitosamente, pero no se actualizó el cliente, en la parte superior del formulario se encuentra una descripción de porqué no se pudo realizar la operación."
-          onConfirm={() => this._closeError()}
-          />
+          <SweetAlert
+           type= "success"
+           show={this.state.showExitoSaveNotUpdate}
+           title="Edición de cliente"
+           text={messageAlertSuccess}
+           onConfirm={() => this._closeSuccessSaveUpdate()}
+         />
          <SweetAlert
           type= "error"
           show={this.state.showEr}

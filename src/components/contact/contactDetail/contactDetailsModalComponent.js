@@ -916,5 +916,6 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
 export default reduxForm({
   form: 'submitValidation',
   fields,
+  destroyOnUnmount: false,
   validate
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

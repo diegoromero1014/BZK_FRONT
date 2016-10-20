@@ -6,8 +6,8 @@ import DataComercial from './dataComercial';
 import DeclarationOfOrigin from './DeclarationOfOrigin';
 import InternationalOperations from './internationalOperations';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {seletedButton, validateContactShareholder} from './actions';
-import {BUTTON_UPDATE, BUTTON_EDIT} from './constants';
+import {seletedButton, validateContactShareholder, updateClient, sendErrorsUpdate} from './actions';
+import {BUTTON_UPDATE, BUTTON_EDIT, CONSULT} from './constants';
 import Notas from './notas';
 import {bindActionCreators} from 'redux';
 import Products from './product';
@@ -58,13 +58,25 @@ class DetailsInfoClient extends Component{
   }
 
   _clickButtonClientUpdate(){
-    const {seletedButton, validateContactShareholder} = this.props;
+    const {seletedButton, validateContactShareholder, updateClient, sendErrorsUpdate} = this.props;
     seletedButton(BUTTON_UPDATE);
     validateContactShareholder().then( (data) => {
       if(!_.get(data, 'payload.data.validateLogin')){
         redirectUrl("/login");
       } else {
-        redirectUrl("/dashboard/clientEdit");
+        updateClient(CONSULT).then( (data) => {
+          if(!_.get(data, 'payload.data.validateLogin')){
+            redirectUrl("/login");
+          } else {
+              if( _.get(data, 'payload.data.data.detailsResponse') === null ){
+                sendErrorsUpdate([]);
+              } else {
+                const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
+                sendErrorsUpdate(messageErrors);
+              }
+              redirectUrl("/dashboard/clientEdit");
+          }
+        });
       }
     });
   }
@@ -209,7 +221,9 @@ DetailsInfoClient.PropTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     seletedButton,
-    validateContactShareholder
+    validateContactShareholder,
+    updateClient,
+    sendErrorsUpdate
   }, dispatch);
 }
 

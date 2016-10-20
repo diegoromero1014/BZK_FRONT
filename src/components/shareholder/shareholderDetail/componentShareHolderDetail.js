@@ -568,5 +568,6 @@ function mapStateToProps({editShareholderReducer, selectsReducer, createSharehol
 export default reduxForm({
   form: 'submitValidation',
   fields,
+  destroyOnUnmount: false,
   validate
 }, mapStateToProps, mapDispatchToProps)(ComponentShareHolderDetail);

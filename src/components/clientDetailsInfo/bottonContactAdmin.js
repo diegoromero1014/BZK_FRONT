@@ -44,7 +44,7 @@ class BottonContactAdmin extends Component {
           <div className="modalBt4-dialog modalBt4-lg" style={{width: '80%'}}>
               <div className="modalBt4-content modal-content">
                   <div className="modalBt4-header modal-header">
-                    <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Admin Contactos</h4>
+                    <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Administración contactos</h4>
                     <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                       <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                       <span className="sr-only">Close</span>
