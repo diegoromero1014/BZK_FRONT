@@ -244,7 +244,6 @@ class ModalProduct extends Component {
   componentWillMount() {
     const {getMasterDataFields, productDetail} = this.props;
     getMasterDataFields([CLIENT_TYPE_PRODUCT, FILTER_COUNTRY]);
-    console.log("productDetail", productDetail);
 
     if(productDetail !== null){
       this.setState({

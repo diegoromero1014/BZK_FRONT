@@ -41,9 +41,7 @@ class DownloadPrevisits extends Component {
 		let year;
 		let url;
 		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSeletedModal, yearModal, getCsv } = this.props;
-		console.log(1);
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		console.log(2);
 		if (itemSeletedModal === TAB_PREVISIT) {
 			year = yearModal !== '' ? yearModal : moment().year();
 			url = '/getCsvPreVisits';

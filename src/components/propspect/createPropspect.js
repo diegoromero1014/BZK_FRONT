@@ -56,7 +56,6 @@ class CreatePropspect extends Component{
     }
     const {consultDataSelect, consultList} = this.props;
     consultDataSelect(constants.CLIENT_ID_TYPE).then((data) => {
-      console.log("data", data);
       if( _.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED  ){
         redirectUrl("/login");
       }
