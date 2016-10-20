@@ -183,7 +183,7 @@ const validate = values => {
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
-  if(props.visible.toString() === "false"){
+  if(props.visible !== undefined && props.visible !== null && props.visible.toString() === "false"){
     return <Col xs={12} md={4} lg={4}>
       <dt>
         {props.title}
@@ -800,7 +800,7 @@ class clientEdit extends Component{
                   </div>
                   :
                   <div>
-                    <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente esta completa, recuerde revisarla. </span>
+                    <span style={{marginLeft: "20px", marginTop: "10px", color: "green", fontSize: "12pt"}} >La información del cliente está completa, recuerde revisarla. </span>
                   </div>
                 }
                 { idButton === BUTTON_UPDATE ?
