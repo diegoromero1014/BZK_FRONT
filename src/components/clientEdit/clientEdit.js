@@ -52,7 +52,7 @@ const valuesYesNo = [
   {'id': false, 'value': "No"}
 ];
 
-const fields = ["description", "idCIIU", "idSubCIIU", "address", "country", "city", "province", "neighborhood",
+const fields = ["description", "idCIIU", "idSubCIIU", "addressClient", "country", "city", "province", "neighborhood",
     "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
@@ -83,10 +83,10 @@ const validate = values => {
     } else {
       errors.idSubCIIU = null;
     }
-    if (!values.address) {
-      errors.address = VALUE_REQUIERED;
+    if (!values.addressClient) {
+      errors.addressClient = VALUE_REQUIERED;
     } else {
-      errors.address = null;
+      errors.addressClient = null;
     }
     if (!values.telephone) {
       errors.telephone = VALUE_REQUIERED;
@@ -538,7 +538,7 @@ class clientEdit extends Component{
 
   _saveClient(typeSave){
     const {
-      fields: {description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, address, country, city, province, neighborhood,
+      fields: {description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient, country, city, province, neighborhood,
         district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
         liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, originResource,
         centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
@@ -588,16 +588,16 @@ class clientEdit extends Component{
           "marketLeader":infoClient.marketLeader,
           "territory":infoClient.territory,
           "actualizationDate": infoClient.actualizationDate,
-          "justificationForNoRM": marcGeren.value.toString() === 'false' ? justifyNoGeren.value : '',
+          "justificationForNoRM": marcGeren.value !== null && marcGeren.value.toString() === 'false' ? justifyNoGeren.value : '',
           "justificationForLostClient": justifyExClient.value,
-          "justificationForCreditNeed": necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
+          "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
           "isVirtualStatement": extractsVirtual.value,
           "lineOfBusiness": infoClient.lineOfBusiness,
           "isManagedByRm": marcGeren.value,
           "addresses":[
             {
               "typeOfAddress": 41,
-              "address":address.value,
+              "address":addressClient.value,
               "country":country.value,
               "province":province.value,
               "city":city.value,
@@ -775,7 +775,7 @@ class clientEdit extends Component{
 
   render(){
     const {
-    fields: {description, idCIIU, idSubCIIU, address, country, city, province, neighborhood,
+    fields: {description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
       centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
@@ -992,14 +992,14 @@ class clientEdit extends Component{
               </dt>
               <dt>
                 <Textarea
-                  name="address"
+                  name="addressClient"
                   validateEnter={true}
                   type="text"
                   style={{width: '100%', height: '100%'}}
                   max="250"
-                  onChange={val => this._onchangeValue("address", val)}
+                  onChange={val => this._onchangeValue("addressClient", val)}
                   placeholder="Ingrese la dirección"
-                  {...address}
+                  {...addressClient}
                   touched={true}
                 />
               </dt>
@@ -1325,6 +1325,7 @@ class clientEdit extends Component{
                   data={valuesYesNo}
                   {...marcGeren}
                   onChange={val => this._onChangeMarcGeren(val)}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1341,6 +1342,7 @@ class clientEdit extends Component{
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
               onChange={val => this._onChangeJustifyNoGeren(val)}
+              touched={true}
             />
             <Col xs={12} md={4} lg={4}>
               <dt>
@@ -1355,6 +1357,7 @@ class clientEdit extends Component{
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   {...centroDecision}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1374,6 +1377,7 @@ class clientEdit extends Component{
                   textProp={'value'}
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
+                  touched={true}
                 />
               </dt>
             </Col>
@@ -1389,6 +1393,7 @@ class clientEdit extends Component{
               obligatory={true}
               data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
               onChange={justifyNoLME.onChange}
+              touched={true}
             />
             <SelectsJustificacion
               visible={'false'}
@@ -1402,6 +1407,7 @@ class clientEdit extends Component{
               obligatory={false}
               data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
               onChange={justifyExClient.onChange}
+              touched={true}
             />
           </Row>
           <Row style={{padding: "0px 10px 10px 20px"}}>
@@ -1719,7 +1725,7 @@ function mapStateToProps({clientInformacion, selectsReducer, clientProductReduce
       description: infoClient.description,
       idCIIU: infoClient.ciiu,
       idSubCIIU: infoClient.subCiiu,
-      address: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
+      addressClient: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
       country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
       province: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].province : '',
       neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
