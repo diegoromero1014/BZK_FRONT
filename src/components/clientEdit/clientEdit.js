@@ -1449,7 +1449,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtOtherOriginGoods"
                   type="text"
-                  max="250"
+                  max="200"
                   placeholder="Ingrese el detalle"
                   {...otherOriginGoods}
                   disabled={this.state.otherOriginGoodsEnable}
@@ -1488,7 +1488,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtOtherOriginResource"
                   type="text"
-                  max="250"
+                  max="200"
                   placeholder="Ingrese el detalle"
                   {...otherOriginResource}
                   disabled={this.state.otherOriginResourceEnable}
@@ -1588,7 +1588,7 @@ class clientEdit extends Component{
                 <Input
                   name="txtOtherOperationsForeign"
                   type="text"
-                  max="250"
+                  max="200"
                   placeholder="Ingrese cuál"
                   {...otherOperationsForeign}
                   disabled={this.state.otherOperationsForeignEnable}
