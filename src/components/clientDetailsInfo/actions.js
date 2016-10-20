@@ -55,12 +55,12 @@ export function validateContactShareholder(){
   }
 }
 
-export function updateClient(){
+export function updateClient(typeConsult){
   const json = {
     "messageHeader":{
       "sessionToken": window.localStorage.getItem('sessionToken'),
       "timestamp": new Date().getTime(),
-      "service": "",
+      "service": typeConsult,
       "status": "0",
       "language": "es",
       "displayErrorMessage": "",

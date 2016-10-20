@@ -196,7 +196,7 @@ class ModalComponentContact extends Component {
     _closeCreate() {
         const {clearSearchContact, isOpen, clearContactCreate, clearContactOrder} = this.props;
         clearSearchContact();
-        this.props.resetForm();
+        //this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
         this.setState({showEx: false});
         isOpen();
@@ -852,6 +852,7 @@ function mapDispatchToProps(dispatch) {
 export default reduxForm({
     form: 'submitValidation',
     fields,
+    destroyOnUnmount: false,
     validate,
     onSubmitFail: errors => {
         console.log('');

@@ -552,5 +552,6 @@ function mapStateToProps({selectsReducer, createShareholder, reducerGlobal}, own
 export default reduxForm({
   form : 'submitValidation',
   fields,
+  destroyOnUnmount: false,
   validate
 }, mapStateToProps, mapDispatchToProps)(ModalComponentShareholder);
