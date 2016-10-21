@@ -222,7 +222,10 @@ class clientEdit extends Component{
       messageError: '',
       otherOperationsForeignEnable: 'disabled',
       otherOriginGoodsEnable: 'disabled',
-      otherOriginResourceEnable: 'disabled'
+      otherOriginResourceEnable: 'disabled',
+      countOperationsForeign: 0,
+      countOriginGoods: 0,
+      countOriginResource: 0
     };
     this._saveClient = this._saveClient.bind(this);
     this._submitEditClient = this._submitEditClient.bind(this);
@@ -445,10 +448,21 @@ class clientEdit extends Component{
   }
 
   _onChangeOperationsForeigns(val){
-    const {fields:{otherOperationsForeign}, selectsReducer} = this.props;
+    const {fields:{otherOperationsForeign}, selectsReducer, clientInformacion} = this.props;
     var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
     var idOptionOther = _.get(_.filter(dataOperationsForeigns, ['key', KEY_OPTION_OTHER_OPERATIONS_FOREIGNS]), '[0].id');
-    var operationsForeignsSelected = _.split(val, ',');
+    var infoClient = clientInformacion.get('responseClientInfo');
+    var originForeignsClient = _.split(infoClient.operationsForeigns, ',');
+    var operationsForeignsSelected = [];
+    if(this.state.countOperationsForeign < originForeignsClient.length){
+      operationsForeignsSelected = originForeignsClient;
+      this.setState({
+        countOperationsForeign: this.state.countOperationsForeign ++
+      });
+    }else{
+      operationsForeignsSelected = _.split(val, ',');
+    }
+
     if(idOptionOther === undefined || _.indexOf(operationsForeignsSelected, idOptionOther.toString()) === -1){
       otherOperationsForeign.onChange('');
       this.setState({
@@ -462,10 +476,21 @@ class clientEdit extends Component{
   }
 
   _onChangeOriginGoods(val){
-    const {fields:{otherOriginGoods}, selectsReducer} = this.props;
+    const {fields:{otherOriginGoods}, selectsReducer, clientInformacion} = this.props;
     var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
     var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
     var originGoodsSelected = _.split(val, ',');
+    var infoClient = clientInformacion.get('responseClientInfo');
+    var originGoodsSelected = [];
+    var originGoodsClient = _.split(infoClient.originGoods, ',');
+    if(this.state.countOriginGoods < originGoodsClient.length){
+      originGoodsSelected = originGoodsClient;
+      this.setState({
+        countOriginGoods: this.state.countOriginGoods ++
+      });
+    }else{
+      originGoodsSelected = _.split(val, ',');
+    }
     if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
       otherOriginGoods.onChange('');
       this.setState({
@@ -479,10 +504,21 @@ class clientEdit extends Component{
   }
 
   _onChangeOriginResource(val){
-    const {fields:{otherOriginResource}, selectsReducer} = this.props;
+    const {fields:{otherOriginResource}, selectsReducer, clientInformacion} = this.props;
     var dataOriginResource = selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE);
     var idOptionOther = _.get(_.filter(dataOriginResource, ['key', KEY_OPTION_OTHER_ORIGIN_RESOURCE]), '[0].id');
-    var originResourceSelected = _.split(val, ',');
+    var infoClient = clientInformacion.get('responseClientInfo');
+    var originResourceSelected = [];
+    var originResourcesClient = _.split(infoClient.originResources, ',');
+    if(this.state.countOriginResource < originResourcesClient.length){
+      originResourceSelected = originResourcesClient;
+      this.setState({
+        countOriginResource: this.state.countOriginResource ++
+      });
+    }else{
+      originResourceSelected = _.split(val, ',');
+    }
+
     if(idOptionOther === undefined || _.indexOf(originResourceSelected, idOptionOther.toString()) === -1){
       otherOriginResource.onChange('');
       this.setState({
@@ -749,13 +785,12 @@ class clientEdit extends Component{
             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
           }
-          this._onChangeOperationsForeigns(infoClient.operationsForeigns);
-          this._onChangeOriginGoods(infoClient.originGoods);
-          this._onChangeOriginResource(infoClient.originResources);
-
-          originGoods.onChange(JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]'));
-          originResource.onChange(JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]'));
-          operationsForeigns.onChange(JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
+          var dataOriginGoods = JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]');
+          var dataOriginResource = JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]');
+          var dataOperationsForeign = JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]');
+          originGoods.onChange(dataOriginGoods);
+          originResource.onChange(dataOriginResource);
+          operationsForeigns.onChange(dataOperationsForeign);
           }, (reason) => {
           this.setState({showEx: true});
         });
