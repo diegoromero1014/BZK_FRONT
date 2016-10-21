@@ -749,6 +749,10 @@ class clientEdit extends Component{
             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
           }
+          this._onChangeOperationsForeigns(infoClient.operationsForeigns);
+          this._onChangeOriginGoods(infoClient.originGoods);
+          this._onChangeOriginResource(infoClient.originResources);
+
           originGoods.onChange(JSON.parse('["'+_.join(infoClient.originGoods, '","')+'"]'));
           originResource.onChange(JSON.parse('["'+_.join(infoClient.originResources, '","')+'"]'));
           operationsForeigns.onChange(JSON.parse('["'+_.join(infoClient.operationsForeigns, '","')+'"]'));
