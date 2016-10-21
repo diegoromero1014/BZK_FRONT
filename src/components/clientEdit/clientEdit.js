@@ -75,112 +75,138 @@ var infoMarcaGeren = true;
 
 const validate = values => {
     const errors = {}
-
+    var errorScrollTop = false;
     if (!values.idCIIU) {
       errors.idCIIU = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.idCIIU = null;
     }
     if (!values.idSubCIIU) {
       errors.idSubCIIU = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.idSubCIIU = null;
     }
     if (!values.addressClient) {
       errors.addressClient = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.addressClient = null;
     }
     if (!values.telephone) {
       errors.telephone = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.telephone = null;
     }
     if (!values.annualSales) {
       errors.annualSales = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.annualSales = null;
     }
     if (!values.country) {
       errors.country = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.country = null;
     }
     if (!values.province) {
       errors.province = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.province = null;
     }
     if (!values.city) {
       errors.city = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.city = null;
     }
     if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
       errors.dateSalesAnnuals = DATE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.dateSalesAnnuals = null;
     }
     if (!values.liabilities) {
       errors.liabilities = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.liabilities = null;
     }
     if (!values.assets) {
       errors.assets = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.assets = null;
     }
     if (!values.operatingIncome) {
       errors.operatingIncome = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.operatingIncome = null;
     }
     if (!values.nonOperatingIncome) {
       errors.nonOperatingIncome = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.nonOperatingIncome = null;
     }
     if (!values.expenses) {
       errors.expenses = VALUE_REQUIERED;
+      errorScrollTop = true;
     } else {
       errors.expenses = null;
     }
     if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect) {
       errors.marcGeren = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.marcGeren = null;
     }
     if (values.marcGeren === 'false' && !values.justifyNoGeren) {
       errors.justifyNoGeren = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.justifyNoGeren = null;
     }
     if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect) {
       errors.centroDecision = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.centroDecision = null;
     }
     if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect) {
       errors.necesitaLME = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.necesitaLME = null;
     }
     if (values.necesitaLME === 'false' && !values.justifyNoLME) {
       errors.justifyNoLME = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.justifyNoLME = null;
     }
     if (values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') {
       errors.reportVirtual = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.reportVirtual = null;
     }
     if (values.extractsVirtual === null || values.extractsVirtual === undefined || values.extractsVirtual === '') {
       errors.extractsVirtual = OPTION_REQUIRED;
+      errorScrollTop = true;
     } else {
       errors.extractsVirtual = null;
     }
+
+    if( errorScrollTop ){
+      document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
+
     return errors;
 };
 
@@ -677,6 +703,9 @@ class clientEdit extends Component{
                        sendErrorsUpdate([]);
                      } else {
                        const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
+                       if( messageErrors !== null && messageErrors.length > 0 ){
+                         document.getElementById('dashboardComponentScroll').scrollTop = 0;
+                       }
                        sendErrorsUpdate(messageErrors);
                      }
                      messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
