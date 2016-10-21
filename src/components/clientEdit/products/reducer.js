@@ -48,8 +48,7 @@ export default (state = initialState, action) => {
             averageMontlyAmount: product.averageMontlyAmount,
             coin: product.coin,
             country: product.country,
-            city: product.city,
-            uid: product.uid
+            city: product.city
           })
         });
       });
