@@ -44,6 +44,9 @@ let errorContact;
 let errorShareholder;
 let messageAlertSuccess;
 var notesArray = [];
+var countOperationsForeign = 0;
+var countOriginGoods = 0;
+var countOriginResource = 0;
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -222,10 +225,7 @@ class clientEdit extends Component{
       messageError: '',
       otherOperationsForeignEnable: 'disabled',
       otherOriginGoodsEnable: 'disabled',
-      otherOriginResourceEnable: 'disabled',
-      countOperationsForeign: 0,
-      countOriginGoods: 0,
-      countOriginResource: 0
+      otherOriginResourceEnable: 'disabled'
     };
     this._saveClient = this._saveClient.bind(this);
     this._submitEditClient = this._submitEditClient.bind(this);
@@ -454,11 +454,9 @@ class clientEdit extends Component{
     var infoClient = clientInformacion.get('responseClientInfo');
     var originForeignsClient = _.split(infoClient.operationsForeigns, ',');
     var operationsForeignsSelected = [];
-    if(this.state.countOperationsForeign < originForeignsClient.length){
+    if(countOperationsForeign < originForeignsClient.length){
       operationsForeignsSelected = originForeignsClient;
-      this.setState({
-        countOperationsForeign: this.state.countOperationsForeign ++
-      });
+      countOperationsForeign = countOperationsForeign + 1;
     }else{
       operationsForeignsSelected = _.split(val, ',');
     }
@@ -483,11 +481,9 @@ class clientEdit extends Component{
     var infoClient = clientInformacion.get('responseClientInfo');
     var originGoodsSelected = [];
     var originGoodsClient = _.split(infoClient.originGoods, ',');
-    if(this.state.countOriginGoods < originGoodsClient.length){
+    if(countOriginGoods < originGoodsClient.length){
       originGoodsSelected = originGoodsClient;
-      this.setState({
-        countOriginGoods: this.state.countOriginGoods ++
-      });
+      countOriginGoods = countOriginGoods + 1;
     }else{
       originGoodsSelected = _.split(val, ',');
     }
@@ -510,11 +506,9 @@ class clientEdit extends Component{
     var infoClient = clientInformacion.get('responseClientInfo');
     var originResourceSelected = [];
     var originResourcesClient = _.split(infoClient.originResources, ',');
-    if(this.state.countOriginResource < originResourcesClient.length){
+    if(countOriginResource < originResourcesClient.length){
       originResourceSelected = originResourcesClient;
-      this.setState({
-        countOriginResource: this.state.countOriginResource ++
-      });
+      countOriginResource = countOriginResource + 1;
     }else{
       originResourceSelected = _.split(val, ',');
     }
