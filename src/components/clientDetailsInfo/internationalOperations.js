@@ -22,7 +22,7 @@ class InternationalOperations extends Component{
         <Row>
           <Col xs={12} md={12} lg={12} style={{paddingRight: "20px"}}>
             <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <i className="industry icon" style={{fontSize: "25px"}}></i>
+              <i className="world icon" style={{fontSize: "25px"}}></i>
               <span className="title-middle"> Información operaciones internacionales</span>
             </dl>
           </Col>
