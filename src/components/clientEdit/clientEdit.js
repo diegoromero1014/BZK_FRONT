@@ -1545,7 +1545,7 @@ class clientEdit extends Component{
             <Col xs={12} md={12} lg={12}>
               <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
                 <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"99%", marginBottom:"10px"}}/>
-                <i className="industry icon" style={{fontSize: "25px"}}/>
+                <i className="world icon" style={{fontSize: "25px"}}/>
                 <span className="title-middle"> Información operaciones internacionales</span>
               </div>
             </Col>
