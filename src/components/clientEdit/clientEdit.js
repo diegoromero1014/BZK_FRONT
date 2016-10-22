@@ -72,6 +72,8 @@ var oldJustifyGeren = '';
 var infoJustificationForNoRM = true;
 //Controla si es la primer vez que se setea información en el campo marcGeren
 var infoMarcaGeren = true;
+//Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
+var clickButttonSave= false;
 
 const validate = values => {
     const errors = {}
@@ -203,7 +205,8 @@ const validate = values => {
       errors.extractsVirtual = null;
     }
 
-    if( errorScrollTop ){
+    if( errorScrollTop && clickButttonSave ){
+      clickButttonSave = false;
       document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
 
@@ -271,7 +274,7 @@ class clientEdit extends Component{
     this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
-    this._onConfirmSaveAllClient = this._onConfirmSaveAllClient.bind(this);
+    this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
   }
 
   _closeWindow(){
@@ -583,6 +586,10 @@ class clientEdit extends Component{
       showConfirmSave: false
     });
     this._saveClient(BUTTON_EDIT);
+  }
+
+  clickButtonScrollTop(){
+    clickButttonSave = true;
   }
 
   _onConfirmSaveAllClient(){
@@ -1684,11 +1691,11 @@ class clientEdit extends Component{
           <div className="" style={{marginTop: "50px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
               {idButton === BUTTON_UPDATE ?
-                <button className="btn" style={{float:"right", margin:"8px 0px 0px 50px", position:"fixed"}} type="submit">
+                <button className="btn" style={{float:"right", margin:"8px 0px 0px 50px", position:"fixed"}} onClick={this.clickButtonScrollTop}  type="submit">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar/Sarlaft</span>
                 </button>
                 :
-                <button className="btn" style={{float:"right", margin:"8px 0px 0px 120px", position:"fixed"}} type="submit">
+                <button className="btn" style={{float:"right", margin:"8px 0px 0px 120px", position:"fixed"}} onClick={this.clickButtonScrollTop} type="submit">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
                 </button>
               }
