@@ -77,6 +77,10 @@ var infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
 var clickButttonSave= false;
 
+var otherOperationsForeignEnable = 'disabled';
+var otherOriginGoodsEnable = 'disabled';
+var otherOriginResourceEnable = 'disabled';
+
 const validate = values => {
     const errors = {}
     var errorScrollTop = false;
@@ -207,6 +211,31 @@ const validate = values => {
       errors.extractsVirtual = null;
     }
 
+    if( otherOriginGoodsEnable !== 'disabled' ){
+      if (values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') {
+        errors.otherOriginGoods = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOriginGoods = null;
+      }
+    }
+    if( otherOriginResourceEnable !== 'disabled' ){
+      if (values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') {
+        errors.otherOriginResource = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOriginResource = null;
+      }
+    }
+    if( otherOperationsForeignEnable !== 'disabled' ){
+      if (values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') {
+        errors.otherOperationsForeign = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOperationsForeign = null;
+      }
+    }
+
     if( errorScrollTop && clickButttonSave ){
       clickButttonSave = false;
       document.getElementById('dashboardComponentScroll').scrollTop = 0;
@@ -288,6 +317,19 @@ class clientEdit extends Component{
     const {sendErrorsUpdate} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false });
+    countOperationsForeign = 0;
+    countOriginGoods = 0;
+    countOriginResource = 0;
+    isProspect = false;
+    errorNote = false;
+    oldJustifyGeren = '';
+    infoJustificationForNoRM = true;
+    clickButttonSave= false;
+    otherOperationsForeignEnable = 'disabled';
+    otherOriginGoodsEnable = 'disabled';
+    otherOriginResourceEnable = 'disabled';
+    initValueJustifyNonGeren = false;
+    initValueJustifyNonLME = false;
     redirectUrl("/dashboard/clientInformation");
   }
 
@@ -299,6 +341,19 @@ class clientEdit extends Component{
     const {sendErrorsUpdate} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false, showEx:false, showEr: false});
+    countOperationsForeign = 0;
+    countOriginGoods = 0;
+    countOriginResource = 0;
+    isProspect = false;
+    errorNote = false;
+    oldJustifyGeren = '';
+    infoJustificationForNoRM = true;
+    clickButttonSave= false;
+    otherOperationsForeignEnable = 'disabled';
+    otherOriginGoodsEnable = 'disabled';
+    otherOriginResourceEnable = 'disabled';
+    initValueJustifyNonGeren = false;
+    initValueJustifyNonLME = false;
     redirectUrl("/dashboard/clientInformation");
   }
 
@@ -397,6 +452,7 @@ class clientEdit extends Component{
 
   _onChangeValueNeedLME(val){
     const {fields: {necesitaLME, justifyNoLME}} = this.props;
+    console.log("Entrooooo");
     if( val === 'true' || val && initValueJustifyNonLME){
       justifyNoLME.onChange('');
     } else {
@@ -512,10 +568,12 @@ class clientEdit extends Component{
 
     if(idOptionOther === undefined || _.indexOf(operationsForeignsSelected, idOptionOther.toString()) === -1){
       otherOperationsForeign.onChange('');
+      otherOperationsForeignEnable = 'disabled';
       this.setState({
         otherOperationsForeignEnable: 'disabled'
       });
     }else{
+      otherOperationsForeignEnable = '';
       this.setState({
         otherOperationsForeignEnable: ''
       });
@@ -523,7 +581,7 @@ class clientEdit extends Component{
   }
 
   _onChangeOriginGoods(val){
-    const {fields:{otherOriginGoods}, selectsReducer, clientInformacion} = this.props;
+    const {fields:{otherOriginGoods, originGoods}, selectsReducer, clientInformacion} = this.props;
     var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
     var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
     var originGoodsSelected = _.split(val, ',');
@@ -538,10 +596,12 @@ class clientEdit extends Component{
     }
     if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
       otherOriginGoods.onChange('');
+      otherOriginGoodsEnable = 'disabled';
       this.setState({
         otherOriginGoodsEnable: 'disabled'
       });
     }else{
+      otherOriginGoodsEnable = '';
       this.setState({
         otherOriginGoodsEnable: ''
       });
@@ -564,10 +624,12 @@ class clientEdit extends Component{
 
     if(idOptionOther === undefined || _.indexOf(originResourceSelected, idOptionOther.toString()) === -1){
       otherOriginResource.onChange('');
+      otherOriginResourceEnable = 'disabled';
       this.setState({
         otherOriginResourceEnable: 'disabled'
       });
     }else{
+      otherOriginResourceEnable = '';
       this.setState({
         otherOriginResourceEnable: ''
       });
