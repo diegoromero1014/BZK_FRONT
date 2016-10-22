@@ -478,7 +478,7 @@ class clientEdit extends Component{
     var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
     var idOptionOther = _.get(_.filter(dataOperationsForeigns, ['key', KEY_OPTION_OTHER_OPERATIONS_FOREIGNS]), '[0].id');
     var infoClient = clientInformacion.get('responseClientInfo');
-    var originForeignsClient = _.split(infoClient.operationsForeigns, ',');
+    var originForeignsClient = _.isEmpty(infoClient.operationsForeigns) ? [] : _.split(infoClient.operationsForeigns, ',');
     var operationsForeignsSelected = [];
     if(countOperationsForeign < originForeignsClient.length){
       operationsForeignsSelected = originForeignsClient;
@@ -503,10 +503,9 @@ class clientEdit extends Component{
     const {fields:{otherOriginGoods}, selectsReducer, clientInformacion} = this.props;
     var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
     var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
-    var originGoodsSelected = _.split(val, ',');
     var infoClient = clientInformacion.get('responseClientInfo');
     var originGoodsSelected = [];
-    var originGoodsClient = _.split(infoClient.originGoods, ',');
+    var originGoodsClient = _.isEmpty(infoClient.originGoods) ? [] : _.split(infoClient.originGoods, ',');
     if(countOriginGoods < originGoodsClient.length){
       originGoodsSelected = originGoodsClient;
       countOriginGoods = countOriginGoods + 1;
@@ -531,7 +530,7 @@ class clientEdit extends Component{
     var idOptionOther = _.get(_.filter(dataOriginResource, ['key', KEY_OPTION_OTHER_ORIGIN_RESOURCE]), '[0].id');
     var infoClient = clientInformacion.get('responseClientInfo');
     var originResourceSelected = [];
-    var originResourcesClient = _.split(infoClient.originResources, ',');
+    var originResourcesClient = _.isEmpty(infoClient.originResources) ? [] : _.split(infoClient.originResources, ',');
     if(countOriginResource < originResourcesClient.length){
       originResourceSelected = originResourcesClient;
       countOriginResource = countOriginResource + 1;
