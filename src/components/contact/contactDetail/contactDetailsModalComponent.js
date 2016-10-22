@@ -306,6 +306,7 @@ class ContactDetailsModalComponent extends Component {
     const {isOpen, clearClienEdit,clearContactOrder,clearContactCreate} = this.props;
     this.setState({contactEdited: false, isEditable: false});
     isOpen();
+    this.props.resetForm();
     clearClienEdit();
     clearContactCreate();
     clearContactOrder();
