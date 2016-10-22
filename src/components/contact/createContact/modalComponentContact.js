@@ -141,7 +141,6 @@ class ModalComponentContact extends Component {
         const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact, nonValidateEnter} = this.props;
         nonValidateEnter(true);
         clearSearchContact();
-        this.props.resetForm();
         tipoDocumento.onChange('');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
@@ -196,7 +195,6 @@ class ModalComponentContact extends Component {
     _closeCreate() {
         const {clearSearchContact, isOpen, clearContactCreate, clearContactOrder} = this.props;
         clearSearchContact();
-        //this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
         this.setState({showEx: false});
         isOpen();
@@ -207,7 +205,6 @@ class ModalComponentContact extends Component {
     _onClickLimpiar() {
         const {clearSearchContact} = this.props;
         clearSearchContact();
-        this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
     }
 
@@ -225,7 +222,6 @@ class ModalComponentContact extends Component {
           searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
               if ((_.get(data, 'payload.data.isClientContact'))) {
                   clearSearchContact();
-                  this.props.resetForm();
                   this.setState({showErrorYa: true});
               } else {
                   this.setState({disabled: 'disabled'});
@@ -850,7 +846,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'submitValidationContactCreate',
     fields,
     destroyOnUnmount: false,
     validate,

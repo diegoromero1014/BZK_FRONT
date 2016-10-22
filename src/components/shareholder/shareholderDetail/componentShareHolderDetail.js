@@ -566,7 +566,7 @@ function mapStateToProps({editShareholderReducer, selectsReducer, createSharehol
 }
 
 export default reduxForm({
-  form: 'submitValidation',
+  form: 'submitValidationShareholderDetails',
   fields,
   destroyOnUnmount: false,
   validate

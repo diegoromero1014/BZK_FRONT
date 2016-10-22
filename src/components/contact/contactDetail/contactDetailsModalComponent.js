@@ -306,7 +306,6 @@ class ContactDetailsModalComponent extends Component {
     const {isOpen, clearClienEdit,clearContactOrder,clearContactCreate} = this.props;
     this.setState({contactEdited: false, isEditable: false});
     isOpen();
-    this.props.resetForm();
     clearClienEdit();
     clearContactCreate();
     clearContactOrder();
@@ -914,7 +913,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
 }
 
 export default reduxForm({
-  form: 'submitValidation',
+  form: 'submitValidationContactDetails',
   fields,
   destroyOnUnmount: false,
   validate
