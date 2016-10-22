@@ -452,7 +452,6 @@ class clientEdit extends Component{
 
   _onChangeValueNeedLME(val){
     const {fields: {necesitaLME, justifyNoLME}} = this.props;
-    console.log("Entrooooo");
     if( val === 'true' || val && initValueJustifyNonLME){
       justifyNoLME.onChange('');
     } else {
