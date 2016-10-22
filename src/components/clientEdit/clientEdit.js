@@ -47,6 +47,8 @@ var notesArray = [];
 var countOperationsForeign = 0;
 var countOriginGoods = 0;
 var countOriginResource = 0;
+var initValueJustifyNonGeren = false;
+var initValueJustifyNonLME = false;
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -272,6 +274,7 @@ class clientEdit extends Component{
     this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
     this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
     this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
+    this._onChangeValueNeedLME = this._onChangeValueNeedLME.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
     this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
@@ -370,6 +373,7 @@ class clientEdit extends Component{
 
   _onChangeMarcGeren(val){
     if(!infoMarcaGeren && val === 'true'){
+      console.log('entro');
       var dataTypeNote, idExcepcionNoGerenciado;
       const {selectsReducer, deleteNote, notes} = this.props;
       dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -383,6 +387,22 @@ class clientEdit extends Component{
     }else {
       infoMarcaGeren = false;
     }
+    if(val === 'true' || val === true && initValueJustifyNonGeren){
+      const {fields:{justifyNoGeren}} = this.props;
+      justifyNoGeren.onChange('');
+    } else {
+      initValueJustifyNonGeren = true;
+    }
+  }
+
+  _onChangeValueNeedLME(val){
+    const {fields: {necesitaLME, justifyNoLME}} = this.props;
+    if( val === 'true' || val && initValueJustifyNonLME){
+      justifyNoLME.onChange('');
+    } else {
+      initValueJustifyNonLME = true;
+    }
+    necesitaLME.onChange(val);
   }
 
   _onChangeJustifyNoGeren(val){
@@ -1447,6 +1467,7 @@ class clientEdit extends Component{
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   touched={true}
+                  onChange={val => this._onChangeValueNeedLME(val)}
                 />
               </dt>
             </Col>
