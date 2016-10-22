@@ -914,7 +914,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
 }
 
 export default reduxForm({
-  form: 'submitValidation',
+  form: 'submitValidationContactDetails',
   fields,
   destroyOnUnmount: false,
   validate

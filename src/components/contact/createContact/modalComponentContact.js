@@ -850,7 +850,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'submitValidationContactCreate',
     fields,
     destroyOnUnmount: false,
     validate,

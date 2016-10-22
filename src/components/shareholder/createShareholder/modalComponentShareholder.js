@@ -550,7 +550,7 @@ function mapStateToProps({selectsReducer, createShareholder, reducerGlobal}, own
 }
 
 export default reduxForm({
-  form : 'submitValidation',
+  form : 'submitValidationShareholderCreate',
   fields,
   destroyOnUnmount: false,
   validate

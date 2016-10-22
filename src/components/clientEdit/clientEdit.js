@@ -47,6 +47,8 @@ var notesArray = [];
 var countOperationsForeign = 0;
 var countOriginGoods = 0;
 var countOriginResource = 0;
+var initValueJustifyNonGeren = false;
+var initValueJustifyNonLME = false;
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -72,6 +74,12 @@ var oldJustifyGeren = '';
 var infoJustificationForNoRM = true;
 //Controla si es la primer vez que se setea información en el campo marcGeren
 var infoMarcaGeren = true;
+//Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
+var clickButttonSave= false;
+
+var otherOperationsForeignEnable = 'disabled';
+var otherOriginGoodsEnable = 'disabled';
+var otherOriginResourceEnable = 'disabled';
 
 const validate = values => {
     const errors = {}
@@ -203,7 +211,33 @@ const validate = values => {
       errors.extractsVirtual = null;
     }
 
-    if( errorScrollTop ){
+    if( otherOriginGoodsEnable !== 'disabled' ){
+      if (values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') {
+        errors.otherOriginGoods = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOriginGoods = null;
+      }
+    }
+    if( otherOriginResourceEnable !== 'disabled' ){
+      if (values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') {
+        errors.otherOriginResource = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOriginResource = null;
+      }
+    }
+    if( otherOperationsForeignEnable !== 'disabled' ){
+      if (values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') {
+        errors.otherOperationsForeign = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.otherOperationsForeign = null;
+      }
+    }
+
+    if( errorScrollTop && clickButttonSave ){
+      clickButttonSave = false;
       document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
 
@@ -269,9 +303,10 @@ class clientEdit extends Component{
     this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
     this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
     this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
+    this._onChangeValueNeedLME = this._onChangeValueNeedLME.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
-    this._onConfirmSaveAllClient = this._onConfirmSaveAllClient.bind(this);
+    this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
   }
 
   _closeWindow(){
@@ -282,6 +317,19 @@ class clientEdit extends Component{
     const {sendErrorsUpdate} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false });
+    countOperationsForeign = 0;
+    countOriginGoods = 0;
+    countOriginResource = 0;
+    isProspect = false;
+    errorNote = false;
+    oldJustifyGeren = '';
+    infoJustificationForNoRM = true;
+    clickButttonSave= false;
+    otherOperationsForeignEnable = 'disabled';
+    otherOriginGoodsEnable = 'disabled';
+    otherOriginResourceEnable = 'disabled';
+    initValueJustifyNonGeren = false;
+    initValueJustifyNonLME = false;
     redirectUrl("/dashboard/clientInformation");
   }
 
@@ -293,6 +341,19 @@ class clientEdit extends Component{
     const {sendErrorsUpdate} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false, showEx:false, showEr: false});
+    countOperationsForeign = 0;
+    countOriginGoods = 0;
+    countOriginResource = 0;
+    isProspect = false;
+    errorNote = false;
+    oldJustifyGeren = '';
+    infoJustificationForNoRM = true;
+    clickButttonSave= false;
+    otherOperationsForeignEnable = 'disabled';
+    otherOriginGoodsEnable = 'disabled';
+    otherOriginResourceEnable = 'disabled';
+    initValueJustifyNonGeren = false;
+    initValueJustifyNonLME = false;
     redirectUrl("/dashboard/clientInformation");
   }
 
@@ -367,6 +428,7 @@ class clientEdit extends Component{
 
   _onChangeMarcGeren(val){
     if(!infoMarcaGeren && val === 'true'){
+      console.log('entro');
       var dataTypeNote, idExcepcionNoGerenciado;
       const {selectsReducer, deleteNote, notes} = this.props;
       dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -380,6 +442,23 @@ class clientEdit extends Component{
     }else {
       infoMarcaGeren = false;
     }
+    if(val === 'true' || val === true && initValueJustifyNonGeren){
+      const {fields:{justifyNoGeren}} = this.props;
+      justifyNoGeren.onChange('');
+    } else {
+      initValueJustifyNonGeren = true;
+    }
+  }
+
+  _onChangeValueNeedLME(val){
+    const {fields: {necesitaLME, justifyNoLME}} = this.props;
+    console.log("Entrooooo");
+    if( val === 'true' || val && initValueJustifyNonLME){
+      justifyNoLME.onChange('');
+    } else {
+      initValueJustifyNonLME = true;
+    }
+    necesitaLME.onChange(val);
   }
 
   _onChangeJustifyNoGeren(val){
@@ -489,10 +568,12 @@ class clientEdit extends Component{
 
     if(idOptionOther === undefined || _.indexOf(operationsForeignsSelected, idOptionOther.toString()) === -1){
       otherOperationsForeign.onChange('');
+      otherOperationsForeignEnable = 'disabled';
       this.setState({
         otherOperationsForeignEnable: 'disabled'
       });
     }else{
+      otherOperationsForeignEnable = '';
       this.setState({
         otherOperationsForeignEnable: ''
       });
@@ -500,7 +581,7 @@ class clientEdit extends Component{
   }
 
   _onChangeOriginGoods(val){
-    const {fields:{otherOriginGoods}, selectsReducer, clientInformacion} = this.props;
+    const {fields:{otherOriginGoods, originGoods}, selectsReducer, clientInformacion} = this.props;
     var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
     var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
     var infoClient = clientInformacion.get('responseClientInfo');
@@ -514,10 +595,12 @@ class clientEdit extends Component{
     }
     if(idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1){
       otherOriginGoods.onChange('');
+      otherOriginGoodsEnable = 'disabled';
       this.setState({
         otherOriginGoodsEnable: 'disabled'
       });
     }else{
+      otherOriginGoodsEnable = '';
       this.setState({
         otherOriginGoodsEnable: ''
       });
@@ -540,10 +623,12 @@ class clientEdit extends Component{
 
     if(idOptionOther === undefined || _.indexOf(originResourceSelected, idOptionOther.toString()) === -1){
       otherOriginResource.onChange('');
+      otherOriginResourceEnable = 'disabled';
       this.setState({
         otherOriginResourceEnable: 'disabled'
       });
     }else{
+      otherOriginResourceEnable = '';
       this.setState({
         otherOriginResourceEnable: ''
       });
@@ -582,6 +667,10 @@ class clientEdit extends Component{
       showConfirmSave: false
     });
     this._saveClient(BUTTON_EDIT);
+  }
+
+  clickButtonScrollTop(){
+    clickButttonSave = true;
   }
 
   _onConfirmSaveAllClient(){
@@ -1439,6 +1528,7 @@ class clientEdit extends Component{
                   parentId="dashboardComponentScroll"
                   data={valuesYesNo}
                   touched={true}
+                  onChange={val => this._onChangeValueNeedLME(val)}
                 />
               </dt>
             </Col>
@@ -1683,11 +1773,11 @@ class clientEdit extends Component{
           <div className="" style={{marginTop: "50px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
               {idButton === BUTTON_UPDATE ?
-                <button className="btn" style={{float:"right", margin:"8px 0px 0px 50px", position:"fixed"}} type="submit">
+                <button className="btn" style={{float:"right", margin:"8px 0px 0px 50px", position:"fixed"}} onClick={this.clickButtonScrollTop}  type="submit">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Actualizar/Sarlaft</span>
                 </button>
                 :
-                <button className="btn" style={{float:"right", margin:"8px 0px 0px 120px", position:"fixed"}} type="submit">
+                <button className="btn" style={{float:"right", margin:"8px 0px 0px 120px", position:"fixed"}} onClick={this.clickButtonScrollTop} type="submit">
                   <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar</span>
                 </button>
               }
