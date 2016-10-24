@@ -253,7 +253,7 @@ class ModalProduct extends Component {
         typeError: null,
         number: productDetail.number,
         numberError: null,
-        averageMontlyAmount: productDetail.averageMontlyAmount,
+        averageMontlyAmount: productDetail.averageMontlyAmount === 0 ? '0' : fomatInitialStateNumber(productDetail.averageMontlyAmount),
         averageMontlyAmountError: null,
         coin: productDetail.coin,
         coinError: null,
@@ -399,6 +399,14 @@ class ModalProduct extends Component {
       </form>
     );
   }
+}
+
+function fomatInitialStateNumber(val){
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(val + "")){
+      val = val.toString().replace(pattern, "$1,$2");
+    }
+    return val;
 }
 
 function mapStateToProps({selectsReducer, clientProductReducer}, {fields, productDetail}) {
