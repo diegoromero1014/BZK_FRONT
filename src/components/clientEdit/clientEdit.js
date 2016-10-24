@@ -428,7 +428,6 @@ class clientEdit extends Component{
 
   _onChangeMarcGeren(val){
     if(!infoMarcaGeren && val === 'true'){
-      console.log('entro');
       var dataTypeNote, idExcepcionNoGerenciado;
       const {selectsReducer, deleteNote, notes} = this.props;
       dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
