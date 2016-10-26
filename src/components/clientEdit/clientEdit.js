@@ -76,6 +76,8 @@ var infoJustificationForNoRM = true;
 var infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
 var clickButttonSave= false;
+//Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
+var disabledOperationsForeigns = true;
 
 var otherOperationsForeignEnable = 'disabled';
 var otherOriginGoodsEnable = 'disabled';
@@ -233,6 +235,87 @@ const validate = values => {
         errorScrollTop = true;
       } else {
         errors.otherOperationsForeign = null;
+      }
+    }
+
+    //Valido los campos que sopn cenesarios para actualizar un cliente
+    if( idButton === BUTTON_UPDATE ){
+      if( values.taxNature === null || values.taxNature === undefined || values.taxNature === '') {
+        errors.taxNature = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.taxNature = null;
+      }
+
+      //Valido si el cliente tiene ingresos no operaciones
+      if( values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') {
+        errors.nonOperatingIncome = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.nonOperatingIncome = null;
+        //En caso tal de que los ingresos operacionales sean mayor a 0, se debe de validar el de
+        if( numeral(values.nonOperatingIncome).format('0') > 0){
+          if( values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') {
+            errors.detailNonOperatingIncome = OPTION_REQUIRED;
+            errorScrollTop = true;
+          } else {
+            errors.detailNonOperatingIncome = null;
+          }
+        }
+      }
+
+      //Valido que el cliente tenga asociado el origen de los bienes
+      if( values.originGoods === null || values.originGoods === undefined || values.originGoods === '' || values.originGoods[0] === '') {
+        errors.originGoods = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.originGoods = null;
+      }
+
+      //Valido que el cliente tenga asociado el origen de los recursos
+      if( values.originResource === null || values.originResource === undefined || values.originResource === '' || values.originResource[0]  === '') {
+        errors.originResource = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.originResource = null;
+      }
+
+      //Valido que el cliente tenga asociado el país de origen
+      if( values.countryOrigin === null || values.countryOrigin === undefined || values.countryOrigin === '') {
+        errors.countryOrigin = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.countryOrigin = null;
+      }
+
+      //Valido que el cliente tenga ciudad de origen de los recursos
+      if( values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') {
+        errors.originCityResource = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        errors.originCityResource = null;
+      }
+
+      //Valido si el cliente realiza operaciones en moneda extranjera
+      if( values.operationsForeignCurrency === null || values.operationsForeignCurrency === undefined || values.operationsForeignCurrency === '') {
+        errors.operationsForeignCurrency = OPTION_REQUIRED;
+        errorScrollTop = true;
+      } else {
+        //En caso de que si realice operaciones, obligo a que me indique cuales
+        errors.operationsForeignCurrency = null;
+        if( values.operationsForeignCurrency.toString() === 'true'  ){
+          disabledOperationsForeigns = false;
+          if( values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0]  === '') {
+            errors.operationsForeigns = OPTION_REQUIRED;
+            errorScrollTop = true;
+          } else {
+            errors.operationsForeigns = null;
+          }
+        } else {
+          disabledOperationsForeigns = true;
+          values.operationsForeigns = null;
+          errors.operationsForeigns = null;
+        }
       }
     }
 
@@ -766,7 +849,7 @@ class clientEdit extends Component{
           "otherOperationsForeign": otherOperationsForeign.value,
           "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']')
        }
-         const {createProspect, updateClient, sendErrorsUpdate} = this.props;
+         const {createProspect, sendErrorsUpdate, updateClient} = this.props;
          changeStateSaveData(true, MESSAGE_SAVE_DATA);
          createProspect(jsonCreateProspect)
          .then((data) => {
@@ -781,31 +864,15 @@ class clientEdit extends Component{
                  if(!_.get(data, 'payload.data.validateLogin')){
                    redirectUrl("/login");
                  } else {
-                   if( _.get(data, 'payload.data.data.codeTransaction') === 200 ){
-                     messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                     this.setState({showEx: true});
-                   } else {
-                     if( _.get(data, 'payload.data.data.detailsResponse') === null ){
-                       sendErrorsUpdate([]);
-                     } else {
-                       const messageErrors = _.split(_.get(data, 'payload.data.data.detailsResponse'), ',');
-                       if( messageErrors !== null && messageErrors.length > 0 ){
-                         document.getElementById('dashboardComponentScroll').scrollTop = 0;
-                       }
-                       sendErrorsUpdate(messageErrors);
-                     }
-                     messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                     this.setState({
-                       showExitoSaveNotUpdate: true
-                     })
-                   }
+                   messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                   this.setState({showEx: true});
                  }
                });
              }
            } else {
-             changeStateSaveData(false, "");
              this.setState({showEr: true});
            }
+           changeStateSaveData(false, "");
          }, (reason) => {
            changeStateSaveData(false, "");
            this.setState({showEr: true});
@@ -816,7 +883,7 @@ class clientEdit extends Component{
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
     errorNote = false;
-    const {fields: {justifyNoGeren, marcGeren}, notes, selectsReducer} = this.props;
+    const {fields: {justifyNoGeren, marcGeren}, notes, tabReducer, selectsReducer} = this.props;
     notesArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -841,6 +908,12 @@ class clientEdit extends Component{
           errorNote = true;
         }
       });
+      errorContact = tabReducer.get('errorConstact');
+      errorShareholder = tabReducer.get('errorShareholder');
+      if( errorContact || errorShareholder  ){
+        errorNote = true;
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+      }
       if(!errorNote){
         if( idButton === BUTTON_UPDATE ){
           this.setState({
@@ -849,16 +922,21 @@ class clientEdit extends Component{
         } else {
           this._saveClient(BUTTON_EDIT);
         }
+      } else {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
       }
     }
   };
 
   componentWillReceiveProps(nextProps){
-    const {errors} = nextProps;
+    const {fields: {operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods}, errors} = nextProps;
     var errorsArray = _.toArray(errors);
     this.setState({
       sumErrorsForm: errorsArray.length
     });
+    if( operationsForeignCurrency.value.toString() === 'false' && operationsForeigns.value !== '' ){
+      operationsForeigns.onChange('');
+    }
   }
 
   componentWillMount(){
@@ -941,7 +1019,7 @@ class clientEdit extends Component{
           <div>
             <p style={{paddingTop: '10px'}}></p>
             <Row xs={12} md={12} lg={12} style={{border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '116px'}}>
-              <Col xs={12} md={6} lg={6} style={{marginTop: '24px'}}>
+              <Col xs={12} md={12} lg={12} style={{marginTop: '24px'}}>
                 { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
                   <div>
                     <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
@@ -960,22 +1038,6 @@ class clientEdit extends Component{
                   <div></div>
                 }
               </Col>
-              { tabReducer.get('errorsMessage').length > 0 ?
-                <Col xs={12} md={6} lg={6}>
-                  <div className="ui accordion">
-                    <div className="active title errors">
-                      <span style={{color: "red", fontSize: "12pt", marginLeft: '28px'}}> Descripción errores</span>
-                    </div>
-                    <div className="scroll errors" style={{height: '80px', overflow: 'scroll', width: '100%'}}>
-                      <div className="active content errors" style={{marginLeft: '10px', marginTop: '-8px', paddingTop: '5px'}}>
-                        {tabReducer.get('errorsMessage').map(this._mapMessageErros)}
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-                :
-                <div></div>
-              }
             </Row>
           </div>
           <Row style={{padding: "10px 10px 10px 20px"}}>
@@ -1612,6 +1674,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese el detalle"
                   {...otherOriginGoods}
                   disabled={this.state.otherOriginGoodsEnable}
+                  error={otherOriginGoodsEnable === 'disabled' ? null : otherOriginGoods.error}
                   touched={true}
                 />
               </dt>
@@ -1651,6 +1714,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese el detalle"
                   {...otherOriginResource}
                   disabled={this.state.otherOriginResourceEnable}
+                  error={otherOriginResourceEnable === 'disabled' ? null : otherOriginResource.error}
                   touched={true}
                 />
               </dt>
@@ -1732,6 +1796,7 @@ class clientEdit extends Component{
                   onChange={val => this._onChangeOperationsForeigns(val)}
                   onBlur={operationsForeigns.onBlur}
                   data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
+                  disabled={disabledOperationsForeigns ? 'disabled' : ''}
                   touched={true}
                   maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
                   />
@@ -1751,6 +1816,7 @@ class clientEdit extends Component{
                   placeholder="Ingrese cuál"
                   {...otherOperationsForeign}
                   disabled={this.state.otherOperationsForeignEnable}
+                  error={otherOperationsForeignEnable === 'disabled' ? null : otherOperationsForeign.error}
                   touched={true}
                 />
               </dt>

@@ -5,6 +5,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ShareholderInfo from '../shareholder/component';
 import {validateContactShareholder} from './actions';
+import {redirectUrl} from '../globalComponents/actions';
 
 class BottonShareholderAdmin extends Component {
   constructor(props){

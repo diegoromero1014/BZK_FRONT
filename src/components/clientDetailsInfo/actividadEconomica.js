@@ -34,7 +34,7 @@ class ActividadEconomica extends Component{
         </thead>
         <tbody>
           <tr>
-            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.taxNaturaKey}</td>
+            <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.taxNatureKey}</td>
             <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.ciiu}</td>
             <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.sector}</td>
             <td style={{width: "20%", verticalAlign: "initial"}}>{infoClient.subCiiuKey}</td>
