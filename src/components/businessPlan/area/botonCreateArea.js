@@ -2,6 +2,12 @@ import React, {Component} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import ModalArea from './modalArea';
 import Modal from 'react-modal';
+import _ from 'lodash';
+
+const style ={
+     btnEnable : {float: 'right',cursor: 'pointer'},
+     btnDisabled: {float: 'right',cursor: 'not-allowed'}
+};
 
 class BotonCreateArea extends Component {
 
@@ -28,7 +34,7 @@ class BotonCreateArea extends Component {
     return (
       <Col xsOffset={1} mdOffset={9} lgOffset={9} xs={12} md={3} lg={3}>
         <div style={{marginLeft: "17px"}}>
-          <button className="btn btn-primary" disabled={disabled} onClick={this.openModal} style={{float: 'right',cursor: 'pointer'}}>
+          <button className="btn btn-primary" disabled={disabled} onClick={this.openModal} style={ _.isEqual(disabled, "disabled") ? style.btnDisabled :style.btnEnable }>
             <i className="white plus icon"/> Agregar área
           </button>
           <Modal

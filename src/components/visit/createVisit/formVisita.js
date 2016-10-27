@@ -411,7 +411,7 @@ class FormVisita extends Component{
         <header className="header-client-detail">
           <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
             <div>
-              <h3 style={{wordBreak:'break-all'}} className="inline title-head">
+              <h3 style={{wordBreak:'keep-all'}} className="inline title-head">
                 {infoClient.clientName}
               </h3>
               {infoClient.isProspect &&
