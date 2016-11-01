@@ -59,12 +59,14 @@ class ModalArea extends Component {
     this._updateValue = this._updateValue.bind(this);
     this._handleCreateArea = this._handleCreateArea.bind(this);
     this._closeCreate = this._closeCreate.bind(this);
+    this._onClickDate = this._onClickDate.bind(this);
     this.state = {
       showSuccessAdd:false,
       showSuccessEdit:false,
       showEr:false,
       prueba:[],
-      showErrorYa: false
+      showErrorYa: false,
+      openDatePicker: false
     }
     momentLocalizer(moment);
   }
@@ -79,6 +81,12 @@ class ModalArea extends Component {
       statusArea.onChange(areaEdit.statusIdArea);
       areaDate.onChange(moment(areaEdit.areaFormat, 'DD/MM/YYYY'));
     }
+  }
+
+  _onClickDate(){
+    setTimeout(function(){
+      document.getElementById('modalComponentScrollArea').scrollTop = 1000;
+    }, 100);
   }
 
   _closeCreate(){
@@ -182,9 +190,9 @@ class ModalArea extends Component {
         const {initialValues, fields:{areaDes, actionArea, areaResponsable, areaDate,statusArea}, handleSubmit, error}= this.props;
         return (
           <form onSubmit={handleSubmit(this._handleCreateArea)}>
-            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollArea">
               <dt className="business-title"><span style={{paddingLeft: '20px'}}>Adicionar área al plan de negocio</span></dt>
-              <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+              <div style={{paddingLeft:'20px',paddingRight:'20px', paddingBottom: '30px'}}>
                 <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
                 <Row>
                   <Col xs>
@@ -254,6 +262,7 @@ class ModalArea extends Component {
                       format={"DD/MM/YYYY"}
                       time={false}
                       {...areaDate}
+                      onClick={this._onClickDate}
                     />
                     </dt>
                   </Col>
@@ -322,4 +331,4 @@ function mapStateToProps({areas, selectsReducer}, {areaEdit}) {
 }
 
 
-export default reduxForm({form : 'submitValidation', fields,validate}, mapStateToProps, mapDispatchToProps)(ModalArea);
+export default reduxForm({form : 'submitModalArea', fields,validate}, mapStateToProps, mapDispatchToProps)(ModalArea);

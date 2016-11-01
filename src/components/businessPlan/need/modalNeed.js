@@ -81,6 +81,7 @@ class ModalNeed extends Component {
     this._updateValue = this._updateValue.bind(this);
     this._handleCreateNeed = this._handleCreateNeed.bind(this);
     this._closeCreate = this._closeCreate.bind(this);
+    this._onClickDate = this._onClickDate.bind(this);
     this._scroll= this._scroll.bind(this);
     this.state = {
       showSuccessAdd:false,
@@ -97,6 +98,12 @@ class ModalNeed extends Component {
     var element = document.getElementById("fecha")
     var alignWithTop = true;
     element.scrollIntoView(alignWithTop);
+  }
+
+  _onClickDate(){
+    setTimeout(function(){
+      document.getElementById('modalComponentScrollNeed').scrollTop = 1000;
+    }, 100);
   }
 
   componentDidMount(){
@@ -246,9 +253,9 @@ class ModalNeed extends Component {
         const {initialValues, fields:{needType, descriptionNeed, needProduct, needImplementation,needTask, needBenefits, needResponsable, needDate, statusNeed}, handleSubmit, error}= this.props;
         return (
           <form onSubmit={handleSubmit(this._handleCreateNeed)}>
-            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
+            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollNeed">
               <dt className="business-title"><span style={{paddingLeft: '20px'}}>Adicionar necesidad al plan de negocio</span></dt>
-              <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+              <div style={{paddingLeft:'20px',paddingRight:'20px', paddingBottom: '30px'}}>
                 <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
                 <Row>
                   <Col xs>
@@ -390,6 +397,7 @@ class ModalNeed extends Component {
                       format={"DD/MM/YYYY"}
                       time={false}
                       {...needDate}
+                      onClick={this._onClickDate}
                     />
                     </dt>
                   </Col>
@@ -466,4 +474,4 @@ function mapStateToProps({needs, selectsReducer}, {needEdit}) {
 }
 
 
-export default reduxForm({form : 'submitValidation', fields, validate}, mapStateToProps, mapDispatchToProps)(ModalNeed);
+export default reduxForm({form : 'submitValidationNeed', fields, validate}, mapStateToProps, mapDispatchToProps)(ModalNeed);
