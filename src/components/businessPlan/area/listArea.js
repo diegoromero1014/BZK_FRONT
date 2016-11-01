@@ -118,7 +118,7 @@ class ListArea extends Component {
     var disabledButtonCreate= '';
     this._getValuesArea();
     const {areas, disabled} = this.props;
-    if(areas.size === 10){
+    if(areas.size === 20){
       disabledButtonCreate = 'disabled';
     }else{
       disabledButtonCreate = '';

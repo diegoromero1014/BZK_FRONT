@@ -37,7 +37,7 @@ class UbicationCorrespondence extends Component{
             </thead>
             <tbody>
               <tr>
-                <td style={{width: "25%", verticalAlign: "initial"}}><p style={{wordBreak:'break-all'}}>{addresses.address}</p></td>
+                <td style={{width: "25%", verticalAlign: "initial"}}><p style={{wordBreak:'keep-all'}}>{addresses.address}</p></td>
               </tr>
             </tbody>
           </table>
@@ -66,7 +66,7 @@ class UbicationCorrespondence extends Component{
                 </thead>
                 <tbody>
                   <tr>
-                    <td style={{width: "50%", verticalAlign: "initial",paddingRight: '16px'}}><p style={{wordBreak:'break-all'}}>{addresses.neighborhood}</p></td>
+                    <td style={{width: "50%", verticalAlign: "initial",paddingRight: '16px'}}><p style={{wordBreak:'keep-all'}}>{addresses.neighborhood}</p></td>
                     <td style={{width: "25%", verticalAlign: "initial"}}>{addresses.phoneNumber}</td>
                   </tr>
                 </tbody>

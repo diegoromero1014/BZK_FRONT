@@ -1044,7 +1044,7 @@ class clientEdit extends Component{
             <Col xs={12} md={4} lg={4}>
               <dt><span>Razón social</span></dt>
               <dt>
-                <p style={{fontWeight: "normal", marginTop: "8px",wordBreak:'break-all'}}>
+                <p style={{fontWeight: "normal", marginTop: "8px",wordBreak:'keep-all'}}>
                   {infoClient.clientName}
                 </p>
               </dt>

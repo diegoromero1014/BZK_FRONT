@@ -60,7 +60,10 @@ class DownloadBusinessPlan extends Component {
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos  de los "informes de plan de negocio" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
-
+						<ul className="ui list" style={{marginLeft:'0px'}}>
+							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Necesidades'}</div>
+						</ul>
+						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
 						<ul className="ui list">
 							<li>{'Tipo de documento'}</li>
 							<li>{'Número de documento'}</li>
@@ -71,12 +74,6 @@ class DownloadBusinessPlan extends Component {
 							<li>{'Fecha'}</li>
 							<li>{'Objetivo del plan'}</li>
 							<li>{'Oportunidades y Amenazas externas de la Compañía'}</li>
-						</ul>
-					</div>
-					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
-						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
-						<ul className="ui list" style={{marginLeft:'0px'}}>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Necesidades'}</div>
 						</ul>
 					</div>
 				</div>

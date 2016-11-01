@@ -46,7 +46,7 @@ class ComponentClientInformation extends Component{
             <Col xs={11} sm={11} md={11} lg={11}>
     					<div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
     						<div>
-    							<h3 style={{wordBreak:'break-all'}} className="inline title-head">
+    							<h3 style={{wordBreak:'keep-all'}} className="inline title-head">
     								{infoClient.clientName}
     							</h3>
                   {infoClient.isProspect &&
@@ -91,7 +91,7 @@ class ComponentClientInformation extends Component{
                         <td colSpan="4">
                           <dl className="company-detail" style={{paddingTop: "15px"}}>
                             <dt><span style={{fontWeight: "bold", color: "#4C5360", marginLeft: "0px"}}>Breve descripción de la empresa</span></dt>
-                            <dd style={{marginLeft: "0px"}}><p style={{wordBreak:'break-all'}}>{infoClient.description}</p></dd>
+                            <dd style={{marginLeft: "0px"}}><p style={{wordBreak:'keep-all', textAlign: 'justify'}}>{infoClient.description}</p></dd>
                           </dl>
                         </td>
                       </tr>

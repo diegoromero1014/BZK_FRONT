@@ -247,7 +247,7 @@ class ComponentShareHolderDetail extends Component {
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de documento</span></dt>
                 <dt>
-                  <p style={{fontWeight: "normal", wordBreak:'break-all'}}>
+                  <p style={{fontWeight: "normal", wordBreak:'keep-all'}}>
                     {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(SHAREHOLDER_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(SHAREHOLDER_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') : ''}
                   </p>
                 </dt>

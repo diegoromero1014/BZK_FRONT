@@ -123,7 +123,7 @@ class ListNeed extends Component {
     var disabledButtonCreate= '';
     this._getValuesNeed();
     const {needs, disabled} = this.props;
-    if(needs.size === 10){
+    if(needs.size === 40){
       disabledButtonCreate = 'disabled';
     }else{
       disabledButtonCreate = '';
