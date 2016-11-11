@@ -14,7 +14,11 @@ var itemClients = {
     icon: "building icon",
     link: "/dashboard/clients"
 };
-var menuItems = [];
+var menuItems = [{
+    text: "Mis clientes",
+    icon: "building icon",
+    link: "/dashboard/clients"
+}];
 
 const menuItemCerrarSesion = [
     {
