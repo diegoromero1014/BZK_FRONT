@@ -86,3 +86,30 @@ export function formValidateKeyEnter(e, validate){
     e.preventDefault();
   }
 }
+
+export function validatePermissionsByModule(module){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "module": module,
+      "typeApp": constants.FRONT_APP
+    }
+  }
+
+   var request = axios.post(constants.APP_URL + "/validatePermissionsModule", json);
+   return{
+     type: module,
+     payload: request
+   }
+}

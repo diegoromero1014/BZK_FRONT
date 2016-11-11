@@ -6,6 +6,7 @@ import GridComponent from '../grid/component';
 import {NUMBER_RECORDS, DELETE_TYPE_PREVISIT} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {ELIMINAR} from '../../constantsGlobal';
 
 let v1 = '';
 
@@ -76,7 +77,8 @@ class ListPrevisitComponent extends Component {
 
 	_renderCellView(data) {
 		const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de previsita?";
-
+		const {reducerGlobal} = this.props;
+		var permissionsPrevisits = reducerGlobal.get('permissionsPrevisits');
 		return _.forOwn(data, function(value, key) {
 			let json1 = {
 				'messageHeader': {
@@ -108,14 +110,16 @@ class ListPrevisitComponent extends Component {
 			_.set(value, 'datePrevisitFormat', datePrevisitFormat.format('DD') + ' ' + datePrevisitFormat.format('MMM')
 				+ ' ' + datePrevisitFormat.format('YYYY') + ', ' + datePrevisitFormat.format('hh:mm a'));
 
-			if (value.idStatusDocument === 0) {
-				_.set(value, 'delete', {
-					actionDelete: true,
-					urlServer: '/deleteEntity',
-					typeDelete: DELETE_TYPE_PREVISIT,
-					mensaje: mensaje,
-					json: json1
-				});
+			if( _.get(permissionsPrevisits, _.indexOf(permissionsPrevisits, ELIMINAR), false) ){
+				if (value.idStatusDocument === 0) {
+					_.set(value, 'delete', {
+						actionDelete: true,
+						urlServer: '/deleteEntity',
+						typeDelete: DELETE_TYPE_PREVISIT,
+						mensaje: mensaje,
+						json: json1
+					});
+				}
 			}
 		});
 	}
@@ -138,9 +142,10 @@ function mapDispatchToProps(dispatch) {
 	}, dispatch);
 }
 
-function mapStateToProps({previsitReducer}, ownerProps) {
+function mapStateToProps({previsitReducer, reducerGlobal}, ownerProps) {
 	return {
-		previsitReducer
+		previsitReducer,
+		reducerGlobal
 	};
 }
 

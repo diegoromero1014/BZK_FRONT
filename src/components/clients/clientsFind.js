@@ -15,7 +15,8 @@ import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {clearContact} from '../contact/actions';
 import {clearInfoClient} from '../clientInformation/actions';
-import {SESSION_EXPIRED} from '../../constantsGlobal';
+import {SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 
 const fields =["team","certificationStatus"];
 
@@ -45,10 +46,19 @@ class ClientsFind extends Component {
         }
       });
       consultList(constants.TEAM_FOR_EMPLOYEE);
-      const {updateTitleNavBar} = this.props;
+      const {updateTitleNavBar, validatePermissionsByModule} = this.props;
       updateTitleNavBar("Mis clientes");
       clearInfoClient();
       clearContact();
+      validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -106,7 +116,7 @@ class ClientsFind extends Component {
 
     render() {
       var clientItems = [];
-      const {fields:{team,certificationStatus},handleSubmit} = this.props;
+      const {fields:{team,certificationStatus}, handleSubmit, navBar, reducerGlobal} = this.props;
       const {clientR,selectsReducer} = this.props;
       var countClients = clientR.get('countClients');
       var status = clientR.get('status');
@@ -150,9 +160,11 @@ class ClientsFind extends Component {
                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch} title="Limpiar búsqueda" style={{marginLeft:"17px"}}>
                   <i className="erase icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
-                <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
-                  <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-                </button>
+                {  _.get(navBar.get('mapModulesAccess'), MODULE_PROSPECT) &&
+                  <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
+                    <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                  </button>
+                }
             </Col>
         </Row>
         </form>
@@ -184,17 +196,19 @@ function mapDispatchToProps(dispatch){
     consultList,
     updateTitleNavBar,
     clearContact,
-    clearInfoClient
+    clearInfoClient,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({clientR, selectsReducer, navBar, contactsByClient, clientInformacion},{fields}){
+function mapStateToProps({clientR, selectsReducer, navBar, contactsByClient, clientInformacion, reducerGlobal},{fields}){
   return {
     clientR,
     selectsReducer,
     navBar,
     contactsByClient,
-    clientInformacion
+    clientInformacion,
+    reducerGlobal
   };
 }
 

@@ -10,6 +10,8 @@ import SelectFilterContact from '../selectsComponent/selectFilterContact/selectF
 import PaginationContactComponent from './paginationContactComponent';
 import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RECORDS} from './constants';
 import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
 
 class ContactComponent extends Component {
 
@@ -26,17 +28,24 @@ class ContactComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContact} = this.props;
+      const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2,
+        value3, clearContact, validatePermissionsByModule} = this.props;
       clearContact();
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
-      "",
-      "",
-      "");
+      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","","","");
+      validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
+        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
   render() {
-    const {contactsByClient} = this.props;
+    const {contactsByClient, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if(contactsByClient.get('rowCount') !== 0){
@@ -54,7 +63,9 @@ class ContactComponent extends Component {
               value2={this.state.value2}
               value3={this.state.value3}
           /></Col>
-          <BotonCreateContactComponent/>
+          { _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
+            <BotonCreateContactComponent/>
+          }
           </Row>
           <Row>
             <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Función:</span>
@@ -103,13 +114,17 @@ class ContactComponent extends Component {
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    contactsByClientFindServer,clearContact
+    contactsByClientFindServer,
+    clearContact,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient,selectsReducer}, ownerProps){
+function mapStateToProps({contactsByClient, selectsReducer, reducerGlobal}, ownerProps){
     return {
-        contactsByClient,selectsReducer
+        contactsByClient,
+        selectsReducer,
+        reducerGlobal
     };
 }
 

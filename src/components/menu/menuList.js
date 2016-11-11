@@ -1,26 +1,20 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 import MenuListItem from './menuListItem';
+import {connect} from 'react-redux';
+import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS} from '../../constantsGlobal';
 
-const menuItems = [
-    /*
-    Se comenta porque la funcionalidad no esta activa, no hace nada
-    {
-        text: "Mi portafolio",
-        icon: "icon-suitcase",
-        link: "/dashboard/portafolio"
-    },*/
-    {
-        text: "Vista gerencial",
-        icon: "bar chart icon",
-        link: "/dashboard/viewManagement"
-    },
-    {
-        text: "Mis clientes",
-        icon: "building icon",
-        link: "/dashboard/clients"
-    }
-];
+var itemManagerialView = {
+    text: "Vista gerencial",
+    icon: "bar chart icon",
+    link: "/dashboard/viewManagement"
+};
+var itemClients = {
+    text: "Mis clientes",
+    icon: "building icon",
+    link: "/dashboard/clients"
+};
+var menuItems = [];
 
 const menuItemCerrarSesion = [
     {
@@ -45,18 +39,34 @@ class MenuList extends Component {
         />
     }
 
+    componentWillReceiveProps(nextProps){
+      menuItems = [];
+      const {navBar} = nextProps;
+      if( _.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW) ){
+        menuItems.push(itemManagerialView);
+      }
+      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS) ){
+        menuItems.push(itemClients);
+      }
+    }
+
     render() {
+        const {navBar} = this.props;
         const currentDate = moment().locale('es');
         return (
             <div style={{overflow: "hidden", height: "100%"}}>
               <div className="page-sidebar-wrapper" style={{width: "100%", height: "100%", overflow: "hidden"}}>
                 <ul style={{width: "100%"}}>
                     <a id="news-menu-item" className="news-menu-item menu-item">
-                        <div className="today">
+                        <div className="today" style={{width: "70px"}}>
                             <span className="today-month">{currentDate.format("MMM")}</span>
                             <span className="today-date">{currentDate.format("DD")}</span>
                         </div>
-                        <span className="today-label" style={{marginLeft: "1px"}}>Hoy</span>
+                        {navBar.get('status') !== 'closed' &&
+                          <div className="today" style={{width: "10px"}}>
+                            <span className="today-label" style={{marginLeft: "1px"}}>Hoy</span>
+                          </div>
+                        }
                     </a>
                     {menuItems.map(this._mapMenuItems)}
                 </ul>
@@ -68,5 +78,10 @@ class MenuList extends Component {
         )
     }
 }
+function mapStateToProps({navBar},ownerProps) {
+  return {
+    navBar
+  };
+}
 
-export default MenuList;
+export default connect(mapStateToProps)(MenuList);

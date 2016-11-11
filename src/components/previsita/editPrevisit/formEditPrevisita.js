@@ -14,7 +14,7 @@ import ParticipantesCliente from '../../participantsVisitPre/participantesClient
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-  TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+  TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
 import {addParticipant} from '../../participantsVisitPre/actions';
@@ -656,7 +656,9 @@ class FormEditPrevisita extends Component{
             <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
           </Col>
           <Col xs={2} sm={2} md={2} lg={2}>
-            <button type="button" onClick={this._editPreVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) &&
+              <button type="button" onClick={this._editPreVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            }
           </Col>
         </Row>
         <Row style={{padding: "10px 10px 20px 20px"}}>

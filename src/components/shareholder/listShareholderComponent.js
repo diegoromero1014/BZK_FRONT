@@ -1,12 +1,10 @@
-import React, {
-  Component,
-  PropTypes
-} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {shareholdersByClientFindServer,clearShareholder,orderColumnShareholder,clearShareholderPaginator,clearShareholderOrder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_SHAREHOLDER} from './constants';
+import {ELIMINAR} from '../../constantsGlobal';
 
 let v1 = "";
 let v2 = "";
@@ -102,6 +100,8 @@ class ListShareholderComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el accionista ";
+    const {reducerGlobal} = this.props;
+    var permissionsShareholders = reducerGlobal.get('permissionsShareholders');
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -128,13 +128,15 @@ class ListShareholderComponent extends Component {
               component : "VIEW_SHAREHOLDER"
             });
             _.set(value,'percentageS', value.percentage + "%");
-            _.set(value, 'delete',  {
-              actionDelete: true,
-              urlServer: "/deleteEntity",
-              typeDelete : DELETE_TYPE_SHAREHOLDER,
-              mensaje: mensaje + value.name + "?",
-              json: json1
-            });
+            if( _.get(permissionsShareholders, _.indexOf(permissionsShareholders, ELIMINAR), false) ){
+              _.set(value, 'delete',  {
+                actionDelete: true,
+                urlServer: "/deleteEntity",
+                typeDelete : DELETE_TYPE_SHAREHOLDER,
+                mensaje: mensaje + value.name + "?",
+                json: json1
+              });
+            }
       });
   }
 
@@ -156,9 +158,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({shareholdersReducer}, ownerProps){
+function mapStateToProps({shareholdersReducer, reducerGlobal}, ownerProps){
     return {
-        shareholdersReducer
+        shareholdersReducer,
+        reducerGlobal
     };
 }
 

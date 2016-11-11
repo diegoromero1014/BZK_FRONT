@@ -12,6 +12,8 @@ import {NUMBER_RECORDS,SHAREHOLDER_KIND,SHAREHOLDER_TYPE} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import $ from 'jquery';
 import {redirectUrl} from '../globalComponents/actions';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {MODULE_SHAREHOLDERS, CREAR, EDITAR} from '../../constantsGlobal';
 
 var enableClickCertificationShareholder = "";
 
@@ -32,7 +34,7 @@ class ShareholderComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const{clearShareholder,shareholdersByClientFindServer, clientInformacion} = this.props;
+      const{clearShareholder,shareholdersByClientFindServer, clientInformacion, validatePermissionsByModule} = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       clearShareholder();
       shareholdersByClientFindServer(0,window.localStorage.getItem('idClientSelected'),
@@ -55,6 +57,15 @@ class ShareholderComponent extends Component {
               }
             }
         );
+        validatePermissionsByModule(MODULE_SHAREHOLDERS).then((data) => {
+          if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+            redirectUrl("/login");
+          } else {
+            if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+              redirectUrl("/dashboard");
+            }
+          }
+        });
     }
   }
 
@@ -81,7 +92,7 @@ class ShareholderComponent extends Component {
   }
 
   render() {
-    const {shareholdersReducer} = this.props;
+    const {shareholdersReducer, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if(shareholdersReducer.get('rowCount') !== 0){
@@ -94,15 +105,17 @@ class ShareholderComponent extends Component {
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
-        <div style={{marginBottom: "10px"}}>
-          <label style={{fontWeight: "bold"}}>
-              <input type="checkbox" id="checkNoShareholder"
-                checked={this.state.valueCheck}
-                disabled={enableClickCertificationShareholder}
-                onClick={this._handleChangeValueCertificateShareholder} />
-              &nbsp;&nbsp;Certifico que el cliente no tiene accionistas con un porcentaje de participación mayor a 5%.
-          </label>
-        </div>
+        { _.get(reducerGlobal.get('permissionsShareholders'), _.indexOf(reducerGlobal.get('permissionsShareholders'), EDITAR), false) &&
+          <div style={{marginBottom: "10px"}}>
+            <label style={{fontWeight: "bold"}}>
+                <input type="checkbox" id="checkNoShareholder"
+                  checked={this.state.valueCheck}
+                  disabled={enableClickCertificationShareholder}
+                  onClick={this._handleChangeValueCertificateShareholder} />
+                &nbsp;&nbsp;Certifico que el cliente no tiene accionistas con un porcentaje de participación mayor a 5%.
+            </label>
+          </div>
+        }
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         <Grid style={{ width: "100%"}}>
           <Row><Col xs={10} sm={10} md={11} lg={11}>
@@ -111,7 +124,9 @@ class ShareholderComponent extends Component {
             value2={this.state.value2}
             disabled={this.state.disabledComponents}
           /></Col>
+          { _.get(reducerGlobal.get('permissionsShareholders'), _.indexOf(reducerGlobal.get('permissionsShareholders'), CREAR), false) &&
             <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
+          }
           </Row>
           <Row>
             <Col xs><span style={{fontWeight:'bold',color:'#4C5360'}}>Tipo de accionista:</span>
@@ -158,14 +173,16 @@ function mapDispatchToProps(dispatch){
     clearShareholder,
     shareholdersByClientFindServer,
     updateCertificateNoShareholder,
-    changeCheckInfoClient
+    changeCheckInfoClient,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({shareholdersReducer, clientInformacion}, ownerProps){
+function mapStateToProps({shareholdersReducer, clientInformacion, reducerGlobal}, ownerProps){
     return {
         shareholdersReducer,
-        clientInformacion
+        clientInformacion,
+        reducerGlobal
     };
 }
 

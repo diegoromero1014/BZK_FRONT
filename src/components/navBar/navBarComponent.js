@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {toggleMenu, updateTitleNavBar} from './actions';
+import {toggleMenu, updateTitleNavBar, consultModulesAccess} from './actions';
 
 class NavBarComponent extends Component {
     constructor(props) {
@@ -13,6 +13,11 @@ class NavBarComponent extends Component {
         e.preventDefault();
         const {toggleMenu} = this.props;
         toggleMenu();
+    }
+
+    componentWillMount(){
+      const {consultModulesAccess} = this.props;
+      consultModulesAccess();
     }
 
     render() {
@@ -74,7 +79,8 @@ function mapStateToProps({navBar}, ownerProps) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         toggleMenu,
-        updateTitleNavBar
+        updateTitleNavBar,
+        consultModulesAccess
     }, dispatch);
 }
 

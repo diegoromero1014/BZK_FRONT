@@ -286,15 +286,16 @@ class ModalComponentContact extends Component {
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
           changeStateSaveData(false, "");
+          if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false" ){
+            redirectUrl("/login");
+          } else {
             if ((_.get(data, 'payload.data.status') === 200)) {
                 this.setState({showEx: true});
-                contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
-                    "",
-                    "",
-                    "");
+                contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "","","","");
             } else {
                 this.setState({showEr: true});
             }
+          }
         }, (reason) => {
           changeStateSaveData(false, "");
           this.setState({showEr: true});

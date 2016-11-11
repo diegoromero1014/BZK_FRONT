@@ -57,6 +57,28 @@ export const MESSAGE_ERROR = "error";
 export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
 
+//Variable de tipo de aplicacion
+export const FRONT_APP = "Front";
+
+//Variables de los permisos
+export const VISUALIZAR = "Visualizar";
+export const CREAR = "Crear";
+export const EDITAR = "Editar";
+export const ELIMINAR = "Eliminar";
+export const DESCARGAR = "Descargar";
+
+//Variables de los modulos de la aplicación
+export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
+export const MODULE_CLIENTS = "Clientes";
+export const MODULE_PROSPECT = "Prospectos";
+export const MODULE_CONTACTS = "Contactos";
+export const MODULE_SHAREHOLDERS = "Accionistas";
+export const MODULE_PREVISITS = "Previsitas";
+export const MODULE_VISITS = "Visitas";
+export const MODULE_TASKS = "Tareas";
+export const MODULE_PIPELINE = "Pipeline";
+export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
+
 let API_URL;
 if (process.env.NODE_ENV === "production") {
     API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";

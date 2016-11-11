@@ -10,7 +10,8 @@ import PaginationPreVisitComponent from './paginationPrevisitComponent';
 import ButtonCreateDownloadPreVisitModal from './downloadPrevisits/buttonCreateDownloadPrevisitModal';
 import {previsitByClientFindServer, clearPrevisit} from './actions';
 import {downloadFilePdf} from '../clientInformation/actions';
-import {FILE_OPTION_PRE_VISIT_GUIDE} from '../../constantsGlobal';
+import {FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 import {updateTitleNavBar} from '../navBar/actions';
 
 class PrevisitComponent extends Component {
@@ -34,9 +35,18 @@ class PrevisitComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ) {
       redirectUrl("/login");
     } else {
-      const {previsitByClientFindServer, clearPrevisit} = this.props;
+      const {previsitByClientFindServer, clearPrevisit, validatePermissionsByModule} = this.props;
       clearPrevisit();
       previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+      validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -49,7 +59,7 @@ class PrevisitComponent extends Component {
     let visibleTable = 'none';
     let visibleMessage = 'block';
     let visibleDownload = 'none';
-    const {previsitReducer} = this.props;
+    const {previsitReducer, reducerGlobal} = this.props;
     if(previsitReducer.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
@@ -65,9 +75,11 @@ class PrevisitComponent extends Component {
                 <SelectFilterContact config={{onChange: (value) => this.setState({value1: value.id})}} idTypeFilter={FILTER_STATUS_PREVISIT_ID} />
               </Col>
               <Col xs>
-                <button className="btn btn-primary" type="button" title="Crear previsita" style={{marginTop: "21px"}} onClick={this._createPrevisita}>
-                  <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-                </button>
+                { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), CREAR), false) &&
+                  <button className="btn btn-primary" type="button" title="Crear previsita" style={{marginTop: "21px"}} onClick={this._createPrevisita}>
+                    <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                  </button>
+                }
                 <button className="btn btn-primary" style={{marginTop: '20px',marginLeft: '15px'}}type="button" title="Caso práctico previsita" onClick={this._downloadFilePrevisitGuide}>
                   <span>{'Caso práctico'} </span>
                   <i title="Informe de previsita guía" className="file pdf outline icon" style={{cursor: "pointer", position: 'relative'}}></i>
@@ -91,7 +103,9 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
-        <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
+        { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
+          <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
+        }
       </div>
     );
   }
@@ -99,13 +113,15 @@ class PrevisitComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit, downloadFilePdf, updateTitleNavBar
+    previsitByClientFindServer, clearPrevisit, downloadFilePdf, updateTitleNavBar,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({previsitReducer}, ownerProps) {
+function mapStateToProps({previsitReducer, reducerGlobal}, ownerProps) {
   return {
-    previsitReducer
+    previsitReducer,
+    reducerGlobal
   };
 }
 

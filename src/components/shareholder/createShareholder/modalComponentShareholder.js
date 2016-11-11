@@ -242,7 +242,7 @@ class ModalComponentShareholder extends Component {
       changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createShareholder(messageBody).then((data) => {
         changeStateSaveData(false, "");
-        if((_.get(data, 'payload.validateLogin') === 'false')){
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.validateLogin') === 'false' ){
           redirectUrl("/login");
         } else {
           if((_.get(data, 'payload.data.status') === 200)){

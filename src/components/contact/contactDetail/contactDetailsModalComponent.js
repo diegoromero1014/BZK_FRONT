@@ -17,7 +17,7 @@ import {changeStateSaveData} from '../../dashboard/actions';
 import {CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE} from '../../selectsComponent/constants';
 import {getContactDetails, saveContact, clearClienEdit} from './actions';
 import {contactsByClientFindServer,clearContactOrder,clearContactCreate} from '../actions';
-import {FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NUMBER_RECORDS} from '../constants';
@@ -362,15 +362,17 @@ class ContactDetailsModalComponent extends Component {
     changeStateSaveData(true, MESSAGE_SAVE_DATA);
     saveContact(jsonUpdateContact).then((data) => {
       changeStateSaveData(false, "");
-      if (_.get(data, 'payload.data.status') === 200) {
-        this.setState({contactEdited: true});
-        contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"",
-              "",
-              "",
-              "");
-          } else {
+      if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false" ){
+        redirectUrl("/login");
+      } else {
+        if (_.get(data, 'payload.data.status') === 200) {
+          this.setState({contactEdited: true});
+          contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","","","");
+        } else {
           this.setState({showEr: true});
-          }
+        }
+      }
+
       }, (reason) => {
         changeStateSaveData(false, "");
         this.setState({showEr: true});
@@ -409,7 +411,9 @@ class ContactDetailsModalComponent extends Component {
                   </dt>
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={4}>
-                  <button type="button" onClick={this._editContact} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+                  { _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), EDITAR), false) &&
+                    <button type="button" onClick={this._editContact} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+                  }
                 </Col>
               </Row>
               <Row>
@@ -908,7 +912,8 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
  } else {
   return {
     contactDetail,
-    selectsReducer
+    selectsReducer,
+    reducerGlobal
   };
  }
 }

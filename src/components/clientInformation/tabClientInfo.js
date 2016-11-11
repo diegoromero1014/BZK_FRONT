@@ -12,6 +12,8 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
+import {MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
+  MODULE_PIPELINE, MODULE_BUSSINESS_PLAN} from '../../constantsGlobal';
 
 class TabClientInfo extends Component{
   constructor(props){
@@ -30,7 +32,7 @@ class TabClientInfo extends Component{
   }
 
   render(){
-    const {infoClient, tabReducer} = this.props;
+    const {infoClient, tabReducer, navBar} = this.props;
     var styleInfo = true;
     var styleContacts = false;
     var styleShareholders = false;
@@ -186,27 +188,41 @@ class TabClientInfo extends Component{
   				<li style={backgroundInfo} onClick={this._handleClickTabItem.bind(this, 1)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Info</a>
           </li>
-  				<li style={backgroundContacts} onClick={this._handleClickTabItem.bind(this, 2)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Contactos</a>
-          </li>
-          <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, 3)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
-          </li>
-          <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
-          </li>
-          <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
-          </li>
-          <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, 6)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Tareas</a>
-          </li>
-          <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, 7)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Pipeline</a>
-          </li>
-          <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, 8)}>
-            <a className="button-link-url" style={{marginRight: "15px"}}>Planes de negocios</a>
-          </li>
+          { _.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS) &&
+            <li style={backgroundContacts} onClick={this._handleClickTabItem.bind(this, 2)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Contactos</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS) &&
+            <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, 3)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_PREVISITS) &&
+            <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_VISITS) &&
+            <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
+            <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, 6)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Tareas</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
+            <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, 7)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Pipeline</a>
+            </li>
+          }
+          { _.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
+            <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, 8)}>
+              <a className="button-link-url" style={{marginRight: "15px"}}>Planes de negocios</a>
+            </li>
+          }
   			</ul>
         <div className="header-client-detail" style={{paddingLeft: "20px", height: "84%", paddingRight: "20px", backgroundColor: "white", marginTop: "-8px"}}>
           {styleInfo && <DetailsInfoClient infoClient={infoClient}/>}
@@ -229,9 +245,10 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({tabReducer},ownerProps) {
+function mapStateToProps({tabReducer, navBar},ownerProps) {
   return {
-    tabReducer
+    tabReducer,
+    navBar
   };
 }
 

@@ -15,7 +15,8 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import _ from 'lodash';
 import numeral from 'numeral';
 import {changeStateSaveData} from '../dashboard/actions';
-import {MESSAGE_SAVE_DATA} from '../../constantsGlobal';
+import {MESSAGE_SAVE_DATA, MODULE_PROSPECT, CREAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication} from '../selectsComponent/actions';
 
 const valuesYesNo = [
@@ -196,14 +197,18 @@ class FormCreateProspect extends Component{
       createProspect(jsonCreateProspect)
       .then((data) => {
         changeStateSaveData(false, "");
-        if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
-            this.setState({showEx: true});
-          } else {
-            this.setState({showEr: true});
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false" ){
+          redirectUrl("/login");
+        } else {
+          if((_.get(data, 'payload.data.responseCreateProspect') === "create")){
+              this.setState({showEx: true});
+            } else {
+              this.setState({showEr: true});
+          }
         }
-        }, (reason) => {
-          changeStateSaveData(false, "");
-          this.setState({showEr: true});
+      }, (reason) => {
+        changeStateSaveData(false, "");
+        this.setState({showEr: true});
       });
     } else {
       this._redirectClients();
@@ -211,10 +216,19 @@ class FormCreateProspect extends Component{
   }
 
   componentWillMount(){
-    const {consultList, consultDataSelect} = this.props;
+    const {consultList, consultDataSelect, validatePermissionsByModule} = this.props;
     consultList(constants.TEAM_FOR_EMPLOYEE);
     consultList(constants.CIIU);
     consultDataSelect(constants.FILTER_COUNTRY);
+    validatePermissionsByModule(MODULE_PROSPECT).then((data) => {
+      if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+        redirectUrl("/login");
+      } else {
+        if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+          redirectUrl("/dashboard");
+        }
+      }
+    });
   }
 
   _onChangeCIIU(val){
@@ -256,7 +270,7 @@ class FormCreateProspect extends Component{
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
       error, handleSubmit, selectsReducer} = this.props;
-    const {propspectReducer} = this.props
+    const {propspectReducer, reducerGlobal} = this.props
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
         <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
@@ -594,15 +608,26 @@ class FormCreateProspect extends Component{
 
           <Col xs={12} md={12} lg={12} style={{paddingTop: "60px"}}>
             <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-              <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
-                <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
-              </button>
-              <button className="btn btn-secondary modal-button-edit"
-                onClick={this._closeWindow}
-                style={{float:"right", margin:"8px 0px 0px 190px", position:"fixed", backgroundColor: "#C1C1C1"}}
-                type="button">
-                <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
-              </button>
+              { _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), CREAR), false)  ?
+                <div>
+                  <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
+                    <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
+                  </button>
+                  <button className="btn btn-secondary modal-button-edit"
+                    onClick={this._closeWindow}
+                    style={{float:"right", margin:"8px 0px 0px 190px", position:"fixed", backgroundColor: "#C1C1C1"}}
+                    type="button">
+                    <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+                  </button>
+                </div>
+                :
+                <button className="btn btn-secondary modal-button-edit"
+                  onClick={this._closeWindow}
+                  style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor: "#C1C1C1"}}
+                  type="button">
+                  <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+                </button>
+              }
             </div>
           </Col>
           <SweetAlert
@@ -648,14 +673,16 @@ function mapDispatchToProps(dispatch) {
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication,
-    changeStateSaveData
+    changeStateSaveData,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({propspectReducer, selectsReducer, notes},ownerProps) {
+function mapStateToProps({propspectReducer, selectsReducer, reducerGlobal, notes},ownerProps) {
   return {
     propspectReducer,
     selectsReducer,
+    reducerGlobal,
     notes
   };
 }

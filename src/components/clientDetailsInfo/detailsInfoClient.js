@@ -13,6 +13,8 @@ import {bindActionCreators} from 'redux';
 import Products from './product';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import {EDITAR, MODULE_CLIENTS} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 import {redirectUrl} from '../globalComponents/actions';
 
 class DetailsInfoClient extends Component{
@@ -24,10 +26,19 @@ class DetailsInfoClient extends Component{
   }
 
   componentWillMount(){
-    const {login} = this.props;
+    const {login, validatePermissionsByModule} = this.props;
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }
+    validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+      if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+        redirectUrl("/login");
+      } else {
+        if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+          redirectUrl("/dashboard");
+        }
+      }
+    });
   }
 
   _mapNoteItems(item, idx){
@@ -71,8 +82,7 @@ class DetailsInfoClient extends Component{
   }
 
   render(){
-    const {infoClient, menuState} = this.props;
-
+    const {infoClient, menuState, reducerGlobal} = this.props;
     var actualizationDateString = "";
     if( infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined ){
       var actualizationDate = moment(infoClient.actualizationDate).locale('es');
@@ -186,7 +196,7 @@ class DetailsInfoClient extends Component{
           </div>
           {foreignProducts.map(this._mapProductItems)}
         </div>
-        {infoClient.haveAccessEdit &&
+        {infoClient.haveAccessEdit && _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false) &&
           <div className="" style={{marginLeft: "-20px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
               <a style={{float:"right", margin:"15px 0px 0px 110px", position:"fixed", cursor: "pointer",textDecoration: "underline"}} onClick={this._clickButtonClientEdit}>
@@ -211,13 +221,15 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     seletedButton,
     validateContactShareholder,
-    sendErrorsUpdate
+    sendErrorsUpdate,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({navBar}){
+function mapStateToProps({navBar, reducerGlobal}){
   return {
-    menuState: navBar.get('status')
+    menuState: navBar.get('status'),
+    reducerGlobal
   };
 }
 

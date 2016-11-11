@@ -7,6 +7,7 @@ import {bindActionCreators} from 'redux';
 import {contactsByClientFindServer,clearContactPaginator,orderColumnContact,clearContactOrder} from './actions';
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
+import {ELIMINAR} from '../../constantsGlobal';
 
 let v1 = "";
 let v2 = "";
@@ -67,6 +68,8 @@ class ListContactComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el contacto ";
+    const {reducerGlobal} = this.props;
+    var permissionsContacts = reducerGlobal.get('permissionsContacts');
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -93,13 +96,15 @@ class ListContactComponent extends Component {
               urlServer: "./component",
               component : "VIEW_CONTACT"
             });
-            _.set(value, 'delete',  {
-              actionDelete: true,
-              urlServer: "/deleteContactForClient",
-              typeDelete : DELETE_TYPE_CONTACT,
-              mensaje: mensaje + value.nameComplet + "?",
-              json: json1
-            });
+            if( _.get(permissionsContacts, _.indexOf(permissionsContacts, ELIMINAR), false) ){
+              _.set(value, 'delete',  {
+                actionDelete: true,
+                urlServer: "/deleteContactForClient",
+                typeDelete : DELETE_TYPE_CONTACT,
+                mensaje: mensaje + value.nameComplet + "?",
+                json: json1
+              });
+            }
       });
   }
 
@@ -167,9 +172,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient}, ownerProps){
+function mapStateToProps({contactsByClient, reducerGlobal}, ownerProps){
     return {
-        contactsByClient
+        contactsByClient,
+        reducerGlobal
     };
 }
 

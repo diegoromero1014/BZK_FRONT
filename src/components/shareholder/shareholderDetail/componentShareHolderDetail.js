@@ -14,7 +14,7 @@ import {consultDataSelect, consultListWithParameterUbication, getMasterDataField
 import {createShareholder} from '../createShareholder/actions';
 import {CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER}
 from '../../selectsComponent/constants';
-import {PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import _ from 'lodash';
@@ -160,7 +160,7 @@ class ComponentShareHolderDetail extends Component {
     changeStateSaveData(true, MESSAGE_SAVE_DATA);
     createShareholder(messageBody).then((data) => {
       changeStateSaveData(false, "");
-      if((_.get(data, 'payload.validateLogin') === 'false')){
+      if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.validateLogin') === 'false' ){
         redirectUrl("/login");
       } else {
         if((_.get(data, 'payload.data.status') === 200)){
@@ -300,7 +300,9 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} sm={12} md={6} lg={4}>
-                <button type="button" onClick={this._editShareHolder} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+                { _.get(reducerGlobal.get('permissionsShareholders'), _.indexOf(reducerGlobal.get('permissionsShareholders'), EDITAR), false) &&
+                  <button type="button" onClick={this._editShareHolder} className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>Editar <i className={'icon edit'}></i></button>
+                }
               </Col>
             </Row>
             <Row>
