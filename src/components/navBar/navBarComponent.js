@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {toggleMenu, updateTitleNavBar, consultModulesAccess} from './actions';
+import {redirectUrl} from '../globalComponents/actions';
+import {MODULE_CLIENTS} from '../../constantsGlobal';
 
 class NavBarComponent extends Component {
     constructor(props) {

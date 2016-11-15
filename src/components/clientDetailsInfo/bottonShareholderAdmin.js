@@ -6,6 +6,8 @@ import Modal from 'react-modal';
 import ShareholderInfo from '../shareholder/component';
 import {validateContactShareholder} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
+import {MODULE_SHAREHOLDERS} from '../../constantsGlobal';
+import SweetAlert from 'sweetalert-react';
 
 class BottonShareholderAdmin extends Component {
   constructor(props){
@@ -13,12 +15,18 @@ class BottonShareholderAdmin extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
     this.state = {
-      modalIsOpen: false
+      modalIsOpen: false,
+      showErrorPermissions: false
     };
   }
 
   openModal(){
-    this.setState({modalIsOpen: true});
+    const {navBar} = this.props;
+    if( _.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS) ){
+      this.setState({modalIsOpen: true});
+    } else {
+      this.setState({ showErrorPermissions: true });
+    }
   }
 
   closeModal(){
@@ -57,6 +65,13 @@ class BottonShareholderAdmin extends Component {
               </div>
           </div>
         </Modal>
+        <SweetAlert
+         type= "warning"
+         show={this.state.showErrorPermissions}
+         title="Administración de accionistas"
+         text="Señor usuario, no tiene permisos para acceder a está funcionalidad."
+         onConfirm={() => this.setState({showErrorPermissions: false})}
+         />
       </div>
     );
   }
@@ -68,9 +83,10 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion},ownerProps) {
+function mapStateToProps({clientInformacion, navBar},ownerProps) {
   return {
-    clientInformacion
+    clientInformacion,
+    navBar
   };
 }
 

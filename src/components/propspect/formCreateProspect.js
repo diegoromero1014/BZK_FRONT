@@ -221,7 +221,7 @@ class FormCreateProspect extends Component{
     consultList(constants.CIIU);
     consultDataSelect(constants.FILTER_COUNTRY);
     validatePermissionsByModule(MODULE_PROSPECT).then((data) => {
-      if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+      if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
       } else {
         if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {

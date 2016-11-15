@@ -10,6 +10,8 @@ import ListBusinessPlanComponent from './listBusinessPlanComponent';
 import PaginationBusinessPlanComponent from './paginationBusinessPlanComponent';
 import {updateTitleNavBar} from '../navBar/actions';
 import ButtonDownloadBusinessPlanComponent from './downloadBusinessPlan/buttonDownloadBusinessPlanComponent';
+import {MODULE_BUSSINESS_PLAN, CREAR, DESCARGAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 
 class BusinessPlanComponent extends Component {
 
@@ -25,9 +27,18 @@ class BusinessPlanComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const {businessPlanByClientFindServer,clearBusinessPlan} = this.props;
+      const {businessPlanByClientFindServer, clearBusinessPlan, validatePermissionsByModule} = this.props;
       clearBusinessPlan();
       businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.businessDate",1,"","");
+      validatePermissionsByModule(MODULE_BUSSINESS_PLAN).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -38,7 +49,7 @@ class BusinessPlanComponent extends Component {
   }
 
   render() {
-    const {businessPlanReducer} = this.props;
+    const {businessPlanReducer, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     let visibleDownload = 'none';
@@ -60,9 +71,11 @@ class BusinessPlanComponent extends Component {
                 idTypeFilter={FILTER_STATUS_BUSINESS_PLAN_ID}/>
               </Col>
               <Col xs>
-                <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{marginTop: '21px'}}>
-                  <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-                </button>
+                { _.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), CREAR), false) &&
+                  <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{marginTop: '21px'}}>
+                    <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                  </button>
+                }
               </Col>
             </Row>
           </Grid>
@@ -82,7 +95,9 @@ class BusinessPlanComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
           </Row>
         </Grid>
-        <ButtonDownloadBusinessPlanComponent visibleDownload={visibleDownload} />
+        { _.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), DESCARGAR), false) &&
+          <ButtonDownloadBusinessPlanComponent visibleDownload={visibleDownload} />
+        }
        </div>
     );
   }
@@ -93,14 +108,16 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     businessPlanByClientFindServer,
     clearBusinessPlan,
-    updateTitleNavBar
+    updateTitleNavBar,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({businessPlanReducer , navBar}, ownerProps){
+function mapStateToProps({businessPlanReducer, navBar, reducerGlobal}, ownerProps){
     return {
         businessPlanReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 

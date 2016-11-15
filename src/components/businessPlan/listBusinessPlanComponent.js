@@ -7,6 +7,7 @@ import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_BUSINESS_PLAN} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {ELIMINAR} from '../../constantsGlobal';
 
 let v1 = "";
 
@@ -81,6 +82,8 @@ class ListBusinessPlanComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de plan de negocio?";
+    const {reducerGlobal} = this.props;
+    var permissionsBussinessPlan = reducerGlobal.get('permissionsBussinessPlan');
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -115,15 +118,18 @@ class ListBusinessPlanComponent extends Component {
               dateBusinessPlanStartFormat = moment(value.businessDate).locale('es').format('DD MMM YYYY, hh:mm a');
             }
             _.set(value, 'businessDate',dateBusinessPlanStartFormat);
-            if(value.idStatusDocument === 0){
-              _.set(value, 'delete',  {
-                actionDelete: true,
-                urlServer: "/deleteEntity",
-                typeDelete : DELETE_TYPE_BUSINESS_PLAN,
-                mensaje: mensaje,
-                json: json1
-              });
-          }
+
+            if( _.get(permissionsBussinessPlan, _.indexOf(permissionsBussinessPlan, ELIMINAR), false) ){
+              if(value.idStatusDocument === 0){
+                _.set(value, 'delete',  {
+                  actionDelete: true,
+                  urlServer: "/deleteEntity",
+                  typeDelete : DELETE_TYPE_BUSINESS_PLAN,
+                  mensaje: mensaje,
+                  json: json1
+                });
+              }
+            }
       });
   }
 
@@ -145,9 +151,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({businessPlanReducer}, ownerProps){
+function mapStateToProps({businessPlanReducer, reducerGlobal}, ownerProps){
     return {
-        businessPlanReducer
+        businessPlanReducer,
+        reducerGlobal
     };
 }
 

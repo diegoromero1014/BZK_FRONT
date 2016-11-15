@@ -1,6 +1,6 @@
 import * as actions from './constants';
 import axios from 'axios';
-import {APP_URL} from '../../constantsGlobal';
+import {APP_URL, FRONT_APP} from '../../constantsGlobal';
 
 export function toggleMenu() {
     return {
@@ -28,7 +28,10 @@ export function consultModulesAccess(){
         "debug": true,
         "isSuccessful": true
       },
-      messageBody: null
+      messageBody: {
+        "idRole": null,
+        "app": FRONT_APP
+      }
     }
   var request = axios.post(APP_URL + "/getModulesAccess", json);
   return {

@@ -9,6 +9,8 @@ import {pipelineByClientFindServer,clearPipeline} from './actions';
 import ListPipelineComponent from './listPipelineComponent';
 import PaginationPipelineComponent from './paginationPipelineComponent';
 import {updateTitleNavBar} from '../navBar/actions';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {MODULE_PIPELINE, CREAR, DESCARGAR} from '../../constantsGlobal';
 import ButtonDownloadPipelineComponent from './downloadPipeline/buttonDownloadPipelineComponent';
 
 class PipelineComponent extends Component {
@@ -26,9 +28,18 @@ class PipelineComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const {pipelineByClientFindServer,clearPipeline} = this.props;
+      const {pipelineByClientFindServer, clearPipeline, validatePermissionsByModule} = this.props;
       clearPipeline();
       pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"","");
+      validatePermissionsByModule(MODULE_PIPELINE).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -40,7 +51,7 @@ class PipelineComponent extends Component {
 
 
   render() {
-    const {pipelineReducer} = this.props;
+    const {pipelineReducer, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     let visibleDownload = 'none';
@@ -49,6 +60,7 @@ class PipelineComponent extends Component {
       visibleMessage = 'none';
       visibleDownload = 'block';
     }
+    console.log('permissionsPipeline', reducerGlobal.get('permissionsPipeline'));
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
@@ -68,9 +80,11 @@ class PipelineComponent extends Component {
           idTypeFilter={PIPELINE_STATUS}/>
           </Col>
           <Col xs>
-          <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{marginTop: '21px'}}>
-            <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-          </button>
+          { _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), CREAR), false) &&
+            <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{marginTop: '21px'}}>
+              <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+            </button>
+          }
         </Col>
           </Row>
         </Grid>
@@ -90,7 +104,9 @@ class PipelineComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
+          { _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
+            <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
+          }
        </div>
     );
   }
@@ -100,14 +116,16 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     pipelineByClientFindServer,
     clearPipeline,
-    updateTitleNavBar
+    updateTitleNavBar,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({pipelineReducer, navBar}, ownerProps){
+function mapStateToProps({pipelineReducer, navBar, reducerGlobal}, ownerProps){
     return {
         pipelineReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 

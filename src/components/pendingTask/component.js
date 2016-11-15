@@ -9,6 +9,9 @@ import SelectFilterContact from '../selectsComponent/selectFilterContact/selectF
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
 import ButtonCreatePendingTaskComponent from './createPendingTask/buttonCreatePendingTaskComponent';
+import {MODULE_TASKS, CREAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {redirectUrl} from '../globalComponents/actions';
 
 class UserTaskComponent extends Component {
 
@@ -22,14 +25,23 @@ class UserTaskComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ) {
       redirectUrl("/login");
     } else {
-      const {tasksByClientFindServer,tasksByClient,clearUserTask} = this.props;
+      const {tasksByClientFindServer,tasksByClient,clearUserTask, validatePermissionsByModule} = this.props;
       clearUserTask();
       tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
+      validatePermissionsByModule(MODULE_TASKS).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
   render() {
-    const {tasksByClient} = this.props;
+    const {tasksByClient, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if(tasksByClient.get('rowCount') !== 0) {
@@ -47,7 +59,11 @@ class UserTaskComponent extends Component {
           }}
           idTypeFilter={TASK_STATUS}/>
           </Col>
-          <Col xs>  <ButtonCreatePendingTaskComponent/>  </Col>
+          <Col xs>
+            { _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
+                <ButtonCreatePendingTaskComponent/>
+            }
+          </Col>
           </Row>
         </Grid>
         </div>
@@ -73,13 +89,15 @@ class UserTaskComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    tasksByClientFindServer, clearUserTask
+    tasksByClientFindServer, clearUserTask,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({tasksByClient}, ownerProps) {
+function mapStateToProps({tasksByClient, reducerGlobal}, ownerProps) {
   return {
-    tasksByClient
+    tasksByClient,
+    reducerGlobal
   };
 }
 

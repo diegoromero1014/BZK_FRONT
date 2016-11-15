@@ -39,7 +39,7 @@ class PrevisitComponent extends Component {
       clearPrevisit();
       previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
       validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
-        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {

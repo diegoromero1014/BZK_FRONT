@@ -7,7 +7,11 @@ const initialState = Immutable.Map({
   permissionsClients: [],
   permissionsContacts: [],
   permissionsShareholders: [],
-  permissionsPrevisits: []
+  permissionsPrevisits: [],
+  permissionsTasks: [],
+  permissionsPipeline: [],
+  permissionsBussinessPlan: [],
+  permissionsManagerialView: []
 });
 
 export default (state = initialState, action) => {
@@ -29,6 +33,21 @@ export default (state = initialState, action) => {
     case constants.MODULE_PREVISITS:
       const permissionsPrevisits = action.payload.data.data.permissions;
       return state.set('permissionsPrevisits', permissionsPrevisits);
+    case constants.MODULE_VISITS:
+      const permissionsVisits = action.payload.data.data.permissions;
+      return state.set('permissionsVisits', permissionsVisits);
+    case constants.MODULE_TASKS:
+      const permissionsTasks = action.payload.data.data.permissions;
+      return state.set('permissionsTasks', permissionsTasks);
+    case constants.MODULE_PIPELINE:
+      const permissionsPipeline = action.payload.data.data.permissions;
+      return state.set('permissionsPipeline', permissionsPipeline);
+    case constants.MODULE_BUSSINESS_PLAN:
+      const permissionsBussinessPlan = action.payload.data.data.permissions;
+      return state.set('permissionsBussinessPlan', permissionsBussinessPlan);
+    case constants.MODULE_MANAGERIAL_VIEW:
+      const permissionsManagerialView = action.payload.data.data.permissions;
+      return state.set('permissionsManagerialView', permissionsManagerialView);
     default:
       return state;
   }

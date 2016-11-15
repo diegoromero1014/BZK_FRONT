@@ -11,6 +11,7 @@ import PaginationContactComponent from './paginationContactComponent';
 import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RECORDS} from './constants';
 import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import {redirectUrl} from '../globalComponents/actions';
 import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
 
 class ContactComponent extends Component {
@@ -33,7 +34,7 @@ class ContactComponent extends Component {
       clearContact();
       contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,"",0,"","","","");
       validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
-        if((_.get(data, 'payload.data.validateLogin') === 'false')) {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {

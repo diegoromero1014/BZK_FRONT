@@ -17,6 +17,7 @@ import {changeStateSaveData} from '../../dashboard/actions';
 import {NUMBER_RECORDS} from '../constants';
 import {MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
 import {TASK_STATUS} from '../../selectsComponent/constants';
+import {redirectUrl} from '../../globalComponents/actions';
 
 import _ from 'lodash';
 import $ from 'jquery';
@@ -133,16 +134,20 @@ class ModalComponentPendingTask extends Component {
       changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createPendingTaskNew(messageBody).then((data) => {
         changeStateSaveData(false, "");
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ){
+          redirectUrl("/login");
+        } else {
           if((_.get(data, 'payload.data.status') === 200)){
-              this.setState({showEx: true});
-              tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
-            } else {
-              this.setState({showEr: true});
-          }
-          }, (reason) => {
-            changeStateSaveData(false, "");
+            this.setState({showEx: true});
+            tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
+          } else {
             this.setState({showEr: true});
-        });
+          }
+        }
+      }, (reason) => {
+        changeStateSaveData(false, "");
+        this.setState({showEr: true});
+      });
     } else {
       fecha.onChange('');
     }

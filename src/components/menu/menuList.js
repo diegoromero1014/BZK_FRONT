@@ -14,11 +14,7 @@ var itemClients = {
     icon: "building icon",
     link: "/dashboard/clients"
 };
-var menuItems = [{
-    text: "Mis clientes",
-    icon: "building icon",
-    link: "/dashboard/clients"
-}];
+var menuItems = [];
 
 const menuItemCerrarSesion = [
     {
@@ -41,6 +37,10 @@ class MenuList extends Component {
             linkUrl={item.link}
             style={item.style}
         />
+    }
+
+    componentWillMount(){
+      menuItems = [];
     }
 
     componentWillReceiveProps(nextProps){

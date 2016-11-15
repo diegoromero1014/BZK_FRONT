@@ -12,6 +12,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
+import {consultModulesAccess} from '../navBar/actions';
 import {MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
   MODULE_PIPELINE, MODULE_BUSSINESS_PLAN} from '../../constantsGlobal';
 
@@ -29,6 +30,11 @@ class TabClientInfo extends Component{
     this.setState({
       tabActive: tabSelect
     });
+  }
+
+  componentWillMount(){
+    const {consultModulesAccess} = this.props;
+    consultModulesAccess();
   }
 
   render(){
@@ -241,7 +247,8 @@ class TabClientInfo extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    updateTabSeleted
+    updateTabSeleted,
+    consultModulesAccess
   }, dispatch);
 }
 

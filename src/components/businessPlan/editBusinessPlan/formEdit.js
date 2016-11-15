@@ -11,7 +11,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
 import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
-import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
@@ -332,7 +332,9 @@ class FormEdit extends Component {
             <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
           </Col>
           <Col xs={2} sm={2} md={2} lg={2}>
-            <button type="button" onClick={this._editBusiness} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            { _.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), EDITAR), false) &&
+              <button type="button" onClick={this._editBusiness} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            }
           </Col>
         </Row>
         <Row style={{padding: "10px 10px 10px 20px"}}>

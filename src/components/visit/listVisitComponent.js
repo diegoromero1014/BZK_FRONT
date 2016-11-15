@@ -9,6 +9,7 @@ import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_VISIT} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {ELIMINAR} from '../../constantsGlobal';
 
 
 let v1 = "";
@@ -92,7 +93,8 @@ class ListVisitComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de la reunión?";
-
+    const {reducerGlobal} = this.props;
+    var permissionsVisits = reducerGlobal.get('permissionsVisits');
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -128,15 +130,18 @@ class ListVisitComponent extends Component {
             }
             var dateVisitFormat = moment(value.dateVisit).locale('es');
              _.set(value, 'dateVisitFormat',dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY")+ ", " + dateVisitFormat.format("hh:mm a"));
-            if(value.idStatusDocument === 0){
-              _.set(value, 'delete',  {
-                actionDelete: true,
-                urlServer: "/deleteEntity",
-                typeDelete : DELETE_TYPE_VISIT,
-                mensaje: mensaje,
-                json: json1
-              });
-          }
+
+            if( _.get(permissionsVisits, _.indexOf(permissionsVisits, ELIMINAR), false) ){
+              if(value.idStatusDocument === 0){
+                _.set(value, 'delete',  {
+                  actionDelete: true,
+                  urlServer: "/deleteEntity",
+                  typeDelete : DELETE_TYPE_VISIT,
+                  mensaje: mensaje,
+                  json: json1
+                });
+              }
+            }
       });
   }
 
@@ -158,9 +163,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({visitReducer}, ownerProps){
+function mapStateToProps({visitReducer, reducerGlobal}, ownerProps){
     return {
-        visitReducer
+        visitReducer,
+        reducerGlobal
     };
 }
 

@@ -490,7 +490,7 @@ class FormEditPrevisita extends Component{
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createPrevisit(previsitJson).then((data)=> {
           changeStateSaveData(false, "");
-          if((_.get(data, 'payload.data.validateLogin') === 'false')){
+          if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false'){
             redirectUrl("/login");
           } else {
             if( (_.get(data, 'payload.data.status') === 200) ){

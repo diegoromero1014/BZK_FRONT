@@ -7,7 +7,7 @@ import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
 import {TYPE_YEAR,TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA, DESCARGAR} from '../../constantsGlobal';
 import ButtonDownloadModal from './buttonDownloadModal';
 import {changeStateSaveData} from '../dashboard/actions';
 
@@ -51,10 +51,10 @@ class ItemChart extends Component{
   }
 
   render(){
-    const {textValue, iconValue, itemSeleted, styleColor} = this.props;
+    const {textValue, iconValue, itemSeleted, styleColor, reducerGlobal} = this.props;
     var styleBorderDownload = "1px solid " + styleColor;
     return(
-      <Col xs={12} md={6} lg={3} style={{padding: '10px 15px 10px 15px'}}>
+      <Col xs={12} md={6} lg={3} style={{padding: '0 15px 10px 15px'}}>
         <div style={{color: 'white', backgroundColor: styleColor, borderColor: styleColor, borderRadius: '4px 4px 0px 0px', cursor: 'pointer'}}
           onClick={this._clickSectionChart.bind(this, itemSeleted)}>
           <div style={{height: '100px'}} >
@@ -64,16 +64,22 @@ class ItemChart extends Component{
         </div>
         <div style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
           borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload}}>
-          <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{
-            onChange: (value) => this.setState({valueYear: value.id})
-          }}/>
-          { itemSeleted === TAB_VISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
-          { itemSeleted === TAB_PIPELINE && <i className='green file excel outline icon'
-                      title="Descargar información en formato CSV"
-                      onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
-                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>}
-          { itemSeleted === TAB_PREVISIT && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
-          { itemSeleted === TAB_BUSINESS && <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} /> }
+          { _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{onChange: (value) => this.setState({valueYear: value.id})}}/>
+          }
+          { itemSeleted === TAB_VISIT && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
+          }
+          { itemSeleted === TAB_PIPELINE && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <i className='green file excel outline icon' title="Descargar información en formato CSV" onClick={this._clickDownloadExcel.bind(this, itemSeleted)}
+                      style={{fontSize: "18px", float: 'right', marginTop: '10px', marginRight: "5px", cursor: 'pointer'}}/>
+          }
+          { itemSeleted === TAB_PREVISIT && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
+          }
+          { itemSeleted === TAB_BUSINESS && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
+          }
         </div>
       </Col>
     );
@@ -89,9 +95,10 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer},ownerProps) {
+function mapStateToProps({viewManagementReducer, reducerGlobal},ownerProps) {
   return {
-    viewManagementReducer
+    viewManagementReducer,
+    reducerGlobal
   };
 }
 

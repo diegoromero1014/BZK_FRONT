@@ -13,7 +13,8 @@ import {getMasterDataFields} from '../selectsComponent/actions';
 import {TASK_STATUS} from '../selectsComponent/constants';
 import {createPendingTaskNew} from './createPendingTask/actions'
 import {clearUserTask, tasksByClientFindServer} from './actions';
-import {MESSAGE_SAVE_DATA} from '../../constantsGlobal';
+import {MESSAGE_SAVE_DATA, EDITAR} from '../../constantsGlobal';
+import {redirectUrl} from '../globalComponents/actions';
 import {NUMBER_RECORDS} from './constants';
 import {changeStateSaveData} from '../dashboard/actions';
 import _ from 'lodash';
@@ -142,11 +143,15 @@ class ModalCreateTask extends Component{
       changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createPendingTaskNew(messageBody).then((data) => {
         changeStateSaveData(false, "");
-          if((_.get(data, 'payload.data.status') === 200)){
-              this.setState({taskEdited: true});
-            } else {
-              this.setState({showErrtask: true});
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ){
+          redirectUrl("/login");
+        } else {
+          if( _.get(data, 'payload.data.status') === 200 ){
+            this.setState({taskEdited: true});
+          } else {
+            this.setState({showErrtask: true});
           }
+        }
           }, (reason) => {
             changeStateSaveData(false, "");
             this.setState({showErrtask: true});
@@ -158,7 +163,7 @@ class ModalCreateTask extends Component{
 
   render(){
     const {fields: {responsable, fecha, idEstado, tarea, advance, dateVisit},
-        taskEdit, selectsReducer, handleSubmit} = this.props;
+        taskEdit, selectsReducer, reducerGlobal, handleSubmit} = this.props;
     return  (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -192,10 +197,12 @@ class ModalCreateTask extends Component{
                 </dt>
               </Col>
               <Col xs={12} md={3} ld={3}>
-                <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
-                  style={{marginRight:'15px', float:'right', marginTop:'35px'}}>
-                  Editar <i className={'icon edit'}></i>
-                </button>
+                { _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
+                  <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
+                    style={{marginRight:'15px', float:'right', marginTop:'35px'}}>
+                    Editar <i className={'icon edit'}></i>
+                  </button>
+                }
               </Col>
             </Row>
             <Row style={{padding: "0px 10px 0px 0px"}}>
@@ -304,11 +311,12 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({tasksByClient, selectsReducer, participants}, {taskEdit}){
+function mapStateToProps({tasksByClient, selectsReducer, participants, reducerGlobal}, {taskEdit}){
   return {
     tasksByClient,
     selectsReducer,
     participants,
+    reducerGlobal,
     initialValues: {
       responsable: taskEdit.responsable,
       idEmployee:taskEdit.idResponsable,

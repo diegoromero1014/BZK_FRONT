@@ -10,6 +10,8 @@ import ListVisitComponent from './listVisitComponent';
 import PaginationVisitComponent from './paginationVisitComponent';
 import {updateTitleNavBar} from '../navBar/actions';
 import ButtonCreateDownloadVisitModal from './downloadVisits/buttonCreateDownloadVisitModal';
+import {MODULE_VISITS, CREAR, DESCARGAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 import {clearIdPrevisit} from './actions';
 
 class VisitComponent extends Component {
@@ -26,9 +28,18 @@ class VisitComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const {visitByClientFindServer,clearVisit} = this.props;
+      const {visitByClientFindServer,clearVisit, validatePermissionsByModule} = this.props;
       clearVisit();
       visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
+      validatePermissionsByModule(MODULE_VISITS).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -40,7 +51,7 @@ class VisitComponent extends Component {
   }
 
   render() {
-    const {visitReducer} = this.props;
+    const {visitReducer, reducerGlobal} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     let visibleDownload = 'none';
@@ -62,9 +73,11 @@ class VisitComponent extends Component {
           idTypeFilter={FILTER_STATUS_VISIT_ID}/>
           </Col>
           <Col xs>
-          <button className="btn btn-primary" type="button" title="Crear reunión" style={{marginTop: '21px'}} onClick={this._createVisit}>
-            <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
-          </button>
+          { _.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), CREAR), false) &&
+            <button className="btn btn-primary" type="button" title="Crear reunión" style={{marginTop: '21px'}} onClick={this._createVisit}>
+              <i className="file text outline icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+            </button>
+          }
         </Col>
           </Row>
         </Grid>
@@ -84,7 +97,9 @@ class VisitComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          <ButtonCreateDownloadVisitModal visibleDownload={visibleDownload}/>
+          { _.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), DESCARGAR), false) &&
+            <ButtonCreateDownloadVisitModal visibleDownload={visibleDownload}/>
+          }
        </div>
     );
   }
@@ -95,14 +110,16 @@ function mapDispatchToProps(dispatch){
     visitByClientFindServer,
     clearVisit,
     updateTitleNavBar,
-    clearIdPrevisit
+    clearIdPrevisit,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({visitReducer, navBar}, ownerProps){
+function mapStateToProps({visitReducer, navBar, reducerGlobal}, ownerProps){
     return {
         visitReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 

@@ -10,6 +10,7 @@ import GridComponent from '../grid/component';
 import {NUMBER_RECORDS,DELETE_TYPE_PIPELINE} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {ELIMINAR} from '../../constantsGlobal';
 
 
 let v1 = "";
@@ -99,7 +100,8 @@ class ListPipelineComponent extends Component {
 
   _renderCellView(data){
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de pipeline?";
-
+    const {reducerGlobal} = this.props;
+    var permissionsPipeline = reducerGlobal.get('permissionsPipeline');
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
@@ -132,15 +134,17 @@ class ListPipelineComponent extends Component {
             _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));
              var datePipelineEndFormat = moment(value.endDate).locale('es');
             _.set(value, 'datePipelineEndFormat',datePipelineEndFormat.format("DD") + " " + datePipelineEndFormat.format("MMM") + " " + datePipelineEndFormat.format("YYYY")+ ", " + datePipelineEndFormat.format("hh:mm a"));
-            if(value.idStatusDocument === 0){
-              _.set(value, 'delete',  {
-                actionDelete: true,
-                urlServer: "/deleteEntity",
-                typeDelete : DELETE_TYPE_PIPELINE,
-                mensaje: mensaje,
-                json: json1
-              });
-          }
+            if( _.get(permissionsPipeline, _.indexOf(permissionsPipeline, ELIMINAR), false) ){
+              if(value.idStatusDocument === 0){
+                _.set(value, 'delete',  {
+                  actionDelete: true,
+                  urlServer: "/deleteEntity",
+                  typeDelete : DELETE_TYPE_PIPELINE,
+                  mensaje: mensaje,
+                  json: json1
+                });
+              }
+            }
       });
   }
 
@@ -162,9 +166,10 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({pipelineReducer}, ownerProps){
+function mapStateToProps({pipelineReducer, reducerGlobal}, ownerProps){
     return {
-        pipelineReducer
+        pipelineReducer,
+        reducerGlobal
     };
 }
 

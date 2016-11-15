@@ -11,6 +11,8 @@ import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import ViewChartVisit from './chartVisit/viewChartVisit';
 import ViewChartBusinessPlan from './chartBusinessPlan/viewChartBusinessPlan';
 import {TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {MODULE_MANAGERIAL_VIEW} from '../../constantsGlobal';
 import _ from 'lodash';
 
 const itemsChart = [
@@ -50,9 +52,18 @@ class ViewManagement extends Component{
     if(window.localStorage.getItem('sessionToken') === ""){
       redirectUrl("/login");
     } else {
-      const {changeTabSeletedChartView, updateTitleNavBar} = this.props;
+      const {changeTabSeletedChartView, updateTitleNavBar, validatePermissionsByModule} = this.props;
       changeTabSeletedChartView(0);
       updateTitleNavBar("Vista gerencial");
+      validatePermissionsByModule(MODULE_MANAGERIAL_VIEW).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+          redirectUrl("/login");
+        } else {
+          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+            redirectUrl("/dashboard");
+          }
+        }
+      });
     }
   }
 
@@ -67,11 +78,11 @@ class ViewManagement extends Component{
   }
 
   render(){
-    const {viewManagementReducer} = this.props;
+    const {viewManagementReducer, reducerGlobal} = this.props;
     const tabSeletedReducer = viewManagementReducer.get('tabSeleted');
     const isLoadChart = viewManagementReducer.get('loadChart');
     return(
-      <div className="ui segment">
+      <div className="ui segment" style={{marginTop: '-2px'}}>
         <div style={{backgroundColor: "white"}}>
           <Row xs={12} md={12} lg={12} style={{padding: '15px 20px 10px 20px'}}>
             {itemsChart.map(this._mapChartItems)}
@@ -95,14 +106,16 @@ class ViewManagement extends Component{
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     updateTitleNavBar,
-    changeTabSeletedChartView
+    changeTabSeletedChartView,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer, navBar},ownerProps) {
+function mapStateToProps({viewManagementReducer, navBar, reducerGlobal},ownerProps) {
   return {
     viewManagementReducer,
-    navBar
+    navBar,
+    reducerGlobal
   };
 }
 

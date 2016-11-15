@@ -18,7 +18,7 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {LAST_VISIT_REVIEW} from '../constants';
 import {TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS} from '../../../constantsGlobal';
-import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import {createVisti, detailVisit, pdfDescarga} from '../actions';
 import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
 import {downloadFilePdf} from '../../clientInformation/actions';
@@ -218,7 +218,7 @@ class FormEdit extends Component{
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createVisti(visitJson).then((data)=> {
           changeStateSaveData(false, "");
-          if(data.payload.data.validateLogin === 'false'){
+          if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ){
             redirectUrl("/login");
           } else {
             if(data.payload.data.status === 200){
@@ -442,7 +442,9 @@ class FormEdit extends Component{
             <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
           </Col>
           <Col xs={2} sm={2} md={2} lg={2}>
-            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            { _.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), EDITAR), false) &&
+              <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'} style={{marginRight:'15px', float:'right', marginTop:'-15px'}}>Editar <i className={'icon edit'}></i></button>
+            }
           </Col>
         </Row>
           <Row style={{padding: "10px 10px 10px 20px"}}>
