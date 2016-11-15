@@ -13,7 +13,8 @@ class FormLogin extends Component{
       usuario: "",
       password: "",
       messageErrorServidor: false,
-      messageUsuarioIncorrecto: false
+      messageUsuarioIncorrecto: false,
+      messageWithoutPermissions: false
     }
   }
 
@@ -35,13 +36,19 @@ class FormLogin extends Component{
     const {validateLogin} = this.props;
     validateLogin(usuario, password)
     .then( response => {
-      if( _.get(response, 'payload.data.data') !== {} && _.get(response, 'payload.data.data') !== undefined ){
-        if( _.get(response, 'payload.data.data.redirecUrl') === "/login" &&
-            _.get(response, 'payload.data.data.sessionToken') === "" ){
+      if( _.get(response, 'payload.data.status') === 200 ){
+        if( _.get(response, 'payload.data.data.redirecUrl') === "login" ){
           this.setState({
             messageUsuarioIncorrecto: true,
-            messageErrorServidor: false
+            messageErrorServidor: false,
+            messageWithoutPermissions: false
           });
+        } else if( _.get(response, 'payload.data.data.redirecUrl') === "withoutPermissions" ){
+            this.setState({
+              messageWithoutPermissions: true,
+              messageUsuarioIncorrecto: false,
+              messageErrorServidor: false
+            });
         } else {
           const {saveSessionToken, redirectUrl} = this.props;
           saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
@@ -50,14 +57,16 @@ class FormLogin extends Component{
       } else {
         this.setState({
           messageErrorServidor: true,
-          messageUsuarioIncorrecto: false
+          messageUsuarioIncorrecto: false,
+          messageWithoutPermissions: false
         });
       }
     })
     .catch(err => {
       this.setState({
         messageErrorServidor: true,
-        messageUsuarioIncorrecto: false
+        messageUsuarioIncorrecto: false,
+        messageWithoutPermissions: false
       });
     });
   }
@@ -65,6 +74,7 @@ class FormLogin extends Component{
   componenWillMount(){
     this.state.messageErrorServidor = false;
     this.state.messageUsuarioIncorrecto = false;
+    this.state.messageWithoutPermissions = false;
     const {clearStateLogin} = this.props;
     clearStateLogin();
   }
@@ -92,6 +102,11 @@ class FormLogin extends Component{
           {this.state.messageUsuarioIncorrecto &&
             <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
               <span style={{color: "#e76e70", size: "17px"}}>Usuario o contraseña incorrecto</span>
+            </div>
+          }
+          {this.state.messageWithoutPermissions &&
+            <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
+              <span style={{color: "#e76e70", size: "17px"}}>Usuario sin permisos</span>
             </div>
           }
           <div className="button-item" style={{marginLeft: "0px",paddingLeft: '28px',paddingRight: '28px'}}>
