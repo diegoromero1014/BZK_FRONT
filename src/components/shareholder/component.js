@@ -13,6 +13,7 @@ import SelectFilterContact from '../selectsComponent/selectFilterContact/selectF
 import $ from 'jquery';
 import {redirectUrl} from '../globalComponents/actions';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {MODULE_SHAREHOLDERS, CREAR, EDITAR} from '../../constantsGlobal';
 
 var enableClickCertificationShareholder = "";
@@ -23,6 +24,7 @@ class ShareholderComponent extends Component {
      super(props);
      this._handleChangeValueCertificateShareholder = this._handleChangeValueCertificateShareholder.bind(this);
      this.state= {
+        openMessagePermissions: false,
         value1: "",
         value2:"",
         valueCheck: false,
@@ -62,7 +64,7 @@ class ShareholderComponent extends Component {
             redirectUrl("/login");
           } else {
             if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-              redirectUrl("/dashboard");
+              this.setState({ openMessagePermissions: true });
             }
           }
         });
@@ -163,6 +165,7 @@ class ShareholderComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
+          <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
        </div>
     );
   }

@@ -12,6 +12,7 @@ import {previsitByClientFindServer, clearPrevisit} from './actions';
 import {downloadFilePdf} from '../clientInformation/actions';
 import {FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {updateTitleNavBar} from '../navBar/actions';
 
 class PrevisitComponent extends Component {
@@ -21,6 +22,7 @@ class PrevisitComponent extends Component {
      this._createPrevisita = this._createPrevisita.bind(this);
      this._downloadFilePrevisitGuide = this._downloadFilePrevisitGuide.bind(this);
      this.state= {
+       openMessagePermissions: false,
        value1: ""
     };
   }
@@ -43,7 +45,7 @@ class PrevisitComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -106,6 +108,7 @@ class PrevisitComponent extends Component {
         { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
           <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
         }
+        <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
       </div>
     );
   }

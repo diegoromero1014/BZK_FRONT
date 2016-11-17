@@ -12,6 +12,7 @@ import {FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID,NUMBER_RE
 import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {redirectUrl} from '../globalComponents/actions';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
 
 class ContactComponent extends Component {
@@ -19,6 +20,7 @@ class ContactComponent extends Component {
   constructor(props){
      super(props);
      this.state= {
+        openMessagePermissions: false,
         value1: "",
         value2: "",
         value3: ""
@@ -38,7 +40,7 @@ class ContactComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -108,6 +110,7 @@ class ContactComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
+          <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
        </div>
     );
   }

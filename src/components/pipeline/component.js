@@ -12,14 +12,16 @@ import {updateTitleNavBar} from '../navBar/actions';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_PIPELINE, CREAR, DESCARGAR} from '../../constantsGlobal';
 import ButtonDownloadPipelineComponent from './downloadPipeline/buttonDownloadPipelineComponent';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 
 class PipelineComponent extends Component {
 
   constructor(props){
     super(props);
     this.state= {
-       value1: "",
-       value2: ""
+      openMessagePermissions: false,
+      value1: "",
+      value2: ""
     };
     this._createPipeline = this._createPipeline.bind(this);
   }
@@ -36,7 +38,7 @@ class PipelineComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -107,6 +109,7 @@ class PipelineComponent extends Component {
           { _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
             <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
           }
+          <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
        </div>
     );
   }

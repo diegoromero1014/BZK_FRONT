@@ -106,7 +106,7 @@ class FormLogin extends Component{
           }
           {this.state.messageWithoutPermissions &&
             <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}} >
-              <span style={{color: "#e76e70", size: "17px"}}>Usuario sin permisos</span>
+              <span style={{color: "#e76e70", size: "17px"}}>Usuario sin privilegios suficientes para acceder</span>
             </div>
           }
           <div className="button-item" style={{marginLeft: "0px",paddingLeft: '28px',paddingRight: '28px'}}>

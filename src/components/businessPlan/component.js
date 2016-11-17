@@ -12,13 +12,15 @@ import {updateTitleNavBar} from '../navBar/actions';
 import ButtonDownloadBusinessPlanComponent from './downloadBusinessPlan/buttonDownloadBusinessPlanComponent';
 import {MODULE_BUSSINESS_PLAN, CREAR, DESCARGAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 
 class BusinessPlanComponent extends Component {
 
   constructor(props){
     super(props);
     this.state= {
-       value1: ""
+      openMessagePermissions: false,
+      value1: ""
     };
     this._createBusinessPlan = this._createBusinessPlan.bind(this);
   }
@@ -35,7 +37,7 @@ class BusinessPlanComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -98,6 +100,7 @@ class BusinessPlanComponent extends Component {
         { _.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), DESCARGAR), false) &&
           <ButtonDownloadBusinessPlanComponent visibleDownload={visibleDownload} />
         }
+        <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
        </div>
     );
   }

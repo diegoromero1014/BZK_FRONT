@@ -66,8 +66,8 @@ class BottonContactAdmin extends Component {
         <SweetAlert
          type= "warning"
          show={this.state.showErrorPermissions}
-         title="Administración de contactos"
-         text="Señor usuario, no tiene permisos para acceder a está funcionalidad."
+         title="Acceso denegado"
+         text="Señor usuario, no tiene permisos para acceder a éste módulo."
          onConfirm={() => this.setState({showErrorPermissions: false})}
          />
       </div>

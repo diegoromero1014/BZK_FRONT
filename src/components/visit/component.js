@@ -12,6 +12,7 @@ import {updateTitleNavBar} from '../navBar/actions';
 import ButtonCreateDownloadVisitModal from './downloadVisits/buttonCreateDownloadVisitModal';
 import {MODULE_VISITS, CREAR, DESCARGAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {clearIdPrevisit} from './actions';
 
 class VisitComponent extends Component {
@@ -20,7 +21,8 @@ class VisitComponent extends Component {
      super(props);
     this._createVisit = this._createVisit.bind(this);
     this.state= {
-       value1: ""
+      openMessagePermissions: false,
+      value1: ""
     };
   }
 
@@ -36,7 +38,7 @@ class VisitComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -100,6 +102,7 @@ class VisitComponent extends Component {
           { _.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), DESCARGAR), false) &&
             <ButtonCreateDownloadVisitModal visibleDownload={visibleDownload}/>
           }
+          <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
        </div>
     );
   }

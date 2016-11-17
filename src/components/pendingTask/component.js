@@ -11,13 +11,17 @@ import ListPendingTaskComponent from './listPendingTaskComponent';
 import ButtonCreatePendingTaskComponent from './createPendingTask/buttonCreatePendingTaskComponent';
 import {MODULE_TASKS, CREAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {redirectUrl} from '../globalComponents/actions';
 
 class UserTaskComponent extends Component {
 
   constructor(props) {
      super(props);
-     this.state = {value1: ""};
+     this.state = {
+       openMessagePermissions: false,
+       value1: ""
+     };
 
   }
 
@@ -33,7 +37,7 @@ class UserTaskComponent extends Component {
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -82,6 +86,7 @@ class UserTaskComponent extends Component {
             </Col>
           </Row>
         </Grid>
+        <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
       </div>
     );
   }
