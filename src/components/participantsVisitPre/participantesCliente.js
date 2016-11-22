@@ -12,6 +12,8 @@ import {contactsByClientFindServer} from '../contact/actions';
 import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
 import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../constantsGlobal';
 import {downloadFilePDF} from '../contact/actions'
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
 import {NUMBER_CONTACTS} from './constants';
 import _ from 'lodash';
 
@@ -86,13 +88,20 @@ class ParticipantesCliente extends Component{
   }
 
   componentWillMount(){
-    const{contactsByClient, contactsByClientFindServer, clearParticipants, participants} = this.props;
+    const{contactsByClient, contactsByClientFindServer, clearParticipants, participants, validatePermissionsByModule} = this.props;
     clearParticipants();
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
-    //if( _.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined ){
-      contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_CONTACTS,"",0,"","","","");
-    //}
+    contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_CONTACTS,"",0,"","","","");
+    validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
+      if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+        redirectUrl("/login");
+      } else {
+        if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
+          this.setState({ openMessagePermissions: true });
+        }
+      }
+    });
   }
 
   _updateValue(value){
@@ -119,7 +128,7 @@ class ParticipantesCliente extends Component{
   }
 
   render(){
-    const {fields: {contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, error, handleSubmit, participants, contactsByClient,
+    const {fields: {contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, reducerGlobal, error, handleSubmit, participants, contactsByClient,
     addParticipant, disabled} = this.props;
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
@@ -203,7 +212,9 @@ class ParticipantesCliente extends Component{
                 <i className="white plus icon"/> Agregar participante
                 </button>
               </Col>
-              <BotonCreateContactComponent typeButton={1} />
+              { _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
+                <BotonCreateContactComponent typeButton={1} />
+              }
             </Row>
           </Col>
           : ''}
@@ -243,15 +254,17 @@ function mapDispatchToProps(dispatch) {
         addParticipant,
         contactsByClientFindServer,
         clearParticipants,
-        downloadFilePDF
+        downloadFilePDF,
+        validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, participants, contactsByClient}) {
+function mapStateToProps({selectsReducer, participants, contactsByClient, reducerGlobal}) {
     return {
         participants,
         selectsReducer,
-        contactsByClient
+        contactsByClient,
+        reducerGlobal
     };
 }
 
