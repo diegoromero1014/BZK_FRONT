@@ -58,8 +58,15 @@ class ItemChart extends Component{
         <div style={{color: 'white', backgroundColor: styleColor, borderColor: styleColor, borderRadius: '4px 4px 0px 0px', cursor: 'pointer'}}
           onClick={this._clickSectionChart.bind(this, itemSeleted)}>
           <div style={{height: '100px'}} >
-            <i className={iconValue} style={{fontSize: "60px", marginTop: '45px', marginLeft: "15px"}}/>
-            <span style={{fontSize: "30px", float: 'right', marginTop: '40px', marginRight: "25px"}} >{textValue}</span>
+              <Row>
+                  <Col xs={6} md={4} lg={4} style={{padding: '0 15px 10px 15px'}}>
+                      <i className={iconValue} style={{fontSize: "60px", marginTop: '45px', marginLeft: "15px"}}/>
+                  </Col>
+                  <Col xs={6} md={8} lg={8} style={{padding: '0 15px 10px 15px'}}>
+                      <span
+                          style={{fontSize: "28px", float: 'right', marginTop: '40px', marginRight: "25px"}}>{textValue}</span>
+                  </Col>
+              </Row>
           </div>
         </div>
         <div style={{color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,

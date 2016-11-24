@@ -78,6 +78,7 @@ export const MODULE_VISITS = "Visitas";
 export const MODULE_TASKS = "Tareas";
 export const MODULE_PIPELINE = "Pipeline";
 export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
+export const MODULE_ALERTS = "Alertas";
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import MenuListItem from './menuListItem';
 import {connect} from 'react-redux';
-import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS} from '../../constantsGlobal';
+import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS,MODULE_ALERTS} from '../../constantsGlobal';
 
 var itemManagerialView = {
     text: "Vista gerencial",
@@ -13,6 +13,11 @@ var itemClients = {
     text: "Mis clientes",
     icon: "building icon",
     link: "/dashboard/clients"
+};
+var itemAlerts = {
+    text: "Alertas",
+    icon: "alarm icon icon",
+    link: "/dashboard/viewAlerts"
 };
 var menuItems = [];
 
@@ -49,8 +54,11 @@ class MenuList extends Component {
       if( _.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW) ){
         menuItems.push(itemManagerialView);
       }
-      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS) ){
+      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)){
         menuItems.push(itemClients);
+      }
+      if( _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)){
+        menuItems.push(itemAlerts);
       }
     }
 
