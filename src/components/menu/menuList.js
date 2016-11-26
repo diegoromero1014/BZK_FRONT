@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import MenuListItem from './menuListItem';
 import {connect} from 'react-redux';
+import ViewAlerts from '../alerts/alertsComponent';
 import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS,MODULE_ALERTS} from '../../constantsGlobal';
 
 var itemManagerialView = {
@@ -13,11 +14,6 @@ var itemClients = {
     text: "Mis clientes",
     icon: "building icon",
     link: "/dashboard/clients"
-};
-var itemAlerts = {
-    text: "Alertas",
-    icon: "alarm icon icon",
-    link: "/dashboard/viewAlerts"
 };
 var menuItems = [];
 
@@ -57,9 +53,6 @@ class MenuList extends Component {
       if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)){
         menuItems.push(itemClients);
       }
-      if( _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)){
-        menuItems.push(itemAlerts);
-      }
     }
 
     render() {
@@ -81,6 +74,9 @@ class MenuList extends Component {
                         }
                     </a>
                     {menuItems.map(this._mapMenuItems)}
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
+                        <ViewAlerts/>
+                    }
                 </ul>
                 <ul style={{width: "100%", bottom: "0px", position: "absolute"}}>
                     {menuItemCerrarSesion.map(this._mapMenuItems)}

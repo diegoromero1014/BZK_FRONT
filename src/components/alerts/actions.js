@@ -2,11 +2,12 @@
  * Created by user- on 11/22/2016.
  */
 import {APP_URL} from '../../constantsGlobal';
-import {GET_ALERT_BY_USER} from './constants';
+import {GET_ALERT_BY_USER,OPEN_MODAL_ALERTS} from './constants';
 import axios from 'axios';
 
 
-export function getAlertsByUser(limInf, limSup){
+export function getAlertsByUser(){
+
     const json = {
         "messageHeader":{
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -19,16 +20,18 @@ export function getAlertsByUser(limInf, limSup){
             "applicationVersion": "",
             "debug": true,
             "isSuccessful": true
-        },
-        "messageBody":{
-            "limInf": limInf,
-            "limSup": limSup
         }
     };
-
-        var request = axios.post(APP_URL + "/clientListForEmployee", json);
+        const request = axios.post(APP_URL + "/getAllNumberByAlertByUser", json);
     return{
         type: GET_ALERT_BY_USER,
         payload: request
+    }
+}
+
+export function openModalAlerts(open){
+    return{
+        type: OPEN_MODAL_ALERTS,
+        open
     }
 }

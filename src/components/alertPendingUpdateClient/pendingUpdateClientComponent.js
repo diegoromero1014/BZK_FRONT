@@ -11,7 +11,7 @@ import {NUMBER_RECORDS} from './constants';
 import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import {consultList,getMasterDataFields} from '../selectsComponent/actions';
+import {consultList,getMasterDataFields,consultListWithParameterUbication,consultDataSelect} from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
@@ -20,13 +20,14 @@ import {clearInfoClient} from '../clientInformation/actions';
 import {SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 
-const fields =["team","certificationStatus"];
+const fields =["team","region","zone"];
 
 class ClientsPendingUpdate extends Component {
     constructor(props) {
         super(props);
         this._onChangeTeam = this._onChangeTeam.bind(this);
-        this._onChangeCertificationStatus = this._onChangeCertificationStatus.bind(this);
+        this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
+        this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
         this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
         this._handleClientsFind = this._handleClientsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
@@ -40,7 +41,7 @@ class ClientsPendingUpdate extends Component {
         if(window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined){
             redirectUrl("/login");
         } else {
-            const {clearFilter,consultList,getMasterDataFields, clearContact, clearInfoClient} = this.props;
+            const {clearFilter,consultList,getMasterDataFields, clearContact, clearInfoClient,consultDataSelect} = this.props;
             clearFilter();
             getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
                 if( _.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED  ){
@@ -48,6 +49,7 @@ class ClientsPendingUpdate extends Component {
                 }
             });
             consultList(constants.TEAM_FOR_EMPLOYEE);
+            consultDataSelect(constants.LIST_REGIONS);
             const {updateTitleNavBar, validatePermissionsByModule} = this.props;
             updateTitleNavBar("Alerta de clientes pendientes actualización");
             clearInfoClient();
@@ -79,18 +81,27 @@ class ClientsPendingUpdate extends Component {
         }
     }
 
-    _onChangeCertificationStatus(val){
-        const {fields: {certificationStatus}} = this.props;
-        certificationStatus.onChange(val);
+    _onChangeRegionStatus(val){
+        const {fields: {region,zone},consultListWithParameterUbication} = this.props;
+        region.onChange(val);
+        zone.onChange(null);
+        consultListWithParameterUbication(constants.LIST_ZONES,val);
+        if(val){
+            this._handleClientsFind();
+        }
+    }
+    _onChangeZoneStatus(val){
+        const {fields: {zone}} = this.props;
+        zone.onChange(val);
         if(val){
             this._handleClientsFind();
         }
     }
 
     _handleClientsFind(){
-        const {fields: {certificationStatus,team}} = this.props;
+        const {fields: {team,region,zone}} = this.props;
         const {clientsFindServer,alertPendingUpdateClient,changePage} = this.props;
-        clientsFindServer(alertPendingUpdateClient.get('keywordNameNit'), 0, NUMBER_RECORDS,certificationStatus.value,team.value).then((data) => {
+        clientsFindServer(alertPendingUpdateClient.get('keywordNameNit'), 0, NUMBER_RECORDS,region.value,team.value).then((data) => {
             if ( !_.get(data, 'payload.data.validateLogin') ) {
                 redirectUrl("/login");
             }
@@ -118,7 +129,7 @@ class ClientsPendingUpdate extends Component {
 
     render() {
         var clientItems = [];
-        const {fields:{team,certificationStatus}, handleSubmit, navBar, reducerGlobal} = this.props;
+        const {fields:{team,region,zone}, handleSubmit, navBar, reducerGlobal} = this.props;
         const {alertPendingUpdateClient,selectsReducer} = this.props;
         var countClients = alertPendingUpdateClient.get('countClients');
         var status = alertPendingUpdateClient.get('status');
@@ -128,7 +139,7 @@ class ClientsPendingUpdate extends Component {
                 <form>
                     <Row style={{borderBottom:"2px solid #D9DEDF",marginTop:"15px"}}>
                         <Col xs={12} sm={12} md={4} lg={4} style={{width:'60%'}}>
-                            <SearchBarClient valueTeam = {team.value} valueCertification={certificationStatus.value}/>
+                            <SearchBarClient valueTeam = {team.value} valueCertification={region.value}/>
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2} style={{width:'60%'}}>
                             <ComboBox
@@ -146,30 +157,30 @@ class ClientsPendingUpdate extends Component {
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2} style={{width:'60%'}}>
                             <ComboBox
-                                name="celula"
+                                name="region"
                                 labelInput="Región"
-                                {...certificationStatus}
-                                onChange={val => this._onChangeCertificationStatus(val)}
-                                value={certificationStatus.value}
-                                onBlur={certificationStatus.onBlur}
+                                {...region}
+                                onChange={val => this._onChangeRegionStatus(val)}
+                                value={region.value}
+                                onBlur={region.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 searchClient ={'client'}
-                                data={selectsReducer.get(constants.CERTIFICATION_STATUS) || []}
+                                data={selectsReducer.get(constants.LIST_REGIONS) || []}
                             />
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2} style={{width:'60%'}}>
                             <ComboBox
-                                name="celula"
+                                name="zona"
                                 labelInput="Zona"
-                                {...certificationStatus}
-                                onChange={val => this._onChangeCertificationStatus(val)}
-                                value={certificationStatus.value}
-                                onBlur={certificationStatus.onBlur}
+                                {...zone}
+                                onChange={val => this._onChangeZoneStatus(val)}
+                                value={zone.value}
+                                onBlur={zone.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 searchClient ={'client'}
-                                data={selectsReducer.get(constants.CERTIFICATION_STATUS) || []}
+                                data={selectsReducer.get(constants.LIST_ZONES) || []}
                             />
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{width:'100%'}}>
@@ -189,7 +200,7 @@ class ClientsPendingUpdate extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
-                        <Pagination valueTeam = {team.value} valueCertification={certificationStatus.value}/>
+                        <Pagination valueTeam = {team.value} valueCertification={region.value}/>
                     </Col>
                 </Row>
             </div>
@@ -208,7 +219,9 @@ function mapDispatchToProps(dispatch){
         updateTitleNavBar,
         clearContact,
         clearInfoClient,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        consultListWithParameterUbication,
+        consultDataSelect
     }, dispatch);
 }
 

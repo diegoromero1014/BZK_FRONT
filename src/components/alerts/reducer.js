@@ -3,32 +3,28 @@
  */
 import Immutable from 'immutable';
 import * as actions from './constants';
+import _  from 'lodash';
 
 const initialState = Immutable.Map(
     {
-        listAlertByUser: Immutable.List(
-            [
-                {
-                codeAlert: "pending_update_client",
-                nameAlert: "Clientes pendientes de actualización",
-                countClientByAlert: 109,
-                }
-            ]
-        )
-});
+        listAlertByUser: Immutable.List(),
+        openModal: false
+    }
+);
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case actions.GET_ALERT_BY_USER:
             const response = action.payload.data;
-            console.log("response",response);
-            // return state.withMutations(map => {
-            //     map
-            //         .set('status', 'processed')
-            //         .set('countClients', response.countClients)
-            //         .set('responseClients', response.listClients === undefined ? [] : JSON.parse(response.listClients));
-            // });
+            return state.withMutations(map => {
+                map.set('listAlertByUser', _.get(response,"data"));
+            });
             return state;
+        case actions.OPEN_MODAL_ALERTS:
+            return state.withMutations(map => {
+                map
+                    .set('openModal', action.open)
+            });
         default:
             return state;
     }

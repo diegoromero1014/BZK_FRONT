@@ -21,7 +21,6 @@ import Pipeline from './components/pipeline/createPipeline/createPipeline';
 import EditPipeline from './components/pipeline/editPipeline/editPipeline';
 import BusinessPlan from './components/businessPlan/createBusinessPlan/createBusinessPlan';
 import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
-import ViewAlerts from './components/alerts/alertsComponent';
 import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
 
 class App extends Component {
@@ -42,7 +41,6 @@ export default (
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
                 <Route path="viewManagement" component={ViewManagement}></Route>
-                <Route path="viewAlerts" component={ViewAlerts}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>
