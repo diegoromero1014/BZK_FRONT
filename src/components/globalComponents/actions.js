@@ -8,3 +8,15 @@ export function redirectUrl(url) {
         sessionToken: url
     }
 }
+
+export function shorterStringValue(element){
+  return element.length > 50 ? element.substring(0, 50) + "..." : element;
+}
+
+export function mapDateValueFromTask(date){
+  if( moment(date, [REVIEWED_DATE_FORMAT], 'es', true).isValid() ){
+    return date;
+  } else {
+    return moment(date).locale('es').format(REVIEWED_DATE_FORMAT);
+  }
+}

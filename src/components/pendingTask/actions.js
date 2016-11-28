@@ -6,7 +6,7 @@ export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder,
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-      "username":"lmejias",
+      "username":"",
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",

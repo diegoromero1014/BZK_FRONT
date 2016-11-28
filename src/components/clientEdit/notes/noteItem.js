@@ -4,6 +4,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import {bindActionCreators} from 'redux';
 import {deleteNote, updateNote} from './actions';
+import {updateErrorsNotes} from '../../clientDetailsInfo/actions';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
@@ -19,9 +20,23 @@ class NoteItem extends Component {
     }
 
     updateValue(prop, value) {
-        const {updateNote, index} = this.props;
+        const {updateNote, index, updateErrorsNotes, notes} = this.props;
         this.setState(_.set({}, prop, value));
         updateNote(index, prop, value);
+        let notesArray = [];
+        notes.map(map => {
+          var noteItem = {
+            "typeOfNote": map.combo,
+            "note": map.body
+          }
+          notesArray.push(noteItem);
+        });
+        updateErrorsNotes(false);
+        notesArray.forEach(function(note){
+          if(_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)){
+            updateErrorsNotes(true);
+          }
+        });
     }
 
     _deleteNote() {
@@ -36,6 +51,9 @@ class NoteItem extends Component {
         const {combo, body} = this.props;
         this.updateValue("combo", combo);
         this.updateValue("body", body);
+        if( _.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null) ){
+          updateErrorsNotes(true);
+        }
     }
 
     componentDidMount() {
@@ -94,8 +112,14 @@ class NoteItem extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         deleteNote,
-        updateNote
+        updateNote,
+        updateErrorsNotes
     }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(NoteItem);
+
+function mapStateToProps({notes}) {
+    return {notes};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteItem);

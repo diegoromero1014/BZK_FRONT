@@ -14,6 +14,7 @@ import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 import {deleteArea} from '../businessPlan/area/actions';
 import {deleteNeed} from '../businessPlan/need/actions';
+import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../draftDocuments/actions';
 
 class ButtonDeleteComponent extends Component{
 
@@ -93,7 +94,8 @@ class ButtonDeleteComponent extends Component{
           clearPrevisitPaginator,clearVisitOrder,clearVisitPaginator,previsitByClientFindServer,
           visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,
           clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer, clearBusinessPlanOrder,
-          clearBusinessPlanPaginator, businessPlanByClientFindServer} = this.props;
+          clearBusinessPlanPaginator, businessPlanByClientFindServer, draftsDocumentsByUser, clearDraftDocumentOrder,
+          clearDraftDocumentPaginator} = this.props;
         if(this.state.showEx === true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -110,18 +112,32 @@ class ButtonDeleteComponent extends Component{
             clearVisitOrder();
             clearVisitPaginator();
             visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
+            clearDraftDocumentOrder();
+            clearDraftDocumentPaginator();
+            draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_PREVISIT){
             clearPrevisitOrder();
             clearPrevisitPaginator();
             previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+            clearDraftDocumentOrder();
+            clearDraftDocumentPaginator();
+            draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE){
+            console.log('draftsDocumentsByUser pipeline');
             clearPipelineOrder();
             clearPipelinePaginator();
             pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "","");
+            clearDraftDocumentOrder();
+            clearDraftDocumentPaginator();
+            draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN){
+            console.log('draftsDocumentsByUser business plan');
             clearBusinessPlanOrder();
             clearBusinessPlanPaginator();
             businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.businessDate", 1, "","");
+            clearDraftDocumentOrder();
+            clearDraftDocumentPaginator();
+            draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }
       }
       this.setState({showEx:false, showEr: false,show: false});
@@ -191,7 +207,10 @@ function mapDispatchToProps(dispatch) {
     deleteParticipant,
     deleteTask,
     deleteNeed,
-    deleteArea
+    deleteArea,
+    draftsDocumentsByUser,
+    clearDraftDocumentOrder,
+    clearDraftDocumentPaginator
   }, dispatch);
 }
 

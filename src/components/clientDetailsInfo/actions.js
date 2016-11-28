@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER, UPDATE_CLIENT,
-      CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE} from './constants';
+      CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES} from './constants';
 import axios from 'axios';
 
 export function updateTabSeleted( tabActive ){
@@ -14,6 +14,13 @@ export function seletedButton( idButton ){
   return {
     type: CLICK_BUTTON_UPDATE_EDIT,
     payload: idButton
+  }
+}
+
+export function updateErrorsNotes( errorNotes ){
+  return {
+    type: UPDATE_ERROR_NOTES,
+    payload: errorNotes
   }
 }
 

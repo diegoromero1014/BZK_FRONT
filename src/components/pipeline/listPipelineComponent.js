@@ -128,7 +128,6 @@ class ListPipelineComponent extends Component {
               ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/pipelineEdit",
               component: "VIEW_PIPELINE"
-              //component : "VIEW_VISIT"
             });
             var datePipelineStartFormat = moment(value.startDate).locale('es');
             _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));

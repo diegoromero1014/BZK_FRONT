@@ -9,6 +9,7 @@ import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
 import ModalComponent from '../modal/modalComponent';
 import ButtonDetailsRedirectComponent from './buttonDetailsRedirectComponent';
+import TrafficLightComponent from './trafficLightComponent';
 import PdfLinkComponent from './pdfLinkComponent';
 
 class GridComponent extends Component {
@@ -29,6 +30,8 @@ class GridComponent extends Component {
             var cell;
             if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
+            }else if(value.key === 'trafficLight'){
+              cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)}/>
             }else if(value.key === 'delete' &&  _.get(row, value.key)){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else if(value.key === 'actionsRedirect'){

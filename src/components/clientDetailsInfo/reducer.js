@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import {UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER,
-        CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE} from './constants';
+        CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES} from './constants';
 
 const initialState = Immutable.Map({
   status: "200",
@@ -9,7 +9,8 @@ const initialState = Immutable.Map({
   errorConstact: 0,
   errorShareholder: 0,
   modalErrorsIsOpen: false,
-  errorsMessage: []
+  errorsMessage: [],
+  errorNotesEditClient: false
 });
 
 export default(state = initialState, action) => {
@@ -18,6 +19,8 @@ export default(state = initialState, action) => {
       return state.set("tabSelected", action.payload);
     case CLICK_BUTTON_UPDATE_EDIT:
       return state.set("seletedButton", action.payload);
+    case UPDATE_ERROR_NOTES:
+      return state.set("errorNotesEditClient", action.payload);
     case CHANGE_VALUE_MODAL_ERRORS:
       return state.set("modalErrorsIsOpen", action.payload);
     case MESSAGE_ERRORS_UPDATE:

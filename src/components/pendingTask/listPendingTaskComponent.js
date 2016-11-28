@@ -5,7 +5,6 @@ import {tasksByClientFindServer,orderColumnUserTask,clearUserTaskOrder,clearUser
 import GridComponent from '../grid/component';
 import {NUMBER_RECORDS} from './constants';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 let v1= "";
 class ListPendingTaskComponent extends Component {
@@ -123,16 +122,12 @@ class ListPendingTaskComponent extends Component {
         title: "Estado",
         key: "status"
       }
-      /*{
-        title: "",
-        key:"delete"
-      },*/
     ]
   }
 
   render() {
     const {tasksByClient} = this.props;
-    const modalTitle = 'Tarea Detalle';
+    const modalTitle = 'Tarea';
     const data = tasksByClient.get('userTasksByClient');
     return (
       <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>

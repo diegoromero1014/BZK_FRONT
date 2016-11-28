@@ -117,7 +117,7 @@ class ListBusinessPlanComponent extends Component {
             } else {
               dateBusinessPlanStartFormat = moment(value.businessDate).locale('es').format('DD MMM YYYY, hh:mm a');
             }
-            _.set(value, 'businessDate',dateBusinessPlanStartFormat);
+            _.set(value, 'businessDate', dateBusinessPlanStartFormat);
 
             if( _.get(permissionsBussinessPlan, _.indexOf(permissionsBussinessPlan, ELIMINAR), false) ){
               if(value.idStatusDocument === 0){
