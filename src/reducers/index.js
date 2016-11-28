@@ -37,6 +37,8 @@ import clientProductReducer from '../components/clientEdit/products/reducer';
 import myPendingsReducer from '../components/myPendings/reducer';
 import draftDocumentsReducer from '../components/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
+import alertsReducer from '../components/alerts/reducer';
+import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -75,6 +77,8 @@ export default combineReducers({
     dashboardReducer: dashboardReducer,
     clientProductReducer: clientProductReducer,
     reducerGlobal: reducerGlobal,
+    alerts: alertsReducer,
+    alertPendingUpdateClient: alertPendingUpdateClientReducer,
     myPendingsReducer: myPendingsReducer,
     draftDocumentsReducer: draftDocumentsReducer
 });

@@ -21,6 +21,7 @@ import Pipeline from './components/pipeline/createPipeline/createPipeline';
 import EditPipeline from './components/pipeline/editPipeline/editPipeline';
 import BusinessPlan from './components/businessPlan/createBusinessPlan/createBusinessPlan';
 import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
+import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
 
 class App extends Component {
     render() {
@@ -52,6 +53,7 @@ export default (
                 <Route path="pipelineEdit/:id" component={EditPipeline}></Route>
                 <Route path="businessPlan" component={BusinessPlan}></Route>
                 <Route path="businessPlanEdit/:id" component={EditBusinessPlan}></Route>
+                <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

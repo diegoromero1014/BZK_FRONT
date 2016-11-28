@@ -23,7 +23,7 @@ export function clientsFindServer(keyword, limInf, limSup,certificationStatus,te
       "certificationStatus": certificationStatus,
       "teamId" : teamId
     }
-  }
+  };
 
   var request = axios.post(APP_URL + "/clientListForEmployee", json);
   return{

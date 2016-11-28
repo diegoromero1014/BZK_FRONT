@@ -50,3 +50,5 @@ export const CLIENT_TAX_NATURA = "clientTaxNatura";
 export const CLIENT_ORIGIN_GOODS = "clientOriginGoods";
 export const CLIENT_ORIGIN_RESOURCE = "clientOriginResources";
 export const CLIENT_OPERATIONS_FOREIGN_CURRENCY = "clientOperationsForeignCurrency";
+export const LIST_REGIONS = "region";
+export const LIST_ZONES = "zone";

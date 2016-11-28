@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import MenuListItem from './menuListItem';
 import {connect} from 'react-redux';
+import ViewAlerts from '../alerts/alertsComponent';
+import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS,MODULE_ALERTS} from '../../constantsGlobal';
 import {redirectUrl} from '../globalComponents/actions';
 import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS} from '../../constantsGlobal';
 import ButtonComponentMyPending from '../myPendings/buttonComponentMyPendings';
@@ -52,7 +54,7 @@ class MenuList extends Component {
       if( _.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW) ){
         menuItems.push(itemManagerialView);
       }
-      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS) ){
+      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)){
         menuItems.push(itemClients);
       }
     }
@@ -76,6 +78,9 @@ class MenuList extends Component {
                         }
                     </a>
                     {menuItems.map(this._mapMenuItems)}
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
+                        <ViewAlerts/>
+                    }
                     <ButtonComponentMyPending />
                     <ButtonComponentDraftDocument />
                 </ul>
