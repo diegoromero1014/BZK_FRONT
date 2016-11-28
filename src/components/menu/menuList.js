@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import ViewAlerts from '../alerts/alertsComponent';
 import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS,MODULE_ALERTS} from '../../constantsGlobal';
 import {redirectUrl} from '../globalComponents/actions';
-import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS} from '../../constantsGlobal';
 import ButtonComponentMyPending from '../myPendings/buttonComponentMyPendings';
 import ButtonComponentDraftDocument from '../draftDocuments/buttonComponentDraftDocument';
 
