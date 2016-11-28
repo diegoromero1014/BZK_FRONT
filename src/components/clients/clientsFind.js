@@ -15,7 +15,7 @@ import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {clearContact} from '../contact/actions';
 import {clearInfoClient} from '../clientInformation/actions';
-import {SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS} from '../../constantsGlobal';
+import {SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 
 const fields =["team","certificationStatus"];
@@ -50,6 +50,11 @@ class ClientsFind extends Component {
       updateTitleNavBar("Mis clientes");
       clearInfoClient();
       clearContact();
+      validatePermissionsByModule(MODULE_PROSPECT).then((data) => {
+        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+          redirectUrl("/login");
+        }
+      });
       validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -160,7 +165,7 @@ class ClientsFind extends Component {
                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch} title="Limpiar búsqueda" style={{marginLeft:"17px"}}>
                   <i className="erase icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
-                {  _.get(navBar.get('mapModulesAccess'), MODULE_PROSPECT) &&
+                { _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) && _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), CREAR), false) &&
                   <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
                     <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                   </button>

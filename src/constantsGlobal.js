@@ -79,6 +79,15 @@ export const MODULE_TASKS = "Tareas";
 export const MODULE_PIPELINE = "Pipeline";
 export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
 
+export const TAB_INFO = 1;
+export const TAB_CONTACTS = 2;
+export const TAB_SHAREHOLDER = 3;
+export const TAB_PREVISITS = 5;
+export const TAB_VISITS = 4;
+export const TAB_PENDING_TASK = 6;
+export const TAB_PIPELINE = 7;
+export const TAB_BUSINESS_PLAN = 8;
+
 let API_URL;
 if (process.env.NODE_ENV === "production") {
     API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";

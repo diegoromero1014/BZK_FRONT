@@ -15,6 +15,7 @@ import {updateTabSeleted} from '../clientDetailsInfo/actions';
 import {consultModulesAccess} from '../navBar/actions';
 import {MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
   MODULE_PIPELINE, MODULE_BUSSINESS_PLAN} from '../../constantsGlobal';
+import {TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE, TAB_BUSINESS_PLAN} from '../../constantsGlobal';
 
 class TabClientInfo extends Component{
   constructor(props){
@@ -59,11 +60,11 @@ class TabClientInfo extends Component{
 
     var tabActive = tabReducer.get('tabSelected');
     if( tabActive === null || tabActive === undefined || tabActive === "" ){
-      tabActive = 1;
+      tabActive = TAB_INFO;
     }
-    if( tabActive === 1 ){
+    if( tabActive === TAB_INFO ){
       //la configuración ya se hizo arriba
-    } else if( tabActive === 2 ){
+    } else if( tabActive === TAB_CONTACTS ){
       styleInfo = false;
       styleContacts = true;
       styleShareholders = false;
@@ -81,7 +82,7 @@ class TabClientInfo extends Component{
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
-    } else if( tabActive === 3 ){
+    } else if( tabActive === TAB_SHAREHOLDER ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = true;
@@ -98,7 +99,7 @@ class TabClientInfo extends Component{
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
-    }else if( tabActive === 4 ){
+    }else if( tabActive === TAB_VISITS ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
@@ -115,7 +116,7 @@ class TabClientInfo extends Component{
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
-    }else if( tabActive === 5 ){
+    }else if( tabActive === TAB_PREVISITS ){
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
@@ -132,7 +133,7 @@ class TabClientInfo extends Component{
       backgroundPending = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
-    } else if (tabActive === 6) {
+    } else if (tabActive === TAB_PENDING_TASK) {
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
@@ -150,7 +151,7 @@ class TabClientInfo extends Component{
       backgroundPipeline = {height: "60px", borderBottomStyle: "none", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     }
-    else if (tabActive === 7) {
+    else if (tabActive === TAB_PIPELINE) {
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
@@ -168,7 +169,7 @@ class TabClientInfo extends Component{
       backgroundPipeline = {height: "60px", borderBottomStyle: "solid", borderBottomColor: "#3498db", width: "70px"};
       backgroundBusinessPlan = {height: "60px", borderBottomStyle: "none", width: "140px"};
     }
-    else if (tabActive === 8) {
+    else if (tabActive === TAB_BUSINESS_PLAN) {
       styleInfo = false;
       styleContacts = false;
       styleShareholders = false;
@@ -191,41 +192,41 @@ class TabClientInfo extends Component{
       <div className="my-custom-tab" style={{marginTop: "2px"}}>
         <ul className="nav nav-tabs custom-tab" style={{backgroundColor: "white", height: "60px",
           boxShadow: "0px 1px 0px 0 rgba(0, 0, 0, 0.2)", marginTop: "0px"}}>
-  				<li style={backgroundInfo} onClick={this._handleClickTabItem.bind(this, 1)}>
+  				<li style={backgroundInfo} onClick={this._handleClickTabItem.bind(this, TAB_INFO)}>
             <a className="button-link-url" style={{marginRight: "15px"}}>Info</a>
           </li>
           { _.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS) &&
-            <li style={backgroundContacts} onClick={this._handleClickTabItem.bind(this, 2)}>
+            <li style={backgroundContacts} onClick={this._handleClickTabItem.bind(this, TAB_CONTACTS)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Contactos</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS) &&
-            <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, 3)}>
+            <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, TAB_SHAREHOLDER)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Accionistas</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_PREVISITS) &&
-            <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, 5)}>
+            <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, TAB_PREVISITS)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Previsitas</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_VISITS) &&
-            <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, 4)}>
+            <li style={backgroundVisits} onClick={this._handleClickTabItem.bind(this, TAB_VISITS)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Visitas/Reunión</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
-            <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, 6)}>
+            <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Tareas</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
-            <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, 7)}>
+            <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, TAB_PIPELINE)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Pipeline</a>
             </li>
           }
           { _.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
-            <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, 8)}>
+            <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, TAB_BUSINESS_PLAN)}>
               <a className="button-link-url" style={{marginRight: "15px"}}>Planes de negocios</a>
             </li>
           }

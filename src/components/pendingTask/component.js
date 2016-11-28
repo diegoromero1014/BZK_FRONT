@@ -32,15 +32,7 @@ class UserTaskComponent extends Component {
       const {tasksByClientFindServer,tasksByClient,clearUserTask, validatePermissionsByModule} = this.props;
       clearUserTask();
       tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
-      validatePermissionsByModule(MODULE_TASKS).then((data) => {
-        if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-          redirectUrl("/login");
-        } else {
-          if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            this.setState({ openMessagePermissions: true });
-          }
-        }
-      });
+      
     }
   }
 

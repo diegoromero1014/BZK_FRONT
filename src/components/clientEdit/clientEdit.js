@@ -3,7 +3,7 @@ import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {consultInfoClient} from '../clientInformation/actions';
-import {seletedButton, sendErrorsUpdate} from '../clientDetailsInfo/actions';
+import {seletedButton, sendErrorsUpdate, updateErrorsNotes} from '../clientDetailsInfo/actions';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
@@ -66,8 +66,6 @@ const fields = ["description", "idCIIU", "idSubCIIU", "addressClient", "country"
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
-//Controla la validación en las notas
-var errorNote = false;
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
 var oldJustifyGeren = '';
 //Controla si es la primer vez que se setea información en el campo justificationForNoRM
@@ -397,14 +395,14 @@ class clientEdit extends Component{
   }
 
   _onConfirmExit(){
-    const {sendErrorsUpdate} = this.props;
+    const {sendErrorsUpdate, updateErrorsNotes} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false });
     countOperationsForeign = 0;
     countOriginGoods = 0;
     countOriginResource = 0;
     isProspect = false;
-    errorNote = false;
+    updateErrorsNotes(false);
     oldJustifyGeren = '';
     infoJustificationForNoRM = true;
     clickButttonSave= false;
@@ -421,14 +419,14 @@ class clientEdit extends Component{
   }
 
   _closeSuccess(){
-    const {sendErrorsUpdate} = this.props;
+    const {sendErrorsUpdate, updateErrorsNotes} = this.props;
     sendErrorsUpdate([]);
     this.setState({show: false, showEx:false, showEr: false});
     countOperationsForeign = 0;
     countOriginGoods = 0;
     countOriginResource = 0;
     isProspect = false;
-    errorNote = false;
+    updateErrorsNotes(false);
     oldJustifyGeren = '';
     infoJustificationForNoRM = true;
     clickButttonSave= false;
@@ -882,8 +880,7 @@ class clientEdit extends Component{
 
   //Edita el cliente después de haber validado los campos, solo acá se validan las notas
   _submitEditClient(){
-    errorNote = false;
-    const {fields: {justifyNoGeren, marcGeren}, notes, tabReducer, selectsReducer} = this.props;
+    const {fields: {justifyNoGeren, marcGeren}, notes, tabReducer, selectsReducer, updateErrorsNotes} = this.props;
     notesArray = [];
     var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
     var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -903,18 +900,13 @@ class clientEdit extends Component{
     if(marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren){
       this.setState({showErNotes: true});
     }else{
-      notesArray.forEach(function(note){
-        if(_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)){
-          errorNote = true;
-        }
-      });
       errorContact = tabReducer.get('errorConstact');
       errorShareholder = tabReducer.get('errorShareholder');
       if( errorContact || errorShareholder  ){
-        errorNote = true;
+        updateErrorsNotes(false);
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
       }
-      if(!errorNote){
+      if(!tabReducer.get('errorNotesEditClient')){
         if( idButton === BUTTON_UPDATE ){
           this.setState({
             showConfirmSave: true
@@ -940,12 +932,13 @@ class clientEdit extends Component{
   }
 
   componentWillMount(){
-    errorNote = false;
     infoJustificationForNoRM = true;
     infoMarcaGeren = true;
     const {fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns},
-            clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer, clearProducts, setProducts, tabReducer} = this.props;
+            clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer,
+            clearProducts, setProducts, tabReducer, updateErrorsNotes} = this.props;
     idButton = tabReducer.get('seletedButton');
+    updateErrorsNotes(false);
     clearValuesAdressess();
     clearNotes();
     clearProducts();
@@ -1007,9 +1000,9 @@ class clientEdit extends Component{
       centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
       detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
       otherOperationsForeign}, error, handleSubmit, tabReducer, selectsReducer, clientInformacion, notes} = this.props;
-    if(notes.toArray().length === 0){
-      errorNote = false;
-    }
+    //if(notes.toArray().length === 0){
+      //errorNote = false;
+    //}
     errorContact = tabReducer.get('errorConstact');
     errorShareholder = tabReducer.get('errorShareholder');
     var infoClient = clientInformacion.get('responseClientInfo');
@@ -1020,7 +1013,7 @@ class clientEdit extends Component{
             <p style={{paddingTop: '10px'}}></p>
             <Row xs={12} md={12} lg={12} style={{border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '116px'}}>
               <Col xs={12} md={12} lg={12} style={{marginTop: '24px'}}>
-                { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 ?
+                { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                   <div>
                     <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>
                   </div>
@@ -1630,7 +1623,7 @@ class clientEdit extends Component{
               </div>
             </Col>
           </Row>
-          <NotesClient error={errorNote}/>
+          <NotesClient/>
           <Row style={{padding: "0px 10px 10px 20px"}}>
             <Col xs={12} md={12} lg={12}>
               <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -1924,7 +1917,8 @@ function mapDispatchToProps(dispatch) {
     changeStateSaveData,
     seletedButton,
     updateClient,
-    sendErrorsUpdate
+    sendErrorsUpdate,
+    updateErrorsNotes
   }, dispatch);
 }
 

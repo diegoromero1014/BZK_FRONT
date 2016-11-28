@@ -34,6 +34,8 @@ import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
 import dashboardReducer from '../components/dashboard/reducer';
 import clientProductReducer from '../components/clientEdit/products/reducer';
+import myPendingsReducer from '../components/myPendings/reducer';
+import draftDocumentsReducer from '../components/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
 
 export default combineReducers({
@@ -72,5 +74,7 @@ export default combineReducers({
     clientEconomicGroupReducer: clientEconomicGroupReducer,
     dashboardReducer: dashboardReducer,
     clientProductReducer: clientProductReducer,
-    reducerGlobal: reducerGlobal
+    reducerGlobal: reducerGlobal,
+    myPendingsReducer: myPendingsReducer,
+    draftDocumentsReducer: draftDocumentsReducer
 });

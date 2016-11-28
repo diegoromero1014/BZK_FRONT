@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import MenuListItem from './menuListItem';
 import {connect} from 'react-redux';
+import {redirectUrl} from '../globalComponents/actions';
 import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS} from '../../constantsGlobal';
+import ButtonComponentMyPending from '../myPendings/buttonComponentMyPendings';
+import ButtonComponentDraftDocument from '../draftDocuments/buttonComponentDraftDocument';
 
 var itemManagerialView = {
     text: "Vista gerencial",
@@ -73,6 +76,8 @@ class MenuList extends Component {
                         }
                     </a>
                     {menuItems.map(this._mapMenuItems)}
+                    <ButtonComponentMyPending />
+                    <ButtonComponentDraftDocument />
                 </ul>
                 <ul style={{width: "100%", bottom: "0px", position: "absolute"}}>
                     {menuItemCerrarSesion.map(this._mapMenuItems)}

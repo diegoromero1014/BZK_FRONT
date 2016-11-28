@@ -17,6 +17,7 @@ import {MESSAGE_SAVE_DATA, EDITAR} from '../../constantsGlobal';
 import {redirectUrl} from '../globalComponents/actions';
 import {NUMBER_RECORDS} from './constants';
 import {changeStateSaveData} from '../dashboard/actions';
+import {getInfoTaskUser, tasksByUser, clearMyPendingPaginator} from '../myPendings/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -103,20 +104,31 @@ class ModalCreateTask extends Component{
   }
 
   componentWillMount(){
-    const{fields: {idEstado}, taskEdit, getMasterDataFields} = this.props;
+    const{fields: {id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit}, taskEdit, getMasterDataFields, getInfoTaskUser} = this.props;
     getMasterDataFields([TASK_STATUS]);
-    if( taskEdit !== undefined && taskEdit !== null && taskEdit !== "" ){
-      setTimeout(function(){
-        idEstado.onChange(taskEdit.idStatus);
-      }, 500);
-    }
+    getInfoTaskUser(taskEdit).then((data) => {
+      const task = _.get(data, 'payload.data.data');
+      responsable.onChange(task.responsable);
+      idEmployee.onChange(task.idResponsable);
+      idEstado.onChange(task.idStatus);
+      advance.onChange(task.advance);
+      id.onChange(task.id);
+      if( moment(fecha.value, 'YYYY-MM-DD').isValid() ){
+        fecha.onChange(moment(task.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"));
+      } else {
+        fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
+      }
+      tarea.onChange(task.task);
+    });
   }
 
   _closeViewOrEditTask() {
-    const {isOpen, tasksByClientFindServer} = this.props;
+    const {isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator} = this.props;
     this.setState({isEditable: false, taskEdited: false, showErrtask: false});
     isOpen();
     tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS,"c.closingDate", 0, "");
+    clearMyPendingPaginator();
+    tasksByUser(0, NUMBER_RECORDS, "", "", "");
     this.props.resetForm();
   }
 
@@ -307,7 +319,10 @@ function mapDispatchToProps(dispatch){
     createPendingTaskNew,
     clearUserTask,
     tasksByClientFindServer,
-    changeStateSaveData
+    clearMyPendingPaginator,
+    changeStateSaveData,
+    getInfoTaskUser,
+    tasksByUser
   }, dispatch);
 }
 
@@ -316,17 +331,7 @@ function mapStateToProps({tasksByClient, selectsReducer, participants, reducerGl
     tasksByClient,
     selectsReducer,
     participants,
-    reducerGlobal,
-    initialValues: {
-      responsable: taskEdit.responsable,
-      idEmployee:taskEdit.idResponsable,
-      idEstado: taskEdit.idStatus,
-      advance: taskEdit.advance,
-      id: taskEdit.id,
-      fecha: moment(taskEdit.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"),
-      tarea : taskEdit.task,
-      dateVisit : taskEdit.dateVisit === null ? null :  moment(taskEdit.dateVisit, 'YYYY-MM-DD HH:mm:ss').format("DD MMM YYYY hh:mm a")
-    }
+    reducerGlobal
   }
 }
 

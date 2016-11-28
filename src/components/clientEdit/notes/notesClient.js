@@ -54,7 +54,7 @@ class NotesClient extends Component {
     }
 
     render() {
-      const {notes, error} = this.props;
+      const {notes, tabReducer} = this.props;
       return (
         <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
@@ -66,14 +66,14 @@ class NotesClient extends Component {
               </button>
           </Col>
             <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
-              {error &&
+              {tabReducer.get('errorNotesEditClient') &&
                 <div>
                   <div className="ui pointing below red basic label">
                     Debe ingresar todos los campos
                   </div>
                 </div>
               }
-              <div style={error ? {paddingBottom:"20px", border:"1px solid red", borderRadius:"5px"} : {}}>
+              <div style={tabReducer.get('errorNotesEditClient') ? {paddingBottom:"20px", border:"1px solid red", borderRadius:"5px"} : {}}>
                 {notes.map(this._mapNotesItems)}
               </div>
             </Col>
@@ -91,10 +91,11 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({notes, selectsReducer}) {
+function mapStateToProps({notes, selectsReducer, tabReducer}) {
     return {
         notes,
-        selectsReducer
+        selectsReducer,
+        tabReducer
     };
 }
 
