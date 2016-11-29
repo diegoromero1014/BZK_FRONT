@@ -95,7 +95,8 @@ class comboBoxComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId, searchClient, styles, shouldHandleUpdate} = this.props;
+        const {nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo,
+          parentId, searchClient, styles, shouldHandleUpdate, defaultValue} = this.props;
         if (touched && invalid && shouldHandleUpdate) {
             scrollTo(parentId);
         }
@@ -104,7 +105,7 @@ class comboBoxComponent extends Component {
                 <div
                     className={`styleWidthComponents ui search selection dropdown ${disabled} ${name} ${deployUp === true ? 'bottom pointing' : ''}`}
                     style={styles}>
-                    <input type="hidden" name={nameInput} placeholder="Seleccione..."/>
+                    <input type="hidden" name={nameInput} value={defaultValue} placeholder="Seleccione..."/>
                     <i className="dropdown icon"/>
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
                     <div className={`right menu ${name}`}>

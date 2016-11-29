@@ -5,9 +5,9 @@ import React, {
 
 class HeaderComponent extends Component {
   render(){
-    const {titleColumn,orderColumn} = this.props;
+    const {titleColumn,orderColumn, width} = this.props;
     return (
-      <th style={{textTransform:'none'}}>{titleColumn}{orderColumn}</th>
+      <th style={width ? {textTransform:'none', width: width} : {textTransform:'none'}}>{titleColumn}{orderColumn}</th>
     );
   }
 }

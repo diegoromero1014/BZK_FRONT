@@ -62,7 +62,6 @@ class PipelineComponent extends Component {
       visibleMessage = 'none';
       visibleDownload = 'block';
     }
-    console.log('permissionsPipeline', reducerGlobal.get('permissionsPipeline'));
     return (
       <div className = "tab-pane quickZoomIn animated"
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>

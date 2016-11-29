@@ -10,8 +10,10 @@ import {validatePermissionsByModule} from '../../actionsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './pendingTaskUtilities';
+import {getMasterDataFields} from '../selectsComponent/actions';
+import {TASK_STATUS} from '../selectsComponent/constants';
 
-let v1 = "";
+let keyWord = "";
 
 class ListMyPendingComponent extends Component {
 
@@ -29,7 +31,8 @@ class ListMyPendingComponent extends Component {
   }
 
   componentWillMount(){
-    const {validatePermissionsByModule} = this.props;
+    const {validatePermissionsByModule, getMasterDataFields} = this.props;
+    getMasterDataFields([TASK_STATUS]);
     validatePermissionsByModule(MODULE_TASKS).then((data) => {
       if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
@@ -42,22 +45,21 @@ class ListMyPendingComponent extends Component {
   }
 
 componentWillReceiveProps(nextProps){
-    const {value1} = nextProps;
-    if ((v1 !== nextProps.value1)){
-    v1 = nextProps.value1;
-  }
+    if (keyWord !== nextProps.keyWordParameter){
+      keyWord = nextProps.keyWordParameter;
+    }
 }
 
 _orderColumn(orderMyPending,columnMyPending){
     if(orderMyPending === 1){
-      this.setState({orderD :'none',orderA:'inline-block'});
+      this.setState({orderA :'none',orderD:'inline-block'});
     }else{
-      this.setState({orderD :'inline-block',orderA :'none'});
+      this.setState({orderA :'inline-block',orderD :'none'});
     }
     const {tasksByUser,orderColumnMyPending,clearMyPendingPaginator} = this.props;
     clearMyPendingPaginator();
     orderColumnMyPending(orderMyPending, columnMyPending);
-    tasksByUser(0, NUMBER_RECORDS, v1, orderMyPending, columnMyPending);
+    tasksByUser(0, NUMBER_RECORDS, keyWord, orderMyPending, columnMyPending);
   }
 
   _renderHeaders(){
@@ -67,14 +69,16 @@ _orderColumn(orderMyPending,columnMyPending){
         key:"actions"
       },
       {
-        title: "Tipo de documento",
+        title: "Tipo documento",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"MD_TC.D05_KEY")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"MD_TC.D05_KEY")}></i></span>,
-        key:"idTypeClient"
+        key:"idTypeClient",
+        width: '160px'
       },
       {
-        title: "Número de documento",
+        title: "Número documento",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"CLI.D09_CLIENT_ID_NUMBER")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"CLI.D09_CLIENT_ID_NUMBER")}></i></span>,
-        key:"idNumberClient"
+        key:"idNumberClient",
+        width: '170px'
       },
       {
         title: "Nombre/Razón social",
@@ -86,19 +90,20 @@ _orderColumn(orderMyPending,columnMyPending){
         key:"trafficLight"
       },
       {
-        title: "Fecha de vencimiento",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(1,"UT.D62_CLOSING_DATE")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(0,"UT.D62_CLOSING_DATE")}></i></span>,
-        key:"closeDate"
+        title: "Fecha vencimiento",
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"UT.D62_CLOSING_DATE")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"UT.D62_CLOSING_DATE")}></i></span>,
+        key:"closeDate",
+        width: '170px'
       },
       {
         title: "Estado",
-        key:"status"
+        key:"changeStateTask",
+        width: '100px'
       }
     ]
   }
 
   _renderCellView(data){
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar la tarea ";
     return mapDataGrid(data);
   }
 
@@ -107,7 +112,7 @@ _orderColumn(orderMyPending,columnMyPending){
     const modalTitle = 'Tarea';
     const data = myPendingsReducer.get('pendingTaskListByUser');
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
+      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', overflowX : 'hidden'}}>
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
       </div>
     );
@@ -122,7 +127,8 @@ function mapDispatchToProps(dispatch){
     clearMyPendingPaginator,
     clearMyPendingsOrder,
     validatePermissionsByModule,
-    redirectUrl
+    redirectUrl,
+    getMasterDataFields
   }, dispatch);
 }
 

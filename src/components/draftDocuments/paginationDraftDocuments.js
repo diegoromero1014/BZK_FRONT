@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {NUMBER_RECORDS} from './constants';
 import {draftsDocumentsByUser, limitiInf, changePage, clearDraftDocument, clearDraftDocumentOrder} from './actions';
 
-let v1 = "";
+let keyWord = "";
 class PaginationDraftDocument extends Component{
 
   constructor(props){
@@ -14,7 +14,7 @@ class PaginationDraftDocument extends Component{
 
   _handleFindDraftDocuments(limInf){
       const {draftsDocumentsByUser, draftDocumentsReducer} = this.props;
-      draftsDocumentsByUser(limInf, NUMBER_RECORDS, v1, draftDocumentsReducer.get('orderDrafts'), draftDocumentsReducer.get('columnDrafts')).then( (data) => {
+      draftsDocumentsByUser(limInf, NUMBER_RECORDS, keyWord, draftDocumentsReducer.get('orderDrafts'), draftDocumentsReducer.get('columnDrafts')).then( (data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         }
@@ -27,12 +27,9 @@ class PaginationDraftDocument extends Component{
   }
 
   componentWillReceiveProps(nextProps){
-    const { value1 } = nextProps;
-    if ((v1 !== nextProps.value1)){
-      v1 = nextProps.value1;
+    if ((keyWord !== nextProps.keyWordParameter)){
+      keyWord = nextProps.keyWordParameter;
       const {clearDraftDocumentOrder} = this.props;
-      //clearDraftDocumentOrder();
-      this._handleFindDraftDocuments(0);
     }
   }
 

@@ -3,28 +3,36 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../globalComponents/actions';
 import ModalDraftDocuments from './modalDraftDocuments';
+import {updateStatusModal} from './actions';
 import Modal from 'react-modal';
 import _ from 'lodash';
 
 class ButtonComponentDraftDocument extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      modalIsOpen: false
-    };
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
   }
 
   openModal(){
-    this.setState({modalIsOpen: true});
+    const {updateStatusModal} = this.props;
+    updateStatusModal(true);
   }
 
   closeModal(){
-    this.setState({modalIsOpen: false});
+    const {updateStatusModal} = this.props;
+    updateStatusModal(false);
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {draftDocumentsReducer} = nextProps;
+    this.setState({
+      modalIsOpen: draftDocumentsReducer.get('modalIsOpen')
+    });
   }
 
   render(){
+    const {draftDocumentsReducer} = this.props;
     return(
       <li onClick={this.openModal} className="cursorMenuList">
           <a>
@@ -33,8 +41,8 @@ class ButtonComponentDraftDocument extends Component {
                 <span className="title">Documentos en borrador</span>
               </div>
           </a>
-          <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
-            <div className="modalBt4-dialog modalBt4-lg"  style={{width: '80%'}}>
+          <Modal isOpen={draftDocumentsReducer.get('modalIsOpen')} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+            <div className="modalBt4-dialog modalBt4-lg"  style={{width: '85%'}}>
               <div className="modalBt4-content modal-content">
                 <div className="modalBt4-header modal-header">
                   <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Mis documentos en borrador</h4>
@@ -56,7 +64,14 @@ class ButtonComponentDraftDocument extends Component {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     redirectUrl,
+    updateStatusModal
   }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(ButtonComponentDraftDocument);
+function mapStateToProps({draftDocumentsReducer}, ownerProps){
+  return {
+    draftDocumentsReducer
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonComponentDraftDocument);

@@ -6,6 +6,7 @@ import {changeOwnerDraft} from '../visit/actions';
 import {changeOwnerDraftPrevisit} from '../previsita/actions';
 import {changeOwnerDraftPipeline} from '../pipeline/actions';
 import {updateTitleNavBar} from '../navBar/actions';
+import {updateStatusModal} from '../draftDocuments/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -15,7 +16,7 @@ class ButtonDetailsRedirectComponent extends Component {
   }
 
   _detailVisit(){
-    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline} = this.props;
+    const {actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline, updateStatusModal} = this.props;
     if( actionsRedirect.typeClickDetail === "visita" ){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
@@ -30,6 +31,7 @@ class ButtonDetailsRedirectComponent extends Component {
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
     }
     redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+    updateStatusModal(false);
   }
 
   render(){
@@ -53,7 +55,8 @@ function mapDispatchToProps(dispatch){
     updateTitleNavBar,
     changeOwnerDraft,
     changeOwnerDraftPrevisit,
-    changeOwnerDraftPipeline
+    changeOwnerDraftPipeline,
+    updateStatusModal
   }, dispatch);
 }
 

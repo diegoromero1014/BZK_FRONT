@@ -61,7 +61,7 @@ class ModalDraftDocuments extends Component {
     const {draftDocumentsReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
-    if(draftDocumentsReducer.get('pendingTaskListByUser') !== 0) {
+    if(draftDocumentsReducer.get('rowCount') !== 0 ) {
       visibleTable = 'block';
       visibleMessage = 'none';
     }
@@ -72,7 +72,7 @@ class ModalDraftDocuments extends Component {
             <Row>
               <Col xs={12} sm={12} md={8} lg={8}>
                 <div className="InputAddOn">
-                  <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por tipo de documento, nit y nombre del cliente"  value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+                  <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, nit y nombre del cliente"  value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
                   <button onClick={this._handleDraftDcoumentsFind} className="button InputAddOn-item">
                     <i className="search icon" />
                   </button>
@@ -84,8 +84,8 @@ class ModalDraftDocuments extends Component {
         <Grid style= {{display:visibleTable, width: "100%"}}>
           <Row>
             <Col xs>
-              <ListDraftDocuments value1={this.state.keywordDraftDocument} />
-              <PaginationDraftDocument value1={this.state.keywordDraftDocument} />
+              <ListDraftDocuments keyWordParameter={this.state.keywordDraftDocument} />
+              <PaginationDraftDocument keyWordParameter={this.state.keywordDraftDocument} />
           </Col>
           </Row>
         </Grid>

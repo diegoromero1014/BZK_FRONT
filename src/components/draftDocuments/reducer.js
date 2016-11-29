@@ -9,7 +9,8 @@ const initialState = Immutable.Map({
     limInf: 0,
     rowCount: 0,
     orderDrafts: 0,
-    columnDrafts: ""
+    columnDrafts: "",
+    modalIsOpen: false
 });
 
 
@@ -25,6 +26,8 @@ export default (state = initialState, action) => {
           });
         case constants.CHANGE_PAGE:
             return state.set('page', action.currentPage);
+        case constants.UPDATE_MODAL_IS_OPEN:
+            return state.set('modalIsOpen', action.modalIsOpen);
         case constants.LIMITE_INF:
             return state.set('limInf', action.limInfe);
         case constants.GET_INFO_DOCUMENT:

@@ -49,6 +49,14 @@ export default (state = initialState, action) => {
                 .set('rowCount', 0)
                 .set('pendingTaskListByUser', []);
             });
+        case constants.UPDATE_STATUS_TASK:
+            return state.withMutations(map => {
+                map
+                .set('page', 1)
+                .set('limInf', 0)
+                .set('rowCount', 0)
+                .set('pendingTaskListByUser', []);
+            });
         case constants.ORDER_COLUMN_MY_PENDING:
               return state.withMutations(map => {
                   map

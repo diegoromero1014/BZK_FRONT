@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {NUMBER_RECORDS} from './constants';
 import {tasksByUser, limitiInf, changePage, clearPendingTask, clearMyPendingsOrder} from './actions';
 
-let v1 = "";
+let keyWord = "";
 class PaginationPendingTask extends Component{
 
   constructor(props){
@@ -14,7 +14,7 @@ class PaginationPendingTask extends Component{
 
   _handleFindPendingtask(limInf){
       const {tasksByUser, myPendingsReducer} = this.props;
-      tasksByUser(limInf, NUMBER_RECORDS, v1, myPendingsReducer.get('orderMyPending'), myPendingsReducer.get('columnMyPending')).then( (data) => {
+      tasksByUser(limInf, NUMBER_RECORDS, keyWord, myPendingsReducer.get('orderMyPending'), myPendingsReducer.get('columnMyPending')).then( (data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         }
@@ -27,12 +27,10 @@ class PaginationPendingTask extends Component{
   }
 
   componentWillReceiveProps(nextProps){
-    const { value1 } = nextProps;
-    if ((v1 !== nextProps.value1)){
-      v1 = nextProps.value1;
+    if (keyWord !== nextProps.keyWordParameter){
+      keyWord = nextProps.keyWordParameter;
       const {clearMyPendingsOrder} = this.props;
       clearMyPendingsOrder();
-      this._handleFindPendingtask(0);
     }
   }
 
