@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {toggleMenu, updateTitleNavBar, consultModulesAccess} from './actions';
+import {toggleMenu, updateTitleNavBar, consultModulesAccess,viewAlertClient} from './actions';
+import BellAlert from '../alerts/bellClientAlertComponent';
 import {redirectUrl} from '../globalComponents/actions';
 import {MODULE_CLIENTS} from '../../constantsGlobal';
+
 
 class NavBarComponent extends Component {
     constructor(props) {
@@ -25,6 +27,7 @@ class NavBarComponent extends Component {
     render() {
       const {navBar} = this.props;
       const titleNavBar = navBar.get('titleNavBar');
+      const viewAlertClient = navBar.get('viewAlertClient');
       return (
           <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
               <div className="pull-left" style={{paddingLeft: "5px !important"}}>
@@ -39,33 +42,8 @@ class NavBarComponent extends Component {
                       </li>
                   </ul>
               </div>
-              <div className="pull-right" style={{paddingRight: "20px", display:"none"}}>
-                  <ul className="nav">
-                      <li className="quicklinks">
-                          <a href="#">
-                              <div className="iconset webfont">
-                                  <i className="icon-link"></i>
-                                  Enlaces rápidos
-                              </div>
-                          </a>
-                      </li>
-                      <li className="quicklinks">
-                          <a href="#">
-                              <div className="iconset webfont">
-                                  <i className="icon-search-sm"></i>
-                                  Búsqueda
-                              </div>
-                          </a>
-                      </li>
-                      <li className="quicklinks">
-                          <div className="iconset webfont">
-                              <a href="#">
-                                  <i className="icon-notification"></i>
-                                  Alerta
-                              </a>
-                          </div>
-                      </li>
-                  </ul>
+              <div className="pull-right" style={{marginTop: "0px", marginRight: "-22px", fontSize:"30px"}}>
+                  {viewAlertClient && <BellAlert />}
               </div>
           </div>
       );
@@ -82,7 +60,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         toggleMenu,
         updateTitleNavBar,
-        consultModulesAccess
+        consultModulesAccess,
+        viewAlertClient
     }, dispatch);
 }
 

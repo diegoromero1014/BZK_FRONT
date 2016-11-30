@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {consultInfoClient} from './actions';
 import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
-import {updateTitleNavBar} from '../navBar/actions';
+import {updateTitleNavBar,viewAlertClient} from '../navBar/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import $ from 'jquery';
@@ -25,8 +25,14 @@ class ComponentClientInformation extends Component{
 
   componentWillMount(){
     $(window).scrollTop(0);
-    const {updateTitleNavBar} = this.props;
+    const {updateTitleNavBar, viewAlertClient} = this.props;
     updateTitleNavBar("Mis clientes");
+
+    viewAlertClient(true);
+  }
+
+  componentWillUnmount(){
+      this.props.viewAlertClient(false);
   }
 
   render(){
@@ -39,6 +45,7 @@ class ComponentClientInformation extends Component{
       showAECNoAplica = true;
       showAECNivel = false;
     }
+
     return(
       <div>
         <header className="header-client-detail" style={{boxShadow: "-3px 2px 5px 0 rgba(0, 0, 0, 0.2)"}}>
@@ -130,6 +137,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     consultInfoClient,
     updateTitleNavBar,
+    viewAlertClient,
     redirectUrl
   }, dispatch);
 }
