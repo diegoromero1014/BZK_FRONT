@@ -34,8 +34,8 @@ export const mapDataGrid = (data = []) => {
     },
     idTypeClient: item.idTypeClient,
     idNumberClient  : item.idNumberClient,
-    clientName: shorterStringValue(item.clientName),
-    title: item.clientName,
+    clientName: item.clientName,
+    title: item.resume,
     changeStateTask: {
       idTask: item.id,
       idStatus: item.idStatus

@@ -83,7 +83,8 @@ _orderColumn(orderMyPending,columnMyPending){
       {
         title: "Nombre/Razón social",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"CLI.D09_CLIENT_NAME")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"CLI.D09_CLIENT_NAME")}></i></span>,
-        key:"clientName"
+        key:"clientName",
+        width: '380px'
       },
       {
         title: "",

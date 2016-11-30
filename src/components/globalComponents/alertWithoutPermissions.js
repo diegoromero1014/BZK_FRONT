@@ -23,7 +23,7 @@ class AlertWithoutPermissions extends Component{
 
   _closeModal(){
     this.setState({openMessagePermissions: false});
-    redirectUrl("/dashboard/home");
+    redirectUrl("/dashboard");
   }
 
   render(){
