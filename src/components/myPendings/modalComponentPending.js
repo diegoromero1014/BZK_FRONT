@@ -61,7 +61,7 @@ class ModalComponentPending extends Component {
     const {myPendingsReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
-    if(myPendingsReducer.get('pendingTaskListByUser') !== 0) {
+    if(myPendingsReducer.get('rowCount') !== 0 ) {
       visibleTable = 'block';
       visibleMessage = 'none';
     }
@@ -100,8 +100,8 @@ class ModalComponentPending extends Component {
         <Grid style= {{display:visibleTable, width: "100%"}}>
           <Row>
             <Col xs>
-              <ListPendingTaskComponent value1={this.state.keywordMyPending}/>
-              <PaginationPendingTask value1={this.state.keywordMyPending} />
+              <ListPendingTaskComponent keyWordParameter={this.state.keywordMyPending}/>
+              <PaginationPendingTask keyWordParameter={this.state.keywordMyPending} />
           </Col>
           </Row>
         </Grid>

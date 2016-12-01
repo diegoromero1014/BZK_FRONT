@@ -12,6 +12,7 @@ import ViewChartVisit from './chartVisit/viewChartVisit';
 import ViewChartBusinessPlan from './chartBusinessPlan/viewChartBusinessPlan';
 import {TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS} from './constants';
 import {validatePermissionsByModule} from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {MODULE_MANAGERIAL_VIEW} from '../../constantsGlobal';
 import _ from 'lodash';
 
@@ -46,6 +47,9 @@ const itemsChart = [
 class ViewManagement extends Component{
   constructor(props){
     super(props);
+    this.state= {
+       openMessagePermissions: false
+    };
   }
 
   componentWillMount(){
@@ -60,7 +64,7 @@ class ViewManagement extends Component{
           redirectUrl("/login");
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
-            redirectUrl("/dashboard");
+            this.setState({ openMessagePermissions: true });
           }
         }
       });
@@ -97,8 +101,8 @@ class ViewManagement extends Component{
             <div className="ui text loader">Cargando gráfica</div>
           </div>
         }
+        <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
       </div>
-
     );
   }
 }

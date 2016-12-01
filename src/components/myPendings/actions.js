@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {FIND_PENDING_TASKS, LIMITE_INF, CHANGE_PAGE, CLEAR_PENDING_TASK, CLEAR_MY_PENDINGS_ORDER,
-CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK} from './constants';
+CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK} from './constants';
 import axios from 'axios';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
@@ -57,6 +57,35 @@ export function getInfoTaskUser(idTask) {
   var request = axios.post(APP_URL + "/getPendingTaskById", json);
   return {
     type: GET_INFO_USERTASK,
+    payload: request
+  }
+}
+
+export function updateStatusTask(idTask, idStatus) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "username":"",
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      idTask: idTask,
+      idStatus: idStatus
+    }
+  };
+
+
+  var request = axios.post(APP_URL + "/updateStatusTask", json);
+  return {
+    type: UPDATE_STATUS_TASK,
     payload: request
   }
 }

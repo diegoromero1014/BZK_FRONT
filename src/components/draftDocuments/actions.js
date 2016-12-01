@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {FIND_DRAFT_DOCUMENTS, LIMITE_INF, CHANGE_PAGE, CLEAR_DRAFT_DOCUMENTS, CLEAR_DRAFT_DOCUMENTS_ORDER,
-CLEAR_DRAFT_DOCUMENTS_PAGINATOR, ORDER_COLUMN_DRAFT_DOCUMENTS, GET_INFO_DOCUMENT} from './constants';
+CLEAR_DRAFT_DOCUMENTS_PAGINATOR, ORDER_COLUMN_DRAFT_DOCUMENTS, GET_INFO_DOCUMENT, UPDATE_MODAL_IS_OPEN} from './constants';
 import axios from 'axios';
 
 export function draftsDocumentsByUser(pageNum, maxRows, keyWord, orderDrafts, columnDrafts) {
@@ -99,4 +99,12 @@ export function orderColumnDraftDocument(orderDrafts,columnDrafts){
         orderDrafts: orderDrafts,
         columnDrafts: columnDrafts
     };
+}
+
+
+export function updateStatusModal(modalIsOpen){
+  return {
+    type: UPDATE_MODAL_IS_OPEN,
+    modalIsOpen: modalIsOpen
+  }
 }

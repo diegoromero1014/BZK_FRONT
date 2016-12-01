@@ -5,9 +5,13 @@ import React, {
 
 class TdComponent extends Component {
   render(){
-    const {columnRow,styles} = this.props;
+    const {columnRow, styles, title} = this.props;
     return (
-      <td style={styles}>{columnRow}</td>
+      <td style={styles}>
+        <div title={title}>
+          {columnRow}
+        </div>
+      </td>
     );
   }
 }

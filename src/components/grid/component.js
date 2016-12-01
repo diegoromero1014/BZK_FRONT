@@ -10,6 +10,7 @@ import ButtonDeleteComponent from './buttonDeleteComponent';
 import ModalComponent from '../modal/modalComponent';
 import ButtonDetailsRedirectComponent from './buttonDetailsRedirectComponent';
 import TrafficLightComponent from './trafficLightComponent';
+import SelectTaskComponent from './selectTaskComponent';
 import PdfLinkComponent from './pdfLinkComponent';
 
 class GridComponent extends Component {
@@ -22,7 +23,7 @@ class GridComponent extends Component {
   }
 
   _renderHeader(header, idx){
-      return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} />;
+      return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} width={header.width} />;
   }
 
   _renderCell(row, headers,modalTitle){
@@ -33,13 +34,23 @@ class GridComponent extends Component {
             }else if(value.key === 'trafficLight'){
               cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)}/>
             }else if(value.key === 'delete' &&  _.get(row, value.key)){
-              cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
+              if( _.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete ){
+                cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
+              } else {
+                cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
+              }
             }else if(value.key === 'actionsRedirect'){
-              cell= <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)}/>
+              if( _.get(row, value.key).permissionsView !== undefined && !_.get(row, value.key).permissionsView ){
+                cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
+              } else {
+                cell = <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
+              }
             }else if(value.key === 'actionsPdf' &&  _.get(row, value.key)){
               cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>
+            }else if(value.key === 'changeStateTask' &&  _.get(row, value.key)){
+              cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)}/>
             }else{
-              cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} styles={value.style} />
+              cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
             }
           return (
             cell

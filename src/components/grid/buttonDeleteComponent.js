@@ -123,7 +123,6 @@ class ButtonDeleteComponent extends Component{
             clearDraftDocumentPaginator();
             draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE){
-            console.log('draftsDocumentsByUser pipeline');
             clearPipelineOrder();
             clearPipelinePaginator();
             pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "","");
@@ -131,7 +130,6 @@ class ButtonDeleteComponent extends Component{
             clearDraftDocumentPaginator();
             draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
           }else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN){
-            console.log('draftsDocumentsByUser business plan');
             clearBusinessPlanOrder();
             clearBusinessPlanPaginator();
             businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.businessDate", 1, "","");

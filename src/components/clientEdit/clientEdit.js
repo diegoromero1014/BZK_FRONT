@@ -1012,8 +1012,9 @@ class clientEdit extends Component{
         <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor:"#FFFFFF"}}>
           <div>
             <p style={{paddingTop: '10px'}}></p>
-            <Row xs={12} md={12} lg={12} style={{border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '116px'}}>
-              <Col xs={12} md={12} lg={12} style={{marginTop: '24px'}}>
+            <Row xs={12} md={12} lg={12} style={ idButton === BUTTON_EDIT ? {border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '60px'} :
+              {border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8', borderRadius: '2px', margin: '0px 28px 0 20px', height: '110px'}}>
+              <Col xs={12} md={12} lg={12} style={{marginTop: '20px'}}>
                 { this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                   <div>
                     <span style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}} >Falta información obligatoria del cliente (ver campos seleccionados).</span>

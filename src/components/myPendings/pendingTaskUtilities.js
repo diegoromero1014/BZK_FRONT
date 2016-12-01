@@ -34,8 +34,12 @@ export const mapDataGrid = (data = []) => {
     },
     idTypeClient: item.idTypeClient,
     idNumberClient  : item.idNumberClient,
-    clientName: shorterStringValue(item.clientName),
-    status: item.status,
+    clientName: item.clientName,
+    title: item.resume,
+    changeStateTask: {
+      idTask: item.id,
+      idStatus: item.idStatus
+    },
     closeDate: mapDateValueFromTask(item.closeDate),
     trafficLight: {
       color: mapDateColor(item.closeDate),

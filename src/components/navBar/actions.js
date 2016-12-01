@@ -15,6 +15,13 @@ export function updateTitleNavBar(title){
   }
 }
 
+export function viewAlertClient(view){
+    return {
+        type: actions.VIEW_ALERT_CLIENT,
+        viewAlertClient: view
+    }
+}
+
 export function consultModulesAccess(){
   const json = {
       messageHeader: {

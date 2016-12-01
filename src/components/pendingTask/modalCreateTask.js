@@ -106,14 +106,15 @@ class ModalCreateTask extends Component{
   componentWillMount(){
     const{fields: {id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit}, taskEdit, getMasterDataFields, getInfoTaskUser} = this.props;
     getMasterDataFields([TASK_STATUS]);
-    getInfoTaskUser(taskEdit).then((data) => {
+    let idTask = _.get(taskEdit, 'id', taskEdit);
+    getInfoTaskUser(idTask).then((data) => {
       const task = _.get(data, 'payload.data.data');
       responsable.onChange(task.responsable);
       idEmployee.onChange(task.idResponsable);
       idEstado.onChange(task.idStatus);
       advance.onChange(task.advance);
       id.onChange(task.id);
-      if( moment(fecha.value, 'YYYY-MM-DD').isValid() ){
+      if( moment(task.finalDate, 'YYYY-MM-DD').isValid() ){
         fecha.onChange(moment(task.finalDate, 'YYYY-MM-DD').format("DD/MM/YYYY"));
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
