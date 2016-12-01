@@ -39,7 +39,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {showLoading, fields: {team, region, zone}} = this.props;
+        const {showLoading} = this.props;
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {

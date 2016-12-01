@@ -46,6 +46,9 @@ class ViewAlerts extends Component {
     }
 
     openModal() {
+        if (window.localStorage.getItem('sessionToken') === "") {
+            redirectUrl("/login");
+        }
         const {showLoading, getAlertsByUser} = this.props;
         showLoading(true, 'Cargando alertas..');
         getAlertsByUser().then((data) => {
