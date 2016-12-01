@@ -26,7 +26,7 @@ const styleAlert = {
     padding: "14px 10px",
     marginTop: "10px",
     borderRadius: "5px"
-}
+};
 
 class BellClientAlertComponent extends Component {
     constructor(props) {
