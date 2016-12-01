@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {clientsFindServer, changePage, changeKeyword} from './actions';
+import {clientsPendingUpdateFindServer, changePage, changeKeyword} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import SweetAlert from 'sweetalert-react';
+import {showLoading} from '../loading/actions';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 
@@ -41,17 +42,23 @@ class SearchBarClient extends Component{
   }
 
   _handleClientsFind(e){
-    const {clientsFindServer, valueTeam,valueCertification} = this.props;
-    const {alertPendingUpdateClient} = this.props;
-    if(alertPendingUpdateClient.get('keywordNameNit') === '' || alertPendingUpdateClient.get('keywordNameNit') === undefined){
+    const {clientsPendingUpdateFindServer,alertPendingUpdateClient,showLoading} = this.props;
+      const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
+    if(keyWordNameNit === '' || keyWordNameNit === undefined){
       this.setState({showEr: true});
     }else{
       const {changePage} = this.props;
-      clientsFindServer(alertPendingUpdateClient.get('keywordNameNit'), 0, NUMBER_RECORDS,valueCertification,valueTeam).then((data) => {
-        if ( !_.get(data, 'payload.data.validateLogin') ) {
-          redirectUrl("/login");
-        }
-      });
+        const idTeam = alertPendingUpdateClient.get('idTeam');
+        const idRegion = alertPendingUpdateClient.get('idRegion');
+        const idZone = alertPendingUpdateClient.get('idZone');
+        const order = alertPendingUpdateClient.get('order');
+        const columnOrder = alertPendingUpdateClient.get('columnOrder');
+        showLoading(true, 'Cargando..');
+        clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+            if (_.has(data, 'payload.data.data')) {
+                showLoading(false, null);
+            }
+        });
       changePage(1);
     }
   }
@@ -81,14 +88,13 @@ class SearchBarClient extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl
+      clientsPendingUpdateFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, showLoading
   }, dispatch);
 }
 
-function mapStateToProps({alertPendingUpdateClient, tabReducer}, ownerProps){
+function mapStateToProps({alertPendingUpdateClient}, ownerProps){
   return {
-    alertPendingUpdateClient,
-    tabReducer
+    alertPendingUpdateClient
   };
 }
 

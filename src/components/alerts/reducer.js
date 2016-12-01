@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
         case actions.GET_ALERT_BY_USER:
             const response = action.payload.data;
             return state.withMutations(map => {
-                map.set('listAlertByUser', _.get(response,"data"));
+                map.set('listAlertByUser', _.get(response,"data",[]));
             });
             return state;
         case actions.OPEN_MODAL_ALERTS:

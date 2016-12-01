@@ -39,6 +39,7 @@ import draftDocumentsReducer from '../components/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
 import alertsReducer from '../components/alerts/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
+import loadingReducer from '../components/loading/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -80,5 +81,6 @@ export default combineReducers({
     alerts: alertsReducer,
     alertPendingUpdateClient: alertPendingUpdateClientReducer,
     myPendingsReducer: myPendingsReducer,
-    draftDocumentsReducer: draftDocumentsReducer
+    draftDocumentsReducer: draftDocumentsReducer,
+    loading: loadingReducer
 });

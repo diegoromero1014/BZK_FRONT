@@ -9,6 +9,10 @@ export function redirectUrl(url) {
     }
 }
 
+export function goBack() {
+    Router.goBack();
+}
+
 export function shorterStringValue(element){
   return element.length > 50 ? element.substring(0, 50) + "..." : element;
 }

@@ -6,6 +6,7 @@ import {redirectUrl} from '../globalComponents/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import LoadingComponent from '../loading/loadingComponent';
 
 class Dashboard extends Component {
     constructor(props){
@@ -42,6 +43,7 @@ class Dashboard extends Component {
                       id="dashboardComponentScroll"
                       style={{backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden", marginTop: "3px"}}>
                       {this.props.children}
+                        <LoadingComponent />
                       {dashboardReducer.get('showSaveData') &&
                         <div className="ui active inverted dimmer">
                           <div className="ui text loader">{dashboardReducer.get('messageData')}</div>

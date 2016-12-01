@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
+import _ from 'lodash';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -17,11 +18,12 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case constants.FIND_DRAFT_DOCUMENTS:
           const response = action.payload.data;
+
           return state.withMutations(map => {
               map
               .set('status', response.status)
-              .set('rowCount', response.data === null || response.data === undefined ? 0 : response.data.rowCount)
-              .set('draftDocumentsListByUser', response.data.rows === null || response.data.rows === undefined ? [] : response.data.rows);
+              .set('rowCount', _.get(response,'data.rowCount',0))
+              .set('draftDocumentsListByUser', _.get(response,'data.rows',[]));
           });
         case constants.CHANGE_PAGE:
             return state.set('page', action.currentPage);

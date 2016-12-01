@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
+import {updateTitleNavBar} from '../navBar/actions';
 import {connect} from 'react-redux';
-import {consultInfoClient} from '../clientInformation/actions';
 import {seletedButton, sendErrorsUpdate, updateErrorsNotes} from '../clientDetailsInfo/actions';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {redirectUrl} from '../globalComponents/actions';
+import {redirectUrl, goBack} from '../globalComponents/actions';
 import SelectTypeDocument from '../selectsComponent/selectTypeDocument/componentTypeDocument';
 import SelectYesNo from '../selectsComponent/selectYesNo/selectYesNo';
 import {consultDataSelect, consultList, consultListWithParameter, economicGroupsByKeyword, consultListWithParameterUbication,
@@ -411,7 +411,7 @@ class clientEdit extends Component{
     otherOriginResourceEnable = 'disabled';
     initValueJustifyNonGeren = false;
     initValueJustifyNonLME = false;
-    redirectUrl("/dashboard/clientInformation");
+    goBack();
   }
 
   _closeError(){
@@ -435,7 +435,7 @@ class clientEdit extends Component{
     otherOriginResourceEnable = 'disabled';
     initValueJustifyNonGeren = false;
     initValueJustifyNonLME = false;
-    redirectUrl("/dashboard/clientInformation");
+    goBack();
   }
 
   _closeSuccessSaveUpdate(){
@@ -934,14 +934,15 @@ class clientEdit extends Component{
   componentWillMount(){
     infoJustificationForNoRM = true;
     infoMarcaGeren = true;
-    const {fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns},
+    const {fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns},updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes} = this.props;
+            clearProducts, setProducts, tabReducer, updateErrorsNotes,consultInfoClient} = this.props;
     idButton = tabReducer.get('seletedButton');
     updateErrorsNotes(false);
     clearValuesAdressess();
     clearNotes();
     clearProducts();
+    updateTitleNavBar("Actualizar/Editar cliente");
     var infoClient = clientInformacion.get('responseClientInfo');
     if(infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== ''){
       setNotes(infoClient.notes);
@@ -1918,7 +1919,8 @@ function mapDispatchToProps(dispatch) {
     seletedButton,
     updateClient,
     sendErrorsUpdate,
-    updateErrorsNotes
+    updateErrorsNotes,
+    updateTitleNavBar
   }, dispatch);
 }
 

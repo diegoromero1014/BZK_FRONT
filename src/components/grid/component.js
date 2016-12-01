@@ -35,7 +35,7 @@ class GridComponent extends Component {
             }else if(value.key === 'delete' &&  _.get(row, value.key)){
               cell = <ButtonDeleteComponent key={idx} actionsDelete={_.get(row, value.key)}/>
             }else if(value.key === 'actionsRedirect'){
-              cell= <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
+              cell= <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)}/>
             }else if(value.key === 'actionsPdf' &&  _.get(row, value.key)){
               cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>
             }else{

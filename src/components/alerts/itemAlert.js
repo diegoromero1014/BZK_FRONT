@@ -46,8 +46,9 @@ class ItemAlert extends Component {
                     color: 'white',
                     backgroundColor: styleColor,
                     borderColor: styleColor,
-                    borderRadius: '4px 4px 4px 4px'
-                }}>
+                    borderRadius: '4px 4px 4px 4px',
+                    cursor: 'pointer'
+                }} onClick={this._handleRedirectAlert}>
                     <div style={{height: '120px'}}>
                         <Row>
                             <Col xs={4} md={4} lg={3}>
@@ -75,9 +76,8 @@ class ItemAlert extends Component {
                     </div>
                     <div style={{
                         color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
-                        borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload,
-                        cursor: 'pointer'
-                    }} onClick={this._handleRedirectAlert}>
+                        borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload
+                    }}>
                         <span style={{
                             float: 'left',
                             fontSize: '15px',
