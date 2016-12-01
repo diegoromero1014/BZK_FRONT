@@ -43,7 +43,7 @@ class GridComponent extends Component {
               if( _.get(row, value.key).permissionsView !== undefined && !_.get(row, value.key).permissionsView ){
                 cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
               } else {
-                cell = <ButtonDetailsRedirectComponent key={idx} actionsRedirect={_.get(row, value.key)}/>
+                cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon}  actionsRedirect={_.get(row, value.key)}/>
               }
             }else if(value.key === 'actionsPdf' &&  _.get(row, value.key)){
               cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>

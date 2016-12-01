@@ -11,6 +11,7 @@ import {consultInfoClient} from '../clientInformation/actions';
 import {showLoading} from '../loading/actions';
 import {BUTTON_UPDATE} from '../clientDetailsInfo/constants';
 import {isUndefined,has} from 'lodash';
+import {updateStatusModal} from '../draftDocuments/actions';
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -21,7 +22,7 @@ class ButtonDetailsRedirectComponent extends Component {
 
   _detailVisit(){
     const {actionsRedirect, updateTitleNavBar, validateContactShareholder,changeOwnerDraft,
-        changeOwnerDraftPrevisit, changeOwnerDraftPipeline,consultInfoClient,seletedButton,showLoading } = this.props;
+        changeOwnerDraftPrevisit, changeOwnerDraftPipeline,consultInfoClient,seletedButton,showLoading,updateStatusModal } = this.props;
     if( actionsRedirect.typeClickDetail === "visita"){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
@@ -50,7 +51,7 @@ class ButtonDetailsRedirectComponent extends Component {
         });
         validateContactShareholder();
     }
-
+      updateStatusModal(false);
   }
 
   render(){
@@ -79,7 +80,8 @@ function mapDispatchToProps(dispatch) {
         seletedButton,
         consultInfoClient,
         validateContactShareholder,
-        showLoading
+        showLoading,
+        updateStatusModal
   }, dispatch);
 }
 
