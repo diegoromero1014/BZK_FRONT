@@ -5,9 +5,9 @@ import {UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDE
 const initialState = Immutable.Map({
   status: "200",
   tabSelected: null,
-  seletedButton: 0,
-  errorConstact: 0,
-  errorShareholder: 0,
+  seletedButton: false,
+  errorConstact: false,
+  errorShareholder: false,
   modalErrorsIsOpen: false,
   errorsMessage: [],
   errorNotesEditClient: false
