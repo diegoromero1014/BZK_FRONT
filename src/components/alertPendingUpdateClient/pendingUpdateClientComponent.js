@@ -15,7 +15,8 @@ import {
     consultList,
     getMasterDataFields,
     consultListWithParameterUbication,
-    consultDataSelect
+    consultDataSelect,
+    consultTeamsByRegionByEmployee
 } from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
@@ -60,14 +61,17 @@ class ClientsPendingUpdate extends Component {
     }
 
     _cleanSearch() {
-        const {resetForm,showLoading, clearFilter} = this.props;
-        resetForm();
+        const {fields: {team,region, zone},resetForm,showLoading, clearFilter,consultList} = this.props;
+        team.onChange(null);
+        region.onChange(null);
+        zone.onChange(null);
         showLoading(true, 'Cargando..');
         clearFilter().then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
             }
         });
+        consultList(constants.TEAM_FOR_EMPLOYEE);
     }
 
     _onChangeTeam(val) {
@@ -80,9 +84,11 @@ class ClientsPendingUpdate extends Component {
     }
 
     _onChangeRegionStatus(val) {
-        const {fields: {region, zone}, consultListWithParameterUbication, changeRegion} = this.props;
+        const {fields: {team,region, zone}, consultListWithParameterUbication, changeRegion,consultTeamsByRegionByEmployee} = this.props;
+        consultTeamsByRegionByEmployee(val);
         region.onChange(val);
         zone.onChange(null);
+        team.onChange(null);
         changeRegion(val);
         consultListWithParameterUbication(constants.LIST_ZONES, val);
         if (val) {
@@ -140,7 +146,7 @@ class ClientsPendingUpdate extends Component {
                                 value={team.value}
                                 onBlur={team.onBlur}
                                 valueProp={'id'}
-                                textProp={'description'}
+                                textProp={'name'}
                                 searchClient={'client'}
                                 data={selectsReducer.get('teamValueObjects')}
                             />
@@ -226,6 +232,7 @@ function mapDispatchToProps(dispatch) {
         changeTeam,
         changeRegion,
         changeZone,
+        consultTeamsByRegionByEmployee
     }, dispatch);
 }
 

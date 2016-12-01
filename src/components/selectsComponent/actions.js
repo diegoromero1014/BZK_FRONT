@@ -1,6 +1,8 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS, PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS } from './constants';
+import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
+    TEAM_FOR_REGION_EMPLOYEE,CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
+    PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS } from './constants';
 
 export function consultDataSelect(field){
   const json = {
@@ -235,4 +237,30 @@ export function getClientNeeds() {
     type: PIPELINE_CLIENT_NEEDS,
     payload: request
   };
+}
+
+
+export function consultTeamsByRegionByEmployee(idRegion){
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        messageBody: {
+            "idRegion": idRegion
+        }
+    };
+    var request = axios.post(APP_URL + "/getCellsByRegionByUser", json);
+    return {
+        type: TEAM_FOR_REGION_EMPLOYEE,
+        payload: request
+    }
 }

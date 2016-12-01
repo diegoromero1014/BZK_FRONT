@@ -81,6 +81,8 @@ export default (state = initialState, action) => {
           return state.set('dataTypeAttitudeOverGroup', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TEAM_FOR_EMPLOYEE:
           return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
+        case constants.TEAM_FOR_REGION_EMPLOYEE:
+          return state.set('teamValueObjects', defaultData(action, 'payload.data.data'));
         case constants.TYPE_NOTES:
           return state.set('dataTypeNotes',  defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.ECONOMIC_GROUPS:

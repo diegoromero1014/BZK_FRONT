@@ -4,11 +4,12 @@ import {bindActionCreators} from 'redux';
 import {showLoading} from '../loading/actions';
 import {clientsPendingUpdateFindServer, changePage} from './actions';
 import {NUMBER_RECORDS} from './constants';
+import {has} from 'lodash';
 
 class Pagination extends Component{
 
   _handlePagination(page){
-    const {clientsPendingUpdateFindServer,changePage,alertPendingUpdateClient} = this.props;
+    const {clientsPendingUpdateFindServer,changePage,alertPendingUpdateClient,showLoading} = this.props;
       changePage(page);
       const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
       const idTeam = alertPendingUpdateClient.get('idTeam');
@@ -19,7 +20,7 @@ class Pagination extends Component{
       showLoading(true, 'Cargando..');
       //keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows,order,columnOrder
       clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
-          if (!_.get(data, 'payload.data.data')) {
+          if (has(data, 'payload.data.data')) {
               showLoading(false, null);
           }
       });

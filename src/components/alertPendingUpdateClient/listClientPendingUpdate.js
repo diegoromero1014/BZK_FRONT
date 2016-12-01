@@ -15,7 +15,10 @@ import {EDITAR} from '../../constantsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './clientPendingUpdateUtilities';
-import {get,indexOf} from 'lodash';
+import {get,indexOf,has} from 'lodash';
+import {showLoading} from '../loading/actions';
+import {clientsPendingUpdateFindServer} from './actions';
+import {NUMBER_RECORDS} from './constants';
 
 let v1 = "";
 class ListDraftDocuments extends Component {
@@ -23,8 +26,8 @@ class ListDraftDocuments extends Component {
     constructor(props) {
         super(props);
         momentLocalizer(moment);
-        // this._renderCellView = this._renderCellView.bind(this);
         this._renderHeaders = this._renderHeaders.bind(this);
+        this._orderColumn = this._orderColumn.bind(this);
         this.state = {
             column: "",
             order: "",
@@ -48,81 +51,89 @@ class ListDraftDocuments extends Component {
     }
 
     _orderColumn(orderClients, columnClients) {
+        const {clientsPendingUpdateFindServer,alertPendingUpdateClient,showLoading} = this.props;
+        const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
+        const idTeam = alertPendingUpdateClient.get('idTeam');
+        const idRegion = alertPendingUpdateClient.get('idRegion');
+        const idZone = alertPendingUpdateClient.get('idZone');
+        const page = alertPendingUpdateClient.get('pageNum');
         if (orderClients === 1) {
             this.setState({orderD: 'none', orderA: 'inline-block'});
         } else {
             this.setState({orderD: 'inline-block', orderA: 'none'});
         }
-        // const {draftsDocumentsByUser, orderColumnDraftDocument, clearDraftDocumentPaginator} = this.props;
-        // clearDraftDocumentPaginator();
-        // orderColumnDraftDocument(orderClients, columnClients);
-        // draftsDocumentsByUser(0, NUMBER_RECORDS, v1, orderClients, columnClients);
+        showLoading(true, 'Cargando..');
+        clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
+            if (has(data, 'payload.data.data')) {
+                showLoading(false, null);
+            }
+        });
     }
 
     _renderHeaders() {
 
         const headersTable = [
             {
-                title: "Tipo de documento",
+                title: "Tipo documento",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "results.typeDocument")}></i><i
+                                      onClick={() => this._orderColumn(0, "typeDocument")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "results.typeDocument")}></i></span>,
+                    onClick={() => this._orderColumn(1, "typeDocument")}></i></span>,
                 key: "typeDocument"
             },
             {
-                title: "Número de documento",
+                title: "Número documento",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "results.idNumberClient")}></i><i
+                                      onClick={() => this._orderColumn(0, "idNumberClient")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "results.idNumberClient")}></i></span>,
+                    onClick={() => this._orderColumn(1, "idNumberClient")}></i></span>,
                 key: "idNumberClient"
             },
             {
                 title: "Nombre/Razón social",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "results.clientName")}></i><i
+                                      onClick={() => this._orderColumn(0, "clientName")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "results.clientName")}></i></span>,
+                    onClick={() => this._orderColumn(1, "clientName")}></i></span>,
                 key: "clientName"
             },
             {
                 title: "Célula",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "results.team")}></i><i
+                                      onClick={() => this._orderColumn(0, "team")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "results.team")}></i></span>,
+                    onClick={() => this._orderColumn(1, "team")}></i></span>,
                 key: "team"
             },
             {
                 title: "Region",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "results.region")}></i><i
+                                      onClick={() => this._orderColumn(0, "region")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "results.region")}></i></span>,
+                    onClick={() => this._orderColumn(1, "region")}></i></span>,
                 key: "region"
             },
             {
                 title: "Zona",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(1, "results.zone")}></i><i
+                                      onClick={() => this._orderColumn(1, "zone")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(0, "results.zone")}></i></span>,
+                    onClick={() => this._orderColumn(0, "zone")}></i></span>,
                 key: "zone"
             },
             {
-                title: "Última fecha de modificación",
+                title: "Última modificación",
                 orderColumn: <span><i className="caret down icon"
                                       style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(1, "results.lastUpdateDate")}></i><i
+                                      onClick={() => this._orderColumn(1, "lastUpdateDate")}></i><i
                     className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(0, "results.lastUpdateDate")}></i></span>,
+                    onClick={() => this._orderColumn(0, "lastUpdateDate")}></i></span>,
                 key: "lastUpdateDate"
             }
         ];
@@ -159,7 +170,9 @@ function mapDispatchToProps(dispatch) {
         redirectUrl,
         clearClientOrder,
         clearClientPagination,
-        orderColumnClientPendingUpdate
+        orderColumnClientPendingUpdate,
+        clientsPendingUpdateFindServer,
+        showLoading
     }, dispatch);
 }
 
