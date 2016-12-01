@@ -78,7 +78,8 @@ class BellClientAlertComponent extends Component {
                     <Popup
                         trigger={<Icon name='alarm outline'/>}
                         size='large'
-                        on='click'
+                        flowing
+                        hoverable
                         positioning='bottom left'
                     >
                         <Grid style={{maxHeight: "400px", overflow: "scroll"}}>
