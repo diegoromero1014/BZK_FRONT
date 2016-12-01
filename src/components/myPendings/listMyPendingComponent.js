@@ -113,7 +113,7 @@ _orderColumn(orderMyPending,columnMyPending){
     const modalTitle = 'Tarea';
     const data = myPendingsReducer.get('pendingTaskListByUser');
     return (
-      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', overflowX : 'hidden'}}>
+      <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll', overflowX : 'hidden', paddingBottom: '90px'}}>
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
       </div>
     );

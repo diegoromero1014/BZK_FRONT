@@ -18,41 +18,48 @@ class ButtonDetailsRedirectComponent extends Component {
   constructor(props){
     super(props);
     this._detailVisit = this._detailVisit.bind(this);
+    this._handleRedirect = this._handleRedirect.bind(this);
   }
 
   _detailVisit(){
     const {actionsRedirect, updateTitleNavBar, validateContactShareholder,changeOwnerDraft,
         changeOwnerDraftPrevisit, changeOwnerDraftPipeline,consultInfoClient,seletedButton,showLoading,updateStatusModal } = this.props;
+    showLoading(true, 'Cargando cliente...');
     if( actionsRedirect.typeClickDetail === "visita"){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
-        redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
     } else if( actionsRedirect.typeClickDetail === "previsita" ){
       updateTitleNavBar("Informe de previsita");
       changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
-        redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
     } else if (actionsRedirect.typeClickDetail === "pipeline") {
       updateTitleNavBar("Informe de pipeline");
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-        redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
     } else if (actionsRedirect.typeClickDetail === "businessPlan") {
       updateTitleNavBar("Informe de plan de negocio");
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-      redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
     }else if (actionsRedirect.typeClickDetail === "clientEdit") {
-        showLoading(true, 'Cargando cliente...');
-        window.localStorage.setItem('idClientSelected',actionsRedirect.id);
         seletedButton(BUTTON_UPDATE);
-        consultInfoClient().then((data)=> {
-            if (has(data,'payload.data.clientInformation')) {
-                showLoading(false,null);
-                redirectUrl(actionsRedirect.urlRedirect);
-            }
-        });
         validateContactShareholder();
+        this._handleRedirect(actionsRedirect.urlRedirect, actionsRedirect.id);
     }
+
       updateStatusModal(false);
   }
+
+  _handleRedirect(urlRedirect, idClient){
+    window.localStorage.setItem('idClientSelected', idClient);
+    const {consultInfoClient, showLoading} = this.props;
+    consultInfoClient().then((data)=> {
+        showLoading(false,null);
+        redirectUrl(urlRedirect);
+    });
+  }
+
+
 
   render(){
     const iconButton = isUndefined(this.props.icon) ? "zoom icon" : this.props.icon;
@@ -81,7 +88,8 @@ function mapDispatchToProps(dispatch) {
         consultInfoClient,
         validateContactShareholder,
         showLoading,
-        updateStatusModal
+        updateStatusModal,
+        redirectUrl
   }, dispatch);
 }
 

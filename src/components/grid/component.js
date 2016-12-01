@@ -73,7 +73,7 @@ class GridComponent extends Component {
     const data = this.props.data;
     const modalTitle = this.props.modalTitle;
     return (
-          <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info" >
+          <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info">
             <thead style={{color: '#4c5360'}}>
               <tr role="row">
                 {headers().map(this._renderHeader)}

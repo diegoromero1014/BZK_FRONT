@@ -99,6 +99,7 @@ export const mapDataGrid = (data = [], viewPrevisit, viewVisit, viewPipeline, vi
       actionsRedirect: {
         actionView: true,
         id: item.id,
+        idClient: item.idClient,
         typeClickDetail: validateTypeClickDetails(item.typeDocument),
         ownerDraft: STATUS_DRAFT_DOCUMENT,
         urlRedirect: validateUrlRedirect(item.typeDocument),

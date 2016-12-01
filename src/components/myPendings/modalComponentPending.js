@@ -66,7 +66,7 @@ class ModalComponentPending extends Component {
       visibleMessage = 'none';
     }
     return (
-      <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
+      <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "20px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px'}}>
           <Grid style={{ width: "100%"}}>
             <Row>
@@ -97,7 +97,7 @@ class ModalComponentPending extends Component {
             </Row>
           </Grid>
         </div>
-        <Grid style= {{display:visibleTable, width: "100%"}}>
+        <Grid style= {{display:visibleTable, width: "100%", marginBottom: '50px'}}>
           <Row>
             <Col xs>
               <ListPendingTaskComponent keyWordParameter={this.state.keywordMyPending}/>

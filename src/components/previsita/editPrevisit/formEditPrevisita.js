@@ -532,6 +532,7 @@ class FormEditPrevisita extends Component{
     const {nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer} = this.props;
     nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
+    console.log('consultInfoClient', infoClient);
     if(_.isEmpty(infoClient)){
         redirectUrl("/dashboard/clientInformation");
     } else {
