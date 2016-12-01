@@ -25,8 +25,7 @@ const styleAlert = {
     backgroundColor: "#e2e1e1",
     padding: "14px 10px",
     marginTop: "10px",
-    borderRadius: "5px",
-    cursor: 'pointer'
+    borderRadius: "5px"
 }
 
 class BellClientAlertComponent extends Component {
@@ -42,7 +41,7 @@ class BellClientAlertComponent extends Component {
                     return listAlerts.map((alert, idx) => {
                         return (
                             <Grid.Row key={idx} style={styleAlert}>
-                                <div onClick={this._handleRedirectAlert.bind(this, alert.code)}>
+                                <div>
                                     {alert.name}
                                 </div>
                             </Grid.Row>
@@ -60,17 +59,6 @@ class BellClientAlertComponent extends Component {
         }
     }
 
-    _handleRedirectAlert(codeAlert) {
-        switch (codeAlert) {
-            case CODE_ALERT_PENDING_UPDATE_CLIENT:
-                redirectUrl("/dashboard/alertClientPendingUpdate");
-                break;
-            default:
-                return null;
-        }
-    }
-
-
     render() {
         set(styleNumAlert, 'background', size(this.props.listAlertOnClient) > 0 ? 'red' : 'green');
         return (
@@ -84,7 +72,8 @@ class BellClientAlertComponent extends Component {
                     padding: "10px 0 0 5px",
                     position: "relative",
                     top: "-10px",
-                    borderRadius: "30px"
+                    borderRadius: "30px",
+                    cursor: 'pointer'
                 }}>
                     <Popup
                         trigger={<Icon name='alarm outline'/>}
