@@ -29,8 +29,6 @@ class ListDraftDocuments extends Component {
         this._renderHeaders = this._renderHeaders.bind(this);
         this._orderColumn = this._orderColumn.bind(this);
         this.state = {
-            column: "",
-            order: "",
             orderA: 'none',
             orderD: 'inline-block'
         }
@@ -51,18 +49,19 @@ class ListDraftDocuments extends Component {
     }
 
     _orderColumn(orderClients, columnClients) {
+        if (orderClients === 1) {
+            this.setState({orderD: 'none', orderA: 'inline-block'});
+        } else {
+            this.setState({orderD: 'inline-block', orderA: 'none'});
+        }
         const {clientsPendingUpdateFindServer,alertPendingUpdateClient,showLoading} = this.props;
         const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
         const idTeam = alertPendingUpdateClient.get('idTeam');
         const idRegion = alertPendingUpdateClient.get('idRegion');
         const idZone = alertPendingUpdateClient.get('idZone');
         const page = alertPendingUpdateClient.get('pageNum');
-        if (orderClients === 1) {
-            this.setState({orderD: 'none', orderA: 'inline-block'});
-        } else {
-            this.setState({orderD: 'inline-block', orderA: 'none'});
-        }
         showLoading(true, 'Cargando..');
+        console.log("orderClients",orderClients,"columnClients",columnClients);
         clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);
@@ -75,65 +74,37 @@ class ListDraftDocuments extends Component {
         const headersTable = [
             {
                 title: "Tipo documento",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "typeDocument")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "typeDocument")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "typeDocument")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "typeDocument")}></i></span>,
                 key: "typeDocument"
             },
             {
                 title: "Número documento",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "idNumberClient")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "idNumberClient")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "idNumberClient")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "idNumberClient")}></i></span>,
                 key: "idNumberClient"
             },
             {
                 title: "Nombre/Razón social",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "clientName")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "clientName")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "clientName")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "clientName")}></i></span>,
                 key: "clientName"
             },
             {
                 title: "Célula",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "team")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "team")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "team")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "team")}></i></span>,
                 key: "team"
             },
             {
                 title: "Region",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(0, "region")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(1, "region")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "region")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "region")}></i></span>,
                 key: "region"
             },
             {
                 title: "Zona",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(1, "zone")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(0, "zone")}></i></span>,
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "zone")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "zone")}></i></span>,
                 key: "zone"
             },
             {
                 title: "Última modificación",
-                orderColumn: <span><i className="caret down icon"
-                                      style={{cursor: 'pointer', display: this.state.orderD}}
-                                      onClick={() => this._orderColumn(1, "lastUpdateDate")}></i><i
-                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
-                    onClick={() => this._orderColumn(0, "lastUpdateDate")}></i></span>,
+                orderColumn: <span><i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "lastUpdateDate")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "lastUpdateDate")}></i></span>,
                 key: "lastUpdateDate"
             }
         ];

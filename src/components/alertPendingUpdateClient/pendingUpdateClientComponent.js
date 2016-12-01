@@ -38,7 +38,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {alertPendingUpdateClient,showLoading, fields: {team, region, zone}} = this.props;
+        const {showLoading, fields: {team, region, zone}} = this.props;
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
@@ -66,12 +66,12 @@ class ClientsPendingUpdate extends Component {
         region.onChange(null);
         zone.onChange(null);
         showLoading(true, 'Cargando..');
-        clearFilter().then((data) => {
-            if (_.has(data, 'payload.data.data')) {
+        clearFilter();
+        consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+            if (_.has(data, 'payload.data.teamValueObjects')) {
                 showLoading(false, null);
             }
         });
-        consultList(constants.TEAM_FOR_EMPLOYEE);
     }
 
     _onChangeTeam(val) {
@@ -146,7 +146,7 @@ class ClientsPendingUpdate extends Component {
                                 value={team.value}
                                 onBlur={team.onBlur}
                                 valueProp={'id'}
-                                textProp={'name'}
+                                textProp={'description'}
                                 searchClient={'client'}
                                 data={selectsReducer.get('teamValueObjects')}
                             />

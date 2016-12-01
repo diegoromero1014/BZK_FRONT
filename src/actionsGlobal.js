@@ -121,7 +121,6 @@ export function shorterStringValue(element){
 }
 
 export function mapDateValueFromTask(date){
-  console.log('date', date);
   if( moment(date, [REVIEWED_DATE_FORMAT], 'es', true).isValid() ){
     return date;
   } else {
