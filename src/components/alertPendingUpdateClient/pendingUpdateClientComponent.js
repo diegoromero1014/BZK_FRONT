@@ -26,6 +26,7 @@ import ListClientsPendingUpdate from './listClientPendingUpdate';
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
+const titleModule = 'Alerta de clientes pendientes por actualizar';
 
 class ClientsPendingUpdate extends Component {
     constructor(props) {
@@ -56,7 +57,7 @@ class ClientsPendingUpdate extends Component {
                     showLoading(false, null);
                 }
             });
-            updateTitleNavBar("Alerta de clientes pendientes actualización");
+            updateTitleNavBar(titleModule);
         }
     }
 
