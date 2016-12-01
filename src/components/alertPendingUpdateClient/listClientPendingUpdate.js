@@ -61,7 +61,6 @@ class ListDraftDocuments extends Component {
         const idZone = alertPendingUpdateClient.get('idZone');
         const page = alertPendingUpdateClient.get('pageNum');
         showLoading(true, 'Cargando..');
-        console.log("orderClients",orderClients,"columnClients",columnClients);
         clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);
