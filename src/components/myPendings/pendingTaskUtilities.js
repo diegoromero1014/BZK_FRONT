@@ -8,7 +8,7 @@ import {shorterStringValue, mapDateValueFromTask} from '../../actionsGlobal';
 export function getColor(date){
   const expirationDate = moment(date, 'DD MMM YYYY', 'es');
   const currentDate = moment().startOf('day');
-  const beforeThreeDays = moment().startOf('day').add(2, 'days');
+  const beforeThreeDays = moment().startOf('day').add(3, 'days');
   if(currentDate.isAfter(expirationDate)){
     return COLOR_TRAFFICT_RED;
   } else if(beforeThreeDays.isBefore(expirationDate) || beforeThreeDays.isSame(expirationDate)){
