@@ -92,7 +92,7 @@ class ListDraftDocuments extends Component {
                 key: "team"
             },
             {
-                title: "Region",
+                title: "Región",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "region")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "region")}></i></span>,
                 key: "region"
             },
