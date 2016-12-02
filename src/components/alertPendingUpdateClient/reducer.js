@@ -36,7 +36,7 @@ export default (state = initialState, action) => {
             const response2 = get(action.payload,'data.data',[]);
             return state.withMutations(map => {
                 map
-                    .set('status', 'withoutProcessing')
+                    .set('status', 'processed')
                     .set('keywordNameNit', '')
                     .set('idTeam', null)
                     .set('idRegion', null)

@@ -62,11 +62,9 @@ class ClientsPendingUpdate extends Component {
     }
 
     _cleanSearch() {
-        const {fields: {team,region, zone},resetForm,showLoading, clearFilter,consultList} = this.props;
-        team.onChange(null);
-        region.onChange(null);
-        zone.onChange(null);
+        const {resetForm,showLoading, clearFilter,consultList} = this.props;
         showLoading(true, 'Cargando..');
+        resetForm();
         clearFilter();
         consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
             if (_.has(data, 'payload.data.teamValueObjects')) {
@@ -85,15 +83,15 @@ class ClientsPendingUpdate extends Component {
     }
 
     _onChangeRegionStatus(val) {
-        const {fields: {team,region, zone}, consultListWithParameterUbication, changeRegion,consultTeamsByRegionByEmployee} = this.props;
-        consultTeamsByRegionByEmployee(val);
-        region.onChange(val);
-        zone.onChange(null);
-        team.onChange(null);
-        changeRegion(val);
-        consultListWithParameterUbication(constants.LIST_ZONES, val);
-        if (val) {
+        if (!_.isEqual(val, "")) {
+            const {fields: {team, region, zone}, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee} = this.props;
+            region.onChange(val);
+            zone.onChange(null);
+            team.onChange(null);
+            changeRegion(val);
+            consultListWithParameterUbication(constants.LIST_ZONES, val);
             this._handleClientsFind();
+            consultTeamsByRegionByEmployee(val);
         }
     }
 
@@ -113,7 +111,6 @@ class ClientsPendingUpdate extends Component {
         const order = alertPendingUpdateClient.get('order');
         const columnOrder = alertPendingUpdateClient.get('columnOrder');
         showLoading(true, 'Cargando..');
-        //keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows,order,columnOrder
         clientsPendingUpdateFindServer(keyWordNameNit, team.value, region.value, zone.value, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
@@ -157,7 +154,7 @@ class ClientsPendingUpdate extends Component {
                                 name="region"
                                 labelInput="Región"
                                 {...region}
-                                onChange={val => this._onChangeRegionStatus(val)}
+                                onChange={val =>this._onChangeRegionStatus(val)}
                                 value={region.value}
                                 onBlur={region.onBlur}
                                 valueProp={'id'}
