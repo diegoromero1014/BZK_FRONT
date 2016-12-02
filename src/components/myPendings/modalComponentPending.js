@@ -80,18 +80,18 @@ class ModalComponentPending extends Component {
               </Col>
               <Col xs={12} sm={12} md={3} lg={3}>
                 <div style={{height: '80px', marginLeft: '30px'}} >
-                  <div style={{display: 'inline-flex'}}>
+                  <Row>
                     <div style={{borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'red'}}></div>
                     <span style={{marginLeft: '10px'}}> Tarea vencida</span>
-                  </div>
-                  <div style={{display: 'inline-flex'}}>
+                  </Row>
+                  <Row style={{marginTop:"5px"}}>
                     <div style={{borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'orange'}}></div>
                     <span style={{marginLeft: '10px'}}> Tarea próxima a vencerse</span>
-                  </div>
-                  <div style={{display: 'inline-flex'}}>
+                  </Row>
+                  <Row style={{marginTop:"5px"}}>
                     <div style={{borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'green'}}></div>
                     <span style={{marginLeft: '10px'}}> Tarea con tiempo</span>
-                  </div>
+                  </Row>
                 </div>
               </Col>
             </Row>
