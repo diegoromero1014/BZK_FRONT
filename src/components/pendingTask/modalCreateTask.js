@@ -176,7 +176,7 @@ class ModalCreateTask extends Component{
 
   render(){
     const {fields: {responsable, fecha, idEstado, tarea, advance, dateVisit},
-        taskEdit, selectsReducer, reducerGlobal, handleSubmit} = this.props;
+        selectsReducer, reducerGlobal, handleSubmit} = this.props;
     return  (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"

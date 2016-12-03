@@ -202,6 +202,7 @@ class FormEdit extends Component{
               tareas.push(data);
           }
         );
+
         var visitJson = {
           "id": detailVisit.data.id,
           "client": window.localStorage.getItem('idClientSelected'),

@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import {GET_PIPELINE_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PIPELINE,
   CLEAR_PIPELINE, CLEAR_PIPELINE_ORDER,CLEAR_PIPELINE_PAGINATOR, GET_PIPELINE, OWNER_DRAFT} from './constants';
+import {isUndefined} from 'lodash';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -21,7 +22,7 @@ export default (state = initialState, action) => {
 		return state.withMutations(map => {
 			map.set('status', response.status)
 			.set('rowCount', response.rowCount)
-			.set('pipelineList', JSON.parse(response.pipelineList));
+			.set('pipelineList', isUndefined(response.pipelineList) ? [] : JSON.parse(response.pipelineList));
       	});
     case CHANGE_PAGE:
         return state.set('page', action.currentPage);

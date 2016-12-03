@@ -30,7 +30,7 @@ class PipelineComponent extends Component {
     if( window.localStorage.getItem('sessionToken') === "" ){
       redirectUrl("/login");
     }else{
-      const {pipelineByClientFindServer, clearPipeline, validatePermissionsByModule} = this.props;
+      const {pipelineByClientFindServer, clearPipeline, validatePermissionsByModule, clientInformacion} = this.props;
       clearPipeline();
       pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"","");
       validatePermissionsByModule(MODULE_PIPELINE).then((data) => {
@@ -123,11 +123,12 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({pipelineReducer, navBar, reducerGlobal}, ownerProps){
+function mapStateToProps({pipelineReducer, navBar, reducerGlobal, clientInformacion}, ownerProps){
     return {
         pipelineReducer,
         navBar,
-        reducerGlobal
+        reducerGlobal,
+        clientInformacion
     };
 }
 

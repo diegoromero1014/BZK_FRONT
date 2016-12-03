@@ -34,7 +34,6 @@ let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
-let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
 

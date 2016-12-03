@@ -72,7 +72,7 @@ class ModalDraftDocuments extends Component {
             <Row>
               <Col xs={12} sm={12} md={8} lg={8}>
                 <div className="InputAddOn">
-                  <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, nit y nombre del cliente"  value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+                  <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, número de documento y nombre del cliente"  value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
                   <button onClick={this._handleDraftDcoumentsFind} className="button InputAddOn-item">
                     <i className="search icon" />
                   </button>

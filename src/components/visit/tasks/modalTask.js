@@ -17,7 +17,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import _ from 'lodash';
 import $ from 'jquery';
 
-const fields = ["responsable", "fecha", "tarea"];
+const fields = ["idEmployee", "responsable", "fecha", "tarea"];
 const errors = {};
 var usersBanco = [];
 var idUsuario, nameUsuario;
@@ -88,8 +88,9 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e){
-      const {fields: {responsable}, filterUsersBanco} = this.props;
+      const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
       const selector =  $('.ui.search.responsable');
+      idEmployee.onChange(null);
       if(e.keyCode === 13 || e.which === 13){
         e.preventDefault();
         if(responsable.value !== "" && responsable.value !== null && responsable.value !== undefined){
@@ -105,7 +106,8 @@ class ModalTask extends Component {
                   'description'
                 ],
                 onSelect : function(event) {
-                    responsable.onChange(event.title);
+                    responsable.onChange(event.title)
+                    idEmployee.onChange(event.idUsuario);
                     return 'default';
                 }
               });
@@ -123,7 +125,7 @@ class ModalTask extends Component {
     }
 
     _handleCreateTask(){
-      const {fields:{responsable, fecha, tarea}, handleSubmit, error, addTask, editTask, taskEdit} = this.props;
+      const {fields:{responsable, fecha, tarea, idEmployee}, handleSubmit, error, addTask, editTask, taskEdit} = this.props;
       if(responsable.value !== nameUsuario){
         nameUsuario = responsable.value;
         idUsuario = null;
@@ -131,7 +133,7 @@ class ModalTask extends Component {
       if( moment(fecha.value, 'DD/MM/YYYY').isValid() ){
         if(taskEdit !== undefined){
           taskEdit.tarea = tarea.value;
-          taskEdit.idResponsable = idUsuario;
+          taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
           taskEdit.responsable = nameUsuario;
           taskEdit.fecha = fecha.value;
           taskEdit.fechaForm = fecha.value;
@@ -144,7 +146,7 @@ class ModalTask extends Component {
           var task = {
             uuid,
             tarea: tarea.value,
-            idResponsable: idUsuario,
+            idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
             responsable: nameUsuario,
             fecha: fecha.value,
             fechaForm: fecha.value

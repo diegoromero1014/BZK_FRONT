@@ -28,26 +28,46 @@ class ButtonDetailsRedirectComponent extends Component {
     if( actionsRedirect.typeClickDetail === "visita"){
       updateTitleNavBar("Informe de visita/reunión");
       changeOwnerDraft(actionsRedirect.ownerDraft);
-      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      if( !isUndefined(actionsRedirect.idClient ) ){
+          this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      } else {
+          showLoading(false,null);
+          redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      }
     } else if( actionsRedirect.typeClickDetail === "previsita" ){
       updateTitleNavBar("Informe de previsita");
       changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
-      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      if( !isUndefined(actionsRedirect.idClient ) ){
+        this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      } else {
+          showLoading(false, null);
+          redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      }
     } else if (actionsRedirect.typeClickDetail === "pipeline") {
       updateTitleNavBar("Informe de pipeline");
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      if( !isUndefined(actionsRedirect.idClient ) ){
+          this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      } else {
+          showLoading(false, null);
+          redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      }
     } else if (actionsRedirect.typeClickDetail === "businessPlan") {
       updateTitleNavBar("Informe de plan de negocio");
       changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-      this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      if( !isUndefined(actionsRedirect.idClient ) ){
+          this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+      } else {
+          showLoading(false, null);
+          redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+      }
     }else if (actionsRedirect.typeClickDetail === "clientEdit") {
         seletedButton(BUTTON_UPDATE);
         validateContactShareholder();
         this._handleRedirect(actionsRedirect.urlRedirect, actionsRedirect.id);
     }
 
-      updateStatusModal(false);
+    updateStatusModal(false);
   }
 
   _handleRedirect(urlRedirect, idClient){
