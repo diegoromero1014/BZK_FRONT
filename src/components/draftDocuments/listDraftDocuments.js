@@ -95,7 +95,7 @@ _orderColumn(orderDrafts, columnDrafts){
       },
       {
         title: "Fecha modificación",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(1,"results.updateDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(0,"results.updateDate")}></i></span>,
+        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"results.updateDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"results.updateDate")}></i></span>,
         key:"updateDate",
         width: '165px'
       },
