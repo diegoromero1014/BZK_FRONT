@@ -30,7 +30,7 @@ class LinkComponent extends Component {
 }
 
 LinkComponent.propTypes = {
-    text: PropTypes.isRequired,
+    text: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
     isRedirect: PropTypes.bool.isRequired,
     idClient: PropTypes.number

@@ -34,7 +34,7 @@ class MenuListItem extends Component {
                                 <i className={iconClassName} style={{fontSize: "50px", marginTop: marginTop, marginLeft: "10px"}}/>
                             </Col>
                             <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
-                                <span style={{ fontSize: '18', marginTop: '5px', lineHeight: '1.1em'}}>
+                                <span style={{ fontSize: '18px', marginTop: '5px', lineHeight: '1.1em'}}>
                                     {labelText}
                                 </span>
                             </Col>

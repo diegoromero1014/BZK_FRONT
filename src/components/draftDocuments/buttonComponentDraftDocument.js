@@ -46,7 +46,7 @@ class ButtonComponentDraftDocument extends Component {
                 <i className="big file archive outline icon" style={{fontSize: "50px", marginTop: '20px', marginBottom: '5px', marginLeft: "10px"}}/>
               </Col>
               <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
-                <span style={{ fontSize: '18', lineHeight: '1.1em'}}>Documentos en borrador</span>
+                <span style={{ fontSize: '18px', lineHeight: '1.1em'}}>Documentos en borrador</span>
               </Col>
             </Row>
           </div>

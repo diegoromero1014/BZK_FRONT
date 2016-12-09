@@ -8,6 +8,7 @@ import {bindActionCreators} from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
 import {toggleMenu} from '../menu/actions';
 import {updateTitleNavBar} from '../navBar/actions';
+import {MENU_OPENED, MENU_CLOSED} from '../navBar/constants';
 
 class Dashboard extends Component {
     constructor(props){
@@ -30,7 +31,7 @@ class Dashboard extends Component {
 
     _onClickDashboard(){
         const {navBar, toggleMenu} = this.props;
-        if(navBar.get('status') === "opened"){
+        if(navBar.get('status') === MENU_OPENED){
             toggleMenu();
         }
     }
@@ -38,7 +39,7 @@ class Dashboard extends Component {
     render() {
         const {navBar, dashboardReducer} = this.props;
         var widthComponent = '0px';
-        if(navBar.get('status') === "closed"){
+        if(navBar.get('status') === MENU_CLOSED){
           widthComponent= '0px';
         } else {
           widthComponent = '96%';

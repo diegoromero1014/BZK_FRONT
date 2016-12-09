@@ -39,7 +39,7 @@ class ButtonComponentMyPending extends Component {
                 <i className="big tasks icon" style={{fontSize: "50px", marginTop: '20px', marginLeft: "10px"}}/>
               </Col>
               <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
-                <span style={{ fontSize: '18', lineHeight: '1.1em'}}>Mis pendientes</span>
+                <span style={{ fontSize: '18px', lineHeight: '1.1em'}}>Mis pendientes</span>
               </Col>
             </Row>
           </div>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {MENU_CLOSED, MENU_OPENED} from './constants';
 import {toggleMenu, updateTitleNavBar, consultModulesAccess, viewAlertClient} from './actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 
@@ -33,7 +34,7 @@ class NavBarComponent extends Component {
 
     componentWillMount(){
       const {consultModulesAccess, toggleMenu, navBar} = this.props;
-      if( navBar.get('status') === "closed" ){
+      if( navBar.get('status') === MENU_CLOSED ){
           toggleMenu();
       }
       consultModulesAccess();
@@ -46,19 +47,21 @@ class NavBarComponent extends Component {
       const status = navBar.get('status');
         return (
           <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue, transition: 'all 0.3s'}}>
-              <div className="pull-left" style={status === "closed" ? styles.divNavBarTitleClosed : styles.divNavBarTitleOpened}>
+              <div className="pull-left" style={status === MENU_CLOSED ? styles.divNavBarTitleClosed : styles.divNavBarTitleOpened}>
                   <ul className="nav" style={{paddingLeft: "0px"}}>
                       <li style={{cursor: "pointer"}} title="Menú">
                           <a onClick={this.handleLayoutToggle}>
                             <i className="big sidebar icon"></i>
                           </a>
                       </li>
-                      <li style={{fontSize: "30px"}}>
-                          {titleNavBar}
-                      </li>
+                      { status !== MENU_OPENED &&
+                          <li style={{fontSize: "30px"}}>
+                              {titleNavBar}
+                          </li>
+                      }
                   </ul>
               </div>
-              <div className="pull-right" style={{fontSize:"30px"}}>
+              <div className="pull-right" style={{fontSize:"30px", maxHeight: '26px',}}>
                   {viewAlertClient && <BellAlert />}
               </div>
           </div>

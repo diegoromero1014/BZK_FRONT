@@ -55,7 +55,7 @@ class ItemAlert extends Component {
                             </Col>
                             <Col xs={4} md={4} lg={9}>
                                 <span style={{
-                                    fontSize: '50',
+                                    fontSize: '50px',
                                     float: 'right',
                                     marginTop: '22px',
                                     marginRight: "20px"
