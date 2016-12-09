@@ -5,10 +5,15 @@ import {toggleMenu, updateTitleNavBar, consultModulesAccess, viewAlertClient} fr
 import BellAlert from '../alerts/bellClientAlertComponent';
 
 const styles = {
-  divNavBarTitle: {
+  divNavBarTitleOpened: {
       paddingLeft: '5px !important',
       zIndex: 10,
       backgroundColor: 'white',
+      maxHeight: '60px',
+      position: 'relative'
+  },
+  divNavBarTitleClosed: {
+      paddingLeft: '5px !important',
       maxHeight: '60px',
       position: 'relative'
   }
@@ -38,9 +43,10 @@ class NavBarComponent extends Component {
       const {navBar, paddingLeftValue} = this.props;
       const titleNavBar = navBar.get('titleNavBar');
       const viewAlertClient = navBar.get('viewAlertClient');
-      return (
-          <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue}}>
-              <div className="pull-left" style={styles.divNavBarTitle}>
+      const status = navBar.get('status');
+        return (
+          <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue, transition: 'all 0.3s'}}>
+              <div className="pull-left" style={status === "closed" ? styles.divNavBarTitleClosed : styles.divNavBarTitleOpened}>
                   <ul className="nav" style={{paddingLeft: "0px"}}>
                       <li style={{cursor: "pointer"}} title="Menú">
                           <a onClick={this.handleLayoutToggle}>
@@ -52,7 +58,7 @@ class NavBarComponent extends Component {
                       </li>
                   </ul>
               </div>
-              <div className="pull-right" style={{marginTop: "0px", marginRight: "-22px", fontSize:"30px"}}>
+              <div className="pull-right" style={{fontSize:"30px"}}>
                   {viewAlertClient && <BellAlert />}
               </div>
           </div>
