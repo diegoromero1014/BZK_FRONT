@@ -85,7 +85,6 @@ class ViewAlerts extends Component {
 
     handlePaintAlerts(alerts){
         let countAlerts = 0;
-        console.log('alerts', alerts);
         let listAlerts = alerts.map((item, idx) => {
             if (item.active) {
                 switch (item.codeAlert) {
