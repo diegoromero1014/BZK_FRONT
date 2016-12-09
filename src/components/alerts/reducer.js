@@ -25,6 +25,10 @@ export default (state = initialState, action) => {
                 map
                     .set('openModal', action.open)
             });
+        case actions.CLEAR_MODAL_ALERTS:
+            return state.withMutations(map => {
+                map.set('listAlertByUser', [])
+            });
         default:
             return state;
     }

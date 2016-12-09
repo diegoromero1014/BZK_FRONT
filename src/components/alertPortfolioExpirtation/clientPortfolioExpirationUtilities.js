@@ -1,7 +1,11 @@
-import {shorterStringValue, mapDateValueFromTask} from '../../actionsGlobal';
+/**
+ * Created by user- on 12/6/2016.
+ */
+import {shorterStringValue, mapDateValueFromTask,formatNumeral} from '../../actionsGlobal';
 
 
 export const mapDataGrid = (data = []) => {
+
     return data.map((client, idx) => ({
         typeDocument: client.typeDocument,
         idNumberClient  : client.idNumberClient,
@@ -10,9 +14,9 @@ export const mapDataGrid = (data = []) => {
             value: shorterStringValue(client.clientName),
             link: '/dashboard/clientInformation'
         },
-        team: client.team,
-        region: client.region,
-        zone: client.zone,
-        lastUpdateDate: client.lastUpdateDate === null ? "" : mapDateValueFromTask(client.lastUpdateDate)
+        balance: formatNumeral(client.balance,'$ 0,0[.]00'),
+        daysOverdue: client.daysOverdue,
+        entity: client.entity,
+        responsible: shorterStringValue(client.responsible)
     }));
 };

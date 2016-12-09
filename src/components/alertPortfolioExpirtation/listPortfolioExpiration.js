@@ -1,5 +1,5 @@
 /**
- * Created by ahurtado on 11/28/2016.
+ * Created by ahurtado on 12/06/2016.
  */
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
@@ -7,20 +7,20 @@ import {bindActionCreators} from 'redux';
 import {
     clearClientOrder,
     clearClientPagination,
-    orderColumnClientPendingUpdate
+    orderColumnClientPortfolioExpiration
 } from './actions';
 import GridComponent from '../grid/component';
 import {redirectUrl} from '../globalComponents/actions'
 import {VISUALIZAR} from '../../constantsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {mapDataGrid} from './clientPendingUpdateUtilities';
+import {mapDataGrid} from './clientPortfolioExpirationUtilities';
 import {get,indexOf,has} from 'lodash';
 import {showLoading} from '../loading/actions';
-import {clientsPendingUpdateFindServer} from './actions';
+import {clientsPortfolioExpirationFindServer} from './actions';
 import {NUMBER_RECORDS} from './constants';
 
-class ListClientsPendingUpdate extends Component {
+class ListClientsPortfolioExpiration extends Component {
 
     constructor(props) {
         super(props);
@@ -46,14 +46,14 @@ class ListClientsPendingUpdate extends Component {
         } else {
             this.setState({orderD: 'inline-block', orderA: 'none'});
         }
-        const {clientsPendingUpdateFindServer,alertPendingUpdateClient,showLoading} = this.props;
-        const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
-        const idTeam = alertPendingUpdateClient.get('idTeam');
-        const idRegion = alertPendingUpdateClient.get('idRegion');
-        const idZone = alertPendingUpdateClient.get('idZone');
-        const page = alertPendingUpdateClient.get('pageNum');
+        const {clientsPortfolioExpirationFindServer,alertPortfolioExpiration,showLoading} = this.props;
+        const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
+        const idTeam = alertPortfolioExpiration.get('idTeam');
+        const idRegion = alertPortfolioExpiration.get('idRegion');
+        const idZone = alertPortfolioExpiration.get('idZone');
+        const page = alertPortfolioExpiration.get('pageNum');
         showLoading(true, 'Cargando..');
-        clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
+        clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);
             }
@@ -61,7 +61,6 @@ class ListClientsPendingUpdate extends Component {
     }
 
     _renderHeaders() {
-
         const headersTable = [
             {
                 title: "Tipo documento",
@@ -80,27 +79,26 @@ class ListClientsPendingUpdate extends Component {
                 showLink :has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false)
             },
             {
-                title: "Célula",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "team")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "team")}></i></span>,
-                key: "team"
+                title: "Saldo",
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "balance")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "balance")}></i></span>,
+                key: "balance"
             },
             {
-                title: "Región",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "region")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "region")}></i></span>,
-                key: "region"
+                title: "Días vencidos",
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "daysOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "daysOverdue")}></i></span>,
+                key: "daysOverdue"
             },
             {
-                title: "Zona",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "zone")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "zone")}></i></span>,
-                key: "zone"
+                title: "Entidad",
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "entity")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "entity")}></i></span>,
+                key: "entity"
             },
             {
-                title: "Última modificación",
-                orderColumn: <span><i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "lastUpdateDate")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "lastUpdateDate")}></i></span>,
-                key: "lastUpdateDate"
+                title: "Responsable",
+                orderColumn: <span><i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "responsible")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "responsible")}></i></span>,
+                key: "responsible"
             }
         ];
-
         return headersTable;
     }
 
@@ -109,8 +107,8 @@ class ListClientsPendingUpdate extends Component {
     }
 
     render() {
-        const {alertPendingUpdateClient} = this.props;
-        const data = alertPendingUpdateClient.get('responseClients');
+        const {alertPortfolioExpiration} = this.props;
+        const data = alertPortfolioExpiration.get('responseClients');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
@@ -124,18 +122,18 @@ function mapDispatchToProps(dispatch) {
         redirectUrl,
         clearClientOrder,
         clearClientPagination,
-        orderColumnClientPendingUpdate,
-        clientsPendingUpdateFindServer,
+        orderColumnClientPortfolioExpiration,
+        clientsPortfolioExpirationFindServer,
         showLoading
     }, dispatch);
 }
 
-function mapStateToProps({alertPendingUpdateClient, reducerGlobal}, ownerProps) {
+function mapStateToProps({alertPortfolioExpiration, reducerGlobal}, ownerProps) {
     return {
-        alertPendingUpdateClient,
+        alertPortfolioExpiration,
         reducerGlobal
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListClientsPendingUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(ListClientsPortfolioExpiration);
 

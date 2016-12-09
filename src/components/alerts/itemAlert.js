@@ -7,7 +7,6 @@ import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';
 import {openModalAlerts} from './actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA, DESCARGAR} from '../../constantsGlobal';
 
 var styles = {
     minHeight: "30px",
@@ -37,9 +36,8 @@ class ItemAlert extends Component {
 
 
     render() {
-        const {textValue, iconValue, styleColor, fontSize, number} = this.props;
+        const {textValue, iconValue, styleColor, fontSize, number,form} = this.props;
         var styleBorderDownload = "1px solid " + styleColor;
-
         return (
             <Col xs={12} md={6} lg={3} style={{padding: '0 15px 10px 15px'}}>
                 <div style={{
@@ -99,8 +97,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({openModalAlerts}, dispatch);
 }
 
-function mapStateToProps({}, ownerProps) {
-    return {};
+function mapStateToProps({form}, ownerProps) {
+    return {form};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemAlert);
