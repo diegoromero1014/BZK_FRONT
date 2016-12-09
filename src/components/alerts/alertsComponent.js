@@ -10,9 +10,9 @@ import {redirectUrl} from '../globalComponents/actions';
 import ItemAlert from './itemAlert';
 import {updateTitleNavBar} from '../navBar/actions';
 import {showLoading} from '../loading/actions';
-import {getAlertsByUser, openModalAlerts} from './actions';
+import {getAlertsByUser, openModalAlerts,clearListAlerts} from './actions';
 import {updateNumberTotalClients} from '../alertPendingUpdateClient/actions';
-import {CODE_ALERT_PENDING_UPDATE_CLIENT} from './constants';
+import {CODE_ALERT_PENDING_UPDATE_CLIENT,CODE_ALERT_PORTFOLIO_EXPIRATION} from './constants';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_ALERTS, MODULE_CLIENTS} from '../../constantsGlobal';
 import _ from 'lodash';
@@ -25,9 +25,12 @@ const itemAlerts = {
 class ViewAlerts extends Component {
     constructor(props) {
         super(props);
-        this._mapAlerts = this._mapAlerts.bind(this);
+        this.handlePaintAlerts = this.handlePaintAlerts.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
+        this.state = {
+            countAlerts :0
+        };
     }
 
     componentWillMount() {
@@ -45,11 +48,16 @@ class ViewAlerts extends Component {
         });
     }
 
+    componentWillUnmount(){
+        this.props.clearListAlerts();
+    }
+
     openModal() {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         }
-        const {showLoading, getAlertsByUser} = this.props;
+        const {showLoading, getAlertsByUser,clearListAlerts} = this.props;
+        clearListAlerts();
         showLoading(true, 'Cargando alertas..');
         getAlertsByUser().then((data) => {
             if (_.has(data, 'payload.data')) {
@@ -63,26 +71,45 @@ class ViewAlerts extends Component {
         this.props.openModalAlerts(false);
     }
 
-    paintItemAlert(item, idx, textSize, colorCard, urlAlert) {
+    paintItemAlert(item, idx,icon, textSize, colorCard, urlAlert) {
         return (<ItemAlert
             key={idx}
             textValue={item.nameAlert}
             fontSize={textSize}
-            iconValue="users icon"
+            iconValue={icon}
             number={item.countClientByAlert}
             styleColor={colorCard}
             urlAlert={urlAlert}
         />);
     }
 
-    _mapAlerts(item, idx) {
-        switch (item.codeAlert) {
-            case CODE_ALERT_PENDING_UPDATE_CLIENT:
-                return this.paintItemAlert(item, idx, "15px", "#086A87", "/dashboard/alertClientPendingUpdate");
-                break;
-            default:
-                return null;
+    handlePaintAlerts(alerts){
+        let countAlerts = 0;
+        let listAlerts = alerts.map((item, idx) => {
+            if (item.active) {
+                switch (item.codeAlert) {
+                    case CODE_ALERT_PENDING_UPDATE_CLIENT:
+                        countAlerts = countAlerts + 1;
+                        return this.paintItemAlert(item, idx, "users icon", "15px", "#086A87", "/dashboard/alertClientPendingUpdate");
+                        break;
+                    case CODE_ALERT_PORTFOLIO_EXPIRATION:
+                        countAlerts = countAlerts + 1;
+                        return this.paintItemAlert(item, idx, 'folder open icon', "15px", "#086A87", "/dashboard/alertClientsPortfolioExpiration");
+                        break;
+                    default:
+                        return null;
+                }
+            }
+        });
+        if (_.isEqual(countAlerts, 0)) {
+            listAlerts =
+                <Col xs={12} md={12} lg={12}>
+                    <h2>
+                        Señor usuario, no tiene alertas pendientes.
+                    </h2>
+                </Col>;
         }
+        return listAlerts;
     }
 
     render() {
@@ -119,7 +146,7 @@ class ViewAlerts extends Component {
                                 <div className="ui segment" style={{marginTop: '-2px'}}>
                                     <div style={{backgroundColor: "white"}}>
                                         <Row xs={12} md={12} lg={12} style={{padding: '15px 20px 10px 20px'}}>
-                                            {listAlerts.map(this._mapAlerts)}
+                                            {this.handlePaintAlerts(listAlerts)}
                                         </Row>
                                     </div>
                                 </div>
@@ -141,7 +168,8 @@ function mapDispatchToProps(dispatch) {
         getAlertsByUser,
         showLoading,
         updateNumberTotalClients,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        clearListAlerts
     }, dispatch);
 }
 

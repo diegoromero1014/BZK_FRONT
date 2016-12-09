@@ -38,7 +38,7 @@ class Pagination extends Component{
     return (
       <div>
         {countClients > NUMBER_RECORDS ?
-          <div style={{borderTop:"2px solid #D9DEDF", width:"100%", marginTop:"15px", paddingTop: "15px", paddingBottom:"15px"}}>
+          <div style={{borderTop:"2px solid #D9DEDF", width:"100%", paddingTop: "15px", paddingBottom:"15px", backgroundColor: '#FFF'}}>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
                 {page !== 1 ? <li onClick={() => {this._handlePagination(page - 1)}}><a>«</a></li> :"" }

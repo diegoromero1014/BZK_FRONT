@@ -2,6 +2,8 @@ import * as constants from './constantsGlobal';
 import axios from 'axios';
 import {REVIEWED_DATE_FORMAT} from './constantsGlobal';
 import moment from 'moment';
+import numeral from 'numeral';
+import _ from 'lodash';
 
 export function consultParameterServer(tagConsult){
   const json = {
@@ -107,7 +109,7 @@ export function validatePermissionsByModule(module){
       "module": module,
       "typeApp": constants.FRONT_APP
     }
-  }
+  };
 
    var request = axios.post(constants.APP_URL + "/validatePermissionsModule", json);
    return{
@@ -119,6 +121,12 @@ export function validatePermissionsByModule(module){
 export function shorterStringValue(element){
   return element.length > 50 ? element.substring(0, 50) + "..." : element;
 }
+
+export function formatNumeral(number, format) {
+     let numberNumeral = numeral(number);
+    return numberNumeral.format(format);
+}
+
 
 export function mapDateValueFromTask(date){
   if( moment(date, [REVIEWED_DATE_FORMAT], 'es', true).isValid() ){

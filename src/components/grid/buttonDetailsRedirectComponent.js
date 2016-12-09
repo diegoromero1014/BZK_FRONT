@@ -62,8 +62,8 @@ class ButtonDetailsRedirectComponent extends Component {
           redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
       }
     }else if (actionsRedirect.typeClickDetail === "clientEdit") {
-        seletedButton(BUTTON_UPDATE);
-        validateContactShareholder();
+        // seletedButton(BUTTON_UPDATE);
+        // validateContactShareholder();
         this._handleRedirect(actionsRedirect.urlRedirect, actionsRedirect.id);
     }
 
