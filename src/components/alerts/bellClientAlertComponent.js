@@ -28,6 +28,14 @@ const styleAlert = {
     borderRadius: "5px"
 };
 
+const styles = {
+    iconAlert: {
+        position: "fixed",
+        right: "10px",
+        top: "18px"
+    }
+};
+
 class BellClientAlertComponent extends Component {
     constructor(props) {
         super(props);
@@ -62,11 +70,7 @@ class BellClientAlertComponent extends Component {
     render() {
         set(styleNumAlert, 'background', size(this.props.listAlertOnClient) > 0 ? 'red' : 'green');
         return (
-            <div style={{
-                position: "absolute",
-                right: "10px",
-                marginTop: "20px"
-            }}>
+            <div style={styles.iconAlert}>
                 <div style={{
                     background: "#ececec",
                     padding: "10px 0 0 5px",

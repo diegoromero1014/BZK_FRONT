@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import Modal from 'react-modal';
 import {connect} from 'react-redux';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import {Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import ItemAlert from './itemAlert';
 import {updateTitleNavBar} from '../navBar/actions';
@@ -15,11 +15,17 @@ import {updateNumberTotalClients} from '../alertPendingUpdateClient/actions';
 import {CODE_ALERT_PENDING_UPDATE_CLIENT} from './constants';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_ALERTS, MODULE_CLIENTS} from '../../constantsGlobal';
+import {COLOR_ITEMS_MENU} from '../menu/constants';
+import {toggleMenu} from '../menu/actions';
 import _ from 'lodash';
 
 const itemAlerts = {
     text: "Alertas",
     icon: "alarm icon icon"
+};
+
+const styles = {
+
 };
 
 class ViewAlerts extends Component {
@@ -49,13 +55,14 @@ class ViewAlerts extends Component {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         }
-        const {showLoading, getAlertsByUser} = this.props;
+        const {showLoading, getAlertsByUser, toggleMenu} = this.props;
         showLoading(true, 'Cargando alertas..');
         getAlertsByUser().then((data) => {
             if (_.has(data, 'payload.data')) {
                 showLoading(false, null);
             }
         });
+        toggleMenu();
         this.props.openModalAlerts(true);
     }
 
@@ -92,13 +99,20 @@ class ViewAlerts extends Component {
 
         if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
             return (
-                <li onClick={this.openModal} className="cursorMenuList">
-                    <a>
-                        <i className={itemAlerts.icon}/>
-                        <div style={{width: "100px", height: "30px"}}>
-                            <span className="title">{itemAlerts.text}</span>
+                <Col xs={12} md={6} lg={2} style={{padding: '15px 15px 10px 15px'}}>
+                    <div style={{color: 'white',  backgroundColor: COLOR_ITEMS_MENU,  borderColor: COLOR_ITEMS_MENU,  borderRadius: '4px 4px 4px 4px', cursor: 'pointer'}}
+                         onClick={this.openModal}>
+                        <div style={{height: '120px'}}>
+                            <Row>
+                                <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
+                                    <i className={itemAlerts.icon} style={{fontSize: "50px", marginTop: '35px', marginLeft: "10px"}}/>
+                                </Col>
+                                <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
+                                    <span style={{ fontSize: '18px', lineHeight: '1.1em'}}>{itemAlerts.text}</span>
+                                </Col>
+                            </Row>
                         </div>
-                    </a>
+                    </div>
                     <Modal
                         isOpen={modalIsOpen}
                         onRequestClose={this.closeModal}
@@ -126,7 +140,7 @@ class ViewAlerts extends Component {
                             </div>
                         </div>
                     </Modal>
-                </li>
+                </Col>
             );
         }else{
             return null;
@@ -141,7 +155,8 @@ function mapDispatchToProps(dispatch) {
         getAlertsByUser,
         showLoading,
         updateNumberTotalClients,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        toggleMenu
     }, dispatch);
 }
 

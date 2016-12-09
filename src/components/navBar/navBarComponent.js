@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {toggleMenu, updateTitleNavBar, consultModulesAccess,viewAlertClient} from './actions';
+import {toggleMenu, updateTitleNavBar, consultModulesAccess, viewAlertClient} from './actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
-import {redirectUrl} from '../globalComponents/actions';
-import {MODULE_CLIENTS} from '../../constantsGlobal';
 
+const styles = {
+  divNavBarTitle: {
+      paddingLeft: '5px !important',
+      zIndex: 10,
+      backgroundColor: 'white',
+      maxHeight: '60px',
+      position: 'relative'
+  }
+};
 
 class NavBarComponent extends Component {
     constructor(props) {
@@ -20,19 +27,22 @@ class NavBarComponent extends Component {
     }
 
     componentWillMount(){
-      const {consultModulesAccess} = this.props;
+      const {consultModulesAccess, toggleMenu, navBar} = this.props;
+      if( navBar.get('status') === "closed" ){
+          toggleMenu();
+      }
       consultModulesAccess();
     }
 
     render() {
-      const {navBar} = this.props;
+      const {navBar, paddingLeftValue} = this.props;
       const titleNavBar = navBar.get('titleNavBar');
       const viewAlertClient = navBar.get('viewAlertClient');
       return (
-          <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
-              <div className="pull-left" style={{paddingLeft: "5px !important"}}>
+          <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue}}>
+              <div className="pull-left" style={styles.divNavBarTitle}>
                   <ul className="nav" style={{paddingLeft: "0px"}}>
-                      <li style={{cursor: "pointer"}}>
+                      <li style={{cursor: "pointer"}} title="Menú">
                           <a onClick={this.handleLayoutToggle}>
                             <i className="big sidebar icon"></i>
                           </a>
