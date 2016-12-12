@@ -14,7 +14,7 @@ class LinkComponent extends Component {
     }
 
     _redirect() {
-        const {url, redirectUrl, idClient} = this.props;
+        const {url, idClient} = this.props;
         window.localStorage.setItem('idClientSelected', idClient);
         redirectUrl(url);
     }
@@ -37,9 +37,7 @@ LinkComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        redirectUrl
-    }, dispatch);
+    return bindActionCreators({}, dispatch);
 }
 
 function mapStateToProps({}, ownerProps) {

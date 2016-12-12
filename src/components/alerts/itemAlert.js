@@ -31,16 +31,16 @@ class ItemAlert extends Component {
     }
 
     _handleRedirectAlert(e) {
-        const {openModalAlerts,urlAlert,fn, form,reset,nameForm}= this.props;
+        const {openModalAlerts,urlAlert,fnClearFilter,reset,nameForm}= this.props;
         openModalAlerts(false);
         redirectUrl(urlAlert);
         reset(nameForm);
-        fn();
+        fnClearFilter();
     }
 
 
     render() {
-        const {textValue, icon, styleColor, fontSize, number,form} = this.props;
+        const {textValue, icon, styleColor, fontSize, number} = this.props;
         var styleBorderDownload = "1px solid " + styleColor;
         return (
             <Col xs={12} md={6} lg={3} style={{padding: '0 15px 10px 15px'}}>
@@ -97,7 +97,7 @@ class ItemAlert extends Component {
 }
 
 ItemAlert.propTypes = {
-    fn: PropTypes.func.isRequired,
+    fnClearFilter: PropTypes.func.isRequired,
     nameForm: PropTypes.string,
     icon: PropTypes.element.isRequired
 };
@@ -106,8 +106,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({openModalAlerts,reset}, dispatch);
 }
 
-function mapStateToProps({form}, ownerProps) {
-    return {form};
+function mapStateToProps({}, ownerProps) {
+    return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemAlert);

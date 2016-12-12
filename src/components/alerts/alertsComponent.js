@@ -23,6 +23,8 @@ import {toggleMenu} from '../navBar/actions';
 import {showButtonCloseMenu} from '../menu/actions';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import {consultList} from '../selectsComponent/actions';
+import {FORM_FILTER_ALERT_PUC} from '../alertPendingUpdateClient/constants';
+import {FORM_FILTER_ALERT_PE} from '../alertPortfolioExpirtation/constants';
 import _ from 'lodash';
 
 const itemAlerts = {
@@ -103,7 +105,7 @@ class ViewAlerts extends Component {
         this.props.openModalAlerts(false);
     }
 
-    paintItemAlert(item, idx,icon, textSize, colorCard, urlAlert, fn,nameForm) {
+    paintItemAlert(item, idx,icon, textSize, colorCard, urlAlert, fnClearFilter,nameForm) {
         return (<ItemAlert
             key={idx}
             textValue={item.nameAlert}
@@ -112,7 +114,7 @@ class ViewAlerts extends Component {
             number={item.countClientByAlert}
             styleColor={colorCard}
             urlAlert={urlAlert}
-            fn={fn}
+            fnClearFilter={fnClearFilter}
             nameForm={nameForm}
         />);
     }
@@ -126,14 +128,14 @@ class ViewAlerts extends Component {
                         countAlerts = countAlerts + 1;
                         const iconClientsPending =<i className='users icon' style={{fontSize: "50px", marginTop: '50px', marginLeft: "18px"}}/>;
                         return this.paintItemAlert(item, idx, iconClientsPending, "15px", "#086A87",
-                            "/dashboard/alertClientPendingUpdate",this._cleanFilterClientPendingUpdate,'formFilterAlertPUC');
+                            "/dashboard/alertClientPendingUpdate",this._cleanFilterClientPendingUpdate,FORM_FILTER_ALERT_PUC);
                         break;
                     case CODE_ALERT_PORTFOLIO_EXPIRATION:
                         countAlerts = countAlerts + 1;
                         const iconPortfolioExp = <PortfolioExpirationIcon/>;
                         // const iconPortfolioExp = <i className='folder open icon' style={{fontSize: "50px !important", marginTop: '50px', marginLeft: "18px"}}/>;
                         return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", "#086A87",
-                            "/dashboard/alertClientsPortfolioExpiration",this._cleanFilterPortfolioExpiration, 'formFilterAlertPE');
+                            "/dashboard/alertClientsPortfolioExpiration",this._cleanFilterPortfolioExpiration, FORM_FILTER_ALERT_PE);
                         break;
                     default:
                         return null;

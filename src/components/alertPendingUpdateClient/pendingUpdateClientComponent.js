@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {clientsPendingUpdateFindServer, clearFilter, changePage, changeKeyword, changeTeam,changeRegion,changeZone} from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientAlertPendingUpdate';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS,FORM_FILTER_ALERT_PUC} from './constants';
 import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
@@ -59,6 +59,9 @@ class ClientsPendingUpdate extends Component {
             });
             updateTitleNavBar(titleModule);
         }
+    }
+    componentWillUnmount(){
+        this.props.updateTitleNavBar('');
     }
 
     _cleanSearch() {
@@ -243,5 +246,5 @@ function mapStateToProps({alertPendingUpdateClient, selectsReducer, navBar, redu
     };
 }
 
-export default reduxForm({form: 'formFilterAlertPUC', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({form: FORM_FILTER_ALERT_PUC, fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 

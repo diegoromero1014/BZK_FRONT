@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {clientsPortfolioExpirationFindServer, clearFilter, changePage, changeKeyword, changeTeam,changeRegion,changeZone} from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS, FORM_FILTER_ALERT_PE} from './constants';
 import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
@@ -26,7 +26,7 @@ import ListClientsPendingUpdate from './listPortfolioExpiration';
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
-const titleModule = 'Alerta de clientes de cartera vencida';
+const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 
 class ClientsPendingUpdate extends Component {
     constructor(props) {
@@ -59,6 +59,10 @@ class ClientsPendingUpdate extends Component {
             });
             updateTitleNavBar(titleModule);
         }
+    }
+
+    componentWillUnmount(){
+        this.props.updateTitleNavBar('');
     }
 
     _cleanSearch() {
@@ -243,5 +247,5 @@ function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar, redu
     };
 }
 
-export default reduxForm({form: 'formFilterAlertPE', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({form: FORM_FILTER_ALERT_PE, fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 

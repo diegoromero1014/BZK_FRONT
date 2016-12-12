@@ -13,5 +13,5 @@ export const UPDATE_NUMBER_TOTAL_CLIENTS = "UPDATE_NUMBER_TOTAL_CLIENTS";
 export const CHANGE_TEAM = "CHANGE_TEAM";
 export const CHANGE_REGION = "CHANGE_REGION";
 export const CHANGE_ZONE = "CHANGE_ZONE";
-
+export const FORM_FILTER_ALERT_PUC = "formFilterAlertPUC";
 
