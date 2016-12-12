@@ -52,7 +52,7 @@ class Dashboard extends Component {
                     float: "left",
                     width: widthComponent,
                     height: "100%",
-                    transition: 'all 0.3s',
+                    transition: 'all 0.2s',
                     zIndex: '10000'
                 }}>
                     <MenuComponent />
@@ -63,7 +63,7 @@ class Dashboard extends Component {
                     float: "left",
                     width: "100%",
                     overflow: "hidden",
-                    transition: 'all 0.3s'
+                    transition: 'all 0.2s'
                 }}>
                     <NavBarComponent paddingLeftValue={widthComponent}/>
                     <div

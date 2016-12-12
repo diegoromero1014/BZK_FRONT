@@ -84,24 +84,18 @@ class MenuList extends Component {
         return (
             <div style={{overflowX: "auto", height: "100%"}}>
                 <Row className="page-sidebar-wrapper"
-                     style={{width: "100%", overflowX: "auto", overflowY: 'hidden', paddingLeft: '10px'}}>
+                     style={{width: "100%", paddingLeft: '10px'}}>
                     { menuReducer.get('showCloseMenu') &&
-                    <Col xs={1} md={1} lg={1} style={{marginTop: '12px', marginLeft: '10px', maxWidth: '60px'}}>
+                    <Col xs={1} md={1} lg={1} style={{marginTop: '13px', marginLeft: '5px', maxWidth: '60px'}}>
                         <i className="big sidebar icon"
                            onClick={this.handleLayoutToggle}
                            style={{cursor: "pointer", color: '#4c5360 !important'}}
                            title="Cerrar menú"></i>
                     </Col>
                     }
-                    { menuReducer.get('showCloseMenu') ?
-                        <Col xs={10} md={10} lg={10} style={{marginTop: '15px'}}>
-                            <span style={{fontSize: '22px', color: 'black'}}>Biztrack - Menú</span>
-                        </Col>
-                        :
-                        <Col xs={11} md={11} lg={11} style={{marginTop: '15px', marginLeft: '10px'}}>
-                            <span style={{fontSize: '22px', color: 'black'}}>Biztrack - Menú</span>
-                        </Col>
-                    }
+                    <Col xs={11} md={11} lg={11} style={ menuReducer.get('showCloseMenu')  ? {marginTop: '15px'} : {marginTop: '15px', marginLeft: '10px'}}>
+                        <span style={{fontSize: '30px', color: 'black'}}>Biztrack - Menú</span>
+                    </Col>
                     {menuItems.map(this._mapMenuItems)}
                     { _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
                     <ViewAlerts/>
