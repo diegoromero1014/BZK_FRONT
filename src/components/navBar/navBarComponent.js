@@ -62,7 +62,7 @@ class NavBarComponent extends Component {
                   </ul>
               </div>
               <div className="pull-right" style={{fontSize:"30px", maxHeight: '26px',}}>
-                  {viewAlertClient && <BellAlert />}
+                  {viewAlertClient && status === MENU_CLOSED && <BellAlert />}
               </div>
           </div>
       );
