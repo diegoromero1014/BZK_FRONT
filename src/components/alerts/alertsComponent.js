@@ -20,7 +20,6 @@ import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_ALERTS, MODULE_CLIENTS} from '../../constantsGlobal';
 import {COLOR_ITEMS_MENU} from '../menu/constants';
 import {toggleMenu} from '../navBar/actions';
-import {showButtonCloseMenu} from '../menu/actions';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import {consultList} from '../selectsComponent/actions';
 import {FORM_FILTER_ALERT_PUC} from '../alertPendingUpdateClient/constants';
@@ -86,7 +85,7 @@ class ViewAlerts extends Component {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         }
-        const {showLoading, getAlertsByUser, clearListAlerts, toggleMenu, showButtonCloseMenu, menuReducer} = this.props;
+        const {showLoading, getAlertsByUser, clearListAlerts, toggleMenu, menuReducer} = this.props;
         clearListAlerts();
         showLoading(true, 'Cargando alertas..');
         getAlertsByUser().then((data) => {
@@ -94,9 +93,8 @@ class ViewAlerts extends Component {
                 showLoading(false, null);
             }
         });
-        toggleMenu();
-        if( !menuReducer.get('showCloseMenu') ){
-            showButtonCloseMenu(true);
+        if( menuReducer.get('showCloseMenu') ){
+            toggleMenu();
         }
         this.props.openModalAlerts(true);
     }
@@ -219,7 +217,6 @@ function mapDispatchToProps(dispatch) {
         validatePermissionsByModule,
         clearListAlerts,
         toggleMenu,
-        showButtonCloseMenu,
         clearFilter,
         clearFilterPE,
         consultList

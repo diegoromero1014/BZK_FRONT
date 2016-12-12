@@ -263,7 +263,7 @@ class FormCreateProspect extends Component{
     const {propspectReducer, reducerGlobal} = this.props
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
-        <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", backgroundColor: "#F0F0F0"}}>
+        <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", marginBottom:"100px", backgroundColor: "#F0F0F0"}}>
 
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
@@ -595,23 +595,21 @@ class FormCreateProspect extends Component{
               />
             </div>
           </Col>
-
-          <Col xs={12} md={12} lg={12} style={{paddingTop: "60px"}}>
-            <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-              <div>
-                <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
-                </button>
-                <button className="btn btn-secondary modal-button-edit"
-                  onClick={this._closeWindow}
-                  style={{float:"right", margin:"8px 0px 0px 190px", position:"fixed", backgroundColor: "#C1C1C1"}}
-                  type="button">
-                  <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
-                </button>
-              </div>
-            </div>
-          </Col>
-          <SweetAlert
+        </Row>
+        <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+          <div style={{width: "300px", height: "100%", position: "fixed", right: "0px"}}>
+            <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Crear prospecto</span>
+            </button>
+            <button className="btn btn-secondary modal-button-edit"
+                    onClick={this._closeWindow}
+                    style={{float:"right", margin:"8px 0px 0px 180px", position:"fixed", backgroundColor: "#C1C1C1"}}
+                    type="button">
+              <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+            </button>
+          </div>
+        </div>
+        <SweetAlert
             type= "warning"
             show={this.state.show}
             title={titleConfirm}
@@ -622,21 +620,20 @@ class FormCreateProspect extends Component{
             showCancelButton= {true}
             onCancel= {() => this.setState({show: false })}
             onConfirm={() => this._onConfirmCreate()}/>
-          <SweetAlert
-           type= "success"
-           show={this.state.showEx}
-           title="Creación de prospecto"
-           text="Señor usuario, el prospecto se creó de forma exitosa."
-           onConfirm={() => this._closeSuccess()}
-           />
-           <SweetAlert
+        <SweetAlert
+            type= "success"
+            show={this.state.showEx}
+            title="Creación de prospecto"
+            text="Señor usuario, el prospecto se creó de forma exitosa."
+            onConfirm={() => this._closeSuccess()}
+        />
+        <SweetAlert
             type= "error"
             show={this.state.showEr}
             title="Error creando prospecto"
             text="Señor usuario, ocurrió un error creando el prospecto."
             onConfirm={() => this._closeError()}
-            />
-      </Row>
+        />
       </form>
     );
   }
