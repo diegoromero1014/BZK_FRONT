@@ -11,13 +11,17 @@ import ItemAlert from './itemAlert';
 import {updateTitleNavBar} from '../navBar/actions';
 import {showLoading} from '../loading/actions';
 import {getAlertsByUser, openModalAlerts,clearListAlerts} from './actions';
+import {clearFilter} from '../alertPendingUpdateClient/actions';
+import {clearFilter as clearFilterPE}  from '../alertPortfolioExpirtation/actions';
 import {updateNumberTotalClients} from '../alertPendingUpdateClient/actions';
 import {CODE_ALERT_PENDING_UPDATE_CLIENT,CODE_ALERT_PORTFOLIO_EXPIRATION} from './constants';
+import * as constants from '../selectsComponent/constants';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_ALERTS, MODULE_CLIENTS} from '../../constantsGlobal';
 import {COLOR_ITEMS_MENU} from '../menu/constants';
 import {toggleMenu} from '../navBar/actions';
 import {showButtonCloseMenu} from '../menu/actions';
+import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import _ from 'lodash';
 
 const itemAlerts = {
@@ -29,6 +33,8 @@ class ViewAlerts extends Component {
     constructor(props) {
         super(props);
         this.handlePaintAlerts = this.handlePaintAlerts.bind(this);
+        this._cleanFilterClientPendingUpdate = this._cleanFilterClientPendingUpdate.bind(this);
+        this._cleanFilterPortfolioExpiration = this._cleanFilterPortfolioExpiration.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
     }
@@ -44,6 +50,27 @@ class ViewAlerts extends Component {
                 if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
                     redirectUrl("/dashboard");
                 }
+            }
+        });
+    }
+
+    _cleanFilterClientPendingUpdate() {
+        const {showLoading, clearFilter,consultList} = this.props;
+        showLoading(true, 'Cargando..');
+        clearFilter();
+        consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+            if (_.has(data, 'payload.data.teamValueObjects')) {
+                showLoading(false, null);
+            }
+        });
+    }
+    _cleanFilterPortfolioExpiration() {
+        const {showLoading, clearFilterPE,consultList} = this.props;
+        showLoading(true, 'Cargando..');
+        clearFilterPE();
+        consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+            if (_.has(data, 'payload.data.teamValueObjects')) {
+                showLoading(false, null);
             }
         });
     }
@@ -75,15 +102,17 @@ class ViewAlerts extends Component {
         this.props.openModalAlerts(false);
     }
 
-    paintItemAlert(item, idx,icon, textSize, colorCard, urlAlert) {
+    paintItemAlert(item, idx,icon, textSize, colorCard, urlAlert, fn,nameForm) {
         return (<ItemAlert
             key={idx}
             textValue={item.nameAlert}
             fontSize={textSize}
-            iconValue={icon}
+            icon={icon}
             number={item.countClientByAlert}
             styleColor={colorCard}
             urlAlert={urlAlert}
+            fn={fn}
+            nameForm={nameForm}
         />);
     }
 
@@ -94,11 +123,16 @@ class ViewAlerts extends Component {
                 switch (item.codeAlert) {
                     case CODE_ALERT_PENDING_UPDATE_CLIENT:
                         countAlerts = countAlerts + 1;
-                        return this.paintItemAlert(item, idx, "users icon", "15px", "#086A87", "/dashboard/alertClientPendingUpdate");
+                        const iconClientsPending =<i className='users icon' style={{fontSize: "50px", marginTop: '50px', marginLeft: "18px"}}/>;
+                        return this.paintItemAlert(item, idx, iconClientsPending, "15px", "#086A87",
+                            "/dashboard/alertClientPendingUpdate",this._cleanFilterClientPendingUpdate,'formFilterAlertPUC');
                         break;
                     case CODE_ALERT_PORTFOLIO_EXPIRATION:
                         countAlerts = countAlerts + 1;
-                        return this.paintItemAlert(item, idx, 'folder open icon', "15px", "#086A87", "/dashboard/alertClientsPortfolioExpiration");
+                        const iconPortfolioExp = <PortfolioExpirationIcon/>;
+                        // const iconPortfolioExp = <i className='folder open icon' style={{fontSize: "50px !important", marginTop: '50px', marginLeft: "18px"}}/>;
+                        return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", "#086A87",
+                            "/dashboard/alertClientsPortfolioExpiration",this._cleanFilterPortfolioExpiration, 'formFilterAlertPE');
                         break;
                     default:
                         return null;
@@ -182,7 +216,10 @@ function mapDispatchToProps(dispatch) {
         validatePermissionsByModule,
         clearListAlerts,
         toggleMenu,
-        showButtonCloseMenu
+        showButtonCloseMenu,
+        clearFilter,
+        clearFilterPE,
+        consultList
     }, dispatch);
 }
 

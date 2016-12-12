@@ -75,7 +75,7 @@ class ListClientsPortfolioExpiration extends Component {
             {
                 title: "Nombre/Razón social",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "clientName")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "clientName")}></i></span>,
-                key: "clientName",
+                key: "clientNameLink",
                 showLink :has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false)
             },
             {
