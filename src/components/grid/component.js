@@ -50,8 +50,8 @@ class GridComponent extends Component {
               cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)}/>
             }else if(value.key === 'changeStateTask' &&  _.get(row, value.key)){
               cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)}/>
-            }else if(value.key === 'clientName'){
-                cell = <LinkComponent text={_.get(row, 'clientName.value')} url={_.get(row, 'clientName.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'clientName.id')}/>
+            }else if(value.key === 'clientNameLink'){
+                cell = <LinkComponent text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'clientName.id')}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
             }

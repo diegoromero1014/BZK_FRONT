@@ -243,5 +243,5 @@ function mapStateToProps({alertPendingUpdateClient, selectsReducer, navBar, redu
     };
 }
 
-export default reduxForm({form: 'simple', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({form: 'formFilterAlertPUC', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 

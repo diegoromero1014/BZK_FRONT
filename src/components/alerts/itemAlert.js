@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
+import {reset} from 'redux-form';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import moment from 'moment';
@@ -30,13 +31,16 @@ class ItemAlert extends Component {
     }
 
     _handleRedirectAlert(e) {
-        this.props.openModalAlerts(false);
-        redirectUrl(this.props.urlAlert);
+        const {openModalAlerts,urlAlert,fn, form,reset,nameForm}= this.props;
+        openModalAlerts(false);
+        redirectUrl(urlAlert);
+        reset(nameForm);
+        fn();
     }
 
 
     render() {
-        const {textValue, iconValue, styleColor, fontSize, number,form} = this.props;
+        const {textValue, icon, styleColor, fontSize, number,form} = this.props;
         var styleBorderDownload = "1px solid " + styleColor;
         return (
             <Col xs={12} md={6} lg={3} style={{padding: '0 15px 10px 15px'}}>
@@ -50,8 +54,7 @@ class ItemAlert extends Component {
                     <div style={{height: '120px'}}>
                         <Row>
                             <Col xs={4} md={4} lg={3}>
-                                <i className={iconValue}
-                                   style={{fontSize: "50px", marginTop: '50px', marginLeft: "18px"}}/>
+                                {icon}
                             </Col>
                             <Col xs={4} md={4} lg={9}>
                                 <span style={{
@@ -93,8 +96,14 @@ class ItemAlert extends Component {
 
 }
 
+ItemAlert.propTypes = {
+    fn: PropTypes.func.isRequired,
+    nameForm: PropTypes.string,
+    icon: PropTypes.element.isRequired
+};
+
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({openModalAlerts}, dispatch);
+    return bindActionCreators({openModalAlerts,reset}, dispatch);
 }
 
 function mapStateToProps({form}, ownerProps) {

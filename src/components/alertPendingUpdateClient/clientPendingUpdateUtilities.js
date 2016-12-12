@@ -5,7 +5,7 @@ export const mapDataGrid = (data = []) => {
     return data.map((client, idx) => ({
         typeDocument: client.typeDocument,
         idNumberClient  : client.idNumberClient,
-        clientName: {
+        clientNameLink: {
             id: client.idClient,
             value: shorterStringValue(client.clientName),
             link: '/dashboard/clientInformation'

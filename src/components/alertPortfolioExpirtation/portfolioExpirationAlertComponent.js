@@ -243,5 +243,5 @@ function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar, redu
     };
 }
 
-export default reduxForm({form: 'simple', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({form: 'formFilterAlertPE', fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 
