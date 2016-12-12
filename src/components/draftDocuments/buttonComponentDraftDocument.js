@@ -8,7 +8,6 @@ import Modal from 'react-modal';
 import {COLOR_ITEMS_MENU} from '../menu/constants';
 import {Col, Row} from 'react-flexbox-grid';
 import {toggleMenu} from '../navBar/actions';
-import {showButtonCloseMenu} from '../menu/actions';
 
 class ButtonComponentDraftDocument extends Component {
     constructor(props) {
@@ -18,12 +17,11 @@ class ButtonComponentDraftDocument extends Component {
     }
 
     openModal() {
-        const {updateStatusModal, toggleMenu, menuReducer, showButtonCloseMenu} = this.props;
-        toggleMenu();
-        updateStatusModal(true);
-        if (!menuReducer.get('showCloseMenu')) {
-            showButtonCloseMenu(true);
+        const {updateStatusModal, toggleMenu, menuReducer} = this.props;
+        if (menuReducer.get('showCloseMenu')) {
+            toggleMenu();
         }
+        updateStatusModal(true);
     }
 
     closeModal() {
@@ -94,8 +92,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         redirectUrl,
         updateStatusModal,
-        toggleMenu,
-        showButtonCloseMenu
+        toggleMenu
     }, dispatch);
 }
 

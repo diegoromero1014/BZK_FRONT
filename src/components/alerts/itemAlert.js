@@ -5,9 +5,11 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
-import _ from 'lodash';
 import {openModalAlerts} from './actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {toggleMenu} from '../navBar/actions';
+import {MENU_OPENED} from '../navBar/constants';
+import {showButtonCloseMenu} from '../menu/actions';
 
 var styles = {
     minHeight: "30px",
@@ -31,11 +33,17 @@ class ItemAlert extends Component {
     }
 
     _handleRedirectAlert(e) {
-        const {openModalAlerts,urlAlert,fn, form,reset,nameForm}= this.props;
+        const {openModalAlerts,urlAlert,fn, form,reset,nameForm, menuReducer, toggleMenu, showButtonCloseMenu, navBar}= this.props;
         openModalAlerts(false);
         redirectUrl(urlAlert);
         reset(nameForm);
         fn();
+        if( navBar.get('status') === MENU_OPENED ){
+            toggleMenu();
+        }
+        if( !menuReducer.get('showCloseMenu') ){
+            showButtonCloseMenu(true);
+        }
     }
 
 
@@ -103,11 +111,11 @@ ItemAlert.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({openModalAlerts,reset}, dispatch);
+    return bindActionCreators({openModalAlerts, toggleMenu, showButtonCloseMenu, reset}, dispatch);
 }
 
-function mapStateToProps({form}, ownerProps) {
-    return {form};
+function mapStateToProps({form, menuReducer, navBar}, ownerProps) {
+    return {form, menuReducer, navBar};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemAlert);

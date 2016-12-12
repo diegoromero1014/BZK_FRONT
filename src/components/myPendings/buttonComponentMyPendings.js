@@ -7,7 +7,6 @@ import ModalComponentPending from './modalComponentPending';
 import {COLOR_ITEMS_MENU} from '../menu/constants';
 import {Col, Row} from 'react-flexbox-grid';
 import {toggleMenu} from '../navBar/actions';
-import {showButtonCloseMenu} from '../menu/actions';
 
 class ButtonComponentMyPending extends Component {
     constructor(props) {
@@ -20,11 +19,10 @@ class ButtonComponentMyPending extends Component {
     }
 
     openModal() {
-        const {toggleMenu, menuReducer, showButtonCloseMenu} = this.props;
+        const {toggleMenu, menuReducer} = this.props;
         this.setState({modalIsOpen: true});
-        toggleMenu();
-        if (!menuReducer.get('showCloseMenu')) {
-            showButtonCloseMenu(true);
+        if (menuReducer.get('showCloseMenu')) {
+            toggleMenu();
         }
     }
 
@@ -81,8 +79,7 @@ class ButtonComponentMyPending extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         redirectUrl,
-        toggleMenu,
-        showButtonCloseMenu
+        toggleMenu
     }, dispatch);
 }
 
