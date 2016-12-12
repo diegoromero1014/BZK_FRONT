@@ -131,7 +131,6 @@ class ViewAlerts extends Component {
                     case CODE_ALERT_PORTFOLIO_EXPIRATION:
                         countAlerts = countAlerts + 1;
                         const iconPortfolioExp = <PortfolioExpirationIcon/>;
-                        // const iconPortfolioExp = <i className='folder open icon' style={{fontSize: "50px !important", marginTop: '50px', marginLeft: "18px"}}/>;
                         return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", "#086A87",
                             "/dashboard/alertClientsPortfolioExpiration",this._cleanFilterPortfolioExpiration, FORM_FILTER_ALERT_PE);
                         break;
