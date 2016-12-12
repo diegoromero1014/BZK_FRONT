@@ -22,6 +22,7 @@ import {COLOR_ITEMS_MENU} from '../menu/constants';
 import {toggleMenu} from '../navBar/actions';
 import {showButtonCloseMenu} from '../menu/actions';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
+import {consultList} from '../selectsComponent/actions';
 import _ from 'lodash';
 
 const itemAlerts = {
