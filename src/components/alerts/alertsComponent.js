@@ -16,7 +16,8 @@ import {CODE_ALERT_PENDING_UPDATE_CLIENT,CODE_ALERT_PORTFOLIO_EXPIRATION} from '
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_ALERTS, MODULE_CLIENTS} from '../../constantsGlobal';
 import {COLOR_ITEMS_MENU} from '../menu/constants';
-import {toggleMenu} from '../menu/actions';
+import {toggleMenu} from '../navBar/actions';
+import {showButtonCloseMenu} from '../menu/actions';
 import _ from 'lodash';
 
 const itemAlerts = {
@@ -55,7 +56,7 @@ class ViewAlerts extends Component {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         }
-        const {showLoading, getAlertsByUser, clearListAlerts, toggleMenu} = this.props;
+        const {showLoading, getAlertsByUser, clearListAlerts, toggleMenu, showButtonCloseMenu, menuReducer} = this.props;
         clearListAlerts();
         showLoading(true, 'Cargando alertas..');
         getAlertsByUser().then((data) => {
@@ -64,6 +65,9 @@ class ViewAlerts extends Component {
             }
         });
         toggleMenu();
+        if( !menuReducer.get('showCloseMenu') ){
+            showButtonCloseMenu(true);
+        }
         this.props.openModalAlerts(true);
     }
 
@@ -177,16 +181,18 @@ function mapDispatchToProps(dispatch) {
         updateNumberTotalClients,
         validatePermissionsByModule,
         clearListAlerts,
-        toggleMenu
+        toggleMenu,
+        showButtonCloseMenu
     }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}, ownerProps) {
+function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts, menuReducer}, ownerProps) {
     return {
         viewManagementReducer,
         navBar,
         reducerGlobal,
-        alerts
+        alerts,
+        menuReducer
     };
 }
 

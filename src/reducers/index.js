@@ -41,6 +41,7 @@ import alertsReducer from '../components/alerts/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
 import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirtation/reducer';
 import loadingReducer from '../components/loading/reducer';
+import menuReducer from '../components/menu/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -84,5 +85,6 @@ export default combineReducers({
     myPendingsReducer: myPendingsReducer,
     draftDocumentsReducer: draftDocumentsReducer,
     loading: loadingReducer,
-    alertPortfolioExpiration :alertPortfolioExpirationReducer
+    alertPortfolioExpiration :alertPortfolioExpirationReducer,
+    menuReducer: menuReducer
 });

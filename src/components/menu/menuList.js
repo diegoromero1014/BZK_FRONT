@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import MenuListItem from './menuListItem';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS} from '../../constantsGlobal';
 import ButtonComponentMyPending from '../myPendings/buttonComponentMyPendings';
 import ButtonComponentDraftDocument from '../draftDocuments/buttonComponentDraftDocument';
-import {Row} from 'react-flexbox-grid';
+import {Row, Col} from 'react-flexbox-grid';
 import {COLOR_ITEMS_MENU, COLOR_ITEMS_MENU_BLACK} from './constants';
 import ViewAlerts from '../alerts/alertsComponent';
+import {toggleMenu} from '../navBar/actions';
+import {showButtonCloseMenu} from '../menu/actions';
 import _ from 'lodash';
 
 var menuItems = [];
@@ -37,11 +40,9 @@ const menuItemCerrarSesion = {
 
 class MenuList extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.setState({
-            loadPermisions: false
-        });
+        this.handleLayoutToggle = this.handleLayoutToggle.bind(this);
     }
 
     _mapMenuItems(item, idx) {
@@ -55,44 +56,77 @@ class MenuList extends Component {
         />
     }
 
-    componentWillMount(){
-      menuItems = [];
-      menuItemsCloseSession= [];
-      menuItemsCloseSession.push(menuItemCerrarSesion);
+    handleLayoutToggle(e) {
+        e.preventDefault();
+        const {toggleMenu} = this.props;
+        toggleMenu();
     }
 
-    componentWillReceiveProps(nextProps){
-      menuItems = [];
-      const {navBar} = nextProps;
-      if( _.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW) ){
-        menuItems.push(itemManagerialView);
-      }
-      if( _.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)){
-        menuItems.push(itemClients);
-      }
+    componentWillMount() {
+        menuItems = [];
+        menuItemsCloseSession = [];
+        menuItemsCloseSession.push(menuItemCerrarSesion);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        menuItems = [];
+        const {navBar} = nextProps;
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW)) {
+            menuItems.push(itemManagerialView);
+        }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)) {
+            menuItems.push(itemClients);
+        }
     }
 
     render() {
-        const {navBar} = this.props;
+        const {navBar, menuReducer} = this.props;
         return (
             <div style={{overflowX: "auto", height: "100%"}}>
-              <Row className="page-sidebar-wrapper" style={{width: "100%", overflowX: "auto", overflowY: 'hidden', paddingLeft: '10px'}}>
-                  {menuItems.map(this._mapMenuItems)}
-                  { _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
+                <Row className="page-sidebar-wrapper"
+                     style={{width: "100%", overflowX: "auto", overflowY: 'hidden', paddingLeft: '10px'}}>
+                    { menuReducer.get('showCloseMenu') &&
+                    <Col xs={1} md={1} lg={1} style={{marginTop: '12px', marginLeft: '10px', maxWidth: '60px'}}>
+                        <i className="big sidebar icon"
+                           onClick={this.handleLayoutToggle}
+                           style={{cursor: "pointer", color: '#4c5360 !important'}}
+                           title="Cerrar menú"></i>
+                    </Col>
+                    }
+                    { menuReducer.get('showCloseMenu') ?
+                        <Col xs={10} md={10} lg={10} style={{marginTop: '15px'}}>
+                            <span style={{fontSize: '22px', color: 'black'}}>Biztrack - Menú</span>
+                        </Col>
+                        :
+                        <Col xs={11} md={11} lg={11} style={{marginTop: '15px', marginLeft: '10px'}}>
+                            <span style={{fontSize: '22px', color: 'black'}}>Biztrack - Menú</span>
+                        </Col>
+                    }
+                    {menuItems.map(this._mapMenuItems)}
+                    { _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
                     <ViewAlerts/>
-                  }
-                  <ButtonComponentMyPending />
-                  <ButtonComponentDraftDocument />
-                  {menuItemsCloseSession.map(this._mapMenuItems)}
-              </Row>
+                    }
+                    <ButtonComponentMyPending />
+                    <ButtonComponentDraftDocument />
+                    {menuItemsCloseSession.map(this._mapMenuItems)}
+                </Row>
             </div>
         )
     }
 }
-function mapStateToProps({navBar},ownerProps) {
-  return {
-    navBar
-  };
+function mapStateToProps({navBar, menuReducer}, ownerProps) {
+    return {
+        navBar,
+        menuReducer
+    };
 }
 
-export default connect(mapStateToProps)(MenuList);
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        toggleMenu,
+        showButtonCloseMenu
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuList);

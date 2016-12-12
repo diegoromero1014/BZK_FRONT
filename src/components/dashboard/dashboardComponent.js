@@ -14,8 +14,7 @@ class Dashboard extends Component {
     constructor(props){
         super(props);
         this.state = {
-            widthComponent: '0px',
-            widthComponentDiv: '96%'
+            widthComponent: '0px'
         };
         this._onClickDashboard = this._onClickDashboard.bind(this);
     }
@@ -25,7 +24,7 @@ class Dashboard extends Component {
         redirectUrl("/login");
       } else {
           const {updateTitleNavBar} = this.props;
-          updateTitleNavBar("Inicio");
+          updateTitleNavBar("");
       }
     }
 
@@ -42,7 +41,7 @@ class Dashboard extends Component {
         if(navBar.get('status') === MENU_CLOSED){
           widthComponent= '0px';
         } else {
-          widthComponent = '96%';
+          widthComponent = '100%';
         }
 
         return (

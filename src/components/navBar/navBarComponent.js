@@ -49,7 +49,7 @@ class NavBarComponent extends Component {
           <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue, transition: 'all 0.3s'}}>
               <div className="pull-left" style={status === MENU_CLOSED ? styles.divNavBarTitleClosed : styles.divNavBarTitleOpened}>
                   <ul className="nav" style={{paddingLeft: "0px"}}>
-                      <li style={{cursor: "pointer"}} title="Menú">
+                      <li style={{cursor: "pointer"}} title="Abrir menú">
                           <a onClick={this.handleLayoutToggle}>
                             <i className="big sidebar icon"></i>
                           </a>
