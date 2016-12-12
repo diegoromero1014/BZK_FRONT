@@ -263,7 +263,7 @@ class FormCreateProspect extends Component{
     const {propspectReducer, reducerGlobal} = this.props
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
-        10<Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", marginBottom:"90px", backgroundColor: "#F0F0F0"}}>
+        <Row style={{height: "100%", marginTop: "3px", paddingBottom: "15px", marginBottom:"100px", backgroundColor: "#F0F0F0"}}>
 
           <Col xs={12} md={8} lg={8} style={{marginTop: "20px", paddingRight: "35px"}}>
             <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
