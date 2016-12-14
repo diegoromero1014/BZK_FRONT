@@ -19,6 +19,7 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
@@ -447,7 +448,7 @@ class FormPipeline extends Component {
     const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, business, product,
               priority, registeredCountry, startDate, client, documentStatus, probability},
-          clientInformacion, selectsReducer, handleSubmit, reducerGlobal} = this.props;
+          clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar} = this.props;
 
     return(
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
@@ -785,6 +786,7 @@ class FormPipeline extends Component {
             </div>
           </Col>
         </Row>
+        { navBar.get('status') === MENU_CLOSED &&
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -798,6 +800,7 @@ class FormPipeline extends Component {
             </button>
           </div>
         </div>
+        }
         <SweetAlert
           type={typeMessage}
           show={this.state.showMessageCreatePipeline}
@@ -848,12 +851,13 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, reducerGlobal}, ownerProps) {
+function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar}, ownerProps) {
     return {
       clientInformacion,
       selectsReducer,
       contactsByClient,
-      reducerGlobal
+      reducerGlobal,
+      navBar
     };
 }
 

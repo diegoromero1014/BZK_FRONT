@@ -14,6 +14,7 @@ import {FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR} from '.
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {updateTitleNavBar} from '../navBar/actions';
+import {MENU_CLOSED} from '../navBar/constants';
 
 class PrevisitComponent extends Component {
 
@@ -61,7 +62,7 @@ class PrevisitComponent extends Component {
     let visibleTable = 'none';
     let visibleMessage = 'block';
     let visibleDownload = 'none';
-    const {previsitReducer, reducerGlobal} = this.props;
+    const {previsitReducer, reducerGlobal, navBar} = this.props;
     if(previsitReducer.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
@@ -105,7 +106,7 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
-        { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
+        { navBar.get('status') === MENU_CLOSED && _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
           <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
         }
         <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
@@ -121,10 +122,11 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({previsitReducer, reducerGlobal}, ownerProps) {
+function mapStateToProps({previsitReducer, reducerGlobal, navBar}, ownerProps) {
   return {
     previsitReducer,
-    reducerGlobal
+    reducerGlobal,
+    navBar
   };
 }
 

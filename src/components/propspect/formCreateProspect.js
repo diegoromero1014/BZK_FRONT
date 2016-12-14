@@ -15,6 +15,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import _ from 'lodash';
 import numeral from 'numeral';
 import {changeStateSaveData} from '../dashboard/actions';
+import {MENU_CLOSED} from '../navBar/constants';
 import {MESSAGE_SAVE_DATA, MODULE_PROSPECT} from '../../constantsGlobal';
 import {consultDataSelect, consultList, consultListWithParameter, consultListWithParameterUbication} from '../selectsComponent/actions';
 
@@ -259,7 +260,7 @@ class FormCreateProspect extends Component{
       fields: {razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
          address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
          nonOperatingIncome, expenses, dateSalesAnnuals, idCelula},
-      error, handleSubmit, selectsReducer} = this.props;
+      error, handleSubmit, selectsReducer, navBar} = this.props;
     const {propspectReducer, reducerGlobal} = this.props
     return(
       <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
@@ -596,6 +597,7 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
         </Row>
+        { navBar.get('status') === MENU_CLOSED &&
         <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "300px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
@@ -609,6 +611,7 @@ class FormCreateProspect extends Component{
             </button>
           </div>
         </div>
+        }
         <SweetAlert
             type= "warning"
             show={this.state.show}
@@ -655,12 +658,13 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({propspectReducer, selectsReducer, reducerGlobal, notes},ownerProps) {
+function mapStateToProps({propspectReducer, selectsReducer, reducerGlobal, notes, navBar},ownerProps) {
   return {
     propspectReducer,
     selectsReducer,
     reducerGlobal,
-    notes
+    notes,
+    navBar
   };
 }
 

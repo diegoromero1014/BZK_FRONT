@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
+import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
 
 
 const initialState = Immutable.Map({
@@ -11,7 +11,7 @@ const initialState = Immutable.Map({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case VAIDATE_PROSPECT_EXISTS:
+      case VALIDATE_PROSPECT_EXISTS:
       const {status, validateLogin, prospectExist} = action.payload.data;
       return state.withMutations( map => {
         map

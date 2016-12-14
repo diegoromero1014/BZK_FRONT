@@ -13,6 +13,7 @@ import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_PIPELINE, CREAR, DESCARGAR} from '../../constantsGlobal';
 import ButtonDownloadPipelineComponent from './downloadPipeline/buttonDownloadPipelineComponent';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
+import {MENU_CLOSED} from '../navBar/constants';
 
 class PipelineComponent extends Component {
 
@@ -53,7 +54,7 @@ class PipelineComponent extends Component {
 
 
   render() {
-    const {pipelineReducer, reducerGlobal} = this.props;
+    const {pipelineReducer, reducerGlobal, navBar} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     let visibleDownload = 'none';
@@ -105,7 +106,7 @@ class PipelineComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          { _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
+          { navBar.get('status') === MENU_CLOSED && _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
             <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
           }
           <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />

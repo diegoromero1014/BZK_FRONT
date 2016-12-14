@@ -16,6 +16,7 @@ import SweetAlert from 'sweetalert-react';
 import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
 import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import {createBusiness} from '../actions';
 import moment from 'moment';
 import _ from 'lodash';
@@ -243,7 +244,7 @@ class FormBusinessPlan extends Component {
   }
 
   render() {
-    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, reducerGlobal} = this.props;
+    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, reducerGlobal, navBar} = this.props;
     return(
       <form onSubmit={handleSubmit(this._submitCreateBusiness)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
@@ -331,6 +332,7 @@ class FormBusinessPlan extends Component {
               </div>
             </Col>
           </Row>
+          { navBar.get('status') === MENU_CLOSED &&
           <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
               <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -344,6 +346,7 @@ class FormBusinessPlan extends Component {
               </button>
             </div>
           </div>
+          }
           <SweetAlert
            type="error"
            show={this.state.showErrorSaveBusiness}
@@ -382,13 +385,14 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, reducerGlobal, needs, areas}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, reducerGlobal, needs, areas, navBar}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       reducerGlobal,
       needs,
-      areas
+      areas,
+      navBar
     };
 }
 export default reduxForm({

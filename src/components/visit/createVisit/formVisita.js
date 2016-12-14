@@ -28,6 +28,7 @@ import {detailPrevisit} from '../../previsita/actions';
 import {addParticipant, clearParticipants} from '../../participantsVisitPre/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {clearIdPrevisit} from '../actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
@@ -387,7 +388,7 @@ class FormVisita extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral},
-      clientInformacion, selectsReducer, handleSubmit, visitReducer, reducerGlobal} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, visitReducer, reducerGlobal, navBar} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const {aecStatus} = infoClient;
     //Verifico si la visita se asocia a una previsita, para así cargar los datos
@@ -551,6 +552,7 @@ class FormVisita extends Component{
             </div>
           </Col>
         </Row>
+        { navBar.get('status') === MENU_CLOSED &&
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -564,6 +566,7 @@ class FormVisita extends Component{
             </button>
           </div>
         </div>
+        }
         <SweetAlert
          type="error"
          show={this.state.showErrorSaveVisit}
@@ -612,14 +615,15 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal, navBar}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       visitReducer,
       participants,
       tasks,
-      reducerGlobal
+      reducerGlobal,
+      navBar
     };
 }
 

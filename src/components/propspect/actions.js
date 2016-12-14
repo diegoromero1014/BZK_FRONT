@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import { VAIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
+import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
 import axios from 'axios';
 
 export function validateProspectExists(typeDocument, numberDocument){
@@ -23,7 +23,7 @@ export function validateProspectExists(typeDocument, numberDocument){
     }
   var request = axios.post(APP_URL + "/validateProspectExists", json);
   return {
-    type: VAIDATE_PROSPECT_EXISTS,
+    type: VALIDATE_PROSPECT_EXISTS,
     payload: request
   }
 }

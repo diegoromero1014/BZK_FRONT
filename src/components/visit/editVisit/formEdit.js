@@ -24,6 +24,7 @@ import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actio
 import {downloadFilePdf} from '../../clientInformation/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
+import {MENU_CLOSED} from '../../navBar/constants';
 import {addTask} from '../tasks/actions';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -383,7 +384,7 @@ class FormEdit extends Component{
 
   render(){
     const {fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
-    selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal} = this.props;
+    selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal, navBar} = this.props;
     const ownerDraft = visitReducer.get('ownerDraft');
     const detailVisit = visitReducer.get('detailVisit');
     const infoClient = clientInformacion.get('responseClientInfo');
@@ -595,6 +596,7 @@ class FormEdit extends Component{
             </div>
           </Col>
         </Row>
+        { navBar.get('status') === MENU_CLOSED &&
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
@@ -611,6 +613,7 @@ class FormEdit extends Component{
             </button>
           </div>
         </div>
+        }
         <SweetAlert
          type="error"
          show={this.state.showErrorSaveVisit}
@@ -659,7 +662,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal}, ownerProps){
+function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar}, ownerProps){
     const detailVisit = visitReducer.get('detailVisit');
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       var visitTime = detailVisit.data.visitTime;
@@ -678,7 +681,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         participants,
         tasks,
         clientInformacion,
-        reducerGlobal
+        reducerGlobal,
+        navBar
       };
     }else{
       return {
@@ -697,7 +701,8 @@ function mapStateToProps({selectsReducer, visitReducer, participants, contactsBy
         participants,
         tasks,
         clientInformacion,
-        reducerGlobal
+        reducerGlobal,
+        navBar
       };
     }
 }

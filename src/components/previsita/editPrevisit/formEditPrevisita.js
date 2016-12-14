@@ -21,6 +21,7 @@ import {addParticipant} from '../../participantsVisitPre/actions';
 import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import {changeStateSaveData} from '../../dashboard/actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import $ from 'jquery';
@@ -631,7 +632,7 @@ class FormEditPrevisita extends Component{
 
   render(){
     const { fields:{acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
-      clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal} = this.props;
+      clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar} = this.props;
     const ownerDraft = previsitReducer.get('ownerDraft');
     const detailPrevisit = previsitReducer.get('detailPrevisit');
     fechaModString = '';
@@ -894,7 +895,7 @@ class FormEditPrevisita extends Component{
             <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
           </Col>
         </Row>
-
+        { navBar.get('status') === MENU_CLOSED &&
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
@@ -911,6 +912,7 @@ class FormEditPrevisita extends Component{
             </button>
           </div>
         </div>
+        }
         <SweetAlert
          type="error"
          show={this.state.showErrorSavePreVisit}
@@ -965,13 +967,14 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal }, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal, navBar }, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       participants,
       previsitReducer,
-      reducerGlobal
+      reducerGlobal,
+      navBar
     };
 }
 

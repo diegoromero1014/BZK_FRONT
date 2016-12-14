@@ -20,6 +20,7 @@ import {detailBusiness, pdfDescarga} from '../actions';
 import {addNeed, editNeed} from '../need/actions';
 import {addArea, editArea} from '../area/actions';
 import {createBusiness} from '../actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import numeral from 'numeral';
 import moment from 'moment';
 import _ from 'lodash';
@@ -305,7 +306,7 @@ class FormEdit extends Component {
     var fechaCreateString = '';
     var createdBy = '';
     var updatedBy = '';
-    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal} = this.props;
+    const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, navBar} = this.props;
     const ownerDraft = businessPlanReducer.get('ownerDraft');
     const detailBusiness = businessPlanReducer.get('detailBusiness');
     if(detailBusiness !== undefined && detailBusiness !== null && detailBusiness !== '' && !_.isEmpty(detailBusiness)){
@@ -455,6 +456,7 @@ class FormEdit extends Component {
               </div>
             </Col>
           </Row>
+          { navBar.get('status') === MENU_CLOSED &&
           <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
               <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}  style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
@@ -471,6 +473,7 @@ class FormEdit extends Component {
               </button>
             </div>
           </div>
+          }
           <SweetAlert
            type="error"
            show={this.state.showErrorSaveBusiness}
@@ -514,14 +517,15 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas}, ownerProps){
+function mapStateToProps({clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas, navBar}, ownerProps){
     return {
       clientInformacion,
       selectsReducer,
       businessPlanReducer,
       reducerGlobal,
       needs,
-      areas
+      areas,
+      navBar
     };
 }
 export default reduxForm({

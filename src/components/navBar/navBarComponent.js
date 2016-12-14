@@ -45,6 +45,7 @@ class NavBarComponent extends Component {
       const titleNavBar = navBar.get('titleNavBar');
       const viewAlertClient = navBar.get('viewAlertClient');
       const status = navBar.get('status');
+      const displayAlert = (viewAlertClient && status === MENU_CLOSED) ? "block" : "none";
         return (
           <div className="header-quick-nav" style={{height: "60px", paddingLeft: paddingLeftValue, transition: 'all 0.3s'}}>
               <div className="pull-left" style={status === MENU_CLOSED ? styles.divNavBarTitleClosed : styles.divNavBarTitleOpened}>
@@ -61,8 +62,8 @@ class NavBarComponent extends Component {
                       }
                   </ul>
               </div>
-              <div className="pull-right" style={{fontSize:"30px", maxHeight: '26px',}}>
-                  {viewAlertClient && status === MENU_CLOSED && <BellAlert />}
+              <div className="pull-right" style={{fontSize:"30px", maxHeight: '26px', display: displayAlert}}>
+                   <BellAlert />
               </div>
           </div>
       );

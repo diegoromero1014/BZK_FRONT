@@ -20,6 +20,7 @@ import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
 import {changeStateSaveData} from '../../dashboard/actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
@@ -433,7 +434,7 @@ class FormEditPipeline extends Component {
             businessWeek, currency, indexing, endDate, need, observations, business, product,
             priority, registeredCountry, startDate, client, documentStatus,
         		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
-            clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal} = this.props;
+            clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar} = this.props;
 
 		const ownerDraft = pipelineReducer.get('ownerDraft');
 		let fechaModString = '';
@@ -842,42 +843,44 @@ class FormEditPipeline extends Component {
           	: ''}
           </Col>
         </Row>
-				<div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
-				  <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
-				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
-				      <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
-				    </button>
-				    <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}  style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
-				      <span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
-				    </button>
-				    <button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
-		              <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
-		            </button>
-				    <button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
-				      <span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
-				    </button>
-				  </div>
-				</div>
-				<SweetAlert
-				  type={typeMessage}
-				  show={this.state.showMessageCreatePipeline}
-				  title={titleMessage}
-				  text={message}
-				  onConfirm={this._closeMessageCreatePipeline}
-				/>
-				<SweetAlert
-				  type= "warning"
-				  show={this.state.showConfirm}
-				  title={titleMessage}
-				  text={message}
-				  confirmButtonColor= '#DD6B55'
-				  confirmButtonText= 'Sí, estoy seguro!'
-				  cancelButtonText = "Cancelar"
-				  showCancelButton= {true}
-				  onCancel= {() => this.setState({showConfirm: false })}
-				  onConfirm={this._closeConfirmClosePipeline}
-				/>
-				<SweetAlert
+        { navBar.get('status') === MENU_CLOSED &&
+		<div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
+			<div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+				<button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={this.state.isEditable === true && ownerDraft === 0 ?  {float:"right", margin:"8px 0px 0px -120px", position:"fixed", backgroundColor:"#00B5AD"} : {display: "none"}}>
+					<span style={{color: "#FFFFFF", padding:"10px"}}>Guardar como borrador</span>
+				</button>
+				<button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}  style={this.state.isEditable === true ? {float:"right", margin:"8px 0px 0px 107px", position:"fixed"} : {display: "none"}}>
+					<span style={{color: "#FFFFFF", padding:"10px"}}>Guardar definitivo</span>
+				</button>
+				<button className="btn" type="button" onClick={this._onClickPDF} style={{float:"right", margin:"8px 0px 0px 292px", position:"fixed", backgroundColor:"#eb984e"}}>
+					<span style={{color: "#FFFFFF", padding:"10px"}}>Descargar pdf</span>
+				</button>
+				<button className="btn" type="button" onClick={this._onCloseButton} style={{float:"right", margin:"8px 0px 0px 450px", position:"fixed", backgroundColor:"rgb(193, 193, 193)"}}>
+					<span style={{color: "#FFFFFF", padding:"10px"}}>Cancelar</span>
+				</button>
+			</div>
+		</div>
+        }
+		<SweetAlert
+		  type={typeMessage}
+		  show={this.state.showMessageCreatePipeline}
+		  title={titleMessage}
+		  text={message}
+		  onConfirm={this._closeMessageCreatePipeline}
+		/>
+		<SweetAlert
+		  type= "warning"
+		  show={this.state.showConfirm}
+		  title={titleMessage}
+		  text={message}
+		  confirmButtonColor= '#DD6B55'
+		  confirmButtonText= 'Sí, estoy seguro!'
+		  cancelButtonText = "Cancelar"
+		  showCancelButton= {true}
+		  onCancel= {() => this.setState({showConfirm: false })}
+		  onConfirm={this._closeConfirmClosePipeline}
+		/>
+		<SweetAlert
           type="warning"
           show={this.state.showConfirmChangeCurrency}
           title={titleMessage}
@@ -908,7 +911,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal}, pathParameter) {
+function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar}, pathParameter) {
 	const pipeline = pipelineReducer.get('detailPipeline');
 	if (pipeline) {
 	    if( pipeline.id === parseInt(pathParameter.id) ){
@@ -919,7 +922,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      pipelineReducer,
 	  	      pdfDescarga,
 	  	      consultParameterServer,
-            reducerGlobal,
+            	reducerGlobal,
+              navBar,
 
 	  	      initialValues: {
   	        	id: pipeline.id,
@@ -950,7 +954,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
   	  		    createdByName: pipeline.createdByName,
   	  		    updatedByName: pipeline.updatedByName,
   	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-                            business: ''
+				business: ''
 	  	      }
 	  	    };
 	    } else {
@@ -961,7 +965,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      pipelineReducer,
 	  	      pdfDescarga,
 	  	      consultParameterServer,
-            reducerGlobal
+			  reducerGlobal,
+              navBar
 	  	    };
 	    }
 	} else {
@@ -972,7 +977,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	      pipelineReducer,
 	      pdfDescarga,
 	      consultParameterServer,
-        reducerGlobal
+			reducerGlobal,
+			navBar
 	  	};
 	}
 }
