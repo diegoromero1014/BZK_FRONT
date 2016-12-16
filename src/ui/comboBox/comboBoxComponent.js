@@ -57,7 +57,7 @@ class comboBoxComponent extends Component {
                 if (isEmptyAndUsed) {
                     this._clearValues(name);
                 }
-            }
+    }
         }
     }
 
@@ -75,7 +75,9 @@ class comboBoxComponent extends Component {
                 });
                 onBlur(id, text);
                 onChange(id, text);
-            }
+            },
+            forceSelection: false,
+            selectOnKeydown: false
         });
         selector.dropdown('setting', {
           allowAdditions: false,

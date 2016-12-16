@@ -37,7 +37,9 @@ class MultipleSelectComponent extends Component {
                   });
                   onBlur(id, text);
                   onChange(id, text);
-              }
+              },
+              forceSelection: false,
+              selectOnKeydown: false
           });
         } else{
           selector.dropdown({
@@ -49,7 +51,9 @@ class MultipleSelectComponent extends Component {
                   });
                   onBlur(id, text);
                   onChange(id, text);
-              }
+              },
+              forceSelection: false,
+              selectOnKeydown: false
           });
         }
         selector.dropdown('setting', {
@@ -57,7 +61,9 @@ class MultipleSelectComponent extends Component {
           message: {
             maxSelections : 'Máximo 3 opciones',
             noResults:'No hay valores que cumplan con el filtro'
-          }
+          },
+            forceSelection: false,
+            selectOnKeydown: false
         });
     }
 
