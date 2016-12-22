@@ -15,20 +15,19 @@ import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGrou
 class ComponentClientInformation extends Component{
   constructor(props) {
      super(props);
-     const {consultInfoClient} = this.props;
-     consultInfoClient().then((data) => {
-       if(!_.get(data, 'payload.data.validateLogin')){
-         redirectUrl("/login");
-       }
-     });
   }
 
   componentWillMount(){
     $(window).scrollTop(0);
-    const {updateTitleNavBar, viewAlertClient} = this.props;
+    const {updateTitleNavBar, viewAlertClient, consultInfoClient} = this.props;
     updateTitleNavBar("Mis clientes");
-
+    consultInfoClient().then((data) => {
+        if(!_.get(data, 'payload.data.validateLogin')){
+            redirectUrl("/login");
+        }
+    });
     viewAlertClient(true);
+
   }
 
   componentWillUnmount(){
@@ -38,12 +37,14 @@ class ComponentClientInformation extends Component{
   render(){
     const {clientInformacion} = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    const {aecStatus} = infoClient;
     var showAECNoAplica = false;
     var showAECNivel = true;
-    if( aecStatus === undefined || aecStatus === null ){
-      showAECNoAplica = true;
-      showAECNivel = false;
+    if( infoClient !== null && infoClient !== undefined ){
+        const {aecStatus} = infoClient;
+        if( aecStatus === undefined || aecStatus === null ){
+            showAECNoAplica = true;
+            showAECNivel = false;
+        }
     }
 
     return(

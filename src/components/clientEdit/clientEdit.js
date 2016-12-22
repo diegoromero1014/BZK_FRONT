@@ -1004,9 +1004,9 @@ class clientEdit extends Component{
     fields: {description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
       district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
       liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-      centroDecision, necesitaLME, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+      centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
       detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-      otherOperationsForeign}, error, handleSubmit, tabReducer, selectsReducer, clientInformacion, notes} = this.props;
+      otherOperationsForeign}, handleSubmit, tabReducer, selectsReducer, clientInformacion } = this.props;
     //if(notes.toArray().length === 0){
       //errorNote = false;
     //}
@@ -1520,6 +1520,14 @@ class clientEdit extends Component{
                 </div>
               </dt>
             </Col>
+            <Col xs={12} md={4} lg={4}>
+              <dt>
+                  <span>NIT principal</span>
+              </dt>
+              <dt style={{marginTop: '8px'}}>
+                  <span style={{fontWeight: 'normal'}}>{nitPrincipal.value}</span>
+              </dt>
+            </Col>
           </Row>
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} md={4} lg={4} style={{paddingRight: "10px"}}>
@@ -1965,6 +1973,7 @@ function mapStateToProps({clientInformacion, selectsReducer, clientProductReduce
       justifyExClient: infoClient.justificationForLostClient,
       justifyNoLME: infoClient.justificationForCreditNeed,
       groupEconomic: infoClient.economicGroup,
+      nitPrincipal: infoClient.nitPrincipal,
       taxNature: infoClient.taxNature,
       detailNonOperatingIncome: infoClient.detailNonOperatinIncome,
       originGoods: '',
