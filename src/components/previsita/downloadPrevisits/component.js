@@ -76,17 +76,34 @@ class DownloadPrevisits extends Component {
 					</div>
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
-						<ul className="ui list">
-							<li>{'Tipo de documento'}</li>
-							<li>{'Número de documento'}</li>
-							<li>{'Razón social'}</li>
-							<li>{'Grupo económico'}</li>
-							<li>{'Gerente de cuenta'}</li>
-							<li>{'Célula'}</li>
-							<li>{'Fecha de la reunión'}</li>
-							<li>{'Tipo de reunión'}</li>
-							<li>{'Lugar'}</li>
-						</ul>
+                        <Row style={{margin:'10px'}}>
+                            <Col>
+                                <ul className="ui list">
+                                    <li>{'Tipo de documento'}</li>
+                                    <li>{'Número de documento'}</li>
+                                    <li>{'Razón social'}</li>
+                                    <li>{'Grupo económico'}</li>
+                                    <li>{'Gerente de cuenta'}</li>
+                                    <li>{'Célula'}</li>
+                                    <li>{'Región'}</li>
+                                    <li>{'Zona'}</li>
+                                    <li>{'Fecha de la reunión'}</li>
+                                </ul>
+                            </Col>
+                            <Col style={{paddingLeft:'15px'}}>
+                                <ul className="ui list">
+									<li>{'Tipo de reunión'}</li>
+									<li>{'Lugar'}</li>
+                                    <li>{'Objetivo'}</li>
+                                    <li>{'Creador por'}</li>
+                                    <li>{'Posición creador por'}</li>
+                                    <li>{'Fecha creación'}</li>
+                                    <li>{'Modificacdo por'}</li>
+                                    <li>{'Posición modificado por'}</li>
+                                    <li>{'Fecha modificación'}</li>
+                                </ul>
+                            </Col>
+                        </Row>
 					</div>
 					</div>
 					<div className="modalBt4-footer modal-footer">
