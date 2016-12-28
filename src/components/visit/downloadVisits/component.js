@@ -96,7 +96,7 @@ class DownloadVisits extends Component {
 								<li>{'Creador por'}</li>
 								<li>{'Posición creador por'}</li>
 								<li>{'Fecha creación'}</li>
-								<li>{'Modificacdo por'}</li>
+								<li>{'Modificado por'}</li>
 								<li>{'Posición modificado por'}</li>
 								<li>{'Fecha modificación'}</li>
 								</ul>

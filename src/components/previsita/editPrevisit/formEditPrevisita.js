@@ -60,6 +60,8 @@ var fechaModString = '';
 var fechaCreateString = '';
 var createdBy = '';
 var updatedBy = '';
+var positionCreatedBy = '';
+var positionUpdatedBy = '';
 var firstLoadInfo = false;
 
 const validate = values => {
@@ -639,6 +641,8 @@ class FormEditPrevisita extends Component{
     if(detailPrevisit !== undefined && detailPrevisit !== null && detailPrevisit !== '' && !_.isEmpty(detailPrevisit)){
       createdBy = detailPrevisit.data.createdByName;
       updatedBy = detailPrevisit.data.updatedByName;
+      positionCreatedBy = detailPrevisit.data.positionCreatedBy;
+      positionUpdatedBy = detailPrevisit.data.positionUpdatedBy;
       if(detailPrevisit.data.updatedTimestamp !== null){
         var fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp, "x").locale('es');
         fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
@@ -881,7 +885,7 @@ class FormEditPrevisita extends Component{
             : '' }
           </Col>
         </Row>
-        <Row style={{padding: "5px 10px 20px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
           </Col>
@@ -893,6 +897,14 @@ class FormEditPrevisita extends Component{
           </Col>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy}</span>
+          </Col>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy}</span>
           </Col>
         </Row>
         { navBar.get('status') === MENU_CLOSED &&

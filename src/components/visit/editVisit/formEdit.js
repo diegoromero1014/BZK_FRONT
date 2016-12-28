@@ -399,10 +399,14 @@ class FormEdit extends Component{
     var fechaCreateString = '';
     var createdBy = '';
     var updatedBy = '';
+    var positionCreatedBy = '';
+    var positionUpdatedBy = '';
 
     if(detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)){
       createdBy = detailVisit.data.createdByName;
       updatedBy = detailVisit.data.updatedByName;
+      positionCreatedBy = detailVisit.data.positionCreatedBy;
+      positionUpdatedBy = detailVisit.data.positionUpdatedBy;
       if(detailVisit.data.updatedTimestamp !== null){
         var fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
         fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
@@ -587,6 +591,14 @@ class FormEdit extends Component{
           </Col>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy}</span>
+          </Col>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy}</span>
           </Col>
         </Row>
         <Row>
