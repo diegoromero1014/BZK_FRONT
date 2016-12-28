@@ -83,10 +83,10 @@ class DownloadBusinessPlan extends Component {
 									<li>{'Objetivo del plan'}</li>
                                     <li>{'Oportunidades y amenazas externas de la compañía'}</li>
                                     <li>{'Creador por'}</li>
-                                    <li>{'Posición creador por'}</li>
+                                    <li>{'Posición de usuario que crea'}</li>
                                     <li>{'Fecha creación'}</li>
                                     <li>{'Modificado por'}</li>
-                                    <li>{'Posición modificado por'}</li>
+                                    <li>{'Posición de usuario que modifica'}</li>
                                     <li>{'Fecha modificación'}</li>
                                 </ul>
                             </Col>

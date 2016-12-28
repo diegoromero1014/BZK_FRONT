@@ -94,10 +94,10 @@ class DownloadVisits extends Component {
 								<li>{'Fecha de la reunión'}</li>
 								<li>{'Tipo de reunión'}</li>
 								<li>{'Creador por'}</li>
-								<li>{'Posición creador por'}</li>
+								<li>{'Posición de usuario que crea'}</li>
 								<li>{'Fecha creación'}</li>
 								<li>{'Modificado por'}</li>
-								<li>{'Posición modificado por'}</li>
+								<li>{'Posición de usuario que modifica'}</li>
 								<li>{'Fecha modificación'}</li>
 								</ul>
 							</Col>

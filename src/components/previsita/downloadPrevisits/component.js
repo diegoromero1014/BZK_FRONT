@@ -96,10 +96,10 @@ class DownloadPrevisits extends Component {
 									<li>{'Lugar'}</li>
                                     <li>{'Objetivo'}</li>
                                     <li>{'Creador por'}</li>
-                                    <li>{'Posición creador por'}</li>
+                                    <li>{'Posición de usuario que crea'}</li>
                                     <li>{'Fecha creación'}</li>
                                     <li>{'Modificado por'}</li>
-                                    <li>{'Posición modificado por'}</li>
+                                    <li>{'Posición de usuario que modifica'}</li>
                                     <li>{'Fecha modificación'}</li>
                                 </ul>
                             </Col>
