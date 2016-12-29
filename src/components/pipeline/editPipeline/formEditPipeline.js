@@ -28,8 +28,8 @@ import numeral from 'numeral';
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
-    "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName"
-    ];
+    "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
+    "positionUpdatedBy"];
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -433,7 +433,8 @@ class FormEditPipeline extends Component {
 		const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
             businessWeek, currency, indexing, endDate, need, observations, business, product,
             priority, registeredCountry, startDate, client, documentStatus,
-        		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate},
+        		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
+            positionUpdatedBy},
             clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar} = this.props;
 
 		const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -825,7 +826,7 @@ class FormEditPipeline extends Component {
             : '' }
           </Col>
         </Row>
-        <Row style={{padding: "5px 10px 20px 20px"}}>
+        <Row style={{padding: "5px 10px 0px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <span style={{marginLeft: "0px", color: "#818282"}}>{createdByName.value}</span>
           </Col>
@@ -841,6 +842,14 @@ class FormEditPipeline extends Component {
           	{updatedBy.value !== null ?
           		<span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
           	: ''}
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy.value}</span>
+          </Col>
+          <Col xs={6} md={6} lg={6}>
+            <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy.value}</span>
           </Col>
         </Row>
         { navBar.get('status') === MENU_CLOSED &&
@@ -922,9 +931,8 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
 	  	      pipelineReducer,
 	  	      pdfDescarga,
 	  	      consultParameterServer,
-            	reducerGlobal,
-              navBar,
-
+          	reducerGlobal,
+            navBar,
 	  	      initialValues: {
   	        	id: pipeline.id,
   	        	businessStatus: pipeline.businessStatus,
@@ -953,8 +961,10 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
   	  		    updatedTimestamp: pipeline.updatedTimestamp,
   	  		    createdByName: pipeline.createdByName,
   	  		    updatedByName: pipeline.updatedByName,
+              positionCreatedBy: pipeline.positionCreatedBy,
+              positionUpdatedBy: pipeline.positionUpdatedBy,
   	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-				business: ''
+	            business: ''
 	  	      }
 	  	    };
 	    } else {

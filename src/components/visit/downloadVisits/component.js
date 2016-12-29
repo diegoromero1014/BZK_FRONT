@@ -76,16 +76,32 @@ class DownloadVisits extends Component {
 					</div>
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
-						<ul className="ui list">
-							<li>{'Tipo de documento'}</li>
-							<li>{'Número de documento'}</li>
-							<li>{'Razón social'}</li>
-							<li>{'Grupo económico'}</li>
-							<li>{'Gerente de cuenta'}</li>
-							<li>{'Célula'}</li>
-							<li>{'Fecha de la reunión'}</li>
-							<li>{'Tipo de reunión'}</li>
-						</ul>
+						<Row style={{margin:'10px'}}>
+							<Col>
+								<ul className="ui list">
+									<li>{'Tipo de documento'}</li>
+									<li>{'Número de documento'}</li>
+									<li>{'Razón social'}</li>
+									<li>{'Grupo económico'}</li>
+									<li>{'Gerente de cuenta'}</li>
+									<li>{'Célula'}</li>
+									<li>{'Región'}</li>
+									<li>{'Zona'}</li>
+								</ul>
+							</Col>
+							<Col style={{paddingLeft:'15px'}}>
+								<ul className="ui list">
+								<li>{'Fecha de la reunión'}</li>
+								<li>{'Tipo de reunión'}</li>
+								<li>{'Creador por'}</li>
+								<li>{'Posición de usuario que crea'}</li>
+								<li>{'Fecha creación'}</li>
+								<li>{'Modificado por'}</li>
+								<li>{'Posición de usuario que modifica'}</li>
+								<li>{'Fecha modificación'}</li>
+								</ul>
+							</Col>
+						</Row>
 					</div>
 				</div>
 				<div className="modalBt4-footer modal-footer">
