@@ -1,6 +1,7 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_PREVISIT,CONSULT_VISIT,CONSULT_CURRENCY, LOAD_CHART, CONSULT_BUSINESS_PLANS} from './constants';
+import {TAB_SELETED_ACTIVE, GET_CSV,CONSULT_PIPELINE, CONSULT_PREVISIT,CONSULT_VISIT,CONSULT_CURRENCY, LOAD_CHART, 
+  CONSULT_BUSINESS_PLANS, CHANGE_ERROR_YEAR} from './constants';
 export function changeTabSeletedChartView(tabSeleted){
   return{
     type: TAB_SELETED_ACTIVE,
@@ -14,6 +15,14 @@ export function changeLoadChart(loadChart){
     loadChart: loadChart
   }
 }
+
+export function changeErrorYearSeleted(value){
+  return{
+    type: CHANGE_ERROR_YEAR,
+    value: value
+  }
+}
+
 
 export function consultInformationPipeline(idStatusPipeline, idCurrency){
   const json = {

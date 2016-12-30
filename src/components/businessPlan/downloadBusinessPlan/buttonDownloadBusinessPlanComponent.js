@@ -29,7 +29,7 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 		return (
 			<div style={{display:visibleDownload, marginLeft: '-20px',position: 'fixed', border: '1px solid rgb(194, 194, 194)', bottom: '0px', width: '100%', marginBottom: '0px', height: '50px', background: 'rgba(255, 255, 255, 0.74902)'}}>
 				<div style={{width: '580px', height: '100%', position: 'fixed', right: '0px'}}>
-	        <button className="btn" style={{float: 'right', margin: '8px 0px 0px 400px', position: 'fixed'}} title={'Exportar en formato CSV'} onClick={this._downloadBusinessPlans}>
+	        <button className="btn" style={{float: 'right', margin: '8px 0px 0px 400px', position: 'fixed'}} title={'Exportar en formato Excel'} onClick={this._downloadBusinessPlans}>
 	          <span style={{color: "#FFFFFF", padding:"10px"}}>{'Descargar '}<i className="file excel outline icon"></i></span>
 	        </button>
     		</div>
