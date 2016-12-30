@@ -408,7 +408,6 @@ class FormEdit extends Component {
             name="desarrolloGeneral"
             type="text"
             max="3500"
-            touched={true}
             title="La longitud máxima de caracteres es de 3500"
             style={{width: '100%', height: '178px'}}
             value={this.state.opportunities}
