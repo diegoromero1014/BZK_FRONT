@@ -34,6 +34,7 @@
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "html-webpack-plugin": "^2.24.1",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
     "node-sass": "^3.4.2",
@@ -60,7 +61,7 @@
     "formatjs": "^0.1.1",
     "history": "^2.1.0",
     "immutable": "^3.7.6",
-    "jquery": "^2.2.3",
+    "jquery": "^3.1.1",
     "lodash": "^4.11.2",
     "moment": "^2.12.0",
     "node-sass": "^3.7.0",
@@ -85,7 +86,7 @@
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.9.5",
     "redux-thunk": "^2.0.1",
-    "semantic-ui": "^2.1.8",
+    "semantic-ui": "^2.2.7",
     "semantic-ui-react": "^0.61.4",
     "sweetalert-react": "^0.4.4"
   }

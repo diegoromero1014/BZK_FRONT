@@ -13,6 +13,7 @@ var webpack = require('webpack'),
     cssFixLoader = require('./css-fix-loader'),
     WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin'),
     webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools')),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
     config = {
         devtool: 'source-map',
         context: path.resolve(__dirname, '..'),
@@ -42,7 +43,7 @@ var webpack = require('webpack'),
                 {
                     test: /\.less$/,
                     loader: ExtractTextPlugin.extract('style', 'css!less'),
-                    include: [/react\-widgets/, path.resolve(__dirname, '..', 'semantic', 'src')]
+                    include: [/react-widgets/, path.resolve(__dirname, '..', 'semantic', 'src')]
                 },
                 {
                     test: /(\.scss)$/,
@@ -60,7 +61,7 @@ var webpack = require('webpack'),
                 },
                 {
                     test: /\.css$/,
-                    include: [/semantic/],
+                    include: [/semantic-ui/],
                     loader: ExtractTextPlugin.extract('style', 'css', cssFixLoader, 'postcss-loader')
                 },
                 {
@@ -119,7 +120,12 @@ var webpack = require('webpack'),
                 jQuery: 'jquery',
                 $: 'jquery'
             }),
-            webpackIsomorphicToolsPlugin
+            webpackIsomorphicToolsPlugin,
+            new HtmlWebpackPlugin({
+                title: 'Biztrack',
+                inject: 'body',
+                template: 'src/lib/indexProduction.ejs',
+            })
         ]
     };
 
