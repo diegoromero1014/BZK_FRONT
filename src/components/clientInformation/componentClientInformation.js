@@ -39,8 +39,9 @@ class ComponentClientInformation extends Component{
     const infoClient = clientInformacion.get('responseClientInfo');
     var showAECNoAplica = false;
     var showAECNivel = true;
+    var aecStatus = "";
     if( infoClient !== null && infoClient !== undefined ){
-        const {aecStatus} = infoClient;
+        aecStatus = infoClient.aecStatus;
         if( aecStatus === undefined || aecStatus === null ){
             showAECNoAplica = true;
             showAECNivel = false;
