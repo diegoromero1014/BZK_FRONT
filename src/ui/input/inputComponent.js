@@ -34,8 +34,8 @@ class inputComponent extends Component {
                            style={style}
                            onChange={this._onChange}
                            placeholder={placeholder}
-                           disabled={disabled}
                            onBlur={onBlur}
+                           disabled={disabled}
                            onKeyPress={onKey}
                            onFocus={onFocus}
                            value={value || ''}/>
