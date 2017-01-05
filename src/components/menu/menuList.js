@@ -91,7 +91,7 @@ class MenuList extends Component {
         itemAlerts.children = [];
         var listAlerts = alerts.get('listAlertByUser');
         if (!_.isEqual(listAlerts, undefined) && !_.isEqual(listAlerts, null)) {
-            alerts.get('listAlertByUser').map((item, idx) => {
+            listAlerts.map((item, idx) => {
                 if (item.active) {
                     switch (item.codeAlert) {
                         case CODE_ALERT_PENDING_UPDATE_CLIENT:
