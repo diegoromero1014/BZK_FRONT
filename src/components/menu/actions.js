@@ -1,8 +1,7 @@
 import * as actions from './constants';
 
-export function showButtonCloseMenu(value){
+export function toggleMenu() {
     return {
-        type: actions.SHOW_CLOSE_MENU,
-        value: value
+        type: actions.TOGGLE_MENU
     }
 }

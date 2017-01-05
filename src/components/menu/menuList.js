@@ -1,126 +1,158 @@
-import React, {Component} from 'react';
-import MenuListItem from './menuListItem';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS} from '../../constantsGlobal';
-import ButtonComponentMyPending from '../myPendings/buttonComponentMyPendings';
-import ButtonComponentDraftDocument from '../draftDocuments/buttonComponentDraftDocument';
-import {Row, Col} from 'react-flexbox-grid';
-import {COLOR_ITEMS_MENU, COLOR_ITEMS_MENU_BLACK} from './constants';
-import ViewAlerts from '../alerts/alertsComponent';
-import {toggleMenu} from '../navBar/actions';
-import {showButtonCloseMenu} from '../menu/actions';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import MenuListItemFather from './menuListItemFather';
+import { connect } from 'react-redux';
+import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION } from '../alerts/constants';
+import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS } from '../../constantsGlobal';
+import { redirectUrl } from '../globalComponents/actions';
+import { getAlertsByUser } from '../alerts/actions';
+import moment from 'moment';
 import _ from 'lodash';
-
-var menuItems = [];
-var menuItemsCloseSession = [];
 
 const itemManagerialView = {
     text: "Vista gerencial",
-    icon: "bar chart icon",
-    link: "/dashboard/viewManagement",
-    marginTop: "30px",
-    colorItem: COLOR_ITEMS_MENU
+    icon: "bar chart",
+    link: "/dashboard/viewManagement"
 };
 const itemClients = {
     text: "Mis clientes",
-    icon: "building icon",
+    icon: "building",
     link: "/dashboard/clients",
-    marginTop: "30px",
-    colorItem: COLOR_ITEMS_MENU
 };
+const itemMyPendings = {
+    text: "Mis pendientes",
+    icon: "tasks",
+    link: "/dashboard/myPendings"
+};
+const itemDraftDocuments = {
+    text: "Documentos en borrador",
+    icon: "file archive outline",
+    link: "/dashboard/draftDocuments"
+};
+const itemAlerts = {
+    text: "Alertas",
+    icon: "alarm",
+    link: "/dashboard/alerts",
+    children: []
+};
+const childrenAlertPendingUpdate = { text: "Pendiente por actualizar", link: "/dashboard/alertClientPendingUpdate" };
+const childrenAlertPortExpiration = { text: "Vencimiento de cartera", link: "/dashboard/alertClientsPortfolioExpiration" };
+var menuItems = [];
 
-const menuItemCerrarSesion = {
-    text: "Cerrar sesión",
-    icon: "big power icon",
-    link: "/login",
-    marginTop: "20px",
-    colorItem: COLOR_ITEMS_MENU_BLACK
-};
+const menuItemCerrarSesion = [
+    {
+        text: "Cerrar sesión",
+        icon: "power",
+        link: "/login",
+        style: {
+            backgroundColor: "black"
+        }
+    }
+];
 
 class MenuList extends Component {
 
-    constructor(props) {
-        super(props);
-        this.handleLayoutToggle = this.handleLayoutToggle.bind(this);
-    }
-
     _mapMenuItems(item, idx) {
-        return <MenuListItem
+        var children = item.children;
+        if (_.isEqual(item.children, undefined) || _.isEqual(item.children, null)) {
+            children = [];
+        }
+        return <MenuListItemFather
             key={idx}
             iconClassName={item.icon}
             labelText={item.text}
             linkUrl={item.link}
-            marginTop={item.marginTop}
-            colorItem={item.colorItem}
-        />
-    }
-
-    handleLayoutToggle(e) {
-        e.preventDefault();
-        const {toggleMenu} = this.props;
-        toggleMenu();
+            style={item.style}
+            children={children}
+            classIem={item.classIem}
+            />
     }
 
     componentWillMount() {
         menuItems = [];
-        menuItemsCloseSession = [];
-        menuItemsCloseSession.push(menuItemCerrarSesion);
+        const {getAlertsByUser} = this.props;
+        getAlertsByUser();
     }
 
     componentWillReceiveProps(nextProps) {
         menuItems = [];
-        const {navBar} = nextProps;
+        const {navBar, alerts} = nextProps;
         if (_.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW)) {
             menuItems.push(itemManagerialView);
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_CLIENTS)) {
             menuItems.push(itemClients);
         }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
+            menuItems.push(itemAlerts);
+        }
+        menuItems.push(itemMyPendings);
+        menuItems.push(itemDraftDocuments);
+        itemAlerts.children = [];
+        var listAlerts = alerts.get('listAlertByUser');
+        if (!_.isEqual(listAlerts, undefined) && !_.isEqual(listAlerts, null)) {
+            alerts.get('listAlertByUser').map((item, idx) => {
+                if (item.active) {
+                    switch (item.codeAlert) {
+                        case CODE_ALERT_PENDING_UPDATE_CLIENT:
+                            itemAlerts.children.push(childrenAlertPendingUpdate);
+                            break;
+                        case CODE_ALERT_PORTFOLIO_EXPIRATION:
+                            itemAlerts.children.push(childrenAlertPortExpiration);
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+            });
+        }
     }
 
     render() {
-        const {navBar, menuReducer} = this.props;
+        const {navBar} = this.props;
+        const currentDate = moment().locale('es');
         return (
-            <div style={{overflowX: "auto", height: "100%"}}>
-                <Row className="page-sidebar-wrapper"
-                     style={{width: "100%", paddingLeft: '10px'}}>
-                    { menuReducer.get('showCloseMenu') &&
-                    <Col xs={1} md={1} lg={1} style={{marginTop: '13px', marginLeft: '5px', maxWidth: '60px'}}>
-                        <i className="big sidebar icon"
-                           onClick={this.handleLayoutToggle}
-                           style={{cursor: "pointer", color: '#4c5360 !important'}}
-                           title="Cerrar menú"></i>
-                    </Col>
-                    }
-                    <Col xs={11} md={11} lg={11} style={ menuReducer.get('showCloseMenu')  ? {marginTop: '15px'} : {marginTop: '15px', marginLeft: '10px'}}>
-                        <span style={{fontSize: '30px', color: 'black'}}>Biztrack - Menú</span>
-                    </Col>
-                    {menuItems.map(this._mapMenuItems)}
-                    { _.get(navBar.get('mapModulesAccess'), MODULE_ALERTS) &&
-                    <ViewAlerts/>
-                    }
-                    <ButtonComponentMyPending />
-                    <ButtonComponentDraftDocument />
-                    {menuItemsCloseSession.map(this._mapMenuItems)}
-                </Row>
+            <div>
+                <div style={{ overflow: "hidden", height: "100%" }}>
+                    <div className="page-sidebar-wrapper" style={{ width: "100%", height: "100%", marginBottom: '40px' }}>
+                        <ul style={{ width: "100%" }}>
+                            <div>
+                                <li>
+                                    <a className="menuItemStyle">
+                                        <div style={{ paddingTop: '10px' }}>
+                                            <span className="today-label">Hoy</span>
+                                            <span className="today-month" style={{ marginLeft: "10px" }}>{currentDate.format("MMM")}</span>
+                                            <span className="today-date">{currentDate.format("DD")}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </div>
+                            {menuItems.map(this._mapMenuItems)}
+                        </ul>
+                    </div>
+                </div>
+                <div style={{ height: "54px", width: "100%", bottom: "0px", position: "absolute" }}>
+                    <ul style={{ width: "100%", paddingLeft: '0px' }}>
+                        {menuItemCerrarSesion.map(this._mapMenuItems)}
+                    </ul>
+                </div>
             </div>
         )
     }
-}
-function mapStateToProps({navBar, menuReducer}, ownerProps) {
-    return {
-        navBar,
-        menuReducer
-    };
 }
 
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        toggleMenu,
-        showButtonCloseMenu
+        getAlertsByUser
     }, dispatch);
+}
+
+function mapStateToProps({navBar, alerts}, ownerProps) {
+    return {
+        navBar,
+        alerts
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuList);

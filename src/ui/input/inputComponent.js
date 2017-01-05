@@ -33,6 +33,7 @@ class inputComponent extends Component {
                     maxLength={max}
                     style={style}
                     onChange={this._onChange}
+                    disabled={disabled}
                     placeholder={placeholder}
                     onBlur={onBlur}
                     onKeyPress={onKey}

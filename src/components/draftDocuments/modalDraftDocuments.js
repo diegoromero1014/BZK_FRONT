@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import {redirectUrl} from '../globalComponents/actions';
-import {updateTabSeleted} from '../clientDetailsInfo/actions';
-import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator, clearDraftDocument} from './actions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import { redirectUrl } from '../globalComponents/actions';
+import { updateTitleNavBar } from '../navBar/actions';
+import { draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator, clearDraftDocument } from './actions';
 import ListDraftDocuments from './listDraftDocuments';
 import PaginationDraftDocument from './paginationDraftDocuments';
-import {NUMBER_RECORDS} from './constants';
+import { NUMBER_RECORDS } from './constants';
 import _ from 'lodash';
 
 
 class ModalDraftDocuments extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
+    this.state = {
       keywordDraftDocument: '',
     }
     this.consultInfoDraftDocuments = this.consultInfoDraftDocuments.bind(this);
@@ -23,56 +23,56 @@ class ModalDraftDocuments extends Component {
     this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
   }
 
-  _handleChangeKeyword(e){
-    if(e.keyCode === 13 || e.which === 13){
+  _handleChangeKeyword(e) {
+    if (e.keyCode === 13 || e.which === 13) {
       this.consultInfoDraftDocuments();
-    }else{
+    } else {
       this.setState({
         keywordDraftDocument: e.target.value
       });
     }
   }
 
-  componentWillMount(){
-    const {clearDraftDocument} = this.props;
+  componentWillMount() {
+    const {clearDraftDocument, updateTitleNavBar} = this.props;
     clearDraftDocument();
     this.consultInfoDraftDocuments();
-
+    updateTitleNavBar("Mis documentos en borrador");
   }
 
-  consultInfoDraftDocuments(){
+  consultInfoDraftDocuments() {
     const {draftsDocumentsByUser, clearDraftDocumentPaginator} = this.props;
     clearDraftDocumentPaginator();
-    draftsDocumentsByUser(0, NUMBER_RECORDS, this.state.keywordDraftDocument).then( (data) => {
-      if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+    draftsDocumentsByUser(0, NUMBER_RECORDS, this.state.keywordDraftDocument).then((data) => {
+      if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
       }
     });
   }
 
-  _handleDraftDcoumentsFind(){
-      const {draftsDocumentsByUser, clearDraftDocumentPaginator, clearDraftDocumentOrder} = this.props;
-      clearDraftDocumentPaginator();
-      clearDraftDocumentOrder();
-      draftsDocumentsByUser(0, NUMBER_RECORDS, this.state.keywordDraftDocument, null, "");
+  _handleDraftDcoumentsFind() {
+    const {draftsDocumentsByUser, clearDraftDocumentPaginator, clearDraftDocumentOrder} = this.props;
+    clearDraftDocumentPaginator();
+    clearDraftDocumentOrder();
+    draftsDocumentsByUser(0, NUMBER_RECORDS, this.state.keywordDraftDocument, null, "");
   }
 
-  render(){
+  render() {
     const {draftDocumentsReducer} = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
-    if(draftDocumentsReducer.get('rowCount') !== 0 ) {
+    if (draftDocumentsReducer.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
     }
     return (
-      <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
-        <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px'}}>
-          <Grid style={{ width: "100%"}}>
+      <div className="tab-pane quickZoomIn animated" style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
+        <div style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px' }}>
+          <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs={12} sm={12} md={8} lg={8}>
                 <div className="InputAddOn">
-                  <input style={{padding: '0px 11px !important'}} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, número de documento y nombre del cliente"  value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field"/>
+                  <input style={{ padding: '0px 11px !important' }} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, número de documento y nombre del cliente" value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field" />
                   <button onClick={this._handleDraftDcoumentsFind} className="button InputAddOn-item">
                     <i className="search icon" />
                   </button>
@@ -81,18 +81,20 @@ class ModalDraftDocuments extends Component {
             </Row>
           </Grid>
         </div>
-        <Grid style= {{display:visibleTable, width: "100%"}}>
-          <Row>
-            <Col xs>
+        <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px', marginTop: '20px' }}>
+          <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
+            <Col>
               <ListDraftDocuments keyWordParameter={this.state.keywordDraftDocument} />
-              <PaginationDraftDocument keyWordParameter={this.state.keywordDraftDocument} />
-          </Col>
+              <div style={{ marginBottom: '10px' }}>
+                <PaginationDraftDocument keyWordParameter={this.state.keywordDraftDocument} />
+              </div>
+            </Col>
           </Row>
         </Grid>
-        <Grid style= {{display:visibleMessage, width: "100%"}}>
+        <Grid style={{ display: visibleMessage, width: "100%" }}>
           <Row center="xs">
             <Col xs={12} sm={8} md={12} lg={12}>
-              <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span>
+              <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
             </Col>
           </Row>
         </Grid>
@@ -102,17 +104,18 @@ class ModalDraftDocuments extends Component {
 
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     redirectUrl,
     clearDraftDocument,
     draftsDocumentsByUser,
     clearDraftDocumentOrder,
-    clearDraftDocumentPaginator
+    clearDraftDocumentPaginator,
+    updateTitleNavBar
   }, dispatch);
 }
 
-function mapStateToProps({draftDocumentsReducer}, ownerProps){
+function mapStateToProps({draftDocumentsReducer}, ownerProps) {
   return {
     draftDocumentsReducer
   };

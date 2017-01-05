@@ -11,7 +11,6 @@ import {consultInfoClient} from '../clientInformation/actions';
 import {showLoading} from '../loading/actions';
 import {isUndefined, has} from 'lodash';
 import {updateStatusModal} from '../draftDocuments/actions';
-import {showButtonCloseMenu} from '../menu/actions';
 import {toggleMenu} from '../navBar/actions';
 import {MENU_OPENED} from '../navBar/constants';
 
@@ -26,7 +25,7 @@ class ButtonDetailsRedirectComponent extends Component {
     _detailVisit() {
         const {
             actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline, showLoading,
-            updateStatusModal, showButtonCloseMenu, toggleMenu, navBar, menuReducer
+            updateStatusModal, toggleMenu, navBar, menuReducer
         } = this.props;
         showLoading(true, 'Cargando cliente...');
         if (actionsRedirect.typeClickDetail === "visita") {
@@ -68,9 +67,6 @@ class ButtonDetailsRedirectComponent extends Component {
         }
         if (navBar.get('status') === MENU_OPENED) {
             toggleMenu();
-        }
-        if (!menuReducer.get('showCloseMenu')) {
-            showButtonCloseMenu(true);
         }
         updateStatusModal(false);
     }
@@ -114,8 +110,7 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         updateStatusModal,
         redirectUrl,
-        toggleMenu,
-        showButtonCloseMenu
+        toggleMenu
     }, dispatch);
 }
 
