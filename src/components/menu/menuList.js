@@ -118,7 +118,7 @@ class MenuList extends Component {
                         <ul style={{ width: "100%" }}>
                             <div style={{ marginBottom: '24px', textAlign: 'center' }}>
                                 <li>
-                                    <div style={{ paddingTop: '10px', marginLeft: '-15px' }}>
+                                    <div style={{ paddingTop: '10px', marginLeft: '-10px' }}>
                                         <span style={{ fontSize: '20px', color: 'white' }}>Hoy</span>
                                         <span style={{ marginLeft: "10px", fontSize: '20px', color: 'white' }}>{currentDate.format("MMMM")}</span>
                                         <span style={{ marginLeft: "5px", fontSize: '20px', color: 'white' }}>{currentDate.format("DD")}</span>
