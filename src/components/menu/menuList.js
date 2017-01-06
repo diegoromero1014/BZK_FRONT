@@ -116,7 +116,7 @@ class MenuList extends Component {
                 <div style={{ overflow: "hidden", height: "100%" }}>
                     <div className="page-sidebar-wrapper" style={{ width: "100%", height: "100%", marginBottom: '40px' }}>
                         <ul style={{ width: "100%" }}>
-                            <div style={{ marginBottom: '12px', textAlign: 'center' }}>
+                            <div style={{ marginBottom: '24px', textAlign: 'center' }}>
                                 <li>
                                     <div style={{ paddingTop: '10px', marginLeft: '-15px' }}>
                                         <span style={{ fontSize: '20px', color: 'white' }}>Hoy</span>
