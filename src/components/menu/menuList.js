@@ -116,15 +116,13 @@ class MenuList extends Component {
                 <div style={{ overflow: "hidden", height: "100%" }}>
                     <div className="page-sidebar-wrapper" style={{ width: "100%", height: "100%", marginBottom: '40px' }}>
                         <ul style={{ width: "100%" }}>
-                            <div>
+                            <div style={{ marginBottom: '12px', textAlign: 'center' }}>
                                 <li>
-                                    <a className="menuItemStyle">
-                                        <div style={{ paddingTop: '10px' }}>
-                                            <span className="today-label">Hoy</span>
-                                            <span className="today-month" style={{ marginLeft: "10px" }}>{currentDate.format("MMM")}</span>
-                                            <span className="today-date">{currentDate.format("DD")}</span>
-                                        </div>
-                                    </a>
+                                    <div style={{ paddingTop: '10px', marginLeft: '-15px' }}>
+                                        <span style={{ fontSize: '20px', color: 'white' }}>Hoy</span>
+                                        <span style={{ marginLeft: "10px", fontSize: '20px', color: 'white' }}>{currentDate.format("MMMM")}</span>
+                                        <span style={{ marginLeft: "5px", fontSize: '20px', color: 'white' }}>{currentDate.format("DD")}</span>
+                                    </div>
                                 </li>
                             </div>
                             {menuItems.map(this._mapMenuItems)}
