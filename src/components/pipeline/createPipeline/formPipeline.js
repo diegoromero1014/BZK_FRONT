@@ -127,8 +127,8 @@ class FormPipeline extends Component {
   _cleanForm() {
     const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
     businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
-    priority, registeredCountry, startDate, client, documentStatus}} = this.props;
-
+    priority, registeredCountry, startDate, client, documentStatus, probability, pendingDisburAmount, amountDisbursed,
+    estimatedDisburDate, entity, contract}} = this.props;
     nameUsuario.onChange('');
     idUsuario.onChange('');
     value.onChange('');
@@ -151,6 +151,12 @@ class FormPipeline extends Component {
     documentStatus.onChange('');
     contollerErrorChangeType = false;
     idCurrencyAux = null;
+    probability.onChange('');
+    pendingDisburAmount.onChange('');
+    amountDisbursed.onChange('');
+    estimatedDisburDate.onChange('');
+    entity.onChange('');
+    contract.onChange('');
   }
 
   _changeCurrency(currencyValue) {
