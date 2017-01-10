@@ -22,12 +22,10 @@ const itemClients = {
 const itemMyPendings = {
     text: "Mis pendientes",
     icon: "tasks",
-    link: "/dashboard/myPendings"
-};
-const itemDraftDocuments = {
-    text: "Documentos en borrador",
-    icon: "file archive outline",
-    link: "/dashboard/draftDocuments"
+    children: [
+        { text: "Mis tareas", link: "/dashboard/myPendings" },
+        { text: "Documentos en borrador", link: "/dashboard/draftDocuments" }
+    ]
 };
 const itemAlerts = {
     text: "Alertas",
@@ -87,7 +85,6 @@ class MenuList extends Component {
             menuItems.push(itemAlerts);
         }
         menuItems.push(itemMyPendings);
-        menuItems.push(itemDraftDocuments);
         itemAlerts.children = [];
         var listAlerts = alerts.get('listAlertByUser');
         if (!_.isEqual(listAlerts, undefined) && !_.isEqual(listAlerts, null)) {

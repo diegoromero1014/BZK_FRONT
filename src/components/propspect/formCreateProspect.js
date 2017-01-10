@@ -597,7 +597,6 @@ class FormCreateProspect extends Component{
             </div>
           </Col>
         </Row>
-        { navBar.get('status') === MENU_CLOSED &&
         <div style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "300px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed"}} type="submit">
@@ -611,7 +610,6 @@ class FormCreateProspect extends Component{
             </button>
           </div>
         </div>
-        }
         <SweetAlert
             type= "warning"
             show={this.state.show}

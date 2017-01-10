@@ -8,6 +8,7 @@ import { tasksByUser, clearMyPendingsOrder, clearMyPendingPaginator, clearPendin
 import { NUMBER_RECORDS } from './constants';
 import ListPendingTaskComponent from './listMyPendingComponent';
 import PaginationPendingTask from './paginationPendingTask';
+import {GRREN_COLOR, ORANGE_COLOR, RED_COLOR} from '../../constantsGlobal';
 import _ from 'lodash';
 
 class ModalComponentPending extends Component {
@@ -20,6 +21,7 @@ class ModalComponentPending extends Component {
     this.consultInfoMyPendingTask = this.consultInfoMyPendingTask.bind(this);
     this._handleMyPendingByClientsFind = this._handleMyPendingByClientsFind.bind(this);
     this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+    this._cleanSearch = this._cleanSearch.bind(this);
   }
 
   _handleChangeKeyword(e) {
@@ -37,7 +39,6 @@ class ModalComponentPending extends Component {
     clearPendingTask();
     this.consultInfoMyPendingTask();
     updateTitleNavBar("Mis pendientes");
-
   }
 
   consultInfoMyPendingTask() {
@@ -57,6 +58,14 @@ class ModalComponentPending extends Component {
     tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "");
   }
 
+  _cleanSearch() {
+    this.setState({ keywordMyPending: ""});
+    const {tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder} = this.props;
+    clearMyPendingPaginator();
+    clearMyPendingsOrder();
+    tasksByUser(0, NUMBER_RECORDS, "", null, "");
+  }
+
   render() {
     const {myPendingsReducer} = this.props;
     var visibleTable = 'none';
@@ -70,7 +79,7 @@ class ModalComponentPending extends Component {
         <div style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
-              <Col xs={12} sm={12} md={8} lg={8}>
+              <Col xs={12} sm={12} md={6} lg={6}>
                 <div className="InputAddOn">
                   <input style={{ padding: '0px 11px !important' }} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente" value={this.state.keywordMyPending} onChange={this._handleChangeKeyword} className="input InputAddOn-field" />
                   <button onClick={this._handleMyPendingByClientsFind} className="button InputAddOn-item">
@@ -78,18 +87,25 @@ class ModalComponentPending extends Component {
                   </button>
                 </div>
               </Col>
+              <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                  title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                  <i className="erase icon"
+                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                </button>
+              </Col>
               <Col xs={12} sm={12} md={3} lg={3}>
                 <div style={{ height: '80px', marginLeft: '30px' }} >
                   <Row>
-                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'red' }}></div>
+                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: RED_COLOR }}></div>
                     <span style={{ marginLeft: '10px' }}> Tarea vencida</span>
                   </Row>
                   <Row style={{ marginTop: "5px" }}>
-                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'orange' }}></div>
+                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: ORANGE_COLOR }}></div>
                     <span style={{ marginLeft: '10px' }}> Tarea próxima a vencerse</span>
                   </Row>
                   <Row style={{ marginTop: "5px" }}>
-                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: 'green' }}></div>
+                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: GRREN_COLOR }}></div>
                     <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
                   </Row>
                 </div>
@@ -99,7 +115,7 @@ class ModalComponentPending extends Component {
         </div>
         <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px', marginTop: '20px' }}>
           <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
-            <Col>
+            <Col style={{width: '100%'}}>
               <ListPendingTaskComponent keyWordParameter={this.state.keywordMyPending} />
               <div style={{ marginBottom: '10px' }}>
                 <PaginationPendingTask keyWordParameter={this.state.keywordMyPending} />
@@ -109,7 +125,7 @@ class ModalComponentPending extends Component {
         </Grid>
         <Grid style={{ display: visibleMessage, width: "100%" }}>
           <Row center="xs">
-            <Col xs={12} sm={8} md={12} lg={12}>
+            <Col xs={12} sm={8} md={12} lg={12} style={{marginTop: '15px'}}>
               <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
             </Col>
           </Row>

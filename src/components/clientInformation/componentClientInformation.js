@@ -7,10 +7,11 @@ import TabClientInfo from './tabClientInfo';
 import {updateTitleNavBar,viewAlertClient} from '../navBar/actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
-import $ from 'jquery';
-import _ from 'lodash';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
+import { ORANGE_COLOR, BLUE_COLOR } from '../../constantsGlobal';
+import $ from 'jquery';
+import _ from 'lodash';
 
 class ComponentClientInformation extends Component{
   constructor(props) {
@@ -113,13 +114,13 @@ class ComponentClientInformation extends Component{
               <table style={infoClient.economicGroup !== null ? {height: '100%', width: '50%', float: 'right'} : {height: '50%', width: '50%', float: 'right'}}>
                 <tbody>
                   <tr>
-                    <td style={{marginTop: "0px", backgroundColor: "#E79C29", borderRadius: "0px"}}>
+                    <td style={{marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px"}}>
                       <ButtonTeamComponent />
                     </td>
                   </tr>
                   {infoClient.economicGroup &&
                     <tr>
-                      <td style={{marginTop: "0px", backgroundColor: "#2671D7", borderRadius: "0px"}}>
+                      <td style={{marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px"}}>
                         <ButtonEconomicgroup />
                       </td>
                     </tr>

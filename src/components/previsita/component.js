@@ -106,7 +106,7 @@ class PrevisitComponent extends Component {
             </Col>
           </Row>
         </Grid>
-        { navBar.get('status') === MENU_CLOSED && _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
+        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), DESCARGAR), false) &&
           <ButtonCreateDownloadPreVisitModal visibleDownload={visibleDownload} />
         }
         <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />

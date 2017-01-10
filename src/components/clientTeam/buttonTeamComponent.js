@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalComponentTeam from './modalComponentTeam';
+import {ORANGE_COLOR} from '../../constantsGlobal';
 
 class buttonTeamComponent extends Component {
 
@@ -28,7 +29,7 @@ class buttonTeamComponent extends Component {
     const {toggleModalShareholder, disabled} = this.props;
     return (
         <div>
-          <button className="btn btn-primary" type="button" title="Ver célula" style={{backgroundColor: "#E79C29", borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
+          <button className="btn btn-primary" type="button" title="Ver célula" style={{backgroundColor: ORANGE_COLOR, borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
             <i className="users outline icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
           </button>
 

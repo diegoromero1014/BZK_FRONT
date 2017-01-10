@@ -17,6 +17,10 @@ export const SESSION_EXPIRED = "-2";
 export const MESSAGE_SAVE_DATA = "Guardando información";
 export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
+export const BLUE_COLOR = "#337ab7";
+export const GRREN_COLOR = "#5cb85c";
+export const ORANGE_COLOR = "#f0ad4e";
+export const RED_COLOR = "#d9534f";
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +

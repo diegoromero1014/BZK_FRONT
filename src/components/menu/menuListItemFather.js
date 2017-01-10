@@ -24,7 +24,9 @@ class MenuListItemFather extends Component {
         if (linkUrl === "/login") {
             window.localStorage.setItem('sessionToken', '');
         }
-        redirectUrl(linkUrl);
+        if( !_.isEqual(linkUrl, undefined) && !_.isEqual(linkUrl, null) ){
+            redirectUrl(linkUrl);
+        }
     }
 
     _mapMenuItemsChildren(item, idx) {

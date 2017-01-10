@@ -21,6 +21,7 @@ class ModalDraftDocuments extends Component {
     this.consultInfoDraftDocuments = this.consultInfoDraftDocuments.bind(this);
     this._handleDraftDcoumentsFind = this._handleDraftDcoumentsFind.bind(this);
     this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+    this._cleanSearch = this._cleanSearch.bind(this);
   }
 
   _handleChangeKeyword(e) {
@@ -57,6 +58,14 @@ class ModalDraftDocuments extends Component {
     draftsDocumentsByUser(0, NUMBER_RECORDS, this.state.keywordDraftDocument, null, "");
   }
 
+  _cleanSearch() {
+    this.setState({ keywordDraftDocument: ""});
+    const {draftsDocumentsByUser, clearDraftDocumentPaginator, clearDraftDocumentOrder} = this.props;
+    clearDraftDocumentPaginator();
+    clearDraftDocumentOrder();
+    draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
+  }
+
   render() {
     const {draftDocumentsReducer} = this.props;
     var visibleTable = 'none';
@@ -70,7 +79,7 @@ class ModalDraftDocuments extends Component {
         <div style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
-              <Col xs={12} sm={12} md={8} lg={8}>
+              <Col xs={12} sm={12} md={6} lg={6}>
                 <div className="InputAddOn">
                   <input style={{ padding: '0px 11px !important' }} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por informe, tipo de documento, número de documento y nombre del cliente" value={this.state.keywordDraftDocument} onChange={this._handleChangeKeyword} className="input InputAddOn-field" />
                   <button onClick={this._handleDraftDcoumentsFind} className="button InputAddOn-item">
@@ -78,12 +87,19 @@ class ModalDraftDocuments extends Component {
                   </button>
                 </div>
               </Col>
+              <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                  title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                  <i className="erase icon"
+                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                </button>
+              </Col>
             </Row>
           </Grid>
         </div>
         <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px', marginTop: '20px' }}>
           <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
-            <Col>
+            <Col style={{width: '100%'}}>
               <ListDraftDocuments keyWordParameter={this.state.keywordDraftDocument} />
               <div style={{ marginBottom: '10px' }}>
                 <PaginationDraftDocument keyWordParameter={this.state.keywordDraftDocument} />

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import { redirectUrl } from '../globalComponents/actions';
+import _ from 'lodash';
 
 class MenuListItemChildren extends Component {
 
@@ -9,14 +10,16 @@ class MenuListItemChildren extends Component {
         if (linkUrl === "/login") {
             window.localStorage.setItem('sessionToken', '');
         }
-        redirectUrl(linkUrl);
+        if( !_.isEqual(linkUrl, undefined) && !_.isEqual(linkUrl, null) ){
+            redirectUrl(linkUrl);
+        }
     }
 
     render() {
         const {labelText, linkUrl, style} = this.props;
         return (
             <li onClick={this._handleClickMenuItemChildren.bind(this)} className="cursorMenuList">
-                <a className="menuItemStyle">
+                <a className="menuItemStyle" style={{paddingLeft: '5px !important'}}>
                     <div  style={{paddingTop: '8px'}}>
                         <span className="title">{labelText}</span>
                     </div>

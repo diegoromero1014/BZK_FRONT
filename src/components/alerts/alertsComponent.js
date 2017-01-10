@@ -17,7 +17,7 @@ import { updateNumberTotalClients } from '../alertPendingUpdateClient/actions';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION } from './constants';
 import * as constants from '../selectsComponent/constants';
 import { validatePermissionsByModule } from '../../actionsGlobal';
-import { MODULE_ALERTS, MODULE_CLIENTS } from '../../constantsGlobal';
+import { MODULE_ALERTS, MODULE_CLIENTS, BLUE_COLOR } from '../../constantsGlobal';
 import { COLOR_ITEMS_MENU } from '../menu/constants';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import { consultList } from '../selectsComponent/actions';
@@ -99,13 +99,13 @@ class ViewAlerts extends Component {
                     case CODE_ALERT_PENDING_UPDATE_CLIENT:
                         countAlerts = countAlerts + 1;
                         const iconClientsPending = <i className='users icon' style={{ fontSize: "50px", marginTop: '50px', marginLeft: "18px" }} />;
-                        return this.paintItemAlert(item, idx, iconClientsPending, "15px", "#086A87",
+                        return this.paintItemAlert(item, idx, iconClientsPending, "15px", BLUE_COLOR,
                             "/dashboard/alertClientPendingUpdate", this._cleanFilterClientPendingUpdate, FORM_FILTER_ALERT_PUC);
                         break;
                     case CODE_ALERT_PORTFOLIO_EXPIRATION:
                         countAlerts = countAlerts + 1;
                         const iconPortfolioExp = <PortfolioExpirationIcon />;
-                        return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", "#086A87",
+                        return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", BLUE_COLOR,
                             "/dashboard/alertClientsPortfolioExpiration", this._cleanFilterPortfolioExpiration, FORM_FILTER_ALERT_PE);
                         break;
                     default:

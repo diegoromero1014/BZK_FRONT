@@ -106,7 +106,7 @@ class PipelineComponent extends Component {
             <Col xs={12} sm={8} md={12} lg={12}><span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span></Col>
             </Row>
           </Grid>
-          { navBar.get('status') === MENU_CLOSED && _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
+          { _.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), DESCARGAR), false) &&
             <ButtonDownloadPipelineComponent visibleDownload={visibleDownload}/>
           }
           <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
