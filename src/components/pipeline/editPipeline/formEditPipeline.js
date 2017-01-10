@@ -10,12 +10,16 @@ import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
-import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS} from '../../selectsComponent/constants';
-import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
-import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW} from '../constants';
+import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS,
+   PROBABILITY, LINE_OF_BUSINESS} from '../../selectsComponent/constants';
+import {consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
+  getClientNeeds} from '../../selectsComponent/actions';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT,
+  DATE_START_AFTER, MESSAGE_SAVE_DATA, EDITAR, ONLY_POSITIVE_INTEGER} from '../../../constantsGlobal';
+import {PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW, CURRENCY_LABEL_COP, CURRENCY_COP,
+  CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING} from '../constants';
 import {createEditPipeline, getPipelineById, pdfDescarga} from '../actions';
-import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber} from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import {filterUsersBanco} from '../../participantsVisitPre/actions';
@@ -29,7 +33,7 @@ const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", 
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
-    "positionUpdatedBy"];
+    "positionUpdatedBy", "probability", "pendingDisburAmount", "amountDisbursed", "estimatedDisburDate", "entity", "contract"];
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -92,7 +96,9 @@ class FormEditPipeline extends Component {
 			showConfirm: false,
 			employeeResponsible: false,
 			showConfirmChangeCurrency: false,
-      errorBusinessPipeline: null
+      errorBusinessPipeline: null,
+      labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
+      visibleContract: false
 		};
 
 		this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -110,6 +116,7 @@ class FormEditPipeline extends Component {
   	this._handleTermInMonths = this._handleTermInMonths.bind(this);
   	this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
   	this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
+    this._changeEntity = this._changeEntity.bind(this);
 	}
 
 	_closeMessageCreatePipeline() {
@@ -127,7 +134,18 @@ class FormEditPipeline extends Component {
 	 }
 
 	_changeCurrency(currencyValue) {
-    const {fields: {value}} = this.props;
+    const {fields: {value}, selectsReducer} = this.props;
+    var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
+    var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
+    if(codeCurrency === CURRENCY_COP){
+      this.setState({
+  			labelCurrency: CURRENCY_LABEL_COP
+  		});
+    }else{
+      this.setState({
+  			labelCurrency: CURRENCY_LABEL_OTHER_OPTION
+  		});
+    }
     if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
     }
@@ -157,6 +175,23 @@ class FormEditPipeline extends Component {
     var input = lugarSelector.find("input");
     input.focus();
 	}
+
+  _changeEntity(val){
+    const {fields:{contract}, selectsReducer} = this.props;
+    var linesOfBusiness = selectsReducer.get(LINE_OF_BUSINESS)
+    var lineOfBusinessSelected = _.get(_.filter(linesOfBusiness, ['id', parseInt(val)]), '[0].key');
+    if(lineOfBusinessSelected === LINE_OF_BUSINESS_LEASING){
+      this.setState({
+          visibleContract: true
+      });
+    }else{
+      this.setState({
+          visibleContract: false
+      });
+      contract.onChange("");
+    }
+  }
+
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
     //Elimino los caracteres no validos
@@ -260,7 +295,8 @@ class FormEditPipeline extends Component {
 	_submitCreatePipeline() {
 		const {initialValues, fields: {id, idUsuario, value, commission, roe, termInMonths, businessStatus,
 		  businessWeek, currency, indexing, endDate, need, observations, business, product,
-		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario
+		  priority, registeredCountry, startDate, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
+      estimatedDisburDate, entity, contract
 		}, createEditPipeline, changeStateSaveData} = this.props;
 
 	    if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
@@ -289,7 +325,13 @@ class FormEditPipeline extends Component {
   	  		"termInMonths": termInMonths.value === undefined ? null : numeral(termInMonths.value).format('0'),
   	  		"value": value.value === undefined ? null : (value.value).replace(/,/g, ""),
   	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-  	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x'))
+  	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
+          "probability": probability.value,
+          "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? '' : numeral(pendingDisburAmount.value).format('0.0000'),
+          "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? '' : numeral(amountDisbursed.value).format('0.0000'),
+          "entity": entity.value,
+          "contract": contract.value,
+          "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
   	  	};
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
   	  	createEditPipeline(pipelineJson).then((data)=> {
@@ -305,7 +347,7 @@ class FormEditPipeline extends Component {
   	  	      } else {
   	  	        typeMessage = "error";
   	  	        titleMessage = "Edición pipeline";
-  	  	        message = "Señor usuario, ocurrió un error creando el pipeline.";
+  	  	        message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
   	  	        this.setState({showMessageCreatePipeline :true});
   	  	      }
   	  	    }
@@ -313,7 +355,7 @@ class FormEditPipeline extends Component {
             changeStateSaveData(false, "");
   	  	    typeMessage = "error";
   	  	    titleMessage = "Edición pipeline";
-  	  	    message = "Señor usuario, ocurrió un error creando del pipeline.";
+  	  	    message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
   	  	    this.setState({showMessageCreatePipeline :true});
   	  	  });
         }
@@ -400,7 +442,7 @@ class FormEditPipeline extends Component {
 		if(_.isEmpty(infoClient)) {
 		    redirectUrl("/dashboard/clientInformation");
 		} else {
-		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS]);
+		  getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS]);
 		}
 		getPipelineById(id).then(function(data){
       const pipeline = _.get(data, 'payload.data.data');
@@ -434,10 +476,9 @@ class FormEditPipeline extends Component {
             businessWeek, currency, indexing, endDate, need, observations, business, product,
             priority, registeredCountry, startDate, client, documentStatus,
         		updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-            positionUpdatedBy},
+            positionUpdatedBy, probability, entity, pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract},
             clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar} = this.props;
-
-		const ownerDraft = pipelineReducer.get('ownerDraft');
+    const ownerDraft = pipelineReducer.get('ownerDraft');
 		let fechaModString = '';
 		if(updatedTimestamp.value !== null) {
 			let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
@@ -449,7 +490,7 @@ class FormEditPipeline extends Component {
 			fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
 		}
 
-        return(
+    return(
 			<form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
 				style={{backgroundColor: "#FFFFFF", paddingTop:"10px", width: "100%", paddingBottom: "50px"}}>
     		<Row style={{padding: "5px 10px 0px 20px"}}>
@@ -552,7 +593,7 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Interés / Comisión</span>
+				        <span>Interés / Spread</span>
 				      </dt>
 				      <Input
 				        name="commission"
@@ -667,8 +708,6 @@ class FormEditPipeline extends Component {
 				      />
 				    </div>
 				  </Col>
-				</Row>
-				<Row style={{padding: "0px 10px 20px 20px"}}>
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
@@ -687,6 +726,58 @@ class FormEditPipeline extends Component {
 				    </div>
 				  </Col>
 				</Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Probabilidad</span>
+              </dt>
+              <ComboBox
+                name="comboProbability"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...probability}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(PROBABILITY) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
+              />
+            </div>
+          </Col>
+          <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
+            <dt>
+              <span>Entidad</span>
+            </dt>
+            <dt>
+              <ComboBox
+                name="comboEntity"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...entity}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(LINE_OF_BUSINESS) || []}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
+                onChange={val => this._changeEntity(val)}
+              />
+            </dt>
+          </Col>
+          <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? {paddingRight: "20px", display: "block"} : {display: "none"}}>
+            <dt>
+              <span>Contrato</span>
+            </dt>
+            <dt>
+              <Input
+                name="txtContract"
+                type="text"
+                {...contract}
+                max="50"
+                parentId="dashboardComponentScroll"
+				        disabled={this.state.isEditable ? '' : 'disabled'}
+              />
+            </dt>
+          </Col>
+        </Row>
 				<Row style={{padding: "20px 23px 20px 20px"}}>
 				  <Col xs={12} md={12} lg={12}>
 				    <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -718,7 +809,7 @@ class FormEditPipeline extends Component {
 				  <Col xs={6} md={3} lg={3}>
 				    <div style={{paddingRight: "15px"}}>
 				      <dt>
-				        <span>Valor en millones (</span><span style={{color: "red"}}>*</span>)
+				        <span>{this.state.labelCurrency} (</span><span style={{color: "red"}}>*</span>)
 				      </dt>
 				      <Input
                 {...value}
@@ -778,7 +869,59 @@ class FormEditPipeline extends Component {
 				      />
 				    </dt>
 				  </Col>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Monto pendiente por desembolsar</span>
+              </dt>
+              <Input
+                name="txtPendingDisburAmount"
+                type="text"
+                {...pendingDisburAmount}
+                max="28"
+                parentId="dashboardComponentScroll"
+                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
+              />
+            </div>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Monto desembolsado</span>
+              </dt>
+              <Input
+                name="txtAmountDisbursed"
+                type="text"
+                {...amountDisbursed}
+                max="28"
+                parentId="dashboardComponentScroll"
+                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, amountDisbursed, amountDisbursed.value, true, 2)}
+                onFocus={val => this._handleFocusValueNumber(amountDisbursed, amountDisbursed.value)}
+				        disabled={this.state.isEditable ? '' : 'disabled'}
+              />
+            </div>
+          </Col>
 				</Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
+              </dt>
+              <dt>
+                <DateTimePickerUi
+                  {...estimatedDisburDate}
+                  culture='es'
+                  format={DATE_FORMAT}
+                  time={false}
+  				        disabled={this.state.isEditable ? '' : 'disabled'}
+                />
+              </dt>
+            </div>
+          </Col>
+        </Row>
 				<Row style={{padding: "20px 23px 20px 20px"}}>
 				  <Col xs={12} md={12} lg={12}>
 				    <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
@@ -888,18 +1031,18 @@ class FormEditPipeline extends Component {
 		  onConfirm={this._closeConfirmClosePipeline}
 		/>
 		<SweetAlert
-          type="warning"
-          show={this.state.showConfirmChangeCurrency}
-          title={titleMessage}
-          text={message}
-          confirmButtonColor= '#DD6B55'
-          confirmButtonText= 'Sí, estoy seguro!'
-          cancelButtonText = "Cancelar"
-          showCancelButton= {true}
-          onCancel= {this._closeCancelConfirmChanCurrency}
-          onConfirm={this._closeConfirmChangeCurrency}
-        />
-			</form>
+      type="warning"
+      show={this.state.showConfirmChangeCurrency}
+      title={titleMessage}
+      text={message}
+      confirmButtonColor= '#DD6B55'
+      confirmButtonText= 'Sí, estoy seguro!'
+      cancelButtonText = "Cancelar"
+      showCancelButton= {true}
+      onCancel= {this._closeCancelConfirmChanCurrency}
+      onConfirm={this._closeConfirmChangeCurrency}
+    />
+	   </form>
 		);
 	}
 }
@@ -962,32 +1105,38 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
               positionCreatedBy: pipeline.positionCreatedBy,
               positionUpdatedBy: pipeline.positionUpdatedBy,
   	  		    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-	            business: ''
+	            business: '',
+              probability: pipeline.probability,
+              entity: pipeline.entity,
+              pendingDisburAmount: fomatInitialStateNumber(pipeline.pendingDisburAmount),
+              amountDisbursed: fomatInitialStateNumber(pipeline.amountDisbursed),
+              estimatedDisburDate: moment(pipeline.estimatedDisburDate).format(DATE_FORMAT),
+              contract: pipeline.contract
 	  	      }
 	  	    };
 	    } else {
 	      return {
-	  	      clientInformacion,
-	  	      selectsReducer,
-	  	      contactsByClient,
-	  	      pipelineReducer,
-	  	      pdfDescarga,
-	  	      consultParameterServer,
-			  reducerGlobal,
-              navBar
-	  	    };
+  	      clientInformacion,
+  	      selectsReducer,
+  	      contactsByClient,
+  	      pipelineReducer,
+  	      pdfDescarga,
+  	      consultParameterServer,
+          reducerGlobal,
+          navBar
+  	    };
 	    }
 	} else {
 		return {
-	      clientInformacion,
-	      selectsReducer,
-	      contactsByClient,
-	      pipelineReducer,
-	      pdfDescarga,
-	      consultParameterServer,
+      clientInformacion,
+      selectsReducer,
+      contactsByClient,
+      pipelineReducer,
+      pdfDescarga,
+      consultParameterServer,
 			reducerGlobal,
 			navBar
-	  	};
+  	};
 	}
 }
 

@@ -8,12 +8,13 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS} from '../../selectsComponent/constants';
+import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS} from '../../selectsComponent/constants';
 import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
-import {LAST_PIPELINE_REVIEW} from '../constants';
+import {LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING} from '../constants';
 import {createEditPipeline} from '../actions';
-import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
-import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER,
+  MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER} from '../../../constantsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber} from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
@@ -26,7 +27,8 @@ import numeral from 'numeral';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product", "reviewedDate",
-    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability"];
+    "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability", "pendingDisburAmount", "amountDisbursed",
+    "estimatedDisburDate", "entity", "contract"];
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -89,7 +91,9 @@ class FormPipeline extends Component {
       showConfirm: false,
       employeeResponsible: false,
       showConfirmChangeCurrency: false,
-      errorBusinessPipeline: null
+      errorBusinessPipeline: null,
+      labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
+      visibleContract: false
     };
 
     this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -101,6 +105,7 @@ class FormPipeline extends Component {
     this._onCloseButton = this._onCloseButton.bind(this);
     this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
     this._changeCurrency = this._changeCurrency.bind(this);
+    this._changeEntity = this._changeEntity.bind(this);
     this._handleTermInMonths = this._handleTermInMonths.bind(this);
     this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
     this._cleanForm = this._cleanForm.bind(this);
@@ -122,8 +127,8 @@ class FormPipeline extends Component {
   _cleanForm() {
     const {initialValues, fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
     businessWeek, currency, indexing, endDate, need, observations, product, reviewedDate,
-    priority, registeredCountry, startDate, client, documentStatus}} = this.props;
-
+    priority, registeredCountry, startDate, client, documentStatus, probability, pendingDisburAmount, amountDisbursed,
+    estimatedDisburDate, entity, contract}} = this.props;
     nameUsuario.onChange('');
     idUsuario.onChange('');
     value.onChange('');
@@ -146,17 +151,32 @@ class FormPipeline extends Component {
     documentStatus.onChange('');
     contollerErrorChangeType = false;
     idCurrencyAux = null;
+    probability.onChange('');
+    pendingDisburAmount.onChange('');
+    amountDisbursed.onChange('');
+    estimatedDisburDate.onChange('');
+    entity.onChange('');
+    contract.onChange('');
   }
 
   _changeCurrency(currencyValue) {
-    const {fields: {value}} = this.props;
+    const {fields: {value}, selectsReducer} = this.props;
+    var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
+    var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
+    if(codeCurrency === CURRENCY_COP){
+      this.setState({
+        labelCurrency: CURRENCY_LABEL_COP
+      });
+    }else{
+      this.setState({
+        labelCurrency: CURRENCY_LABEL_OTHER_OPTION
+      });
+    }
     if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
     }
-
     if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
       contollerErrorChangeType = true;
-
       if (idCurrencyAux !== null && value.value !== '') {
         titleMessage = "Tipo de moneda";
         message = "Señor usuario, sí cambia la “Moneda” la información diligenciada en el “Valor” se borrará. ¿Está seguro que desea cambiar la Moneda?";
@@ -180,6 +200,22 @@ class FormPipeline extends Component {
     var lugarSelector = $('.valueMillions');
     var input = lugarSelector.find("input");
     input.focus();
+  }
+
+  _changeEntity(val){
+    const {fields:{contract}, selectsReducer} = this.props;
+    var linesOfBusiness = selectsReducer.get(LINE_OF_BUSINESS)
+    var lineOfBusinessSelected = _.get(_.filter(linesOfBusiness, ['id', parseInt(val)]), '[0].key');
+    if(lineOfBusinessSelected === LINE_OF_BUSINESS_LEASING){
+      this.setState({
+          visibleContract: true
+      });
+    }else{
+      this.setState({
+          visibleContract: false
+      });
+      contract.onChange("");
+    }
   }
 
   _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
@@ -285,7 +321,8 @@ class FormPipeline extends Component {
   _submitCreatePipeline() {
     const {fields: {idUsuario, value, commission, roe, termInMonths, businessStatus,
       businessWeek, currency, indexing, endDate, need, observations, business, product,
-      priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario
+      priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario, pendingDisburAmount, amountDisbursed,
+      estimatedDisburDate, entity, contract
     }, createEditPipeline, changeStateSaveData} = this.props;
 
     if((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)){
@@ -315,6 +352,12 @@ class FormPipeline extends Component {
           "value": value.value === undefined ? null : numeral(value.value).format('0'),
           "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
           "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
+          "probability": probability.value,
+          "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? '' : numeral(pendingDisburAmount.value).format('0.0000'),
+          "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? '' : numeral(amountDisbursed.value).format('0.0000'),
+          "entity": entity.value,
+          "contract": this.state.visibleContract ? contract.value : "",
+          "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
         };
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createEditPipeline(pipelineJson).then((data)=> {
@@ -330,7 +373,7 @@ class FormPipeline extends Component {
             } else {
               typeMessage = "error";
               titleMessage = "Creación pipeline";
-              message = "Señor usuario, ocurrió un error creando el pipeline.";
+              message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
               this.setState({showMessageCreatePipeline :true});
             }
           }
@@ -338,7 +381,7 @@ class FormPipeline extends Component {
           changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación pipeline";
-          message = "Señor usuario, ocurrió un error creando del pipeline.";
+          message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
           this.setState({showMessageCreatePipeline :true});
         });
       }
@@ -431,9 +474,9 @@ class FormPipeline extends Component {
       errorBusinessPipeline: null
     });
     if(_.isEmpty(infoClient)) {
-        redirectUrl("/dashboard/clientInformation");
+      redirectUrl("/dashboard/clientInformation");
     } else {
-      getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS]);
+      getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS]);
       consultParameterServer(LAST_PIPELINE_REVIEW).then((data)=> {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
@@ -447,7 +490,8 @@ class FormPipeline extends Component {
   render() {
     const { fields: {nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
               businessWeek, currency, indexing, endDate, need, observations, business, product,
-              priority, registeredCountry, startDate, client, documentStatus, probability},
+              priority, registeredCountry, startDate, client, documentStatus, probability, entity,
+              pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract},
           clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar} = this.props;
 
     return(
@@ -540,7 +584,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Interés / Comisión</span>
+                <span>Interés / Spread</span>
               </dt>
               <Input
                 name="commission"
@@ -652,8 +696,6 @@ class FormPipeline extends Component {
               />
             </div>
           </Col>
-        </Row>
-        <Row style={{padding: "0px 10px 20px 20px"}}>
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
@@ -669,6 +711,55 @@ class FormPipeline extends Component {
                 data={[{id: true, value: 'Si'}, {id:false, value: 'No'}]}
               />
             </div>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Probabilidad</span>
+              </dt>
+              <ComboBox
+                name="comboProbability"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...probability}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(PROBABILITY) || []}
+              />
+            </div>
+          </Col>
+          <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
+            <dt>
+              <span>Entidad</span>
+            </dt>
+            <dt>
+              <ComboBox
+                name="comboEntity"
+                labelInput="Seleccione..."
+                valueProp={'id'}
+                textProp={'value'}
+                {...entity}
+                parentId="dashboardComponentScroll"
+                data={selectsReducer.get(LINE_OF_BUSINESS) || []}
+                onChange={val => this._changeEntity(val)}
+              />
+            </dt>
+          </Col>
+          <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? {paddingRight: "20px", display: "block"} : {display: "none"}}>
+            <dt>
+              <span>Contrato</span>
+            </dt>
+            <dt>
+              <Input
+                name="txtContract"
+                type="text"
+                {...contract}
+                max="50"
+                parentId="dashboardComponentScroll"
+              />
+            </dt>
           </Col>
         </Row>
         <Row style={{padding: "20px 23px 20px 20px"}}>
@@ -701,7 +792,7 @@ class FormPipeline extends Component {
           <Col xs={6} md={3} lg={3}>
             <div style={{paddingRight: "15px"}}>
               <dt>
-                <span>Valor en millones (</span><span style={{color: "red"}}>*</span>)
+                <span>{this.state.labelCurrency} (</span><span style={{color: "red"}}>*</span>)
               </dt>
               <Input
                 {...value}
@@ -756,6 +847,55 @@ class FormPipeline extends Component {
                 time={false}
               />
             </dt>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Monto pendiente por desembolsar</span>
+              </dt>
+              <Input
+                name="txtPendingDisburAmount"
+                type="text"
+                {...pendingDisburAmount}
+                max="28"
+                parentId="dashboardComponentScroll"
+                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+              />
+            </div>
+          </Col>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Monto desembolsado</span>
+              </dt>
+              <Input
+                name="txtAmountDisbursed"
+                type="text"
+                {...amountDisbursed}
+                max="28"
+                parentId="dashboardComponentScroll"
+                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, amountDisbursed, amountDisbursed.value, true, 2)}
+                onFocus={val => this._handleFocusValueNumber(amountDisbursed, amountDisbursed.value)}
+              />
+            </div>
+          </Col>
+        </Row>
+        <Row style={{padding: "0px 10px 20px 20px"}}>
+          <Col xs={6} md={3} lg={3}>
+            <div style={{paddingRight: "15px"}}>
+              <dt>
+                <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
+              </dt>
+              <dt>
+                <DateTimePickerUi
+                  {...estimatedDisburDate}
+                  culture='es'
+                  format={DATE_FORMAT}
+                  time={false}
+                />
+              </dt>
+            </div>
           </Col>
         </Row>
         <Row style={{padding: "20px 23px 20px 20px"}}>
