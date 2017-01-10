@@ -135,3 +135,48 @@ export function mapDateValueFromTask(date){
     return moment(date).locale('es').format(REVIEWED_DATE_FORMAT);
   }
 }
+
+export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
+  //Elimino los caracteres no validos
+  for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){
+   if (validos.indexOf(val.toString().charAt(i)) !== -1){
+      output += val.toString().charAt(i)
+    }
+  }
+  val = output;
+
+  /* Si typeValidation = 2 es por que el valor puede ser negativo
+     Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+  */
+  var decimal = '';
+  if(val.includes(".")){
+    var vectorVal = val.split(".");
+    if(allowsDecimal){
+      val = vectorVal[0] + '.';
+      if(vectorVal.length > 1){
+        decimal = vectorVal[1].substring(0, lengthDecimal);
+      }
+    }else{
+      val = vectorVal[0];
+    }
+  }
+
+  if( typeValidation === constants.ALLOWS_NEGATIVE_INTEGER ) { //Realizo simplemente el formateo
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(val)){
+      val = val.replace(pattern, "$1,$2");
+    }
+    valuReduxForm.onChange(val + decimal);
+  } else { //Valido si el valor es negativo o positivo
+    var value = numeral(valuReduxForm.value).format('0');
+    if( value >= 0 ){
+      pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(val)){
+        val = val.replace(pattern, "$1,$2");
+      }
+      valuReduxForm.onChange(val + decimal);
+    } else {
+      valuReduxForm.onChange("");
+    }
+  }
+}
