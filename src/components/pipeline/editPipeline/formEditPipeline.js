@@ -327,8 +327,8 @@ class FormEditPipeline extends Component {
   	  		"startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
   	  		"endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
           "probability": probability.value,
-          "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? '' : numeral(pendingDisburAmount.value).format('0.0000'),
-          "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? '' : numeral(amountDisbursed.value).format('0.0000'),
+          "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? '' : (pendingDisburAmount.value).replace(/,/g, ""),
+          "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? '' : (amountDisbursed.value).replace(/,/g, ""),
           "entity": entity.value,
           "contract": contract.value,
           "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
