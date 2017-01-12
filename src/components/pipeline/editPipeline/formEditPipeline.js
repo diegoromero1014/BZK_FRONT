@@ -1110,7 +1110,7 @@ function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, p
               entity: pipeline.entity,
               pendingDisburAmount: fomatInitialStateNumber(pipeline.pendingDisburAmount),
               amountDisbursed: fomatInitialStateNumber(pipeline.amountDisbursed),
-              estimatedDisburDate: moment(pipeline.estimatedDisburDate).format(DATE_FORMAT),
+              estimatedDisburDate: pipeline.estimatedDisburDate !== null ? moment(pipeline.estimatedDisburDate).format(DATE_FORMAT) : "",
               contract: pipeline.contract
 	  	      }
 	  	    };
