@@ -25,8 +25,8 @@ class inputComponent extends Component {
             $(`.ui.input.${name} [type=text]`).focus();
         }
         return (
-            <div>
-                <div className={`styleWidthComponents ui input ${disabled} ${name}`}>
+            <div className={disabled}>
+                <div className={`styleWidthComponents ui input ${name}`}>
                     <input type={type}
                            name={nameInput}
                            min={min}
@@ -36,6 +36,7 @@ class inputComponent extends Component {
                            placeholder={placeholder}
                            onBlur={onBlur}
                            disabled={disabled}
+                           className={disabled}
                            onKeyPress={onKey}
                            onFocus={onFocus}
                            value={value || ''}/>

@@ -133,3 +133,27 @@
 		margin-bottom: 0px;
 	}
 }
+
+
+input[disabled]{
+	background-color: #eee !important;
+	cursor: not-allowed !important;
+	opacity: 1 !important;
+}
+
+.ui.disabled.input, .ui.input input[disabled] {
+	background-color: #eee !important;
+	cursor: not-allowed !important;
+	opacity: 1 !important;
+}
+
+.ui.disabled.dropdown, .ui.dropdown .menu > .disabled.item {
+	background-color: #eee !important;
+	cursor: not-allowed !important;
+	opacity: 1 !important;
+}
+
+.disabled{
+	background-color: #eee !important;
+	cursor: not-allowed !important;
+}

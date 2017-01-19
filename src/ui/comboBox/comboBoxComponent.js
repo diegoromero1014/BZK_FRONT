@@ -103,11 +103,11 @@ class comboBoxComponent extends Component {
             scrollTo(parentId);
         }
         return (
-            <div>
+            <div className={disabled}>
                 <div
-                    className={`styleWidthComponents ui search selection dropdown ${disabled} ${name} ${deployUp === true ? 'bottom pointing' : ''}`}
+                    className={`styleWidthComponents ui search selection dropdown  ${name} ${deployUp === true ? 'bottom pointing' : ''} ${disabled}`}
                     style={{minWidth: '7em'}}>
-                    <input type="hidden" name={nameInput} value={defaultValue} placeholder="Seleccione..."/>
+                    <input type="hidden"  name={nameInput} value={defaultValue} disabled={disabled} placeholder="Seleccione..." className={disabled}/>
                     <i className="dropdown icon"/>
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
                     <div className={`right menu ${name}`}>

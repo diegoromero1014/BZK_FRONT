@@ -82,9 +82,9 @@ class MultipleSelectComponent extends Component {
           scrollTo(parentId);
         }
         return (
-            <div style={style}>
+            <div style={style} className={disabled}>
                 <div className={`styleWidthComponents ui multiple search selection dropdown ${disabled} ${name}`}>
-                    <input type="hidden" name={nameInput}/>
+                    <input type="hidden" disabled={disabled} name={nameInput}/>
                     <i className="dropdown icon"/>
                     <div className="default text">{labelInput}</div>
                     <div className="menu">
