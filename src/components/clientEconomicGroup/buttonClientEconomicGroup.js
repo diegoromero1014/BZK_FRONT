@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalComponentEconomicGroup from './modalComponentEconomicGroup';
+import {BLUE_COLOR} from '../../constantsGlobal';
 
 class buttonClientEconomicGroup extends Component {
 
@@ -27,7 +28,7 @@ class buttonClientEconomicGroup extends Component {
   render() {
     return (
         <div>
-          <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{marginTop: "0px", backgroundColor: "#2671D7", borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
+          <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
             <i className="sitemap icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
           </button>
           <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">

@@ -10,7 +10,6 @@ import {openModalAlerts} from './actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {toggleMenu} from '../navBar/actions';
 import {MENU_OPENED} from '../navBar/constants';
-import {showButtonCloseMenu} from '../menu/actions';
 
 var styles = {
     minHeight: "30px",
@@ -34,16 +33,13 @@ class ItemAlert extends Component {
     }
 
     _handleRedirectAlert(e) {
-        const {openModalAlerts,urlAlert,fnClearFilter,reset,nameForm, menuReducer, toggleMenu, showButtonCloseMenu, navBar}= this.props;
+        const {openModalAlerts,urlAlert,fnClearFilter,reset,nameForm, menuReducer, toggleMenu, navBar}= this.props;
         openModalAlerts(false);
         redirectUrl(urlAlert);
         reset(nameForm);
         fnClearFilter();
         if( navBar.get('status') === MENU_OPENED ){
             toggleMenu();
-        }
-        if( !menuReducer.get('showCloseMenu') ){
-            showButtonCloseMenu(true);
         }
     }
 
@@ -112,7 +108,7 @@ ItemAlert.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({openModalAlerts, toggleMenu, showButtonCloseMenu, reset}, dispatch);
+    return bindActionCreators({openModalAlerts, toggleMenu, reset}, dispatch);
 }
 
 function mapStateToProps({menuReducer, navBar}, ownerProps) {

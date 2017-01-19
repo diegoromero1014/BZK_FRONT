@@ -48,6 +48,32 @@
 	cursor: pointer;
 }
 
+
+.menuItemStyle {
+	display: block;
+    vertical-align: middle;
+    color: #ffffff;
+    position: relative;
+    margin: 0;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 300;
+	height: 40px;
+	padding-left: 10px;
+	border-bottom: 0px;
+}
+
+.menuItemStyle:hover {
+	background-color: #3498DB;
+	color: #ffffff;
+}
+
+.itemMenu {
+	font-size: 18px;
+	margin-top: -10px;
+	width: 40px;
+}
+
 /**
  * Addition icons from webfont, instead of iconset sprite
  */

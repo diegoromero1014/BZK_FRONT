@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
-import * as constants from './constants';
+import * as actions from './constants';
 
 const initialState = Immutable.Map({
-    status: constants.MENU_OPENED,
+    status: "opened",
     titleNavBar: 'Mis clientes',
     viewAlertClient:false,
     mapModulesAccess: []
@@ -10,15 +10,15 @@ const initialState = Immutable.Map({
 
 export default (state = initialState, action) => {
     switch (action.type) {
-    case constants.TOGGLE_MENU:
+    case actions.TOGGLE_MENU:
         const currentState = state.get('status');
-        const newStatus = currentState === constants.MENU_CLOSED ? constants.MENU_OPENED : constants.MENU_CLOSED;
+        const newStatus = currentState === "closed" ? "opened" : "closed";
         return state.set("status", newStatus);
-    case constants.UPDATE_TITLE_NAV_BAR:
+    case actions.UPDATE_TITLE_NAV_BAR:
         return state.set("titleNavBar", action.newTitle);
-    case constants.CONSULT_MODULE_ACCESS:
+    case actions.CONSULT_MODULE_ACCESS:
         return state.set("mapModulesAccess", action.payload.data.data);
-    case constants.VIEW_ALERT_CLIENT:
+    case actions.VIEW_ALERT_CLIENT:
         return state.set("viewAlertClient", action.viewAlertClient);
     default:
         return state;

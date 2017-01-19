@@ -5,8 +5,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clientsPortfolioExpirationFindServer, changePage, changeKeyword} from './actions';
+import {CODE_ALERT_PORTFOLIO_EXPIRATION} from '../alerts/constants';
+import {getAlertsByUser} from '../alerts/actions';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import SweetAlert from 'sweetalert-react';
 import {showLoading} from '../loading/actions';
 import _ from 'lodash';
@@ -16,6 +19,7 @@ class SearchBarClient extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            openMessagePermissions: false,
             showEr: false,
         };
         this._handleClientsFind = this._handleClientsFind.bind(this);
@@ -28,9 +32,18 @@ class SearchBarClient extends Component{
     }
 
     componentWillMount(){
+        const {getAlertsByUser} = this.props;
+        const self = this;
         if( window.localStorage.getItem('sessionToken') === "" ){
             redirectUrl("/login");
         }
+        getAlertsByUser().then((data) => {
+            _.get(data, 'payload.data.data').map((item, idx) => {
+                if( item.codeAlert === CODE_ALERT_PORTFOLIO_EXPIRATION && !item.active ){
+                    self.setState({ openMessagePermissions: true});
+                }
+            });
+        });
     }
 
     _handleChangeKeyword(e){
@@ -81,6 +94,7 @@ class SearchBarClient extends Component{
                     text="Señor usuario, por favor ingrese un criterio de búsqueda."
                     onConfirm={() => this._closeError()}
                 />
+                <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
             </div>
         )
     }
@@ -88,7 +102,7 @@ class SearchBarClient extends Component{
 
 function mapDispatchToProps(dispatch){
     return bindActionCreators({
-        clientsPortfolioExpirationFindServer, changePage, changeKeyword, redirectUrl, showLoading
+        clientsPortfolioExpirationFindServer, changePage, changeKeyword, redirectUrl, showLoading, getAlertsByUser
     }, dispatch);
 }
 

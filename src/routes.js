@@ -23,6 +23,9 @@ import BusinessPlan from './components/businessPlan/createBusinessPlan/createBus
 import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
 import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
 import AdminAlertClientsPortfolioExpiration from './components/alertPortfolioExpirtation/portfolioExpirationAlertComponent';
+import ModalComponentPending from './components/myPendings/modalComponentPending';
+import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments';
+import ViewAlerts from './components/alerts/alertsComponent';
 
 class App extends Component {
     render() {
@@ -56,6 +59,9 @@ export default (
                 <Route path="businessPlanEdit/:id" component={EditBusinessPlan}></Route>
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
+                <Route path="myPendings" component={ModalComponentPending}></Route>
+                <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
+                <Route path="alerts" component={ViewAlerts}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

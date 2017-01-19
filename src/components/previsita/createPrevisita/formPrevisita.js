@@ -722,7 +722,6 @@ class FormPrevisita extends Component{
             </div>
           </Col>
         </Row>
-        { navBar.get('status') === MENU_CLOSED &&
         <div className="" style={{position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
           <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{float:"right", margin:"8px 0px 0px 8px", position:"fixed", backgroundColor:"#00B5AD"}}>
@@ -736,7 +735,6 @@ class FormPrevisita extends Component{
             </button>
           </div>
         </div>
-        }
         <SweetAlert
          type="error"
          show={this.state.showErrorSavePreVisit}

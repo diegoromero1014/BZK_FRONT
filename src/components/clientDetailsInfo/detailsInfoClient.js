@@ -83,7 +83,7 @@ class DetailsInfoClient extends Component{
   }
 
   render(){
-    const {infoClient, menuState, reducerGlobal} = this.props;
+    const {infoClient, reducerGlobal} = this.props;
     var actualizationDateString = "";
     if( infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined ){
       var actualizationDate = moment(infoClient.actualizationDate).locale('es');
@@ -197,7 +197,7 @@ class DetailsInfoClient extends Component{
           </div>
           {foreignProducts.map(this._mapProductItems)}
         </div>
-        {infoClient.haveAccessEdit && menuState=== MENU_CLOSED && _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false) &&
+        {infoClient.haveAccessEdit && _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false) &&
           <div className="" style={{marginLeft: "-20px", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width:"100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height:"50px", background: "rgba(255,255,255,0.75)"}}>
             <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
               <a style={{float:"right", margin:"15px 0px 0px 110px", position:"fixed", cursor: "pointer",textDecoration: "underline"}} onClick={this._clickButtonClientEdit}>

@@ -52,7 +52,7 @@ class FormLogin extends Component{
         } else {
           const {saveSessionToken, redirectUrl} = this.props;
           saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
-          redirectUrl("/dashboard");
+          redirectUrl("/dashboard/clients");
         }
       } else {
         this.setState({

@@ -14,7 +14,7 @@ import { TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS } from './constants
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import AlertErrorYearNoSeleted from '../globalComponents/alertErrorYearNoSeleted';
-import { MODULE_MANAGERIAL_VIEW } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, BLUE_COLOR, GRREN_COLOR, ORANGE_COLOR, RED_COLOR } from '../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
 
@@ -22,25 +22,25 @@ const itemsChart = [
   {
     text: "Previsitas",
     icon: "bar chart icon",
-    styleColor: "#337ab7",
+    styleColor: BLUE_COLOR,
     tab: TAB_PREVISIT
   },
   {
     text: "Visitas",
     icon: "bar chart icon",
-    styleColor: "#5cb85c",
+    styleColor: GRREN_COLOR,
     tab: TAB_VISIT
   },
   {
     text: "Pipeline",
     icon: "bar chart icon",
-    styleColor: "#f0ad4e",
+    styleColor: ORANGE_COLOR,
     tab: TAB_PIPELINE
   },
   {
     text: "Negocios",
     icon: "bar chart icon",
-    styleColor: "#d9534f",
+    styleColor: RED_COLOR,
     tab: TAB_BUSINESS
   }
 
