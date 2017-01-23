@@ -12,7 +12,7 @@ const initialState = Immutable.Map(
     }
 );
 
-export default (state = initialState, action) => {
+export default (action, state = initialState) => {
     switch (action.type) {
         case actions.GET_ALERT_BY_USER:
             const response = action.payload.data;

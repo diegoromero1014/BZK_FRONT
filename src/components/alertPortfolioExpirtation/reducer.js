@@ -51,7 +51,7 @@ const initialState = Immutable.Map({
     totalClientsByFiltered: 0
 });
 
-export default (state = initialState, action) => {
+export default (action, state = initialState) => {
     switch (action.type) {
         case actions.FIND_CLIENTS_PORTFOLIO_EXPIRATION:
             const response = get(action.payload,'data.data',[]);
