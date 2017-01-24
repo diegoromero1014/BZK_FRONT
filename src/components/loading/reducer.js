@@ -10,7 +10,7 @@ const initialState = Immutable.Map({
     textLoading: 'Cargando..',
 });
 
-export default (action,state = initialState) => {
+export default (state = initialState, action = {}) => {
     switch (action.type) {
         case SHOW_LOADING:
             return state.withMutations(map => {

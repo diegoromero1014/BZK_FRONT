@@ -13,7 +13,7 @@ const initialState = Immutable.Map({
     columnMyPending: ""
 });
 
-export default (action, state = initialState) => {
+export default (state = initialState, action = {}) => {
     switch (action.type) {
         case constants.FIND_PENDING_TASKS:
           const response = action.payload.data;

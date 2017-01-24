@@ -18,7 +18,7 @@ const initialState = Immutable.Map({
     totalClientsByFiltered: 0
 });
 
-export default (action,state = initialState) => {
+export default (state = initialState, action = {}) => {
     switch (action.type) {
         case actions.CLIENTS_FIND_FOR_ALERT_PENDING_UPDATE:
             const response = get(action.payload,'data.data',[]);

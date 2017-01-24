@@ -15,7 +15,7 @@ const initialState = Immutable.Map({
 });
 
 
-export default (action, state = initialState) => {
+export default (state = initialState, action = {}) => {
     switch (action.type) {
         case constants.FIND_DRAFT_DOCUMENTS:
           const response = action.payload.data;
