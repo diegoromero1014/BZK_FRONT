@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {COLOR_TRAFFICT_RED, COLOR_TRAFFICT_ORANGE, COLOR_TRAFFICT_GREEN} from './constants';
+import {COLOR_RED, COLOR_ORANGE, COLOR_GREEN} from '../clientInformation/constants';
 import {REVIEWED_DATE_FORMAT} from '../../constantsGlobal';
 import get from 'lodash/get';
 import flow from 'lodash/flow';
@@ -10,11 +10,11 @@ export function getColor(date){
   const currentDate = moment().startOf('day');
   const beforeThreeDays = moment().startOf('day').add(3, 'days');
   if(currentDate.isAfter(expirationDate)){
-    return COLOR_TRAFFICT_RED;
+    return COLOR_RED;
   } else if(beforeThreeDays.isBefore(expirationDate) || beforeThreeDays.isSame(expirationDate)){
-    return COLOR_TRAFFICT_GREEN;
+    return COLOR_GREEN;
   } else {
-    return COLOR_TRAFFICT_ORANGE;
+    return COLOR_ORANGE;
   }
 }
 
