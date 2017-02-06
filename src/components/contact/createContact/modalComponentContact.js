@@ -209,6 +209,7 @@ class ModalComponentContact extends Component {
         clearSearchContact();
         this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
+        document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
     }
 
     _searchContact(e) {
@@ -321,7 +322,7 @@ class ModalComponentContact extends Component {
 
         return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     id="modalComponentScroll">
+                     id="modalComponentScrollCreateContact">
                     <dt className="business-title"><span
                         style={{paddingLeft: '20px'}}>Información básica contacto</span></dt>
                     <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
