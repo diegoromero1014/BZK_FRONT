@@ -5,7 +5,7 @@ import {tasksByUser, clearPendingTask, orderColumnMyPending, clearMyPendingPagin
 import GridComponent from '../grid/component';
 import {redirectUrl} from '../globalComponents/actions'
 import {NUMBER_RECORDS} from './constants';
-import {MODULE_TASKS} from '../../constantsGlobal';
+import {MODULE_TASKS, EDITAR} from '../../constantsGlobal';
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -105,7 +105,9 @@ _orderColumn(orderMyPending,columnMyPending){
   }
 
   _renderCellView(data){
-    return mapDataGrid(data);
+    const {reducerGlobal} = this.props;
+    var editPendings = _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false);
+    return mapDataGrid(data, editPendings === EDITAR ? true : editPendings);
   }
 
   render() {
