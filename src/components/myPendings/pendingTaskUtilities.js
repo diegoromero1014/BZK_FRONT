@@ -23,7 +23,7 @@ export const mapDateColor = (date) => {
   return func(date);
 }
 
-export const mapDataGrid = (data = []) => {
+export const mapDataGrid = (data = [], permissionsEdit) => {
   return data.map(item => ({
     actions: {
       actionView: true,
@@ -37,7 +37,9 @@ export const mapDataGrid = (data = []) => {
     title: item.resume,
     changeStateTask: {
       idTask: item.id,
-      idStatus: item.idStatus
+      idStatus: item.idStatus,
+      statusPending: item.statusPending,
+      permissionEdit: permissionsEdit
     },
     closeDate: mapDateValueFromTask(item.closeDate),
     trafficLight: {
