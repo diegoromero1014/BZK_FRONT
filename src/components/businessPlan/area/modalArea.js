@@ -148,7 +148,7 @@ class ModalArea extends Component {
     const {fields: {areaResponsable,idEmployee}, filterUsersBanco} = this.props;
     const selector =  $('.ui.search.areaResponsable');
     if(e.keyCode === 13 || e.which === 13){
-      e.preventDefault();
+      e.consultclick ? "" : e.preventDefault();
       if(areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined){
         selector.toggleClass('loading');
         filterUsersBanco(areaResponsable.value).then((data) => {
@@ -169,7 +169,9 @@ class ModalArea extends Component {
             });
             selector.toggleClass('loading');
             selector.search('search local', areaResponsable.value);
-            selector.focus();
+            setTimeout(function () {
+              $('#inputParticipantBanc').focus();
+            }, 150);
           });
       }
     }

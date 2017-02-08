@@ -1,3 +1,7 @@
+.ui.icon.input > i.icon:not(.link){
+	pointer-events: auto !important;
+}
+
 .hidden {
 	display: none !important;
 }

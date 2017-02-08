@@ -206,7 +206,7 @@ class ModalNeed extends Component {
     idEmployee.onChange(null);
     const selector =  $('.ui.search.needResponsable');
     if(e.keyCode === 13 || e.which === 13){
-      e.preventDefault();
+      e.consultclick ? "" : e.preventDefault();
       if(needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined){
         selector.toggleClass('loading');
         filterUsersBanco(needResponsable.value).then((data) => {
@@ -230,7 +230,9 @@ class ModalNeed extends Component {
             });
             selector.toggleClass('loading');
             selector.search('search local', needResponsable.value);
-            selector.focus();
+            setTimeout(function () {
+              $('#inputParticipantBanc').focus();
+            }, 150);
           });
       }
     }
