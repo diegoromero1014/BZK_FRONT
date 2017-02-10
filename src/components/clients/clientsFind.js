@@ -165,7 +165,7 @@ class ClientsFind extends Component {
                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch} title="Limpiar búsqueda" style={{marginLeft:"17px"}}>
                   <i className="erase icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                 </button>
-                { _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) && _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), CREAR), false) &&
+                { _.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) && 
                   <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button" title="Crear prospecto" style={{marginLeft:"17px"}}>
                     <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                   </button>
