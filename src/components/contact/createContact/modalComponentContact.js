@@ -210,7 +210,9 @@ class ModalComponentContact extends Component {
         this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
         if( document.getElementById('modalComponentScrollCreateContact') !== null && document.getElementById('modalComponentScrollCreateContact') !== undefined ){
-            document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
+            setTimeout(function(){
+                document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
+            }, 500)
         }
     }
 
