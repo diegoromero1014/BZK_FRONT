@@ -209,7 +209,9 @@ class ModalComponentContact extends Component {
         clearSearchContact();
         this.props.resetForm();
         this.setState({disabled: '', noExiste: 'hidden', botonBus: 'block'});
-        document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
+        if( document.getElementById('modalComponentScrollCreateContact') !== null && document.getElementById('modalComponentScrollCreateContact') !== undefined ){
+            document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
+        }
     }
 
     _searchContact(e) {
@@ -335,7 +337,7 @@ class ModalComponentContact extends Component {
                                         disabled={this.state.disabled}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="modalComponentScroll"
+                                        parentId="modalComponentScrollCreateContact"
                                         data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                     /></dd>
                                 </dl>
@@ -376,7 +378,7 @@ class ModalComponentContact extends Component {
                                                   onChange={val => this._genero(val)}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_TITLE) || []}
                                                   shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoTratamiendo')}
                                     /></dd>
@@ -390,7 +392,7 @@ class ModalComponentContact extends Component {
                                         {...tipoGenero}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={this.state.generoData}
                                                   shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoGenero')}
                                     /></dd>
@@ -454,7 +456,7 @@ class ModalComponentContact extends Component {
                                         {...tipoCargo}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
                                                   shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoCargo')}
                                     /></dd>
@@ -467,7 +469,7 @@ class ModalComponentContact extends Component {
                                         {...tipoDependencia}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_DEPENDENCY) || []}
                                                   shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoDependencia')}
                                     /></dd>
@@ -495,7 +497,7 @@ class ModalComponentContact extends Component {
                                         {...tipoEstiloSocial}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                                     /></dd>
                                 </dl>
@@ -507,7 +509,7 @@ class ModalComponentContact extends Component {
                                         {...tipoActitud}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                                     /></dd>
                                 </dl>
@@ -531,7 +533,7 @@ class ModalComponentContact extends Component {
                                         onBlur={pais.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="modalComponentScroll"
+                                        parentId="modalComponentScrollCreateContact"
                                         data={selectsReducer.get(FILTER_COUNTRY) || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
                                     /></dd>
@@ -550,7 +552,7 @@ class ModalComponentContact extends Component {
                                         onBlur={departamento.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="modalComponentScroll"
+                                        parentId="modalComponentScrollCreateContact"
                                         data={selectsReducer.get('dataTypeProvince')}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
                                     /></dd>
@@ -566,7 +568,7 @@ class ModalComponentContact extends Component {
                                         {...ciudad}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="modalComponentScroll"
+                                        parentId="modalComponentScrollCreateContact"
                                         data={selectsReducer.get('dataTypeCity')}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
                                     /></dd>
@@ -677,7 +679,7 @@ class ModalComponentContact extends Component {
                                         {...tipoContacto}
                                                   valueProp={'id'}
                                                   textProp={'value'}
-                                                  parentId="modalComponentScroll"
+                                                  parentId="modalComponentScrollCreateContact"
                                                   data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                                                   shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoContacto')}
                                     /></dd>
@@ -706,7 +708,7 @@ class ModalComponentContact extends Component {
                                         {...tipoFuncion}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="modalComponentScroll"
+                                        parentId="modalComponentScrollCreateContact"
                                         data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
                                         />
