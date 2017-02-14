@@ -70,6 +70,7 @@ export const CREAR = "Crear";
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
+export const FINALIZAR = "Finalizar";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -83,6 +84,8 @@ export const MODULE_TASKS = "Tareas";
 export const MODULE_PIPELINE = "Pipeline";
 export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
 export const MODULE_ALERTS = "Alertas";
+export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
+export const MODULE_COVENANTS = "Covenants";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -92,6 +95,9 @@ export const TAB_VISITS = 4;
 export const TAB_PENDING_TASK = 6;
 export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
+export const TAB_RISKS_MANAGEMENT = 9;
+
+
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
