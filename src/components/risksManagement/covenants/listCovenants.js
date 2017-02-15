@@ -1,13 +1,14 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Row, Col } from 'react-flexbox-grid';
 import GridComponent from '../../grid/component';
-import {redirectUrl} from '../../globalComponents/actions'
-import {mapDataGrid} from './covenantsUtilities';
-import {get, indexOf, has} from 'lodash';
-import {showLoading} from '../../loading/actions';
-import {clientCovenants} from './actions';
-import {} from './constants';
+import { redirectUrl } from '../../globalComponents/actions'
+import { mapDataGrid } from './covenantsUtilities';
+import { get, indexOf, has } from 'lodash';
+import { showLoading } from '../../loading/actions';
+import { clientCovenants } from './actions';
+import { COLOR_RED, COLOR_ORANGE, COLOR_GREEN } from '../../clientInformation/constants';
 
 
 class ListCovenantsComponent extends Component {
@@ -20,7 +21,11 @@ class ListCovenantsComponent extends Component {
 
     componentWillMount() {
         const {clientCovenants} = this.props;
-        clientCovenants();
+        clientCovenants().then((data) => {
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            }
+        });
     }
 
 
@@ -29,27 +34,31 @@ class ListCovenantsComponent extends Component {
         const headersTable = [
             {
                 title: "",
-                key:"actions"
+                key: "actions"
             },
             {
                 title: "Id covenant",
-                key: "typeDocument"
+                key: "idCovenant"
             },
             {
                 title: "Negocio/Producto",
-                key: "idNumberClient"
+                key: "lineOfBusiness"
             },
             {
-                title: "Descripción de acta",
-                key: "team"
+                title: "Gerente responsable",
+                key: "managerAccount"
             },
             {
-                title: "Frecuencia de revisión",
-                key: "region"
+                title: "Descripción covenant",
+                key: "descriptionRecord"
             },
             {
                 title: "Acta o contrato",
-                key: "zone"
+                key: "agreement"
+            },
+            {
+                title: "",
+                key: "trafficLight"
             },
             {
                 title: "Fecha próximo seguimiento",
@@ -65,12 +74,31 @@ class ListCovenantsComponent extends Component {
     }
 
     render() {
+        const modalTitle = 'Creación de seguimientos';
         const {covenant} = this.props;
         const data = covenant.get('responseCovenant');
 
         return (
-            <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
+            <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
+                <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
+                    <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
+                        <div className="traffickLigth-item-covenants" style={{backgroundColor: COLOR_RED }}></div>
+                        <span style={{ marginLeft: '10px' }}> Tarea vencida</span>
+                    </Col>
+                    <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_ORANGE }}></div>
+                        <span style={{ marginLeft: '10px' }}> Tarea próxima a vencerse</span>
+                    </Col>
+                    <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
+                        <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
+                    </Col>
+                    <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
+                        <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
+                    </Col>
+                </Row>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
             </div>
         );
     }
@@ -85,7 +113,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({covenant,reducerGlobal}, ownerProps) {
+function mapStateToProps({covenant, reducerGlobal}, ownerProps) {
     return {
         covenant,
         reducerGlobal

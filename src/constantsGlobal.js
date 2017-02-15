@@ -16,6 +16,7 @@ export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
 export const SESSION_EXPIRED = "-2";
 export const MESSAGE_SAVE_DATA = "Guardando información";
 export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
+export const MESSAGE_LOAD_DATA = "Descargando información";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 export const BLUE_COLOR = "#337ab7";
 export const GRREN_COLOR = "#5cb85c";
