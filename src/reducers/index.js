@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
-import MenuReducer from '../components/menu/reducer';
 import LoginReducer from '../components/login/reducer';
 import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
@@ -41,12 +40,11 @@ import alertsReducer from '../components/alerts/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
 import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirtation/reducer';
 import loadingReducer from '../components/loading/reducer';
-import menuReducer from '../components/menu/reducer';
 import covenant from '../components/risksManagement/covenants/reducer';
+import alertCovenantReducer from '../components/alertCovenants/reducer';
 
 export default combineReducers({
     routing: routerReducer,
-    menu: MenuReducer,
     login: LoginReducer,
     navBar: NavBarReducer,
     clientR: ClientReducer,
@@ -88,5 +86,5 @@ export default combineReducers({
     loading: loadingReducer,
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
-    menuReducer: menuReducer
+    alertCovenant :alertCovenantReducer
 });

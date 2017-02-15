@@ -33,7 +33,7 @@ class ItemAlert extends Component {
     }
 
     _handleRedirectAlert(e) {
-        const {openModalAlerts,urlAlert,fnClearFilter,reset,nameForm, menuReducer, toggleMenu, navBar}= this.props;
+        const {openModalAlerts,urlAlert,fnClearFilter,reset,nameForm, toggleMenu, navBar}= this.props;
         openModalAlerts(false);
         redirectUrl(urlAlert);
         reset(nameForm);
@@ -111,8 +111,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({openModalAlerts, toggleMenu, reset}, dispatch);
 }
 
-function mapStateToProps({menuReducer, navBar}, ownerProps) {
-    return { menuReducer, navBar};
+function mapStateToProps({navBar}, ownerProps) {
+    return {navBar};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemAlert);

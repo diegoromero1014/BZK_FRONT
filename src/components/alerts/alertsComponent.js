@@ -14,7 +14,7 @@ import { getAlertsByUser, openModalAlerts, clearListAlerts } from './actions';
 import { clearFilter } from '../alertPendingUpdateClient/actions';
 import { clearFilter as clearFilterPE } from '../alertPortfolioExpirtation/actions';
 import { updateNumberTotalClients } from '../alertPendingUpdateClient/actions';
-import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION } from './constants';
+import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT } from './constants';
 import * as constants from '../selectsComponent/constants';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { MODULE_ALERTS, MODULE_CLIENTS, BLUE_COLOR } from '../../constantsGlobal';
@@ -23,7 +23,9 @@ import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import { consultList } from '../selectsComponent/actions';
 import { FORM_FILTER_ALERT_PUC } from '../alertPendingUpdateClient/constants';
 import { FORM_FILTER_ALERT_PE } from '../alertPortfolioExpirtation/constants';
+import { FORM_FILTER_ALERT_COVENANT } from '../alertCovenants/constants';
 import _ from 'lodash';
+import {Icon} from 'semantic-ui-react';
 
 class ViewAlerts extends Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class ViewAlerts extends Component {
         this.handlePaintAlerts = this.handlePaintAlerts.bind(this);
         this._cleanFilterClientPendingUpdate = this._cleanFilterClientPendingUpdate.bind(this);
         this._cleanFilterPortfolioExpiration = this._cleanFilterPortfolioExpiration.bind(this);
+        this._cleanFilterAlertCovenant = this._cleanFilterAlertCovenant.bind(this);
     }
 
     componentWillMount() {
@@ -76,6 +79,16 @@ class ViewAlerts extends Component {
             }
         });
     }
+    _cleanFilterAlertCovenant() {
+        // const {showLoading, clearFilterPE, consultList} = this.props;
+        // showLoading(true, 'Cargando..');
+        // clearFilterPE();
+        // consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+        //     if (_.has(data, 'payload.data.teamValueObjects')) {
+        //         showLoading(false, null);
+        //     }
+        // });
+    }
 
     paintItemAlert(item, idx, icon, textSize, colorCard, urlAlert, fnClearFilter, nameForm) {
         return (<ItemAlert
@@ -107,6 +120,12 @@ class ViewAlerts extends Component {
                         const iconPortfolioExp = <PortfolioExpirationIcon />;
                         return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", BLUE_COLOR,
                             "/dashboard/alertClientsPortfolioExpiration", this._cleanFilterPortfolioExpiration, FORM_FILTER_ALERT_PE);
+                        break;
+                    case CODE_COVENANT_ALERT:
+                        countAlerts = countAlerts + 1;
+                        const iconCovenant = <Icon style={{fontSize: "50px", marginTop: '55px', marginLeft: "18px"}} name="briefcase"/>;
+                        return this.paintItemAlert(item, idx, iconCovenant, "15px", BLUE_COLOR,
+                            "/dashboard/alertCovenants", this._cleanFilterAlertCovenant, FORM_FILTER_ALERT_COVENANT);
                         break;
                     default:
                         return null;
@@ -161,13 +180,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts, menuReducer}, ownerProps) {
+function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}, ownerProps) {
     return {
         viewManagementReducer,
         navBar,
         reducerGlobal,
-        alerts,
-        menuReducer
+        alerts
     };
 }
 

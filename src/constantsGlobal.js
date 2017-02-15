@@ -19,7 +19,7 @@ export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
 export const MESSAGE_LOAD_DATA = "Descargando información";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 export const BLUE_COLOR = "#337ab7";
-export const GRREN_COLOR = "#5cb85c";
+export const GREEN_COLOR = "#5cb85c";
 export const ORANGE_COLOR = "#f0ad4e";
 export const RED_COLOR = "#d9534f";
 

@@ -25,7 +25,7 @@ class ButtonDetailsRedirectComponent extends Component {
     _detailVisit() {
         const {
             actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline, showLoading,
-            updateStatusModal, toggleMenu, navBar, menuReducer
+            updateStatusModal, toggleMenu, navBar
         } = this.props;
         showLoading(true, 'Cargando cliente...');
         if (actionsRedirect.typeClickDetail === "visita") {
@@ -114,11 +114,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({navBar, visitReducer, menuReducer}, ownerProps) {
+function mapStateToProps({navBar, visitReducer}, ownerProps) {
     return {
         navBar,
-        visitReducer,
-        menuReducer
+        visitReducer
     };
 }
 

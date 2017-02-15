@@ -26,6 +26,7 @@ import AdminAlertClientsPortfolioExpiration from './components/alertPortfolioExp
 import ModalComponentPending from './components/myPendings/modalComponentPending';
 import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments';
 import ViewAlerts from './components/alerts/alertsComponent';
+import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 
 class App extends Component {
     render() {
@@ -59,6 +60,7 @@ export default (
                 <Route path="businessPlanEdit/:id" component={EditBusinessPlan}></Route>
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
+                <Route path="alertCovenants" component={AlertCovenants}></Route>
                 <Route path="myPendings" component={ModalComponentPending}></Route>
                 <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                 <Route path="alerts" component={ViewAlerts}></Route>

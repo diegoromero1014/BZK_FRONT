@@ -8,7 +8,7 @@ import { tasksByUser, clearMyPendingsOrder, clearMyPendingPaginator, clearPendin
 import { NUMBER_RECORDS } from './constants';
 import ListPendingTaskComponent from './listMyPendingComponent';
 import PaginationPendingTask from './paginationPendingTask';
-import {GRREN_COLOR, ORANGE_COLOR, RED_COLOR} from '../../constantsGlobal';
+import {GREEN_COLOR, ORANGE_COLOR, RED_COLOR} from '../../constantsGlobal';
 import _ from 'lodash';
 
 class ModalComponentPending extends Component {
@@ -105,7 +105,7 @@ class ModalComponentPending extends Component {
                     <span style={{ marginLeft: '10px' }}> Tarea próxima a vencerse</span>
                   </Row>
                   <Row style={{ marginTop: "5px" }}>
-                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: GRREN_COLOR }}></div>
+                    <div style={{ borderRadius: '50%', width: '20px', height: '20px', backgroundColor: GREEN_COLOR }}></div>
                     <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
                   </Row>
                 </div>

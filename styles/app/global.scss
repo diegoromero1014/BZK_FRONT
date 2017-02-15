@@ -136,7 +136,7 @@
 }
 .tooltip-title {
 	&.client-name {
-		word-break: break-word;
+		word-break: keep-all;
 		white-space: nowrap;
 	}
 	&.client-name:last-child {

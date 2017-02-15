@@ -5,7 +5,7 @@ import {Icon, Popup, Grid} from 'semantic-ui-react';
 import {get, set, size} from 'lodash';
 import {redirectUrl} from '../globalComponents/actions';
 import {CODE_ALERT_PENDING_UPDATE_CLIENT} from './constants';
-import {GRREN_COLOR, RED_COLOR} from '../../constantsGlobal';
+import {GREEN_COLOR, RED_COLOR} from '../../constantsGlobal';
 import _ from 'lodash';
 
 const styleNumAlert = {
@@ -69,7 +69,7 @@ class BellClientAlertComponent extends Component {
     }
 
     render() {
-        set(styleNumAlert, 'background', size(this.props.listAlertOnClient) > 0 ? RED_COLOR : GRREN_COLOR);
+        set(styleNumAlert, 'background', size(this.props.listAlertOnClient) > 0 ? RED_COLOR : GREEN_COLOR);
         return (
             <div style={styles.iconAlert}>
                 <div style={{
