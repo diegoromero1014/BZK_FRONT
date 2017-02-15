@@ -83,19 +83,19 @@ class ListCovenantsComponent extends Component {
                 <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{backgroundColor: COLOR_RED }}></div>
-                        <span style={{ marginLeft: '10px' }}> Tarea vencida</span>
+                        <span style={{ marginLeft: '10px' }}> Covenant vencido</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_ORANGE }}></div>
-                        <span style={{ marginLeft: '10px' }}> Tarea próxima a vencerse</span>
+                        <span style={{ marginLeft: '10px' }}> Covenant próximo a vencerse</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
-                        <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
+                        <span style={{ marginLeft: '10px' }}> Covenant con tiempo</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
-                        <span style={{ marginLeft: '10px' }}> Tarea con tiempo</span>
+                        <span style={{ marginLeft: '10px' }}> gris</span>
                     </Col>
                 </Row>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
