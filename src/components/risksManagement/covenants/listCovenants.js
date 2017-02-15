@@ -8,7 +8,7 @@ import { mapDataGrid } from './covenantsUtilities';
 import { get, indexOf, has } from 'lodash';
 import { showLoading } from '../../loading/actions';
 import { clientCovenants } from './actions';
-import { COLOR_RED, COLOR_ORANGE, COLOR_GREEN } from '../../clientInformation/constants';
+import {GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR}from '../../../constantsGlobal';
 
 
 class ListCovenantsComponent extends Component {
@@ -82,20 +82,20 @@ class ListCovenantsComponent extends Component {
             <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
                 <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{backgroundColor: COLOR_RED }}></div>
+                        <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR }}></div>
                         <span style={{ marginLeft: '10px' }}> Covenant vencido</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_ORANGE }}></div>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}></div>
                         <span style={{ marginLeft: '10px' }}> Covenant próximo a vencerse</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}></div>
                         <span style={{ marginLeft: '10px' }}> Covenant con tiempo</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: COLOR_GREEN }}></div>
-                        <span style={{ marginLeft: '10px' }}> gris</span>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GRAY_COLOR }}></div>
+                        <span style={{ marginLeft: '10px' }}> Covenant inactivo</span>
                     </Col>
                 </Row>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />

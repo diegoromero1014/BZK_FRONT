@@ -1,4 +1,4 @@
-import {COLOR_RED, COLOR_ORANGE, COLOR_GREEN} from '../../clientInformation/constants';
+import {GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR} from '../../../constantsGlobal';
 import {shorterStringValue} from '../../../actionsGlobal';
 import moment from 'moment';
 import _ from 'lodash';
@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 export function getColorCovenant(date, capitalBalance){
     if( _.isNull(capitalBalance) || _.isEmpty(capitalBalance) ){
-        return 'gray';
+        return GRAY_COLOR;
     }
     const dateNextExpiration = moment(date, 'DD/MM/YYYY');
     const initialDate = moment().startOf('month');
@@ -16,11 +16,11 @@ export function getColorCovenant(date, capitalBalance){
 
     if( dateNextExpiration.isBefore(initialDate) || 
         ( dateNextExpiration.isAfter(initialDate) && dateNextExpiration.isBefore(finalDate) ) ){
-        return COLOR_RED;
+        return RED_COLOR;
     } else if( dateNextExpiration.isAfter(addMonthInitialDate) && dateNextExpiration.isBefore(addMonthFinalDate) ){
-        return COLOR_ORANGE;
+        return ORANGE_COLOR;
     } else {
-        return COLOR_GREEN;
+        return GREEN_COLOR;
     }
 }
 

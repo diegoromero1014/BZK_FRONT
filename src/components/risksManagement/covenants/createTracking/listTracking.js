@@ -16,8 +16,6 @@ class ListTracking extends Component {
 
     render() {
         const {covenant} = this.props;
-        console.log('covenant', covenant);
-        console.log('covenant', covenant.trackingCovenant);
         return (
             <div>
                 { 0 > 0 ?
