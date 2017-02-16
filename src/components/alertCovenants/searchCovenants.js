@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { clientsPendingUpdateFindServer, changePage, changeKeyword } from './actions';
+import { covenantsFindServer, changePage, changeKeyword } from './actions';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-import {CODE_ALERT_PENDING_UPDATE_CLIENT} from '../alerts/constants';
+import {CODE_COVENANT_ALERT} from '../alerts/constants';
 import {getAlertsByUser} from '../alerts/actions';
 import { NUMBER_RECORDS } from './constants';
 import { redirectUrl } from '../globalComponents/actions';
@@ -37,7 +37,7 @@ class SearchBarClient extends Component {
     }
     getAlertsByUser().then((data) => {
       _.get(data, 'payload.data.data').map((item, idx) => {
-        if (item.codeAlert === CODE_ALERT_PENDING_UPDATE_CLIENT && !item.active) {
+        if (item.codeAlert === CODE_COVENANT_ALERT && !item.active) {
           self.setState({ openMessagePermissions: true });
         }
       });
@@ -53,25 +53,19 @@ class SearchBarClient extends Component {
   }
 
   _handleClientsFind(e) {
-    // const {clientsPendingUpdateFindServer, alertCovenant, showLoading} = this.props;
-    // const keyWordNameNit = alertCovenant.get('keywordNameNit');
-    // if (keyWordNameNit === '' || keyWordNameNit === undefined) {
-    //   this.setState({ showEr: true });
-    // } else {
-    //   const {changePage} = this.props;
-    //   const idTeam = alertCovenant.get('idTeam');
-    //   const idRegion = alertCovenant.get('idRegion');
-    //   const idZone = alertCovenant.get('idZone');
-    //   const order = alertCovenant.get('order');
-    //   const columnOrder = alertCovenant.get('columnOrder');
-    //   showLoading(true, 'Cargando..');
-    //   clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
-    //     if (_.has(data, 'payload.data.data')) {
-    //       showLoading(false, null);
-    //     }
-    //   });
-    //   changePage(1);
-    // }
+      const {covenantsFindServer, alertCovenant, changePage, showLoading} = this.props;
+      const keyWordNameNit = alertCovenant.get('keywordNameNit');
+      const statusCovenant = alertCovenant.get('statusCovenant');
+      const pageNum = alertCovenant.get('pageNum');
+      const order = alertCovenant.get('order');
+      const columnOrder = alertCovenant.get('columnOrder');
+      showLoading(true, 'Cargando..');
+      covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+          if (_.has(data, 'payload.data.data')) {
+              showLoading(false, null);
+          }
+      });
+      changePage(1);
   }
 
   render() {
@@ -100,14 +94,12 @@ class SearchBarClient extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    clientsPendingUpdateFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, showLoading, getAlertsByUser
+      covenantsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, showLoading, getAlertsByUser
   }, dispatch);
 }
 
 function mapStateToProps({alertCovenant}, ownerProps) {
-  return {
-    alertCovenant
-  };
+  return {alertCovenant};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBarClient);

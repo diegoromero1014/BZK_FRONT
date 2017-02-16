@@ -136,6 +136,11 @@ export function mapDateValueFromTask(date){
   }
 }
 
+export function getStrDateByDatFormat(date,format){
+         const formatDefault =  _.isEmpty(format) ?'DD/MM/YYYY': format;
+        return moment(date, formatDefault).locale('es').format(REVIEWED_DATE_FORMAT);
+}
+
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
   //Elimino los caracteres no validos
   for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++){

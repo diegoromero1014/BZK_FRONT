@@ -2,12 +2,7 @@
  * Created by ahurtado on 11/23/2016.
  */
 import {APP_URL} from '../../constantsGlobal';
-import {
-    FIND_ALERT_COVENANTS, CHANGE_PAGE_FOR_COVENANTS,
-    CLEAR_CLIENT_ORDER, CLEAR_CLIENT_PAGINATION, ORDER_COLUMN_CLIENT,
-    CHANGE_KEYWORD_NAME_NIT_COVENANT, CLEAR_FILTER_ALERT_COVENANT, UPDATE_NUMBER_TOTAL_COVENANTS, NUMBER_RECORDS,
-    CHANGE_STATUS_COVENANT
-} from './constants';
+import * as constant from './constants';
 import axios from 'axios';
 
 export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, maxRows,order,columnOrder) {
@@ -34,25 +29,55 @@ export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, max
         }
     };
 
-    // const request = axios.post(APP_URL + "/getClientsPendingUpdateAlert", json);
-    const request = {};
+    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
     return {
-        type: FIND_ALERT_COVENANTS,
+        type: constant.FIND_ALERT_COVENANTS,
         payload: request
     }
 }
 
 export function changePage(page) {
     return {
-        type: CHANGE_PAGE_FOR_COVENANTS,
+        type: constant.CHANGE_PAGE_FOR_COVENANTS,
         currentPage: page
     }
 }
 
 export function changeKeyword(keyword) {
     return {
-        type: CHANGE_KEYWORD_NAME_NIT_COVENANT,
+        type: constant.CHANGE_KEYWORD_NAME_NIT_COVENANT,
         keywordNameNit: keyword
+    }
+}
+
+export function defaultValues() {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username": "",
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            "keyWordNameNit": null,
+            "statusCovenant": '0',
+            "pageNum": 1,
+            "maxRows": constant.NUMBER_RECORDS,
+            "order" : 0,
+            "columnOrder" : null
+        }
+    };
+    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
+    return {
+        type: constant.INITIAL_VALUES,
+        payload: request
     }
 }
 
@@ -74,50 +99,49 @@ export function clearFilter() {
         },
         "messageBody": {
             "keyWordNameNit": null,
-            "statusCovenant": null,
+            "statusCovenant": -1,
             "pageNum": 1,
-            "maxRows": NUMBER_RECORDS,
+            "maxRows": constant.NUMBER_RECORDS,
             "order" : 0,
             "columnOrder" : null
         }
     };
-    // const request = axios.post(APP_URL + "/getClientsPendingUpdateAlert", json);
-    const request = {};
+    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
     return {
-        type: CLEAR_FILTER_ALERT_COVENANT,
+        type: constant.CLEAR_FILTER_ALERT_COVENANT,
         payload: request
     }
 }
 
 export function changeStatusCovenant(statusCovenant) {
     return {
-        type: CHANGE_STATUS_COVENANT,
+        type: constant.CHANGE_STATUS_COVENANT,
         statusCovenant
     }
 }
 
 export function clearClientOrder() {
     return {
-        type: CLEAR_CLIENT_ORDER
+        type: constant.CLEAR_CLIENT_ORDER
     };
 }
 
 export function clearClientPagination() {
     return {
-        type: CLEAR_CLIENT_PAGINATION
+        type: constant.CLEAR_CLIENT_PAGINATION
     };
 }
 
 export function updateNumberTotalCovenants(totalCovenants) {
     return {
-        type: UPDATE_NUMBER_TOTAL_COVENANTS,
+        type: constant.UPDATE_NUMBER_TOTAL_COVENANTS,
         totalCovenants
     };
 }
 
 export function orderColumnCovenants(orderClients, columnClients) {
     return {
-        type: ORDER_COLUMN_CLIENT,
+        type: constant.ORDER_COLUMN_CLIENT,
         orderClients,
         columnClients
     };

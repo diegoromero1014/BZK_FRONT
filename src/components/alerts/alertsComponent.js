@@ -11,8 +11,9 @@ import ItemAlert from './itemAlert';
 import { updateTitleNavBar } from '../navBar/actions';
 import { showLoading } from '../loading/actions';
 import { getAlertsByUser, openModalAlerts, clearListAlerts } from './actions';
-import { clearFilter } from '../alertPendingUpdateClient/actions';
+import { clearFilter as clearFilterPUC } from '../alertPendingUpdateClient/actions';
 import { clearFilter as clearFilterPE } from '../alertPortfolioExpirtation/actions';
+import { defaultValues } from '../alertCovenants/actions';
 import { updateNumberTotalClients } from '../alertPendingUpdateClient/actions';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT } from './constants';
 import * as constants from '../selectsComponent/constants';
@@ -60,9 +61,9 @@ class ViewAlerts extends Component {
     }
 
     _cleanFilterClientPendingUpdate() {
-        const {showLoading, clearFilter, consultList} = this.props;
+        const {showLoading, clearFilterPUC, consultList} = this.props;
         showLoading(true, 'Cargando..');
-        clearFilter();
+        clearFilterPUC();
         consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
             if (_.has(data, 'payload.data.teamValueObjects')) {
                 showLoading(false, null);
@@ -80,14 +81,7 @@ class ViewAlerts extends Component {
         });
     }
     _cleanFilterAlertCovenant() {
-        // const {showLoading, clearFilterPE, consultList} = this.props;
-        // showLoading(true, 'Cargando..');
-        // clearFilterPE();
-        // consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
-        //     if (_.has(data, 'payload.data.teamValueObjects')) {
-        //         showLoading(false, null);
-        //     }
-        // });
+        this.props.defaultValues();
     }
 
     paintItemAlert(item, idx, icon, textSize, colorCard, urlAlert, fnClearFilter, nameForm) {
@@ -173,8 +167,9 @@ function mapDispatchToProps(dispatch) {
         updateNumberTotalClients,
         validatePermissionsByModule,
         clearListAlerts,
-        clearFilter,
+        clearFilterPUC,
         clearFilterPE,
+        defaultValues,
         consultList,
         updateTitleNavBar
     }, dispatch);

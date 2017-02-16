@@ -8,7 +8,7 @@ import {get} from 'lodash';
 const initialState = Immutable.Map({
     status: "withoutProcessing",
     keywordNameNit: "",
-    statusCovenant: 1,
+    statusCovenant: '0',
     pageNum: 1,
     order: 0,
     columnOrder: '',
@@ -36,11 +36,23 @@ export default (state = initialState, action = {}) => {
                 map
                     .set('status', 'processed')
                     .set('keywordNameNit', '')
-                    .set('statusCovenant', null)
+                    .set('statusCovenant', '-1')
                     .set('pageNum', 1)
                     .set('columnOrder', '')
                     .set('totalCovenantsByFiltered', get(response2, 'rowCount',0))
                     .set('responseCovenants', get(response2, 'rows',[]));
+            });
+        case actions.INITIAL_VALUES:
+            const response3 = get(action.payload,'data.data',[]);
+            return state.withMutations(map => {
+                map
+                    .set('status', 'processed')
+                    .set('keywordNameNit', '')
+                    .set('statusCovenant', '0')
+                    .set('pageNum', 1)
+                    .set('columnOrder', '')
+                    .set('totalCovenantsByFiltered', get(response3, 'rowCount',0))
+                    .set('responseCovenants', get(response3, 'rows',[]));
             });
         case actions.CHANGE_STATUS_COVENANT:
             return state.withMutations(map => {
