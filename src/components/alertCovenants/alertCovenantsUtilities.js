@@ -1,5 +1,6 @@
-import {shorterStringValue, getStrDateByDatFormat} from '../../actionsGlobal';
+import {shorterStringValue, mapDateValueFromTask,mapDateValueFromTaskByFormat} from '../../actionsGlobal';
 import {getColorCovenant} from '../risksManagement/covenants/covenantsUtilities';
+import {DATE_FORMAT} from '../../constantsGlobal';
 
 export const mapDataGrid = (data = []) => {
     return data.map((covenant, idx) => ({
@@ -9,9 +10,10 @@ export const mapDataGrid = (data = []) => {
         agreement: covenant.agreement,
         lineOfBusiness: covenant.lineOfBusiness,
         managerAccount: covenant.managerAccount,
-        nextExpirationTimestamp: covenant.nextExpirationTimestamp === null ? "" : getStrDateByDatFormat(covenant.nextExpirationTimestamp),
+        nextExpirationTimestamp: mapDateValueFromTask(covenant.nextExpirationTimestamp),
         trafficLight: {
-            color: getColorCovenant(covenant.nextExpirationTimestamp, covenant.capitalBalance),
+            color: getColorCovenant(mapDateValueFromTaskByFormat(covenant.nextExpirationTimestamp,DATE_FORMAT), covenant.capitalBalance),
+            // color: 'blue',
             title: "",
             key: "trafficLight"
         },
