@@ -19,18 +19,6 @@ import {get,indexOf,has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {NUMBER_RECORDS} from './constants';
 
-const data2 = [
-    {
-        idCovenant: "232332",
-        idNumberClient:"2433243",
-        clientName:"dssdsdsdsd",
-        agreement:"sadsadssd",
-        lineOfBusiness:"sadsadssd",
-        manager:"Andres hurtado",
-        expirationDate: '01 01 2018',
-    }
-];
-
 class ListAlertCovenants extends Component {
 
     constructor(props) {
