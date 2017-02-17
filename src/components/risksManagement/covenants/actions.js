@@ -3,7 +3,7 @@
  */
 
 import {APP_URL} from '../../../constantsGlobal';
-import {CLIENTS_COVENANTS, CONSULT_INFO_COVENANT, CLEAR_COVENANT} from './constants';
+import {CLIENTS_COVENANTS, CONSULT_INFO_COVENANT, CLEAR_COVENANT, CHANGE_STATUS_CREATE} from './constants';
 import axios from 'axios';
 
 export function clientCovenants() {
@@ -57,5 +57,12 @@ export function getInfoCovenant(idCovenant) {
 export function clearCovenant(){
     return {
         type: CLEAR_COVENANT
+    }
+}
+
+export function changeStatusCreate(value){
+    return {
+        type: CHANGE_STATUS_CREATE,
+        value: value
     }
 }

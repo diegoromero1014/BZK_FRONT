@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
+import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
-import InputComponent from '../../../../ui/input/inputComponent';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../../actionsGlobal';
 import { redirectUrl } from '../../../globalComponents/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
-import { getInfoCovenant, clearCovenant } from '../actions';
+import { changeStatusCreate } from '../actions';
+import InfoLastTracking from './infoLastTracking';
+import FormCreateTracking from './formCreateTracking';
 import ListTracking from './listTracking';
 import _ from 'lodash';
 
-const fields = [];
-const errors = {};
-
-const validate = (values) => {
-    return errors;
-}
 
 class CreateTracking extends Component {
     constructor(props) {
@@ -26,51 +17,52 @@ class CreateTracking extends Component {
         this._addTracking = this._addTracking.bind(this);
     }
 
-    componentWillMount() {
-        this.props.resetForm();
-        const {nonValidateEnter} = this.props;
-        nonValidateEnter(true);
-    }
-
     _handleCreateTracking() {
         console.log('Trueeeeeeeeeee');
     }
 
     _addTracking() {
-        console.log('Add Tracking');
+        const {changeStatusCreate} = this.props;
+        changeStatusCreate(true);
     }
 
     render() {
-        const {handleSubmit, covenant} = this.props;
+        const {covenant} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         return (
-            <form onSubmit={handleSubmit(this._handleCreateTracking)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-                <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginLeft: '15px', marginRight: '15px' }} >
-                    <Row xs={12} md={12} lg={12} style={{marginBottom: '10px'}} >
+            <div style={{ marginLeft: '15px', marginRight: '15px', marginTop: '15px' }}>
+                <Row xs={12} md={12} lg={12}>
+                    <Col xs={12} md={12} lg={12}>
+                        <InfoLastTracking />
+                    </Col>
+                </Row>
+                {covenant.get('showFormCreatetracking') &&
+                    <FormCreateTracking />
+                }
+                {!covenant.get('showFormCreatetracking') &&
+                    <Row xs={12} md={12} lg={12} style={{ marginBottom: '10px' }} >
                         {infoCovenant.showButtonAddTrackingCovenant &&
                             <Col xs={12} md={12} lg={12} style={{ paddingRight: "8px", textAlign: "right" }}>
                                 <button className="btn btn-primary" onClick={this._addTracking} style={{ float: 'right', cursor: 'pointer' }} title="Agregar seguimiento">
-                                    <i className="white plus icon"></i>
+                                    <i className="white plus icon"></i>Agrear seguimiento
                                 </button>
                             </Col>
                         }
                     </Row>
-                    <Row xs={12} md={12} lg={12}>
-                        <Col xs={12} md={12} lg={12}>
-                            <ListTracking />
-                        </Col>
-                    </Row>
-                </div>
-            </form>
+                }
+                <Row xs={12} md={12} lg={12}>
+                    <Col xs={12} md={12} lg={12}>
+                        <ListTracking />
+                    </Col>
+                </Row>
+            </div>
         );
     };
 }
 
-
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        nonValidateEnter,
-        formValidateKeyEnter
+        changeStatusCreate
     }, dispatch);
 }
 
@@ -81,8 +73,4 @@ function mapStateToProps({reducerGlobal, covenant}, ownerProps) {
     };
 }
 
-export default reduxForm({
-    form: 'submitValidationTrackingCovenant',
-    fields,
-    validate
-}, mapStateToProps, mapDispatchToProps)(CreateTracking);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTracking);
