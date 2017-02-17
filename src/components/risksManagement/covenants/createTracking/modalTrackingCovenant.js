@@ -85,6 +85,7 @@ class ModaltrackingCovenant extends Component {
                     </Row>
                 </div>
                 <div style={{marginTop: '30px'}} >
+                    <dt className="business-title"><span style={{ paddingLeft: '20px', paddingBottom: '10px' }}>Información de seguimientos</span></dt>
                     <CreateTracking />
                 </div>
             </div>

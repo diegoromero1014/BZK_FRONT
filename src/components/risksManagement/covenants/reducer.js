@@ -7,9 +7,10 @@ import { get } from 'lodash';
 
 const initialState = Immutable.Map({
     status: "withoutProcessing",
+    showFormCreatetracking: false,
     responseCovenant: [],
     covenantInfo: {},
-    trackingCovenant: Immutable.List()
+    trackingCovenant: []
 });
 
 export default (state = initialState, action = {}) => {
@@ -23,9 +24,15 @@ export default (state = initialState, action = {}) => {
             });
         case actions.CONSULT_INFO_COVENANT:
             const responseInfo = get(action.payload, 'data', []);
-            return state.set('covenantInfo', get(responseInfo, 'data', []));
+            return state.withMutations(map =>{
+                map
+                    .set( 'covenantInfo', get(responseInfo, 'data', []) )
+                    .set( 'trackingCovenant', get(responseInfo.data, 'listTrackingCovenant', []) );
+            });
         case actions.CLEAR_COVENANT:
             return state.set('covenantInfo', {});
+        case actions.CHANGE_STATUS_CREATE:
+            return state.set('showFormCreatetracking', action.value);
         default:
             return state;
     }

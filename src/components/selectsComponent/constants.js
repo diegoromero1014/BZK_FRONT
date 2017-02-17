@@ -55,3 +55,4 @@ export const LIST_REGIONS = "region";
 export const LIST_ZONES = "zone";
 export const PROBABILITY = "probability";
 export const LINE_OF_BUSINESS = "lineOfBusiness";
+export const VALID_COVENANT = "validCovenant";
