@@ -195,7 +195,7 @@ class ClientsPendingUpdate extends Component {
                         Total: {numberTotalClientFiltered}
                     </div>
                 </Row>
-                <Row style={{paddingLeft: "10px"}}>
+                <Row>
                     <Col xs={12} md={12} lg={12}>
                         <Grid style={{display: visibleTable, width: "98%"}}>
                             <Row>
