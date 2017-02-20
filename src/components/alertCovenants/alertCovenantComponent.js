@@ -137,15 +137,15 @@ class AlertCovenants extends Component {
                 <Row style={{width: "98%",marginLeft: '12px', padding: '10px 5px 5px 10px', display: visibleTable, backgroundColor: '#FFF'}} xs={12} md={12} lg={12}>
                     <Col xs={12} md={4} lg={4} style={{display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR }}></div>
-                        <span style={{ marginLeft: '10px' }}>{optionsColorExpiration[0].text}</span>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}></div>
                         <span style={{ marginLeft: '10px' }}>{optionsColorExpiration[1].text}</span>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}></div>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}></div>
                         <span style={{ marginLeft: '10px' }}>{optionsColorExpiration[2].text}</span>
+                    </Col>
+                    <Col xs={12} md={4} lg={4} style={{display: '-webkit-inline-box' }}>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}></div>
+                        <span style={{ marginLeft: '10px' }}>{optionsColorExpiration[3].text}</span>
                     </Col>
                 </Row>
                 <Row>

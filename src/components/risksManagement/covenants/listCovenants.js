@@ -83,19 +83,19 @@ class ListCovenantsComponent extends Component {
                 <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR }}></div>
-                        <span style={{ marginLeft: '10px' }}> Covenant vencido</span>
+                        <span style={{ marginLeft: '5px' }}>Covenant con seguimiento pendiente</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}></div>
-                        <span style={{ marginLeft: '10px' }}> Covenant próximo a vencerse</span>
+                        <span style={{ marginLeft: '5px' }}>Covenant con seguimiento próximo mes</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}></div>
-                        <span style={{ marginLeft: '10px' }}> Covenant con tiempo</span>
+                        <span style={{ marginLeft: '5px' }}>Covenants con revisión posterior</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: GRAY_COLOR }}></div>
-                        <span style={{ marginLeft: '10px' }}> Covenant inactivo</span>
+                        <span style={{ marginLeft: '5px' }}>Covenant inactivo</span>
                     </Col>
                 </Row>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
