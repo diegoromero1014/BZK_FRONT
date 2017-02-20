@@ -105,11 +105,12 @@ class ListAlertCovenants extends Component {
     }
 
     render() {
+        const modalTitle = 'Creación de seguimientos';
         const {alertCovenant} = this.props;
         const data = alertCovenant.get('responseCovenants');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
             </div>
         );
     }

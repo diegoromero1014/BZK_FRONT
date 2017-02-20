@@ -13,6 +13,9 @@ import { changeStatusCreate, createTrackingCovenant, getInfoCovenant, clientCove
 import { VALID_COVENANT, FULLFILLMENT_COVENANT } from '../../../selectsComponent/constants';
 import { getMasterDataFields } from '../../../selectsComponent/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
+import { covenantsFindServer, changePage } from '../../../alertCovenants/actions';
+import { showLoading } from '../../../loading/actions';
+import { NUMBER_RECORDS } from '../../../alertCovenants/constants';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -47,6 +50,7 @@ class FormCreateTracking extends Component {
         };
         this._closeMessageCreateTracking = this._closeMessageCreateTracking.bind(this);
         this._handleCreateTracking = this._handleCreateTracking.bind(this);
+        this._handleRefreshAlertCovenants = this._handleRefreshAlertCovenants.bind(this);
         this._canceCreate = this._canceCreate.bind(this);
     }
 
@@ -61,6 +65,7 @@ class FormCreateTracking extends Component {
         this.props.resetForm();
         changeStatusCreate(false);
         if (response) {
+            this._handleRefreshAlertCovenants();
             clientCovenants();
             isOpen();
         } else {
@@ -94,6 +99,22 @@ class FormCreateTracking extends Component {
                 }
             }
         });
+    }
+
+    _handleRefreshAlertCovenants() {
+        const {covenantsFindServer, alertCovenant, changePage, showLoading} = this.props;
+        const keyWordNameNit = alertCovenant.get('keywordNameNit');
+        const statusCovenant = alertCovenant.get('statusCovenant');
+        const pageNum = alertCovenant.get('pageNum');
+        const order = alertCovenant.get('order');
+        const columnOrder = alertCovenant.get('columnOrder');
+        showLoading(true, 'Cargando..');
+        covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+            if (_.has(data, 'payload.data.data')) {
+                showLoading(false, null);
+            }
+        });
+        changePage(1);
     }
 
     _canceCreate() {
@@ -200,18 +221,21 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         changeStateSaveData,
         createTrackingCovenant,
-        changeStatusCreate,
         getInfoCovenant,
         clientCovenants,
-        redirectUrl
+        redirectUrl,
+        covenantsFindServer,
+        showLoading,
+        changePage
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, reducerGlobal, covenant}, ownerProps) {
+function mapStateToProps({selectsReducer, reducerGlobal, covenant, alertCovenant}, ownerProps) {
     return {
         selectsReducer,
         reducerGlobal,
-        covenant
+        covenant,
+        alertCovenant
     };
 }
 
