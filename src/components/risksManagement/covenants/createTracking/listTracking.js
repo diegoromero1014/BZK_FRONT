@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import SweetAlert from 'sweetalert-react';
+import { formatDateFromDDMMYYY, shorterStringValue } from '../../../../actionsGlobal';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -16,11 +17,13 @@ class ListTracking extends Component {
     }
 
     _mapValuesTracking(trackingData, idx) {
+        const dateTrackingData = formatDateFromDDMMYYY(trackingData.trackinTimestamp);
+        const observedValueShoet = shorterStringValue(trackingData.observedValue);
         return <tr key={idx}>
-            <td>{trackingData.trackinTimestamp}</td>
+            <td>{dateTrackingData}</td>
             <td>{trackingData.validCovenant}</td>
             <td>{trackingData.fullfillmentCovenant}</td>
-            <td>{trackingData.observedValue}</td>
+            <td>{observedValueShoet}</td>
         </tr>
     }
 

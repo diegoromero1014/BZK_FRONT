@@ -2,9 +2,32 @@
  * Created by IAS-ASUS on 2/2/2017.
  */
 
-import {APP_URL} from '../../../constantsGlobal';
-import {CLIENTS_COVENANTS, CONSULT_INFO_COVENANT, CLEAR_COVENANT, CHANGE_STATUS_CREATE} from './constants';
+import { APP_URL } from '../../../constantsGlobal';
+import { CLIENTS_COVENANTS, CONSULT_INFO_COVENANT, CLEAR_COVENANT, CHANGE_STATUS_CREATE, CREATE_TRACKING_COVENANT } from './constants';
 import axios from 'axios';
+
+export function createTrackingCovenant(jsonTracking) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": jsonTracking
+    }
+    var request = axios.post(APP_URL + "/saveTrackingCovenant", json);
+    return {
+        type: CREATE_TRACKING_COVENANT,
+        payload: request
+    }
+}
 
 export function clientCovenants() {
     const json = {
@@ -54,13 +77,13 @@ export function getInfoCovenant(idCovenant) {
     }
 }
 
-export function clearCovenant(){
+export function clearCovenant() {
     return {
         type: CLEAR_COVENANT
     }
 }
 
-export function changeStatusCreate(value){
+export function changeStatusCreate(value) {
     return {
         type: CHANGE_STATUS_CREATE,
         value: value

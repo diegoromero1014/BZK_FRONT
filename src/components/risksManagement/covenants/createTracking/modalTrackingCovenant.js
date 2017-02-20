@@ -9,7 +9,8 @@ import InputComponent from '../../../../ui/input/inputComponent';
 import { MESSAGE_LOAD_DATA } from '../../../../constantsGlobal';
 import { redirectUrl } from '../../../globalComponents/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
-import { getInfoCovenant, clearCovenant } from '../actions';
+import { getInfoCovenant, clearCovenant, changeStatusCreate } from '../actions';
+import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';
 import CreateTracking from './createTacking';
 import _ from 'lodash';
 
@@ -21,8 +22,9 @@ class ModaltrackingCovenant extends Component {
     }
 
     componentWillMount() {
-        const {clearCovenant, getInfoCovenant, covenantId, changeStateSaveData} = this.props;
+        const {clearCovenant, getInfoCovenant, covenantId, changeStateSaveData, changeStatusCreate} = this.props;
         clearCovenant();
+        changeStatusCreate(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         getInfoCovenant(covenantId).then((data) => {
             changeStateSaveData(false, "");
@@ -35,8 +37,10 @@ class ModaltrackingCovenant extends Component {
     
 
     render() {
-        const {covenant} = this.props;
+        const {covenant, isOpen} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
+        const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
+        const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
         return (
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{overflowX: 'hidden'}}>
                 <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del covenant</span></dt>
@@ -76,17 +80,17 @@ class ModaltrackingCovenant extends Component {
                         </Col>
                         <Col xs={12} md={6} lg={4} >
                             <dt style={{ paddingTop: '5px' }}>Fecha de grabación</dt>
-                            <dd style={{ minHeight: '26px' }}>{_.isNull(infoCovenant.creationTimestamp) || _.isUndefined(infoCovenant.creationTimestamp) ? "" : infoCovenant.creationTimestamp.split(" ")[0]}</dd>
+                            <dd style={{ minHeight: '26px' }}>{dateCreate}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >
                             <dt style={{ paddingTop: '5px' }}>Fecha proximo seguimiento</dt>
-                            <dd style={{ minHeight: '26px' }}>{_.isNull(infoCovenant.expirationTimestamp) || _.isUndefined(infoCovenant.expirationTimestamp) ? "" : infoCovenant.expirationTimestamp.split(" ")[0]}</dd>
+                            <dd style={{ minHeight: '26px' }}>{dateExpiration}</dd>
                         </Col>
                     </Row>
                 </div>
-                <div style={{marginTop: '30px'}} >
+                <div style={{marginTop: '15px'}} >
                     <dt className="business-title"><span style={{ paddingLeft: '20px', paddingBottom: '10px' }}>Información de seguimientos</span></dt>
-                    <CreateTracking />
+                    <CreateTracking isOpen={isOpen}/>
                 </div>
             </div>
         );
@@ -96,8 +100,9 @@ class ModaltrackingCovenant extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getInfoCovenant,
         changeStateSaveData,
+        changeStatusCreate,
+        getInfoCovenant,
         clearCovenant
     }, dispatch);
 }

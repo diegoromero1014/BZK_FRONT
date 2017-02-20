@@ -37,7 +37,9 @@ const initialState = Immutable.Map({
   pipelineCurrencies: [],
   pipelineClientNeeds: [],
   region: [],
-  zone: []
+  zone: [],
+  validCovenant: [],
+  fullfillmentCovenant: []
 });
 
 
@@ -132,6 +134,8 @@ export default (state = initialState, action) => {
             return state.set('region', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.LIST_ZONES:
             return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.FULLFILLMENT_COVENANT:
+            return state.set('fullfillmentCovenant', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
           return state;
   }

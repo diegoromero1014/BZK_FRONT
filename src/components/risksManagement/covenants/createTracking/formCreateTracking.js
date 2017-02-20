@@ -4,64 +4,111 @@ import { reduxForm } from 'redux-form';
 import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../ui/input/inputComponent';
+import Textarea from '../../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../../ui/dateTimePicker/dateTimePickerComponent';
 import { Row, Col } from 'react-flexbox-grid';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../../actionsGlobal';
-import { DATE_FORMAT } from '../../../../constantsGlobal';
+import { DATE_FORMAT, OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_SAVE_DATA } from '../../../../constantsGlobal';
 import { redirectUrl } from '../../../globalComponents/actions';
-import { changeStatusCreate } from '../actions';
-import { VALID_COVENANT } from '../../../selectsComponent/constants';
+import { changeStatusCreate, createTrackingCovenant, getInfoCovenant, clientCovenants } from '../actions';
+import { VALID_COVENANT, FULLFILLMENT_COVENANT } from '../../../selectsComponent/constants';
 import { getMasterDataFields } from '../../../selectsComponent/actions';
+import { changeStateSaveData } from '../../../dashboard/actions';
 import moment from 'moment';
 import _ from 'lodash';
 
-const fields = ["trackingDate", "validCovenant"];
+var response = false;
+const fields = ["validCovenant", "fullfillmentCovenant", "observedValue", "dateFinancialStatements", "observations"];
 const errors = {};
 
 const validate = (values) => {
+    if (!values.validCovenant) {
+        errors.validCovenant = OPTION_REQUIRED;
+    } else {
+        errors.validCovenant = null;
+    }
+    if (!values.fullfillmentCovenant) {
+        errors.fullfillmentCovenant = OPTION_REQUIRED;
+    } else {
+        errors.fullfillmentCovenant = null;
+    }
+    if (!values.observedValue) {
+        errors.observedValue = VALUE_REQUIERED;
+    } else {
+        errors.observedValue = null;
+    }
     return errors;
 }
 
 class FormCreateTracking extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showAlertCreatetracking: false
+        };
+        this._closeMessageCreateTracking = this._closeMessageCreateTracking.bind(this);
         this._handleCreateTracking = this._handleCreateTracking.bind(this);
         this._canceCreate = this._canceCreate.bind(this);
     }
 
-    componenWillMount() {
-        const {nonValidateEnter, getMasterDataFields} = this.props;
-        getMasterDataFields([VALID_COVENANT]);
-        nonValidateEnter(true);
+    componentWillMount() {
+        const {getMasterDataFields} = this.props;
+        getMasterDataFields([VALID_COVENANT, FULLFILLMENT_COVENANT]);
+    }
+
+    _closeMessageCreateTracking() {
+        const {changeStatusCreate, getInfoCovenant, clientCovenants, isOpen } = this.props;
+        this.setState({ showAlertCreatetracking: false });
+        this.props.resetForm();
+        changeStatusCreate(false);
+        if (response) {
+            clientCovenants();
+            isOpen();
+        } else {
+            getInfoCovenant(infoCovenant.idCovenant);
+        }
     }
 
     _handleCreateTracking() {
-        alert('Create');
+        const {fields: {validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations}, covenant,
+            changeStateSaveData, createTrackingCovenant} = this.props;
+        const infoCovenant = covenant.get('covenantInfo');
+        const trackingCovenant = {
+            idCovenant: infoCovenant.idCovenant,
+            validCovenant: validCovenant.value,
+            fullfillmentCovenant: fullfillmentCovenant.value,
+            observedValue: observedValue.value,
+            dateFinancialStatements: parseInt(moment(dateFinancialStatements.value, DATE_FORMAT).format('x')),
+            observations: observations.value
+        };
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        createTrackingCovenant(trackingCovenant).then((data) => {
+            changeStateSaveData(false, "");
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            } else {
+                this.setState({ showAlertCreatetracking: true });
+                if (_.get(data, 'payload.data.data') || _.get(data, 'payload.data.data') === true) {
+                    response = true;
+                } else {
+                    response = false;
+                }
+            }
+        });
     }
 
     _canceCreate() {
         const {changeStatusCreate} = this.props;
+        this.props.resetForm();
         changeStatusCreate(false);
     }
 
     render() {
-        const { fields: {trackingDate, validCovenant},
-            handleSubmit, formValidateKeyEnter, selectsReducer} = this.props;
+        const { fields: {validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations},
+            handleSubmit, formValidateKeyEnter, selectsReducer, reducerGlobal} = this.props;
         return (
-            <form onSubmit={handleSubmit(this._handleCreateTracking)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-                <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial' }}>
+            <form onSubmit={handleSubmit(this._handleCreateTracking)} >
+                <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginTop: '10px' }}>
                     <Row xs={12} md={12} lg={12} style={{ paddingBottom: '20px' }}>
-                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Fecha seguimiento - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-                            </dt>
-                            <DateTimePickerUi
-                                culture='es'
-                                format={DATE_FORMAT}
-                                time={false}
-                                {...trackingDate}
-                                />
-                        </Col>
                         <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
                                 <span>Covenant vigente (</span><span style={{ color: "red" }}>*</span>)
@@ -70,10 +117,57 @@ class FormCreateTracking extends Component {
                                 name="validCovenant"
                                 labelInput="Seleccione..."
                                 valueProp={'id'}
-                                textProp={'code'}
+                                textProp={'value'}
                                 {...validCovenant}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
-                                onChange={val => this._changeCurrency(val)}
+                                />
+                        </Col>
+                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
+                            <dt>
+                                <span>Cumplimiento del covenant (</span><span style={{ color: "red" }}>*</span>)
+                            </dt>
+                            <ComboBox
+                                name="fullfillmentCovenant"
+                                labelInput="Seleccione..."
+                                valueProp={'id'}
+                                textProp={'value'}
+                                {...fullfillmentCovenant}
+                                data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
+                                />
+                        </Col>
+                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
+                            <dt>
+                                <span>Fecha de estados financieros </span>
+                            </dt>
+                            <DateTimePickerUi
+                                culture='es'
+                                format={DATE_FORMAT}
+                                time={false}
+                                {...dateFinancialStatements}
+                                />
+                        </Col>
+                        <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px" }}>
+                            <dt>
+                                <span>Valor observado (</span><span style={{ color: "red" }}>*</span>)
+                            </dt>
+                            <InputComponent
+                                name="observedValue"
+                                type="text"
+                                {...observedValue}
+                                max="100"
+                                />
+                        </Col>
+                        <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px" }}>
+                            <dt>
+                                <span>Observaciones</span>
+                            </dt>
+                            <Textarea
+                                name="observations"
+                                type="text"
+                                max="2000"
+                                {...observations}
+                                title="La longitud máxima de caracteres es de 2000"
+                                style={{ width: '100%' }}
                                 />
                         </Col>
                     </Row>
@@ -87,6 +181,13 @@ class FormCreateTracking extends Component {
                         </button>
                     </Row>
                 </div>
+                <SweetAlert
+                    type="success"
+                    show={this.state.showAlertCreatetracking}
+                    title="Creación seguimiento"
+                    text="Señor usuario, el seguimiento se creó de forma exitosa."
+                    onConfirm={this._closeMessageCreateTracking}
+                    />
             </form>
         );
     }
@@ -95,10 +196,14 @@ class FormCreateTracking extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        nonValidateEnter,
-        formValidateKeyEnter,
         changeStatusCreate,
-        getMasterDataFields
+        getMasterDataFields,
+        changeStateSaveData,
+        createTrackingCovenant,
+        changeStatusCreate,
+        getInfoCovenant,
+        clientCovenants,
+        redirectUrl
     }, dispatch);
 }
 

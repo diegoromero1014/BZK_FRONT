@@ -13,21 +13,16 @@ import _ from 'lodash';
 class CreateTracking extends Component {
     constructor(props) {
         super(props);
-        this._handleCreateTracking = this._handleCreateTracking.bind(this);
         this._addTracking = this._addTracking.bind(this);
     }
-
-    _handleCreateTracking() {
-        console.log('Trueeeeeeeeeee');
-    }
-
+    
     _addTracking() {
         const {changeStatusCreate} = this.props;
         changeStatusCreate(true);
     }
 
     render() {
-        const {covenant} = this.props;
+        const {covenant, isOpen} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         return (
             <div style={{ marginLeft: '15px', marginRight: '15px', marginTop: '15px' }}>
@@ -37,7 +32,7 @@ class CreateTracking extends Component {
                     </Col>
                 </Row>
                 {covenant.get('showFormCreatetracking') &&
-                    <FormCreateTracking />
+                    <FormCreateTracking isOpen={isOpen}/>
                 }
                 {!covenant.get('showFormCreatetracking') &&
                     <Row xs={12} md={12} lg={12} style={{ marginBottom: '10px' }} >

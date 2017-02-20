@@ -150,6 +150,15 @@ export function mapDateValueFromTaskByFormat(date, format) {
     }
 }
 
+export function formatDateFromDDMMYYY(date, format) {
+    const defaultDate = _.isEmpty(format) ? REVIEWED_DATE_FORMAT : format;
+    if (moment(date, [defaultDate], 'es', true).isValid()) {
+        return date;
+    } else {
+        return moment(date, 'DD/MM/YYYY').locale('es').format(defaultDate);
+    }
+}
+
 export function getStrDateByDateFormat(date, format) {
     const formatDefault = _.isEmpty(format) ? DATE_FORMAT : format;
     return moment(date, formatDefault).locale('es').format(REVIEWED_DATE_FORMAT);
