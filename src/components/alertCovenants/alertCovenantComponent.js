@@ -12,7 +12,6 @@ import Pagination from './pagination';
 import {redirectUrl} from '../globalComponents/actions';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
-import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListAlertCovenants from './listAlertCovenants';
 import _ from 'lodash';
 import { Dropdown } from 'semantic-ui-react'
@@ -22,17 +21,21 @@ const fields = [];
 const titleModule = 'Alerta de covenants vencidos o próximos a vencer';
 const optionsColorExpiration = [
     {
-        text: 'Covenant vencido',
+        text: 'Seleccione un estado de covenant',
+        value: '-1'
+    },
+    {
+        text: 'Covenant con seguimiento pendiente',
         value: '0',
         label: {color: 'red-ayax', empty: true, circular: true},
     },
     {
-        text: 'Covenant vence el próximo mes',
+        text: 'Covenant con seguimiento próximo mes',
         value: '1',
         label: {color: 'orange-ayax', empty: true, circular: true},
     },
     {
-        text: 'Covenant con tiempo',
+        text: 'Covenants con revisión posterior',
         value: '2',
         label: {color: 'green-ayax', empty: true, circular: true},
     }
@@ -103,22 +106,18 @@ class AlertCovenants extends Component {
         var statusCovenant = alertCovenant.get('statusCovenant');
         if(_.isNull(statusCovenant)){
             statusCovenant = "0";
-        }else{
-            if(_.isEqual(statusCovenant,-1)){
-                statusCovenant = "";
-            }
         }
         const numberTotalClientFiltered = alertCovenant.get('totalCovenantsByFiltered');
         return (
             <div>
                 <form>
                     <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
-                        <Col xs={12} sm={12} md={4} lg={4} >
+                        <Col xs={12} sm={12} md={6} lg={6} >
                             <SearchBarClient valueStatus={status.value}/>
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={3}>
-                            <Dropdown value={statusCovenant} onChange={(e,val) => {
-                                this._onChangeStatusCovenant(val.value)}} placeholder='Seleccionar estado' fluid search selection options={optionsColorExpiration} />
+                        <Col xs={12} sm={12} md={4} lg={4}>
+                            <Dropdown  value={statusCovenant} onChange={(e,val) => {
+                                this._onChangeStatusCovenant(val.value)}} placeholder='Por favor, seleccione un estado' fluid search selection options={optionsColorExpiration} />
                         </Col>
 
                         <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>

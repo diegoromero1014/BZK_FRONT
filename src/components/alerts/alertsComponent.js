@@ -117,7 +117,7 @@ class ViewAlerts extends Component {
                         break;
                     case CODE_COVENANT_ALERT:
                         countAlerts = countAlerts + 1;
-                        const iconCovenant = <Icon style={{fontSize: "50px", marginTop: '55px', marginLeft: "18px"}} name="briefcase"/>;
+                        const iconCovenant = <Icon style={{fontSize: "50px", marginTop: '55px', marginLeft: "18px"}} name="ordered list"/>;
                         return this.paintItemAlert(item, idx, iconCovenant, "15px", BLUE_COLOR,
                             "/dashboard/alertCovenants", this._cleanFilterAlertCovenant, FORM_FILTER_ALERT_COVENANT);
                         break;
