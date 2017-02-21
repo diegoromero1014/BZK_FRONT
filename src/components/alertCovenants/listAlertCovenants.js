@@ -61,6 +61,10 @@ class ListAlertCovenants extends Component {
 
         const headersTable = [
             {
+                title: "",
+                key: "actions"
+            },
+            {
                 title: "Id covenant",
                 key: "idCovenant"
             },
@@ -85,15 +89,12 @@ class ListAlertCovenants extends Component {
                 key: "managerAccount"
             },
             {
-                title: "Fecha de vencimiento",
-                key: "nextExpirationTimestamp"
-            }, {
-                title: "Estado",
+                title: "",
                 key: "trafficLight"
             },
             {
-                title: "Seguimiento",
-                key: "actions"
+                title: "Fecha de vencimiento",
+                key: "nextExpirationTimestamp"
             }
         ];
 
