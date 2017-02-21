@@ -55,12 +55,11 @@ class SearchBarClient extends Component{
     }
 
     _handleClientsFind(e){
-        const {clientsPortfolioExpirationFindServer,alertPortfolioExpiration,showLoading} = this.props;
+        const {clientsPortfolioExpirationFindServer,alertPortfolioExpiration,showLoading,changePage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         if(keyWordNameNit === '' || keyWordNameNit === undefined){
             this.setState({showEr: true});
         }else{
-            const {changePage} = this.props;
             const idTeam = alertPortfolioExpiration.get('idTeam');
             const idRegion = alertPortfolioExpiration.get('idRegion');
             const idZone = alertPortfolioExpiration.get('idZone');
@@ -70,9 +69,9 @@ class SearchBarClient extends Component{
             clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
                 if (_.has(data, 'payload.data.data')) {
                     showLoading(false, null);
+                    changePage(1);
                 }
             });
-            changePage(1);
         }
     }
 

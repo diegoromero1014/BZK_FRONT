@@ -83,16 +83,15 @@ class AlertCovenants extends Component {
     _handleCovenantsFind(statusCovenant) {
         const {covenantsFindServer, alertCovenant, changePage, showLoading} = this.props;
         const keyWordNameNit = alertCovenant.get('keywordNameNit');
-        const pageNum = alertCovenant.get('pageNum');
         const order = alertCovenant.get('order');
         const columnOrder = alertCovenant.get('columnOrder');
         showLoading(true, 'Cargando..');
-        covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        covenantsFindServer(keyWordNameNit, statusCovenant, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
+                changePage(1);
             }
         });
-        changePage(1);
     }
 
     render() {

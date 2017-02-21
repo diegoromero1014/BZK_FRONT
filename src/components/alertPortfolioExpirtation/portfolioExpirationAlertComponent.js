@@ -111,16 +111,15 @@ class ClientsPendingUpdate extends Component {
     _handleClientsFind() {
         const {fields: {team, region, zone}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
-        const pageNum = alertPortfolioExpiration.get('pageNum');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
-        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
+                changePage(1);
             }
         });
-        changePage(1);
     }
 
     render() {

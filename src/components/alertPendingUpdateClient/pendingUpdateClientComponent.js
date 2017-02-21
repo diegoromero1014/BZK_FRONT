@@ -110,16 +110,15 @@ class ClientsPendingUpdate extends Component {
     _handleClientsFind() {
         const {fields: {team, region, zone}, clientsPendingUpdateFindServer, alertPendingUpdateClient, changePage, showLoading} = this.props;
         const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
-        const pageNum = alertPendingUpdateClient.get('pageNum');
         const order = alertPendingUpdateClient.get('order');
         const columnOrder = alertPendingUpdateClient.get('columnOrder');
         showLoading(true, 'Cargando..');
-        clientsPendingUpdateFindServer(keyWordNameNit, team.value, region.value, zone.value, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        clientsPendingUpdateFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
+                changePage(1);
             }
         });
-        changePage(1);
     }
 
     render() {

@@ -105,16 +105,15 @@ class FormCreateTracking extends Component {
         const {covenantsFindServer, alertCovenant, changePage, showLoading} = this.props;
         const keyWordNameNit = alertCovenant.get('keywordNameNit');
         const statusCovenant = alertCovenant.get('statusCovenant');
-        const pageNum = alertCovenant.get('pageNum');
         const order = alertCovenant.get('order');
         const columnOrder = alertCovenant.get('columnOrder');
         showLoading(true, 'Cargando..');
-        covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        covenantsFindServer(keyWordNameNit, statusCovenant, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
                 showLoading(false, null);
+                changePage(1);
             }
         });
-        changePage(1);
     }
 
     _canceCreate() {
