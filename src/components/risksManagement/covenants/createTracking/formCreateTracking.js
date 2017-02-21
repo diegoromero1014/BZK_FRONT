@@ -46,9 +46,11 @@ class FormCreateTracking extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAlertCreatetracking: false
+            showAlertCreatetracking: false,
+            showErrorAlertCreatetracking: false
         };
         this._closeMessageCreateTracking = this._closeMessageCreateTracking.bind(this);
+        this._closeMessageErrorCreateTracking = this._closeMessageErrorCreateTracking.bind(this);
         this._handleCreateTracking = this._handleCreateTracking.bind(this);
         this._handleRefreshAlertCovenants = this._handleRefreshAlertCovenants.bind(this);
         this._canceCreate = this._canceCreate.bind(this);
@@ -60,7 +62,7 @@ class FormCreateTracking extends Component {
     }
 
     _closeMessageCreateTracking() {
-        const {changeStatusCreate, getInfoCovenant, clientCovenants, isOpen } = this.props;
+        const {changeStatusCreate, getInfoCovenant, clientCovenants, isOpen, covenant } = this.props;
         this.setState({ showAlertCreatetracking: false });
         this.props.resetForm();
         changeStatusCreate(false);
@@ -69,8 +71,13 @@ class FormCreateTracking extends Component {
             clientCovenants();
             isOpen();
         } else {
+            const infoCovenant = covenant.get('covenantInfo');
             getInfoCovenant(infoCovenant.idCovenant);
         }
+    }
+
+    _closeMessageErrorCreateTracking() {
+        this.setState({ showErrorAlertCreatetracking: false });
     }
 
     _handleCreateTracking() {
@@ -91,11 +98,16 @@ class FormCreateTracking extends Component {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             } else {
-                this.setState({ showAlertCreatetracking: true });
+                if (_.isEqual(_.get(data, 'payload.data.status'), 500)) {
+                    console.log('Error creando seguimiento', _.get(data, 'payload.data.data'));
+                    this.setState({ showErrorAlertCreatetracking: true });
+                } else {
+                    this.setState({ showAlertCreatetracking: true });
                 if (_.get(data, 'payload.data.data') || _.get(data, 'payload.data.data') === true) {
                     response = true;
                 } else {
                     response = false;
+                }
                 }
             }
         });
@@ -208,6 +220,13 @@ class FormCreateTracking extends Component {
                     title="Creación seguimiento"
                     text="Señor usuario, el seguimiento se creó de forma exitosa."
                     onConfirm={this._closeMessageCreateTracking}
+                    />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorAlertCreatetracking}
+                    title="Creación seguimiento"
+                    text="Señor usuario, ocurrió un error tratando de crear el seguimiento."
+                    onConfirm={this._closeMessageErrorCreateTracking}
                     />
             </form>
         );
