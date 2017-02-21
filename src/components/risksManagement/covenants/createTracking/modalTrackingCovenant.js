@@ -48,7 +48,7 @@ class ModaltrackingCovenant extends Component {
                     <Row>
                         <Col xs={12} md={12} lg={12} >
                             <dt style={{ paddingTop: '5px' }}>Descripción de acta</dt>
-                            <dd>{infoCovenant.descriptionRecord}</dd>
+                            <dd style={{ textAlign: 'justify' }}>{infoCovenant.descriptionRecord}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >
                             <dt style={{ paddingTop: '5px' }}>Id covenant</dt>
@@ -67,7 +67,7 @@ class ModaltrackingCovenant extends Component {
                             <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.revisionFrequencyName) ? "" : infoCovenant.revisionFrequencyName}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >
-                            <dt style={{ paddingTop: '5px' }}>Negocio/Producto</dt>
+                            <dt style={{ paddingTop: '5px' }}>Entidad/Línea de negocio</dt>
                             <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.lineOfBusinessName) ? "" : infoCovenant.lineOfBusinessName}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >

@@ -35,7 +35,7 @@ class CreateTracking extends Component {
                     <FormCreateTracking isOpen={isOpen}/>
                 }
                 {!covenant.get('showFormCreatetracking') &&
-                    <Row xs={12} md={12} lg={12} style={{ marginBottom: '10px' }} >
+                    <Row xs={12} md={12} lg={12} style={{ marginBottom: '10px', marginTop: '15px' }} >
                         {infoCovenant.showButtonAddTrackingCovenant &&
                             <Col xs={12} md={12} lg={12} style={{ paddingRight: "8px", textAlign: "right" }}>
                                 <button className="btn btn-primary" onClick={this._addTracking} style={{ float: 'right', cursor: 'pointer' }} title="Agregar seguimiento">

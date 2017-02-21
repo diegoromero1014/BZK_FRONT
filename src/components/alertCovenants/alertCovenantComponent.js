@@ -25,12 +25,12 @@ const optionsColorExpiration = [
         value: '-1'
     },
     {
-        text: 'Covenant con seguimiento pendiente',
+        text: 'Covenants con seguimiento pendiente',
         value: '0',
         label: {color: 'red-ayax', empty: true, circular: true},
     },
     {
-        text: 'Covenant con seguimiento próximo mes',
+        text: 'Covenants con seguimiento próximo mes',
         value: '1',
         label: {color: 'orange-ayax', empty: true, circular: true},
     },
