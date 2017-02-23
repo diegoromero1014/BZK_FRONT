@@ -17,6 +17,7 @@ class InfoLastTracking extends Component {
         const dateFianncialState = lastTracking === null || lastTracking.financialStateTimestamp === null? "" : formatDateFromDDMMYYY(lastTracking.financialStateTimestamp);
         return (
             <div style={{marginLeft: '7px'}}>
+                <h4 style={{borderBottom: "solid 1px", marginTop: "10px"}}>Último seguimiento</h4>
                 {lastTracking !== null &&
                     <Row>
                         <Col xs={12} md={6} lg={4} >

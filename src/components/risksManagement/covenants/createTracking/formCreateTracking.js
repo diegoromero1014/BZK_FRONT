@@ -11,6 +11,7 @@ import { DATE_FORMAT, OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_SAVE_DATA } from
 import { redirectUrl } from '../../../globalComponents/actions';
 import { changeStatusCreate, createTrackingCovenant, getInfoCovenant, clientCovenants } from '../actions';
 import { VALID_COVENANT, FULLFILLMENT_COVENANT } from '../../../selectsComponent/constants';
+import { TITLE_FIELD_OBSERVED_VALUE } from '../constants';
 import { getMasterDataFields } from '../../../selectsComponent/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { covenantsFindServer, changePage } from '../../../alertCovenants/actions';
@@ -181,6 +182,7 @@ class FormCreateTracking extends Component {
                         <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px" }}>
                             <dt>
                                 <span>Valor observado (</span><span style={{ color: "red" }}>*</span>)
+                                <i className="help circle icon blue" style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}} title={TITLE_FIELD_OBSERVED_VALUE}/>
                             </dt>
                             <InputComponent
                                 name="observedValue"
