@@ -68,12 +68,12 @@ class FormCreateTracking extends Component {
         changeStatusCreate(false);
         if (response) {
             this._handleRefreshAlertCovenants();
-            clientCovenants();
             isOpen();
         } else {
             const infoCovenant = covenant.get('covenantInfo');
             getInfoCovenant(infoCovenant.idCovenant);
         }
+        clientCovenants();
     }
 
     _closeMessageErrorCreateTracking() {
