@@ -14,10 +14,12 @@ class InfoLastTracking extends Component {
         const listTracking = covenant.get('trackingCovenant');
         const lastTracking = listTracking.length === 0 ? null : listTracking[0];
         const dateLasttracking = lastTracking === null ? "" : formatDateFromDDMMYYY(lastTracking.trackinTimestamp);
-        const dateFianncialState = lastTracking === null || lastTracking.financialStateTimestamp === null? "" : formatDateFromDDMMYYY(lastTracking.financialStateTimestamp);
+        const dateFianncialState = lastTracking === null || lastTracking.financialStateTimestamp === null ? "" : formatDateFromDDMMYYY(lastTracking.financialStateTimestamp);
         return (
-            <div style={{marginLeft: '7px'}}>
-                <h4 style={{borderBottom: "solid 1px", marginTop: "10px"}}>Último seguimiento</h4>
+            <div style={{ marginLeft: '7px' }}>
+                {lastTracking !== null &&
+                    <h4 style={{ borderBottom: "solid 1px", marginTop: "10px" }}>Último seguimiento</h4>
+                }
                 {lastTracking !== null &&
                     <Row>
                         <Col xs={12} md={6} lg={4} >
