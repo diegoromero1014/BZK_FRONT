@@ -90,7 +90,7 @@ export default combineReducers({
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
     alertCovenant :alertCovenantReducer,
-    pipelineBusinessReducer: pipelineBusinessReducer
+    pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
     alertCovenant :alertCovenantReducer,
     alertBlackList : alertBlackListReducer
