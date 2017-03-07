@@ -4,7 +4,6 @@
 import {shorterStringValue} from '../../actionsGlobal';
 
 export const mapDataGrid = (data = []) => {
-    console.log(data);
     return data.map((blackList, idx) => ({
         idBlackList: blackList.idBlackList,
         idClient: blackList.idClient,

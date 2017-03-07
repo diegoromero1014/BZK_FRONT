@@ -89,7 +89,7 @@ export default combineReducers({
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
     alertCovenant :alertCovenantReducer,
-    leftTimer
+    leftTimer,
     alertCovenant :alertCovenantReducer,
     alertBlackList : alertBlackListReducer
 });
