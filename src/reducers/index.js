@@ -42,6 +42,7 @@ import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirta
 import loadingReducer from '../components/loading/reducer';
 import covenant from '../components/risksManagement/covenants/reducer';
 import alertCovenantReducer from '../components/alertCovenants/reducer';
+import pipelineBusinessReducer from '../components/pipeline/business/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -86,5 +87,6 @@ export default combineReducers({
     loading: loadingReducer,
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
-    alertCovenant :alertCovenantReducer
+    alertCovenant :alertCovenantReducer,
+    pipelineBusinessReducer: pipelineBusinessReducer
 });

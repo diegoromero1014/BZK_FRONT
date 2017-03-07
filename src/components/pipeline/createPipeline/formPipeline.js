@@ -1,36 +1,36 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
+import {bindActionCreators} from 'redux';
+import {redirectUrl} from '../../globalComponents/actions';
+import {Grid, Row, Col} from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import { PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS } from '../../selectsComponent/constants';
-import { getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds } from '../../selectsComponent/actions';
-import { LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING } from '../constants';
-import { createEditPipeline } from '../actions';
-import {
-  SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT, DATE_START_AFTER,
-  MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER
-} from '../../../constantsGlobal';
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber } from '../../../actionsGlobal';
+import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS } from '../../selectsComponent/constants';
+import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
+import {LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
+  LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS} from '../constants';
+import {createEditPipeline} from '../actions';
+import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT,
+  DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER} from '../../../constantsGlobal';
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber} from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
-import { filterUsersBanco } from '../../participantsVisitPre/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { MENU_CLOSED } from '../../navBar/constants';
+import {filterUsersBanco} from '../../participantsVisitPre/actions';
+import {changeStateSaveData} from '../../dashboard/actions';
+import {MENU_CLOSED} from '../../navBar/constants';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
+import Business from '../business/business';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
   "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product", "reviewedDate",
   "priority", "registeredCountry", "startDate", "client", "documentStatus", "probability", "pendingDisburAmount", "amountDisbursed",
-  "estimatedDisburDate", "entity", "contract"];
+  "estimatedDisburDate", "entity", "contract", "origin"];
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -505,134 +505,134 @@ class FormPipeline extends Component {
       businessWeek, currency, indexing, endDate, need, observations, business, product,
       priority, registeredCountry, startDate, client, documentStatus, probability, entity,
       pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract},
-      clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar} = this.props;
-
+      clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, origin} = this.props;
+      console.log('origin', origin);
     return (
       <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
-        style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-        <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
-        <Row style={{ padding: "10px 10px 20px 20px" }}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className="browser icon" style={{ fontSize: "20px" }} />
-              <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={12} md={36} lg={6}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Negocio (</span><span style={{ color: "red" }}>*</span>)
-              </dt>
-              <MultipleSelect
-                name="business"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...business}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(PIPELINE_BUSINESS) || []}
-                />
-              {this.state.errorBusinessPipeline &&
-                <div>
-                  <div className="ui pointing red basic label">
-                    {this.state.errorBusinessPipeline}
+        style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+        <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""} style={origin === ORIGIN_PIPELIN_BUSINESS ? {overflowX:"hidden", paddingBottom:"0px", marginTop:"10px"} : {}}>
+          <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+          <Row style={{ padding: "10px 10px 20px 20px" }}>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                <i className="browser icon" style={{ fontSize: "20px" }} />
+                <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={12} md={36} lg={6}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Negocio (</span><span style={{ color: "red" }}>*</span>)
+                </dt>
+                <MultipleSelect
+                  name="business"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...business}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(PIPELINE_BUSINESS) || []}
+                  />
+                {this.state.errorBusinessPipeline &&
+                  <div>
+                    <div className="ui pointing red basic label">
+                      {this.state.errorBusinessPipeline}
+                    </div>
                   </div>
-                </div>
-              }
-            </div>
-          </Col>
-          <Col xs={12} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Producto</span>
-              </dt>
-              <ComboBox
-                name="product"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'product'}
-                {...product}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get('pipelineProducts') || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Estado (</span><span style={{ color: "red" }}>*</span>)
-              </dt>
-              <ComboBox
-                name="businessStatus"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...businessStatus}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(PIPELINE_STATUS) || []}
-                />
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Indexación</span>
-              </dt>
-              <ComboBox
-                name="indexing"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...indexing}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(PIPELINE_INDEXING) || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Interés / Spread</span>
-              </dt>
-              <Input
-                name="commission"
-                type="text"
-                {...commission}
-                max="10"
-                parentId="dashboardComponentScroll"
-                onBlur={val => this._handleBlurValueNumber(2, commission, commission.value, true)}
-                onFocus={val => this._handleFocusValueNumber(commission, commission.value)}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>ROE</span>
-              </dt>
-              <Input
-                name="roe"
-                type="text"
-                {...roe}
-                max="10"
-                parentId="dashboardComponentScroll"
-                onBlur={val => this._handleBlurValueNumber(1, roe, roe.value, true)}
-                onFocus={val => this._handleFocusValueNumber(roe, roe.value)}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Empleado responsable</span>
-              </dt>
-              <dt>
-                <div className="ui dropdown search participantBanc fluid" style={{ border: "0", zIndex: "1", padding: "0" }}>
+                }
+              </div>
+            </Col>
+            <Col xs={12} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Producto</span>
+                </dt>
+                <ComboBox
+                  name="product"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'product'}
+                  {...product}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get('pipelineProducts') || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Estado (</span><span style={{ color: "red" }}>*</span>)
+                </dt>
+                <ComboBox
+                  name="businessStatus"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...businessStatus}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(PIPELINE_STATUS) || []}
+                  />
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Indexación</span>
+                </dt>
+                <ComboBox
+                  name="indexing"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...indexing}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(PIPELINE_INDEXING) || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Interés / Spread</span>
+                </dt>
+                <Input
+                  name="commission"
+                  type="text"
+                  {...commission}
+                  max="10"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => this._handleBlurValueNumber(2, commission, commission.value, true)}
+                  onFocus={val => this._handleFocusValueNumber(commission, commission.value)}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>ROE</span>
+                </dt>
+                <Input
+                  name="roe"
+                  type="text"
+                  {...roe}
+                  max="10"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => this._handleBlurValueNumber(1, roe, roe.value, true)}
+                  onFocus={val => this._handleFocusValueNumber(roe, roe.value)}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Empleado responsable</span>
+                </dt>
+                <div className="ui dropdown search participantBanc fluid" style={{ border: "0", padding: "0" }}>
                   <div className="ui icon input" style={{ width: "100%" }}>
                     <input className="prompt" id="inputParticipantBanc"
                       style={{ borderRadius: "3px" }}
@@ -656,98 +656,96 @@ class FormPipeline extends Component {
                       </div>
                   </div>
                 }
-              </dt>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
+                </dt>
+                <ComboBox
+                  name="need"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'need'}
+                  {...need}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get('pipelineClientNeeds') || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Prioridad</span>
+                </dt>
+                <ComboBox
+                  name="priority"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...priority}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(PIPELINE_PRIORITY) || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>País libro</span>
+                </dt>
+                <ComboBox
+                  name="registeredCountry"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...registeredCountry}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(FILTER_COUNTRY) || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Negocio de la semana</span>
+                </dt>
+                <ComboBox
+                  name="businessWeek"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...businessWeek}
+                  parentId="dashboardComponentScroll"
+                  data={[{ id: true, value: 'Si' }, { id: false, value: 'No' }]}
+                  />
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Probabilidad</span>
+                </dt>
+                <ComboBox
+                  name="comboProbability"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'value'}
+                  {...probability}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get(PROBABILITY) || []}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
               <dt>
-                <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
+                <span>Entidad</span>
               </dt>
-              <ComboBox
-                name="need"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'need'}
-                {...need}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get('pipelineClientNeeds') || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Prioridad</span>
-              </dt>
-              <ComboBox
-                name="priority"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...priority}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(PIPELINE_PRIORITY) || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>País libro</span>
-              </dt>
-              <ComboBox
-                name="registeredCountry"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...registeredCountry}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(FILTER_COUNTRY) || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Negocio de la semana</span>
-              </dt>
-              <ComboBox
-                name="businessWeek"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...businessWeek}
-                parentId="dashboardComponentScroll"
-                data={[{ id: true, value: 'Si' }, { id: false, value: 'No' }]}
-                />
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Probabilidad</span>
-              </dt>
-              <ComboBox
-                name="comboProbability"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'value'}
-                {...probability}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get(PROBABILITY) || []}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-            <dt>
-              <span>Entidad</span>
-            </dt>
-            <dt>
               <ComboBox
                 name="comboEntity"
                 labelInput="Seleccione..."
@@ -758,188 +756,183 @@ class FormPipeline extends Component {
                 data={selectsReducer.get(LINE_OF_BUSINESS) || []}
                 onChange={val => this._changeEntity(val)}
                 />
-            </dt>
-          </Col>
-          <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? { paddingRight: "20px", display: "block" } : { display: "none" }}>
-            <dt>
-              <span>Contrato</span>
-            </dt>
-            <dt>
-              <Input
-                name="txtContract"
-                type="text"
-                {...contract}
-                max="50"
-                parentId="dashboardComponentScroll"
-                />
-            </dt>
-          </Col>
-        </Row>
-        <Row style={{ padding: "20px 23px 20px 20px" }}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
-              <i className="book icon" style={{ fontSize: "18px" }} />
-              <span style={{ fontSize: "20px" }}>Detalle de plazo y monto</span>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
+            </Col>
+            <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? { paddingRight: "20px", display: "block" } : { display: "none" }}>
               <dt>
-                <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
+                <span>Contrato</span>
               </dt>
-              <ComboBox
-                name="currency"
-                labelInput="Seleccione..."
-                valueProp={'id'}
-                textProp={'code'}
-                {...currency}
-                parentId="dashboardComponentScroll"
-                data={selectsReducer.get('pipelineCurrencies') || []}
-                onChange={val => this._changeCurrency(val)}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
               <dt>
-                <span>{this.state.labelCurrency} (</span><span style={{ color: "red" }}>*</span>)
+                <Input
+                  name="txtContract"
+                  type="text"
+                  {...contract}
+                  max="50"
+                  parentId="dashboardComponentScroll"
+                  />
               </dt>
-              <Input
-                {...value}
-                name="valueMillions"
-                type="text"
-                max="28"
-                parentId="dashboardComponentScroll"
-                onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
-                onFocus={val => this._handleFocusValueNumber(value, value.value)}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
+            </Col>
+          </Row>
+          <Row style={{ padding: "20px 23px 20px 20px" }}>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                <i className="book icon" style={{ fontSize: "18px" }} />
+                <span style={{ fontSize: "20px" }}>Detalle de plazo y monto</span>
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
+                </dt>
+                <ComboBox
+                  name="currency"
+                  labelInput="Seleccione..."
+                  valueProp={'id'}
+                  textProp={'code'}
+                  {...currency}
+                  parentId="dashboardComponentScroll"
+                  data={selectsReducer.get('pipelineCurrencies') || []}
+                  onChange={val => this._changeCurrency(val)}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>{this.state.labelCurrency} (</span><span style={{ color: "red" }}>*</span>)
+                </dt>
+                <Input
+                  {...value}
+                  name="valueMillions"
+                  type="text"
+                  max="28"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
+                  onFocus={val => this._handleFocusValueNumber(value, value.value)}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Plazo en meses</span>
+                </dt>
+                <Input
+                  name="termInMonths"
+                  type="text"
+                  {...termInMonths}
+                  max="4"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                  />
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
               <dt>
-                <span>Plazo en meses</span>
+                <span>Fecha de inicio - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
               </dt>
-              <Input
-                name="termInMonths"
-                type="text"
-                {...termInMonths}
-                max="4"
-                parentId="dashboardComponentScroll"
-                onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
-                />
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-            <dt>
-              <span>Fecha de inicio - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-            </dt>
-            <dt>
               <DateTimePickerUi
                 culture='es'
                 format={DATE_FORMAT}
                 time={false}
                 {...startDate}
                 />
-            </dt>
-          </Col>
-          <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-            <dt>
-              <span>Fecha de finalización - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-            </dt>
-            <dt>
+            </Col>
+            <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
+              <dt>
+                <span>Fecha de finalización - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+              </dt>
               <DateTimePickerUi
                 {...endDate}
                 culture='es'
                 format={DATE_FORMAT}
                 time={false}
                 />
-            </dt>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Monto pendiente por desembolsar</span>
-              </dt>
-              <Input
-                name="txtPendingDisburAmount"
-                type="text"
-                {...pendingDisburAmount}
-                max="28"
-                parentId="dashboardComponentScroll"
-                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
-                onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
-                />
-            </div>
-          </Col>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Monto desembolsado</span>
-              </dt>
-              <Input
-                name="txtAmountDisbursed"
-                type="text"
-                {...amountDisbursed}
-                max="28"
-                parentId="dashboardComponentScroll"
-                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, amountDisbursed, amountDisbursed.value, true, 2)}
-                onFocus={val => this._handleFocusValueNumber(amountDisbursed, amountDisbursed.value)}
-                />
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 10px 20px 20px" }}>
-          <Col xs={6} md={3} lg={3}>
-            <div style={{ paddingRight: "15px" }}>
-              <dt>
-                <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
-              </dt>
-              <dt>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Monto pendiente por desembolsar</span>
+                </dt>
+                <Input
+                  name="txtPendingDisburAmount"
+                  type="text"
+                  {...pendingDisburAmount}
+                  max="28"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                  onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+                  />
+              </div>
+            </Col>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Monto desembolsado</span>
+                </dt>
+                <Input
+                  name="txtAmountDisbursed"
+                  type="text"
+                  {...amountDisbursed}
+                  max="28"
+                  parentId="dashboardComponentScroll"
+                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, amountDisbursed, amountDisbursed.value, true, 2)}
+                  onFocus={val => this._handleFocusValueNumber(amountDisbursed, amountDisbursed.value)}
+                  />
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ padding: "0px 10px 20px 20px" }}>
+            <Col xs={6} md={3} lg={3}>
+              <div style={{ paddingRight: "15px" }}>
+                <dt>
+                  <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
+                </dt>
                 <DateTimePickerUi
                   {...estimatedDisburDate}
                   culture='es'
                   format={DATE_FORMAT}
                   time={false}
                   />
-              </dt>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "20px 23px 20px 20px" }}>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
-              <i className="book icon" style={{ fontSize: "18px" }} />
-              <span style={{ fontSize: "20px" }}> Observaciones </span>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ padding: "0px 23px 20px 20px" }}>
-          <Col xs={12} md={12} lg={12}>
-            <Textarea
-              name="observations"
-              type="text"
-              max="3500"
-              {...observations}
-              title="La longitud máxima de caracteres es de 3500"
-              style={{ width: '100%', height: '178px' }}
-              />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={12} lg={12}>
-            <div style={{ textAlign: "left", marginTop: "0px", marginBottom: "20px", marginLeft: "20px" }}>
-              <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato pipeline: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{datePipelineLastReview}</span>
-            </div>
-          </Col>
-        </Row>
-        <div className="" style={{ position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" }}>
+              </div>
+            </Col>
+          </Row>
+          <Business origin={origin}/>
+          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? {display:"none"} : { padding: "10px 23px 20px 20px" }}>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                <i className="book icon" style={{ fontSize: "18px" }} />
+                <span style={{ fontSize: "20px" }}> Observaciones </span>
+              </div>
+            </Col>
+          </Row>
+          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? {display:"none"} : {padding: "0px 23px 20px 20px" }}>
+            <Col xs={12} md={12} lg={12}>
+              <Textarea
+                name="observations"
+                type="text"
+                max="3500"
+                {...observations}
+                title="La longitud máxima de caracteres es de 3500"
+                style={{ width: '100%', height: '178px' }}
+                />
+            </Col>
+          </Row>
+          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? {display:"none"} : {}}>
+            <Col xs={12} md={12} lg={12}>
+              <div style={{ textAlign: "left", marginTop: "0px", marginBottom: "20px", marginLeft: "20px" }}>
+                <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato pipeline: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{datePipelineLastReview}</span>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? {display:"block", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : {display: "none"}}>
           <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
             <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD" }}>
               <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
@@ -983,6 +976,11 @@ class FormPipeline extends Component {
           onCancel={this._closeCancelConfirmChanCurrency}
           onConfirm={this._closeConfirmChangeCurrency}
           />
+        <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : {display: "none"}} className="modalBt4-footer modal-footer">
+          <button type="submit" className="btn btn-primary modal-button-edit">
+            Guardar
+          </button>
+        </div>
       </form>
     );
   }
@@ -1003,17 +1001,21 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar}, ownerProps) {
+  console.log('ownerProps', ownerProps.origin);
   return {
     clientInformacion,
     selectsReducer,
     contactsByClient,
     reducerGlobal,
-    navBar
+    navBar,
+    initialValues:{
+      origin: ownerProps.origin
+    }
   };
 }
 
 export default reduxForm({
-  form: 'submitValidation',
   fields,
+  form: fields.origin === undefined ? 'submitValidation' : fields.origin,
   validate
 }, mapStateToProps, mapDispatchToProps)(FormPipeline);
