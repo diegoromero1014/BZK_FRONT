@@ -10,21 +10,18 @@ import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import { consultDataSelect, consultList, getMasterDataFields, getPipelineCurrencies, getClientNeeds } from '../../selectsComponent/actions';
 import {
 	PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS,
 	PROBABILITY, LINE_OF_BUSINESS
 } from '../../selectsComponent/constants';
-import {
-	consultDataSelect, consultList, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
-	getClientNeeds
-} from '../../selectsComponent/actions';
 import {
 	SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT,
 	DATE_START_AFTER, MESSAGE_SAVE_DATA, EDITAR, ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
 import {
 	PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, LAST_PIPELINE_REVIEW, CURRENCY_LABEL_COP, CURRENCY_COP,
-	CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING
+	CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING, PRODUCTS
 } from '../constants';
 import { createEditPipeline, getPipelineById, pdfDescarga } from '../actions';
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber } from '../../../actionsGlobal';
@@ -437,7 +434,7 @@ class FormEditPipeline extends Component {
 		this.setState({
 			errorBusinessPipeline: null
 		});
-		const {clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies,
+		const {clientInformacion, getMasterDataFields, getPipelineCurrencies,
 			getClientNeeds, getPipelineById, id, nonValidateEnter,
 			fields: {
 				nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
@@ -446,13 +443,13 @@ class FormEditPipeline extends Component {
 			}} = this.props;
 		nonValidateEnter(true);
 		const infoClient = clientInformacion.get('responseClientInfo');
-		getPipelineProducts();
 		getPipelineCurrencies();
 		getClientNeeds();
 		if (_.isEmpty(infoClient)) {
 			redirectUrl("/dashboard/clientInformation");
 		} else {
-			getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS]);
+			getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS, 
+				PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
 		}
 		getPipelineById(id).then(function (data) {
 			const pipeline = _.get(data, 'payload.data.data');
@@ -556,10 +553,10 @@ class FormEditPipeline extends Component {
 								name="product"
 								labelInput="Seleccione..."
 								valueProp={'id'}
-								textProp={'product'}
+								textProp={'value'}
 								{...product}
 								parentId="dashboardComponentScroll"
-								data={selectsReducer.get('pipelineProducts') || []}
+								data={selectsReducer.get(PRODUCTS) || []}
 								disabled={this.state.isEditable ? '' : 'disabled'}
 								/>
 						</div>
@@ -1060,7 +1057,6 @@ class FormEditPipeline extends Component {
 function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
 		getMasterDataFields,
-		getPipelineProducts,
 		getPipelineCurrencies,
 		getClientNeeds,
 		createEditPipeline,
