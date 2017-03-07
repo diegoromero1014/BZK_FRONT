@@ -8,7 +8,7 @@ import { mapDataGrid } from './covenantsUtilities';
 import { get, indexOf, has } from 'lodash';
 import { showLoading } from '../../loading/actions';
 import { clientCovenants } from './actions';
-import {GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR}from '../../../constantsGlobal';
+import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR } from '../../../constantsGlobal';
 
 
 class ListCovenantsComponent extends Component {
@@ -41,7 +41,7 @@ class ListCovenantsComponent extends Component {
                 key: "idCovenant"
             },
             {
-                title: "Negocio/Producto",
+                title: "Entidad/Línea de negocio",
                 key: "lineOfBusiness"
             },
             {
@@ -77,12 +77,11 @@ class ListCovenantsComponent extends Component {
         const modalTitle = 'Creación de seguimientos';
         const {covenant} = this.props;
         const data = covenant.get('responseCovenant');
-
         return (
             <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
-                <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
+                <Row xs={12} md={12} lg={12} style={{ marginBottom: '20px' }}>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR }}></div>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: RED_COLOR }}></div>
                         <span style={{ marginLeft: '5px' }}>Covenants con seguimiento pendiente</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
@@ -98,7 +97,17 @@ class ListCovenantsComponent extends Component {
                         <span style={{ marginLeft: '5px' }}>Covenants inactivos</span>
                     </Col>
                 </Row>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
+                {data.length > 0 ?
+                    <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
+                    :
+                    <div style={{ display: 'block', width: "100%" }}>
+                        <Row center="xs">
+                            <Col xs={12} sm={8} md={12} lg={12} style={{ marginTop: '15px' }}>
+                                <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
+                            </Col>
+                        </Row>
+                    </div>
+                }
             </div>
         );
     }

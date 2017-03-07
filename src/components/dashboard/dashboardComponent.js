@@ -7,6 +7,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
+import {loadObservablesLeftTimer} from '../login/actions';
 
 class Dashboard extends Component {
     constructor(props){
@@ -16,6 +17,9 @@ class Dashboard extends Component {
     componentWillMount(){
       if( window.localStorage.getItem('sessionToken') === "" ){
         redirectUrl("/login");
+      } else {
+        const {loadObservablesLeftTimer} = this.props;
+        loadObservablesLeftTimer();
       }
     }
 
@@ -47,7 +51,8 @@ class Dashboard extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    changeStateSaveData
+    changeStateSaveData,
+    loadObservablesLeftTimer
   }, dispatch);
 }
 

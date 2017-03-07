@@ -1,5 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
+import {INIT_INPUT_EVENTS, STOP_INPUT_EVENTS} from '../../constantsGlobal';
 import axios from 'axios';
 import $ from 'jquery';
 
@@ -40,5 +41,17 @@ export function clearStateLogin(){
   return {
       type: CLEAR_STATE,
       payload: ""
+  }
+}
+
+export function loadObservablesLeftTimer(){
+  return {
+      type: INIT_INPUT_EVENTS
+  }
+}
+
+export function stopObservablesLeftTimer(){
+  return {
+      type: STOP_INPUT_EVENTS
   }
 }

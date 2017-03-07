@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {validateLogin, saveSessionToken, clearStateLogin} from './actions';
+import {stopObservablesLeftTimer, validateLogin, saveSessionToken, clearStateLogin} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';
 
@@ -71,7 +71,9 @@ class FormLogin extends Component{
     });
   }
 
-  componenWillMount(){
+  componentWillMount(){
+    const {stopObservablesLeftTimer} = this.props;
+    stopObservablesLeftTimer();
     this.state.messageErrorServidor = false;
     this.state.messageUsuarioIncorrecto = false;
     this.state.messageWithoutPermissions = false;
@@ -124,6 +126,7 @@ class FormLogin extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    stopObservablesLeftTimer,
     validateLogin,
     saveSessionToken,
     clearStateLogin,

@@ -43,6 +43,7 @@ import loadingReducer from '../components/loading/reducer';
 import covenant from '../components/risksManagement/covenants/reducer';
 import alertCovenantReducer from '../components/alertCovenants/reducer';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
+import leftTimer from '../components/timeout/timeoutDucks';
 
 export default combineReducers({
     routing: routerReducer,
@@ -87,6 +88,8 @@ export default combineReducers({
     loading: loadingReducer,
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
+    alertCovenant :alertCovenantReducer,
+    leftTimer
     alertCovenant :alertCovenantReducer,
     alertBlackList : alertBlackListReducer
 });

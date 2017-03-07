@@ -109,3 +109,10 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export const APP_URL = API_URL;
+
+export const INIT_INPUT_EVENTS = 'ias-ayax/input/init-events-observer';
+export const STOP_INPUT_EVENTS = 'ias-ayax/input/stop-events-observer';
+export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
+export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
+export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
+export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
