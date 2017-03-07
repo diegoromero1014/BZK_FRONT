@@ -60,12 +60,14 @@ class ContactComponent extends Component {
         style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
         <div className = "tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
         <Grid style={{ width: "100%"}}>
-          <Row><Col xs={10} sm={10} md={11} lg={11}>
-          <SearchContactComponent
-              value1={this.state.value1}
-              value2={this.state.value2}
-              value3={this.state.value3}
-          /></Col>
+          <Row>
+            <Col xs={10} sm={10} md={11} lg={11}>
+              <SearchContactComponent
+                  value1={this.state.value1}
+                  value2={this.state.value2}
+                  value3={this.state.value3}
+              />
+            </Col>
           { _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
             <BotonCreateContactComponent/>
           }

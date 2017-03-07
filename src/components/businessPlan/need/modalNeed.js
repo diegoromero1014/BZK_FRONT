@@ -13,9 +13,9 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {getClientNeeds,getPipelineProducts} from '../../selectsComponent/actions';
+import {getClientNeeds} from '../../selectsComponent/actions';
 import {getMasterDataFields} from '../../selectsComponent/actions';
-import {IMPLEMENTATION_TIMELINE,STATUS_NEED} from './constants';
+import {IMPLEMENTATION_TIMELINE,STATUS_NEED, PRODUCTS} from './constants';
 import {addNeed, editNeed} from './actions';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -142,7 +142,7 @@ class ModalNeed extends Component {
     var status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id',  parseInt(statusNeed.value)]), '[0].value');
     var implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id',  parseInt(needImplementation.value)]), '[0].value');
     var needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id',  parseInt(needType.value)]), '[0].need');
-    var productC = _.get(_.filter(selectsReducer.get('pipelineProducts'), ['id',  parseInt(needProduct.value)]), '[0].product');
+    var productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id',  parseInt(needProduct.value)]), '[0].product');
     if(needResponsable.value !== nameUsuario){
       nameUsuario = needResponsable.value;
       idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
@@ -244,10 +244,9 @@ class ModalNeed extends Component {
   }
 
   componentWillMount() {
-    const {getClientNeeds,getMasterDataFields,getPipelineProducts,selectsReducer} = this.props;
+    const {getClientNeeds, getMasterDataFields, selectsReducer} = this.props;
     getClientNeeds();
-    getPipelineProducts();
-    getMasterDataFields([IMPLEMENTATION_TIMELINE,STATUS_NEED]);
+    getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCTS]);
   }
 
     render() {
@@ -298,10 +297,10 @@ class ModalNeed extends Component {
                         name="needProduct"
                         labelInput="Seleccione..."
                         valueProp={'id'}
-                        textProp={'product'}
+                        textProp={'value'}
                         {...needProduct}
                         parentId="dashboardComponentScroll"
-                        data={selectsReducer.get('pipelineProducts') || []}
+                        data={selectsReducer.get(PRODUCTS) || []}
                       />
                     </dt>
                   </Col>
@@ -432,7 +431,7 @@ class ModalNeed extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getClientNeeds,getMasterDataFields,getPipelineProducts,filterUsersBanco,addNeed,
+    getClientNeeds,getMasterDataFields,filterUsersBanco,addNeed,
     editNeed,
   }, dispatch);
 }

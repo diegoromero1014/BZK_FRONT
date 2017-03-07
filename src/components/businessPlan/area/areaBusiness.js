@@ -43,7 +43,8 @@ class AreaBusiness extends Component{
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({clearArea
+  return bindActionCreators({
+    clearArea
   }, dispatch);
 }
 

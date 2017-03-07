@@ -1,4 +1,3 @@
-
 import React, {
   Component,
   PropTypes
@@ -11,7 +10,6 @@ import {NUMBER_RECORDS,DELETE_TYPE_PIPELINE} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
-
 
 let v1 = "";
 let v2= "";

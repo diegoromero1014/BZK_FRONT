@@ -1,0 +1,4 @@
+export const ADD_BUSINESS = "ADD_BUSINESS";
+export const DELETE_BUSINESS = "DELETE_BUSINESS";
+export const EDIT_BUSINESS = "EDIT_BUSINESS";
+export const CLEAR_BUSINESS = "CLEAR_BUSINESS";
