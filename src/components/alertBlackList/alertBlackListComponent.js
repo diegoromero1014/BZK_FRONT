@@ -111,11 +111,11 @@ class AlertBlackList extends Component {
                         <Col xs={12} sm={12} md={4} lg={4} >
                             <SearchBarEntityBlackList valueStatus={status.value}/>
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2}>
+                        <Col xs={12} sm={12} md={2} lg={3}>
                             <Dropdown  value={typeEntity} onChange={(e,val) => {
                                 this._onChangeTypeEntity(val.value)}} placeholder='Tipo de entidad' fluid search selection options={optionsTypeEntity} />
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
+                        <Col xs={12} sm={12} md={2} lg={1} style={{width: '100%'}}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                     title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
                                 <i className="erase icon"
