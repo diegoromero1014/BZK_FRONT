@@ -13,7 +13,6 @@ export const mapDataGrid = (data = []) => {
         nextExpirationTimestamp: mapDateValueFromTask(covenant.nextExpirationTimestamp),
         trafficLight: {
             color: getColorCovenant(mapDateValueFromTaskByFormat(covenant.nextExpirationTimestamp,DATE_FORMAT), covenant.capitalBalance),
-            // color: 'blue',
             title: "",
             key: "trafficLight"
         },

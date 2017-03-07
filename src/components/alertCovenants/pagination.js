@@ -16,7 +16,6 @@ class Pagination extends Component{
       const statusCovenant = alertCovenant.get('statusCovenant');
       const columnOrder = alertCovenant.get('columnOrder');
       showLoading(true, 'Cargando..');
-      //keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows,order,columnOrder
       covenantsFindServer(keyWordNameNit, statusCovenant, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
           if (has(data, 'payload.data.data')) {
               showLoading(false, null);
