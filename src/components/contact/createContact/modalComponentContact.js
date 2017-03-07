@@ -321,19 +321,18 @@ class ModalComponentContact extends Component {
 
     render() {
         const {modalStatus, selectsReducer, createContactReducer} = this.props;
-        const {
-            initialValues, fields: {
-                id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
+        const {initialValues, fields: {id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
+                tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
                 primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
                 codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
-            }, handleSubmit, error, reducerGlobal
-        } = this.props;
-
-        return (<form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+            }, handleSubmit, error, reducerGlobal} = this.props;
+        return (
+          <form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                id="modalComponentScrollCreateContact">
-                <dt className="business-title"><span
-                    style={{ paddingLeft: '20px' }}>Información básica contacto</span></dt>
+              id="modalComponentScrollCreateContact">
+              <dt className="business-title">
+                <span style={{ paddingLeft: '20px' }}>Información básica contacto</span>
+              </dt>
                 <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                     <Row>
                         <Col xs>
@@ -749,8 +748,8 @@ class ModalComponentContact extends Component {
                 </div>
             </div>
             <div className="modalBt4-footer modal-footer">
-                <button type="submit" style={{ visibility: this.state.noExiste }} className="btn btn-primary modal-button-edit">Guardar
-                        </button>
+              <button type="submit" style={{ visibility: this.state.noExiste }} className="btn btn-primary modal-button-edit">Guardar
+              </button>
             </div>
             <SweetAlert
                 type="success"

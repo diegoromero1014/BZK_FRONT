@@ -42,6 +42,8 @@ import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirta
 import loadingReducer from '../components/loading/reducer';
 import covenant from '../components/risksManagement/covenants/reducer';
 import alertCovenantReducer from '../components/alertCovenants/reducer';
+import pipelineBusinessReducer from '../components/pipeline/business/reducer';
+import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
 
 export default combineReducers({
@@ -88,5 +90,8 @@ export default combineReducers({
     alertPortfolioExpiration :alertPortfolioExpirationReducer,
     covenant :covenant,
     alertCovenant :alertCovenantReducer,
-    leftTimer
+    pipelineBusinessReducer: pipelineBusinessReducer,
+    leftTimer,
+    alertCovenant :alertCovenantReducer,
+    alertBlackList : alertBlackListReducer
 });

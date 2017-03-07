@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import MenuListItemFather from './menuListItemFather';
 import { connect } from 'react-redux';
-import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT } from '../alerts/constants';
+import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
 import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
@@ -36,6 +36,7 @@ const itemAlerts = {
 const childrenAlertPendingUpdate = { text: "Pendiente por actualizar", link: "/dashboard/alertClientPendingUpdate" };
 const childrenAlertPortExpiration = { text: "Vencimiento de cartera", link: "/dashboard/alertClientsPortfolioExpiration" };
 const childrenAlertCovenants = { text: "Covenants", link: "/dashboard/alertCovenants" };
+const childrenAlertBlackList = { text: "Listas de control", link: "/dashboard/alertBlackList" };
 var menuItems = [];
 
 const menuItemCerrarSesion = [
@@ -100,6 +101,9 @@ class MenuList extends Component {
                             break;
                         case CODE_COVENANT_ALERT:
                             itemAlerts.children.push(childrenAlertCovenants);
+                            break;
+                        case CODE_BLACK_LIST_ALERT:
+                            itemAlerts.children.push(childrenAlertBlackList);
                             break;
                         default:
                             return null;
