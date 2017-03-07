@@ -27,6 +27,7 @@ import ModalComponentPending from './components/myPendings/modalComponentPending
 import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments';
 import ViewAlerts from './components/alerts/alertsComponent';
 import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
+import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
 
 class App extends Component {
     render() {
@@ -64,6 +65,7 @@ export default (
                 <Route path="myPendings" component={ModalComponentPending}></Route>
                 <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
+                <Route path="alertBlackList" component={AlertBlackList}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

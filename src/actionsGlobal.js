@@ -119,7 +119,7 @@ export function validatePermissionsByModule(module) {
 }
 
 export function shorterStringValue(element) {
-    return element.length > 50 ? element.substring(0, 50) + "..." : element;
+    return _.isNull(element) ? '' : element.length > 50 ? element.substring(0, 50) + "..." : element;
 }
 
 export function formatNumeral(number, format) {

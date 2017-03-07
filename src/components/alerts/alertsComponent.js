@@ -14,17 +14,20 @@ import { getAlertsByUser, openModalAlerts, clearListAlerts } from './actions';
 import { clearFilter as clearFilterPUC } from '../alertPendingUpdateClient/actions';
 import { clearFilter as clearFilterPE } from '../alertPortfolioExpirtation/actions';
 import { defaultValues } from '../alertCovenants/actions';
+import { clearFilter as clearFilterBlackList } from '../alertBlackList/actions';
 import { updateNumberTotalClients } from '../alertPendingUpdateClient/actions';
-import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT } from './constants';
+import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from './constants';
 import * as constants from '../selectsComponent/constants';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { MODULE_ALERTS, MODULE_CLIENTS, BLUE_COLOR } from '../../constantsGlobal';
 import { COLOR_ITEMS_MENU } from '../menu/constants';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
+import BlackListIcon from '../Icons/BlackListIcon';
 import { consultList } from '../selectsComponent/actions';
 import { FORM_FILTER_ALERT_PUC } from '../alertPendingUpdateClient/constants';
 import { FORM_FILTER_ALERT_PE } from '../alertPortfolioExpirtation/constants';
 import { FORM_FILTER_ALERT_COVENANT } from '../alertCovenants/constants';
+import { FORM_FILTER_ALERT_BLACK_LIST } from '../alertBlackList/constants';
 import _ from 'lodash';
 import {Icon} from 'semantic-ui-react';
 
@@ -35,6 +38,7 @@ class ViewAlerts extends Component {
         this._cleanFilterClientPendingUpdate = this._cleanFilterClientPendingUpdate.bind(this);
         this._cleanFilterPortfolioExpiration = this._cleanFilterPortfolioExpiration.bind(this);
         this._cleanFilterAlertCovenant = this._cleanFilterAlertCovenant.bind(this);
+        this._cleanFilterBlackList = this._cleanFilterBlackList.bind(this);
     }
 
     componentWillMount() {
@@ -70,6 +74,12 @@ class ViewAlerts extends Component {
             }
         });
     }
+
+    _cleanFilterBlackList() {
+        const {showLoading, clearFilterBlackList} = this.props;
+        clearFilterBlackList();
+    }
+
     _cleanFilterPortfolioExpiration() {
         const {showLoading, clearFilterPE, consultList} = this.props;
         showLoading(true, 'Cargando..');
@@ -121,6 +131,12 @@ class ViewAlerts extends Component {
                         return this.paintItemAlert(item, idx, iconCovenant, "15px", BLUE_COLOR,
                             "/dashboard/alertCovenants", this._cleanFilterAlertCovenant, FORM_FILTER_ALERT_COVENANT);
                         break;
+                    case CODE_BLACK_LIST_ALERT:
+                        countAlerts = countAlerts + 1;
+                        const iconBlackList = <BlackListIcon/>;
+                        return this.paintItemAlert(item, idx, iconBlackList, "15px", BLUE_COLOR,
+                            "/dashboard/alertBlackList", this._cleanFilterBlackList, FORM_FILTER_ALERT_BLACK_LIST);
+                        break;
                     default:
                         return null;
                 }
@@ -171,7 +187,7 @@ function mapDispatchToProps(dispatch) {
         clearFilterPE,
         defaultValues,
         consultList,
-        updateTitleNavBar
+        clearFilterBlackList
     }, dispatch);
 }
 
