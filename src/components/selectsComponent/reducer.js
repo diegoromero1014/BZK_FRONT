@@ -33,7 +33,6 @@ const initialState = Immutable.Map({
   dataTypeCertificationStatus:[],
   dataTypeTaskType:[],
   dataPipelineStatus:[],
-  pipelineProducts: [],
   pipelineCurrencies: [],
   pipelineClientNeeds: [],
   region: [],
@@ -121,9 +120,6 @@ export default (state = initialState, action) => {
               map.set(key, values);
             });
           });
-        case constants.PIPELINE_PRODUCTS:
-          const products = action.payload.data.messageBody.productValueObjects;
-          return state.set('pipelineProducts', products);
         case constants.PIPELINE_CURRENCIES:
           const currencies = action.payload.data.messageBody.currencyList;
           return state.set('pipelineCurrencies', currencies);
