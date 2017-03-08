@@ -15,7 +15,7 @@ function getLastDateToken() {
         },
         messageBody: ""
     }
-    var request = axios.post(APP_URL + "/updateSessionLastDate", json);
+    var request = axios.post(APP_URL + "/updateSessionLastDate", json)
     return request;
 }
 
@@ -61,10 +61,18 @@ export const inputEventsEpic = (action$, store) => action$
         const key$ = Rx.Observable.fromEvent(document, 'keypress').mapTo("keypress");
         const mouse$ = Rx.Observable.fromEvent(document, 'mousemove').mapTo("mousemove");
         return Rx.Observable.merge(key$, mouse$)
-            .debounce(() => Rx.Observable.interval(10000))
+            .debounce(() => Rx.Observable.interval(5000))
             .flatMap(event => {
                 const timeoutVal = get(store.getState(), 'leftTimer.timeout');
-                const promise = getLastDateToken();
+                const promise = getLastDateToken().then((data) => {
+                    if (!_.get(data.data, 'validateLogin', false)) {
+                        createClearTimeout(timeoutVal);
+                        redirectUrl("/login");
+                        return {};
+                    } else {
+                        return data;
+                    }
+                });
                 const functionShowAlert = () => {
                     alert("Señor usuario, el tiempo de sesión expirará en " + MINUTES_BEFORE + " minutos");
                     if( moment(get(store.getState(), 'leftTimer.lastDateUpdate')).isBefore(moment()) ){
