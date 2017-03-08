@@ -118,8 +118,9 @@ export function validatePermissionsByModule(module) {
     }
 }
 
-export function shorterStringValue(element) {
-    return _.isNull(element) ? '' : element.length > 50 ? element.substring(0, 50) + "..." : element;
+export function shorterStringValue(element, minLength) {
+    const lengthDafault =  _.isUndefined(minLength) ? 50 : minLength;
+    return _.isNull(element) ? '' : element.length > lengthDafault ? element.substring(0, lengthDafault) + "..." : element;
 }
 
 export function formatNumeral(number, format) {
