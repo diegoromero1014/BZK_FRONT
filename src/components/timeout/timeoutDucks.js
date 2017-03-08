@@ -61,7 +61,7 @@ export const inputEventsEpic = (action$, store) => action$
         const key$ = Rx.Observable.fromEvent(document, 'keypress').mapTo("keypress");
         const mouse$ = Rx.Observable.fromEvent(document, 'mousemove').mapTo("mousemove");
         return Rx.Observable.merge(key$, mouse$)
-            .debounce(() => Rx.Observable.interval(5000))
+            .debounce(() => Rx.Observable.interval(8000))
             .flatMap(event => {
                 const timeoutVal = get(store.getState(), 'leftTimer.timeout');
                 const promise = getLastDateToken().then((data) => {
