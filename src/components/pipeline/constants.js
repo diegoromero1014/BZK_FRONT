@@ -19,3 +19,4 @@ export const CURRENCY_LABEL_COP = "Valor en millones";
 export const CURRENCY_LABEL_OTHER_OPTION = "Valor total";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
+export const PRODUCTS = "products";

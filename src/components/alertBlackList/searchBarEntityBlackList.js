@@ -81,11 +81,11 @@ class SearchBarBlackList extends Component {
         return (
             <div style={{marginLeft: '17px'}}>
                 <div className="InputAddOn">
-                    <input type="text" style={{padding: '0px 11px !important'}} placeholder="Buscar por nombre o NIT"
+                    <input type="text" style={{padding: '0px 11px !important'}} placeholder="Buscar por nombre o NIT de la entidad"
                            value={keyword} onKeyPress={this._handleChangeKeywordEntity} onChange={this._handleChangeKeywordEntity}
                            className="input-lg input InputAddOn-field"/>
                     <button id="searchEntities" className="btn" title="Buscar ente en lista de control" type="button"
-                            onClick={this._handleClientsFind} style={{backgroundColor: "#E0E2E2"}}>
+                            onClick={this._handleEntityFind} style={{backgroundColor: "#E0E2E2"}}>
                         <i className="search icon" style={{margin: '0em', fontSize: '1.2em'}}/>
                     </button>
                 </div>

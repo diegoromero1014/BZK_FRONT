@@ -14,7 +14,7 @@ export const mapDataGrid = (data = []) => {
         documentEntity: blackList.documentEntity,
         nameEntity: shorterStringValue(blackList.nameEntity),
         typeEntity: blackList.typeEntity,
-        message: shorterStringValue(blackList.message),
+        message: shorterStringValue(blackList.message, 300),
         level: blackList.levelBlackList
     }));
 };

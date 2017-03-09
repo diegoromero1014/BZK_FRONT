@@ -9,7 +9,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS } from '../../selectsComponent/constants';
-import {getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
+import {getMasterDataFields, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
   LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS} from '../constants';
 import {createEditPipeline, changeModalIsOpen} from '../actions';
