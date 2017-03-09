@@ -36,10 +36,9 @@ class ListBusiness extends Component {
   _getValuesBusiness(){
     var {pipelineBusinessReducer} = this.props;
     if(pipelineBusinessReducer.size > 0){
+      console.log('pipelineBusinessReducer', pipelineBusinessReducer);
       var data = _.chain(pipelineBusinessReducer.toArray()).map(pipelineBusinessReducer => {
-        const {uuid, businessType, businessIdType, businessFormat, descriptionBusiness,businessProduct,businessIdProduct, businessImplementation,
-          statusBusiness,businessIdImplementation,businessTask,businessBenefits,businessIdResponsable, businessResponsable,businessDate,statusIdBusiness} = business;
-        var descripcionNecesidad = descriptionBusiness.length > 120 ? descriptionBusiness.substring(0, 120) + "..." : descriptionBusiness;
+        const {uuid, product, businessStatus, pipelineBusiness} = pipelineBusinessReducer;
         return _.assign({}, {
           'actions':  {
             actionView: true,
@@ -47,12 +46,10 @@ class ListBusiness extends Component {
             urlServer: "./component",
             component : "VIEW_BUSINESS"
           },
-          uuid: uuid, businessType :businessType, businessIdType :businessIdType, descriptionBusiness : descriptionBusiness,
-          businessProduct : businessProduct,businessIdProduct : businessIdProduct, businessImplementation : businessImplementation,
-          statusBusiness: statusBusiness,businessIdImplementation : businessIdImplementation,businessTask : businessTask,businessBenefits : businessBenefits,
-          businessIdResponsable: businessIdResponsable, businessResponsable : businessResponsable,businessDate: businessDate,businessFormat: businessFormat,
-          statusIdBusiness: statusIdBusiness,
-          descripcionNecesidad :descripcionNecesidad,
+          uuid: uuid,
+          pipelineBusiness: pipelineBusiness,
+          product: product,
+          businessStatus: businessStatus,
           'delete':  {
             typeDelete : DELETE_BUSINESS_VIEW,
             id: uuid,
@@ -101,16 +98,15 @@ class ListBusiness extends Component {
 
   _mapValuesBusiness(businessData, idx){
     var {disabled} = this.props;
-    return
-      <tr key={idx}>
+    return <tr key={idx}>
         <td className="collapsing">
           <i className="zoom icon" title="Ver detalle"
           onClick={this._viewDetailsBusiness.bind(this, businessData)}
           style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
         </td>
-        <td>{businessData.businessType}</td>
-        <td>{businessData.descripcionNecesidad}</td>
-        <td>{businessData.statusBusiness}</td>
+        <td>{businessData.pipelineBusiness}</td>
+        <td>{businessData.product}</td>
+        <td>{businessData.businessStatus}</td>
         <td  className="collapsing">
           <i className="remove icon" title="Eliminar necesidad"
             onClick={this._confirmDeleteBusiness.bind(this, businessData.uuid)}

@@ -6,6 +6,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import CreatePipeline from './createPipeline/formPipeline';
 import {ORIGIN_PIPELIN_BUSINESS} from './constants';
+import createFormPipeline from './createPipeline/formPipeline';
 
 class BotonCreateContactComponent extends Component {
 
@@ -28,12 +29,12 @@ class BotonCreateContactComponent extends Component {
 
   render() {
     const {typeButton} = this.props;
+    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, this.closeModal);
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} style={{textAlign: "right"}}>
           <button className="btn btn-primary" type="button" title="Crear negocio" onClick={this.openModal}>
             Agregar negocio
-            <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
           </button>
           <Modal
             isOpen={this.state.modalIsOpen}
@@ -48,7 +49,7 @@ class BotonCreateContactComponent extends Component {
                     <span className="sr-only">Close</span>
                   </button>
                 </div>
-                <CreatePipeline origin={ORIGIN_PIPELIN_BUSINESS}/>
+                <PipelineComponent />
               </div>
             </div>
           </Modal>
@@ -64,10 +65,8 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({createContactReducer}, ownerProps){
-    return {
-        createContactReducer
-    };
+function mapStateToProps({}, ownerProps){
+    return {};
 }
 
 

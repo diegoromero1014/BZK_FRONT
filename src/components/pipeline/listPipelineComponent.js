@@ -49,7 +49,6 @@ class ListPipelineComponent extends Component {
     }
   }
 
-
   _orderColumn(orderPipeline,columnPipeline){
     if(orderPipeline === 1){
       this.setState({orderA :'none',orderD:'inline-block'});

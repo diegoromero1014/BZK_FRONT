@@ -13,11 +13,6 @@ class BusinessBusiness extends Component{
     super(props);
   }
 
-  componentWillMount(){
-    const{clearBusiness} = this.props;
-    clearBusiness();
-  }
-
   render(){
     const {businesss, disabled, origin} = this.props;
     return(
