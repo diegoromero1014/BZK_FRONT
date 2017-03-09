@@ -11,7 +11,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import {PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS } from '../../selectsComponent/constants';
 import {getMasterDataFields, getPipelineCurrencies, getClientNeeds} from '../../selectsComponent/actions';
 import {LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
-  LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS} from '../constants';
+  LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, PRODUCTS} from '../constants';
 import {createEditPipeline, changeModalIsOpen} from '../actions';
 import {SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT,
   DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER} from '../../../constantsGlobal';
@@ -510,10 +510,9 @@ export default function createFormPipeline(name, origin, functionCloseModal){
     }
 
     componentWillMount() {
-      const {nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineProducts, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
+      const {nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
       nonValidateEnter(true);
       const infoClient = clientInformacion.get('responseClientInfo');
-      getPipelineProducts();
       getPipelineCurrencies();
       getClientNeeds();
       typeButtonClick = null;
@@ -523,7 +522,8 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       if (_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
       } else {
-        getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS]);
+        getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
+          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
             data.payload.data.parameter !== undefined) {
@@ -593,7 +593,7 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                     {...product}
                     name={nameProduct}
                     parentId="dashboardComponentScroll"
-                    data={selectsReducer.get('pipelineProducts') || []}
+                    data={selectsReducer.get(PRODUCTS) || []}
                     />
                 </div>
               </Col>
@@ -1024,7 +1024,6 @@ export default function createFormPipeline(name, origin, functionCloseModal){
   function mapDispatchToProps(dispatch) {
     return bindActionCreators({
       getMasterDataFields,
-      getPipelineProducts,
       getPipelineCurrencies,
       getClientNeeds,
       createEditPipeline,
