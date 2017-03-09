@@ -87,7 +87,8 @@ class ListAlertBlackLists extends Component {
             },
             {
                 title: "Mensaje",
-                key: "message"
+                key: "message",
+                style:{textAlign:"justify"}
             },
             {
                 title: "Nivel",
