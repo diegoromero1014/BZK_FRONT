@@ -17,7 +17,6 @@ import Visit from './components/visit/createVisit/createVisit';
 import VisitEdit from './components/visit/editVisit/editVisit';
 import uiTester from './ui/uiTester';
 import ViewManagement from './components/viewManagement/viewManagement';
-import EditPipeline from './components/pipeline/editPipeline/editPipeline';
 import BusinessPlan from './components/businessPlan/createBusinessPlan/createBusinessPlan';
 import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
 import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
@@ -28,6 +27,7 @@ import ViewAlerts from './components/alerts/alertsComponent';
 import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
 import createFormPipeline from './components/pipeline/createPipeline/formPipeline'
+import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline'
 
 class App extends Component {
     render() {
@@ -55,8 +55,8 @@ export default (
                 <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
-                <Route path="pipeline" component={createFormPipeline('business')}></Route>
-                <Route path="pipelineEdit/:id" component={EditPipeline}></Route>
+                <Route path="pipeline" component={createFormPipeline('pipelineCreate')}></Route>
+                <Route path="pipelineEdit/:id" component={editFormPipeline('pipelineEdit')}></Route>
                 <Route path="businessPlan" component={BusinessPlan}></Route>
                 <Route path="businessPlanEdit/:id" component={EditBusinessPlan}></Route>
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>

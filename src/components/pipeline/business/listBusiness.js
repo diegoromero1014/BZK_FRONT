@@ -4,12 +4,16 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {DELETE_BUSINESS_VIEW} from './constants';
+import {ORIGIN_PIPELIN_BUSINESS} from '../constants';
 import {deleteBusiness} from './actions';
+import moment from 'moment';
+import BtnCreateBusiness from '../btnCreateBusiness';
 import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import _ from 'lodash';
-import moment from 'moment';
-import BtnCreateBusiness from '../btnCreateBusiness';
+import {PRODUCTS, PIPELINE_BUSINESS, PIPELINE_STATUS} from '../../selectsComponent/constants';
+import {shorterStringValue} from '../../../actionsGlobal';
+import BtnEditBusiness from '../btnEditBusiness';
 
 var arrayValueBusiness = [];
 var idBusinessSeleted = null;
@@ -34,31 +38,9 @@ class ListBusiness extends Component {
   }
 
   _getValuesBusiness(){
-    var {pipelineBusinessReducer} = this.props;
+    var {pipelineBusinessReducer, selectsReducer} = this.props;
     if(pipelineBusinessReducer.size > 0){
-      console.log('pipelineBusinessReducer', pipelineBusinessReducer);
-      var data = _.chain(pipelineBusinessReducer.toArray()).map(pipelineBusinessReducer => {
-        const {uuid, product, businessStatus, pipelineBusiness} = pipelineBusinessReducer;
-        return _.assign({}, {
-          'actions':  {
-            actionView: true,
-            business: pipelineBusinessReducer,
-            urlServer: "./component",
-            component : "VIEW_BUSINESS"
-          },
-          uuid: uuid,
-          pipelineBusiness: pipelineBusiness,
-          product: product,
-          businessStatus: businessStatus,
-          'delete':  {
-            typeDelete : DELETE_BUSINESS_VIEW,
-            id: uuid,
-            mensaje: "¿Señor usuario, está seguro que desea eliminar el negocio?"
-          }
-        });
-      })
-      .value();
-      arrayValueBusiness = data;
+      arrayValueBusiness = pipelineBusinessReducer.toArray();
     } else {
       arrayValueBusiness = [];
     }
@@ -84,12 +66,13 @@ class ListBusiness extends Component {
   }
 
   _viewDetailsBusiness(businessDetails){
+    console.log('editar');
     var actions = {
       actionView: true,
-      business: businessDetails,
-      urlServer: "./component",
-      component : "VIEW_BUSINESS"
-    }
+      component : "VIEW_BUSINESS",
+      origin: ORIGIN_PIPELIN_BUSINESS,
+      id: businessDetails.uuid
+    };
     this.setState({
       actions,
       modalIsOpen: true
@@ -97,18 +80,26 @@ class ListBusiness extends Component {
   }
 
   _mapValuesBusiness(businessData, idx){
-    var {disabled} = this.props;
+    var {selectsReducer, disabled} = this.props;
+    var products = selectsReducer.get(PRODUCTS);
+    var business = selectsReducer.get(PIPELINE_BUSINESS);
+    var states = selectsReducer.get(PIPELINE_STATUS);
+    const {uuid, product, businessStatus, pipelineBusiness} = businessData;
+    var nameProduct, nameBusiness, nameState;
+    if(product !== null && product !== '' && product !== undefined){
+      nameProduct = _.get(_.filter(products, ['id', parseInt(product)]), '[0].value');
+    }
+    nameBusiness = _.get(_.filter(business, ['id', parseInt(pipelineBusiness[0])]), '[0].value');
+    nameState = _.get(_.filter(states, ['id', parseInt(businessStatus)]), '[0].value');
     return <tr key={idx}>
         <td className="collapsing">
-          <i className="zoom icon" title="Ver detalle"
-          onClick={this._viewDetailsBusiness.bind(this, businessData)}
-          style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
+          <BtnEditBusiness pipelineBusiness={businessData}/>
         </td>
-        <td>{businessData.pipelineBusiness}</td>
-        <td>{businessData.product}</td>
-        <td>{businessData.businessStatus}</td>
+        <td>{shorterStringValue(nameBusiness, 50)}</td>
+        <td>{shorterStringValue(nameProduct, 50)}</td>
+        <td>{shorterStringValue(nameState, 30)}</td>
         <td  className="collapsing">
-          <i className="remove icon" title="Eliminar necesidad"
+          <i className="remove icon" title="Eliminar negocio"
             onClick={this._confirmDeleteBusiness.bind(this, businessData.uuid)}
             style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
         </td>
@@ -124,7 +115,7 @@ class ListBusiness extends Component {
     }else{
       disabledButtonCreate = '';
     }
-    const modalTitle = 'Necesidad Detalle';
+    const modalTitle = 'Negocio detalle';
     return (
       <div className = "tab-content break-word" style={{zIndex :0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginTop: "10px"}}>
         {disabled === '' || disabled === undefined ?
@@ -161,8 +152,8 @@ class ListBusiness extends Component {
       <SweetAlert
         type= "warning"
         show={this.state.showConfirmDeleteBusiness}
-        title="Eliminación necesidad"
-        text="¿Señor usuario, está seguro que desea eliminar la necesidad?"
+        title="Eliminación negocio"
+        text="¿Señor usuario, está seguro que desea eliminar el negocio?"
         confirmButtonColor= '#DD6B55'
         confirmButtonText= 'Sí, estoy seguro!'
         cancelButtonText = "Cancelar"
@@ -181,9 +172,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({pipelineBusinessReducer}) {
+function mapStateToProps({pipelineBusinessReducer, selectsReducer}) {
     return {
-        pipelineBusinessReducer
+        pipelineBusinessReducer,
+        selectsReducer
     };
 }
 

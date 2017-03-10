@@ -7,7 +7,6 @@ const initialState = Immutable.List();
 export default (state = initialState, action) => {
     switch (action.type) {
     case constants.ADD_BUSINESS:
-    console.log('reducer');
       const business = action.data;
       const newBusiness = _.assign({}, {
         uuid: business.uuid,
@@ -49,31 +48,31 @@ export default (state = initialState, action) => {
         state.findIndex(function(item) {
           return item.uuid === businessEdit.uuid;
         }), function(item) {
-            item.client= business.client,
-            item.documentStatus= business.documentStatus,
-            item.product= business.product,
-            item.businessStatus= business.businessStatus,
-            item.employeeResponsible= business.employeeResponsible,
-            item.currency= business.currency,
-            item.indexing= business.indexing,
-            item.commission= business.commission,
-            item.businessWeek= business.businessWeek,
-            item.need= business.need,
-            item.priority= business.priority,
-            item.roe= business.roe,
-            item.registeredCountry= business.registeredCountry,
-            item.observations= business.observations,
-            item.termInMonths= business.termInMonths,
-            item.pipelineBusiness= business.pipelineBusiness,
-            item.value= business.value,
-            item.startDate= business.startDate,
-            item.endDate= business.endDate,
-            item.probability= business.probability,
-            item.pendingDisburAmount= business.pendingDisburAmount,
-            item.amountDisbursed= business.amountDisbursed,
-            item.entity= business.entity,
-            item.contract= business.contract,
-            item.estimatedDisburDate= business.estimatedDisburDate
+            item.client= businessEdit.client,
+            item.documentStatus= businessEdit.documentStatus,
+            item.product= businessEdit.product,
+            item.businessStatus= businessEdit.businessStatus,
+            item.employeeResponsible= businessEdit.employeeResponsible,
+            item.currency= businessEdit.currency,
+            item.indexing= businessEdit.indexing,
+            item.commission= businessEdit.commission,
+            item.businessWeek= businessEdit.businessWeek,
+            item.need= businessEdit.need,
+            item.priority= businessEdit.priority,
+            item.roe= businessEdit.roe,
+            item.registeredCountry= businessEdit.registeredCountry,
+            item.observations= businessEdit.observations,
+            item.termInMonths= businessEdit.termInMonths,
+            item.pipelineBusiness= businessEdit.pipelineBusiness,
+            item.value= businessEdit.value,
+            item.startDate= businessEdit.startDate,
+            item.endDate= businessEdit.endDate,
+            item.probability= businessEdit.probability,
+            item.pendingDisburAmount= businessEdit.pendingDisburAmount,
+            item.amountDisbursed= businessEdit.amountDisbursed,
+            item.entity= businessEdit.entity,
+            item.contract= businessEdit.contract,
+            item.estimatedDisburDate= businessEdit.estimatedDisburDate
            return item;
         }
       );

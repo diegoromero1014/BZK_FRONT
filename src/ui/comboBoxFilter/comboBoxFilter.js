@@ -25,7 +25,7 @@ class comboBoxFilter extends Component {
     }
     return (
       <div>
-        <div className={`styleWidthComponents ui dropdown search selection fluid ${name}`} style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+        <div className={`styleWidthComponents ui dropdown search selection fluid ${name}`} style={{ border: "0px", padding: "0px" }}>
           <div className="ui icon input" style={{ width: "100%" }}>
             <input className="prompt" id="inputParticipantBanc"
               style={{ borderRadius: "3px" }}

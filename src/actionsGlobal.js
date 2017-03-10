@@ -120,14 +120,13 @@ export function validatePermissionsByModule(module) {
 
 export function shorterStringValue(element, minLength) {
     const lengthDafault =  _.isUndefined(minLength) ? 50 : minLength;
-    return _.isNull(element) ? '' : element.length > lengthDafault ? element.substring(0, lengthDafault) + "..." : element;
+    return element === null || element === undefined || element == '' ? '' : element.length > lengthDafault ? element.substring(0, lengthDafault) + "..." : element;
 }
 
 export function formatNumeral(number, format) {
     let numberNumeral = numeral(number);
     return numberNumeral.format(format);
 }
-
 
 export function mapDateValueFromTask(date) {
     if (_.isNull(date)) {

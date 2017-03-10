@@ -25,7 +25,6 @@ import moment from 'moment';
 import _ from 'lodash';
 import $ from 'jquery';
 
-
 const fields = ["dateBusiness","objectiveBusiness","opportunities"];
 var dateBusinessLastReview;
 var showMessageCreateBusiness= false;
@@ -88,7 +87,6 @@ class FormEdit extends Component {
     const {pdfDescarga, id} = this.props;
     pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
   }
-
 
   _closeConfirmClose(){
     this.setState({showConfirm: false });

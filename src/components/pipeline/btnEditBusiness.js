@@ -5,9 +5,9 @@ import {toggleModalContact} from './actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import {ORIGIN_PIPELIN_BUSINESS} from './constants';
-import createFormPipeline from './createPipeline/formPipeline';
+import createFormPipeline from './editPipeline/formEditPipeline';
 
-class BotonCreateComponent extends Component {
+class BotonCreateContactComponent extends Component {
 
   constructor(props){
       super(props);
@@ -27,14 +27,13 @@ class BotonCreateComponent extends Component {
   }
 
   render() {
-    const {typeButton} = this.props;
-    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, this.closeModal);
+    const {typeButton, pipelineBusiness} = this.props;
+    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, pipelineBusiness, this.closeModal);
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} style={{textAlign: "right"}}>
-          <button className="btn btn-primary" type="button" title="Crear negocio" onClick={this.openModal}>
-            Agregar negocio
-          </button>
+          <i className="zoom icon" title="Ver detalle" onClick={this.openModal}
+            style={{cursor: "pointer"}} />
           <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
@@ -68,4 +67,5 @@ function mapStateToProps({}, ownerProps){
     return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotonCreateComponent);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BotonCreateContactComponent);
