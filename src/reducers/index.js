@@ -42,7 +42,7 @@ import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirta
 import loadingReducer from '../components/loading/reducer';
 import covenant from '../components/risksManagement/covenants/reducer';
 import alertCovenantReducer from '../components/alertCovenants/reducer';
-import pipelineBusinessReducer from '../components/pipeline/business/reducer';
+import pipelineBusinessReducer from '../components/pipeline/business/ducks';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
 
@@ -61,20 +61,20 @@ export default combineReducers({
     form: formReducer,
     notes: notesReducer,
     contactDetail: contactDetail,
-    deleteGridReducer:deleteGridReducer,
-    createContactReducer:createContactReducer,
+    deleteGridReducer: deleteGridReducer,
+    createContactReducer: createContactReducer,
     createShareholder: createShareholderReducer,
     editShareholderReducer: editShareholderReducer,
     previsitReducer: previsitReducer,
     visitReducer: visitReducer,
     participants: participantsReducer,
     tasks: taskReducer,
-    needs:needReducer,
-    areas:areaReducer,
+    needs: needReducer,
+    areas: areaReducer,
     tasksByClient: tasksByClientReducer,
     tabReducer: tabReducer,
     taskReducerCreate: taskReducerCreate,
-    pipelineReducer:pipelineReducer,
+    pipelineReducer: pipelineReducer,
     viewManagementReducer: viewManagementReducer,
     teamParticipantsReducer: teamParticipantsReducer,
     businessPlanReducer: businessPlanReducer,
@@ -87,11 +87,10 @@ export default combineReducers({
     myPendingsReducer: myPendingsReducer,
     draftDocumentsReducer: draftDocumentsReducer,
     loading: loadingReducer,
-    alertPortfolioExpiration :alertPortfolioExpirationReducer,
-    covenant :covenant,
-    alertCovenant :alertCovenantReducer,
+    alertPortfolioExpiration: alertPortfolioExpirationReducer,
+    covenant: covenant,
+    alertCovenant: alertCovenantReducer,
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
-    alertCovenant :alertCovenantReducer,
-    alertBlackList : alertBlackListReducer
+    alertBlackList: alertBlackListReducer
 });

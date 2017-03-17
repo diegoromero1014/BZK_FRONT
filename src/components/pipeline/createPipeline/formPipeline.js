@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import {redirectUrl} from '../../globalComponents/actions';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Row, Col} from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -27,7 +26,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 import Business from '../business/business';
-import {addBusiness, editBusiness} from '../business/actions';
+import {addBusiness, editBusiness} from '../business/ducks';
 import HeaderPipeline from '../headerPipeline';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
