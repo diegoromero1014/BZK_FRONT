@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import {DELETE_BUSINESS_VIEW} from './constants';
 import {ORIGIN_PIPELIN_BUSINESS} from '../constants';
 import {deleteBusiness} from './ducks';
 import BtnCreateBusiness from '../btnCreateBusiness';
