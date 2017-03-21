@@ -50,4 +50,3 @@ export function clearBusiness() {
         type: CLEAR_BUSINESS
     };
 }
-
