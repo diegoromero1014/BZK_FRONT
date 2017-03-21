@@ -505,12 +505,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 }
             } else {
                 const {params: {id}}= this.props;
-                getPipelineById(id).then(function (data) {
-                    const pipeline = _.get(data, 'payload.data.data');
-                    if (pipeline.pipelineBusiness.length > 0) {
-                        business.onChange(JSON.parse('["' + _.join(pipeline.pipelineBusiness, '","') + '"]'));
-                    }
-                });
+                getPipelineById(id);
             }
 
             nonValidateEnter(true);
@@ -619,12 +614,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{padding: "0px 10px 20px 20px"}}>
-                                <Col xs={12} md={36} lg={6}>
+                                <Col xs={12} md={6} lg={6}>
                                     <div style={{paddingRight: "15px"}}>
                                         <dt>
                                             <span>Negocio (</span><span style={{color: "red"}}>*</span>)
                                         </dt>
-                                        <MultipleSelect
+                                        <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
@@ -1281,7 +1276,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionCreatedBy: pipeline.positionCreatedBy,
                     positionUpdatedBy: pipeline.positionUpdatedBy,
                     reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-                    business: '',
+                    business: pipeline.pipelineBusiness === null ? '' : pipeline.pipelineBusiness[0],
                     probability: pipeline.probability,
                     entity: pipeline.entity,
                     pendingDisburAmount: fomatInitialStateNumber(pipeline.pendingDisburAmount),

@@ -557,12 +557,12 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                 </Col>
               </Row>
               <Row style={{ padding: "0px 10px 20px 20px" }}>
-                <Col xs={12} md={36} lg={6}>
+                <Col xs={12} md={6} lg={6}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Negocio (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <MultipleSelect
+                    <ComboBox
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
