@@ -15,12 +15,6 @@ class NotesClient extends Component {
       this._addNote = this._addNote.bind(this);
     }
 
-    _deleteNote(index, e) {
-      e.preventDefault();
-      const {deleteNote} = this.props;
-      deleteNote(index);
-    }
-
     _updateValue(index, e) {
       const {updateNote} = this.props;
       updateNote(index, "body", e);

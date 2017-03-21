@@ -30,7 +30,7 @@ export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los as
     " interés del cliente en nuestra propuesta? Para dar respuesta a esta pregunta tenga en cuenta las " +
     " dimensiones del “Mapa de Proceso de Compra del Cliente”, utilícelo como una herramienta de chequeo " +
     " (ver pdf).";
-export const TITLE_OTHERS_PARTICIPANTS ="En esta sección se podrán ingresar los otros participantes que asistieron a la " +
+export const TITLE_OTHERS_PARTICIPANTS = "En esta sección se podrán ingresar los otros participantes que asistieron a la " +
     " reunión, tanto participantes por parte del Grupo Bancolombia como del cliente.\n" +
     "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
     " y haga clic en el botón  “+ agregar participante”.";
@@ -39,17 +39,17 @@ export const TITLE_BANC_PARTICIPANTS = "En esta sección se podrán adicionar co
     "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
     "“Otros participantes en la reunión”.";
 export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar como “participantes en la reunión por parte del cliente” a los contactos del cliente en Biztrack. Si desea adicionar un participante y que este no quede como contacto haga uso de la sección “Otros participantes en la reunión”\n\n" +
-"Agregar un participante:\n" +
-"1. Ingrese el nombre del contacto (campo: “Nombre”)\n" +
-"2. Seleccione el contacto que desea como participante\n" +
-"3. Haga clic en el botón “+ agregar participante”\n\n" +
-"Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n" +
-"a. Guardar el informe como borrador\n" +
-"b. Ir la pestaña de “contactos” y completar los campos.\n" +
-"c. Retomar la edición del informe y agregar el contacto\n\n" +
-"Crear contacto:\n" +
-"Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
-export const TITLE_OPPORTUNITY_BUSINESS ="Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
+    "Agregar un participante:\n" +
+    "1. Ingrese el nombre del contacto (campo: “Nombre”)\n" +
+    "2. Seleccione el contacto que desea como participante\n" +
+    "3. Haga clic en el botón “+ agregar participante”\n\n" +
+    "Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n" +
+    "a. Guardar el informe como borrador\n" +
+    "b. Ir la pestaña de “contactos” y completar los campos.\n" +
+    "c. Retomar la edición del informe y agregar el contacto\n\n" +
+    "Crear contacto:\n" +
+    "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
+export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
 export const DATE_REQUIERED = "Debe seleccionar un día";
@@ -73,6 +73,7 @@ export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
 export const FINALIZAR = "Finalizar";
+export const VINCULAR = "Vincular";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -98,7 +99,6 @@ export const TAB_PENDING_TASK = 6;
 export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
-
 
 
 let API_URL;

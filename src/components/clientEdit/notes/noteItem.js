@@ -44,9 +44,6 @@ class NoteItem extends Component {
         deleteNote(index);
     }
 
-    _updateValue(e) {
-    }
-
     componentWillMount() {
         const {combo, body} = this.props;
         this.updateValue("combo", combo);

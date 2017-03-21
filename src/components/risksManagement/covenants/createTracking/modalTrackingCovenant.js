@@ -14,7 +14,6 @@ import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';
 import CreateTracking from './createTacking';
 import _ from 'lodash';
 
-
 class ModaltrackingCovenant extends Component {
 
     constructor(props) {
@@ -33,8 +32,6 @@ class ModaltrackingCovenant extends Component {
             }
         });
     }
-
-
 
     render() {
         const {covenant, isOpen} = this.props;
@@ -99,7 +96,6 @@ class ModaltrackingCovenant extends Component {
             </div>
         );
     }
-
 }
 
 function mapDispatchToProps(dispatch) {

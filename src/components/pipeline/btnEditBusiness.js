@@ -5,9 +5,9 @@ import {toggleModalContact} from './actions';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import {ORIGIN_PIPELIN_BUSINESS} from './constants';
-import createFormPipeline from './createPipeline/formPipeline';
+import createFormPipeline from './editPipeline/formEditPipeline';
 
-class BotonCreateComponent extends Component {
+class BotonCreateContactComponent extends Component {
 
   constructor(props){
       super(props);
@@ -23,18 +23,18 @@ class BotonCreateComponent extends Component {
   }
 
   closeModal(){
+    console.log('request');
     this.setState({modalIsOpen: false});
   }
 
   render() {
-    const {typeButton} = this.props;
-    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, this.closeModal);
+    const {typeButton, pipelineBusiness} = this.props;
+    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, pipelineBusiness, this.closeModal);
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} style={{textAlign: "right"}}>
-          <button className="btn btn-primary" type="button" title="Crear negocio" onClick={this.openModal}>
-            Agregar negocio
-          </button>
+          <i className="zoom icon" title="Ver detalle" onClick={this.openModal}
+            style={{cursor: "pointer"}} />
           <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
@@ -42,7 +42,7 @@ class BotonCreateComponent extends Component {
             <div className="modalBt4-dialog modalBt4-lg">
               <div className="modalBt4-content modal-content">
                 <div className="modalBt4-header modal-header">
-                  <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Negocio</h4>
+                  <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="modalBusiness">Negocio</h4>
                   <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                     <span className="sr-only">Close</span>
@@ -68,4 +68,5 @@ function mapStateToProps({}, ownerProps){
     return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotonCreateComponent);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BotonCreateContactComponent);

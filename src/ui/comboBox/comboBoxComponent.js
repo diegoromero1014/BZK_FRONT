@@ -85,8 +85,6 @@ class comboBoxComponent extends Component {
         });
     }
 
-
-
     mapValuesToDropDown(item, idx) {
         const {textProp, valueProp, value} = this.props;
         return (

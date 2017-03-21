@@ -52,7 +52,6 @@ class PipelineComponent extends Component {
     redirectUrl('/dashboard/pipeline');
   }
 
-
   render() {
     const {pipelineReducer, reducerGlobal, navBar} = this.props;
     var visibleTable = 'none';

@@ -1,6 +1,14 @@
 {
   "presets": [
     "react",
-    "es2015"
+    [
+      "es2015",
+      {
+        "loose": true
+      }
+    ]
+  ],
+  "plugins": [
+    ["transform-class-properties", { "spec": true }]
   ]
 }

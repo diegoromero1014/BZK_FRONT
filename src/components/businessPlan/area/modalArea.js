@@ -297,7 +297,9 @@ class ModalArea extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getMasterDataFields,filterUsersBanco,addArea,
+    getMasterDataFields,
+    filterUsersBanco,
+    addArea,
     editArea
   }, dispatch);
 }

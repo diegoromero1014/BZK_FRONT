@@ -3,7 +3,7 @@ import {COLOR_RED, COLOR_ORANGE, COLOR_GREEN} from '../clientInformation/constan
 import {REVIEWED_DATE_FORMAT} from '../../constantsGlobal';
 import get from 'lodash/get';
 import flow from 'lodash/flow';
-import {shorterStringValue, mapDateValueFromTask} from '../../actionsGlobal';
+import {mapDateValueFromTask} from '../../actionsGlobal';
 
 export function getColor(date){
   const expirationDate = moment(date, 'DD MMM YYYY', 'es');
