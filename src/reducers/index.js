@@ -45,6 +45,7 @@ import alertCovenantReducer from '../components/alertCovenants/reducer';
 import pipelineBusinessReducer from '../components/pipeline/business/ducks';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
+import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/LinkEntitiesComponent/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -89,8 +90,9 @@ export default combineReducers({
     loading: loadingReducer,
     alertPortfolioExpiration: alertPortfolioExpirationReducer,
     covenant: covenant,
-    alertCovenant: alertCovenantReducer,
+    alertCovenant : alertCovenantReducer,
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
-    alertBlackList: alertBlackListReducer
+    alertBlackList : alertBlackListReducer,
+    linkEntitiesClient:linkEntitiesClientReducer
 });

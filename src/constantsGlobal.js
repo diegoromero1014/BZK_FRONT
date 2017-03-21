@@ -73,6 +73,7 @@ export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
 export const FINALIZAR = "Finalizar";
+export const VINCULAR = "Vincular";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";

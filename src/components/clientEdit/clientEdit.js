@@ -906,12 +906,6 @@ class clientEdit extends Component{
         updateErrorsNotes(false);
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
       }
-      console.log('_.isEqual(this.state.sumErrorsForm, 0)', _.isEqual(this.state.sumErrorsForm, 0));
-      console.log('_.isEqual(this.state.sumErrorsForm, 1)', tabReducer.get('errorConstact') );
-      console.log('_.isEqual(this.state.sumErrorsForm, 2)', tabReducer.get('errorShareholder') );
-      console.log('_.isEqual(this.state.sumErrorsForm, 1)', _.isEqual(tabReducer.get('errorConstact')	, false));
-      console.log('_.isEqual(this.state.sumErrorsForm, 2)', _.isEqual(tabReducer.get('errorShareholder'), false));
-      console.log('_.isEqual(this.state.sumErrorsForm, 3)', !tabReducer.get('errorNotesEditClient'));
       if( _.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact')	, false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient') ){
         if( idButton === BUTTON_UPDATE ){
           this.setState({

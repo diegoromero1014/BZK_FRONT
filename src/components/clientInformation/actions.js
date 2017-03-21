@@ -19,7 +19,7 @@ export function consultInfoClient(){
     "messageBody":{
       "clientId": window.localStorage.getItem('idClientSelected')
     }
-  }
+  };
 
   var request = axios.post(APP_URL + "/clientInformation", json);
   return{

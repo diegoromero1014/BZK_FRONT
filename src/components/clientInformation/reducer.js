@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, UPDATE_ACTIVE_TAB, CLAER_CLIENT_INFO} from './constants';
+import {isEmpty} from 'lodash';
 
 const initialState = Immutable.Map({
   status: "200",
@@ -13,12 +14,13 @@ export default(state = initialState, action) => {
   switch (action.type) {
     case CONSULT_INFO_CLIENT:
       const {status, validateLogin, clientInformation} = action.payload.data;
+      const dataClient= isEmpty(clientInformation) ? [] : JSON.parse(clientInformation);
       return state.withMutations(map => {
           map
           .set('status', status)
           .set('validateLogin', validateLogin)
-          .set('responseClientInfo', clientInformation === undefined || clientInformation === "" ? [] : JSON.parse(clientInformation));
-      })
+          .set('responseClientInfo', dataClient);
+      });
 
     case UPDATE_ACTIVE_TAB:
       return state.set("tabSelected", action.payload);
