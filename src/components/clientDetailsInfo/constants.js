@@ -9,3 +9,4 @@ export const BUTTON_EDIT = "BUTTON_EDIT";
 export const CONSULT = "CONSULT";
 export const UPDATE = "UPDATE";
 export const UPDATE_ERROR_NOTES = "UPDATE_ERROR_NOTES";
+export const UPDATE_ERROR_LINK_ENTITIES = "UPDATE_ERROR_LINK_ENTITIES";

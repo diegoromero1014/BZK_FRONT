@@ -73,6 +73,7 @@ export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
 export const FINALIZAR = "Finalizar";
+export const VINCULAR = "Vincular";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -104,7 +105,7 @@ let API_URL;
 if (process.env.NODE_ENV === "production") {
     API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";
 } else {
-    API_URL = "http://192.168.2.152:8084/Centricity";
+    API_URL = "http://localhost:8084/Centricity";
 }
 
 export const APP_URL = API_URL;
