@@ -42,7 +42,7 @@ class EntityItem extends Component {
             if (_.isEqual(linkEntity.entity, "") || _.isEqual(linkEntity.entity, null)) {
                 updateErrorsLinkEntities(true);
             }
-            if (!_.isUndefined(text)) {
+            if (!_.isEmpty(text)) {
                 if (_.isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), text.toLowerCase()) || _.isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), text.toLowerCase())) {
                     self.setState(_.set({}, 'isTraderVisible', true));
                     if (_.isEqual(linkEntity.traderCode, "") || _.isEqual(linkEntity.traderCode, null)) {
