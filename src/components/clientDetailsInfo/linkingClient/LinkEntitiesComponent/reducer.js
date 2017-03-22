@@ -14,24 +14,26 @@ export default (state = initialState, action) => {
             const indexEntityToUpdate = state.findIndex(item => item.uid === action.index);
             return state.set(indexEntityToUpdate, _.set(entityToUpdate, action.prop, action.value));
         case CREATE_ENTITY:
-            const newNote = _.assign({}, {
-                traderCode: '',
+            const newEntity = _.assign({}, {
+                traderCode: null,
                 entity: '',
-                uid: action.uid
+                uid: action.uid,
+                entityText: ''
             });
-            return state.push(newNote);
+            return state.push(newEntity);
         case DELETE_ENTITY:
             const index = state.findIndex(item => item.uid === action.index);
             return state.delete(index);
         case SET_ENTITIES:
-            const notes = action.notes;
+            const entities = action.entitiesLinkedClient;
             return state.withMutations(list => {
-                notes.map(item => {
+                entities.map(item => {
                     const uid = _.uniqueId('entity_');
                     list.push({
                         uid,
                         traderCode: item.traderCode,
-                        entity: String(item.entity)
+                        entity: String(item.entity),
+                        entityText: String(item.entityText)
                     })
                 });
             });

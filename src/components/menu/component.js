@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import MenuList from './menuList';
+import SwtAlertMessage from '../sweetAlertMessages/swtMessageComponent';
 
 class MenuComponent extends Component {
     render() {
@@ -10,6 +11,7 @@ class MenuComponent extends Component {
                     <div id="submenu-container" className="inner-menu hidden">
                     </div>
                 </div>
+                <SwtAlertMessage/>
             </div>
         );
     }

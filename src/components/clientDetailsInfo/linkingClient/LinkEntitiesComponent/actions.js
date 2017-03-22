@@ -2,6 +2,8 @@
  * Created by Andres Hurtado on 16/03/2017.
  */
 import * as constants from './constants';
+import {APP_URL} from '../../../../constantsGlobal';
+import axios from 'axios';
 
 export function updateLinkEntity(index, prop, value){
     return {
@@ -26,10 +28,10 @@ export function addEntity(uid){
     };
 }
 
-export function setEntities(notes){
+export function setEntities(entitiesLinkedClient){
     return {
         type: constants.SET_ENTITIES,
-        notes
+        entitiesLinkedClient
     };
 }
 
@@ -37,4 +39,27 @@ export function clearEntities(){
     return {
         type: constants.CLEAR_ENTITIES,
     };
+}
+
+export function saveLinkClient(jsonLinkEntityClient){
+    const jsonComplete = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        messageBody: jsonLinkEntityClient
+    };
+    const request = axios.post(APP_URL + "/saveClient", jsonComplete);
+    return {
+        type: constants.SAVE_LINK_CLIENT,
+        payload: request
+    }
 }
