@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS} from './constants';
 import axios from 'axios';
 
-export function clientsFindServer(keyword, limInf, limSup,certificationStatus,teamId){
+export function clientsFindServer(keyword, limInf, limSup,certificationStatus,teamId,linkingStatusus){
   const json = {
     "messageHeader":{
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -21,7 +21,8 @@ export function clientsFindServer(keyword, limInf, limSup,certificationStatus,te
       "limInf": limInf,
       "limSup": limSup,
       "certificationStatus": certificationStatus,
-      "teamId" : teamId
+      "teamId" : teamId,
+      "linkingStatusus":linkingStatusus
     }
   };
 
