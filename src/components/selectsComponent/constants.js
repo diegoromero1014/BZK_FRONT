@@ -31,6 +31,7 @@ export const CLEAR_VALUES_COUNTRY_KEY = "CLEAR_VALUES_COUNTRY_KEY";
 export const ECONOMIC_GROUPS = "economicGroupsByKeyword";
 export const SHAREHOLDER_KIND = "shareHolderKind";
 export const CERTIFICATION_STATUS = "certificationStatus";
+export const LINKED_STATUS = "linkedStatus";
 export const GENDER = "gender";
 export const FILTER_STATUS_VISIT_ID = 'FILTER_STATUS_VISIT_ID';
 export const VISIT_TYPE = "visitType";
