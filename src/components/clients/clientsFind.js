@@ -141,9 +141,6 @@ class ClientsFind extends Component {
         var countClients = clientR.get('countClients');
         var status = clientR.get('status');
         clientItems = clientR.get('responseClients');
-        console.log("team", ...team);
-        console.log("linkedStatus", ...linkedStatus);
-        console.log("data", selectsReducer.get('linkedStatus'));
         return (
             <div>
                 <form>
