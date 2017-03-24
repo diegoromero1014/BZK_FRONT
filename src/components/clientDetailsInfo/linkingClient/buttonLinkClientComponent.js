@@ -34,22 +34,21 @@ class ButtonLinkClientComponent extends Component {
         this._handleSaveLinkingClient = this._handleSaveLinkingClient.bind(this);
         this._getListEntities = this._getListEntities.bind(this);
         this.state = {
-            modalIsOpen: false,
-            showErrorValidForm: false,
-            linkedStatusKey:'',
-            observationTrader:'',
-            linkEntity:''
+            modalIsOpen: false
         };
     }
 
     openModal() {
         this.setState({modalIsOpen: true});
-        const {consultStateBlackListClient, infoClient,showLoading,swtShowMessage} = this.props;
+        const {consultStateBlackListClient, infoClient, showLoading, swtShowMessage, setEntities, getMasterDataFields, selectsReducer} = this.props;
         const jsonClientInfo = {
-            customerId: get(infoClient,'clientIdNumber'),
-            customerFullName: get(infoClient,'clientName'),
-            customerTypeId: get(infoClient,'clientNameType')
+            customerId: get(infoClient, 'clientIdNumber'),
+            customerFullName: get(infoClient, 'clientName'),
+            customerTypeId: get(infoClient, 'clientNameType')
         };
+        let listEntitiesMasterData = selectsReducer.get(FILTER_TYPE_LBO_ID);
+        setEntities(this._getListEntities(listEntitiesMasterData));
+
         /** Se comenta por que aún no esta estable el servicio **/
         // showLoading(true,'Cargando...');
         // consultStateBlackListClient(jsonClientInfo).then((data)=>{
@@ -67,16 +66,13 @@ class ButtonLinkClientComponent extends Component {
 
     closeModal() {
         this.setState({modalIsOpen: false});
-        this.props.updateFieldInfoClient('linkedStatusKey',this.state.linkedStatusKey);
-        this.props.updateFieldInfoClient('observationTrader',this.state.observationTrader);
-        this.props.updateFieldInfoClient('linkEntity',this.state.linkEntity);
     }
 
     _handleSaveLinkingClient() {
         const {
             fields:{observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
-            swtShowMessage, saveLinkClient,showLoading
+            swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient
         } = this.props;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
@@ -119,14 +115,14 @@ class ButtonLinkClientComponent extends Component {
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray()
             };
-            showLoading(true,'Guardando..');
+            showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
                     if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
-                        this.setState(_.set({}, 'linkedStatusKey', 'Iniciado'));
-                        this.setState(_.set({}, 'observationTrader', observationTrader.value));
-                        this.setState(_.set({}, 'linkEntity', newListEntities.toArray()));
-                        showLoading(false,'');
+                        updateFieldInfoClient('linkedStatusKey', 'Iniciado');
+                        updateFieldInfoClient('observationTrader', observationTrader.value);
+                        updateFieldInfoClient('linkEntity', newListEntities.toArray());
+                        showLoading(false, '');
                         swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
                     }
                 });
@@ -135,15 +131,16 @@ class ButtonLinkClientComponent extends Component {
     }
 
     _getListEntities(listEntitiesMasterData) {
-        const {infoClient} = this.props;
+        const {infoClient, clearEntities} = this.props;
         const listLinkEntitiesClient = get(infoClient, 'linkEntity', []);
+        clearEntities();
         return listLinkEntitiesClient.map(itemEntity => {
                 const entityMasterData = find(listEntitiesMasterData, (item) => {
                     return isEqual(itemEntity.entity, item.id);
                 });
                 return {
                     entity: itemEntity.entity,
-                    entityText: get(entityMasterData,'value', ''),
+                    entityText: get(entityMasterData, 'value', ''),
                     traderCode: itemEntity.traderCode
                 };
             }
@@ -153,10 +150,9 @@ class ButtonLinkClientComponent extends Component {
     componentWillMount() {
         const {setEntities, getMasterDataFields} = this.props;
         let listEntitiesMasterData = [];
-        getMasterDataFields([FILTER_TYPE_LBO_ID]).
-            then((data) => {
-            if ((isEqual(get(data, 'payload.status'),200))) {
-                listEntitiesMasterData = get(data,'payload.data.messageBody.masterDataDetailEntries',[]);
+        getMasterDataFields([FILTER_TYPE_LBO_ID]).then((data) => {
+            if ((isEqual(get(data, 'payload.status'), 200))) {
+                listEntitiesMasterData = get(data, 'payload.data.messageBody.masterDataDetailEntries', []);
                 setEntities(this._getListEntities(listEntitiesMasterData));
             }
         });
@@ -165,8 +161,9 @@ class ButtonLinkClientComponent extends Component {
     componentWillUnmount() {
         this.props.clearEntities();
     }
+
     render() {
-        const {infoClient, fields:{observationTrader}, handleSubmit,message, level} = this.props;
+        const {infoClient, fields:{observationTrader}, handleSubmit, message, level} = this.props;
         const paddingButtons = {paddingRight: '7px', paddingLeft: '7px'};
         return (
             <Col style={paddingButtons}>
@@ -354,10 +351,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({linkEntitiesClient, tabReducer, selectsReducer,blackListClient}, {infoClient}) {
+function mapStateToProps({linkEntitiesClient, tabReducer, selectsReducer, blackListClient}, {infoClient}) {
     const isValidLinkEntities = !tabReducer.get('errorEditLinkEntitiesClient');
     const message = _.isEmpty(blackListClient.get('message')) ? '' : blackListClient.get('message');
-    const level = _.isEmpty(blackListClient.get('level'))? '' : blackListClient.get('level');
+    const level = _.isEmpty(blackListClient.get('level')) ? '' : blackListClient.get('level');
     if (isEmpty(get(infoClient, 'observationTrader', null))) {
         return {
             message,
