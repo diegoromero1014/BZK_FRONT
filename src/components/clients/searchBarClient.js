@@ -41,13 +41,13 @@ class SearchBarClient extends Component{
   }
 
   _handleClientsFind(e){
-    const {clientsFindServer, valueTeam,valueCertification} = this.props;
+    const {clientsFindServer, valueTeam,valueCertification,linkingStatusus} = this.props;
     const {clientR} = this.props;
     if(clientR.get('keyword') === '' || clientR.get('keyword') === undefined){
       this.setState({showEr: true});
     }else{
       const {changePage} = this.props;
-      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,valueCertification,valueTeam).then((data) => {
+      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS,valueCertification,valueTeam,linkingStatusus).then((data) => {
         if ( !_.get(data, 'payload.data.validateLogin') ) {
           redirectUrl("/login");
         }

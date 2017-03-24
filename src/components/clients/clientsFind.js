@@ -146,7 +146,7 @@ class ClientsFind extends Component {
                 <form>
                     <Row style={{marginTop: "15px"}}>
                         <Col xs={12} sm={12} md={6} lg={8} style={{width: '100%'}}>
-                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value}/>
+                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} linkingStatusus={linkedStatus.value}/>
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
