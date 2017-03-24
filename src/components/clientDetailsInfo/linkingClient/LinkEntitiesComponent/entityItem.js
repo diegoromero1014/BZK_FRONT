@@ -25,31 +25,22 @@ class EntityItem extends Component {
     }
 
     _updateValue(prop, value, text) {
-        const {updateLinkEntity, index, updateErrorsLinkEntities, linkEntitiesClient} = this.props;
+        const {updateLinkEntity, index, linkEntitiesClient} = this.props;
         this.setState(_.set({}, prop, value));
         const self = this;
         updateLinkEntity(index, prop, value);
-        let entitiesArray = [];
-        linkEntitiesClient.map(map => {
-            const noteItem = {
-                "entity": map.entity,
-                "traderCode": map.traderCode
-            };
-            entitiesArray.push(noteItem);
-        });
-        updateErrorsLinkEntities(false);
-        entitiesArray.forEach(function (linkEntity) {
-            if (_.isEqual(linkEntity.entity, "") || _.isEqual(linkEntity.entity, null)) {
-                updateErrorsLinkEntities(true);
-            }
+        if(_.isEqual('entity',prop)){
+            this.setState(_.set({}, 'entityName', text));
+        }
+        updateLinkEntity(index, 'entityText', text);
+        linkEntitiesClient.map(linkEntity => {
             if (!_.isEmpty(text)) {
-                if (_.isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), text.toLowerCase()) || _.isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), text.toLowerCase())) {
+                if (_.isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), text.toLowerCase())
+                    || _.isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), text.toLowerCase())) {
                     self.setState(_.set({}, 'isTraderVisible', true));
-                    if (_.isEqual(linkEntity.traderCode, "") || _.isEqual(linkEntity.traderCode, null)) {
-                        updateErrorsLinkEntities(true);
-                    }
                 }else{
                     self.setState(_.set({}, 'isTraderVisible', false));
+                    self.setState(_.set({}, 'traderCode', ''));
                 }
             }
         });
@@ -60,23 +51,14 @@ class EntityItem extends Component {
         deleteLinkEntity(index);
     }
 
-    componentWillMount() {
-        const {entity, traderCode} = this.props;
-        this._updateValue("entity", entity);
-        this._updateValue("traderCode", traderCode);
-        if (_.isEqual(_.isEqual(entity, "") || _.isEqual(entity, null))) {
-            updateErrorsLinkEntities(true);
-        }
-    }
-
     componentDidMount() {
         const {entity, traderCode} = this.props;
-        this._updateValue("entity", entity);
-        this._updateValue("traderCode", traderCode);
+        this.setState(_.set({}, 'entity', entity));
+        this.setState(_.set({}, 'traderCode', traderCode));
     }
 
     render() {
-        const {entity, traderCode, index, _onBlurField, data} = this.props;
+        const {index, data} = this.props;
         return (
             <div>
                 <Row>
@@ -106,7 +88,9 @@ class EntityItem extends Component {
                                     style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
                                     value={this.state.traderCode}
                                     max={600}
-                                    onChange={this._updateValue.bind(this, 'traderCode')}
+                                    onChange={(val) => {
+                                        return this._updateValue('traderCode', val, this.state.entityName);
+                                    }}
                                     onBlur={() => console.log}
                                 />
                             </div>

@@ -46,6 +46,7 @@ import pipelineBusinessReducer from '../components/pipeline/business/ducks';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
 import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/LinkEntitiesComponent/reducer';
+import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer'
 
 export default combineReducers({
     routing: routerReducer,
@@ -94,5 +95,6 @@ export default combineReducers({
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
     alertBlackList : alertBlackListReducer,
-    linkEntitiesClient:linkEntitiesClientReducer
+    linkEntitiesClient:linkEntitiesClientReducer,
+    swtMessage : swtAlertMessagesReducer
 });
