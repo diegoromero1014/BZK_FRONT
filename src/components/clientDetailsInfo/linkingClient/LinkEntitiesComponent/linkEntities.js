@@ -10,7 +10,7 @@ import {getMasterDataFields} from '../../../selectsComponent/actions';
 import {FILTER_TYPE_LBO_ID} from '../../../selectsComponent/constants';
 import LinkEntity from './entityItem';
 import _ from 'lodash';
-import {Button, Icon} from 'semantic-ui-react'
+
 
 class LinkEntitiesClient extends Component {
     constructor(props) {
@@ -27,11 +27,6 @@ class LinkEntitiesClient extends Component {
     _updateValueList(index, value) {
         const {updateLinkEntity} = this.props;
         updateLinkEntity(index, "entity", value);
-    }
-
-    componentWillMount() {
-        const {getMasterDataFields} = this.props;
-        getMasterDataFields([FILTER_TYPE_LBO_ID]);
     }
 
     _addEntity() {

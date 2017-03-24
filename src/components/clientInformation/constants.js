@@ -6,3 +6,5 @@ export const COLOR_GREEN = '#5cb85c';
 export const COLOR_ORANGE = '#f0ad4e';
 export const COLOR_RED = '#d9534f';
 export const CLAER_CLIENT_INFO = 'CLAER_CLIENT_INFO';
+export const UPDATE_FIELD_INFO_CLIENT = 'UPDATE_FIELD_INFO_CLIENT';
+

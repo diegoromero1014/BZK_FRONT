@@ -84,7 +84,7 @@ class DetailsInfoClient extends Component {
     }
 
     render() {
-        const {infoClient, reducerGlobal} = this.props;
+        const {infoClient, reducerGlobal, linkedStatusKey} = this.props;
         var actualizationDateString = "";
         if (infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined) {
             var actualizationDate = moment(infoClient.actualizationDate).locale('es');
@@ -173,7 +173,7 @@ class DetailsInfoClient extends Component {
                                 <span style={{marginLeft: "0px"}}>{infoClient.certificationStatusKey}</span>
                             </td>
                             <td style={{width: "25%", verticalAlign: "initial"}}>
-                                <span style={{marginLeft: "0px"}}>{infoClient.linkedStatusKey}</span>
+                                <span style={{marginLeft: "0px"}}>{linkedStatusKey}</span>
                             </td>
                         </tr>
                         </tbody>
@@ -256,10 +256,6 @@ class DetailsInfoClient extends Component {
     }
 }
 
-DetailsInfoClient.PropTypes = {
-    infoClient: PropTypes.object.isRequired
-};
-
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         seletedButton,
@@ -269,9 +265,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({navBar, reducerGlobal}) {
+function mapStateToProps({navBar, reducerGlobal, clientInformacion}) {
+    const linkedStatusKey = _.get(clientInformacion.get('responseClientInfo'), 'linkedStatusKey', null);
     return {
+        infoClient: Object.assign({}, clientInformacion.get('responseClientInfo')),
         menuState: navBar.get('status'),
+        linkedStatusKey,
         reducerGlobal
     };
 }

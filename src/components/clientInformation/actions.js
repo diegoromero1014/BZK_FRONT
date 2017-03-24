@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT} from './constants';
 import axios from 'axios';
 
 export function consultInfoClient(){
@@ -43,4 +43,12 @@ export function changeCheckInfoClient(check){
     type: CHANGE_CHECK_CLIENT,
     payload: check
   }
+}
+
+export function updateFieldInfoClient(field, value) {
+    return {
+        type: UPDATE_FIELD_INFO_CLIENT,
+        field,
+        value
+    }
 }

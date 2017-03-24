@@ -5,23 +5,22 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
-import LinkEntities from './LinkEntitiesComponent/linkEntities';
+import LinkEntities from './linkEntitiesComponent/linkEntities';
 import Modal from 'react-modal';
-import {isEmpty, isEqual, get} from 'lodash';
+import {isEmpty, isEqual, get, find} from 'lodash';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import {setEntities, clearEntities, saveLinkClient} from './LinkEntitiesComponent/actions';
+import {setEntities, clearEntities, saveLinkClient} from './linkEntitiesComponent/actions';
 import {updateErrorsLinkEntities} from '../../clientDetailsInfo/actions';
-import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA} from './LinkEntitiesComponent/constants';
+import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA} from './linkEntitiesComponent/constants';
 const fields = ["observationTrader"];
 const errors = {};
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import {FILTER_TYPE_LBO_ID} from '../../selectsComponent/constants';
+import {getMasterDataFields} from '../../selectsComponent/actions';
+import {updateFieldInfoClient} from '../../clientInformation/actions';
+import {consultStateBlackListClient} from './actions';
 
 const validate = (values) => {
-    // if (!values.observationTrader) {
-    //     errors.observationTrader = "Debe ingresar un valor";
-    // } else {
-    //     errors.observationTrader = null;
-    // }
     return errors;
 };
 
@@ -32,33 +31,32 @@ class ButtonLinkClientComponent extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
         this._handleSaveLinkingClient = this._handleSaveLinkingClient.bind(this);
+        this._getListEntities = this._getListEntities.bind(this);
         this.state = {
             modalIsOpen: false,
-            showErrorValidForm: false
+            showErrorValidForm: false,
+            linkedStatusKey:'',
+            observationTrader:'',
+            linkEntity:''
         };
     }
 
     openModal() {
-        const {setEntities, infoClient} = this.props;
-        console.log("entities >>>",_.get(infoClient, 'linkEntity', []));
-        // const prueba = [
-        //     {
-        //         entity: "108",
-        //         entityText: "Bancolombia Panamá",
-        //         traderCode: null
-        //     }, {
-        //         entity: "109",
-        //         entityText: "Bancolombia Puerto Rico",
-        //         traderCode: null
-        //     }];
-        // // setEntities(_.get(infoClient, 'linkEntity', []));
-        // setEntities(prueba);
         this.setState({modalIsOpen: true});
+        const {consultStateBlackListClient, infoClient} = this.props;
+        const jsonClientInfo = {
+            customerId: get(infoClient,'clientIdNumber'),
+            customerFullName: get(infoClient,'clientName'),
+            customerTypeId: get(infoClient,'clientNameType')
+        };
+        consultStateBlackListClient(jsonClientInfo);
     }
 
     closeModal() {
         this.setState({modalIsOpen: false});
-        this.props.clearEntities();
+        this.props.updateFieldInfoClient('linkedStatusKey',this.state.linkedStatusKey);
+        this.props.updateFieldInfoClient('observationTrader',this.state.observationTrader);
+        this.props.updateFieldInfoClient('linkEntity',this.state.linkEntity);
     }
 
     _handleSaveLinkingClient() {
@@ -105,6 +103,7 @@ class ButtonLinkClientComponent extends Component {
         } else {
             const jsonLinkEntityClient = {
                 "id": infoClient.id,
+                "isSaveLinking": true,
                 "clientIdType": infoClient.clientIdType,
                 "clientIdNumber": infoClient.clientIdNumber,
                 "celulaId": infoClient.celulaId,
@@ -113,8 +112,11 @@ class ButtonLinkClientComponent extends Component {
             };
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
-                    if((_.get(data, 'payload.data.responseCreateProspect') === "create")) {
-                        swtShowMessage('success', 'Vinculación', 'Vinculacion guardada');
+                    if ((_.get(data, 'payload.data.responseCreateProspect') === "create")) {
+                        swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
+                        this.setState(_.set({}, 'linkedStatusKey', 'Iniciado'));
+                        this.setState(_.set({}, 'observationTrader', observationTrader.value));
+                        this.setState(_.set({}, 'linkEntity', newListEntities.toArray()));
                     }
                 }, (reason) => {
                 });
@@ -122,20 +124,44 @@ class ButtonLinkClientComponent extends Component {
         }
     }
 
-    componentWillMount() {
-        const {setEntities, infoClient} = this.props;
-        // setEntities(_.get(infoClient, 'linkEntity', []));
-        console.log("entities >>>",_.get(infoClient, 'linkEntity', []));
+    _getListEntities(listEntitiesMasterData) {
+        const {infoClient} = this.props;
+        const listLinkEntitiesClient = get(infoClient, 'linkEntity', []);
+        return listLinkEntitiesClient.map(itemEntity => {
+                const entityMasterData = find(listEntitiesMasterData, (item) => {
+                    return isEqual(itemEntity.entity, item.id);
+                });
+                return {
+                    entity: itemEntity.entity,
+                    entityText: get(entityMasterData,'value', ''),
+                    traderCode: itemEntity.traderCode
+                };
+            }
+        );
     }
 
+    componentWillMount() {
+        const {setEntities, getMasterDataFields} = this.props;
+        let listEntitiesMasterData = [];
+        getMasterDataFields([FILTER_TYPE_LBO_ID]).
+            then((data) => {
+            if ((isEqual(get(data, 'payload.status'),200))) {
+                listEntitiesMasterData = get(data,'payload.data.messageBody.masterDataDetailEntries',[]);
+                setEntities(this._getListEntities(listEntitiesMasterData));
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.clearEntities();
+    }
     render() {
-        const {infoClient, fields:{observationTrader}, handleSubmit} = this.props;
+        const {infoClient, fields:{observationTrader}, handleSubmit,message, level} = this.props;
         const paddingButtons = {paddingRight: '7px', paddingLeft: '7px'};
         return (
             <Col style={paddingButtons}>
                 <button className="btn" onClick={this.openModal}>
                     <span >Vincular</span></button>
-
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onRequestClose={this.closeModal}
@@ -239,14 +265,13 @@ class ButtonLinkClientComponent extends Component {
                                 <Row>
                                     <Col xs={12} md={2} lg={2}>
                                         <h4>Nivel</h4>
-                                        <span>Alerta</span>
+                                        <span>{level}</span>
                                     </Col>
                                     <Col xs={12} md={10} lg={10}>
                                         <h4>Mensaje</h4>
-                                        <span>Quiere la boca exhausta vid, kiwi, piña y fugaz jamón. Fabio me exige, sin tapujos,
-                                            que añada cerveza al whisky. Jovencillo emponzoñado de whisky, ¡qué figurota exhibes!
-                                            La cigüeña tocaba cada vez mejor el saxofón y el búho pedía kiwi y queso.
-                                            El jefe buscó el éxtasis en un imprevisto baño de whisky</span>
+                                        <span>
+                                            {message}
+                                        </span>
                                     </Col>
                                 </Row>
                                 <Row style={{padding: "20px 10px 10px 0px"}}>
@@ -268,7 +293,7 @@ class ButtonLinkClientComponent extends Component {
                                 </Row>
                                 <Row>
                                     <Col xs={12} md={12} lg={12}>
-                                        <h4>Observación adminsistrador</h4>
+                                        <h4>Observación administrador</h4>
                                         {_.isEmpty(infoClient.observationAdmin) ?
                                             <p>Sin observaión.</p>
                                             :
@@ -311,14 +336,22 @@ function mapDispatchToProps(dispatch) {
         clearEntities,
         updateErrorsLinkEntities,
         swtShowMessage,
-        saveLinkClient
+        saveLinkClient,
+        getMasterDataFields,
+        updateFieldInfoClient,
+        consultStateBlackListClient
     }, dispatch);
 }
 
-function mapStateToProps({linkEntitiesClient, tabReducer}, {infoClient}) {
+function mapStateToProps({linkEntitiesClient, tabReducer, selectsReducer,blackListClient}, {infoClient}) {
     const isValidLinkEntities = !tabReducer.get('errorEditLinkEntitiesClient');
+    const message = _.isEmpty(blackListClient.get('message')) ? '' : blackListClient.get('message');
+    const level = _.isEmpty(blackListClient.get('level'))? '' : blackListClient.get('level');
     if (isEmpty(get(infoClient, 'observationTrader', null))) {
         return {
+            message,
+            level,
+            selectsReducer,
             linkEntitiesClient,
             isValidLinkEntities,
             infoClient,
@@ -328,6 +361,9 @@ function mapStateToProps({linkEntitiesClient, tabReducer}, {infoClient}) {
         };
     } else {
         return {
+            message,
+            level,
+            selectsReducer,
             linkEntitiesClient,
             isValidLinkEntities,
             infoClient,
