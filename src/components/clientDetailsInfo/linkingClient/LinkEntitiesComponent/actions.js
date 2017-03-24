@@ -57,7 +57,7 @@ export function saveLinkClient(jsonLinkEntityClient){
         },
         messageBody: jsonLinkEntityClient
     };
-    const request = axios.post(APP_URL + "/saveClient", jsonComplete);
+    const request = axios.post(APP_URL + "/saveLinkingClient", jsonComplete);
     return {
         type: constants.SAVE_LINK_CLIENT,
         payload: request

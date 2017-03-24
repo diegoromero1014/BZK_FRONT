@@ -864,8 +864,7 @@ class clientEdit extends Component {
                 "originCityResource": originCityResource.value,
                 "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
                 "otherOperationsForeign": otherOperationsForeign.value,
-                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
-                "isSaveLinking": false
+                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']')
             };
             const {createProspect, sendErrorsUpdate, updateClient} = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);

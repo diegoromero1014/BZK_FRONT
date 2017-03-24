@@ -19,6 +19,7 @@ import {FILTER_TYPE_LBO_ID} from '../../selectsComponent/constants';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {updateFieldInfoClient} from '../../clientInformation/actions';
 import {consultStateBlackListClient} from './actions';
+import {showLoading} from '../../loading/actions';
 
 const validate = (values) => {
     return errors;
@@ -43,13 +44,24 @@ class ButtonLinkClientComponent extends Component {
 
     openModal() {
         this.setState({modalIsOpen: true});
-        const {consultStateBlackListClient, infoClient} = this.props;
+        const {consultStateBlackListClient, infoClient,showLoading,swtShowMessage} = this.props;
         const jsonClientInfo = {
             customerId: get(infoClient,'clientIdNumber'),
             customerFullName: get(infoClient,'clientName'),
             customerTypeId: get(infoClient,'clientNameType')
         };
-        consultStateBlackListClient(jsonClientInfo);
+        showLoading(true,'Cargando...');
+        consultStateBlackListClient(jsonClientInfo).then((data)=>{
+            showLoading(false,'');
+            if(!isEqual(get(data,'payload.data.status'),200)){
+                console.log("Error ",get(data,'payload.data.data'));
+                swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+            }
+        },(reason) => {
+            console.log("reason consultStateBlackListClient ",reason);
+            showLoading(false,'');
+            swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        });
     }
 
     closeModal() {
@@ -63,8 +75,9 @@ class ButtonLinkClientComponent extends Component {
         const {
             fields:{observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
-            swtShowMessage, saveLinkClient
+            swtShowMessage, saveLinkClient,showLoading,updateFieldInfoClient
         } = this.props;
+        showLoading(true,'Guardando..');
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
         const newListEntities = linkEntitiesClient.map(linkEntity => {
@@ -102,23 +115,19 @@ class ButtonLinkClientComponent extends Component {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, por favor ingrese todos los campos obligatorios.');
         } else {
             const jsonLinkEntityClient = {
-                "id": infoClient.id,
-                "isSaveLinking": true,
-                "clientIdType": infoClient.clientIdType,
-                "clientIdNumber": infoClient.clientIdNumber,
-                "celulaId": infoClient.celulaId,
+                "idClient": infoClient.id,
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray()
             };
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
-                    if ((_.get(data, 'payload.data.responseCreateProspect') === "create")) {
-                        swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
+                    if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
                         this.setState(_.set({}, 'linkedStatusKey', 'Iniciado'));
                         this.setState(_.set({}, 'observationTrader', observationTrader.value));
                         this.setState(_.set({}, 'linkEntity', newListEntities.toArray()));
+                        showLoading(false,'');
+                        swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
                     }
-                }, (reason) => {
                 });
 
         }
@@ -339,7 +348,8 @@ function mapDispatchToProps(dispatch) {
         saveLinkClient,
         getMasterDataFields,
         updateFieldInfoClient,
-        consultStateBlackListClient
+        consultStateBlackListClient,
+        showLoading
     }, dispatch);
 }
 

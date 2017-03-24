@@ -14,12 +14,9 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case CONSULT_BLACK_LIST_CLIENT:
             // const response = action.payload.data.data;
-            console.log("response blacklist Client action", action);
-            const levelTest = "Alerta";
-            const messageTest = "Quiere la boca exhausta vid, kiwi, piña y fugaz jamón. Fabio me exige, sin tapujos";
             return state.withMutations(map => {
-                map.set('level', levelTest)
-                    .set('message', messageTest);
+                map.set('level', null)
+                    .set('message', null);
             });
         default:
             return state;
