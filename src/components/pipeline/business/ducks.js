@@ -9,16 +9,17 @@ const initialState = Map();
 export default function (state = initialState, action = {}) {
     switch (action.type) {
     case ADD_BUSINESS:
-        const {data: business} = action;
-        return state.set(business.uuid, business);
+      const {data: business} = action;
+      console.log('business', business);
+      return state.set(business.uuid, business);
     case DELETE_BUSINESS:
-        return state.delete(action.index);
+      return state.delete(action.index);
     case CLEAR_BUSINESS:
-        return state.clear();
+      return state.clear();
     case EDIT_BUSINESS:
-        const businessEdit = action.data;
-        const editKey = businessEdit.uuid;
-        return state.set(editKey, Object.assign({}, state.get(editKey), businessEdit));
+      const businessEdit = action.data;
+      const editKey = businessEdit.uuid;
+      return state.set(editKey, Object.assign({}, state.get(editKey), businessEdit));
     default:
         return state;
     }
@@ -32,6 +33,7 @@ export function deleteBusiness(index) {
 }
 
 export function addBusiness(business) {
+  console.log('action');
     return {
         type: ADD_BUSINESS,
         data: business

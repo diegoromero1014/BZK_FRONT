@@ -36,6 +36,7 @@ class ListBusiness extends Component {
 
     _deleteBusiness = () => {
         const {deleteBusiness, businessList} = this.props;
+        deleteBusiness(idBusinessSeleted);
         this.setState({
             showConfirmDeleteBusiness: false
         });
@@ -64,7 +65,7 @@ class ListBusiness extends Component {
             <td className="collapsing">
                 <i className="remove icon" title="Eliminar negocio"
                    onClick={this._confirmDeleteBusiness.bind(this, businessData.uuid)}
-                   style={disabled === 'disabled' ? {display: 'none'} : {cursor: "pointer"}}/>
+                   style={disabled ? {cursor: "pointer"} : {display: 'none'}}/>
             </td>
         </tr>
     }

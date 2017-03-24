@@ -17,7 +17,7 @@ class BusinessBusiness extends Component{
     const {businesss, disabled, origin} = this.props;
     return(
       <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {display:"none"} : {padding: "0px 10px 20px 20px"}}>
-        <ListBusiness  disabled={disabled}/>
+        <ListBusiness disabled={disabled}/>
       </div>
     );
   }

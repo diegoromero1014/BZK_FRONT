@@ -26,7 +26,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 import Business from '../business/business';
-import {addBusiness, editBusiness} from '../business/ducks';
+import {addBusiness, editBusiness, clearBusiness} from '../business/ducks';
 import HeaderPipeline from '../headerPipeline';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
@@ -377,8 +377,8 @@ export default function createFormPipeline(name, origin, functionCloseModal){
             "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
             "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
             "probability": probability.value,
-            "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? '' : (pendingDisburAmount.value).replace(/,/g, ""),
-            "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? '' : (amountDisbursed.value).replace(/,/g, ""),
+            "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? null : (pendingDisburAmount.value).replace(/,/g, ""),
+            "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? null : (amountDisbursed.value).replace(/,/g, ""),
             "entity": entity.value,
             "contract": this.state.visibleContract ? contract.value : "",
             "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
@@ -509,8 +509,12 @@ export default function createFormPipeline(name, origin, functionCloseModal){
     }
 
     componentWillMount() {
-      const {nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, consultParameterServer} = this.props;
+      const {nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
+        consultParameterServer, clearBusiness} = this.props;
       nonValidateEnter(true);
+      if(origin !== ORIGIN_PIPELIN_BUSINESS){
+        clearBusiness();
+      }
       const infoClient = clientInformacion.get('responseClientInfo');
       getPipelineCurrencies();
       getClientNeeds();
@@ -935,7 +939,7 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                   </div>
                 </Col>
               </Row>
-              <Business origin={origin}/>
+              <Business origin={origin} disabled={true}/>
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? {display:"none"} : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1032,7 +1036,8 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       nonValidateEnter,
       addBusiness,
       editBusiness,
-      changeModalIsOpen
+      changeModalIsOpen,
+      clearBusiness
     }, dispatch);
   }
 
