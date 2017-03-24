@@ -10,7 +10,6 @@ export default function (state = initialState, action = {}) {
     switch (action.type) {
     case ADD_BUSINESS:
       const {data: business} = action;
-      console.log('business', business);
       return state.set(business.uuid, business);
     case DELETE_BUSINESS:
       return state.delete(action.index);
@@ -33,7 +32,6 @@ export function deleteBusiness(index) {
 }
 
 export function addBusiness(business) {
-  console.log('action');
     return {
         type: ADD_BUSINESS,
         data: business

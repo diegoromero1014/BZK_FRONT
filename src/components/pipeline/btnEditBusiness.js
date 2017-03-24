@@ -23,7 +23,6 @@ class BotonCreateContactComponent extends Component {
   }
 
   closeModal(){
-    console.log('request');
     this.setState({modalIsOpen: false});
   }
 
