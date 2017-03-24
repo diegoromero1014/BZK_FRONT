@@ -54,6 +54,7 @@ import ModalErrorsUpdateClient from './modalErrorsUpdateClient';
 import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
+import {showLoading} from '../loading/actions';
 
 let idButton;
 let errorContact;
@@ -956,7 +957,7 @@ class clientEdit extends Component {
         const {
             fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns}, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, consultInfoClient
+            clearProducts, setProducts, tabReducer, updateErrorsNotes, consultInfoClient,showLoading
         } = this.props;
         idButton = tabReducer.get('seletedButton');
         updateErrorsNotes(false);
@@ -978,6 +979,7 @@ class clientEdit extends Component {
                 sendErrorsUpdate([]);
                 redirectUrl("/dashboard/clientInformation");
             } else {
+                showLoading(true,'Cargando...');
                 const {economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                     constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
@@ -993,7 +995,9 @@ class clientEdit extends Component {
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
+                        showLoading(false,'');
                     }, (reason) => {
+                        showLoading(false,'');
                         this.setState({showEx: true});
                     });
                 consultList(constants.CIIU);
@@ -2010,7 +2014,8 @@ function mapDispatchToProps(dispatch) {
         updateClient,
         sendErrorsUpdate,
         updateErrorsNotes,
-        updateTitleNavBar
+        updateTitleNavBar,
+        showLoading
     }, dispatch);
 }
 

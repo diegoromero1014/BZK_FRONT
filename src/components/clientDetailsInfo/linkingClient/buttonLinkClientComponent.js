@@ -75,7 +75,7 @@ class ButtonLinkClientComponent extends Component {
         const {
             fields:{observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
-            swtShowMessage, saveLinkClient,showLoading,updateFieldInfoClient
+            swtShowMessage, saveLinkClient,showLoading
         } = this.props;
         showLoading(true,'Guardando..');
         updateErrorsLinkEntities(false);

@@ -13,6 +13,7 @@ import {ORANGE_COLOR, BLUE_COLOR} from '../../constantsGlobal';
 import $ from 'jquery';
 import _ from 'lodash';
 import {clearEntities} from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
+import {showLoading} from '../loading/actions';
 
 class ComponentClientInformation extends Component {
     constructor(props) {
@@ -21,12 +22,14 @@ class ComponentClientInformation extends Component {
 
     componentWillMount() {
         $(window).scrollTop(0);
-        const {updateTitleNavBar, viewAlertClient, consultInfoClient} = this.props;
+        const {updateTitleNavBar, viewAlertClient, consultInfoClient,showLoading} = this.props;
         updateTitleNavBar("Mis clientes");
+        showLoading(true,'Cargando..');
         consultInfoClient().then((data) => {
             if (!_.get(data, 'payload.data.validateLogin')) {
                 redirectUrl("/login");
             }
+            showLoading(false,'');
         });
         viewAlertClient(true);
 
@@ -182,7 +185,8 @@ function mapDispatchToProps(dispatch) {
         updateTitleNavBar,
         viewAlertClient,
         redirectUrl,
-        clearEntities
+        clearEntities,
+        showLoading
     }, dispatch);
 }
 
