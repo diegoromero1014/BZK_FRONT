@@ -27,8 +27,8 @@ class BotonCreateContactComponent extends Component {
   }
 
   render() {
-    const {typeButton, pipelineBusiness} = this.props;
-    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, pipelineBusiness, this.closeModal);
+    const {typeButton, pipelineBusiness, disabled} = this.props;
+    const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, pipelineBusiness, this.closeModal, disabled);
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} style={{textAlign: "right"}}>

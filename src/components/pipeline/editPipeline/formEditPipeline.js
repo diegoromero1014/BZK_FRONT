@@ -84,7 +84,7 @@ const validate = values => {
     return errors;
 };
 
-export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal) {
+export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     var nameBusiness = _.uniqueId('business_');
     var nameProduct = _.uniqueId('product_');
     var nameIndexing = _.uniqueId('indexing_');
@@ -137,6 +137,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
             this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
             this._changeEntity = this._changeEntity.bind(this);
+            this._consultInfoPipeline = this._consultInfoPipeline.bind(this);
         }
 
         _closeMessageEditPipeline() {
@@ -476,26 +477,23 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               errorBusinessPipeline: null
           });
           const {clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-              getPipelineById, nonValidateEnter, fields: {nameUsuario, idUsuario, value, commission, roe,
+              nonValidateEnter, fields: {nameUsuario, idUsuario, value, commission, roe,
               termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
-              business, product, priority, registeredCountry, startDate, client, documentStatus}, addBusiness, clearBusiness} = this.props;
+              business, product, priority, registeredCountry, startDate, client, documentStatus}, clearBusiness} = this.props;
           if(origin !== ORIGIN_PIPELIN_BUSINESS){
             clearBusiness();
+          }else{
+            this.setState({
+              isEditable: disabled
+            });
           }
           if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
               if (pipelineBusiness.pipelineBusiness.length > 0) {
                   business.onChange(JSON.parse('["' + _.join(pipelineBusiness.pipelineBusiness, '","') + '"]'));
               }
           } else {
-            const {params: {id}}= this.props;
-            getPipelineById(id).then((result) => {
-              var data = result.payload.data.data;
-              _.forIn(data.listPipelines, function(pipeline, key) {
-                const uuid = _.uniqueId('pipelineBusiness_');
-                pipeline.uuid = uuid;
-                addBusiness(pipeline);
-              });
-            });
+            this._consultInfoPipeline();
+            
           }
           nonValidateEnter(true);
           const infoClient = clientInformacion.get('responseClientInfo');
@@ -507,6 +505,61 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                   PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
           }
+        }
+
+        _consultInfoPipeline(){
+            const {fields: {businessStatus, businessWeek, commission, currency, idUsuario, nameUsuario, 
+                endDate, indexing, need, observations, product, priority, roe, registeredCountry, startDate, 
+                termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, 
+                updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy, 
+                reviewedDate, business, probability, entity, pendingDisburAmount, amountDisbursed, 
+                estimatedDisburDate, contract}} = this.props;
+            const {params: {id}, getPipelineById, addBusiness}= this.props;
+            getPipelineById(id).then((result) => {
+              var data = result.payload.data.data;
+              _.forIn(data.listPipelines, function(pipeline, key) {
+                const uuid = _.uniqueId('pipelineBusiness_');
+                pipeline.uuid = uuid;
+                addBusiness(pipeline);
+              });
+              businessStatus.onChange(data.businessStatus);
+              businessWeek.onChange(data.businessWeek);
+              commission.onChange(fomatInitialStateNumber(data.commission));
+              currency.onChange(data.currency);
+              idUsuario.onChange(data.idUsuario);
+              nameUsuario.onChange(data.nameUsuario);
+              endDate.onChange(moment(data.endDate).format(DATE_FORMAT));
+              indexing.onChange(data.indexing);
+              need.onChange(data.need);
+              observations.onChange(data.observations === null ? '' : data.observations);
+              product.onChange(data.product);
+              priority.onChange(data.priority);
+              roe.onChange(fomatInitialStateNumber(data.roe));
+              registeredCountry.onChange(data.registeredCountry);
+              startDate.onChange(moment(data.startDate).format(DATE_FORMAT));
+              termInMonths.onChange(data.termInMonths);
+              value.onChange(fomatInitialStateNumber(data.value));
+              client.onChange(data.client);
+              documentStatus.onChange(data.documentStatus);
+              createdBy.onChange(data.createdBy);
+              updatedBy.onChange(data.updatedBy);
+              createdTimestamp.onChange(data.createdTimestamp);
+              updatedTimestamp.onChange(data.updatedTimestamp);
+              createdByName.onChange(data.createdByName);
+              updatedByName.onChange(data.updatedByName);
+              positionCreatedBy.onChange(data.positionCreatedBy);
+              positionUpdatedBy.onChange(data.positionUpdatedBy);
+              reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT));
+              probability.onChange(data.probability);
+              entity.onChange(data.entity);
+              pendingDisburAmount.onChange(fomatInitialStateNumber(data.pendingDisburAmount));
+              amountDisbursed.onChange(fomatInitialStateNumber(data.amountDisbursed));
+              estimatedDisburDate.onChange( data.estimatedDisburDate !== null ? moment(data.estimatedDisburDate).format(DATE_FORMAT) : "");
+              contract.onChange(data.contract);
+              if (data.pipelineBusiness.length > 0) {
+                  business.onChange(data.pipelineBusiness[0]);
+              }
+            });
         }
 
         componentWillReceiveProps(nextProps) {
@@ -577,8 +630,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             style={origin === ORIGIN_PIPELIN_BUSINESS ? {
                                     overflowX: "hidden",
                                     paddingBottom: "0px",
-                                    marginTop: "10px",
-                                    paddingTop: "10px"
+                                    marginTop: "10px"
                                 } : {}}
 
                                 ref={divArea => this.modalScrollArea = divArea}>
@@ -586,7 +638,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={10} sm={10} md={10} lg={10}>
                                     <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
                                 </Col>
-                                <Col xs={2} sm={2} md={2} lg={2}>
+                                <Col xs={2} sm={2} md={2} lg={2} style={origin === ORIGIN_PIPELIN_BUSINESS ? {display: "none"} : {}}>
                                     {_.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), EDITAR), false) &&
                                     <button type="button" onClick={this._editPipeline}
                                             className={'btn btn-primary modal-button-edit'}
@@ -1202,7 +1254,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         <div className="modalBt4-footer modal-footer"
                           style={origin === ORIGIN_PIPELIN_BUSINESS ? {height: "76px"} : {display: "none"}}>
                             <button type="submit" className="btn btn-primary modal-button-edit"
-                              style={this.state.isEditable ? {} : {display: "none"}}>
+                              style={this.state.isEditable ? {} : {display: "none"}}
+                              onClick={() => typeButtonClick = SAVE_PUBLISHED}>
                                 Guardar
                             </button>
                         </div>
@@ -1229,77 +1282,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     }
 
     function mapStateToProps({clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar, pipelineBusinessReducer}, pathParameter) {
-        const pipelineResult = pipelineReducer.get('detailPipeline');
-        var pipeline;
-        if (origin !== ORIGIN_PIPELIN_BUSINESS) {
-            pipeline = pipelineResult;
-        } else {
-            pipeline = pipelineBusiness;
-        }
-        if (pipeline) {
-            return {
-                clientInformacion,
-                selectsReducer,
-                contactsByClient,
-                pipelineReducer,
-                pdfDescarga,
-                consultParameterServer,
-                reducerGlobal,
-                navBar,
-                pipelineBusinessReducer,
-                initialValues: {
-                    id: pipeline.id,
-                    businessStatus: pipeline.businessStatus,
-                    businessWeek: pipeline.businessWeek,
-                    commission: fomatInitialStateNumber(pipeline.commission),
-                    currency: pipeline.currency,
-                    idUsuario: pipeline.employeeResponsible,
-                    nameUsuario: pipeline.employeeResponsibleName,
-                    endDate: moment(pipeline.endDate).format(DATE_FORMAT),
-                    indexing: pipeline.indexing,
-                    need: pipeline.need,
-                    observations: pipeline.observations === null ? '' : pipeline.observations,
-                    product: pipeline.product,
-                    priority: pipeline.priority,
-                    roe: fomatInitialStateNumber(pipeline.roe),
-                    registeredCountry: pipeline.registeredCountry,
-                    startDate: moment(pipeline.startDate).format(DATE_FORMAT),
-                    pipelineStatus: pipeline.pipelineStatus,
-                    termInMonths: pipeline.termInMonths,
-                    value: fomatInitialStateNumber(pipeline.value),
-                    client: pipeline.client,
-                    documentStatus: pipeline.documentStatus,
-                    createdBy: pipeline.createdBy,
-                    updatedBy: pipeline.updatedBy,
-                    createdTimestamp: pipeline.createdTimestamp,
-                    updatedTimestamp: pipeline.updatedTimestamp,
-                    createdByName: pipeline.createdByName,
-                    updatedByName: pipeline.updatedByName,
-                    positionCreatedBy: pipeline.positionCreatedBy,
-                    positionUpdatedBy: pipeline.positionUpdatedBy,
-                    reviewedDate: moment(pipeline.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT),
-                    business: pipeline.pipelineBusiness === null || pipeline.pipelineBusiness === undefined ? '' : pipeline.pipelineBusiness[0],
-                    probability: pipeline.probability,
-                    entity: pipeline.entity,
-                    pendingDisburAmount: fomatInitialStateNumber(pipeline.pendingDisburAmount),
-                    amountDisbursed: fomatInitialStateNumber(pipeline.amountDisbursed),
-                    estimatedDisburDate: pipeline.estimatedDisburDate !== null ? moment(pipeline.estimatedDisburDate).format(DATE_FORMAT) : "",
-                    contract: pipeline.contract
-                }
-            };
-        } else {
-            return {
-                clientInformacion,
-                selectsReducer,
-                contactsByClient,
-                pipelineReducer,
-                pdfDescarga,
-                consultParameterServer,
-                reducerGlobal,
-                navBar,
-                pipelineBusinessReducer
-            };
-        }
+        return {
+            clientInformacion,
+            selectsReducer,
+            contactsByClient,
+            pipelineReducer,
+            pdfDescarga,
+            consultParameterServer,
+            reducerGlobal,
+            navBar,
+            pipelineBusinessReducer
+        };
     }
 
     function fomatInitialStateNumber(val) {
