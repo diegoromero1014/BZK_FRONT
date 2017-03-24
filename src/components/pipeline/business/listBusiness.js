@@ -57,7 +57,7 @@ class ListBusiness extends Component {
         nameState = _.get(_.filter(states, ['id', parseInt(businessStatus)]), '[0].value');
         return <tr key={idx}>
             <td className="collapsing">
-                <BtnEditBusiness pipelineBusiness={businessData}/>
+                <BtnEditBusiness pipelineBusiness={businessData} disabled={disabled}/>
             </td>
             <td>{shorterStringValue(nameBusiness, 50)}</td>
             <td>{shorterStringValue(nameProduct, 50)}</td>
@@ -80,57 +80,54 @@ class ListBusiness extends Component {
         }
         const modalTitle = 'Negocio detalle';
         return (
-            <div className="tab-content break-word" style={{
-                zIndex: 0,
-                border: '1px solid #cecece',
-                padding: '16px',
-                borderRadius: '3px',
-                overflow: 'initial',
-                marginTop: "10px"
-            }}>
-                {disabled === '' || disabled === undefined ?
-                    <BtnCreateBusiness disabled={disabledButtonCreate}/>
-                    : ''
-                }
-                {businessList.size > 0 ?
-                    <Row style={disabled === '' || disabled === undefined ? {marginTop: '20px'} : {}}>
-                        <Col xs>
-                            <table className="ui striped table">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Negocio</th>
-                                    <th>Producto</th>
-                                    <th>Estado</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {businessList.map(this._mapValuesBusiness)}
-                                </tbody>
-                            </table>
-                        </Col>
-                    </Row> :
-                    <Row>
-                        <Col xs={12} md={12} lg={12}>
-                            <div style={{textAlign: "center", marginTop: "20px", marginBottom: "20px"}}>
-                                <span className="form-item">Aún no se han adicionado negocios</span>
-                            </div>
-                        </Col>
-                    </Row>
-                }
-                <SweetAlert
-                    type="warning"
-                    show={this.state.showConfirmDeleteBusiness}
-                    title="Eliminación negocio"
-                    text="¿Señor usuario, está seguro que desea eliminar el negocio?"
-                    confirmButtonColor='#DD6B55'
-                    confirmButtonText='Sí, estoy seguro!'
-                    cancelButtonText="Cancelar"
-                    showCancelButton={true}
-                    onCancel={() => this.setState({showConfirmDeleteBusiness: false})}
-                    onConfirm={this._deleteBusiness}/>
-            </div>
+          <div className="tab-content break-word" style={{
+              zIndex: 0,
+              border: '1px solid #cecece',
+              padding: '16px',
+              borderRadius: '3px',
+              overflow: 'initial',
+              marginTop: "10px"
+          }}>
+          {disabled && <BtnCreateBusiness disabled={disabledButtonCreate}/>}
+          {businessList.size > 0 ?
+            <Row style={disabled ? {marginTop: '20px'} : {}}>
+                <Col xs>
+                    <table className="ui striped table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Negocio</th>
+                            <th>Producto</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {businessList.map(this._mapValuesBusiness)}
+                        </tbody>
+                    </table>
+                </Col>
+            </Row> :
+            <Row>
+                <Col xs={12} md={12} lg={12}>
+                    <div style={{textAlign: "center", marginTop: "20px", marginBottom: "20px"}}>
+                        <span className="form-item">Aún no se han adicionado negocios</span>
+                    </div>
+                </Col>
+            </Row>
+          }
+          <SweetAlert
+              type="warning"
+              show={this.state.showConfirmDeleteBusiness}
+              title="Eliminación negocio"
+              text="¿Señor usuario, está seguro que desea eliminar el negocio?"
+              confirmButtonColor='#DD6B55'
+              confirmButtonText='Sí, estoy seguro!'
+              cancelButtonText="Cancelar"
+              showCancelButton={true}
+              onCancel={() => this.setState({showConfirmDeleteBusiness: false})}
+              onConfirm={this._deleteBusiness}/>
+          </div>
         );
     }
 }

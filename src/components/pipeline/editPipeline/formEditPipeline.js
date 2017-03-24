@@ -84,7 +84,7 @@ const validate = values => {
     return errors;
 };
 
-export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal) {
+export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     var nameBusiness = _.uniqueId('business_');
     var nameProduct = _.uniqueId('product_');
     var nameIndexing = _.uniqueId('indexing_');
@@ -481,6 +481,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               business, product, priority, registeredCountry, startDate, client, documentStatus}, addBusiness, clearBusiness} = this.props;
           if(origin !== ORIGIN_PIPELIN_BUSINESS){
             clearBusiness();
+          }else{
+            this.setState({
+              isEditable: disabled
+            });
           }
           if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
               if (pipelineBusiness.pipelineBusiness.length > 0) {
@@ -577,8 +581,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             style={origin === ORIGIN_PIPELIN_BUSINESS ? {
                                     overflowX: "hidden",
                                     paddingBottom: "0px",
-                                    marginTop: "10px",
-                                    paddingTop: "10px"
+                                    marginTop: "10px"
                                 } : {}}
 
                                 ref={divArea => this.modalScrollArea = divArea}>
@@ -586,7 +589,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={10} sm={10} md={10} lg={10}>
                                     <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
                                 </Col>
-                                <Col xs={2} sm={2} md={2} lg={2}>
+                                <Col xs={2} sm={2} md={2} lg={2} style={origin === ORIGIN_PIPELIN_BUSINESS ? {display: "none"} : {}}>
                                     {_.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), EDITAR), false) &&
                                     <button type="button" onClick={this._editPipeline}
                                             className={'btn btn-primary modal-button-edit'}
@@ -1202,7 +1205,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         <div className="modalBt4-footer modal-footer"
                           style={origin === ORIGIN_PIPELIN_BUSINESS ? {height: "76px"} : {display: "none"}}>
                             <button type="submit" className="btn btn-primary modal-button-edit"
-                              style={this.state.isEditable ? {} : {display: "none"}}>
+                              style={this.state.isEditable ? {} : {display: "none"}}
+                              onClick={() => typeButtonClick = SAVE_PUBLISHED}>
                                 Guardar
                             </button>
                         </div>
