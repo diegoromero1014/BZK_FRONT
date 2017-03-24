@@ -50,18 +50,19 @@ class ButtonLinkClientComponent extends Component {
             customerFullName: get(infoClient,'clientName'),
             customerTypeId: get(infoClient,'clientNameType')
         };
-        showLoading(true,'Cargando...');
-        consultStateBlackListClient(jsonClientInfo).then((data)=>{
-            showLoading(false,'');
-            if(!isEqual(get(data,'payload.data.status'),200)){
-                console.log("Error ",get(data,'payload.data.data'));
-                swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-            }
-        },(reason) => {
-            console.log("reason consultStateBlackListClient ",reason);
-            showLoading(false,'');
-            swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        });
+        /** Se comenta por que aún no esta estable el servicio **/
+        // showLoading(true,'Cargando...');
+        // consultStateBlackListClient(jsonClientInfo).then((data)=>{
+        //     showLoading(false,'');
+        //     if(!isEqual(get(data,'payload.data.status'),200)){
+        //         console.log("Error ",get(data,'payload.data.data'));
+        //         swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        //     }
+        // },(reason) => {
+        //     console.log("reason consultStateBlackListClient ",reason);
+        //     showLoading(false,'');
+        //     swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        // });
     }
 
     closeModal() {
@@ -77,7 +78,6 @@ class ButtonLinkClientComponent extends Component {
             linkEntitiesClient, updateErrorsLinkEntities,
             swtShowMessage, saveLinkClient,showLoading
         } = this.props;
-        showLoading(true,'Guardando..');
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
         const newListEntities = linkEntitiesClient.map(linkEntity => {
@@ -119,6 +119,7 @@ class ButtonLinkClientComponent extends Component {
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray()
             };
+            showLoading(true,'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
                     if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
