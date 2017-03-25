@@ -29,7 +29,7 @@ class EntityItem extends Component {
         this.setState(_.set({}, prop, value));
         const self = this;
         updateLinkEntity(index, prop, value);
-        if(_.isEqual('entity',prop)){
+        if (_.isEqual('entity', prop)) {
             this.setState(_.set({}, 'entityName', text));
         }
         updateLinkEntity(index, 'entityText', text);
@@ -38,7 +38,7 @@ class EntityItem extends Component {
                 if (_.isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), text.toLowerCase())
                     || _.isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), text.toLowerCase())) {
                     self.setState(_.set({}, 'isTraderVisible', true));
-                }else{
+                } else {
                     self.setState(_.set({}, 'isTraderVisible', false));
                     self.setState(_.set({}, 'traderCode', ''));
                 }
@@ -62,9 +62,9 @@ class EntityItem extends Component {
         return (
             <div>
                 <Row>
-                    <Col xs={12} md={6} lg={6} style={{marginTop: "15px"}}>
+                    <Col xs={12} md={6} lg={6}>
                         <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                            <dt><span>Entidad/Línea de negocio(</span><span style={{color: "red"}}>*</span>)</dt>
+                            <dt><span>Entidad/Línea de negocio (</span><span style={{color: "red"}}>*</span>)</dt>
                             <ComboBox
                                 name={`linkEntity${index}`}
                                 value={this.state.entity}
@@ -79,24 +79,23 @@ class EntityItem extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={10} md={5} lg={5} style={{marginTop: "15px"}}>
-                        {
-                            this.state.isTraderVisible && <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                <dt><span>Código del comercial(</span><span style={{color: "red"}}>*</span>)</dt>
-                                <Input
-                                    type="text"
-                                    style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
-                                    value={this.state.traderCode}
-                                    max={50}
-                                    onChange={(val) => {
-                                        return this._updateValue('traderCode', val, this.state.entityName);
-                                    }}
-                                    onBlur={() => console.log}
-                                />
-                            </div>
-                        }
+                    <Col xs={10} md={5} lg={5}>
+                        <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                            <dt><span>Código del comercial (</span><span style={{color: "red"}}>*</span>)</dt>
+                            <Input
+                                type="text"
+                                style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
+                                value={this.state.traderCode}
+                                max={50}
+                                disabled={!this.state.isTraderVisible}
+                                onChange={(val) => {
+                                    return this._updateValue('traderCode', val, this.state.entityName);
+                                }}
+                                onBlur={() => console.log}
+                            />
+                        </div>
                     </Col>
-                    <Col xs={1} md={1} lg={1} style={{marginTop: "37px"}}>
+                    <Col xs={1} md={1} lg={1} style={{marginTop: "38px"}}>
                         <button onClick={this._deleteLinkEntity}
                                 title="Eliminar"
                                 className="btn btn-sm  btn-danger"

@@ -51,7 +51,7 @@ class LinkEntitiesClient extends Component {
         return (
             <Row style={{padding: "0px 10px 20px 20px"}}>
                 <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
-                    <button title="Agregar entidad de vinculación" className="btn" style={{margin: "12px 0px 0px 12px"}}
+                    <button title="Agregar entidad de vinculación" className="btn" style={{margin: '12px 0px 0px 12px',fontSize: '1.5em'}}
                             type="button"
                             onClick={this._addEntity}
                     >
