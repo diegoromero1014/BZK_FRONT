@@ -118,7 +118,6 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         showConfirm: false,
         employeeResponsible: false,
         showConfirmChangeCurrency: false,
-        errorBusinessPipeline: null,
         labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
         visibleContract: false,
         errorValidate: false,
@@ -502,25 +501,6 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       }
     }
 
-    componentWillReceiveProps(nextProps) {
-      const {fields: {business}} = this.props;
-      if (typeButtonClick === SAVE_PUBLISHED) {
-        if ((business.value === null || business.value === undefined || business.value === "") && typeButtonClick !== null) {
-          this.setState({
-            errorBusinessPipeline: OPTION_REQUIRED
-          });
-        } else {
-          this.setState({
-            errorBusinessPipeline: null
-          });
-        }
-      } else {
-        this.setState({
-          errorBusinessPipeline: null
-        });
-      }
-    }
-
     componentDidMount() {
       const self = this;
       $("#iconSearchUserPipeline").click(function () {
@@ -540,9 +520,6 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       getPipelineCurrencies();
       getClientNeeds();
       typeButtonClick = null;
-      this.setState({
-        errorBusinessPipeline: null
-      });
       if (_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
       } else {

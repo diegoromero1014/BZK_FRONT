@@ -45,6 +45,11 @@ var thisForm;
 
 const validate = values => {
     const errors = {};
+    if (!values.business) {
+      errors.business = OPTION_REQUIRED;
+    } else {
+      errors.business = null;
+    }
     if (!values.businessStatus) {
         errors.businessStatus = OPTION_REQUIRED;
     } else {
@@ -119,7 +124,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showConfirm: false,
                 employeeResponsible: false,
                 showConfirmChangeCurrency: false,
-                errorBusinessPipeline: null,
                 labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
                 visibleContract: false,
                 pendingUpdate: false,
@@ -531,9 +535,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
               business, product, priority, registeredCountry, startDate, client, documentStatus}, addBusiness, clearBusiness} = this.props;
           const infoClient = clientInformacion.get('responseClientInfo');typeButtonClick = null;
-          this.setState({
-              errorBusinessPipeline: null
-          });
           if(origin !== ORIGIN_PIPELIN_BUSINESS){
             clearBusiness();
           }else{
@@ -549,8 +550,21 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
           if (_.isEmpty(infoClient)) {
               redirectUrl("/dashboard/clientInformation");
           } else {
-              getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
-                  PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
+            getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
+              PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]).then((result) => {
+                if(origin !== ORIGIN_PIPELIN_BUSINESS){
+                  const {params: {id}}= this.props;
+                  getPipelineById(id).then((result) => {
+                    var data = result.payload.data.data;
+                    _.forIn(data.listPipelines, function(pipeline, key) {
+                      const uuid = _.uniqueId('pipelineBusiness_');
+                      pipeline.uuid = uuid;
+                      addBusiness(pipeline);
+                    });
+                    this._consultInfoPipeline(data);
+                  });
+                }
+              });
           }
         }
 
@@ -560,37 +574,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
           if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
               this._consultInfoPipeline(pipelineBusiness);
-          } else {
-            const {params: {id}}= this.props;
-            getPipelineById(id).then((result) => {
-              var data = result.payload.data.data;
-              _.forIn(data.listPipelines, function(pipeline, key) {
-                const uuid = _.uniqueId('pipelineBusiness_');
-                pipeline.uuid = uuid;
-                addBusiness(pipeline);
-              });
-              this._consultInfoPipeline(data);
-            });
           }
-        }
-
-        componentWillReceiveProps(nextProps) {
-            const {fields: {business}} = this.props;
-            if (typeButtonClick === SAVE_PUBLISHED) {
-                if (business.value === null || business.value === undefined || business.value === "") {
-                    this.setState({
-                        errorBusinessPipeline: OPTION_REQUIRED
-                    });
-                } else {
-                    this.setState({
-                        errorBusinessPipeline: null
-                    });
-                }
-            } else {
-                this.setState({
-                    errorBusinessPipeline: null
-                });
-            }
         }
 
         componentDidUpdate(prevProps, prevState){
@@ -687,19 +671,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
-                                            {...business}
-                                            name={nameBusiness}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PIPELINE_BUSINESS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+                                            {...business}
+                                            name={nameBusiness}
                                         />
-                                        {this.state.errorBusinessPipeline &&
-                                        <div>
-                                            <div className="ui pointing red basic label">
-                                                {this.state.errorBusinessPipeline}
-                                            </div>
-                                        </div>
-                                        }
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
@@ -711,11 +688,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
-                                            {...product}
-                                            name={nameProduct}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PRODUCTS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+                                            {...product}
+                                            name={nameProduct}
                                         />
                                     </div>
                                 </Col>
