@@ -187,7 +187,7 @@ class ButtonLinkClientComponent extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <div style={{padding: '20px 20px 20px 20px'}}>
+                            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{padding: '20px 20px 20px 20px'}} id="containerModal">
                                 <table style={{width: "100%"}}>
                                     <thead>
                                     <tr>
@@ -230,7 +230,7 @@ class ButtonLinkClientComponent extends Component {
                                     !isEmpty(infoClient.parameterKeepInMind) && !isEqual('n/a', infoClient.parameterKeepInMind.toLowerCase()) &&
                                     <Row style={{padding: "20px 10px 10px 0px"}}>
                                         <Col xs={12} md={12} lg={12}>
-                                            <h3>Tener en cuenta: </h3>
+                                            <h3>Tener en cuenta</h3>
                                             <p style={{textAlign: 'justify'}}>{infoClient.parameterKeepInMind}</p>
                                         </Col>
                                     </Row>
