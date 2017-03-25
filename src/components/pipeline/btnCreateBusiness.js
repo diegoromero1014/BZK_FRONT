@@ -27,12 +27,12 @@ class BotonCreateComponent extends Component {
   }
 
   render() {
-    const {typeButton} = this.props;
+    const {typeButton, disabled} = this.props;
     const PipelineComponent = createFormPipeline(null, ORIGIN_PIPELIN_BUSINESS, this.closeModal);
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} style={{textAlign: "right"}}>
-          <button className="btn btn-primary" type="button" title="Crear negocio" onClick={this.openModal}>
+          <button className="btn btn-primary" type="button" title="Crear negocio" onClick={this.openModal} disabled={disabled} style={_.isEqual(disabled, "disabled") ? {cursor: 'not-allowed'} : {cursor: 'pointer'}}>
             Agregar negocio
           </button>
           <Modal

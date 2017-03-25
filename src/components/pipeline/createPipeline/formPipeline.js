@@ -26,7 +26,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
 import Business from '../business/business';
-import {addBusiness, editBusiness, clearBusiness} from '../business/ducks';
+import {addBusiness, clearBusiness} from '../business/ducks';
 import HeaderPipeline from '../headerPipeline';
 import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 
@@ -121,7 +121,9 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         errorBusinessPipeline: null,
         labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
         visibleContract: false,
-        errorValidate: false
+        errorValidate: false,
+        pendingUpdate: false,
+        updateValues: {}
       };
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -151,6 +153,10 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         redirectUrl("/dashboard/clientInformation");
       }else{
         functionCloseModal();
+      }
+
+      if(this.state.pendingUpdate){
+          this.props.addBusiness(this.state.updateValues);
       }
     }
 
@@ -353,7 +359,7 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         businessWeek, currency, indexing, endDate, need, observations, business, product,
         priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario,
         pendingDisburAmount, amountDisbursed, estimatedDisburDate, entity, contract}, createEditPipeline,
-        changeStateSaveData, addBusiness, pipelineBusinessReducer} = this.props;
+        changeStateSaveData, pipelineBusinessReducer} = this.props;
 
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
@@ -393,11 +399,14 @@ export default function createFormPipeline(name, origin, functionCloseModal){
           if(origin === ORIGIN_PIPELIN_BUSINESS){
             const uuid = _.uniqueId('pipelineBusiness_');
             pipelineJson.uuid = uuid;
-            addBusiness(pipelineJson);
             typeMessage = "success";
             titleMessage = "Creación negocio";
             message = "Señor usuario, el negocio se adicionó exitosamente.";
-            this.setState({ showMessageCreatePipeline: true });
+            this.setState({
+              showMessageCreatePipeline: true,
+              pendingUpdate: true,
+              updateValues: pipelineJson
+            });
           }else{
             var resultPipelineBusines = [];
             _.map(pipelineBusinessReducer.toArray(),
@@ -1047,7 +1056,6 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       changeStateSaveData,
       nonValidateEnter,
       addBusiness,
-      editBusiness,
       changeModalIsOpen,
       clearBusiness
     }, dispatch);
