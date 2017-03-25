@@ -303,7 +303,7 @@ class ButtonLinkClientComponent extends Component {
                                     <Col xs={12} md={12} lg={12}>
                                         <h4>Observación administrador</h4>
                                         {_.isEmpty(infoClient.observationAdmin) ?
-                                            <p>Sin observaión.</p>
+                                            <p>Sin observación.</p>
                                             :
                                             <p style={{textAlign: 'justify'}}>{infoClient.observationAdmin}</p>
                                         }
