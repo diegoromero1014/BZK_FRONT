@@ -447,9 +447,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 });
                             $('.ui.search.' + participantBanc).toggleClass('loading');
+                            $('.ui.search.' + participantBanc).search('search local', nameUsuario.value);
                             setTimeout(function () {
                                 $('#' + inputParticipantBanc).focus();
-                            }, 250);
+                            }, 150);
                         }
                     );
                 }
