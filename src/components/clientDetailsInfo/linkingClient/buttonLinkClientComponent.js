@@ -123,6 +123,7 @@ class ButtonLinkClientComponent extends Component {
                         updateFieldInfoClient('observationTrader', observationTrader.value);
                         updateFieldInfoClient('linkEntity', newListEntities.toArray());
                         showLoading(false, '');
+                        this.closeModal();
                         swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
                     }
                 });
