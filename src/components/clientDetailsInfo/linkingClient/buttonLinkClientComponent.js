@@ -49,19 +49,19 @@ class ButtonLinkClientComponent extends Component {
         let listEntitiesMasterData = selectsReducer.get(FILTER_TYPE_LBO_ID);
         setEntities(this._getListEntities(listEntitiesMasterData));
 
-        /** Se comenta por que aún no esta estable el servicio **/
-        // showLoading(true,'Cargando...');
-        // consultStateBlackListClient(jsonClientInfo).then((data)=>{
-        //     showLoading(false,'');
-        //     if(!isEqual(get(data,'payload.data.status'),200)){
-        //         console.log("Error ",get(data,'payload.data.data'));
-        //         swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        //     }
-        // },(reason) => {
-        //     console.log("reason consultStateBlackListClient ",reason);
-        //     showLoading(false,'');
-        //     swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        // });
+        /** Se debe comentar cuando se despliegue en dllo. **/
+        showLoading(true,'Cargando...');
+        consultStateBlackListClient(jsonClientInfo).then((data)=>{
+            showLoading(false,'');
+            if(!isEqual(get(data,'payload.data.status'),200)){
+                console.log("Error ",get(data,'payload.data.data'));
+                swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+            }
+        },(reason) => {
+            console.log("reason consultStateBlackListClient ",reason);
+            showLoading(false,'');
+            swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        });
     }
 
     closeModal() {
