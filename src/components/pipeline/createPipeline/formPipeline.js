@@ -28,6 +28,7 @@ import numeral from 'numeral';
 import Business from '../business/business';
 import {addBusiness, editBusiness, clearBusiness} from '../business/ducks';
 import HeaderPipeline from '../headerPipeline';
+import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
   "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product", "reviewedDate",
@@ -41,6 +42,7 @@ let typeButtonClick = null;
 let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
+var thisForm;
 
 const validate = values => {
   const errors = {};
@@ -103,11 +105,14 @@ export default function createFormPipeline(name, origin, functionCloseModal){
   var nameProbability = _.uniqueId('probability_');
   var nameEntity = _.uniqueId('entity_');
   var nameCurrency = _.uniqueId('currency_');
+  let participantBanc = _.uniqueId('participantBanc_');
+  let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
 
   class FormPipeline extends Component {
 
     constructor(props) {
       super(props);
+      thisForm = this;
       this.state = {
         showMessageCreatePipeline: false,
         showConfirm: false,
@@ -115,7 +120,8 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         showConfirmChangeCurrency: false,
         errorBusinessPipeline: null,
         labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
-        visibleContract: false
+        visibleContract: false,
+        errorValidate: false
       };
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -347,7 +353,7 @@ export default function createFormPipeline(name, origin, functionCloseModal){
         businessWeek, currency, indexing, endDate, need, observations, business, product,
         priority, registeredCountry, startDate, client, documentStatus, probability, nameUsuario,
         pendingDisburAmount, amountDisbursed, estimatedDisburDate, entity, contract}, createEditPipeline,
-        changeStateSaveData, addBusiness} = this.props;
+        changeStateSaveData, addBusiness, pipelineBusinessReducer} = this.props;
 
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
@@ -393,6 +399,13 @@ export default function createFormPipeline(name, origin, functionCloseModal){
             message = "Señor usuario, el negocio se adicionó exitosamente.";
             this.setState({ showMessageCreatePipeline: true });
           }else{
+            var resultPipelineBusines = [];
+            _.map(pipelineBusinessReducer.toArray(),
+              function(pipelineBusiness){
+                resultPipelineBusines.push(_.omit(pipelineBusiness, ['uuid']));
+              }
+            );
+            pipelineJson.listPipelines = resultPipelineBusines;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createEditPipeline(pipelineJson).then((data) => {
               changeStateSaveData(false, "");
@@ -430,10 +443,10 @@ export default function createFormPipeline(name, origin, functionCloseModal){
       if (e.keyCode === 13 || e.which === 13) {
         e.consultclick ? "" : e.preventDefault();
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
-          $('.ui.search.participantBanc').toggleClass('loading');
+          $('.ui.search.' + participantBanc).toggleClass('loading');
           filterUsersBanco(nameUsuario.value).then((data) => {
             let usersBanco = _.get(data, 'payload.data.data');
-            $('.ui.search.participantBanc')
+            $('.ui.search.' + participantBanc)
               .search({
                 cache: false,
                 source: usersBanco,
@@ -454,13 +467,11 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                   return 'default';
                 }
               });
-            $('.ui.search.participantBanc').toggleClass('loading');
+            $('.ui.search.' + participantBanc).toggleClass('loading');
             setTimeout(function () {
-              $('#inputParticipantBanc').focus();
-              $('#menu results').toggleClass('visible');
-            }, 150);
-          }
-          );
+                $('#' + inputParticipantBanc).focus();
+            }, 250);
+          });
         }
       }
     }
@@ -574,14 +585,7 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                       name={nameBusiness}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(PIPELINE_BUSINESS) || []}
-                      />
-                    {this.state.errorBusinessPipeline &&
-                      <div>
-                        <div className="ui pointing red basic label">
-                          {this.state.errorBusinessPipeline}
-                        </div>
-                      </div>
-                    }
+                    />
                   </div>
                 </Col>
                 <Col xs={12} md={3} lg={3}>
@@ -671,21 +675,20 @@ export default function createFormPipeline(name, origin, functionCloseModal){
                     <dt>
                       <span>Empleado responsable</span>
                     </dt>
-                    <div className="ui dropdown search participantBanc fluid" style={{ border: "0", padding: "0" }}>
-                      <div className="ui icon input" style={{ width: "100%" }}>
-                        <input className="prompt" id="inputParticipantBanc"
-                          style={{ borderRadius: "3px" }}
-                          autoComplete="off"
-                          type="text"
-                          value={nameUsuario.value}
-                          onChange={nameUsuario.onChange}
-                          placeholder="Ingrese un criterio de búsqueda..."
-                          onKeyPress={this.updateKeyValueUsersBanco}
-                          onSelect={val => this._updateValue(val)}
-                          />
-                        <i className="search icon" id="iconSearchUserPipeline"></i>
-                      </div>
-                      <div className="menu results"></div>
+                    <div className={`ui search ${participantBanc} fluid`}>
+                      <ComboBoxFilter
+                        className="prompt"
+                        id={inputParticipantBanc}
+                        style={{borderRadius: "3px"}}
+                        autoComplete="off"
+                        type="text"
+                        {...nameUsuario}
+                        value={nameUsuario.value}
+                        onChange={nameUsuario.onChange}
+                        placeholder="Ingrese un criterio de búsqueda..."
+                        onKeyPress={this.updateKeyValueUsersBanco}
+                        onSelect={val => this._updateValue(val)}
+                      />
                     </div>
                     {
                       this.state.employeeResponsible &&
@@ -1013,8 +1016,16 @@ export default function createFormPipeline(name, origin, functionCloseModal){
               onCancel={this._closeCancelConfirmChanCurrency}
               onConfirm={this._closeConfirmChangeCurrency}
               />
+              <SweetAlert
+                 type="error"
+                 show={this.state.errorValidate}
+                 title='Campos obligatorios'
+                 text='Señor usuario, debe ingresar los campos marcados con asterisco.'
+                 onConfirm={() => this.setState({ errorValidate: false })}
+              />
             <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : {display: "none"}} className="modalBt4-footer modal-footer">
-              <button type="submit" className="btn btn-primary modal-button-edit">
+              <button type="submit" className="btn btn-primary modal-button-edit"
+               onClick={() => typeButtonClick = SAVE_PUBLISHED}>
                 Guardar
               </button>
             </div>
@@ -1041,20 +1052,26 @@ export default function createFormPipeline(name, origin, functionCloseModal){
     }, dispatch);
   }
 
-  function mapStateToProps({pipelineReducer, clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar}, ownerProps) {
+  function mapStateToProps({pipelineReducer, clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar, pipelineBusinessReducer}, ownerProps) {
     return {
       pipelineReducer,
       clientInformacion,
       selectsReducer,
       contactsByClient,
       reducerGlobal,
-      navBar
+      navBar,
+      pipelineBusinessReducer
     };
   }
 
   return reduxForm({
     fields,
     form: name || _.uniqueId('business_'),
-    validate
+    validate,
+    onSubmitFail: errors => {
+      thisForm.setState({
+          errorValidate: true
+       });
+    }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
 }

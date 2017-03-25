@@ -33,12 +33,15 @@ import numeral from 'numeral';
 import HeaderPipeline from '../headerPipeline';
 import {editBusiness, addBusiness, clearBusiness} from '../business/ducks';
 import Business from '../business/business';
+import {swtShowMessage} from '../../sweetAlertMessages/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "currency", "indexing", "endDate", "need", "observations", "business", "product",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
     "positionUpdatedBy", "probability", "pendingDisburAmount", "amountDisbursed", "estimatedDisburDate", "entity", "contract"];
+
+var thisForm;
 
 const validate = values => {
     const errors = {};
@@ -85,17 +88,19 @@ const validate = values => {
 };
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
-    var nameBusiness = _.uniqueId('business_');
-    var nameProduct = _.uniqueId('product_');
-    var nameIndexing = _.uniqueId('indexing_');
-    var nameNeed = _.uniqueId('need_');
-    var namePriority = _.uniqueId('priority_');
-    var nameBusinessStatus = _.uniqueId('businessStatus_');
-    var nameRegisteredCountry = _.uniqueId('registeredCountry_');
-    var nameBusinessWeek = _.uniqueId('businessWeek_');
-    var nameProbability = _.uniqueId('probability_');
-    var nameEntity = _.uniqueId('entity_');
-    var nameCurrency = _.uniqueId('currency_');
+    let nameBusiness = _.uniqueId('business_');
+    let nameProduct = _.uniqueId('product_');
+    let nameIndexing = _.uniqueId('indexing_');
+    let nameNeed = _.uniqueId('need_');
+    let namePriority = _.uniqueId('priority_');
+    let nameBusinessStatus = _.uniqueId('businessStatus_');
+    let nameRegisteredCountry = _.uniqueId('registeredCountry_');
+    let nameBusinessWeek = _.uniqueId('businessWeek_');
+    let nameProbability = _.uniqueId('probability_');
+    let nameEntity = _.uniqueId('entity_');
+    let nameCurrency = _.uniqueId('currency_');
+    let participantBanc = _.uniqueId('participantBanc_');
+    let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -107,6 +112,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         constructor(props) {
             super(props);
+            thisForm = this;
             this.state = {
                 showMessageEditPipeline: false,
                 isEditable: false,
@@ -118,7 +124,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 visibleContract: false,
                 pendingUpdate: false,
                 updateValues: {},
-                firstTimeCharging: false
+                firstTimeCharging: false,
+                errorValidate: false
             };
 
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
@@ -326,7 +333,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessWeek, currency, indexing, endDate, need, observations, business, product,
                 priority, registeredCountry, startDate, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
                 estimatedDisburDate, entity, contract}, createEditPipeline, changeStateSaveData, pipelineBusinessReducer} = this.props;
-            const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? null : this.props.params.id;
+            const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
 
             if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                 this.setState({
@@ -416,10 +423,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (e.keyCode === 13 || e.which === 13) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
-                    $('.ui.search.participantBanc').toggleClass('loading');
+                    $('.ui.search.' + participantBanc).toggleClass('loading');
                     filterUsersBanco(nameUsuario.value).then((data) => {
                             let usersBanco = _.get(data, 'payload.data.data');
-                            $('.ui.search.participantBanc')
+                            $('.ui.search.' + participantBanc)
                                 .search({
                                     cache: false,
                                     source: usersBanco,
@@ -439,9 +446,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         return 'default';
                                     }
                                 });
-                            $('.ui.search.participantBanc').toggleClass('loading');
+                            $('.ui.search.' + participantBanc).toggleClass('loading');
                             setTimeout(function () {
-                                $('#inputParticipantBanc').focus();
+                                $('#' + inputParticipantBanc).focus();
                             }, 250);
                         }
                     );
@@ -471,63 +478,19 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             });
         }
 
-        componentWillMount() {
-          typeButtonClick = null;
-          this.setState({
-              errorBusinessPipeline: null
-          });
-          const {clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-              nonValidateEnter, fields: {nameUsuario, idUsuario, value, commission, roe,
-              termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
-              business, product, priority, registeredCountry, startDate, client, documentStatus}, clearBusiness} = this.props;
-          if(origin !== ORIGIN_PIPELIN_BUSINESS){
-            clearBusiness();
-          }else{
-            this.setState({
-              isEditable: disabled
-            });
-          }
-          if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
-              if (pipelineBusiness.pipelineBusiness.length > 0) {
-                  business.onChange(JSON.parse('["' + _.join(pipelineBusiness.pipelineBusiness, '","') + '"]'));
-              }
-          } else {
-            this._consultInfoPipeline();
-            
-          }
-          nonValidateEnter(true);
-          const infoClient = clientInformacion.get('responseClientInfo');
-          getPipelineCurrencies();
-          getClientNeeds();
-          if (_.isEmpty(infoClient)) {
-              redirectUrl("/dashboard/clientInformation");
-          } else {
-              getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
-                  PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
-          }
-        }
-
-        _consultInfoPipeline(){
-            const {fields: {businessStatus, businessWeek, commission, currency, idUsuario, nameUsuario, 
-                endDate, indexing, need, observations, product, priority, roe, registeredCountry, startDate, 
-                termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, 
-                updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy, 
-                reviewedDate, business, probability, entity, pendingDisburAmount, amountDisbursed, 
+        _consultInfoPipeline(data){
+            const {fields: {businessStatus, businessWeek, commission, currency, idUsuario, nameUsuario,
+                endDate, indexing, need, observations, product, priority, roe, registeredCountry, startDate,
+                termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
+                updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
+                reviewedDate, business, probability, entity, pendingDisburAmount, amountDisbursed,
                 estimatedDisburDate, contract}} = this.props;
-            const {params: {id}, getPipelineById, addBusiness}= this.props;
-            getPipelineById(id).then((result) => {
-              var data = result.payload.data.data;
-              _.forIn(data.listPipelines, function(pipeline, key) {
-                const uuid = _.uniqueId('pipelineBusiness_');
-                pipeline.uuid = uuid;
-                addBusiness(pipeline);
-              });
               businessStatus.onChange(data.businessStatus);
               businessWeek.onChange(data.businessWeek);
               commission.onChange(fomatInitialStateNumber(data.commission));
               currency.onChange(data.currency);
-              idUsuario.onChange(data.idUsuario);
-              nameUsuario.onChange(data.nameUsuario);
+              idUsuario.onChange(data.employeeResponsible);
+              nameUsuario.onChange(data.employeeResponsibleName);
               endDate.onChange(moment(data.endDate).format(DATE_FORMAT));
               indexing.onChange(data.indexing);
               need.onChange(data.need);
@@ -559,7 +522,55 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               if (data.pipelineBusiness.length > 0) {
                   business.onChange(data.pipelineBusiness[0]);
               }
+        }
+
+        componentWillMount() {
+          const {clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
+              getPipelineById, nonValidateEnter, fields: {nameUsuario, idUsuario, value, commission, roe,
+              termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
+              business, product, priority, registeredCountry, startDate, client, documentStatus}, addBusiness, clearBusiness} = this.props;
+          const infoClient = clientInformacion.get('responseClientInfo');typeButtonClick = null;
+          this.setState({
+              errorBusinessPipeline: null
+          });
+          if(origin !== ORIGIN_PIPELIN_BUSINESS){
+            clearBusiness();
+          }else{
+            //como se utiliza el mismo formulario para crear el negocio, al modal se le heredan los permisos de edición
+            //que tiene el pipeline padre
+            this.setState({
+              isEditable: disabled
             });
+          }
+          nonValidateEnter(true);
+          getPipelineCurrencies();
+          getClientNeeds();
+          if (_.isEmpty(infoClient)) {
+              redirectUrl("/dashboard/clientInformation");
+          } else {
+              getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
+                  PROBABILITY, LINE_OF_BUSINESS, PRODUCTS]);
+          }
+        }
+
+        componentDidMount(){
+          const {clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
+              getPipelineById, nonValidateEnter, addBusiness, clearBusiness} = this.props;
+
+          if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
+              this._consultInfoPipeline(pipelineBusiness);
+          } else {
+            const {params: {id}}= this.props;
+            getPipelineById(id).then((result) => {
+              var data = result.payload.data.data;
+              _.forIn(data.listPipelines, function(pipeline, key) {
+                const uuid = _.uniqueId('pipelineBusiness_');
+                pipeline.uuid = uuid;
+                addBusiness(pipeline);
+              });
+              this._consultInfoPipeline(data);
+            });
+          }
         }
 
         componentWillReceiveProps(nextProps) {
@@ -612,7 +623,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
-
             return (
                 <div>
                     {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
@@ -783,18 +793,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <dt>
                                             <span>Empleado responsable</span>
                                         </dt>
-                                        <div className="ui search participantBanc fluid">
-                                            <ComboBoxFilter className="prompt" id="inputParticipantBanc"
-                                                            style={{borderRadius: "3px"}}
-                                                            autoComplete="off"
-                                                            type="text"
-                                                            {...nameUsuario}
-                                                            value={nameUsuario.value}
-                                                            onChange={nameUsuario.onChange}
-                                                            placeholder="Ingrese un criterio de búsqueda..."
-                                                            onKeyPress={this.updateKeyValueUsersBanco}
-                                                            onSelect={val => this._updateValue(val)}
-                                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        <div className={`ui search ${participantBanc} fluid`}>
+                                            <ComboBoxFilter
+                                              className="prompt"
+                                              id={inputParticipantBanc}
+                                              style={{borderRadius: "3px"}}
+                                              autoComplete="off"
+                                              type="text"
+                                              {...nameUsuario}
+                                              value={nameUsuario.value}
+                                              onChange={nameUsuario.onChange}
+                                              placeholder="Ingrese un criterio de búsqueda..."
+                                              onKeyPress={this.updateKeyValueUsersBanco}
+                                              onSelect={val => this._updateValue(val)}
+                                              disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
                                         </div>
                                         {
@@ -1251,6 +1263,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             onCancel={this._closeCancelConfirmChanCurrency}
                             onConfirm={this._closeConfirmChangeCurrency}
                         />
+                        <SweetAlert
+                           type="error"
+                           show={this.state.errorValidate}
+                           title='Campos obligatorios'
+                           text='Señor usuario, debe ingresar los campos marcados con asterisco.'
+                           onConfirm={() => this.setState({ errorValidate: false })}
+                        />
                         <div className="modalBt4-footer modal-footer"
                           style={origin === ORIGIN_PIPELIN_BUSINESS ? {height: "76px"} : {display: "none"}}>
                             <button type="submit" className="btn btn-primary modal-button-edit"
@@ -1320,6 +1339,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         fields,
         validate,
         overwriteOnInitialValuesChange: false,
-
+        onSubmitFail: errors => {
+          thisForm.setState({
+              errorValidate: true
+           });
+        }
     }, mapStateToProps, mapDispatchToProps)(FormEditPipeline);
 }
