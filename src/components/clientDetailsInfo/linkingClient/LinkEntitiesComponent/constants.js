@@ -9,5 +9,6 @@ export const CLEAR_ENTITIES = "CLEAR_ENTITIES";
 export const ENTITY_BANCOLOMBIA = "Bancolombia";
 export const ENTITY_VALORES_BANCOLOMBIA = "Valores bancolombia";
 export const SAVE_LINK_CLIENT = "SAVE_LINK_CLIENT";
+export const START_STATUS = "Iniciada";
 
 

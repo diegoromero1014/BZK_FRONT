@@ -11,7 +11,7 @@ import {isEmpty, isEqual, get, find} from 'lodash';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {setEntities, clearEntities, saveLinkClient} from './linkEntitiesComponent/actions';
 import {updateErrorsLinkEntities} from '../../clientDetailsInfo/actions';
-import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA} from './linkEntitiesComponent/constants';
+import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS} from './linkEntitiesComponent/constants';
 const fields = ["observationTrader"];
 const errors = {};
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
@@ -119,7 +119,7 @@ class ButtonLinkClientComponent extends Component {
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
                     if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
-                        updateFieldInfoClient('linkedStatusKey', 'Iniciado');
+                        updateFieldInfoClient('linkedStatusKey', START_STATUS);
                         updateFieldInfoClient('observationTrader', observationTrader.value);
                         updateFieldInfoClient('linkEntity', newListEntities.toArray());
                         showLoading(false, '');
