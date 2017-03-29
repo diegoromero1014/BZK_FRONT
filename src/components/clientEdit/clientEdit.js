@@ -74,8 +74,8 @@ const valuesYesNo = [
     { 'id': false, 'value': "No" }
 ];
 
-const fields = ["description", "idCIIU", "idSubCIIU", "addressClient", "country", "city", "province", "neighborhood",
-    "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
+const fields = ["razonSocial","idTypeClient","idNumber","description", "idCIIU", "idSubCIIU", "addressClient", "country", "city", 
+    "province", "neighborhood", "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
@@ -102,6 +102,24 @@ var otherOriginResourceEnable = 'disabled';
 const validate = values => {
     const errors = {}
     var errorScrollTop = false;
+    if (!values.razonSocial) {
+        errors.razonSocial = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else {
+        errors.razonSocial = null;
+    }
+    if (!values.idTypeClient) {
+        errors.idTypeClient = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.idTypeClient = null;
+    }
+    if (!values.idNumber) {
+        errors.idNumber = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else {
+        errors.idNumber = null;
+    }
     if (!values.idCIIU) {
         errors.idCIIU = OPTION_REQUIRED;
         errorScrollTop = true;
@@ -791,10 +809,10 @@ class clientEdit extends Component {
     _saveClient(typeSave) {
         const {
             fields: {
-                description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient, country, city, province, neighborhood,
-            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals,
-            liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, originResource,
-            centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
+            idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient, 
+            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales, 
+            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, 
+            originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
             originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment
             },
@@ -808,8 +826,9 @@ class clientEdit extends Component {
         if (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
             var jsonCreateProspect = {
                 "id": infoClient.id,
-                "clientIdNumber": infoClient.clientIdNumber,
-                "clientName": infoClient.clientName,
+                "clientIdType": idTypeClient.value,
+                "clientIdNumber": idNumber.value,
+                "clientName": razonSocial.value,
                 "clientStatus": infoClient.clientStatus,
                 "riskRating": infoClient.riskRating,
                 "isProspect": infoClient.isProspect,
@@ -863,7 +882,6 @@ class clientEdit extends Component {
                     }],
                 "notes": notesArray,
                 "description": description.value,
-                "clientIdType": infoClient.clientIdType,
                 "celulaId": infoClient.celulaId,
                 "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
                 "foreignProducts": productsArray,
@@ -969,7 +987,7 @@ class clientEdit extends Component {
         const {
             fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes, selectsReducer,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, consultInfoClient, showLoading
+            clearProducts, setProducts, tabReducer, updateErrorsNotes, consultInfoClient, showLoading, consultDataSelect
         } = this.props;
         idButton = tabReducer.get('seletedButton');
         updateErrorsNotes(false);
@@ -992,10 +1010,11 @@ class clientEdit extends Component {
                 redirectUrl("/dashboard/clientInformation");
             } else {
                 showLoading(true, 'Cargando...');
-                const { economicGroupsByKeyword, selectsReducer, consultList, consultDataSelect, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
+                const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.SUBSEGMENTS])
+                constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.SUBSEGMENTS,
+                constants.CLIENT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1033,7 +1052,7 @@ class clientEdit extends Component {
     render() {
         const {
             fields: {
-                description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
+            razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
             district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
             liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
             centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
@@ -1092,31 +1111,44 @@ class clientEdit extends Component {
                 </div>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social</span></dt>
+                        <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
-                            <p style={{ fontWeight: "normal", marginTop: "8px", wordBreak: 'keep-all' }}>
-                                {infoClient.clientName}
-                            </p>
+                            <Input
+                                name="razonSocial"
+                                type="text"
+                                max="150"
+                                placeholder="Razón social del cliente"
+                                {...razonSocial}
+                            />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
+                        <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
-                            <span>Tipo de documento</span>
-                        </dt>
-                        <dt>
-                            <p style={{ fontWeight: "normal", marginTop: "8px" }}>
-                                {infoClient.clientNameType}
-                            </p>
+                            <ComboBox
+                                name="tipoDocumento"
+                                labelInput="Tipo de documento del cliente"
+                                {...idTypeClient}
+                                value={idTypeClient.value}
+                                onBlur={idTypeClient.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(constants.CLIENT_ID_TYPE)}
+                                touched={true}
+                            />
                         </dt>
                     </Col>
-                    <Col xs={10} md={4} lg={4}>
+                    <Col xs={12} md={4} lg={4}>
+                        <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
-                            <span>Número de documento</span>
-                        </dt>
-                        <dt>
-                            <p style={{ fontWeight: "normal", marginTop: "8px" }}>
-                                {infoClient.clientIdNumber}
-                            </p>
+                            <Input
+                                name="documento"
+                                type="text"
+                                max="20"
+                                placeholder="Número de documento del cliente"
+                                {...idNumber}
+                            />
                         </dt>
                     </Col>
                 </Row>
@@ -2075,6 +2107,9 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         tabReducer,
         notes,
         initialValues: {
+            razonSocial: infoClient.clientName,
+            idTypeClient: infoClient.clientIdType,
+            idNumber: infoClient.clientIdNumber,
             description: infoClient.description,
             idCIIU: infoClient.ciiu,
             idSubCIIU: infoClient.subCiiu,

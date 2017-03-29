@@ -10,10 +10,10 @@ import {redirectUrl} from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import {ORANGE_COLOR, BLUE_COLOR} from '../../constantsGlobal';
-import $ from 'jquery';
-import _ from 'lodash';
 import {clearEntities} from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import {showLoading} from '../loading/actions';
+import $ from 'jquery';
+import _ from 'lodash';
 
 class ComponentClientInformation extends Component {
     constructor(props) {
@@ -60,8 +60,8 @@ class ComponentClientInformation extends Component {
                     <Row>
                         <Col xs={11} sm={11} md={11} lg={11}>
                             <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
-                                <div>
-                                    <h3 style={{wordBreak: 'keep-all'}} className="inline title-head">
+                                <div style={{marginBottom: '10px'}}>
+                                    <h3 style={{wordBreak: 'keep-all', marginRight: "10px"}} className="inline title-head">
                                         {infoClient.clientName}
                                     </h3>
                                     {infoClient.isProspect &&
@@ -71,7 +71,6 @@ class ComponentClientInformation extends Component {
                                         height: "30px",
                                         display: "inline !important",
                                         textTransform: "none !important",
-                                        marginLeft: "10px"
                                     }}
                                           className="label label-important bounceIn animated prospect">Prospecto</span>
                                     }
