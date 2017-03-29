@@ -58,3 +58,5 @@ export const LINE_OF_BUSINESS = "lineOfBusiness";
 export const VALID_COVENANT = "validCovenant";
 export const FULLFILLMENT_COVENANT = "fullfillmentCovenant";
 export const PRODUCTS = "products";
+export const SEGMENTS = "segment";
+export const SUBSEGMENTS = "subSegment";

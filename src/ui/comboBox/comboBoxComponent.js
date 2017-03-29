@@ -104,7 +104,7 @@ class comboBoxComponent extends Component {
             <div className={disabled}>
                 <div
                     className={`styleWidthComponents ui search selection dropdown  ${name} ${deployUp === true ? 'bottom pointing' : ''} ${disabled}`}
-                    style={{minWidth: '7em'}}>
+                    style={{minWidth: '7em', marginBottom: '0px'}}>
                     <input type="hidden"  name={nameInput} value={defaultValue} disabled={disabled} placeholder="Seleccione..." className={disabled}/>
                     <i className="dropdown icon"/>
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
