@@ -2,7 +2,7 @@
  * Created by Andres Hurtado on 23/03/2017.
  */
 import Immutable from 'immutable';
-import {CONSULT_BLACK_LIST_CLIENT} from './actions';
+import {CONSULT_BLACK_LIST_CLIENT,UPDATE_VALUES_BLACKLIST} from './actions';
 import _ from 'lodash';
 
 const initialState = Immutable.Map({
@@ -17,6 +17,11 @@ export default (state = initialState, action) => {
             return state.withMutations(map => {
                 map.set('level', null)
                     .set('message', null);
+            });
+        case UPDATE_VALUES_BLACKLIST:
+            return state.withMutations(map => {
+                map.set('level', action.level)
+                    .set('message', action.message);
             });
         default:
             return state;

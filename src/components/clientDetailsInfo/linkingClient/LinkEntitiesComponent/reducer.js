@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
             return state.set(indexEntityToUpdate, _.set(entityToUpdate, action.prop, action.value));
         case CREATE_ENTITY:
             const newEntity = _.assign({}, {
+                idEntity: null,
                 traderCode: null,
                 entity: '',
                 uid: action.uid,
@@ -31,6 +32,7 @@ export default (state = initialState, action) => {
                     const uid = _.uniqueId('entity_');
                     list.push({
                         uid,
+                        idEntity:item.id,
                         traderCode: item.traderCode,
                         entity: String(item.entity),
                         entityText: String(item.entityText)

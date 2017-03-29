@@ -81,7 +81,12 @@ class EntityItem extends Component {
                     </Col>
                     <Col xs={10} md={5} lg={5}>
                         <div style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                            <dt><span>Código del comercial (</span><span style={{color: "red"}}>*</span>)</dt>
+                            <dt><span>Código del comercial </span>
+                                {
+                                    this.state.isTraderVisible &&
+                                    <span>(<span style={{color: "red"}}>*</span>)</span>
+                                }
+                            </dt>
                             <Input
                                 type="text"
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}

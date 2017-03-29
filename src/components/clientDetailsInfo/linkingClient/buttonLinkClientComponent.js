@@ -18,8 +18,9 @@ import {swtShowMessage} from '../../sweetAlertMessages/actions';
 import {FILTER_TYPE_LBO_ID} from '../../selectsComponent/constants';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {updateFieldInfoClient} from '../../clientInformation/actions';
-import {consultStateBlackListClient} from './actions';
+import {consultStateBlackListClient,updateValuesBlackList} from './actions';
 import {showLoading} from '../../loading/actions';
+import {consultInfoClient} from '../../clientInformation/actions';
 
 const validate = (values) => {
     return errors;
@@ -40,7 +41,10 @@ class ButtonLinkClientComponent extends Component {
 
     openModal() {
         this.setState({modalIsOpen: true});
-        const {consultStateBlackListClient, infoClient, showLoading, swtShowMessage, setEntities, getMasterDataFields, selectsReducer} = this.props;
+        const {consultStateBlackListClient, infoClient,
+            showLoading, swtShowMessage, setEntities,
+            getMasterDataFields, selectsReducer,
+            updateValuesBlackList} = this.props;
         const jsonClientInfo = {
             customerId: get(infoClient, 'clientIdNumber'),
             customerFullName: get(infoClient, 'clientName'),
@@ -48,31 +52,33 @@ class ButtonLinkClientComponent extends Component {
         };
         let listEntitiesMasterData = selectsReducer.get(FILTER_TYPE_LBO_ID);
         setEntities(this._getListEntities(listEntitiesMasterData));
-
+        updateValuesBlackList(get(infoClient, 'levelBlackList'),get(infoClient, 'messageBlackList'));
         /** Se debe comentar cuando se despliegue en dllo. **/
-        showLoading(true,'Cargando...');
-        consultStateBlackListClient(jsonClientInfo).then((data)=>{
-            showLoading(false,'');
-            if(!isEqual(get(data,'payload.data.status'),200)){
-                console.log("Error ",get(data,'payload.data.data'));
-                swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-            }
-        },(reason) => {
-            console.log("reason consultStateBlackListClient ",reason);
-            showLoading(false,'');
-            swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        });
+        // showLoading(true,'Cargando...');
+        // consultStateBlackListClient(jsonClientInfo).then((data)=>{
+        //     showLoading(false,'');
+        //     if(!isEqual(get(data,'payload.data.status'),200)){
+        //         console.log("Error ",get(data,'payload.data.data'));
+        //         swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        //     }
+        // },(reason) => {
+        //     console.log("Error reason consultState BlackListClient ",reason);
+        //     showLoading(false,'');
+        //     swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        // });
     }
 
     closeModal() {
         this.setState({modalIsOpen: false});
+        this.props.updateValuesBlackList(null,null);
     }
 
     _handleSaveLinkingClient() {
         const {
             fields:{observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
-            swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient
+            swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
+            message, level,consultInfoClient
         } = this.props;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
@@ -89,11 +95,13 @@ class ButtonLinkClientComponent extends Component {
                         isValidLinkEntities = false;
                     }
                     return {
+                        id: linkEntity.idEntity,
                         entity: linkEntity.entity,
                         traderCode: linkEntity.traderCode
                     }
                 } else {
                     return {
+                        id: linkEntity.idEntity,
                         entity: linkEntity.entity,
                         traderCode: null
                     }
@@ -113,18 +121,21 @@ class ButtonLinkClientComponent extends Component {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
                 "observationTrader": observationTrader.value,
-                "linkEntity": newListEntities.toArray()
+                "linkEntity": newListEntities.toArray(),
+                "levelBlackList": message,
+                "messageBlackList": level
             };
             showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
                     if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
-                        updateFieldInfoClient('linkedStatusKey', START_STATUS);
-                        updateFieldInfoClient('observationTrader', observationTrader.value);
-                        updateFieldInfoClient('linkEntity', newListEntities.toArray());
+                        consultInfoClient();
                         showLoading(false, '');
                         this.closeModal();
                         swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
+                    }else{
+                        showLoading(false, '');
+                        swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error guardando la vinculación.');
                     }
                 });
 
@@ -140,6 +151,7 @@ class ButtonLinkClientComponent extends Component {
                     return isEqual(itemEntity.entity, item.id);
                 });
                 return {
+                    id: itemEntity.id,
                     entity: itemEntity.entity,
                     entityText: get(entityMasterData, 'value', ''),
                     traderCode: itemEntity.traderCode
@@ -187,7 +199,8 @@ class ButtonLinkClientComponent extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{padding: '20px 20px 20px 20px'}} id="containerModal">
+                            <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                                 style={{padding: '20px 20px 20px 20px'}} id="containerModal">
                                 <table style={{width: "100%"}}>
                                     <thead>
                                     <tr>
@@ -301,7 +314,7 @@ class ButtonLinkClientComponent extends Component {
                                 </Row>
                                 <Row>
                                     <Col xs={12} md={12} lg={12}>
-                                        <h4>Observación administrador</h4>
+                                        <h4>Observación vinculación</h4>
                                         {_.isEmpty(infoClient.observationAdmin) ?
                                             <p>Sin observación.</p>
                                             :
@@ -348,7 +361,9 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         updateFieldInfoClient,
         consultStateBlackListClient,
-        showLoading
+        showLoading,
+        updateValuesBlackList,
+        consultInfoClient
     }, dispatch);
 }
 
