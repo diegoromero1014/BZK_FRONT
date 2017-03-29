@@ -2,6 +2,7 @@
  * Created by Andres Hurtado on 23/03/2017.
  */
 export const CONSULT_BLACK_LIST_CLIENT = "CONSULT_BLACK_LIST_CLIENT";
+export const UPDATE_VALUES_BLACKLIST = "UPDATE_VALUES_BLACKLIST";
 import {APP_URL} from '../../../constantsGlobal';
 import axios from 'axios';
 
@@ -25,5 +26,13 @@ export function consultStateBlackListClient(jsonLinkEntityClient){
     return {
         type: CONSULT_BLACK_LIST_CLIENT,
         payload: request
+    }
+}
+
+export function updateValuesBlackList(level, message){
+    return {
+        type: UPDATE_VALUES_BLACKLIST,
+        level,
+        message
     }
 }
