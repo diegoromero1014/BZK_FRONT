@@ -410,6 +410,7 @@ class clientEdit extends Component {
             showEr: false,
             showErNotes: false,
             sumErrorsForm: false,
+            showErrorClientExists: false,
             messageError: '',
             otherOperationsForeignEnable: 'disabled',
             otherOriginGoodsEnable: 'disabled',
@@ -462,7 +463,7 @@ class clientEdit extends Component {
     }
 
     _closeError() {
-        this.setState({ show: false, showEx: false, showEr: false, showErNotes: false });
+        this.setState({ show: false, showEx: false, showEr: false, showErNotes: false, showErrorClientExists: false });
     }
 
     _closeSuccess() {
@@ -901,21 +902,25 @@ class clientEdit extends Component {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect)
                 .then((data) => {
-                    if ((_.get(data, 'payload.data.responseCreateProspect') === "create")) {
-                        if (typeSave === BUTTON_EDIT) {
-                            changeStateSaveData(false, "");
-                            messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                            this.setState({ showEx: true });
-                        } else {
-                            updateClient(UPDATE).then((data) => {
+                    if ( _.get(data, 'payload.data.status', 500) === 200 ) {
+                        if ( _.get(data, 'payload.data.responseCreateProspect', false) ) {
+                            if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
-                                if (!_.get(data, 'payload.data.validateLogin')) {
-                                    redirectUrl("/login");
-                                } else {
-                                    messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                                    this.setState({ showEx: true });
-                                }
-                            });
+                                messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
+                                this.setState({ showEx: true });
+                            } else {
+                                updateClient(UPDATE).then((data) => {
+                                    changeStateSaveData(false, "");
+                                    if (!_.get(data, 'payload.data.validateLogin')) {
+                                        redirectUrl("/login");
+                                    } else {
+                                        messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                                        this.setState({ showEx: true });
+                                    }
+                                });
+                            }
+                        } else {
+                            this.setState({ showErrorClientExists: true });
                         }
                     } else {
                         this.setState({ showEr: true });
@@ -2066,6 +2071,13 @@ class clientEdit extends Component {
                     show={this.state.showErNotes}
                     title="Error editando cliente"
                     text='Señor usuario, debe crear al menos una nota de tipo "Excepción no gerenciado".'
+                    onConfirm={() => this._closeError()}
+                />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorClientExists}
+                    title="Error editando cliente"
+                    text='Señor usuario, el tipo y número de documento que desea guardar ya se encuentra registrado.'
                     onConfirm={() => this._closeError()}
                 />
             </form>
