@@ -20,6 +20,7 @@ import {getMasterDataFields} from '../../selectsComponent/actions';
 import {updateFieldInfoClient} from '../../clientInformation/actions';
 import {consultStateBlackListClient, updateValuesBlackList} from './actions';
 import {showLoading} from '../../loading/actions';
+import {consultInfoClient} from '../../clientInformation/actions';
 
 const validate = (values) => {
     return errors;
@@ -80,7 +81,7 @@ class ButtonLinkClientComponent extends Component {
             fields:{observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
             swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
-            message, level
+            message, level,consultInfoClient
         } = this.props;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
@@ -131,9 +132,7 @@ class ButtonLinkClientComponent extends Component {
             saveLinkClient(jsonLinkEntityClient)
                 .then((data) => {
                     if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
-                        updateFieldInfoClient('linkedStatusKey', START_STATUS);
-                        updateFieldInfoClient('observationTrader', observationTrader.value);
-                        updateFieldInfoClient('linkEntity', newListEntities.toArray());
+                        consultInfoClient();
                         showLoading(false, '');
                         this.closeModal();
                         swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
@@ -350,7 +349,8 @@ function mapDispatchToProps(dispatch) {
         updateFieldInfoClient,
         consultStateBlackListClient,
         showLoading,
-        updateValuesBlackList
+        updateValuesBlackList,
+        consultInfoClient
     }, dispatch);
 }
 
