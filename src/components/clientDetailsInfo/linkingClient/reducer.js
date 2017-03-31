@@ -13,10 +13,10 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case CONSULT_BLACK_LIST_CLIENT:
-            // const response = action.payload.data.data;
+            const response = action.payload.data.data;
             return state.withMutations(map => {
-                map.set('level', null)
-                    .set('message', null);
+                map.set('level', _.get(response,'stateType'))
+                    .set('message', _.get(response,'stateMessage'));
             });
         case UPDATE_VALUES_BLACKLIST:
             return state.withMutations(map => {
