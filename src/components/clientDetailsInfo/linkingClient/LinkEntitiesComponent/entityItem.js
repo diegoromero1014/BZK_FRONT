@@ -91,7 +91,7 @@ class EntityItem extends Component {
                                 type="text"
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
                                 value={this.state.traderCode}
-                                max={50}
+                                max={20}
                                 disabled={!this.state.isTraderVisible}
                                 onChange={(val) => {
                                     return this._updateValue('traderCode', val, this.state.entityName);

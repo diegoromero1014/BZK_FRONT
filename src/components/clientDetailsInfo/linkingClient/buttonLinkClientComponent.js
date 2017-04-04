@@ -18,7 +18,7 @@ import {swtShowMessage} from '../../sweetAlertMessages/actions';
 import {FILTER_TYPE_LBO_ID} from '../../selectsComponent/constants';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {updateFieldInfoClient} from '../../clientInformation/actions';
-import {consultStateBlackListClient,updateValuesBlackList} from './actions';
+import {consultStateBlackListClient, updateValuesBlackList} from './actions';
 import {showLoading} from '../../loading/actions';
 import {consultInfoClient} from '../../clientInformation/actions';
 
@@ -41,36 +41,39 @@ class ButtonLinkClientComponent extends Component {
 
     openModal() {
         this.setState({modalIsOpen: true});
-        const {consultStateBlackListClient, infoClient,
+        const {
+            consultStateBlackListClient, infoClient,
             showLoading, swtShowMessage, setEntities,
             getMasterDataFields, selectsReducer,
-            updateValuesBlackList} = this.props;
+            updateValuesBlackList
+        } = this.props;
         const jsonClientInfo = {
             customerId: get(infoClient, 'clientIdNumber'),
             customerFullName: get(infoClient, 'clientName'),
             customerTypeId: get(infoClient, 'clientNameType')
         };
-        let listEntitiesMasterData = selectsReducer.get(FILTER_TYPE_LBO_ID);
-        setEntities(this._getListEntities(listEntitiesMasterData));
-        updateValuesBlackList(get(infoClient, 'levelBlackList'),get(infoClient, 'messageBlackList'));
-        /** Se debe comentar cuando se despliegue en dllo. **/
-        // showLoading(true,'Cargando...');
-        // consultStateBlackListClient(jsonClientInfo).then((data)=>{
-        //     showLoading(false,'');
-        //     if(!isEqual(get(data,'payload.data.status'),200)){
-        //         console.log("Error ",get(data,'payload.data.data'));
-        //         swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        //     }
-        // },(reason) => {
-        //     console.log("Error reason consultState BlackListClient ",reason);
-        //     showLoading(false,'');
-        //     swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
-        // });
+        this._getListEntities();
+        updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
+        /** Se realiza el llamado de listas de control uno a uno para la vinculación **/
+        showLoading(true,'Cargando...');
+        consultStateBlackListClient(jsonClientInfo).then((data)=>{
+            showLoading(false,'');
+            if(!isEqual(get(data,'payload.data.status'),200)){
+                updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
+                console.log("Error ",get(data,'payload.data.data'));
+                swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+            }
+        },(reason) => {
+            updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
+            console.log("reason consultState BlackListClient ",reason);
+            showLoading(false,'');
+            swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
+        });
     }
 
     closeModal() {
         this.setState({modalIsOpen: false});
-        this.props.updateValuesBlackList(null,null);
+        this.props.updateValuesBlackList(null, null);
     }
 
     _handleSaveLinkingClient() {
@@ -122,8 +125,8 @@ class ButtonLinkClientComponent extends Component {
                 "idClient": infoClient.id,
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray(),
-                "levelBlackList": message,
-                "messageBlackList": level
+                "levelBlackList": level,
+                "messageBlackList": message
             };
             showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
@@ -133,7 +136,7 @@ class ButtonLinkClientComponent extends Component {
                         showLoading(false, '');
                         this.closeModal();
                         swtShowMessage('success', 'Vinculación', 'Señor usuario, la vinculación se guardó exitosamente.');
-                    }else{
+                    } else {
                         showLoading(false, '');
                         swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error guardando la vinculación.');
                     }
@@ -142,33 +145,17 @@ class ButtonLinkClientComponent extends Component {
         }
     }
 
-    _getListEntities(listEntitiesMasterData) {
-        const {infoClient, clearEntities} = this.props;
+    _getListEntities() {
+        const {infoClient, clearEntities,setEntities} = this.props;
         const listLinkEntitiesClient = get(infoClient, 'linkEntity', []);
         clearEntities();
-        return listLinkEntitiesClient.map(itemEntity => {
-                const entityMasterData = find(listEntitiesMasterData, (item) => {
-                    return isEqual(itemEntity.entity, item.id);
-                });
-                return {
-                    id: itemEntity.id,
-                    entity: itemEntity.entity,
-                    entityText: get(entityMasterData, 'value', ''),
-                    traderCode: itemEntity.traderCode
-                };
-            }
-        );
+        setEntities(listLinkEntitiesClient);
     }
 
     componentWillMount() {
-        const {setEntities, getMasterDataFields} = this.props;
-        let listEntitiesMasterData = [];
-        getMasterDataFields([FILTER_TYPE_LBO_ID]).then((data) => {
-            if ((isEqual(get(data, 'payload.status'), 200))) {
-                listEntitiesMasterData = get(data, 'payload.data.messageBody.masterDataDetailEntries', []);
-                setEntities(this._getListEntities(listEntitiesMasterData));
-            }
-        });
+        const {getMasterDataFields} = this.props;
+        getMasterDataFields([FILTER_TYPE_LBO_ID]);
+        this._getListEntities();
     }
 
     componentWillUnmount() {
