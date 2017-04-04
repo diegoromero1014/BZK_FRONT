@@ -60,3 +60,4 @@ export const FULLFILLMENT_COVENANT = "fullfillmentCovenant";
 export const PRODUCTS = "products";
 export const SEGMENTS = "segment";
 export const SUBSEGMENTS = "subSegment";
+export const BUSINESS_CATEGORY = "businessCategory";
