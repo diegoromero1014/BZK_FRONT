@@ -142,12 +142,12 @@ class ModalCreateTask extends Component {
   }
 
   _handleEditTask() {
-    const {createPendingTaskNew, changeStateSaveData} = this.props;
+    const {createPendingTaskNew, changeStateSaveData, idClient} = this.props;
     const {fields: {id, responsable, idEmployee, fecha, idEstado, tarea, advance}, handleSubmit, error} = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
       var messageBody = {
         "id": id.value,
-        "clientId": window.localStorage.getItem('idClientSelected'),
+        "clientId": idClient === undefined || idClient === null ? window.localStorage.getItem('idClientSelected'): idClient,
         "task": tarea.value,
         "advance": advance.value,
         "status": idEstado.value,
