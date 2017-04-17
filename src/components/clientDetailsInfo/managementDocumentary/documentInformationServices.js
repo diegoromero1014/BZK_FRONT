@@ -19,14 +19,14 @@ class DocumentInformationServices extends Component {
 
     _createDocumentsRecords(document, idx) {
         return <tr key={idx}>
-            <td>{document.id}</td>
+            <td>{document.documentCode}</td>
             <td>
-                <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.name}</a>
+                <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
             </td>
-            <td>{document.type}</td>
-            <td>{document.status}</td>
-            <td>{document.code}</td>
-
+            <td>{document.documentType}</td>
+            <td>{document.documentStatus}</td>
+            <td>{document.obligatory}</td>
+            <td>{document.expiryDate}</td>
         </tr>
     }
 
@@ -54,11 +54,12 @@ class DocumentInformationServices extends Component {
                         <table style={{ width: "100%" }}>
                             <thead>
                                 <tr>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Id</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Código</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Nombre</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Estado</span></th>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Código</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Obligatoriedad</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Fecha de expiración</span></th>
                                 </tr>
                             </thead>
                             <tbody>
