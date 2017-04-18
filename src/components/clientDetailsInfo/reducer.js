@@ -16,11 +16,7 @@ const initialState = Immutable.Map({
     errorsMessage: [],
     errorNotesEditClient: false,
     errorEditLinkEntitiesClient: false,
-    listDocumentsManagementDocumentary: [
-        {id: '1', name: 'Documento 1', type: 'Documento 1', status: 'Activo', code: '524187', url:'https://www.google.com.co/'},
-        {id: '2', name: 'Documento 2', type: 'Documento 2', status: 'Activo', code: '34324', url:'https://www.google.com.co/'},
-        {id: '3', name: 'Documento 3', type: 'Documento 3', status: 'Activo', code: '4646456', url:'https://www.google.com.co/'}
-    ]
+    listDocumentsManagementDocumentary: null
 });
 
 export default (state = initialState, action) => {
@@ -38,7 +34,6 @@ export default (state = initialState, action) => {
         case MESSAGE_ERRORS_UPDATE:
             return state.set("errorsMessage", action.payload);
         case CONSULT_MANAGEMENT_DOCUMENTARY:
-            console.log('render action.payload', action.payload);
             return state.set("listDocumentsManagementDocumentary", _.get(action.payload, 'data.data',  null) );
         case VALIDATE_CONTACT_SHAREHOLDER:
             const response = action.payload.data.data;
