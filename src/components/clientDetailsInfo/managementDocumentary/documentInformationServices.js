@@ -2,19 +2,35 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { consultManagementDocumentaryService } from '../actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import SweetAlert from 'sweetalert-react';
+import _ from 'lodash';
 
 class DocumentInformationServices extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            showEr: false,
+        };
         this.consultManagementDocumentary = this.consultManagementDocumentary.bind(this);
         this._createDocumentsRecords = this._createDocumentsRecords.bind(this);
     }
 
     consultManagementDocumentary() {
-        const { consultManagementDocumentaryService } = this.props;
-        consultManagementDocumentaryService();
+        const { consultManagementDocumentaryService, changeStateSaveData } = this.props;
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        consultManagementDocumentaryService().then((data) => {
+            changeStateSaveData(false, "");
+            if ( _.get(data, 'payload.data.status', 500) === 500 ) {
+                this.setState({ showEr: true });
+            }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            this.setState({ showEr: true });
+        });
     }
 
     _createDocumentsRecords(document, idx) {
@@ -68,7 +84,7 @@ class DocumentInformationServices extends Component {
                         </table>
                     </div>
                     :
-                    <Grid style={{width: "100%", marginTop: '15px' }}>
+                    <Grid style={{ width: "100%", marginTop: '15px' }}>
                         <Row center="xs">
                             <Col xs={12} sm={8} md={12} lg={12}>
                                 <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No hay documentos para el cliente</span>
@@ -76,6 +92,14 @@ class DocumentInformationServices extends Component {
                         </Row>
                     </Grid>
                 }
+
+                <SweetAlert
+                    type="error"
+                    show={this.state.showEr}
+                    title="Error consultando documentos"
+                    text="Señor usuario, ocurrió un error tratando de consultar los documentos del cliente."
+                    onConfirm={() => this.setState({ showEr: false })}
+                />
             </div>
         );
     }
@@ -83,7 +107,8 @@ class DocumentInformationServices extends Component {
 
 function mapDispatchToProps(dispacth) {
     return bindActionCreators({
-        consultManagementDocumentaryService
+        consultManagementDocumentaryService,
+        changeStateSaveData
     }, dispacth);
 }
 
