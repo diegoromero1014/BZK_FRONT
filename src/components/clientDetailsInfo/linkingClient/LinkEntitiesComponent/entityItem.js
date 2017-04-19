@@ -59,6 +59,7 @@ class EntityItem extends Component {
 
     render() {
         const {index, data} = this.props;
+        const allowEdit = !this.state.isTraderVisible ? 'disabled' : '';
         return (
             <div>
                 <Row>
@@ -92,7 +93,7 @@ class EntityItem extends Component {
                                 style={{height: "22px !important", minHeight: "26px !important", width: "100%"}}
                                 value={this.state.traderCode}
                                 max={20}
-                                disabled={!this.state.isTraderVisible}
+                                disabled={allowEdit}
                                 onChange={(val) => {
                                     return this._updateValue('traderCode', val, this.state.entityName);
                                 }}

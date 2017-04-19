@@ -45,7 +45,7 @@ class ButtonLinkClientComponent extends Component {
             consultStateBlackListClient, infoClient,
             showLoading, swtShowMessage, setEntities,
             getMasterDataFields, selectsReducer,
-            updateValuesBlackList
+            updateValuesBlackList,consultInfoClient
         } = this.props;
         const jsonClientInfo = {
             customerId: get(infoClient, 'clientIdNumber'),
@@ -56,6 +56,7 @@ class ButtonLinkClientComponent extends Component {
         updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
         /** Se realiza el llamado de listas de control uno a uno para la vinculación **/
         showLoading(true,'Cargando...');
+        consultInfoClient();
         consultStateBlackListClient(jsonClientInfo).then((data)=>{
             showLoading(false,'');
             if(!isEqual(get(data,'payload.data.status'),200)){

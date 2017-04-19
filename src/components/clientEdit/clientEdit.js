@@ -1068,7 +1068,8 @@ class clientEdit extends Component {
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
-        isProspect = infoClient.isProspect;
+        const isProspect = infoClient.isProspect;
+        const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
@@ -1646,6 +1647,7 @@ class clientEdit extends Component {
                                 <ComboBoxFilter className="prompt" id="inputEconomicGroup"
                                     style={{ borderRadius: "3px" }}
                                     autoComplete="off"
+                                    disabled={allowChangeEconomicGroup}
                                     type="text"
                                     {...economicGroupName}
                                     value={economicGroupName.value}
