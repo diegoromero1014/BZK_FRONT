@@ -34,7 +34,11 @@ export default (state = initialState, action) => {
         case MESSAGE_ERRORS_UPDATE:
             return state.set("errorsMessage", action.payload);
         case CONSULT_MANAGEMENT_DOCUMENTARY:
-            return state.set("listDocumentsManagementDocumentary", _.get(action.payload, 'data.data',  null) );
+            if( _.get(action.payload, 'data.status',  null) === 500 ){
+                return state.set("listDocumentsManagementDocumentary", null);
+            } else {
+                return state.set("listDocumentsManagementDocumentary", _.get(action.payload, 'data.data',  null) );
+            }
         case VALIDATE_CONTACT_SHAREHOLDER:
             const response = action.payload.data.data;
             return state.withMutations(map => {
