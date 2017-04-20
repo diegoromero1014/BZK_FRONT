@@ -819,13 +819,13 @@ class clientEdit extends Component {
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
-        var productsArray = [];
+        const productsArray = [];
         clientProductReducer.map(map => {
             productsArray.push(_.omit(map, ['uid']))
         });
-        var infoClient = clientInformacion.get('responseClientInfo');
+        const infoClient = clientInformacion.get('responseClientInfo');
         if (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
-            var jsonCreateProspect = {
+            const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
                 "clientIdNumber": idNumber.value,
@@ -884,7 +884,7 @@ class clientEdit extends Component {
                 "notes": notesArray,
                 "description": description.value,
                 "celulaId": infoClient.celulaId,
-                "nitPrincipal": ((!_.isEmpty(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
+                "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
                 "foreignProducts": productsArray,
                 "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
                 "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
