@@ -28,6 +28,7 @@ export const mapDataGrid = (data = [], permissionsEdit) => {
     actions: {
       actionView: true,
       id: item.id,
+      idClient: item.idClient,
       urlServer: "./component",
       component : "VIEW_TASK_ADMIN"
     },

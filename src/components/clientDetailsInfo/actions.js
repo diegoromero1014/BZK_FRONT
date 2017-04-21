@@ -1,7 +1,8 @@
 import {APP_URL} from '../../constantsGlobal';
 import {
     UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER, UPDATE_CLIENT,
-    CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES,UPDATE_ERROR_LINK_ENTITIES
+    CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES,UPDATE_ERROR_LINK_ENTITIES,
+    CONSULT_MANAGEMENT_DOCUMENTARY
 } from './constants';
 import axios from 'axios';
 
@@ -91,6 +92,29 @@ export function updateClient(typeConsult) {
     const request = axios.post(APP_URL + "/updateDataClient", json);
     return {
         type: UPDATE_CLIENT,
+        payload: request
+    }
+}
+
+export function consultManagementDocumentaryService() {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": window.localStorage.getItem('idClientSelected')
+    };
+
+    const request = axios.post(APP_URL + "/managementDocumentaryService", json);
+    return {
+        type: CONSULT_MANAGEMENT_DOCUMENTARY,
         payload: request
     }
 }

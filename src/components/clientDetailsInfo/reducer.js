@@ -1,8 +1,10 @@
 import Immutable from 'immutable';
 import {
     UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER,
-    CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES,UPDATE_ERROR_LINK_ENTITIES
+    CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES, UPDATE_ERROR_LINK_ENTITIES,
+    CONSULT_MANAGEMENT_DOCUMENTARY
 } from './constants';
+import _ from 'lodash';
 
 const initialState = Immutable.Map({
     status: "200",
@@ -13,10 +15,11 @@ const initialState = Immutable.Map({
     modalErrorsIsOpen: false,
     errorsMessage: [],
     errorNotesEditClient: false,
-    errorEditLinkEntitiesClient: false
+    errorEditLinkEntitiesClient: false,
+    listDocumentsManagementDocumentary: null
 });
 
-export default(state = initialState, action) => {
+export default (state = initialState, action) => {
     switch (action.type) {
         case UPDATE_ACTIVE_TAB:
             return state.set("tabSelected", action.payload);
@@ -30,6 +33,12 @@ export default(state = initialState, action) => {
             return state.set("modalErrorsIsOpen", action.payload);
         case MESSAGE_ERRORS_UPDATE:
             return state.set("errorsMessage", action.payload);
+        case CONSULT_MANAGEMENT_DOCUMENTARY:
+            if( _.get(action.payload, 'data.status',  null) === 500 ){
+                return state.set("listDocumentsManagementDocumentary", null);
+            } else {
+                return state.set("listDocumentsManagementDocumentary", _.get(action.payload, 'data.data',  null) );
+            }
         case VALIDATE_CONTACT_SHAREHOLDER:
             const response = action.payload.data.data;
             return state.withMutations(map => {
