@@ -141,7 +141,7 @@ class ModalComponentPendingTask extends Component {
         } else {
           if ((_.get(data, 'payload.data.status') === 200)) {
             this.setState({ showEx: true });
-            tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "c.closingDate", 0, "");
+            tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
           } else {
             this.setState({ showEr: true });
           }
@@ -250,7 +250,7 @@ class ModalComponentPendingTask extends Component {
           type="success"
           show={this.state.showEx}
           title="Creación de tarea"
-          text="Señor usuario, la tarea se creó de forma exitosa."
+          text="Señor usuario, la tarea se creó exitosamente."
           onConfirm={() => this._closeCreate()}
           />
         <SweetAlert

@@ -67,12 +67,12 @@ class ModalCreateTask extends Component {
   }
 
   _updateValue(value) {
-    const {fields: {responsable}, contactsByClient} = this.props;
+    const { fields: { responsable }, contactsByClient } = this.props;
     responsable.onChange(value);
   }
 
   updateKeyValueUsersBanco(e) {
-    const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
+    const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
     const selector = $('.ui.search.responsable');
     idEmployee.onChange(null);
     if (e.keyCode === 13 || e.which === 13) {
@@ -106,7 +106,7 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    const {fields: {id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit}, taskEdit, getMasterDataFields, getInfoTaskUser} = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit }, taskEdit, getMasterDataFields, getInfoTaskUser } = this.props;
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
@@ -121,15 +121,18 @@ class ModalCreateTask extends Component {
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
+      if (task.dateVisit !== null) {
+        dateVisit.onChange(moment(task.dateVisit).format("DD/MM/YYYY"));
+      }
       tarea.onChange(task.task);
     });
   }
 
   _closeViewOrEditTask() {
-    const {isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator} = this.props;
+    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator } = this.props;
     this.setState({ isEditable: false, taskEdited: false, showErrtask: false });
     isOpen();
-    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "c.closingDate", 0, "");
+    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
     clearMyPendingPaginator();
     tasksByUser(0, NUMBER_RECORDS, "", "", "");
     this.props.resetForm();
@@ -142,8 +145,8 @@ class ModalCreateTask extends Component {
   }
 
   _handleEditTask() {
-    const {createPendingTaskNew, changeStateSaveData} = this.props;
-    const {fields: {id, responsable, idEmployee, fecha, idEstado, tarea, advance}, handleSubmit, error} = this.props;
+    const { createPendingTaskNew, changeStateSaveData } = this.props;
+    const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
       var messageBody = {
         "id": id.value,
@@ -177,8 +180,8 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const {fields: {responsable, fecha, idEstado, tarea, advance, dateVisit},
-      selectsReducer, reducerGlobal, handleSubmit} = this.props;
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
+      selectsReducer, reducerGlobal, handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -195,7 +198,7 @@ class ModalCreateTask extends Component {
                     format={"DD/MM/YYYY"}
                     time={false}
                     disabled={this.state.isEditable ? '' : 'disabled'}
-                    />
+                  />
                 </dt>
               </Col>
               <Col xs={12} md={4} lg={4}>
@@ -208,7 +211,7 @@ class ModalCreateTask extends Component {
                     labelInput="Seleccione"
                     data={selectsReducer.get(TASK_STATUS) || []}
                     disabled={this.state.isEditable ? '' : 'disabled'}
-                    />
+                  />
                 </dt>
               </Col>
               <Col xs={12} md={3} ld={3}>
@@ -235,7 +238,7 @@ class ModalCreateTask extends Component {
                     onSelect={val => this._updateValue(val)}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                     max="255"
-                    />
+                  />
                 </dt>
               </Col>
             </Row>
@@ -251,7 +254,7 @@ class ModalCreateTask extends Component {
                     title="La longitud máxima de caracteres es de 1000"
                     style={{ width: '100%', height: '120px' }}
                     disabled={this.state.isEditable ? '' : 'disabled'}
-                    />
+                  />
                 </dt>
               </Col>
             </Row>
@@ -267,14 +270,13 @@ class ModalCreateTask extends Component {
                     title="La longitud máxima de caracteres es de 1000"
                     style={{ width: '100%', height: '120px' }}
                     disabled={this.state.isEditable ? '' : 'disabled'}
-                    />
+                  />
                 </dt>
               </Col>
             </Row>
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-
           {dateVisit.value !== null ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
@@ -285,7 +287,7 @@ class ModalCreateTask extends Component {
                   type="submit"
                   className="btn btn-primary modal-button-edit"
                   disabled={this.state.isEditable ? '' : 'disabled'}
-                  >{'Guardar'}</button>
+                >{'Guardar'}</button>
               </Col>
             </Row>
             :
@@ -293,23 +295,23 @@ class ModalCreateTask extends Component {
               type="submit"
               className="btn btn-primary modal-button-edit"
               disabled={this.state.isEditable ? '' : 'disabled'}
-              >{'Guardar'}</button>
+            >{'Guardar'}</button>
           }
         </div>
         <SweetAlert
           type="success"
           show={this.state.taskEdited}
           title="Edición de tarea"
-          text="Señor usuario, la tarea se editó de forma exitosa."
+          text="Señor usuario, la tarea se editó exitosamente."
           onConfirm={() => this._closeViewOrEditTask()}
-          />
+        />
         <SweetAlert
           type="error"
           show={this.state.showErrtask}
           title="Error editando tarea"
           text="Señor usuario, ocurrió un error editando la tarea."
           onConfirm={() => this.setState({ showErrtask: false })}
-          />
+        />
       </form>
     );
   }
@@ -329,7 +331,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({tasksByClient, selectsReducer, participants, reducerGlobal}, {taskEdit}) {
+function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal }, { taskEdit }) {
   return {
     tasksByClient,
     selectsReducer,
