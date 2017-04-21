@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import {
     UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER, UPDATE_CLIENT,
     CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES,UPDATE_ERROR_LINK_ENTITIES,
-    CONSULT_MANAGEMENT_DOCUMENTARY
+    CONSULT_MANAGEMENT_DOCUMENTARY, CLEAR_MANAGEMENT_DOCUMENTARY
 } from './constants';
 import axios from 'axios';
 
@@ -45,6 +45,12 @@ export function sendErrorsUpdate(erros) {
     return {
         type: MESSAGE_ERRORS_UPDATE,
         payload: erros
+    }
+}
+
+export function clearManagementDocumentary() {
+    return {
+        type: CLEAR_MANAGEMENT_DOCUMENTARY
     }
 }
 

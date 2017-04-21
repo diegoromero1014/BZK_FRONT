@@ -17,7 +17,7 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE } from '../../selectsComponent/constants';
 import { getContactDetails, saveContact, clearClienEdit } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR } from '../../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL } from '../../../constantsGlobal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
@@ -31,86 +31,86 @@ var thisForm;
 const validate = values => {
   const errors = {};
   if (!values.contactPosition) {
-    errors.contactPosition = "Debe seleccionar una opción";
+    errors.contactPosition = OPTION_REQUIRED;
   } else {
     errors.contactPosition = null;
   }
   if (!values.contactDependency) {
-    errors.contactDependency = "Debe seleccionar una opción";
+    errors.contactDependency = OPTION_REQUIRED;
   } else {
     errors.contactDependency = null;
   }
   if (!values.contactType) {
-    errors.contactType = "Debe seleccionar una opción";
+    errors.contactType = OPTION_REQUIRED;
   } else {
     errors.contactType = null;
   }
   if (!values.contactTitle) {
-    errors.contactTitle = "Debe seleccionar una opción";
+    errors.contactTitle = OPTION_REQUIRED;
   } else {
     errors.contactTitle = null;
   }
   if (!values.contactGender) {
-    errors.contactGender = "Debe seleccionar una opción";
+    errors.contactGender = OPTION_REQUIRED;
   } else {
     errors.contactGender = null;
   }
   if (!values.contactTypeOfContact) {
-    errors.contactTypeOfContact = "Debe seleccionar una opción";
+    errors.contactTypeOfContact = OPTION_REQUIRED;
   } else {
     errors.contactTypeOfContact = null;
   }
   if (!values.contactCountry) {
-    errors.contactCountry = "Debe seleccionar una opción";
+    errors.contactCountry = OPTION_REQUIRED;
   } else {
     errors.contactCountry = null;
   }
   if (!values.contactProvince) {
-    errors.contactProvince = "Debe seleccionar una opción";
+    errors.contactProvince = OPTION_REQUIRED;
   } else {
     errors.contactProvince = null;
   }
   if (!values.contactCity) {
-    errors.contactCity = "Debe seleccionar una opción";
+    errors.contactCity = OPTION_REQUIRED;
   } else {
     errors.contactCity = null;
   }
   if (!values.contactIdentityNumber) {
-    errors.contactIdentityNumber = "Debe ingresar un valor";
+    errors.contactIdentityNumber = VALUE_REQUIERED;
   } else {
     errors.contactIdentityNumber = null;
   }
   if (!values.contactFirstName) {
-    errors.contactFirstName = "Debe ingresar un valor";
+    errors.contactFirstName = VALUE_REQUIERED;
   } else {
     errors.contactFirstName = null;
   }
   if (!values.contactFirstLastName) {
-    errors.contactFirstLastName = "Debe ingresar un valor";
+    errors.contactFirstLastName = VALUE_REQUIERED;
   } else {
     errors.contactFirstLastName = null;
   }
   if (!values.contactEmailAddress) {
-    errors.contactEmailAddress = "Debe ingresar un valor";
+    errors.contactEmailAddress = VALUE_REQUIERED;
   } else {
-    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.contactEmailAddress))) {
-      errors.contactEmailAddress = "Debe ingresar un formato válido";
+    if (!(/\S+@\S+\.\S+/.test(values.contactEmailAddress))) {
+      errors.contactEmailAddress = INVALID_EMAIL;
     } else {
       errors.contactEmailAddress = null;
     }
   }
   if (!values.contactTelephoneNumber) {
-    errors.contactTelephoneNumber = "Debe ingresar un valor";
+    errors.contactTelephoneNumber = VALUE_REQUIERED;
   } else {
     errors.contactTelephoneNumber = null;
   }
   if (!values.contactFunctions) {
-    errors.contactFunctions = "Debe seleccionar una opción";
+    errors.contactFunctions = OPTION_REQUIRED;
   } else {
     errors.contactFunctions = null;
   }
   if (!values.contactAddress || values.contactAddress === '') {
-    errors.contactAddress = "Debe ingresar un valor";
+    errors.contactAddress = VALUE_REQUIERED;
   } else {
     errors.contactAddress = null;
   }

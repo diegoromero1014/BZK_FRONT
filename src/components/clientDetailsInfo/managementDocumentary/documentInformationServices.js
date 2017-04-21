@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { consultManagementDocumentaryService } from '../actions';
+import { consultManagementDocumentaryService, clearManagementDocumentary } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -17,6 +17,11 @@ class DocumentInformationServices extends Component {
         };
         this.consultManagementDocumentary = this.consultManagementDocumentary.bind(this);
         this._createDocumentsRecords = this._createDocumentsRecords.bind(this);
+    }
+
+    componentWillMount() {
+        const {clearManagementDocumentary} = this.props;
+        clearManagementDocumentary();
     }
 
     consultManagementDocumentary() {
@@ -108,6 +113,7 @@ class DocumentInformationServices extends Component {
 function mapDispatchToProps(dispacth) {
     return bindActionCreators({
         consultManagementDocumentaryService,
+        clearManagementDocumentary,
         changeStateSaveData
     }, dispacth);
 }
