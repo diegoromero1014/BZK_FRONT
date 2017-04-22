@@ -98,7 +98,7 @@ class ListContactComponent extends Component {
         urlServer: "./component",
         component: "VIEW_CONTACT"
       });
-      _.set(value, 'emailAddress', shorterStringValue(value.emailAddress, 45));
+      _.set(value, 'emailAddress', shorterStringValue(value.emailAddress, 40));
       if (_.get(permissionsContacts, _.indexOf(permissionsContacts, ELIMINAR), false)) {
         _.set(value, 'delete', {
           actionDelete: true,

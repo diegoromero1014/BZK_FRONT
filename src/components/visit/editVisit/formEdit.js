@@ -18,7 +18,7 @@ import BotonCreateContactComponent from '../../contact/createContact/botonCreate
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import { LAST_VISIT_REVIEW } from '../constants';
 import { TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS } from '../../../constantsGlobal';
-import { FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR } from '../../../constantsGlobal';
+import { FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR, AEC_NO_APLIED } from '../../../constantsGlobal';
 import { createVisti, detailVisit, pdfDescarga } from '../actions';
 import { addParticipant, filterUsersBanco } from '../../participantsVisitPre/actions';
 import { downloadFilePdf } from '../../clientInformation/actions';
@@ -391,7 +391,7 @@ class FormEdit extends Component {
     const { aecStatus } = infoClient;
     var showAECNoAplica = false;
     var showAECNivel = true;
-    if (aecStatus === undefined || aecStatus === null) {
+    if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
       showAECNoAplica = true;
       showAECNivel = false;
     }

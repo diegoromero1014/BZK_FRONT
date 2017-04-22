@@ -16,7 +16,9 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import {LAST_VISIT_REVIEW, KEY_TYPE_VISIT} from '../constants';
-import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, 
+  TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, 
+  MESSAGE_SAVE_DATA, AEC_NO_APLIED} from '../../../constantsGlobal';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import {createVisti} from '../actions';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
@@ -402,7 +404,7 @@ class FormVisita extends Component{
     }
     var showAECNoAplica = false;
     var showAECNivel = true;
-    if( aecStatus === undefined || aecStatus === null ){
+    if( aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED ){
       showAECNoAplica = true;
       showAECNivel = false;
     }

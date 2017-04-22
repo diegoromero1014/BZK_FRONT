@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import RaitingInternal from '../clientInformation/ratingInternal';
+import {AEC_NO_APLIED} from '../../constantsGlobal';
 import _ from 'lodash';
 
 class CreatePipeline extends Component {
@@ -12,7 +13,7 @@ class CreatePipeline extends Component {
     const {aecStatus} = infoClient;
     var showAECNoAplica = false;
     var showAECNivel = true;
-    if( aecStatus === undefined || aecStatus === null ) {
+    if( aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED ) {
       showAECNoAplica = true;
       showAECNivel = false;
     }
