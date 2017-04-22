@@ -17,6 +17,7 @@ export const SESSION_EXPIRED = "-2";
 export const MESSAGE_SAVE_DATA = "Guardando información";
 export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
 export const MESSAGE_LOAD_DATA = "Cargando información";
+export const CONSUMING_SERVICE = "Consumiento servicio";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 export const BLUE_COLOR = "#337ab7";
 export const GREEN_COLOR = "#5cb85c";
