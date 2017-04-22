@@ -277,7 +277,7 @@ class ModalCreateTask extends Component {
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          {dateVisit.value !== null ?
+          {dateVisit.value !== null && dateVisit.value !== '' ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
                 <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de la visita: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateVisit.value}</span>
