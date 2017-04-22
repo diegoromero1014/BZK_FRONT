@@ -20,7 +20,7 @@ import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { OrderedMap } from 'immutable';
 import _ from 'lodash';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL } from '../../../constantsGlobal';
 import {
     FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
@@ -34,77 +34,77 @@ const errors = {};
 var thisForm;
 const validate = (values) => {
     if (!values.tipoCargo) {
-        errors.tipoCargo = "Debe seleccionar una opción";
+        errors.tipoCargo = OPTION_REQUIRED;
     } else {
         errors.tipoCargo = null;
     }
     if (!values.tipoDependencia) {
-        errors.tipoDependencia = "Debe seleccionar una opción";
+        errors.tipoDependencia = OPTION_REQUIRED;
     } else {
         errors.tipoDependencia = null;
     }
     if (!values.tipoFuncion) {
-        errors.tipoFuncion = "Debe seleccionar una opción";
+        errors.tipoFuncion = OPTION_REQUIRED;
     } else {
         errors.tipoFuncion = null;
     }
     if (!values.primerNombre) {
-        errors.primerNombre = "Debe ingresar un valor";
+        errors.primerNombre = VALUE_REQUIERED;
     } else {
         errors.primerNombre = null;
     }
     if (!values.primerApellido) {
-        errors.primerApellido = "Debe ingresar un valor";
+        errors.primerApellido = VALUE_REQUIERED;
     } else {
         errors.primerApellido = null;
     }
     if (!values.direccion || values.direccion === '') {
-        errors.direccion = "Debe ingresar un valor";
+        errors.direccion = VALUE_REQUIERED;
     } else {
         errors.direccion = null;
     }
     if (!values.telefono) {
-        errors.telefono = "Debe ingresar un valor";
+        errors.telefono = VALUE_REQUIERED;
     } else {
         errors.telefono = null;
     }
     if (!values.correo) {
-        errors.correo = "Debe ingresar un valor";
+        errors.correo = VALUE_REQUIERED;
     } else {
-        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(values.correo))) {
-            errors.correo = "Debe ingresar un valor";
+        if( !(/\S+@\S+\.\S+/.test(values.correo)) ){
+            errors.correo = INVALID_EMAIL;
         } else {
             errors.correo = null;
         }
     }
 
     if (!values.tipoTratamiendo) {
-        errors.tipoTratamiendo = "Debe seleccionar una opción";
+        errors.tipoTratamiendo = OPTION_REQUIRED;
     } else {
         errors.tipoTratamiendo = null;
     }
     if (!values.tipoGenero) {
-        errors.tipoGenero = "Debe seleccionar una opción";
+        errors.tipoGenero = OPTION_REQUIRED;
     } else {
         errors.tipoGenero = null;
     }
     if (!values.tipoContacto) {
-        errors.tipoContacto = "Debe seleccionar una opción";
+        errors.tipoContacto = OPTION_REQUIRED;
     } else {
         errors.tipoContacto = null;
     }
     if (!values.pais) {
-        errors.pais = "Debe seleccionar una opción";
+        errors.pais = OPTION_REQUIRED;
     } else {
         errors.pais = null;
     }
     if (!values.departamento) {
-        errors.departamento = "Debe seleccionar una opción";
+        errors.departamento = OPTION_REQUIRED;
     } else {
         errors.departamento = null;
     }
     if (!values.ciudad) {
-        errors.ciudad = "Debe seleccionar una opción";
+        errors.ciudad = OPTION_REQUIRED;
     } else {
         errors.ciudad = null;
     }
@@ -143,7 +143,7 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount() {
-        const {fields: {tipoDocumento}, getMasterDataFields, clearSearchContact, nonValidateEnter} = this.props;
+        const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, nonValidateEnter } = this.props;
         nonValidateEnter(true);
         clearSearchContact();
         this.props.resetForm();
@@ -152,7 +152,7 @@ class ModalComponentContact extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const {downloadFilePDF} = this.props;
+        const { downloadFilePDF } = this.props;
         downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
     }
 
@@ -162,7 +162,7 @@ class ModalComponentContact extends Component {
     }
 
     _genero(val) {
-        const {fields: {tipoTratamiendo, tipoGenero}, selectsReducer} = this.props;
+        const { fields: { tipoTratamiendo, tipoGenero }, selectsReducer } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
@@ -180,9 +180,9 @@ class ModalComponentContact extends Component {
     }
 
     _onChangeCountry(val) {
-        const {fields: {pais, departamento, ciudad}} = this.props;
+        const { fields: { pais, departamento, ciudad } } = this.props;
         pais.onChange(val);
-        const {consultListWithParameterUbication} = this.props;
+        const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(FILTER_PROVINCE, pais.value);
         departamento.onChange('');
         ciudad.onChange('');
@@ -190,16 +190,16 @@ class ModalComponentContact extends Component {
     }
 
     _onChangeProvince(val) {
-        const {fields: {pais, departamento, ciudad}} = this.props;
+        const { fields: { pais, departamento, ciudad } } = this.props;
         departamento.onChange(val);
-        const {consultListWithParameterUbication} = this.props;
+        const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(FILTER_CITY, departamento.value);
         ciudad.onChange('');
         this.setState({ disabledCiu: '' });
     }
 
     _closeCreate() {
-        const {clearSearchContact, isOpen, clearContactCreate, clearContactOrder} = this.props;
+        const { clearSearchContact, isOpen, clearContactCreate, clearContactOrder } = this.props;
         clearSearchContact();
         //this.props.resetForm();
         this.setState({ disabled: '', noExiste: 'hidden', botonBus: 'block' });
@@ -210,7 +210,7 @@ class ModalComponentContact extends Component {
     }
 
     _onClickLimpiar() {
-        const {clearSearchContact} = this.props;
+        const { clearSearchContact } = this.props;
         clearSearchContact();
         this.props.resetForm();
         this.setState({ disabled: '', noExiste: 'hidden', botonBus: 'block' });
@@ -226,11 +226,11 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
             }, handleSubmit, error
         } = this.props;
-        const {searchContact, clearSearchContact} = this.props;
+        const { searchContact, clearSearchContact } = this.props;
         if (tipoDocumento.value && numeroDocumento.value) {
             searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
                 if ((_.get(data, 'payload.data.isClientContact'))) {
@@ -253,12 +253,12 @@ class ModalComponentContact extends Component {
 
 
     _handleCreateContact() {
-        const {createContactNew, contactsByClientFindServer, createContactReducer, changeStateSaveData} = this.props;
+        const { createContactNew, contactsByClientFindServer, createContactReducer, changeStateSaveData } = this.props;
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
             }, handleSubmit, error
         } = this.props;
         var messageBody = {
@@ -320,478 +320,478 @@ class ModalComponentContact extends Component {
     }
 
     render() {
-        const {modalStatus, selectsReducer, createContactReducer} = this.props;
-        const {initialValues, fields: {id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
-                tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
-                primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
-            }, handleSubmit, error, reducerGlobal} = this.props;
+        const { modalStatus, selectsReducer, createContactReducer } = this.props;
+        const { initialValues, fields: { id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
+            tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
+            primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            }, handleSubmit, error, reducerGlobal } = this.props;
         return (
-          <form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-            <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-              id="modalComponentScrollCreateContact">
-              <dt className="business-title">
-                <span style={{ paddingLeft: '20px' }}>Información básica contacto</span>
-              </dt>
-                <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Tipo de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
-                                    {...tipoDocumento}
-                                    disabled={this.state.disabled}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(CONTACT_ID_TYPE) || []}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Número de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><Input
-                                    name="numeroDocumento"
-                                    type="text"
-                                    max="20"
-                                    disabled={this.state.disabled}
-                                    {...numeroDocumento}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <button type="button" className="btn btn-primary"
-                                    style={{ marginTop: '35px', display: this.state.botonBus }}
-                                    onClick={this._searchContact}><i
-                                        style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                                        className="search icon"></i></button>
-                                <button type="button" className="btn btn-primary"
-                                    style={{ marginTop: '35px', visibility: this.state.noExiste }}
-                                    onClick={this._onClickLimpiar}><i
-                                        style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                                        className="erase icon" /></button>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row style={{ visibility: this.state.noExiste }}>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Tratamiento (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoTratamiendo" labelInput="Seleccione"
-                                    {...tipoTratamiendo}
-                                    onChange={val => this._genero(val)}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_TITLE) || []}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoTratamiendo')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Género (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
-                                    disabled={this.state.disabledDep}
-                                    {...tipoGenero}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={this.state.generoData}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoGenero')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Primer nombre (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd>
-                                    <Input
-                                        name="primerNombre"
-                                        type="text"
-                                        max="60"
-                                        {...primerNombre}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerNombre')}
-                                        /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row style={{ visibility: this.state.noExiste }}>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Segundo nombre</span></dt>
-                                <dd><Input
-                                    name="segundoNombre"
-                                    type="text"
-                                    max="60"
-                                    {...segundoNombre}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Primer apellido (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><Input
-                                    name="primerApellido"
-                                    type="text"
-                                    max="60"
-                                    {...primerApellido}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerApellido')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Segundo apellido</span></dt>
-                                <dd><Input
-                                    name="segundoApellido"
-                                    type="text"
-                                    max="60"
-                                    {...segundoApellido}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row style={{ visibility: this.state.noExiste }}>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Cargo (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoCargo" labelInput="Seleccione"
-                                    {...tipoCargo}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoCargo')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Área dependencia (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoDependencia" labelInput="Seleccione"
-                                    {...tipoDependencia}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_DEPENDENCY) || []}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoDependencia')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Fecha nacimiento - DD/MM/YYYY</span></dt>
-                                <dd><DateTimePickerUi culture='es' format={"DD/MM/YYYY"}
-                                    time={false} {...fechaNacimiento} /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row style={{ visibility: this.state.noExiste }}>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt>
-                                    <span>Estilo social</span>
-                                    <i onClick={this._downloadFileSocialStyle}
-                                        style={{ marginLeft: "10px", cursor: "pointer" }}
-                                        title="Descargar archivo de estilo social"
-                                        className="red file pdf outline icon"></i>
-                                </dt>
-                                <dd><ComboBox name="tipoEstiloSocial" labelInput="Seleccione"
-                                    {...tipoEstiloSocial}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Actitud frente al Grupo</span></dt>
-                                <dd><ComboBox name="tipoActitud" labelInput="Seleccione"
-                                    {...tipoActitud}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                </div>
-                <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
-                    Información de ubicación y correspondencia
+            <form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                    id="modalComponentScrollCreateContact">
+                    <dt className="business-title">
+                        <span style={{ paddingLeft: '20px' }}>Información básica contacto</span>
                     </dt>
-                <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>País (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox
-                                    name="pais"
-                                    labelInput="Seleccione"
-                                    {...pais}
-                                    onChange={val => this._onChangeCountry(val)}
-                                    value={pais.value}
-                                    onBlur={pais.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get(FILTER_COUNTRY) || []}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Departamento (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox
-                                    name="departamento"
-                                    labelInput="Seleccione"
-                                    {...departamento}
-                                    disabled={this.state.disabledDep}
-                                    onChange={val => this._onChangeProvince(val)}
-                                    value={departamento.value}
-                                    onBlur={departamento.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get('dataTypeProvince')}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Ciudad (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox
-                                    name="ciudad"
-                                    disabled={this.state.disabledCiu}
-                                    labelInput="Seleccione"
-                                    {...ciudad}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get('dataTypeCity')}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Dirección (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd>
-                                    <TextareaComponent
-                                        name="direccion"
-                                        validateEnter={true}
-                                        type="text"
-                                        max="250"
-                                        style={{ width: '100%', height: '100%' }}
-                                        onChange={val => this._onchangeValue("direccion", val)}
-                                        rows={4}
-                                        {...direccion}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'direccion')}
-                                        /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Barrio</span></dt>
-                                <dd><Input
-                                    name="barrio"
-                                    type="text"
-                                    max="120"
-                                    {...barrio}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Código postal</span></dt>
-                                <dd><Input
-                                    name="codigoPostal"
-                                    type="text"
-                                    max="25"
-                                    {...codigoPostal}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Teléfono (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><Input
-                                    name="telefono"
-                                    type="text"
-                                    max="30"
-                                    {...telefono}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'telefono')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Extensión</span></dt>
-                                <dd><Input
-                                    name="extension"
-                                    type="text"
-                                    max="20"
-                                    {...extension}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Celular</span></dt>
-                                <dd><Input
-                                    name="celular"
-                                    type="text"
-                                    max="30"
-                                    {...celular}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Correo electrónico (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><Input
-                                    name="correo"
-                                    type="text"
-                                    max="150"
-                                    {...correo}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'correo')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                </div>
-                <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
-                    Clasificación de contacto
-                    </dt>
-                <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Tipo de contacto (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd><ComboBox name="tipoContacto" labelInput="Seleccione"
-                                    {...tipoContacto}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-
-                                    data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
-                                    shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoContacto')}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Entidad / Línea de negocio</span></dt>
-                                <dd><MultipleSelect name="tipoEntidad" labelInput="Seleccione"
-                                    {...tipoEntidad}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
-                                    /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Función (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                <dd>
-                                    <MultipleSelect name="tipoFuncion" labelInput="Seleccione"
-                                        {...tipoFuncion}
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Tipo de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
+                                        {...tipoDocumento}
+                                        disabled={this.state.disabled}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
-                                        />
-                                </dd>
-                            </dl>
-                        </Col>
-                    </Row>
-                </div>
-                <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
-                    Hobbies y Deportes
+                                        data={selectsReducer.get(CONTACT_ID_TYPE) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Número de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><Input
+                                        name="numeroDocumento"
+                                        type="text"
+                                        max="20"
+                                        disabled={this.state.disabled}
+                                        {...numeroDocumento}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <button type="button" className="btn btn-primary"
+                                        style={{ marginTop: '35px', display: this.state.botonBus }}
+                                        onClick={this._searchContact}><i
+                                            style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
+                                            className="search icon"></i></button>
+                                    <button type="button" className="btn btn-primary"
+                                        style={{ marginTop: '35px', visibility: this.state.noExiste }}
+                                        onClick={this._onClickLimpiar}><i
+                                            style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
+                                            className="erase icon" /></button>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row style={{ visibility: this.state.noExiste }}>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Tratamiento (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoTratamiendo" labelInput="Seleccione"
+                                        {...tipoTratamiendo}
+                                        onChange={val => this._genero(val)}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_TITLE) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoTratamiendo')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Género (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
+                                        disabled={this.state.disabledDep}
+                                        {...tipoGenero}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={this.state.generoData}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoGenero')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Primer nombre (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd>
+                                        <Input
+                                            name="primerNombre"
+                                            type="text"
+                                            max="60"
+                                            {...primerNombre}
+                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerNombre')}
+                                        /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row style={{ visibility: this.state.noExiste }}>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Segundo nombre</span></dt>
+                                    <dd><Input
+                                        name="segundoNombre"
+                                        type="text"
+                                        max="60"
+                                        {...segundoNombre}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Primer apellido (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><Input
+                                        name="primerApellido"
+                                        type="text"
+                                        max="60"
+                                        {...primerApellido}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerApellido')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Segundo apellido</span></dt>
+                                    <dd><Input
+                                        name="segundoApellido"
+                                        type="text"
+                                        max="60"
+                                        {...segundoApellido}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row style={{ visibility: this.state.noExiste }}>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Cargo (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoCargo" labelInput="Seleccione"
+                                        {...tipoCargo}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_CONTACT_POSITION) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoCargo')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Área dependencia (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoDependencia" labelInput="Seleccione"
+                                        {...tipoDependencia}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_DEPENDENCY) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoDependencia')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Fecha nacimiento - DD/MM/YYYY</span></dt>
+                                    <dd><DateTimePickerUi culture='es' format={"DD/MM/YYYY"}
+                                        time={false} {...fechaNacimiento} /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row style={{ visibility: this.state.noExiste }}>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt>
+                                        <span>Estilo social</span>
+                                        <i onClick={this._downloadFileSocialStyle}
+                                            style={{ marginLeft: "10px", cursor: "pointer" }}
+                                            title="Descargar archivo de estilo social"
+                                            className="red file pdf outline icon"></i>
+                                    </dt>
+                                    <dd><ComboBox name="tipoEstiloSocial" labelInput="Seleccione"
+                                        {...tipoEstiloSocial}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Actitud frente al Grupo</span></dt>
+                                    <dd><ComboBox name="tipoActitud" labelInput="Seleccione"
+                                        {...tipoActitud}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                    </div>
+                    <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
+                        Información de ubicación y correspondencia
                     </dt>
-                <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
-                    <Row>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Hobbie</span></dt>
-                                <dd><MultipleSelect name="tipoHobbie" labelInput="Seleccione"
-                                    {...tipoHobbie}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_HOBBIES) || []}
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>País (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox
+                                        name="pais"
+                                        labelInput="Seleccione"
+                                        {...pais}
+                                        onChange={val => this._onChangeCountry(val)}
+                                        value={pais.value}
+                                        onBlur={pais.onBlur}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get(FILTER_COUNTRY) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
                                     /></dd>
-                            </dl>
-                        </Col>
-                        <Col xs>
-                            <dl style={{ width: '100%' }}>
-                                <dt><span>Deporte</span></dt>
-                                <dd><MultipleSelect name="tipoDeporte" labelInput="Seleccione"
-                                    {...tipoDeporte}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(FILTER_SPORTS) || []}
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Departamento (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox
+                                        name="departamento"
+                                        labelInput="Seleccione"
+                                        {...departamento}
+                                        disabled={this.state.disabledDep}
+                                        onChange={val => this._onChangeProvince(val)}
+                                        value={departamento.value}
+                                        onBlur={departamento.onBlur}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get('dataTypeProvince')}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
                                     /></dd>
-                            </dl>
-                        </Col>
-                    </Row>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Ciudad (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox
+                                        name="ciudad"
+                                        disabled={this.state.disabledCiu}
+                                        labelInput="Seleccione"
+                                        {...ciudad}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get('dataTypeCity')}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Dirección (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd>
+                                        <TextareaComponent
+                                            name="direccion"
+                                            validateEnter={true}
+                                            type="text"
+                                            max="250"
+                                            style={{ width: '100%', height: '100%' }}
+                                            onChange={val => this._onchangeValue("direccion", val)}
+                                            rows={4}
+                                            {...direccion}
+                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'direccion')}
+                                        /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Barrio</span></dt>
+                                    <dd><Input
+                                        name="barrio"
+                                        type="text"
+                                        max="120"
+                                        {...barrio}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Código postal</span></dt>
+                                    <dd><Input
+                                        name="codigoPostal"
+                                        type="text"
+                                        max="25"
+                                        {...codigoPostal}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Teléfono (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><Input
+                                        name="telefono"
+                                        type="text"
+                                        max="30"
+                                        {...telefono}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'telefono')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Extensión</span></dt>
+                                    <dd><Input
+                                        name="extension"
+                                        type="text"
+                                        max="20"
+                                        {...extension}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Celular</span></dt>
+                                    <dd><Input
+                                        name="celular"
+                                        type="text"
+                                        max="30"
+                                        {...celular}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Correo electrónico (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><Input
+                                        name="correo"
+                                        type="text"
+                                        max="150"
+                                        {...correo}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'correo')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                    </div>
+                    <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
+                        Clasificación de contacto
+                    </dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Tipo de contacto (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd><ComboBox name="tipoContacto" labelInput="Seleccione"
+                                        {...tipoContacto}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+
+                                        data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
+                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoContacto')}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Entidad / Línea de negocio</span></dt>
+                                    <dd><MultipleSelect name="tipoEntidad" labelInput="Seleccione"
+                                        {...tipoEntidad}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Función (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                    <dd>
+                                        <MultipleSelect name="tipoFuncion" labelInput="Seleccione"
+                                            {...tipoFuncion}
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoFuncion')}
+                                        />
+                                    </dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                    </div>
+                    <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
+                        Hobbies y Deportes
+                    </dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Hobbie</span></dt>
+                                    <dd><MultipleSelect name="tipoHobbie" labelInput="Seleccione"
+                                        {...tipoHobbie}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_HOBBIES) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Deporte</span></dt>
+                                    <dd><MultipleSelect name="tipoDeporte" labelInput="Seleccione"
+                                        {...tipoDeporte}
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        data={selectsReducer.get(FILTER_SPORTS) || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
-            </div>
-            <div className="modalBt4-footer modal-footer">
-              <button type="submit" style={{ visibility: this.state.noExiste }} className="btn btn-primary modal-button-edit">Guardar
+                <div className="modalBt4-footer modal-footer">
+                    <button type="submit" style={{ visibility: this.state.noExiste }} className="btn btn-primary modal-button-edit">Guardar
               </button>
-            </div>
-            <SweetAlert
-                type="success"
-                show={this.state.showEx}
-                title="Creación de contacto"
-                text="Señor usuario, el contacto se creó de forma exitosa."
-                onConfirm={() => this._closeCreate()}
+                </div>
+                <SweetAlert
+                    type="success"
+                    show={this.state.showEx}
+                    title="Creación de contacto"
+                    text="Señor usuario, el contacto se creó de forma exitosa."
+                    onConfirm={() => this._closeCreate()}
                 />
-            <SweetAlert
-                type="warning"
-                title="Advertencia"
-                show={this.state.showErrorYa}
-                text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
-                onConfirm={() => this._close()}
+                <SweetAlert
+                    type="warning"
+                    title="Advertencia"
+                    show={this.state.showErrorYa}
+                    text="Señor usuario, el cliente ya presenta una relación con el contacto buscado."
+                    onConfirm={() => this._close()}
                 />
-            <SweetAlert
-                type="error"
-                show={this.state.showEr}
-                title="Error creando contacto"
-                text="Señor usuario, ocurrió un error creando el contacto."
-                onConfirm={() => this.setState({ showEr: false })}
+                <SweetAlert
+                    type="error"
+                    show={this.state.showEr}
+                    title="Error creando contacto"
+                    text="Señor usuario, ocurrió un error creando el contacto."
+                    onConfirm={() => this.setState({ showEr: false })}
                 />
-            <SweetAlert
-                type="error"
-                show={this.state.showCam}
-                title="Campos obligatorios"
-                text="Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del contacto."
-                onConfirm={() => this.setState({ showCam: false })}
+                <SweetAlert
+                    type="error"
+                    show={this.state.showCam}
+                    title="Campos obligatorios"
+                    text="Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del contacto."
+                    onConfirm={() => this.setState({ showCam: false })}
                 />
-            <SweetAlert
-                type="error"
-                show={this.state.showErrorForm}
-                title="Campos obligatorios"
-                text="Señor usuario, para crear un contacto debe ingresar los campos obligatorios."
-                onConfirm={() => this.setState({ showErrorForm: false })}
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorForm}
+                    title="Campos obligatorios"
+                    text="Señor usuario, para crear un contacto debe ingresar los campos obligatorios."
+                    onConfirm={() => this.setState({ showErrorForm: false })}
                 />
-        </form>
+            </form>
         );
     }
 }
 
-function mapStateToProps({createContactReducer, selectsReducer, reducerGlobal}, {fields}) {
+function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal }, { fields }) {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     if (contactDetail && contactDetail.contactIdentityNumber) {
         return {
