@@ -2,181 +2,184 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {contactsByClientFindServer,clearContactPaginator,orderColumnContact,clearContactOrder} from './actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { contactsByClientFindServer, clearContactPaginator, orderColumnContact, clearContactOrder } from './actions';
 import GridComponent from '../grid/component';
-import {NUMBER_RECORDS,DELETE_TYPE_CONTACT} from './constants';
-import {ELIMINAR} from '../../constantsGlobal';
+import { NUMBER_RECORDS, DELETE_TYPE_CONTACT } from './constants';
+import { ELIMINAR } from '../../constantsGlobal';
+import { shorterStringValue } from '../../actionsGlobal';
 
 let v1 = "";
 let v2 = "";
 let v3 = "";
 class ListContactComponent extends Component {
 
-  constructor(props){
-      super(props);
-      this._renderCellView = this._renderCellView.bind(this);
-      this._orderColumn = this._orderColumn.bind(this);
-      this._renderHeaders = this._renderHeaders.bind(this);
-      this.state = {
-        column : "",
-        order : "",
-        orderA: 'inline-block',
-        orderD: 'none'
-      }
+  constructor(props) {
+    super(props);
+    this._renderCellView = this._renderCellView.bind(this);
+    this._orderColumn = this._orderColumn.bind(this);
+    this._renderHeaders = this._renderHeaders.bind(this);
+    this.state = {
+      column: "",
+      order: "",
+      orderA: 'inline-block',
+      orderD: 'none'
+    }
   }
 
- componentWillMount(){
-   this.state = {
-     orderA: 'inline-block',
-     orderD: 'none'
-   }
- }
+  componentWillMount() {
+    this.state = {
+      orderA: 'inline-block',
+      orderD: 'none'
+    }
+  }
 
-  componentWillReceiveProps(nextProps){
-      const {
+  componentWillReceiveProps(nextProps) {
+    const {
           value1,
-          value2,
-          value3
+      value2,
+      value3
       } = nextProps;
-      if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
-          (v3 !== nextProps.value3)) {
+    if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
+      (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
-      const {clearContactOrder} = this.props;
+      const { clearContactOrder } = this.props;
       clearContactOrder();
-      this._orderColumn(0,"");
+      this._orderColumn(0, "");
     }
   }
 
-  _orderColumn(order,column){
-    if(order === 1){
-      this.setState({orderA :'none',orderD:'inline-block'});
-    }else{
-      this.setState({orderA :'inline-block',orderD :'none'});
+  _orderColumn(order, column) {
+    if (order === 1) {
+      this.setState({ orderA: 'none', orderD: 'inline-block' });
+    } else {
+      this.setState({ orderA: 'inline-block', orderD: 'none' });
     }
-    const {contactsByClientFindServer, selectsReducer,contactsByClient, value1, value2, value3,clearContactPaginator,orderColumnContact} = this.props;
+    const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2, value3, clearContactPaginator, orderColumnContact } = this.props;
     clearContactPaginator();
-    orderColumnContact(order,column);
-    contactsByClientFindServer(0,window.localStorage.getItem('idClientSelected'),NUMBER_RECORDS,column,order,contactsByClient.get('keywordContact'),
-    v1,
-    v2,
-    v3);
+    orderColumnContact(order, column);
+    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, column, order, contactsByClient.get('keywordContact'),
+      v1,
+      v2,
+      v3);
   }
 
-  _renderCellView(data){
+  _renderCellView(data) {
     const mensaje = "Señor usuario ¿está seguro que desea eliminar el contacto ";
-    const {reducerGlobal} = this.props;
+    const { reducerGlobal } = this.props;
     var permissionsContacts = reducerGlobal.get('permissionsContacts');
-    return _.forOwn(data, function(value, key) {
-              var json1 = {
-                "messageHeader": {
-                  "sessionToken": window.localStorage.getItem('sessionToken'),
-                      "timestamp": new Date().getTime(),
-                      "service": "",
-                      "status": "0",
-                      "language": "es",
-                      "displayErrorMessage": "",
-                      "technicalErrorMessage": "",
-                      "applicationVersion": "",
-                      "debug": true,
-                      "isSuccessful": true
-                },
-                "messageBody": {
-                "clientId":window.localStorage.getItem('idClientSelected'),
-                "contactId":value.id,
-                "clientContactId": value.idClientContact
-              }
-              }
-            _.set(value, 'actions',  {
-              actionView: true,
-              id: value.id,
-              urlServer: "./component",
-              component : "VIEW_CONTACT"
-            });
-            if( _.get(permissionsContacts, _.indexOf(permissionsContacts, ELIMINAR), false) ){
-              _.set(value, 'delete',  {
-                actionDelete: true,
-                urlServer: "/deleteContactForClient",
-                typeDelete : DELETE_TYPE_CONTACT,
-                mensaje: mensaje + value.nameComplet + "?",
-                json: json1
-              });
-            }
+    return _.forOwn(data, function (value, key) {
+      var json1 = {
+        "messageHeader": {
+          "sessionToken": window.localStorage.getItem('sessionToken'),
+          "timestamp": new Date().getTime(),
+          "service": "",
+          "status": "0",
+          "language": "es",
+          "displayErrorMessage": "",
+          "technicalErrorMessage": "",
+          "applicationVersion": "",
+          "debug": true,
+          "isSuccessful": true
+        },
+        "messageBody": {
+          "clientId": window.localStorage.getItem('idClientSelected'),
+          "contactId": value.id,
+          "clientContactId": value.idClientContact
+        }
+      }
+      console.log('value', value);
+      _.set(value, 'actions', {
+        actionView: true,
+        id: value.id,
+        urlServer: "./component",
+        component: "VIEW_CONTACT"
       });
+      _.set(value, 'emailAddress', shorterStringValue(value.emailAddress, 45));
+      if (_.get(permissionsContacts, _.indexOf(permissionsContacts, ELIMINAR), false)) {
+        _.set(value, 'delete', {
+          actionDelete: true,
+          urlServer: "/deleteContactForClient",
+          typeDelete: DELETE_TYPE_CONTACT,
+          mensaje: mensaje + value.nameComplet + "?",
+          json: json1
+        });
+      }
+    });
   }
 
-  _renderHeaders(){
+  _renderHeaders() {
     return [
       {
         title: "",
-        key:"actions"
+        key: "actions"
       },
       {
         title: "Tratamiento",
-        key:"title"
+        key: "title"
       },
       {
-          title:"Nombre",
-          orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"D10_FIRST_NAME")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"D10_FIRST_NAME")}></i></span>,
-          key: "nameComplet"
+        title: "Nombre",
+        orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "D10_FIRST_NAME")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "D10_FIRST_NAME")}></i></span>,
+        key: "nameComplet"
       },
       {
         title: "Teléfono",
-        key:"telephoneNumber"
+        key: "telephoneNumber"
       },
       {
         title: "Celular",
-        key:"mobileNumber"
+        key: "mobileNumber"
       },
       {
         title: "Correo",
-        key:"emailAddress"
+        key: "emailAddress"
       },
       {
         title: "Ciudad",
-        key:"city"
+        key: "city"
       },
       {
         title: "Tipo de contacto",
-        key:"typeOfContact"
+        key: "typeOfContact"
       },
       {
         title: "Cargo",
-        key:"contactPosition"
+        key: "contactPosition"
       },
       {
         title: "",
-        key:"delete"
+        key: "delete"
       },
     ]
   }
 
   render() {
-    const {contactsByClient} = this.props;
+    const { contactsByClient } = this.props;
     const modalTitle = 'Contacto Detalle';
     const data = contactsByClient.get('contacts');
-    return ( <div className = "horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
-      <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
+    return (<div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
+      <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
     </div>
     );
   }
 }
 
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    contactsByClientFindServer,clearContactPaginator,orderColumnContact,clearContactOrder
+    contactsByClientFindServer, clearContactPaginator, orderColumnContact, clearContactOrder
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient, reducerGlobal}, ownerProps){
-    return {
-        contactsByClient,
-        reducerGlobal
-    };
+function mapStateToProps({ contactsByClient, reducerGlobal }, ownerProps) {
+  return {
+    contactsByClient,
+    reducerGlobal
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListContactComponent);
