@@ -9,7 +9,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import {ORANGE_COLOR, BLUE_COLOR} from '../../constantsGlobal';
+import {ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED} from '../../constantsGlobal';
 import {clearEntities} from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import {showLoading} from '../loading/actions';
 import $ from 'jquery';
@@ -48,7 +48,7 @@ class ComponentClientInformation extends Component {
         var aecStatus = "";
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
-            if (aecStatus === undefined || aecStatus === null) {
+            if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
                 showAECNoAplica = true;
                 showAECNivel = false;
             }

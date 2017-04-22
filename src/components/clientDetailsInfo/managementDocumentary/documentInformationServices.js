@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { consultManagementDocumentaryService, clearManagementDocumentary } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
-import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+import { CONSUMING_SERVICE } from '../../../constantsGlobal';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
@@ -26,7 +26,7 @@ class DocumentInformationServices extends Component {
 
     consultManagementDocumentary() {
         const { consultManagementDocumentaryService, changeStateSaveData } = this.props;
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        changeStateSaveData(true, CONSUMING_SERVICE);
         consultManagementDocumentaryService().then((data) => {
             changeStateSaveData(false, "");
             if ( _.get(data, 'payload.data.status', 500) === 500 ) {
@@ -61,7 +61,7 @@ class DocumentInformationServices extends Component {
                             <td>
                                 <dl style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                                     <i className="newspaper icon" style={{ fontSize: "25px" }}></i>
-                                    <span className="title-middle"> Consulta de servicios de Información Documental</span>
+                                    <span className="title-middle"> Consulta de servicios de información documental</span>
                                 </dl>
                             </td>
                             <td>
