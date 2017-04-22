@@ -852,7 +852,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
+                                            {origin === ORIGIN_PIPELIN_BUSINESS ?
+                                                <span>Categoría del negocio</span>
+                                                :
+                                                <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
+                                            }
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
@@ -900,7 +904,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         onChange={val => this._changeEntity(val)}
                                     />
                                 </Col>
-                                <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? {display: "block", paddingTop: '20px', paddingRight: "20px"} : { display: "none" }}>
+                                <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? { display: "block", paddingTop: '20px', paddingRight: "20px" } : { display: "none" }}>
                                     <dt>
                                         <span>Contrato</span>
                                     </dt>
@@ -1136,8 +1140,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </div>
                                 </Col>
                             </Row>
-                            <Row
-                                style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
+                            <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <Textarea
                                         name="observations"
