@@ -132,7 +132,7 @@ class ButtonAssociateComponent extends Component {
                         confirmButtonColor= '#DD6B55'
                         confirmButtonText= 'Sí, estoy seguro!'
                         cancelButtonText = "Cancelar"
-                        text="Señor usuario ¿seguro que desea asociar la previsita seleccionada?"
+                        text="Señor usuario ¿Está seguro que desea asociar la previsita seleccionada?"
                         showCancelButton= {true}
                         onCancel= {() => this._cancel()}
                         onConfirm={() => this._associtate()}/>
