@@ -61,3 +61,4 @@ export const PRODUCTS = "products";
 export const SEGMENTS = "segment";
 export const SUBSEGMENTS = "subSegment";
 export const BUSINESS_CATEGORY = "businessCategory";
+export const AEC_STATUS = "aecStatus";

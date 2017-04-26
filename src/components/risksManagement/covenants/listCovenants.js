@@ -10,7 +10,6 @@ import { showLoading } from '../../loading/actions';
 import { clientCovenants } from './actions';
 import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR } from '../../../constantsGlobal';
 
-
 class ListCovenantsComponent extends Component {
 
     constructor(props) {
@@ -18,9 +17,8 @@ class ListCovenantsComponent extends Component {
         this._renderHeaders = this._renderHeaders.bind(this);
     }
 
-
     componentWillMount() {
-        const {clientCovenants} = this.props;
+        const { clientCovenants } = this.props;
         clientCovenants().then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
@@ -28,9 +26,7 @@ class ListCovenantsComponent extends Component {
         });
     }
 
-
     _renderHeaders() {
-
         const headersTable = [
             {
                 title: "",
@@ -75,7 +71,7 @@ class ListCovenantsComponent extends Component {
 
     render() {
         const modalTitle = 'Creación de seguimientos';
-        const {covenant} = this.props;
+        const { covenant } = this.props;
         const data = covenant.get('responseCovenant');
         return (
             <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
@@ -113,7 +109,6 @@ class ListCovenantsComponent extends Component {
     }
 }
 
-
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         clientCovenants,
@@ -122,7 +117,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({covenant, reducerGlobal}, ownerProps) {
+function mapStateToProps({ covenant, reducerGlobal }, ownerProps) {
     return {
         covenant,
         reducerGlobal

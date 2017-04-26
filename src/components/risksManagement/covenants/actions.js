@@ -1,7 +1,3 @@
-/**
- * Created by IAS-ASUS on 2/2/2017.
- */
-
 import { APP_URL } from '../../../constantsGlobal';
 import { CLIENTS_COVENANTS, CONSULT_INFO_COVENANT, CLEAR_COVENANT, CHANGE_STATUS_CREATE, CREATE_TRACKING_COVENANT } from './constants';
 import axios from 'axios';
