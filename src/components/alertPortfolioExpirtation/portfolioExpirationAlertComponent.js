@@ -22,7 +22,7 @@ import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {SESSION_EXPIRED} from '../../constantsGlobal';
-import ListClientsPendingUpdate from './listPortfolioExpiration';
+import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -199,7 +199,7 @@ class ClientsPendingUpdate extends Component {
                         <Grid style={{display: visibleTable, width: "98%"}}>
                             <Row>
                                 <Col xs>
-                                    <ListClientsPendingUpdate />
+                                    <ListClientsAlertPortfolioExp />
                                     <Pagination/>
                                 </Col>
                             </Row>

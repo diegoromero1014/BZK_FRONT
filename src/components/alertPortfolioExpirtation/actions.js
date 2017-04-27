@@ -6,7 +6,7 @@ import {
     FIND_CLIENTS_PORTFOLIO_EXPIRATION, CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION,
     CLEAR_CLIENT_ORDER_PE, CLEAR_CLIENT_PAGINATION_PE, ORDER_COLUMN_CLIENT_PE,
     CHANGE_KEYWORD_NAME_NIT_PE, CLEAR_FILTER_CLIENTS_PE, UPDATE_NUMBER_TOTAL_CLIENTS_PE, NUMBER_RECORDS,
-    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE
+    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS
 } from './constants';
 import axios from 'axios';
 
@@ -135,4 +135,31 @@ export function orderColumnClientPortfolioExpiration(orderClients, columnClients
         orderClients,
         columnClients
     };
+}
+
+export function saveObservationPortfolioExp(idAlertPortfolioExp, observations) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username": "",
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            "idAlert": idAlertPortfolioExp,
+            observations
+        }
+    };
+    const request = axios.post(APP_URL + "/saveObservationsAlertPortfolioExp", json);
+    return {
+        type: SAVE_OBSERVATIONS,
+        payload: request
+    }
 }

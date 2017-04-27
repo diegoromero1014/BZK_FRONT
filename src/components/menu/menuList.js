@@ -8,6 +8,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
 import _ from 'lodash';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -70,8 +71,17 @@ class MenuList extends Component {
 
     componentWillMount() {
         menuItems = [];
-        const {getAlertsByUser} = this.props;
+        const {getAlertsByUser,validatePermissionsByModule} = this.props;
         getAlertsByUser();
+        validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            } else {
+                if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
+                    redirectUrl("/dashboard");
+                }
+            }
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -147,7 +157,8 @@ class MenuList extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getAlertsByUser
+        getAlertsByUser,
+        validatePermissionsByModule
     }, dispatch);
 }
 

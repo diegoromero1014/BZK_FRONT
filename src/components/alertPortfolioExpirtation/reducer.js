@@ -5,39 +5,6 @@ import Immutable from 'immutable';
 import * as actions from './constants';
 import {get} from 'lodash';
 
-const data2 = [
-    {
-        idClient:23232,
-        typeDocument: 'NIT',
-        idNumberClient: '51515',
-        clientName: 'EXITO',
-        balance: 4555151,
-        daysOverdue: '58',
-        entity: 'BANCOLOMBIA SUFI',
-        responsible: 'ANDRES HURTADO'
-    },
-    {
-        idClient:23232,
-        typeDocument: 'NIT',
-        idNumberClient: '51515',
-        clientName: 'EXITO',
-        balance: 4555151,
-        daysOverdue: '58',
-        entity: 'BANCOLOMBIA SUFI',
-        responsible: 'ANDRES HURTADO'
-    },
-    {
-        idClient:23232,
-        typeDocument: 'NIT',
-        idNumberClient: '51515',
-        clientName: 'EXITO',
-        balance: 4555151,
-        daysOverdue: '58',
-        entity: 'BANCOLOMBIA SUFI',
-        responsible: 'ANDRES HURTADO'
-    }
-];
-
 const initialState = Immutable.Map({
     status: "withoutProcessing",
     keywordNameNit: "",
@@ -47,7 +14,7 @@ const initialState = Immutable.Map({
     pageNum: 1,
     order: 0,
     columnOrder: '',
-    responseClients: data2,
+    responseClients: [],
     totalClientsByFiltered: 0
 });
 
@@ -116,6 +83,9 @@ export default (state = initialState, action = {}) => {
                 map
                     .set('totalClientsByFiltered', action.totalClients);
             });
+        case actions.SAVE_OBSERVATIONS:
+            // FALTA TO DO
+            return state;
         default:
             return state;
     }

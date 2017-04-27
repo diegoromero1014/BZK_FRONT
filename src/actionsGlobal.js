@@ -119,13 +119,17 @@ export function validatePermissionsByModule(module) {
 }
 
 export function shorterStringValue(element, minLength) {
-    const lengthDafault =  _.isUndefined(minLength) ? 50 : minLength;
+    const lengthDafault = _.isUndefined(minLength) ? 50 : minLength;
     return element === null || element === undefined || element == '' ? '' : element.length > lengthDafault ? element.substring(0, lengthDafault) + "..." : element;
 }
 
 export function formatNumeral(number, format) {
-    let numberNumeral = numeral(number);
-    return numberNumeral.format(format);
+    if (_.isNull(number)) {
+        return '';
+    } else {
+        let numberNumeral = numeral(number);
+        return numberNumeral.format(format);
+    }
 }
 
 export function mapDateValueFromTask(date) {
