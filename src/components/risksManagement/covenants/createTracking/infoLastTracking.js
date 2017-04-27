@@ -31,7 +31,7 @@ class InfoLastTracking extends Component {
                             <dd style={{ minHeight: '26px' }}>{_.isUndefined(lastTracking.validCovenant) ? "" : lastTracking.validCovenant}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >
-                            <dt style={{ paddingTop: '5px' }}>Cumplimineto del covenant</dt>
+                            <dt style={{ paddingTop: '5px' }}>Cumplimiento del covenant</dt>
                             <dd style={{ minHeight: '26px' }}>{_.isUndefined(lastTracking.fullfillmentCovenant) ? "" : lastTracking.fullfillmentCovenant}</dd>
                         </Col>
                         <Col xs={12} md={6} lg={4} >

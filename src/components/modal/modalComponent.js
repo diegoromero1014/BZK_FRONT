@@ -14,6 +14,7 @@ import ModalCreateTask from '../pendingTask/modalCreateTask';
 import ModalTrackingCovenant from '../risksManagement/covenants/createTracking/modalTrackingCovenant';
 import {get} from 'lodash';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
+import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -67,6 +68,9 @@ class ModalComponentDialog extends Component {
                 break;
             case views.VIEW_OBSERVATION:
                 cell = <ModalObservation alertPortfolioExpId={actions.id} isOpen={this.closeModal}/>;
+                break;
+            case views.VIEW_AEC:
+                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal} />
                 break;
         }
 

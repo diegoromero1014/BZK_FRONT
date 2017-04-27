@@ -1,6 +1,3 @@
-/**
- * Created by IAS-ASUS on 2/2/2017.
- */
 import Immutable from 'immutable';
 import * as actions from './constants';
 import { get } from 'lodash';
@@ -18,16 +15,14 @@ export default (state = initialState, action = {}) => {
         case actions.CLIENTS_COVENANTS:
             const response = get(action.payload, 'data', []);
             return state.withMutations(map => {
-                map
-                    .set('status', 'processed')
+                map.set('status', 'processed')
                     .set('responseCovenant', get(response, 'data', []));
             });
         case actions.CONSULT_INFO_COVENANT:
             const responseInfo = get(action.payload, 'data', []);
-            return state.withMutations(map =>{
-                map
-                    .set( 'covenantInfo', get(responseInfo, 'data', []) )
-                    .set( 'trackingCovenant', get(responseInfo.data, 'listTrackingCovenant', []) );
+            return state.withMutations(map => {
+                map.set('covenantInfo', get(responseInfo, 'data', []))
+                    .set('trackingCovenant', get(responseInfo.data, 'listTrackingCovenant', []));
             });
         case actions.CLEAR_COVENANT:
             return state.set('covenantInfo', {});
