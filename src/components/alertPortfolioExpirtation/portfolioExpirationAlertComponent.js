@@ -43,13 +43,8 @@ class ClientsPendingUpdate extends Component {
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
-            const {clearFilter, consultList, getMasterDataFields, consultDataSelect, updateTitleNavBar} = this.props;
+            const {clearFilter, consultList, consultDataSelect, updateTitleNavBar} = this.props;
             showLoading(true, 'Cargando..');
-            getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
-                if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                    redirectUrl("/login");
-                }
-            });
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
             clearFilter().then((data) => {
