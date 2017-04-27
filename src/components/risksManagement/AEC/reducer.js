@@ -16,12 +16,13 @@ export default (state = initialState, action = {}) => {
                 map.set('status', 'processed')
                     .set('responseAEC', get(response, 'data', []));
             });
-        case actions.DET_DETAIL_AEC:
-        console.log('action', action);
-            const responseDetailAEC = get(action.payload, 'data', []);
+        case actions.GET_DETAIL_AEC:
+            const responseDetailAEC = get(action.payload.data, 'data', []);
             return state.set('detailAEC', responseDetailAEC);
-        case actions.CLEAR_AEC:
+        case actions.CLEAR_DETAIL_AEC:
             return state.set('detailAEC', {});
+        case actions.CLEAR_LIST_AEC:
+            return state.set('responseAEC', []);
         default:
             return state;
     }

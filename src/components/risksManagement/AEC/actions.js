@@ -1,5 +1,5 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_ASSETS_AEC, GET_DETAIL_AEC, CLEAR_AEC } from './constants';
+import { GET_ASSETS_AEC, GET_DETAIL_AEC, CLEAR_AEC, CLEAR_LIST_AEC, CLEAR_DETAIL_AEC } from './constants';
 import axios from 'axios';
 
 export function getAssetsAEC(jsonAEC) {
@@ -48,8 +48,14 @@ export function getDetailAEC(idAEC) {
     }
 }
 
-export function clearAEC() {
+export function clearDetailAEC() {
     return {
-        type: CLEAR_AEC
+        type: CLEAR_DETAIL_AEC
+    }
+}
+
+export function clearListAEC() {
+    return {
+        type: CLEAR_LIST_AEC
     }
 }

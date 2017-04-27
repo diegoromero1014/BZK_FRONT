@@ -1,10 +1,10 @@
 /**
  * Created by Andres Hurtado on 21/03/2017.
  */
-import React, {Component, PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {swtCloseMessage} from './actions';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { swtCloseMessage } from './actions';
+import { connect } from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 
 class SwtMessage extends Component {
@@ -37,11 +37,10 @@ class SwtMessage extends Component {
 
 }
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({swtCloseMessage}, dispatch);
+    return bindActionCreators({ swtCloseMessage }, dispatch);
 }
 
-
-function mapStateToProps({swtMessage}) {
+function mapStateToProps({ swtMessage }) {
     return {
         isShow: swtMessage.get('isShow'),
         typeMessage: swtMessage.get('typeMessage'),

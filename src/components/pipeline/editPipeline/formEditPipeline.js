@@ -43,7 +43,6 @@ import numeral from 'numeral';
 import HeaderPipeline from '../headerPipeline';
 import { editBusiness, addBusiness, clearBusiness } from '../business/ducks';
 import Business from '../business/business';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "business", "product",

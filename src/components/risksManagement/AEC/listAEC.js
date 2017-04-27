@@ -4,14 +4,16 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import GridComponent from '../../grid/component';
 import { redirectUrl } from '../../globalComponents/actions';
-import { get, indexOf, has } from 'lodash';
+import _ from 'lodash';
 import { showLoading } from '../../loading/actions';
-import { getAssetsAEC } from './actions';
-import { shorterStringValue } from '../../../actionsGlobal';
+import { getAssetsAEC, clearListAEC } from './actions';
+import { shorterStringValue, formatLongDateToDateWithNameMonth, validateResponse } from '../../../actionsGlobal';
+import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
 import { getMasterDataFields } from '../../selectsComponent/actions';
-import { AEC_STATUS } from '../../selectsComponent/constants';
+import { AEC_STATUS, AEC_LEVEL } from '../../selectsComponent/constants';
 import { ACTIVE_STATE } from './constants';
 import { VIEW_AEC } from '../../modal/constants';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 class ListAECComponent extends Component {
 
@@ -21,23 +23,24 @@ class ListAECComponent extends Component {
     }
 
     componentWillMount() {
-        const { getAssetsAEC, getMasterDataFields, selectsReducer } = this.props;
-        getMasterDataFields([AEC_STATUS]).then(() => {
-            var statesAEC = selectsReducer.get(AEC_STATUS);
-            console.log('statesAEC', statesAEC);
+        const { getAssetsAEC, getMasterDataFields, selectsReducer, clearListAEC, swtShowMessage } = this.props;
+        clearListAEC();
+        getMasterDataFields([AEC_STATUS, AEC_LEVEL]).then((data) => {
+            var statesAEC = data.payload.data.messageBody.masterDataDetailEntries;
             var idActiveState = _.get(_.filter(statesAEC, ['key', ACTIVE_STATE]), '[0].id');
-            console.log('idActiveState', idActiveState);
             var json = {
                 idClient: window.localStorage.getItem('idClientSelected'),
                 statusAEC: idActiveState
             }
-            console.log('json', json);
             getAssetsAEC(json).then((data) => {
-                console.log('data', data);
-                if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                    redirectUrl("/login");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 }
+            }, (reason) => {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
+        }, (reason) => {
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
     }
 
@@ -72,7 +75,7 @@ class ListAECComponent extends Component {
                 urlServer: "./component",
                 component: VIEW_AEC
             },
-            dateMeeting: AEC.dateMeeting,
+            dateMeeting: formatLongDateToDateWithNameMonth(AEC.dateMeeting),
             observations: shorterStringValue(AEC.observations, 40),
             actionPlan: shorterStringValue(AEC.actionPlan, 40)
         }));
@@ -106,7 +109,10 @@ function mapDispatchToProps(dispatch) {
         getAssetsAEC,
         redirectUrl,
         showLoading,
-        getMasterDataFields
+        getMasterDataFields,
+        clearListAEC,
+        validateResponse,
+        swtShowMessage
     }, dispatch);
 }
 

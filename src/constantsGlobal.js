@@ -119,3 +119,7 @@ export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
 export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
 export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
 export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
+
+//Mensajes de error
+export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
+export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";

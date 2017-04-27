@@ -1,18 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import moment from 'moment';
 import numeral from 'numeral';
+import { formatCurrency } from '../../actionsGlobal';
 
 class InfoFinanciera extends Component{
 
   constructor(props){
     super(props);
-  }
-
-  formatCurrency(value) {
-    if (value === null || value === undefined || isNaN(value)) {
-    return '';
-    }
-    return numeral(value).format('0,000');
   }
 
   render(){
@@ -50,10 +44,10 @@ class InfoFinanciera extends Component{
           </thead>
           <tbody>
             <tr>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.annualSales)}</td>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.assets)}</td>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.liabilities)}</td>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.operatingIncome)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.annualSales)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.assets)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.liabilities)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.operatingIncome)}</td>
             </tr>
           </tbody>
         </table>
@@ -68,8 +62,8 @@ class InfoFinanciera extends Component{
           </thead>
           <tbody>
             <tr>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.nonOperatingIncome)}</td>
-              <td style={{width: "25%", verticalAlign: "initial"}}>{this.formatCurrency(infoClient.expenses)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.nonOperatingIncome)}</td>
+              <td style={{width: "25%", verticalAlign: "initial"}}>{formatCurrency(infoClient.expenses)}</td>
               <td style={{width: "25%", verticalAlign: "initial"}}>{salesActualizationDateString}</td>
               <td style={{width: "25%", verticalAlign: "initial"}}></td>
             </tr>
