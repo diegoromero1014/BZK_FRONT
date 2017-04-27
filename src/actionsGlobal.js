@@ -124,8 +124,12 @@ export function shorterStringValue(element, minLength) {
 }
 
 export function formatNumeral(number, format) {
-    let numberNumeral = numeral(number);
-    return numberNumeral.format(format);
+    if (_.isNull(number)) {
+        return '';
+    } else {
+        let numberNumeral = numeral(number);
+        return numberNumeral.format(format);
+    }
 }
 
 export function mapDateValueFromTask(date) {

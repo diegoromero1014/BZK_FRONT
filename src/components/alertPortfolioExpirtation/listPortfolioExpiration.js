@@ -63,11 +63,6 @@ class ListClientsPortfolioExpiration extends Component {
     _renderHeaders() {
         const headersTable = [
             {
-                title: "Tipo documento",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "typeDocument")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "typeDocument")}></i></span>,
-                key: "typeDocument"
-            },
-            {
                 title: "Número documento",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "idNumberClient")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "idNumberClient")}></i></span>,
                 key: "idNumberClient"
@@ -79,9 +74,14 @@ class ListClientsPortfolioExpiration extends Component {
                 showLink :has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false)
             },
             {
-                title: "Saldo",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "balance")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "balance")}></i></span>,
-                key: "balance"
+                title: "Saldo vencido",
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "balanceOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "balanceOverdue")}></i></span>,
+                key: "balanceOverdue"
+            },
+            {
+                title: "Saldo total grupo",
+                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "groupTotalBalance")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "groupTotalBalance")}></i></span>,
+                key: "groupTotalBalance"
             },
             {
                 title: "Días vencidos",
@@ -97,6 +97,10 @@ class ListClientsPortfolioExpiration extends Component {
                 title: "Responsable",
                 orderColumn: <span><i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "responsible")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "responsible")}></i></span>,
                 key: "responsible"
+            },
+            {
+                title: "Observaciones",
+                key: "actions"
             }
         ];
         return headersTable;
@@ -111,7 +115,7 @@ class ListClientsPortfolioExpiration extends Component {
         const data = alertPortfolioExpiration.get('responseClients');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Observaciones"/>
             </div>
         );
     }
