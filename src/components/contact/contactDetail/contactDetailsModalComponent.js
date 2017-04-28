@@ -25,7 +25,7 @@ import { NUMBER_RECORDS } from '../constants';
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
   "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
   "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
-  "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth"];
+  "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth","contactRelevantFeatures"];
 
 var thisForm;
 const validate = values => {
@@ -320,7 +320,7 @@ class ContactDetailsModalComponent extends Component {
     const { fields: { contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-      contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+      contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth,contactRelevantFeatures
     }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData} = this.props;
     const {contactDetail, contactsByClientFindServer} = this.props;
     const contact = contactDetail.get('contactDetailList');
@@ -360,7 +360,8 @@ class ContactDetailsModalComponent extends Component {
       "shippingInformation": null,
       "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']'),
       "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
-      "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null
+      "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null,
+      "contactRelevantFeatures": contactRelevantFeatures.value !== undefined ? contactRelevantFeatures.value : null
     }
     changeStateSaveData(true, MESSAGE_SAVE_DATA);
     saveContact(jsonUpdateContact).then((data) => {
@@ -387,7 +388,7 @@ class ContactDetailsModalComponent extends Component {
       contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
       contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-      contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+      contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth,contactRelevantFeatures
     }, error, handleSubmit, selectsReducer, reducerGlobal} = this.props;
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -814,6 +815,20 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
             </Row>
+            <Row>
+              <Col xs={12} sm={12} md={12} lg={12}>
+                <dt>{'contactRelevantFeatures'}</dt>
+                <dd>
+                  <Textarea className="form-control need-input"
+                    {...contactRelevantFeatures}
+                          validateEnter={true}
+                          name="contactRelevantFeatures"
+                          maxLength="1000"
+                          disabled={this.state.isEditable ? '' : 'disabled'}
+                  />
+                </dd>
+              </Col>
+            </Row>
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
@@ -903,6 +918,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
         contactMobileNumber: contact.mobileNumber,
         contactEmailAddress: contact.emailAddress,
         contactTypeOfContact: contact.typeOfContact,
+        contactRelevantFeatures: contact.contactRelevantFeatures,
         contactLineOfBusiness: '',
         contactFunctions: '',
         contactHobbies: '',

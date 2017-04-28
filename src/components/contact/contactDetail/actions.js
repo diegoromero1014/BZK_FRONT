@@ -88,7 +88,8 @@ export function saveContact(contact) {
           "shippingInformation": null,
       "lineOfBusiness": contact.lineOfBusiness,
       "socialStyle": contact.socialStyle,
-      "attitudeOverGroup": contact.attitudeOverGroup
+      "attitudeOverGroup": contact.attitudeOverGroup,
+      "contactRelevantFeatures": contact.contactRelevantFeatures
     }
   }
 
