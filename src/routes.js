@@ -28,6 +28,7 @@ import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
 import createFormPipeline from './components/pipeline/createPipeline/formPipeline'
 import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline'
+import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent'
 
 class App extends Component {
     render() {
@@ -66,6 +67,7 @@ export default (
                 <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
+                <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>
