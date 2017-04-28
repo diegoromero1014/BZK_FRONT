@@ -106,7 +106,7 @@ function mapStateToProps({reducerGlobal, alertPortfolioExpiration}, {alertPortfo
         reducerGlobal,
         alertPortfolioExpiration,
         initialValues: {
-            observations: _.get(alertPortfolioExp, '0.observation', '')
+            observations: _.get(alertPortfolioExp, '0.observations', '')
         }
     };
 }
