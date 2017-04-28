@@ -1,5 +1,5 @@
-import {combineReducers} from 'redux';
-import {routerReducer} from 'react-router-redux';
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import LoginReducer from '../components/login/reducer';
 import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
@@ -10,7 +10,7 @@ import contactsReducer from '../components/contact/reducer';
 import shareholdersReducer from '../components/shareholder/reducer';
 import propspectReducer from '../components/propspect/reducer';
 import selectsReducer from '../components/selectsComponent/reducer';
-import {reducer as formReducer} from 'redux-form';
+import { reducer as formReducer } from 'redux-form';
 import notesReducer from '../components/clientEdit/notes/reducer';
 import contactDetail from '../components/contact/contactDetail/reducer';
 import deleteGridReducer from '../components/grid/reducer';
@@ -48,6 +48,7 @@ import leftTimer from '../components/timeout/timeoutDucks';
 import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/linkEntitiesComponent/reducer';
 import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer';
 import blackListClientReducer from '../components/clientDetailsInfo/linkingClient/reducer';
+import AECClient from '../components/risksManagement/AEC/reducer';
 import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
 
 export default combineReducers({
@@ -93,12 +94,13 @@ export default combineReducers({
     loading: loadingReducer,
     alertPortfolioExpiration: alertPortfolioExpirationReducer,
     covenant: covenant,
-    alertCovenant : alertCovenantReducer,
+    alertCovenant: alertCovenantReducer,
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
-    alertBlackList : alertBlackListReducer,
-    linkEntitiesClient:linkEntitiesClientReducer,
-    swtMessage : swtAlertMessagesReducer,
-    blackListClient : blackListClientReducer,
+    alertBlackList: alertBlackListReducer,
+    linkEntitiesClient: linkEntitiesClientReducer,
+    swtMessage: swtAlertMessagesReducer,
+    blackListClient: blackListClientReducer,
+    AECClient: AECClient,
     contactsByFunctionOrType : contactsByFunctionOrTypeReducer
 });

@@ -22,7 +22,7 @@ import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {SESSION_EXPIRED} from '../../constantsGlobal';
-import ListClientsPendingUpdate from './listPortfolioExpiration';
+import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -43,13 +43,8 @@ class ClientsPendingUpdate extends Component {
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
-            const {clearFilter, consultList, getMasterDataFields, consultDataSelect, updateTitleNavBar} = this.props;
+            const {clearFilter, consultList, consultDataSelect, updateTitleNavBar} = this.props;
             showLoading(true, 'Cargando..');
-            getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
-                if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                    redirectUrl("/login");
-                }
-            });
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
             clearFilter().then((data) => {
@@ -199,7 +194,7 @@ class ClientsPendingUpdate extends Component {
                         <Grid style={{display: visibleTable, width: "98%"}}>
                             <Row>
                                 <Col xs>
-                                    <ListClientsPendingUpdate />
+                                    <ListClientsAlertPortfolioExp />
                                     <Pagination/>
                                 </Col>
                             </Row>

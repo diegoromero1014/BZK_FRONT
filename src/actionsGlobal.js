@@ -1,9 +1,9 @@
 import * as constants from './constantsGlobal';
 import axios from 'axios';
-import {REVIEWED_DATE_FORMAT, DATE_FORMAT} from './constantsGlobal';
 import moment from 'moment';
 import numeral from 'numeral';
 import _ from 'lodash';
+import { redirectUrl } from './components/globalComponents/actions';
 
 export function consultParameterServer(tagConsult) {
     const json = {
@@ -119,30 +119,34 @@ export function validatePermissionsByModule(module) {
 }
 
 export function shorterStringValue(element, minLength) {
-    const lengthDafault =  _.isUndefined(minLength) ? 50 : minLength;
+    const lengthDafault = _.isUndefined(minLength) ? 50 : minLength;
     return element === null || element === undefined || element == '' ? '' : element.length > lengthDafault ? element.substring(0, lengthDafault) + "..." : element;
 }
 
 export function formatNumeral(number, format) {
-    let numberNumeral = numeral(number);
-    return numberNumeral.format(format);
+    if (_.isNull(number)) {
+        return '';
+    } else {
+        let numberNumeral = numeral(number);
+        return numberNumeral.format(format);
+    }
 }
 
 export function mapDateValueFromTask(date) {
     if (_.isNull(date)) {
         return "";
     } else {
-        if (moment(date, [REVIEWED_DATE_FORMAT], 'es', true).isValid()) {
+        if (moment(date, [constants.REVIEWED_DATE_FORMAT], 'es', true).isValid()) {
             return date;
         } else {
-            return moment(date).locale('es').format(REVIEWED_DATE_FORMAT);
+            return moment(date).locale('es').format(constants.REVIEWED_DATE_FORMAT);
         }
     }
 
 }
 
 export function mapDateValueFromTaskByFormat(date, format) {
-    const defaultDate = _.isEmpty(format) ? REVIEWED_DATE_FORMAT : format;
+    const defaultDate = _.isEmpty(format) ? constants.REVIEWED_DATE_FORMAT : format;
     if (moment(date, [defaultDate], 'es', true).isValid()) {
         return date;
     } else {
@@ -151,7 +155,7 @@ export function mapDateValueFromTaskByFormat(date, format) {
 }
 
 export function formatDateFromDDMMYYY(date, format) {
-    const defaultDate = _.isEmpty(format) ? REVIEWED_DATE_FORMAT : format;
+    const defaultDate = _.isEmpty(format) ? constants.REVIEWED_DATE_FORMAT : format;
     if (moment(date, [defaultDate], 'es', true).isValid()) {
         return date;
     } else {
@@ -159,9 +163,18 @@ export function formatDateFromDDMMYYY(date, format) {
     }
 }
 
+export function formatLongDateToDateWithNameMonth(date) {
+    if (date !== null && date !== '' && date !== undefined) {
+        var dateTaskFormat = moment(date).locale('es');
+        return dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY");
+    } else {
+        return date;
+    }
+}
+
 export function getStrDateByDateFormat(date, format) {
-    const formatDefault = _.isEmpty(format) ? DATE_FORMAT : format;
-    return moment(date, formatDefault).locale('es').format(REVIEWED_DATE_FORMAT);
+    const formatDefault = _.isEmpty(format) ? constants.DATE_FORMAT : format;
+    return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);
 }
 
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
@@ -207,4 +220,22 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
             valuReduxForm.onChange("");
         }
     }
+}
+
+export function formatCurrency(value) {
+    if (value === null || value === undefined || isNaN(value)) {
+        return '';
+    }
+    return numeral(value).format('0,000');
+}
+
+export function validateResponse(response) {
+    if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
+        redirectUrl("/login");
+    } else {
+        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR)) {
+            return false;
+        }
+    }
+    return true;
 }

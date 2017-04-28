@@ -92,6 +92,7 @@ export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
 export const MODULE_ALERTS = "Alertas";
 export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
 export const MODULE_COVENANTS = "Covenants";
+export const MODULE_AEC = "AEC";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -102,7 +103,6 @@ export const TAB_PENDING_TASK = 6;
 export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
-
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
@@ -119,3 +119,7 @@ export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
 export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
 export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
 export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
+
+//Mensajes de error
+export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
+export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";

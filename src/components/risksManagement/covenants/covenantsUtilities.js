@@ -1,11 +1,10 @@
-import {GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR} from '../../../constantsGlobal';
-import {shorterStringValue, formatDateFromDDMMYYY} from '../../../actionsGlobal';
+import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR } from '../../../constantsGlobal';
+import { shorterStringValue, formatDateFromDDMMYYY } from '../../../actionsGlobal';
 import moment from 'moment';
 import _ from 'lodash';
 
-
-export function getColorCovenant(date, capitalBalance){
-    if( _.isNull(capitalBalance) || _.isEmpty(capitalBalance) ){
+export function getColorCovenant(date, capitalBalance) {
+    if (_.isNull(capitalBalance) || _.isEmpty(capitalBalance)) {
         return GRAY_COLOR;
     }
     const dateNextExpiration = moment(date, 'DD/MM/YYYY');
@@ -14,11 +13,11 @@ export function getColorCovenant(date, capitalBalance){
     const addMonthInitialDate = moment(initialDate).add(1, 'month');
     const addMonthFinalDate = moment(finalDate).add(1, 'month').endOf('month');;
 
-    if( dateNextExpiration.isBefore(initialDate) || 
-        ( dateNextExpiration.isAfter(initialDate) && dateNextExpiration.isBefore(finalDate) ) ){
+    if (dateNextExpiration.isBefore(initialDate) ||
+        (dateNextExpiration.isAfter(initialDate) && dateNextExpiration.isBefore(finalDate))) {
         return RED_COLOR;
-    } else if( (dateNextExpiration.isAfter(addMonthInitialDate) || dateNextExpiration.isSame(addMonthInitialDate) ) && 
-        ( dateNextExpiration.isBefore(addMonthFinalDate) || dateNextExpiration.isSame(addMonthFinalDate) ) ){
+    } else if ((dateNextExpiration.isAfter(addMonthInitialDate) || dateNextExpiration.isSame(addMonthInitialDate)) &&
+        (dateNextExpiration.isBefore(addMonthFinalDate) || dateNextExpiration.isSame(addMonthFinalDate))) {
         return ORANGE_COLOR;
     } else {
         return GREEN_COLOR;

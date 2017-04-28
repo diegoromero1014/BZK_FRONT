@@ -21,6 +21,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPend
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
+import { formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateVisit"];
 var usersBanco = [];
@@ -121,8 +122,8 @@ class ModalCreateTask extends Component {
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
-      if (task.dateVisit !== null) {
-        dateVisit.onChange(moment(task.dateVisit).format("DD/MM/YYYY"));
+      if (task.dateVisit !== null && task.dateVisit !== '') {
+        dateVisit.onChange(formatLongDateToDateWithNameMonth(task.dateVisit));
       }
       tarea.onChange(task.task);
     });
@@ -145,12 +146,12 @@ class ModalCreateTask extends Component {
   }
 
   _handleEditTask() {
-    const {createPendingTaskNew, changeStateSaveData, idClient} = this.props;
-    const {fields: {id, responsable, idEmployee, fecha, idEstado, tarea, advance}, handleSubmit, error} = this.props;
+    const { createPendingTaskNew, changeStateSaveData, idClient } = this.props;
+    const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
       var messageBody = {
         "id": id.value,
-        "clientId": idClient === undefined || idClient === null ? window.localStorage.getItem('idClientSelected'): idClient,
+        "clientId": idClient === undefined || idClient === null ? window.localStorage.getItem('idClientSelected') : idClient,
         "task": tarea.value,
         "advance": advance.value,
         "status": idEstado.value,
