@@ -30,6 +30,7 @@ class GridComponent extends Component {
   _renderCell(row, headers,modalTitle){
       return headers.map((value, idx) => {
             var cell;
+          console.log("value",value);
             if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key === 'trafficLight'){
@@ -56,6 +57,8 @@ class GridComponent extends Component {
               }
             }else if(value.key === 'clientNameLink'){
                 cell = <LinkComponent text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'clientNameLink.id')}/>
+            } else if(value.key === 'contactNameLink'){
+                cell = <LinkComponent text={_.get(row, 'contactNameLink.value')} url={_.get(row, 'contactNameLink.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'contactNameLink.idContact')}/>
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
             }
