@@ -48,6 +48,7 @@ import leftTimer from '../components/timeout/timeoutDucks';
 import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/linkEntitiesComponent/reducer';
 import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer';
 import blackListClientReducer from '../components/clientDetailsInfo/linkingClient/reducer';
+import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -98,5 +99,6 @@ export default combineReducers({
     alertBlackList : alertBlackListReducer,
     linkEntitiesClient:linkEntitiesClientReducer,
     swtMessage : swtAlertMessagesReducer,
-    blackListClient : blackListClientReducer
+    blackListClient : blackListClientReducer,
+    contactsByFunctionOrType : contactsByFunctionOrTypeReducer
 });
