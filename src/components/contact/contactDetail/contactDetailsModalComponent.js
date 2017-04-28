@@ -52,9 +52,9 @@ import {NUMBER_RECORDS} from '../constants';
 import {showLoading} from '../../loading/actions';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
-    "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
-    "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
-    "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth"];
+  "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
+  "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
+  "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth","contactRelevantFeatures"];
 
 var thisForm;
 const validate = values => {
