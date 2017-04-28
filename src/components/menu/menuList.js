@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import MenuListItemFather from './menuListItemFather';
 import { connect } from 'react-redux';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
-import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
@@ -82,6 +82,7 @@ class MenuList extends Component {
                 }
             }
         });
+        validatePermissionsByModule(MODULE_CONTACTS);
     }
 
     componentWillReceiveProps(nextProps) {
