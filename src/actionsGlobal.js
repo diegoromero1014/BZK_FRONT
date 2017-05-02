@@ -141,6 +141,18 @@ export function mapDateValueFromTask(date) {
 
 }
 
+export function joinName(firstName, middleName, firstLastName, secondLastName){
+    var nameEntity = firstName;
+    if( !_.isEmpty(middleName) && !_.isNull(middleName) && !_.isUndefined(middleName) ){
+        nameEntity = nameEntity + " " + middleName;
+    }
+    nameEntity = nameEntity + " " + firstLastName;
+    if( !_.isEmpty(secondLastName) && !_.isNull(secondLastName) && !_.isUndefined(secondLastName) ){
+        nameEntity = nameEntity + " " + secondLastName;
+    }
+    return nameEntity;
+}
+
 export function mapDateValueFromTaskByFormat(date, format) {
     const defaultDate = _.isEmpty(format) ? REVIEWED_DATE_FORMAT : format;
     if (moment(date, [defaultDate], 'es', true).isValid()) {

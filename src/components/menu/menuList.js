@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import MenuListItemFather from './menuListItemFather';
 import { connect } from 'react-redux';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
-import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
@@ -18,6 +18,11 @@ const itemClients = {
     text: "Mis clientes",
     icon: "building",
     link: "/dashboard/clients",
+};
+const itemContacts = {
+    text: "Mis contactos",
+    icon: "users",
+    link: "/dashboard/contacts",
 };
 const itemMyPendings = {
     text: "Mis pendientes",
@@ -85,6 +90,9 @@ class MenuList extends Component {
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
             menuItems.push(itemAlerts);
+        }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS)) {
+            menuItems.push(itemContacts);
         }
         menuItems.push(itemMyPendings);
         itemAlerts.children = [];

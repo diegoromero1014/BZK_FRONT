@@ -119,3 +119,15 @@ export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
 export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
 export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
 export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
+
+export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
+export const STYLE_CONTAINER_BUTTONS = {
+    position: "fixed",
+    border: "1px solid #C2C2C2",
+    bottom: "0px",
+    width: "100%",
+    marginBottom: "0px",
+    backgroundColor: "#F8F8F8",
+    height: "50px",
+    background: "rgba(255,255,255,0.75)"
+};

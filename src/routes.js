@@ -26,8 +26,10 @@ import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments
 import ViewAlerts from './components/alerts/alertsComponent';
 import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
-import createFormPipeline from './components/pipeline/createPipeline/formPipeline'
-import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline'
+import createFormPipeline from './components/pipeline/createPipeline/formPipeline';
+import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline';
+import FindContacts from './components/filterContact/findContacts';
+import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
 
 class App extends Component {
     render() {
@@ -66,6 +68,8 @@ export default (
                 <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
+                <Route path="contacts" component={FindContacts}></Route>
+                <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

@@ -291,7 +291,8 @@ class ModalComponentContact extends Component {
             "typeOfContact": tipoContacto.value,
             "lineOfBusiness": JSON.parse('[' + ((tipoEntidad.value) ? tipoEntidad.value : "") + ']'),
             "socialStyle": tipoEstiloSocial.value,
-            "attitudeOverGroup": tipoActitud.value
+            "attitudeOverGroup": tipoActitud.value,
+            "callFromModuleContact": false
         }
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
@@ -331,7 +332,7 @@ class ModalComponentContact extends Component {
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalComponentScrollCreateContact">
                     <dt className="business-title">
-                        <span style={{ paddingLeft: '20px' }}>Información básica contacto</span>
+                        <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>

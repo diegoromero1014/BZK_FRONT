@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {updateTitleNavBar, consultModulesAccess,viewAlertClient} from './actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import {redirectUrl} from '../globalComponents/actions';
-import {MODULE_CLIENTS} from '../../constantsGlobal';
 
 
 class NavBarComponent extends Component {

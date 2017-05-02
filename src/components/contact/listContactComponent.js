@@ -91,7 +91,6 @@ class ListContactComponent extends Component {
           "clientContactId": value.idClientContact
         }
       }
-      console.log('value', value);
       _.set(value, 'actions', {
         actionView: true,
         id: value.id,

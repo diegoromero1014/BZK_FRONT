@@ -1,5 +1,8 @@
-import {APP_URL} from '../../../constantsGlobal';
-import {GET_CONTACT_DETAILS, SAVE_CONTACT, CLEAR_EDIT_CONTACT} from '../constants';
+import { APP_URL } from '../../../constantsGlobal';
+import {
+  GET_CONTACT_DETAILS, SAVE_CONTACT, CLEAR_EDIT_CONTACT, DELETE_RELATOINSHIP_SERVER,
+  SET_ARRAY_DELETE_CLIENT_CONTACT, DELETE_RELATOINSHIP_LOCAL
+} from '../constants';
 import axios from 'axios';
 
 /**
@@ -33,7 +36,7 @@ export function getContactDetails(contactId, clientId) {
   }
 }
 
-export function clearClienEdit(){
+export function clearClienEdit() {
   return {
     type: CLEAR_EDIT_CONTACT
   }
@@ -74,21 +77,22 @@ export function saveContact(contact) {
       "city": contact.city,
       "neighborhood": contact.neighborhood,
       "postalCode": contact.postalCode,
-          "typeOfAddress": null,
+      "typeOfAddress": null,
       "telephoneNumber": contact.telephoneNumber,
       "extension": contact.extension,
       "mobileNumber": contact.mobileNumber,
       "emailAddress": contact.emailAddress,
       "hobbies": contact.hobbies,
       "sports": contact.sports,
-          "modeOfContact": null,
-          "registryKey": null,
-          "notes": null,
+      "modeOfContact": null,
+      "registryKey": null,
+      "notes": null,
       "typeOfContact": contact.typeOfContact,
-          "shippingInformation": null,
+      "shippingInformation": null,
       "lineOfBusiness": contact.lineOfBusiness,
       "socialStyle": contact.socialStyle,
-      "attitudeOverGroup": contact.attitudeOverGroup
+      "attitudeOverGroup": contact.attitudeOverGroup,
+      "callFromModuleContact": contact.callFromModuleContact
     }
   }
 
@@ -97,4 +101,42 @@ export function saveContact(contact) {
     type: SAVE_CONTACT,
     payload: request
   }
+}
+
+export function setArrayDeleteClientContact(listRelationshipClients) {
+  return {
+    type: SET_ARRAY_DELETE_CLIENT_CONTACT,
+    payload: listRelationshipClients
+  }
+}
+
+export function deleteRelationship() {
+  return {
+    type: DELETE_RELATOINSHIP_LOCAL
+  }
+}
+
+
+export function deleteRelationshipServer(listClientContactSalve) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": listClientContactSalve
+    };
+
+    var request = axios.post(APP_URL + "/deleteRelationshipClientContact", json);
+    return {
+        type: DELETE_RELATOINSHIP_SERVER,
+        payload: request
+    }
 }
