@@ -151,7 +151,6 @@ class ModalComponentContact extends Component {
         clearSearchContact();
         this.props.resetForm();
         tipoDocumento.onChange('');
-        showLoading(true, MESSAGE_LOAD_DATA);
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
