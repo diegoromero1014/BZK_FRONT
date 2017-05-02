@@ -48,6 +48,7 @@ import leftTimer from '../components/timeout/timeoutDucks';
 import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/linkEntitiesComponent/reducer';
 import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer';
 import blackListClientReducer from '../components/clientDetailsInfo/linkingClient/reducer';
+import filterContactsReducer from '../components/filterContact/reducer';
 import AECClient from '../components/risksManagement/AEC/reducer';
 import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
 
@@ -97,10 +98,11 @@ export default combineReducers({
     alertCovenant: alertCovenantReducer,
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
-    alertBlackList: alertBlackListReducer,
-    linkEntitiesClient: linkEntitiesClientReducer,
-    swtMessage: swtAlertMessagesReducer,
-    blackListClient: blackListClientReducer,
-    AECClient: AECClient,
+    alertBlackList : alertBlackListReducer,
+    linkEntitiesClient:linkEntitiesClientReducer,
+    swtMessage : swtAlertMessagesReducer,
+    blackListClient : blackListClientReducer,
+    filterContactsReducer,
+    AECClient,
     contactsByFunctionOrType : contactsByFunctionOrTypeReducer
 });

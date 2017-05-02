@@ -26,9 +26,11 @@ import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments
 import ViewAlerts from './components/alerts/alertsComponent';
 import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
-import createFormPipeline from './components/pipeline/createPipeline/formPipeline'
-import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline'
-import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent'
+import createFormPipeline from './components/pipeline/createPipeline/formPipeline';
+import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline';
+import FindContacts from './components/filterContact/findContacts';
+import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
+import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
 
 class App extends Component {
     render() {
@@ -67,6 +69,8 @@ export default (
                 <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
+                <Route path="contacts" component={FindContacts}></Route>
+                <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>

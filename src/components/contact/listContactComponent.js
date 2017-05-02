@@ -90,8 +90,7 @@ class ListContactComponent extends Component {
           "contactId": value.id,
           "clientContactId": value.idClientContact
         }
-      };
-      console.log('value', value);
+      }
       _.set(value, 'actions', {
         actionView: true,
         id: value.id,
