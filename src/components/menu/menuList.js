@@ -8,7 +8,6 @@ import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
 import _ from 'lodash';
-import {validatePermissionsByModule} from '../../actionsGlobal';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -19,6 +18,11 @@ const itemClients = {
     text: "Mis clientes",
     icon: "building",
     link: "/dashboard/clients",
+};
+const itemContacts = {
+    text: "Mis contactos",
+    icon: "users",
+    link: "/dashboard/contacts",
 };
 const itemMyPendings = {
     text: "Mis pendientes",
@@ -71,18 +75,8 @@ class MenuList extends Component {
 
     componentWillMount() {
         menuItems = [];
-        const {getAlertsByUser,validatePermissionsByModule} = this.props;
+        const {getAlertsByUser} = this.props;
         getAlertsByUser();
-        validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
-            } else {
-                if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
-                    redirectUrl("/dashboard");
-                }
-            }
-        });
-        validatePermissionsByModule(MODULE_CONTACTS);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,6 +90,9 @@ class MenuList extends Component {
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
             menuItems.push(itemAlerts);
+        }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS)) {
+            menuItems.push(itemContacts);
         }
         menuItems.push(itemMyPendings);
         itemAlerts.children = [];
@@ -158,8 +155,7 @@ class MenuList extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getAlertsByUser,
-        validatePermissionsByModule
+        getAlertsByUser
     }, dispatch);
 }
 

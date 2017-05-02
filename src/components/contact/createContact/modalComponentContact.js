@@ -18,9 +18,10 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import {showLoading} from '../../loading/actions';
 import { OrderedMap } from 'immutable';
 import _ from 'lodash';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL } from '../../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import {
     FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
@@ -144,7 +145,8 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount() {
-        const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, nonValidateEnter } = this.props;
+        const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, 
+            nonValidateEnter, showLoading } = this.props;
         nonValidateEnter(true);
         clearSearchContact();
         this.props.resetForm();
@@ -294,7 +296,8 @@ class ModalComponentContact extends Component {
             "lineOfBusiness": JSON.parse('[' + ((tipoEntidad.value) ? tipoEntidad.value : "") + ']'),
             "socialStyle": tipoEstiloSocial.value,
             "attitudeOverGroup": tipoActitud.value,
-            "contactRelevantFeatures": contactRelevantFeatures.value
+            "contactRelevantFeatures": contactRelevantFeatures.value,
+            "callFromModuleContact": false
         }
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
@@ -334,7 +337,7 @@ class ModalComponentContact extends Component {
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalComponentScrollCreateContact">
                     <dt className="business-title">
-                        <span style={{ paddingLeft: '20px' }}>Información básica contacto</span>
+                        <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
@@ -877,7 +880,8 @@ function mapDispatchToProps(dispatch) {
         consultList,
         downloadFilePDF,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        showLoading
     }, dispatch);
 }
 

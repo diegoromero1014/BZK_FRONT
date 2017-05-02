@@ -32,6 +32,7 @@ class GridComponent extends Component {
       return headers.map((value, idx) => {
             var cell;
 
+
             if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key === 'trafficLight'){

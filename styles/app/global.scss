@@ -186,4 +186,16 @@ input[disabled]{
 	color: #FFFFFF !important;
 }
 
+.business-title {
+	border-bottom: 1px dotted #cea70b;
+	font-family: 'HelveticaNeueLT', Helvetica, Arial, sans-serif; ;
+	color: #cea70b;
+	padding-top: 17px;
+	padding-bottom: 17px;
+	font-size: 17px;
+}
 
+.business-content dt {
+    padding-top: 15px;
+    text-transform: none;
+}

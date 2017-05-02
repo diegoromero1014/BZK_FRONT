@@ -770,6 +770,67 @@
 			float: right;
 		}
 	}
+	.contact-card-top {
+		border-bottom: 1px solid $default-border-color;
+		margin-bottom: 1px;
+		height: 105px;
+		padding: 12px;
+		.contact-card-top-left {
+			display: inline-block;
+			.contact-title {
+				font-size: 13px;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+			.contact-name {
+				line-height: 1;
+				margin-top: 5px;
+			}
+		}
+		.contact-card-top-right {
+			display: inline-block;
+			width: 78px;
+			height: 100%;
+			background-image: url(../mock/img/profiles/avatar.jpg);
+			background-size: cover;
+			background-position: center;
+
+
+		}
+	}
+	.contact-card-bottom {
+		border-top: 1px solid $default-border-color;
+		padding: 5px;
+		position: relative;
+		line-height: 18px;
+		border-radius: 0px 0px 8px 8px;
+    	height: 22px;
+		background-color: #B0E0E6;
+
+		.contact-card-bottom-right {
+			position: absolute;
+			right: 0;
+			width: 36px;
+			border-left: 1px solid $default-border-color;
+			display: inline-block;
+			height: 25px;
+			text-align: center;
+		}
+		i {
+			font-size: 15px;
+			vertical-align: -webkit-baseline-middle;
+		}
+	}
+	.is-primaty-rm-contact {
+		.contact-card-top-left {
+			width: 110px;
+			float: left;
+			padding-top: 5px;
+		}
+		.contact-card-top-right {
+			float: right;
+		}
+	}
 
 }
 .bottom {
@@ -1225,6 +1286,19 @@
 	margin: 15px 15px 0 0;
 	background-color: white;
 	cursor: pointer;
+}
+
+.team-modal .contact-card {
+	border: 1px solid #c2c7c9;
+	border-radius: 10px;
+	width: 260px;
+	height: 130px;
+	position: relative;
+	display: inline-block;
+	margin: 15px 15px 0 0;
+	background-color: white;
+	cursor: pointer;
+	float: left;
 }
 
 .team-modal .client-card .prospect-corner {

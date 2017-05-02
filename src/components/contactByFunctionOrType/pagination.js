@@ -18,9 +18,10 @@ class Pagination extends Component{
         const idTypeContact = contactsByFunctionOrType.get('idType');
         const order = contactsByFunctionOrType.get('order');
         const columnOrder = contactsByFunctionOrType.get('columnOrder');
+
         showLoading(true, 'Cargando..');
         contactsByFunctionOrTypeFindServer(idFunction, idTypeContact, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
-            if (has(data, 'payload.data.data')) {
+            if (has(data, 'payload.data')) {
                 showLoading(false, null);
             }
         });

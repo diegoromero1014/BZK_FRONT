@@ -123,3 +123,15 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
+
+export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
+export const STYLE_CONTAINER_BUTTONS = {
+    position: "fixed",
+    border: "1px solid #C2C2C2",
+    bottom: "0px",
+    width: "100%",
+    marginBottom: "0px",
+    backgroundColor: "#F8F8F8",
+    height: "50px",
+    background: "rgba(255,255,255,0.75)"
+};
