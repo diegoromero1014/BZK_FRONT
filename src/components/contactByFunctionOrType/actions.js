@@ -16,6 +16,8 @@ import {
 import axios from 'axios';
 
 export function contactsByFunctionOrTypeFindServer(idFunction, idType, pageNum, maxRows, order, columnOrder) {
+
+    console.log('llegue desde el ordenamiento')
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -61,6 +63,7 @@ export function clearFilter() {
 }
 
 export function changeFunction(idFunction) {
+
     return {
         type: CHANGE_FUNCTION_CONTACTS_BY_FUNCTION_OR_TYPE,
         idFunction

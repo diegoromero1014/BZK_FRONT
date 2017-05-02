@@ -50,10 +50,10 @@ class ContactsByFunctionOrType extends Component {
     }
 
     _cleanSearch() {
-        const {resetForm, showLoading, clearFilter} = this.props;
-        showLoading(true, 'Cargando..');
-        resetForm();
+        const {fields: {contactType,contactFunction}, clearFilter} = this.props;
         clearFilter();
+        contactFunction.onChange(null);
+        contactType.onChange(null);
     }
 
     _onChangeFunctionStatus(val) {
@@ -81,13 +81,11 @@ class ContactsByFunctionOrType extends Component {
         showLoading(true, 'Cargando..');
         contactsByFunctionOrTypeFindServer(contactFunction.value, contactType.value, 1, NUMBER_RECORDS, order, columnOrder)
             .then((data) => {
-            console.log("data service",data);
                 if (_.has(data, 'payload.data')) {
                     showLoading(false, null);
                     changePage(1);
                 }
             }, (reason) => {
-                console.log("reason", reason);
             });
     }
 
@@ -99,15 +97,15 @@ class ContactsByFunctionOrType extends Component {
             visibleTable = 'block';
             visibleMessage = 'none';
         }
-        // const numberTotalContactsFiltered = contactsByFunctionOrType.get('totalContactsFiltered');
+
         return (
             <div>
                 <form>
-                    <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                    <Row style={{borderBottom: "2px solid #D9DEDF", paddingTop:"15px", paddingBottom:"17px",paddingLeft:"17px", paddingRight:"17px"}}>
+                        <Col xs={12} sm={12} md={4} lg={4} style={{width: '100%'}}>
                             <ComboBox
                                 name="contactFunction"
-                                labelInput="Función contacto"
+                                labelInput="Función del contacto"
                                 {...contactFunction}
                                 onChange={val => this._onChangeFunctionStatus(val)}
                                 value={contactFunction.value}
@@ -117,10 +115,10 @@ class ContactsByFunctionOrType extends Component {
                                 data={selectsReducer.get('dataTypeFunction') || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                        <Col xs={12} sm={12} md={4} lg={4} style={{width: '100%'}}>
                             <ComboBox
                                 name="contactType"
-                                labelInput="Tipo contacto"
+                                labelInput="Tipo del contacto"
                                 {...contactType}
                                 onChange={val => this._onChangeTypeStatus(val)}
                                 value={contactType.value}
@@ -145,7 +143,7 @@ class ContactsByFunctionOrType extends Component {
                             <Row>
                                 <Col xs>
                                     <ListContactByFunctionOrType />
-                                    {/*<Pagination/>*/}
+                                    <Pagination/>
                                 </Col>
                             </Row>
                         </Grid>
@@ -182,7 +180,8 @@ function mapStateToProps({contactsByFunctionOrType, selectsReducer, navBar, redu
         contactsByFunctionOrType,
         selectsReducer,
         navBar,
-        reducerGlobal
+        reducerGlobal,
+        initialValues: {contactFunction: null, contactType:null}
     };
 }
 
