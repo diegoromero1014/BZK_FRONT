@@ -6,7 +6,6 @@ const initialState = Immutable.Map({
     status: "200",
     validateLogin: true,
     responseClientInfo: {},
-    tabSelected: null,
     economicGroup: null
 });
 

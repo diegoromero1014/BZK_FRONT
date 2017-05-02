@@ -51,6 +51,7 @@ import blackListClientReducer from '../components/clientDetailsInfo/linkingClien
 import filterContactsReducer from '../components/filterContact/reducer';
 import AECClient from '../components/risksManagement/AEC/reducer';
 import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
+import tabRisksManagment from '../components/risksManagement/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -98,11 +99,12 @@ export default combineReducers({
     alertCovenant: alertCovenantReducer,
     pipelineBusinessReducer: pipelineBusinessReducer,
     leftTimer,
-    alertBlackList : alertBlackListReducer,
-    linkEntitiesClient:linkEntitiesClientReducer,
-    swtMessage : swtAlertMessagesReducer,
-    blackListClient : blackListClientReducer,
-    filterContactsReducer,
-    AECClient,
-    contactsByFunctionOrType : contactsByFunctionOrTypeReducer
+    alertBlackList: alertBlackListReducer,
+    linkEntitiesClient: linkEntitiesClientReducer,
+    swtMessage: swtAlertMessagesReducer,
+    blackListClient: blackListClientReducer,
+    AECClient: AECClient,
+    filterContactsReducer: filterContactsReducer,
+    contactsByFunctionOrType: contactsByFunctionOrTypeReducer,
+    tabRisksManagment: tabRisksManagment
 });

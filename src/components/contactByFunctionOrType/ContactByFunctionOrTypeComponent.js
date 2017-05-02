@@ -97,7 +97,7 @@ class ContactsByFunctionOrType extends Component {
             visibleTable = 'block';
             visibleMessage = 'none';
         }
-
+        const totalContactsFiltered = contactsByFunctionOrType.get('totalContactsFiltered');
         return (
             <div>
                 <form>
@@ -137,6 +137,11 @@ class ContactsByFunctionOrType extends Component {
                         </Col>
                     </Row>
                 </form>
+                <Row>
+                    <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
+                        Total: {totalContactsFiltered}
+                    </div>
+                </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
                         <Grid style={{display: visibleTable, width: "98%"}}>

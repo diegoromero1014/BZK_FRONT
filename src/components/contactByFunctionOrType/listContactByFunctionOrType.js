@@ -15,9 +15,12 @@ import {redirectUrl} from '../globalComponents/actions'
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './contactByFunctionOrTypeUtilities';
-import {get,indexOf,has} from 'lodash';
+import {get, indexOf, has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {NUMBER_RECORDS} from './constants';
+import {MODULE_CONTACTS, VISUALIZAR, ELIMINAR} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import _ from 'lodash';
 
 class ListContactsByFunctionOrType extends Component {
 
@@ -33,10 +36,13 @@ class ListContactsByFunctionOrType extends Component {
     }
 
     componentWillMount() {
+
         this.state = {
             orderA: 'none',
             orderD: 'inline-block'
-        }
+        };
+
+        this.props.validatePermissionsByModule(MODULE_CONTACTS);
     }
 
     _orderColumn(orderContacts, columnContact) {
@@ -46,18 +52,18 @@ class ListContactsByFunctionOrType extends Component {
             this.setState({orderD: 'inline-block', orderA: 'none'});
         }
 
-        const {contactsByFunctionOrTypeFindServer,contactsByFunctionOrType,showLoading} = this.props;
+        const {contactsByFunctionOrTypeFindServer, contactsByFunctionOrType, showLoading} = this.props;
 
         const idFunction = contactsByFunctionOrType.get('idFunction');
         const idType = contactsByFunctionOrType.get('idType');
         const page = contactsByFunctionOrType.get('pageNum');
-        console.log(orderContacts, columnContact, page)
+
         showLoading(true, 'Cargando..');
         contactsByFunctionOrTypeFindServer(idFunction, idType, page, NUMBER_RECORDS, orderContacts, columnContact).then((data) => {
             if (has(data, 'payload.data')) {
-            showLoading(false, null);
-        }
-    });
+                showLoading(false, null);
+            }
+        });
     }
 
     _renderHeaders() {
@@ -65,12 +71,20 @@ class ListContactsByFunctionOrType extends Component {
         const headersTable = [
             {
                 title: "Número documento del cliente",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "D09_CLIENT_ID_NUMBER")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "D09_CLIENT_ID_NUMBER")}></i></span>,
+                orderColumn: <span><i className="caret down icon"
+                                      style={{cursor: 'pointer', display: this.state.orderD}}
+                                      onClick={() => this._orderColumn(1, "D09_CLIENT_ID_NUMBER")}></i><i
+                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
+                    onClick={() => this._orderColumn(0, "D09_CLIENT_ID_NUMBER")}></i></span>,
                 key: "clientIdNumber"
             },
             {
                 title: "Nombre/Razón social del cliente",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "D09_CLIENT_NAME")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(1, "D09_CLIENT_NAME")}></i></span>,
+                orderColumn: <span><i className="caret down icon"
+                                      style={{cursor: 'pointer', display: this.state.orderD}}
+                                      onClick={() => this._orderColumn(1, "D09_CLIENT_NAME")}></i><i
+                    className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}
+                    onClick={() => this._orderColumn(1, "D09_CLIENT_NAME")}></i></span>,
                 key: "clientName"
             },
             {
@@ -80,7 +94,7 @@ class ListContactsByFunctionOrType extends Component {
             {
                 title: "Nombre del contacto",
                 key: "modalNameLink",
-                showLink : true
+                showLink: _.has(this.props.reducerGlobal.get('permissionsContacts'), _.indexOf(this.props.reducerGlobal.get('permissionsContacts'), VISUALIZAR), false)
             },
             {
                 title: "Tipo de contacto",
@@ -89,19 +103,27 @@ class ListContactsByFunctionOrType extends Component {
             {
                 title: "Email del contacto",
                 key: "contactEmail"
-            },
-            {
-                title: "",
-                key: "delete"
-
-
-            },
+            }
         ];
+
+        const contactPermissions = this.props.reducerGlobal.get('permissionsContacts');
+
+
+        if (_.has(contactPermissions, _.indexOf(contactPermissions, ELIMINAR), false)) {
+
+
+            headersTable.push({
+                title: "Eliminar contacto",
+                key: "delete"
+            });
+
+
+        }
+
         return headersTable;
     }
 
     _renderCellView(data) {
-        console.log('este es el data',data)
         return mapDataGrid(data);
     }
 
@@ -123,7 +145,8 @@ function mapDispatchToProps(dispatch) {
         clearContactsByFunctionPagination,
         orderColumnContactsByFunctionOrType,
         contactsByFunctionOrTypeFindServer,
-        showLoading
+        showLoading,
+        validatePermissionsByModule
     }, dispatch);
 }
 
