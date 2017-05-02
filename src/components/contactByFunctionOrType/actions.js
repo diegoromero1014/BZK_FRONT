@@ -17,7 +17,7 @@ import axios from 'axios';
 
 export function contactsByFunctionOrTypeFindServer(idFunction, idType, pageNum, maxRows, order, columnOrder) {
 
-    console.log('llegue desde el ordenamiento')
+
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
