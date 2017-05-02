@@ -1,17 +1,21 @@
-import React, { Component, PropTypes } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { reduxForm } from 'redux-form';
-import { Combobox, DateTimePicker, Multiselect } from 'react-widgets';
+import React, {Component, PropTypes} from 'react';
+import {Row, Grid, Col} from 'react-flexbox-grid';
+import {reduxForm} from 'redux-form';
+import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { consultDataSelect, getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
+import {
+    consultDataSelect,
+    getMasterDataFields,
+    consultListWithParameterUbication
+} from '../../selectsComponent/actions';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { downloadFilePDF } from '../actions';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import {downloadFilePDF} from '../actions';
+import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE } from '../../selectsComponent/constants';
@@ -25,7 +29,7 @@ import { NUMBER_RECORDS } from '../constants';
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
   "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
   "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
-  "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth"];
+  "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth","contactRelevantFeatures"];
 
 var thisForm;
 var thisCallFromModuleContact = false;
@@ -100,7 +104,7 @@ const validate = values => {
     if (!(/\S+@\S+\.\S+/.test(values.contactEmailAddress))) {
       errors.contactEmailAddress = INVALID_EMAIL;
     } else {
-      errors.contactEmailAddress = null;
+        errors.contactFunctions = null;
     }
   }
   if (!values.contactTelephoneNumber) {
@@ -125,29 +129,29 @@ const validate = values => {
 
 class ContactDetailsModalComponent extends Component {
 
-  /* Constructor de la clase ContactDetailModalComponent */
-  constructor(props) {
-    super(props);
-    this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
-    this._onchangeValue = this._onchangeValue.bind(this);
-    this._onChangeCountry = this._onChangeCountry.bind(this);
-    this._onChangeProvince = this._onChangeProvince.bind(this);
-    this._genero = this._genero.bind(this);
-    this._uploadProvincesByCountryId = this._uploadProvincesByCountryId.bind(this);
-    this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
-    this._editContact = this._editContact.bind(this);
-    this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
-    this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
-    this.state = {
-      contactEdited: false,
-      isEditable: false,
-      generoData: [],
-      showEr: false,
-      showErrorForm: false
-    };
-    momentLocalizer(moment);
-    thisForm = this;
-  }
+    /* Constructor de la clase ContactDetailModalComponent */
+    constructor(props) {
+        super(props);
+        this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
+        this._onchangeValue = this._onchangeValue.bind(this);
+        this._onChangeCountry = this._onChangeCountry.bind(this);
+        this._onChangeProvince = this._onChangeProvince.bind(this);
+        this._genero = this._genero.bind(this);
+        this._uploadProvincesByCountryId = this._uploadProvincesByCountryId.bind(this);
+        this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
+        this._editContact = this._editContact.bind(this);
+        this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
+        this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
+        this.state = {
+            contactEdited: false,
+            isEditable: false,
+            generoData: [],
+            showEr: false,
+            showErrorForm: false
+        };
+        momentLocalizer(moment);
+        thisForm = this;
+    }
 
   /* Carga la información del contacto */
   componentWillMount() {
@@ -198,12 +202,9 @@ class ContactDetailsModalComponent extends Component {
     } else {
       genero = selectsReducer.get(FILTER_GENDER);
     }
-    contactGender.onChange('');
-    this.setState({ generoData: genero });
-  }
 
-  /* Cambio en los valores */
-  _onchangeValue(type, val) {
+    /* Cambio en los valores */
+    _onchangeValue(type, val) {
 
     switch (type) {
       case "contactIdentityNumber":
@@ -280,9 +281,6 @@ class ContactDetailsModalComponent extends Component {
       const { consultListWithParameterUbication } = this.props;
       consultListWithParameterUbication(FILTER_PROVINCE, val);
     }
-    contactProvince.onChange('');
-    contactCity.onChange('');
-  }
 
   _onChangeProvince(val) {
     const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
@@ -291,8 +289,6 @@ class ContactDetailsModalComponent extends Component {
       const { consultListWithParameterUbication } = this.props;
       consultListWithParameterUbication(FILTER_CITY, val);
     }
-    contactCity.onChange('');
-  }
 
   _uploadProvincesByCountryId(countryId) {
     const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
@@ -300,7 +296,6 @@ class ContactDetailsModalComponent extends Component {
     if (countryId !== undefined && countryId !== null) {
       consultListWithParameterUbication(FILTER_PROVINCE, countryId);
     }
-  }
 
   _uploadCitiesByProvinceId(provinceId) {
     const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
@@ -308,13 +303,6 @@ class ContactDetailsModalComponent extends Component {
     if (provinceId !== undefined && provinceId !== null) {
       consultListWithParameterUbication(FILTER_CITY, provinceId);
     }
-  }
-
-  _editContact() {
-    this.setState({
-      isEditable: !this.state.isEditable
-    });
-  }
 
   _closeViewOrEditContact() {
     const { isOpen, clearClienEdit, clearContactOrder, clearContactCreate, callFromModuleContact } = this.props;
@@ -389,13 +377,25 @@ class ContactDetailsModalComponent extends Component {
         } else {
           this.setState({ showEr: true });
         }
-      }
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        saveContact(jsonUpdateContact).then((data) => {
+            changeStateSaveData(false, "");
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
+                redirectUrl("/login");
+            } else {
+                if (_.get(data, 'payload.data.status') === 200) {
+                    this.setState({contactEdited: true});
+                    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                } else {
+                    this.setState({showEr: true});
+                }
+            }
 
-    }, (reason) => {
-      changeStateSaveData(false, "");
-      this.setState({ showEr: true });
-    });
-  }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            this.setState({showEr: true});
+        });
+    }
 
   render() {
     const { callFromModuleContact } = this.props;
@@ -883,7 +883,7 @@ class ContactDetailsModalComponent extends Component {
 }
 
 ContactDetailsModalComponent.PropTypes = {
-  contactId: PropTypes.number
+    contactId: PropTypes.number
 };
 
 function mapDispatchToProps(dispatch) {
@@ -953,12 +953,12 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
 }
 
 export default reduxForm({
-  form: 'submitValidationContactDetails',
-  fields,
-  destroyOnUnmount: false,
-  validate,
-  onSubmitFail: errors => {
-    document.getElementById('modalEditCotact').scrollTop = 0;
-    thisForm.setState({ showErrorForm: true });
-  }
+    form: 'submitValidationContactDetails',
+    fields,
+    destroyOnUnmount: false,
+    validate,
+    onSubmitFail: errors => {
+        document.getElementById('modalEditCotact').scrollTop = 0;
+        thisForm.setState({showErrorForm: true});
+    }
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

@@ -92,6 +92,7 @@ export function saveContact(contact) {
       "lineOfBusiness": contact.lineOfBusiness,
       "socialStyle": contact.socialStyle,
       "attitudeOverGroup": contact.attitudeOverGroup,
+      "contactRelevantFeatures": contact.contactRelevantFeatures,
       "callFromModuleContact": contact.callFromModuleContact
     }
   }

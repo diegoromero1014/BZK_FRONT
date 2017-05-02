@@ -18,9 +18,10 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import {showLoading} from '../../loading/actions';
 import { OrderedMap } from 'immutable';
 import _ from 'lodash';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL } from '../../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import {
     FILTER_CITY, FILTER_PROVINCE, CONTACT_ID_TYPE, FILTER_CONTACT_POSITION, FILTER_TITLE, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY,
     FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
@@ -28,7 +29,8 @@ import {
 
 const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
     "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
-    "codigoPostal", "telefono", "extension", "celular", "correo", "tipoContacto", "tipoEntidad", "tipoFuncion", "tipoHobbie", "tipoDeporte"
+    "codigoPostal", "telefono", "extension", "celular", "correo", "tipoContacto", "tipoEntidad", "tipoFuncion", "tipoHobbie", "tipoDeporte",
+    "contactRelevantFeatures"
 ];
 const errors = {};
 var thisForm;
@@ -143,11 +145,13 @@ class ModalComponentContact extends Component {
     }
 
     componentWillMount() {
-        const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, nonValidateEnter } = this.props;
+        const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, 
+            nonValidateEnter, showLoading } = this.props;
         nonValidateEnter(true);
         clearSearchContact();
         this.props.resetForm();
         tipoDocumento.onChange('');
+        showLoading(true, MESSAGE_LOAD_DATA);
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     }
 
@@ -227,7 +231,8 @@ class ModalComponentContact extends Component {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
             numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad,
+            contactRelevantFeatures
             }, handleSubmit, error
         } = this.props;
         const { searchContact, clearSearchContact } = this.props;
@@ -258,7 +263,7 @@ class ModalComponentContact extends Component {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
             numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures
             }, handleSubmit, error
         } = this.props;
         var messageBody = {
@@ -292,6 +297,7 @@ class ModalComponentContact extends Component {
             "lineOfBusiness": JSON.parse('[' + ((tipoEntidad.value) ? tipoEntidad.value : "") + ']'),
             "socialStyle": tipoEstiloSocial.value,
             "attitudeOverGroup": tipoActitud.value,
+            "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false
         }
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -325,7 +331,7 @@ class ModalComponentContact extends Component {
         const { initialValues, fields: { id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
             tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
             primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad,contactRelevantFeatures
             }, handleSubmit, error, reducerGlobal } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -746,6 +752,23 @@ class ModalComponentContact extends Component {
                                 </dl>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>contactRelevantFeatures</span></dt>
+                                    <dd>
+                                        <TextareaComponent
+                                            name="contactRelevantFeatures"
+                                            validateEnter={true}
+                                            type="text"
+                                            max="1000"
+                                            style={{ width: '100%', height: '100%' }}
+                                            rows={4}
+                                            {...contactRelevantFeatures}
+                                        /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
@@ -823,6 +846,7 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal }
                 extension: contactDetail.extension,
                 celular: contactDetail.mobileNumber,
                 correo: contactDetail.emailAddress,
+                contactRelevantFeatures: contactDetail.contactRelevantFeatures,
                 tipoHobbie: JSON.parse('["' + _.join(contactDetail.hobbies, '","') + '"]'),
                 tipoContacto: contactDetail.typeOfContact,
                 tipoEntidad: JSON.parse('["' + _.join(contactDetail.lineOfBusiness, '","') + '"]'),
@@ -857,7 +881,8 @@ function mapDispatchToProps(dispatch) {
         consultList,
         downloadFilePDF,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        showLoading
     }, dispatch);
 }
 

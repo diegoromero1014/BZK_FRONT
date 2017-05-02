@@ -30,6 +30,7 @@ import createFormPipeline from './components/pipeline/createPipeline/formPipelin
 import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline';
 import FindContacts from './components/filterContact/findContacts';
 import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
+import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
 
 class App extends Component {
     render() {
@@ -70,6 +71,7 @@ export default (
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
                 <Route path="contacts" component={FindContacts}></Route>
                 <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
+                <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

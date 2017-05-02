@@ -16,7 +16,7 @@ export function filterUsersBanco(filterUser){
         "isSuccessful": true
       },
       messageBody: filterUser
-    }
+    };
   var request = axios.post(APP_URL + "/findUsersByName", json);
   return {
     type: constants.FILTER_USER_BANCO,
