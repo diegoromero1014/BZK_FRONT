@@ -8,7 +8,8 @@ import {shareholdersByClientFindServer,clearShareholderCreate,clearShareholderOr
 import {visitByClientFindServer,clearVisitOrder,clearVisitPaginator} from '../visit/actions';
 import {pipelineByClientFindServer,clearPipelineOrder,clearPipelinePaginator} from '../pipeline/actions';
 import {clearPrevisitOrder,clearPrevisitPaginator, previsitByClientFindServer} from '../previsita/actions';
-import {DELETE_AREA_VIEW,DELETE_NEED_VIEW,DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW,DELETE_TYPE_BUSINESS_PLAN} from './constants';
+import {clearFilter, clearContactsByFunctionPagination, clearContactsOrder, contactsByFunctionOrTypeFindServer} from '../contactByFunctionOrType/actions';
+import {DELETE_AREA_VIEW,DELETE_NEED_VIEW,DELETE_TYPE_PIPELINE,DELETE_TYPE_PREVISIT,DELETE_TYPE_VISIT,NUMBER_RECORDS,DELETE_TYPE_CONTACT,DELETE_TYPE_SHAREHOLDER, DELETE_PARTICIPANT_VIEW, DELETE_TASK_VIEW,DELETE_TYPE_BUSINESS_PLAN,DELETE_CONTACT_FROM_FUNCTION_OR_TYPE} from './constants';
 import {clearBusinessPlanOrder, clearBusinessPlanPaginator, businessPlanByClientFindServer} from '../businessPlan/actions';
 import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
@@ -95,7 +96,7 @@ class ButtonDeleteComponent extends Component{
           visitByClientFindServer,contactsByClientFindServer,actionsDelete,clearContactCreate,clearContactOrder,
           clearShareholderCreate,clearShareholderOrder,shareholdersByClientFindServer, clearBusinessPlanOrder,
           clearBusinessPlanPaginator, businessPlanByClientFindServer, draftsDocumentsByUser, clearDraftDocumentOrder,
-          clearDraftDocumentPaginator} = this.props;
+          clearDraftDocumentPaginator,contactsByFunctionOrTypeFindServer} = this.props;
         if(this.state.showEx === true){
           if(actionsDelete.typeDelete === DELETE_TYPE_CONTACT){
             clearContactCreate();
@@ -104,6 +105,9 @@ class ButtonDeleteComponent extends Component{
             "",
             "",
             "");
+          }else if(actionsDelete.typeDelete === DELETE_CONTACT_FROM_FUNCTION_OR_TYPE){
+              console.log('entre a refrescar');
+              contactsByFunctionOrTypeFindServer('','',0,NUMBER_RECORDS,0,'');
           }else if(actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER){
               clearShareholderCreate();
               clearShareholderOrder();
@@ -208,7 +212,7 @@ function mapDispatchToProps(dispatch) {
     deleteArea,
     draftsDocumentsByUser,
     clearDraftDocumentOrder,
-    clearDraftDocumentPaginator
+    clearDraftDocumentPaginator, clearFilter, clearContactsByFunctionPagination, clearContactsOrder, contactsByFunctionOrTypeFindServer
   }, dispatch);
 }
 

@@ -32,11 +32,13 @@ class GridComponent extends Component {
       return headers.map((value, idx) => {
             var cell;
 
+
             if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>
             }else if(value.key === 'trafficLight'){
               cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)}/>
             }else if(value.key === 'delete' &&  _.get(row, value.key)){
+                console.log('delete', _.get(row, value.key));
               if( _.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete ){
                 cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
               } else {
