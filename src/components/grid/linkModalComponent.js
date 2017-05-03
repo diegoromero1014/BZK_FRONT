@@ -10,7 +10,10 @@ import ContactDetailsModalComponent from '../contact/contactDetail/contactDetail
 import {clearClienEdit} from '../contact/contactDetail/actions';
 import Modal from 'react-modal';
 import {get} from 'lodash';
-
+import {contactsByFunctionOrTypeFindServer} from '../contactByFunctionOrType/actions';
+import {
+    NUMBER_RECORDS
+} from './constants';
 class LinkModalComponent extends Component {
 
     constructor(props) {
@@ -29,7 +32,6 @@ class LinkModalComponent extends Component {
         const modalSize = get(properties, 'modalSize', 'lg');
         const modalTitle = get(properties, 'modalTitle', '');
         const text = get(properties, 'text', '');
-        console.log('render',this);
         if (showModal) {
             return (
                 <td>
@@ -65,7 +67,6 @@ class LinkModalComponent extends Component {
     }
 
     _openModal() {
-        console.log('open modal',this);
         const {properties} = this.props;
         switch (properties.component) {
             case VIEW_CONTACT:
@@ -90,10 +91,11 @@ class LinkModalComponent extends Component {
     }
 
     _closeModal() {
-        const {clearClienEdit, properties} = this.props;
+        const {clearClienEdit, properties,  contactsByFunctionOrTypeFindServer, contactsByFunctionOrType} = this.props;
         this.setState({modalIsOpen: false});
         if (properties.component === VIEW_CONTACT) {
             clearClienEdit();
+            contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), 1, NUMBER_RECORDS, 0, '');
         }
     }
 
@@ -105,11 +107,11 @@ LinkModalComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({clearClienEdit}, dispatch);
+    return bindActionCreators({clearClienEdit,contactsByFunctionOrTypeFindServer}, dispatch);
 }
 
-function mapStateToProps({}, ownerProps) {
-    return {};
+function mapStateToProps({contactsByFunctionOrType}, ownerProps) {
+    return {contactsByFunctionOrType};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LinkModalComponent);
