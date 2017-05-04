@@ -1,10 +1,10 @@
-import {APP_URL} from '../../constantsGlobal';
-import {CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS} from './constants';
+import { APP_URL } from '../../constantsGlobal';
+import { CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS } from './constants';
 import axios from 'axios';
 
-export function clientsFindServer(keyword, limInf, limSup,certificationStatus,teamId,linkingStatusus){
+export function clientsFindServer(keyword, limInf, limSup, certificationStatus, teamId, linkingStatus, levelAEC) {
   const json = {
-    "messageHeader":{
+    "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
       "timestamp": new Date().getTime(),
       "service": "",
@@ -16,38 +16,39 @@ export function clientsFindServer(keyword, limInf, limSup,certificationStatus,te
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody":{
+    "messageBody": {
       "keyword": keyword,
       "limInf": limInf,
       "limSup": limSup,
       "certificationStatus": certificationStatus,
-      "teamId" : teamId,
-      "linkingStatusus":linkingStatusus
+      "teamId": teamId,
+      "linkingStatusus": linkingStatus,
+      "levelAEC": levelAEC
     }
   };
 
   var request = axios.post(APP_URL + "/clientListForEmployee", json);
-  return{
+  return {
     type: CLIENTS_FIND,
     payload: request
   }
 }
 
-export function changePage(page){
-  return{
+export function changePage(page) {
+  return {
     type: CHANGE_PAGE,
     currentPage: page
   }
 }
 
-export function changeKeyword(keyword){
-  return{
+export function changeKeyword(keyword) {
+  return {
     type: CHANGE_KEYWORD,
     keyword: keyword
   }
 }
 
-export function clearClients(){
+export function clearClients() {
   return {
     type: CLEAR_CLIENTS
   }

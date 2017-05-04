@@ -2,41 +2,6 @@ import Immutable from 'immutable';
 import * as actions from './constants';
 import {get} from 'lodash';
 
-const data2 = [
-    {
-        clientContactId: 1234,
-        clientId: 2456,
-        clientIdNumber: '123123',
-        clientName: 'Diego',
-        contactId: 4555,
-        contactIdNumber: '12123123',
-        contactNameLink: 'ANDRES HURTADO',
-        contactType:'contacto prueba',
-        contactEmail: 'prueba@gmail.com'
-    },
-    {
-        clientContactId: 1234,
-        clientId: 2456,
-        clientIdNumber: '123123',
-        clientName: 'Diego',
-        contactId: 4555,
-        contactIdNumber: '12123123',
-        contactNameLink: 'ANDRES HURTADO',
-        contactType:'contacto prueba',
-        contactEmail: 'prueba@gmail.com'
-    },
-    {
-        clientContactId: 1234,
-        clientId: 2456,
-        clientIdNumber: '123123',
-        clientName: 'Diego',
-        contactId: 4555,
-        contactIdNumber: '12123123',
-        contactNameLink: 'ANDRES HURTADO',
-        contactType:'contacto prueba',
-        contactEmail: 'prueba@gmail.com'
-    }
-];
 
 const initialState = Immutable.Map({
     status: "withoutProcessing",
@@ -45,7 +10,7 @@ const initialState = Immutable.Map({
     pageNum: 1,
     order: 0,
     columnOrder: '',
-    responseContacts: data2,
+    responseContacts: '',
     totalContactsFiltered: 0
 });
 
@@ -75,12 +40,12 @@ export default (state = initialState, action = {}) => {
         case actions.CHANGE_FUNCTION_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.withMutations(map => {
                 map
-                    .set('idFunction', action.idTeam);
+                    .set('idFunction', action.idFunction);
             });
         case actions.CHANGE_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.withMutations(map => {
                 map
-                    .set('idType', action.idRegion);
+                    .set('idType', action.idType);
             });
         case actions.CLEAR_ORDER_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.withMutations(map => {

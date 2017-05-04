@@ -272,15 +272,15 @@ class ButtonLinkClientComponent extends Component {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col xs={12} md={2} lg={2}>
+                                    <Col xs={12} md={4} lg={4}>
                                         <h4>Nivel</h4>
-                                        <span>{level}</span>
+                                        <span style={{textAlign: 'justify'}}>{level}</span>
                                     </Col>
-                                    <Col xs={12} md={10} lg={10}>
+                                    <Col xs={12} md={8} lg={8}>
                                         <h4>Mensaje</h4>
-                                        <span>
+                                        <p style={{textAlign: 'justify'}}>
                                             {message}
-                                        </span>
+                                        </p>
                                     </Col>
                                 </Row>
                                 <Row style={{padding: "20px 10px 10px 0px"}}>
