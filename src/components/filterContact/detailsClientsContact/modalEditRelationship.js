@@ -68,14 +68,14 @@ class ModalEditRelationship extends Component {
                     this.setState({
                         showErrorForm: true,
                         typeView: "success",
-                        title: "Actualización información",
+                        title: "Actualizar información",
                         message: "Señor usuario, la relación cliente-contacto ha sido actualizada correctamente."
                     });
                 } else {
                     this.setState({
                         showErrorForm: true,
                         typeView: "error",
-                        title: "Error",
+                        title: "Error actualizando información",
                         message: "Señor usuario, ocurrió un error tratando de actualizar la información."
                     });
                 }
@@ -209,7 +209,7 @@ export default reduxForm({
             showErrorForm: true,
             typeView: "error",
             title: "Campos obligatorios",
-            message: "Señor usuario, para editar la relaicón cliente-contacto debe ingresar los campos obligatorios."
+            message: "Señor usuario, para editar la relación cliente-contacto debe ingresar los campos obligatorios."
         });
     }
 }, mapStateToProps, mapDispatchToProps)(ModalEditRelationship);

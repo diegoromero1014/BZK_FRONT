@@ -166,10 +166,10 @@ class ListClientsContact extends Component {
                         <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
                             <button className="btn btn-danger" onClick={this._validateDelete} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginLeft: '15px' }}>
                                 <i className="trash outline icon"></i> Eliminar relación(es)
-                        </button>
+                            </button>
                             <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
                                 <i className="plus icon"></i> Adicionar relación(es)
-                        </button>
+                            </button>
                         </Col>
                     </Row>
                     :
@@ -210,7 +210,7 @@ class ListClientsContact extends Component {
                 <SweetAlert
                     type="success"
                     show={this.state.successDeleteRelationship}
-                    title="Eliminación relaciones"
+                    title="Eliminar relaciones"
                     text="Señor usuario, la eliminación se realizó de forma exitosa."
                     onConfirm={this._closeDeleteRelationship}
                 />

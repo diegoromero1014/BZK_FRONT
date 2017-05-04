@@ -279,8 +279,8 @@ class ModalCreateRelationship extends Component {
                 this.setState({
                     showErrorForm: true,
                     typeView: "error",
-                    title: "Error creaando relación",
-                    message: "Señor usuario, no puede relacionar el cliente porque no tiene acceso."
+                    title: "Error creando relación",
+                    message: "Señor usuario, no puede relacionar el cliente seleccionado porque no pertenece a una de sus células."
                 });
             }
         }
@@ -294,7 +294,7 @@ class ModalCreateRelationship extends Component {
                 showErrorForm: true,
                 title: "Error agregando clientes",
                 typeView: "error",
-                message: "Señor usuario, para agregar los clientes de un grupo económico a la relación, primero debe buscar un grupo."
+                message: "Señor usuario, debe buscar y seleccionar un grupo económico."
             });
         } else {
             clientsByEconomicGroup(groupEconomic.value).then((data) => {
