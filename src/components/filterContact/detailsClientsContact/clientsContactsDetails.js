@@ -32,6 +32,8 @@ class ClientsContactsDetails extends Component {
     componentWillMount() {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
+        } else if (window.localStorage.getItem('idContactSelected') === "") {
+            redirectUrl("/dashboard/clients");
         } else {
             const { updateTitleNavBar, validatePermissionsByModule } = this.props;
             updateTitleNavBar("Contacto");
@@ -66,17 +68,7 @@ class ClientsContactsDetails extends Component {
                     <dt className="business-title" style={{ fontSize: '17px', marginTop: '30px' }}>
                         <span style={{ paddingLeft: '20px' }}>Listado de clientes asociados</span>
                     </dt>
-                    {contactDetail.get('listClientcontacts').length > 0 ?
-                        <ListClientsContact contactId={contactId} />
-                        :
-                        <Row>
-                            <Col xs={12} md={12} lg={12}>
-                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                    <span className="form-item">El contacto no ha sido asociado a ningún cliente</span>
-                                </div>
-                            </Col>
-                        </Row>
-                    }
+                    <ListClientsContact contactId={contactId} />
                 </div>
                 <SweetAlert
                     type="warning"

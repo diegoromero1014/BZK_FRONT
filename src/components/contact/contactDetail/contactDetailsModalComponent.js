@@ -21,10 +21,11 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { CONTACT_ID_TYPE, FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LOB_ID, FILTER_GENDER, FILTER_TITLE, FILTER_ATTITUDE_OVER_GROUP, FILTER_DEPENDENCY, FILTER_CONTACT_POSITION, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE } from '../../selectsComponent/constants';
 import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL } from '../../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
+import {showLoading} from '../../loading/actions';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
   "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -156,16 +157,18 @@ class ContactDetailsModalComponent extends Component {
   /* Carga la información del contacto */
   componentWillMount() {
     const { nonValidateEnter, getMasterDataFields, getContactDetails, contactId, _uploadProvinces, contactObject,
-      _uploadCities, callFromModuleContact } = this.props;
+      _uploadCities, callFromModuleContact, showLoading } = this.props;
     thisCallFromModuleContact = callFromModuleContact;
     nonValidateEnter(true);
     const that = this;
+    showLoading(true, MESSAGE_LOAD_DATA);
     const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
       FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     const idClient = callFromModuleContact ? null : window.localStorage.getItem('idClientSelected');
     getContactDetails(contactId, idClient)
       .then(function (data) {
+        showLoading(false, "");
         const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
         const { _uploadProvinces, _uploadCities } = that.props;
         if (contact.country !== undefined && contact.country !== null) {
@@ -902,7 +905,8 @@ function mapDispatchToProps(dispatch) {
     downloadFilePDF,
     changeStateSaveData,
     nonValidateEnter,
-    deleteRelationshipServer
+    deleteRelationshipServer,
+    showLoading
   }, dispatch);
 }
 

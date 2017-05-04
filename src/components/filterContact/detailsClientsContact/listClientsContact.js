@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../../globalComponents/actions';
 import { setArrayDeleteClientContact, deleteRelationshipServer, getContactDetails } from '../../contact/contactDetail/actions';
-import { changeValueOpenModal, setEditRelationship } from '../actions';
+import { changeValueOpenModal, setEditRelationship, modifyClientRelationship } from '../actions';
+import { OPEN_CREATE_MODAL, OPEN_EDIT_MODAL } from '../constants';
 import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { shorterStringValue } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -10,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import ModalEditRelationship from './modalEditRelationship';
+import ModalCreateRelationship from './cretaeRelationship/modalCreateRelationship';
 import Modal from 'react-modal';
 import _ from 'lodash';
 
@@ -26,16 +28,24 @@ class ListClientsContact extends Component {
         this._deleteRelastionship = this._deleteRelastionship.bind(this);
         this._seletedAllItems = this._seletedAllItems.bind(this);
         this._closeDeleteRelationship = this._closeDeleteRelationship.bind(this);
+        this._openModalCreateRelationship = this._openModalCreateRelationship.bind(this);
         this._viewRelationchipClientContact = this._viewRelationchipClientContact.bind(this);
+        this._validateDelete = this._validateDelete.bind(this);
         this._selectCheckbox = this._selectCheckbox.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
 
+    _openModalCreateRelationship(type) {
+        const { changeValueOpenModal } = this.props;
+        changeValueOpenModal(true, OPEN_CREATE_MODAL);
+    }
+
     _viewRelationchipClientContact(entityClientContat) {
         const { changeValueOpenModal, setEditRelationship } = this.props;
-        changeValueOpenModal(true);
+        changeValueOpenModal(true, OPEN_EDIT_MODAL);
         setEditRelationship(entityClientContat);
     }
+
 
     _mapValuesClientsContact(clientContact, idx) {
         const { contactDetail } = this.props;
@@ -68,7 +78,7 @@ class ListClientsContact extends Component {
         if (indexDelete < 0) {
             listRelationshipClients.push(idClientContact);
         } else {
-            _.remove(listRelationshipClients, (val) => val == idClientContact)
+            _.remove(listRelationshipClients, (val) => val === idClientContact)
         }
         setArrayDeleteClientContact(listRelationshipClients);
         this.setState({
@@ -86,24 +96,29 @@ class ListClientsContact extends Component {
     }
 
     _deleteRelastionship() {
-        this.setState({ showConfirmDelete: false});
+        this.setState({ showConfirmDelete: false });
         const { contactDetail, deleteRelationshipServer, changeStateSaveData } = this.props;
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        deleteRelationshipServer(contactDetail.get('listDeleteClientContact')).then((data) => {
+            changeStateSaveData(false, "");
+            this.setState({ successDeleteRelationship: true });
+        });
+    }
+
+    _validateDelete() {
+        const { contactDetail } = this.props;
         const listRelationshipClients = contactDetail.get('listDeleteClientContact');
-        if (listRelationshipClients.length > 0) {
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            console.log('listDeleteClientContact', contactDetail.get('listDeleteClientContact'));
-            deleteRelationshipServer(contactDetail.get('listDeleteClientContact')).then((data) => {
-                changeStateSaveData(false, "");
-                this.setState({ successDeleteRelationship: true });
-            });
-        } else {
+        if (listRelationshipClients.length <= 0) {
             this.setState({ errorDeleteRelationship: true });
+        } else {
+            this.setState({ showConfirmDelete: true })
         }
     }
 
-    closeModal() {
-        const { changeValueOpenModal } = this.props;
-        changeValueOpenModal(false);
+    closeModal(type) {
+        const { changeValueOpenModal, modifyClientRelationship } = this.props;
+        modifyClientRelationship([]);
+        changeValueOpenModal(false, type);
     }
 
     _seletedAllItems() {
@@ -124,41 +139,66 @@ class ListClientsContact extends Component {
         const { contactDetail, filterContactsReducer } = this.props;
         const valueCheckAll = contactDetail.get('listDeleteClientContact').length === contactDetail.get('listClientcontacts').length ? true : false;
         return (
-            <div className="tab-content break-word" style={{ border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
-                <Row style={{ marginTop: '20px' }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <table className="ui striped table">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox"
-                                        onClick={this._seletedAllItems} title="Seleccionar todos"
-                                        checked={valueCheckAll} />
-                                    </th>
-                                    <th>Documento</th>
-                                    <th>Razón social</th>
-                                    <th style={{ width: '110px' }}>Tipo de contacto</th>
-                                    <th>Entidad/Línea de negocio</th>
-                                    <th>Función</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {contactDetail.get('listClientcontacts').map(this._mapValuesClientsContact)}
-                            </tbody>
-                        </table>
-                    </Col>
-                    <Col xsOffset={1} mdOffset={9} lgOffset={9} xs={12} md={3} lg={3}>
-                        <button className="btn btn-danger" onClick={() => this.setState({showConfirmDelete: true})} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
-                            <i className="trash outline icon"></i> Eliminar relación(es)
+            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
+                {contactDetail.get('listClientcontacts').length > 0 ?
+                    <Row style={{ marginTop: '20px' }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <table className="ui striped table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox"
+                                            onClick={this._seletedAllItems} title="Seleccionar todos"
+                                            checked={valueCheckAll} />
+                                        </th>
+                                        <th>Documento</th>
+                                        <th>Razón social</th>
+                                        <th style={{ width: '120px' }}>Tipo de contacto</th>
+                                        <th>Entidad/Línea de negocio</th>
+                                        <th>Función</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {contactDetail.get('listClientcontacts').map(this._mapValuesClientsContact)}
+                                </tbody>
+                            </table>
+                        </Col>
+                        <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
+                            <button className="btn btn-danger" onClick={this._validateDelete} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginLeft: '15px' }}>
+                                <i className="trash outline icon"></i> Eliminar relación(es)
                         </button>
-                    </Col>
-                </Row>
+                            <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
+                                <i className="plus icon"></i> Adicionar relación(es)
+                        </button>
+                        </Col>
+                    </Row>
+                    :
+                    <Row>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                <span className="form-item">El contacto no ha sido asociado a ningún cliente</span>
+                            </div>
+                        </Col>
+                        <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
+                            <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginRight: '32px' }}>
+                                <i className="plus icon"></i> Adicionar relación(es)
+                                </button>
+                        </Col>
+                    </Row>
+                }
                 <Modal
                     isOpen={filterContactsReducer.get('modalIsOpen')}
                     onRequestClose={this.closeModal}
                     contentLabel=""
                     className="modalBt4-fade modal fade contact-detail-modal in">
-                    <ModalEditRelationship functionClose={this.closeModal}/>
+                    <ModalEditRelationship functionClose={this.closeModal} />
+                </Modal>
+                <Modal
+                    isOpen={filterContactsReducer.get('modalCreateIsOpen')}
+                    onRequestClose={this.closeModal}
+                    contentLabel=""
+                    className="modalBt4-fade modal fade contact-detail-modal in">
+                    <ModalCreateRelationship functionClose={this.closeModal} />
                 </Modal>
                 <SweetAlert
                     type="error"
@@ -198,7 +238,8 @@ function mapDispatchToProps(dispatch) {
         changeStateSaveData,
         getContactDetails,
         changeValueOpenModal,
-        setEditRelationship
+        setEditRelationship,
+        modifyClientRelationship
     }, dispatch);
 }
 
