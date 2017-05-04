@@ -88,7 +88,7 @@ class SearchBarContacts extends Component {
         const contactItems = filterContactsReducer.get('responseContacts');
         return (
             <Row style={{ width: '100%' }}>
-                <Col xs={12} sm={12} md={6} lg={8}>
+                <Col xs={12} sm={12} md={5} lg={7}>
                     <div className="InputAddOn">
                         <input type="text" style={{ padding: '0px 11px !important' }}
                             placeholder="Búsqueda por documento o nombre del contacto"
@@ -101,11 +101,17 @@ class SearchBarContacts extends Component {
                         </button>
                     </div>
                 </Col>
-                <Col xs={12} sm={12} md={2} lg={2}>
+                <Col xs={12} sm={12} md={1} lg={1}>
                     <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                         title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
                         <i className="erase icon"
                             style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                    </button>
+                </Col>
+                <Col xs={12} sm={12} md={3} lg={3}>
+                    <button className="btn btn-primary" type="button" onClick={() => redirectUrl("/dashboard/searchContactsByFunctionOrType")}
+                        title="Cambiar búsqueda">
+                        <i className="refresh icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Cambiar tipo de búsqueda
                     </button>
                 </Col>
                 <Col xs={12} md={12} lg={12} style={{ paddingLeft: "10px" }}>

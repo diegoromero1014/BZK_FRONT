@@ -11,6 +11,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { changeValueOpenModal, updateRelationshipClientcontact } from '../actions';
 import { FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID } from '../../selectsComponent/constants';
 import { OPTION_REQUIRED, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+import { OPEN_EDIT_MODAL } from '../constants';
 import { redirectUrl } from '../../globalComponents/actions';
 import _ from 'lodash';
 
@@ -38,7 +39,7 @@ class ModalEditRelationship extends Component {
             showErrorForm: false,
             updating: true,
             title: "",
-            typeView: "",
+            typeView: "success",
             message: ""
         };
         this._handlerSubmitRelationship = this._handlerSubmitRelationship.bind(this);
@@ -67,14 +68,14 @@ class ModalEditRelationship extends Component {
                     this.setState({
                         showErrorForm: true,
                         typeView: "success",
-                        title: "Actualización información",
+                        title: "Actualizar información",
                         message: "Señor usuario, la relación cliente-contacto ha sido actualizada correctamente."
                     });
                 } else {
                     this.setState({
                         showErrorForm: true,
                         typeView: "error",
-                        title: "Error",
+                        title: "Error actualizando información",
                         message: "Señor usuario, ocurrió un error tratando de actualizar la información."
                     });
                 }
@@ -87,7 +88,7 @@ class ModalEditRelationship extends Component {
         this.setState({ showErrorForm: false });
         if( _.isEqual(this.state.typeView, "success", false) ){
             const {functionClose} = this.props;
-            functionClose();
+            functionClose(OPEN_EDIT_MODAL);
         }
 
     }
@@ -99,8 +100,8 @@ class ModalEditRelationship extends Component {
             <div className="modalBt4-dialog modalBt4-lg">
                 <div className="modalBt4-content modal-content">
                     <div className="modalBt4-header modal-header">
-                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Edición relación cliente-contacto</h4>
-                        <button type="button" onClick={functionClose} className="close" data-dismiss="modal" role="close">
+                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Editar relación cliente-contacto</h4>
+                        <button type="button" onClick={() => { functionClose(OPEN_EDIT_MODAL) }} className="close" data-dismiss="modal" role="close">
                             <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                             <span className="sr-only">Close</span>
                         </button>
@@ -208,7 +209,7 @@ export default reduxForm({
             showErrorForm: true,
             typeView: "error",
             title: "Campos obligatorios",
-            message: "Señor usuario, para editar la relaicón cliente-contacto debe ingresar los campos obligatorios."
+            message: "Señor usuario, para editar la relación cliente-contacto debe ingresar los campos obligatorios."
         });
     }
 }, mapStateToProps, mapDispatchToProps)(ModalEditRelationship);

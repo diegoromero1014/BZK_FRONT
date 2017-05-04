@@ -51,10 +51,11 @@ export function clearContacts() {
     }
 }
 
-export function changeValueOpenModal(value) {
+export function changeValueOpenModal(value, type) {
     return {
         type: constants.CHANGE_VALUE_IS_OPEN,
-        payload: value
+        payload: value, 
+        typeModal: _.isUndefined(type) ? null : type
     }
 }
 
@@ -85,6 +86,38 @@ export function updateRelationshipClientcontact(jsonBody) {
     var request = axios.post(APP_URL + "/updateRelationshipClientcontact", json);
     return {
         type: constants.UPDATE_VALUES_RELATIONSHIP,
+        payload: request
+    }
+}
+
+export function modifyClientRelationship(arrayClients){
+    return {
+        type: constants.MODIFY_CLIENT_RELATIONSHIP,
+        payload: arrayClients
+    }
+}
+
+
+export function clientsByEconomicGroup(idEconomicGroup) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": idEconomicGroup
+    };
+
+    var request = axios.post(APP_URL + "/getClientsByEconomicGroup", json);
+    return {
+        type: constants.CLIENTS_BY_ECONOMIC_GROUP,
         payload: request
     }
 }

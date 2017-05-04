@@ -18,7 +18,6 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { consultDataSelect, consultList, consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
-import {showLoading} from '../../loading/actions';
 import { OrderedMap } from 'immutable';
 import _ from 'lodash';
 import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED, INVALID_EMAIL, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
@@ -146,7 +145,7 @@ class ModalComponentContact extends Component {
 
     componentWillMount() {
         const { fields: { tipoDocumento }, getMasterDataFields, clearSearchContact, 
-            nonValidateEnter, showLoading } = this.props;
+            nonValidateEnter } = this.props;
         nonValidateEnter(true);
         clearSearchContact();
         this.props.resetForm();
@@ -880,8 +879,7 @@ function mapDispatchToProps(dispatch) {
         consultList,
         downloadFilePDF,
         changeStateSaveData,
-        nonValidateEnter,
-        showLoading
+        nonValidateEnter
     }, dispatch);
 }
 

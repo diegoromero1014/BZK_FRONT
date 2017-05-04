@@ -9,7 +9,9 @@ const initialState = Immutable.Map({
     countContacts: 0,
     responseContacts: [],
     modalIsOpen: false,
-    entityClientContact: {}
+    modalCreateIsOpen: false,
+    entityClientContact: {},
+    clientsCreaterRelationship: []
 });
 
 export default (state = initialState, action = {}) => {
@@ -27,7 +29,11 @@ export default (state = initialState, action = {}) => {
         case constants.CHANGE_KEYWORD:
             return state.set('keyword', action.keyword);
         case constants.CHANGE_VALUE_IS_OPEN:
-            return state.set('modalIsOpen', action.payload);
+            if( _.isEqual(constants.OPEN_CREATE_MODAL, action.typeModal) ){
+                return state.set('modalCreateIsOpen', action.payload);
+            } else {
+                return state.set('modalIsOpen', action.payload);
+            }
         case constants.SET_EDIT_RELATIONSHIP:
             return state.set('entityClientContact', action.payload);
         case constants.CLEAR_CONTACTS:
@@ -39,6 +45,8 @@ export default (state = initialState, action = {}) => {
                     .set('countContacts', 0)
                     .set('responseContacts', []);
             });
+        case constants.MODIFY_CLIENT_RELATIONSHIP:
+            return state.set('clientsCreaterRelationship', action.payload);
         default:
             return state;
     }

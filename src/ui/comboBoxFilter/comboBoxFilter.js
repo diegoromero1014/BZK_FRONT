@@ -19,7 +19,8 @@ class comboBoxFilter extends Component {
     }
 
     render() {
-        const {nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, onChange, onBlur, onKeyPress, onSelect, value} = this.props;
+        const {nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, 
+            onChange, onBlur, onKeyPress, onSelect, value, id} = this.props;
         if (touched && invalid) {
             scrollTo(parentId);
         }
@@ -28,7 +29,7 @@ class comboBoxFilter extends Component {
                 <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${disabled}`}
                      style={{border: "0px", zIndex: "1", padding: "0px"}}>
                     <div className="ui icon input" style={{width: "100%"}}>
-                        <input className={`prompt ${disabled}`} id="inputParticipantBanc"
+                        <input className={`prompt ${disabled}`} id={ id === undefined ? "inputParticipantBanc" : id}
                                style={{borderRadius: "3px"}}
                                autoComplete="off"
                                type="text"
