@@ -1,7 +1,4 @@
-import React, {
-  Component,
-  PropTypes
-} from 'react';
+import React, {Component,PropTypes} from 'react';
 import _ from 'lodash';
 import {Row, Grid, Col} from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
@@ -31,7 +28,6 @@ class GridComponent extends Component {
   _renderCell(row, headers,modalTitle){
       return headers.map((value, idx) => {
             var cell;
-
 
             if(value.key === 'actions'){
               cell = <ModalComponent key={idx} idModal={_.uniqueId()}  modalTitle={modalTitle} actions={_.get(row, value.key)}/>

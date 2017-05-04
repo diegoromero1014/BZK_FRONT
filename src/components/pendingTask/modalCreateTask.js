@@ -17,7 +17,7 @@ import { MESSAGE_SAVE_DATA, EDITAR } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
-import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPendings/actions';
+import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPendings/myTasks/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';

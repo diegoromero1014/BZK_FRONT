@@ -37,7 +37,7 @@ import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 import {deleteArea} from '../businessPlan/area/actions';
 import {deleteNeed} from '../businessPlan/need/actions';
-import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../draftDocuments/actions';
+import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../myPendings/draftDocuments/actions';
 
 class ButtonDeleteComponent extends Component {
 
