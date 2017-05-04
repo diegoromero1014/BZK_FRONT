@@ -41,10 +41,13 @@ export function contactsByFunctionOrTypeFindServer(idFunction, idType, pageNum, 
         }
     };
 
+
     const request = axios.post(APP_URL + "/getContactsByFunctionOrType", json);
     return {
+
         type: FIND_CONTACTS_BY_FUNCTION_OR_TYPE,
         payload: request
+
     }
 }
 

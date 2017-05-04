@@ -21,6 +21,7 @@ class LinkModalComponent extends Component {
         this._closeModal = this._closeModal.bind(this);
         this._openModal = this._openModal.bind(this);
         this._viewModalContent = this._viewModalContent.bind(this);
+        this._resetPageModule = this._resetPageModule.bind(this);
         this.state = {
             modalIsOpen: false
         };
@@ -81,7 +82,7 @@ class LinkModalComponent extends Component {
         switch (actions.component) {
             case VIEW_CONTACT:
                 const contactId = get(actions, 'id.contactId');
-                cell = <ContactDetailsModalComponent contactId={contactId} isOpen={this._closeModal}/>;
+                cell = <ContactDetailsModalComponent contactId={contactId} isOpen={this._closeModal} resetPage={this._resetPageModule}/>;
                 break;
             default:
                 cell = '';
@@ -90,13 +91,15 @@ class LinkModalComponent extends Component {
         return (cell);
     }
 
+
     _closeModal() {
-        const {clearClienEdit, properties,  contactsByFunctionOrTypeFindServer, contactsByFunctionOrType} = this.props;
         this.setState({modalIsOpen: false});
-        if (properties.component === VIEW_CONTACT) {
-            clearClienEdit();
-            contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), 1, NUMBER_RECORDS, 0, '');
-        }
+    }
+
+    _resetPageModule() {
+        const {contactsByFunctionOrType,contactsByFunctionOrTypeFindServer} = this.props;
+        contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), contactsByFunctionOrType.get('pageNum') , NUMBER_RECORDS, 0, '');
+        this.setState({modalIsOpen: false});
     }
 
 }
