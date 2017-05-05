@@ -26,6 +26,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
 import {showLoading} from '../../loading/actions';
+import {swtShowMessage} from '../../sweetAlertMessages/actions';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
   "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -144,10 +145,8 @@ class ContactDetailsModalComponent extends Component {
     this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
     this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
     this.state = {
-      contactEdited: false,
       isEditable: false,
       generoData: [],
-      showEr: false,
       showErrorForm: false
     };
     momentLocalizer(moment);
@@ -324,7 +323,7 @@ class ContactDetailsModalComponent extends Component {
 
   _closeViewOrEditContact() {
     const { isOpen, clearClienEdit, clearContactOrder, clearContactCreate, callFromModuleContact } = this.props;
-    this.setState({ contactEdited: false, isEditable: false });
+    this.setState({ isEditable: false });
     if (!callFromModuleContact) {
       isOpen();
       this.props.resetForm();
@@ -341,7 +340,7 @@ class ContactDetailsModalComponent extends Component {
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
       contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
-    }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer } = this.props;
+    }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage,swtShowMessage } = this.props;
     const { contactDetail, contactsByClientFindServer } = this.props;
     const contact = contactDetail.get('contactDetailList');
     const { saveContact } = this.props;
@@ -390,15 +389,20 @@ class ContactDetailsModalComponent extends Component {
         redirectUrl("/login");
       } else {
         if (_.get(data, 'payload.data.status') === 200) {
-          this.setState({ contactEdited: true });
+            swtShowMessage('success','Edición de contacto','Señor usuario, el contacto se editó de forma exitosa.');
           contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+          if( !_.isUndefined(resetPage) ){
+
+              resetPage();
+          }
+
         } else {
-          this.setState({ showEr: true });
+            swtShowMessage('error','Error editando contacto','Señor usuario, ocurrió un error editando el contacto.');
         }
       }
     }, (reason) => {
       changeStateSaveData(false, "");
-      this.setState({ showEr: true });
+        swtShowMessage('error','Error editando contacto','Señor usuario, ocurrió un error editando el contacto.');
     });
   }
 
@@ -861,20 +865,7 @@ class ContactDetailsModalComponent extends Component {
             >{'Guardar información contacto'}</button>
           </div>
         }
-        <SweetAlert
-          type="success"
-          show={this.state.contactEdited}
-          title="Edición de contacto"
-          text="Señor usuario, el contacto se editó de forma exitosa."
-          onConfirm={() => this._closeViewOrEditContact()}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showEr}
-          title="Error editando contacto"
-          text="Señor usuario, ocurrió un error editando el contacto."
-          onConfirm={() => this.setState({ showEr: false })}
-        />
+
         <SweetAlert
           type="error"
           show={this.state.showErrorForm}
@@ -906,7 +897,8 @@ function mapDispatchToProps(dispatch) {
     changeStateSaveData,
     nonValidateEnter,
     deleteRelationshipServer,
-    showLoading
+    showLoading,
+      swtShowMessage
   }, dispatch);
 }
 
