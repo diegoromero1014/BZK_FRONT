@@ -849,6 +849,24 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
             </Row>
+            <Row>
+              <Col xs>
+                <dl style={{ width: '100%' }}>
+                  <dt><span>Particularidades relevantes del contacto</span></dt>
+                  <dd>
+                    <Textarea
+                        name="contactRelevantFeatures"
+                        validateEnter={true}
+                        type="text"
+                        max="1000"
+                        style={{ width: '100%', height: '100%' }}
+                        rows={4}
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        {...contactRelevantFeatures}
+                    /></dd>
+                </dl>
+              </Col>
+            </Row>
           </div>
         </div>
         {!callFromModuleContact ?
@@ -939,7 +957,7 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
         contactTypeOfContact: contact.typeOfContact,
         contactLineOfBusiness: '',
         contactFunctions: '',
-        contactRelevantFeatures:''
+        contactRelevantFeatures:'',
         contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
         contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
       }
