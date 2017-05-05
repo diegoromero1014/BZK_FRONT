@@ -80,7 +80,7 @@ class ListCreateRelationship extends Component {
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmDelete}
-                    title="Confirmación eliminación"
+                    title="Confirmar eliminación"
                     text="Señor usuario, ¿Está seguro que desea eliminar el cliente de la lista?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'

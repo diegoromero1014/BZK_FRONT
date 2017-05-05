@@ -189,7 +189,7 @@ class ButtonDeleteComponent extends Component {
                 <SweetAlert
                     type="warning"
                     show={this.state.show}
-                    title="Confirmación eliminación"
+                    title="Confirmar eliminación"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
