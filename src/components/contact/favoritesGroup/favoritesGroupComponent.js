@@ -74,7 +74,7 @@ class FavoritesGroup extends Component {
                             <i className="erase icon"
                                style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
                         </button>
-                        <button className="btn btn-primary" type="button" title="Crear grupo" style={{float: "right"}}
+                        <button className="btn btn-primary" type="button" title="Crear grupo" style={{marginLeft: "17px"}}
                                 onClick={this.openModal}>
                             <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
                         </button>
