@@ -25,8 +25,8 @@ import { FILE_OPTION_SOCIAL_STYLE_CONTACT, MESSAGE_SAVE_DATA, EDITAR, OPTION_REQ
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
-import {showLoading} from '../../loading/actions';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
   "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -179,9 +179,9 @@ class ContactDetailsModalComponent extends Component {
         if (!callFromModuleContact) {
           contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
           contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-          contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-          contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
         }
+        contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+        contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
       });
   }
 
@@ -340,7 +340,7 @@ class ContactDetailsModalComponent extends Component {
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
       contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth,contactRelevantFeatures
-    }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage,swtShowMessage } = this.props;
+    }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage } = this.props;
     const { contactDetail, contactsByClientFindServer } = this.props;
     const contact = contactDetail.get('contactDetailList');
     const { saveContact } = this.props;
@@ -390,20 +390,21 @@ class ContactDetailsModalComponent extends Component {
         redirectUrl("/login");
       } else {
         if (_.get(data, 'payload.data.status') === 200) {
-            swtShowMessage('success','Edición de contacto','Señor usuario, el contacto se editó de forma exitosa.');
+          this.setState({ isEditable: false });
+          swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
           contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
-          if( !_.isUndefined(resetPage) ){
+          if (!_.isUndefined(resetPage)) {
 
-              resetPage();
+            resetPage();
           }
 
         } else {
-            swtShowMessage('error','Error editando contacto','Señor usuario, ocurrió un error editando el contacto.');
+          swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         }
       }
     }, (reason) => {
       changeStateSaveData(false, "");
-        swtShowMessage('error','Error editando contacto','Señor usuario, ocurrió un error editando el contacto.');
+      swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
     });
   }
 
@@ -545,7 +546,7 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
               <Col xs={12} sm={12} md={6} lg={4}>
-                <dt><span>{'Area dependencia ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
+                <dt><span>{'Área dependencia ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                 <dd>
                   <ComboBox
                     name="contactDependency"
@@ -848,24 +849,6 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
             </Row>
-            <Row>
-              <Col xs>
-                <dl style={{ width: '100%' }}>
-                  <dt><span>Particularidades relevantes del contacto</span></dt>
-                  <dd>
-                    <Textarea
-                        name="contactRelevantFeatures"
-                        validateEnter={true}
-                        type="text"
-                        max="1000"
-                        style={{ width: '100%', height: '100%' }}
-                        rows={4}
-                        disabled={this.state.isEditable ? '' : 'disabled'}
-                        {...contactRelevantFeatures}
-                    /></dd>
-                </dl>
-              </Col>
-            </Row>
           </div>
         </div>
         {!callFromModuleContact ?
@@ -917,7 +900,7 @@ function mapDispatchToProps(dispatch) {
     nonValidateEnter,
     deleteRelationshipServer,
     showLoading,
-      swtShowMessage
+    swtShowMessage
   }, dispatch);
 }
 
@@ -956,9 +939,9 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
         contactTypeOfContact: contact.typeOfContact,
         contactLineOfBusiness: '',
         contactFunctions: '',
-        contactHobbies: '',
-        contactSports: '',
         contactRelevantFeatures:''
+        contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
+        contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
       }
     };
   } else {

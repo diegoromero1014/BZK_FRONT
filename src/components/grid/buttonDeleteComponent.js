@@ -251,8 +251,6 @@ function mapDispatchToProps(dispatch) {
         clearContactsByFunctionPagination,
         clearContactsOrder,
         contactsByFunctionOrTypeFindServer,
-        clearContactsByFunctionPagination,
-        contactsByFunctionOrTypeFindServer,
         clearFilterGroup
     }, dispatch);
 }
