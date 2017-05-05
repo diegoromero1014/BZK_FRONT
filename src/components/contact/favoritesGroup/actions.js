@@ -156,16 +156,7 @@ export function getValidateExistGroup(name){
         "messageBody": name
     };
 
-    let request = axios.post(APP_URL + "/getValidateExistGroup", json).then(function (response) {
-        console.log(response);
-        console.log('respuesta',response);
-    });
-    if(_.isNull(request)){
-        request={
-            id:null,
-            name:name
-        }
-    }
+    let request = axios.post(APP_URL + "/getValidateExistGroup", json);
     return {
         type: constant.VALID_EXISTS_GROUP,
         payload: request

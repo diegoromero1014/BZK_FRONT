@@ -94,13 +94,11 @@ export default (state = initialState, action = {}) => {
         case actions.VALID_EXISTS_GROUP:
             let response6 = get(action.payload, 'data.data', []);
             let nameSearch = '';
-
-            if (!_.isNull(response6.id)) {
-
+            console.log('asda',response6);
+            if (!_.isNull(response6) && !_.isNull(response6.id)) {
                 state.set('validExistGroup', true);
                 nameSearch = '';
             } else {
-                nameSearch = response6.name;
                 state.set('validExistGroup', false);
             }
             let newGroupSearch = Immutable.Map({
@@ -122,8 +120,7 @@ export default (state = initialState, action = {}) => {
                 middleName: response7.middleName,
                 firstLastName: response7.firstLastName,
                 secondLastName: response7.secondLastName,
-                emailAddress: response7.emailAddress,
-                name: response7.firstName + " " + response7.middleName + " " + response7.firstLastName + " " + response7.secondLastName,
+                emailAddress: response7.emailAddress
             };
             return state.set('contact', contactSearch);
         case actions.ADD_CONTACT_LIST:

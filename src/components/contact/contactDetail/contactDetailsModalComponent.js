@@ -339,7 +339,7 @@ class ContactDetailsModalComponent extends Component {
     const { fields: { contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
       contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-      contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+      contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth,contactRelevantFeatures
     }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage,swtShowMessage } = this.props;
     const { contactDetail, contactsByClientFindServer } = this.props;
     const contact = contactDetail.get('contactDetailList');
@@ -370,6 +370,7 @@ class ContactDetailsModalComponent extends Component {
       "extension": contactExtension.value !== undefined ? contactExtension.value : null,
       "mobileNumber": contactMobileNumber.value !== undefined ? contactMobileNumber.value : null,
       "emailAddress": contactEmailAddress.value !== undefined ? contactEmailAddress.value : null,
+      "contactRelevantFeatures": contactRelevantFeatures.value !== undefined ? contactRelevantFeatures.value : null,
       "modeOfContact": null,
       "registryKey": null,
       "notes": null,
@@ -412,7 +413,7 @@ class ContactDetailsModalComponent extends Component {
       contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
       contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
       contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-      contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth
+      contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth,contactRelevantFeatures
     }, error, handleSubmit, selectsReducer, reducerGlobal } = this.props;
     return (
       <form onSubmit={handleSubmit(this._handlerSubmitContact)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -847,6 +848,24 @@ class ContactDetailsModalComponent extends Component {
                 </dd>
               </Col>
             </Row>
+            <Row>
+              <Col xs>
+                <dl style={{ width: '100%' }}>
+                  <dt><span>Particularidades relevantes del contacto</span></dt>
+                  <dd>
+                    <Textarea
+                        name="contactRelevantFeatures"
+                        validateEnter={true}
+                        type="text"
+                        max="1000"
+                        style={{ width: '100%', height: '100%' }}
+                        rows={4}
+                        disabled={this.state.isEditable ? '' : 'disabled'}
+                        {...contactRelevantFeatures}
+                    /></dd>
+                </dl>
+              </Col>
+            </Row>
           </div>
         </div>
         {!callFromModuleContact ?
@@ -938,7 +957,8 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
         contactLineOfBusiness: '',
         contactFunctions: '',
         contactHobbies: '',
-        contactSports: ''
+        contactSports: '',
+        contactRelevantFeatures:''
       }
     };
   } else {
