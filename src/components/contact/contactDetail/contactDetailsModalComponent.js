@@ -390,7 +390,7 @@ class ContactDetailsModalComponent extends Component {
         redirectUrl("/login");
       } else {
         if (_.get(data, 'payload.data.status') === 200) {
-          this.setState({ isEditable: false });
+          thisForm._closeViewOrEditContact();
           swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
           contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
           if (!_.isUndefined(resetPage)) {
@@ -939,7 +939,7 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
         contactTypeOfContact: contact.typeOfContact,
         contactLineOfBusiness: '',
         contactFunctions: '',
-        contactRelevantFeatures:''
+        contactRelevantFeatures:'',
         contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
         contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
       }

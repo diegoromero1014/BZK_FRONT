@@ -20,7 +20,7 @@ class comboBoxFilter extends Component {
 
     render() {
         const {nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, 
-            onChange, onBlur, onKeyPress, onSelect, value, id} = this.props;
+            onChange, onBlur, onKeyPress, onSelect, value, id, idIcon} = this.props;
         if (touched && invalid) {
             scrollTo(parentId);
         }
@@ -42,7 +42,7 @@ class comboBoxFilter extends Component {
                                disabled={disabled}
                                maxLength={max}
                         />
-                        <i className="search icon" id="iconSearchUserFilter"></i>
+                        <i className="search icon" id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}></i>
                     </div>
                     <div className="menu results" id="resultstUserSearch"></div>
                 </div>
