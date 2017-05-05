@@ -1,7 +1,7 @@
 /**
  * Created by dloaiza 20170426.
  */
-import {shorterStringValue} from '../../actionsGlobal';
+import {shorterStringValue, joinName} from '../../actionsGlobal';
 import {VIEW_CONTACT} from '../grid/constants';
 import {DELETE_MESSAGE,DELETE_CONTACT_FROM_FUNCTION_OR_TYPE} from './constants';
 
@@ -19,7 +19,7 @@ export const mapDataGrid = (data = []) => {
                 contactId: clientContact.id,
                 clientId: clientContact.clientId
             },
-            text: shorterStringValue(clientContact.completeName),
+            text: shorterStringValue(joinName(clientContact.firstName, clientContact.middleName, clientContact.firstLastName, clientContact.secondLastName)),
             modalTitle: "Detalle del contacto",
             component: VIEW_CONTACT
         },

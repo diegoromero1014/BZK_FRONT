@@ -118,7 +118,7 @@ class ContactsByFunctionOrType extends Component {
                         <Col xs={12} sm={12} md={4} lg={4} style={{ width: '100%' }}>
                             <ComboBox
                                 name="contactType"
-                                labelInput="Tipo del contacto"
+                                labelInput="Tipo de contacto"
                                 {...contactType}
                                 onChange={val => this._onChangeTypeStatus(val)}
                                 value={contactType.value}
