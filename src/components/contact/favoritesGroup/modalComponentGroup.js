@@ -17,6 +17,7 @@ import Input from '../../../ui/input/inputComponent';
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
 import ButtonDeleteLocalComponent from '../../grid/buttonDeleteLocalComponent';
 import Immutable from 'immutable';
+import {joinName} from '../../../actionsGlobal';
 
 const fields = ['numeroDocumento', 'tipoDocumento', 'searchGroup'];
 
@@ -34,6 +35,7 @@ class ModalComponentGroup extends Component {
         this._onClickLimpiar = this._onClickLimpiar.bind(this);
         this._addContactList = this._addContactList.bind(this);
         this._deleteContactList = this._deleteContactList.bind(this);
+        this._onClickLimpiarNameGroup = this._onClickLimpiarNameGroup.bind(this);
         this._saveGroupFavoriteContacts = this._saveGroupFavoriteContacts.bind(this);
         this.state = {
             modalIsOpen: false,
@@ -41,7 +43,9 @@ class ModalComponentGroup extends Component {
             visibleTable: "none",
             visibleNameContact: "none",
             searchContact: "none",
-            createGroup: true
+            createGroup: true,
+            disableName: '',
+            disableSave: 'none'
         };
     }
 
@@ -55,39 +59,62 @@ class ModalComponentGroup extends Component {
         if (groupId != undefined) {
             getGroupForId(groupId);
             getListContactGroupForId(groupId);
+            this.setState({disableName: 'disabled'});
+            this.setState({disableSave: 'block'});
+            this.setState({searchContact: ''});
         } else {
             searchGroup.value = '';
             clearContactName();
             resetForm();
             resetModal();
             this.setState({searchContact: 'none'});
+            this.setState({disableName: ''});
+            this.setState({disableSave: 'none'});
+            this.setState({searchContact: 'none'});
         }
     }
 
     _handleValidateExistGroup() {
-        const {fields:{searchGroup},getValidateExistGroup} = this.props;
-        getValidateExistGroup(searchGroup.value);
+        const {fields:{searchGroup},getValidateExistGroup,swtShowMessage,resetForm,resetModal} = this.props;
+        getValidateExistGroup(searchGroup.value).then((data)=> {
+            const groupSearch = _.get(data.payload, 'data.data', null);
+            if (!_.isNull(groupSearch)) {
+                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                resetForm();
+                resetModal();
+                this.setState({disableName: ''});
+                this.setState({disableSave: 'none'});
+                this.setState({searchContact: 'none'});
+            } else {
+                this.setState({disableName: 'disabled'});
+                this.setState({disableSave: 'block'});
+                this.setState({searchContact: ''});
+            }
+        });
     }
 
 
     _saveGroupFavoriteContacts() {
-        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum,swtShowMessage} = this.props;
+        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum} = this.props;
         const group = groupsFavoriteContacts.get('group');
         const list = groupsFavoriteContacts.get('group').get('listContact');
         console.log(_.size(list));
-        if(_.size(list) > 1){
+        console.log(keyWordName);
+        console.log(pageNum);
+
+        if (_.size(list) > 1) {
             saveGroupFavoriteContacts(group.toJSON());
-            groupFindServer(keyWordName,pageNum,NUMBER_RECORDS);
+            //groupFindServer(keyWordName, pageNum, NUMBER_RECORDS);
             swtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito');
             this.closeModal();
-        }else{
-            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos dos contactos');
+        } else {
+            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos un contacto');
         }
     }
 
 
     _addContactList() {
-        const {addContactList,clearContactName,groupsFavoriteContacts,resetForm,swtShowMessage} = this.props;
+        const {addContactList,clearContactName,groupsFavoriteContacts,resetForm,swtShowMessage,fields:{numeroDocumento,tipoDocumento }} = this.props;
         const contact = groupsFavoriteContacts.get('contact');
         const list = groupsFavoriteContacts.get('group').get('listContact');
 
@@ -102,7 +129,8 @@ class ModalComponentGroup extends Component {
                 addContactList();
             }
             clearContactName();
-            resetForm();
+            numeroDocumento.onChange('');
+            tipoDocumento.onChange('');
         }
     }
 
@@ -127,13 +155,13 @@ class ModalComponentGroup extends Component {
     }
 
     _renderCellView(data) {
-
         const mensaje = "Señor usuario ¿está seguro que desea eliminar el grupo ";
         return data.map((contact, idx) => ({
-            nameContact: contact.firstName + " " + contact.middleName + " " + contact.firstLastName + " " + contact.secondLastName,
+            nameContact: joinName(contact.firstName, contact.middleName, contact.firstLastName, contact.secondLastName),
             email: contact.emailAddress,
             deleteLocal: {
-                component: <ButtonDeleteLocalComponent key={contact.id} message={mensaje + contact.name + "?"}
+                component: <ButtonDeleteLocalComponent key={contact.id}
+                                                       message={mensaje + joinName(contact.firstName ,contact.middleName ,contact.firstLastName ,contact.secondLastName) + "?"}
                                                        fn={this._deleteContactList} args={[contact]}/>
             }
         }));
@@ -147,11 +175,19 @@ class ModalComponentGroup extends Component {
         const { fields: {tipoDocumento,numeroDocumento},swtShowMessage,searchContactForGroup } = this.props;
         if (!_.isEqual(numeroDocumento.value.trim(), '') && !_.isEqual(tipoDocumento.value.trim(), '')) {
             searchContactForGroup(tipoDocumento.value, numeroDocumento.value, '').then((data) => {
-
             });
         } else {
             swtShowMessage('error', 'Campos obligatorios', 'Señor usuario, para agregar un contacto debe ingresar los campos obligatorios.');
         }
+    }
+
+    _onClickLimpiarNameGroup() {
+        const {resetForm,resetModal} =this.props;
+        resetForm();
+        resetModal();
+        this.setState({disableName: ''});
+        this.setState({disableSave: 'none'});
+        this.setState({searchContact: 'none'});
     }
 
     _onClickLimpiar() {
@@ -173,26 +209,19 @@ class ModalComponentGroup extends Component {
         let { createGroup,searchContact,visibleMessage,visibleTable,visibleNameContact} = this.state;
         const data = groupsFavoriteContacts.get('group').get('listContact');
         const contactSearch = groupsFavoriteContacts.get('contact');
-        if (!_.isEqual(groupsFavoriteContacts.get('group').get('name').trim(), '')) {
-            searchGroup.value = groupsFavoriteContacts.get('group').get('name');
-        }
+        const contactSearchName = joinName(contactSearch.firstName, contactSearch.middleName, contactSearch.firstLastName, contactSearch.secondLastName);
 
 
         let countFilter = _.size(data);
 
         if (countFilter !== 0) {
-            visibleMessage = 'none';
             visibleTable = 'block';
         }
 
-        if (searchGroup.value.trim() != '') {
-            searchContact = 'block';
-        } else {
-            searchContact = 'none';
-        }
 
+        console.log('contactSearchName', contactSearchName);
 
-        if (!_.isEqual(contactSearch.name, '')) {
+        if (!_.isEqual(contactSearchName.trim(), '')) {
             visibleNameContact = 'inline-flex';
         } else {
             visibleNameContact = 'none';
@@ -211,11 +240,18 @@ class ModalComponentGroup extends Component {
                                 <div className="InputAddOn">
                                     <input type="text" style={{padding: '0px 11px !important'}}
                                            placeholder="Nombre de grupo"
+                                           disabled={this.state.disableName}
                                         {...searchGroup}
                                            className="input-lg input InputAddOn-field"/>
                                     <button onClick={this._handleValidateExistGroup}
                                             className="button InputAddOn-item">
                                         <i className="search icon"/>
+                                    </button>
+
+                                    <button type="button" className="btn btn-primary" style={{ marginLeft:"20px" }}
+                                            onClick={this._onClickLimpiarNameGroup}>
+                                        <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
+                                           className="erase icon"/>
                                     </button>
                                 </div>
                             </Col>
@@ -273,7 +309,7 @@ class ModalComponentGroup extends Component {
                                             type="text"
                                             max="20"
                                             disabled="disabled"
-                                            value={contactSearch.name}
+                                            value={contactSearchName}
                                         /></dd>
                                     </dl>
                                 </Col>
@@ -288,7 +324,8 @@ class ModalComponentGroup extends Component {
                             </Row>
                         </Row>
                         <Row>
-                            <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
+                            <div
+                                style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%', display:visibleTable}}>
                                 Total: {countFilter}
                             </div>
                         </Row>
@@ -299,18 +336,11 @@ class ModalComponentGroup extends Component {
                                     <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
                                 </div>
                             </Col>
-                            <Col xs={12} sm={12} md={12} lg={12} style={{display: visibleMessage}}>
-                                <Row center="xs">
-                                    <Col xs={12} sm={8} md={12} lg={12}>
-                                        <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span>
-                                    </Col>
-                                </Row>
-                            </Col>
                         </Row>
                     </div>
 
                 </div>
-                <div className="modalBt4-footer modal-footer">
+                <div className="modalBt4-footer modal-footer" style={{display:this.state.disableSave}}>
                     <button type="button" onClick={this._saveGroupFavoriteContacts}
                             className="btn btn-primary modal-button-edit">Guardar
                     </button>
@@ -339,11 +369,18 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({groupsFavoriteContacts,selectsReducer}, ownerProps){
+function mapStateToProps({groupsFavoriteContacts,selectsReducer}, ownerProps) {
     const keyWordName = groupsFavoriteContacts.get('pageNum');
     const pageNum = groupsFavoriteContacts.get('keywordName');
+    const searchGroup = groupsFavoriteContacts.get('group').get('name').trim();
     return {
-        groupsFavoriteContacts, selectsReducer,keyWordName,pageNum
+        groupsFavoriteContacts,
+        selectsReducer,
+        keyWordName,
+        pageNum,
+        initialValues: {
+            searchGroup
+        }
     };
 }
 

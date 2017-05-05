@@ -125,7 +125,7 @@ class ModalEditRelationship extends Component {
                                         </dd>
                                     </Col>
                                     <Col xs={12} md={12} lg={12}>
-                                        <dt><span>Entidad / Línea de negocio</span></dt>
+                                        <dt><span>Entidad/Línea de negocio</span></dt>
                                         <dd>
                                             <MultipleSelect
                                                 name="contactLineOfBusiness"
