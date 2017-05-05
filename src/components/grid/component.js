@@ -54,10 +54,12 @@ class GridComponent extends Component {
                 cell = <TdComponent key={idx} columnRow={_.get(_.get(row, value.key), 'statusPending')} title={_.get(_.get(row, value.key), 'statusPending')} />
               }
             }else if(value.key === 'clientNameLink'){
-                cell = <LinkComponent text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'clientNameLink.id')}/>
+                cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value,'showLink')} idClient={_.get(row, 'clientNameLink.id')}/>
             } else if(value.key === 'modalNameLink'){
 
-                cell = <LinkModalComponent showModal={_.get(value,'showLink')} properties={_.get(row, 'modalNameLink')}/>
+                cell = <LinkModalComponent key={idx} showModal={_.get(value,'showLink')} properties={_.get(row, 'modalNameLink')}/>
+            }else if(value.key === 'deleteLocal'){
+                cell = _.get(row,'deleteLocal.component');
             }else{
               cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
             }

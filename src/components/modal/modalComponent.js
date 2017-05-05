@@ -16,6 +16,7 @@ import { get } from 'lodash';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
 import ModalPendingAEC from '../myPendings/AEC/modalPendingAEC';
+import ModalViewEmailsGroup from '../contact/favoritesGroup/modalViewEmailsGroup';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -71,7 +72,10 @@ class ModalComponentDialog extends Component {
                 cell = <ModalObservation alertPortfolioExpId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_AEC:
-                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal} />
+                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal}/>
+                break;
+            case views.VIEW_EMAILS_GROUP:
+                cell = <ModalViewEmailsGroup idGroup={actions.id} isOpen={this.closeModal}/>
                 break;
             case views.VIEW_AEC_PENDING:
                 cell = <ModalPendingAEC aec={actions.aec} isOpen={this.closeModal} />

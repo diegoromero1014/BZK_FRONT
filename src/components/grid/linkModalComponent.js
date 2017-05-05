@@ -5,15 +5,15 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as views from '../../constantsGlobal';
-import {VIEW_CONTACT} from './constants';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import {clearClienEdit} from '../contact/contactDetail/actions';
 import Modal from 'react-modal';
 import {get} from 'lodash';
 import {contactsByFunctionOrTypeFindServer} from '../contactByFunctionOrType/actions';
-import {
-    NUMBER_RECORDS
-} from './constants';
+import {VIEW_CONTACT,NUMBER_RECORDS,VIEW_LINK_GROUP} from './constants';
+import ModalComponentGroup from '../contact/favoritesGroup/modalComponentGroup';
+
+
 class LinkModalComponent extends Component {
 
     constructor(props) {
@@ -83,6 +83,10 @@ class LinkModalComponent extends Component {
                 const contactId = get(actions, 'id.contactId');
                 cell = <ContactDetailsModalComponent contactId={contactId} isOpen={this._closeModal}/>;
                 break;
+            case VIEW_LINK_GROUP:
+                const groupId = get(actions, 'id');
+                cell = <ModalComponentGroup groupId={groupId} isOpen={this._closeModal}/>;
+                break;
             default:
                 cell = '';
         }
@@ -107,7 +111,7 @@ LinkModalComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({clearClienEdit,contactsByFunctionOrTypeFindServer}, dispatch);
+    return bindActionCreators({clearClienEdit, contactsByFunctionOrTypeFindServer}, dispatch);
 }
 
 function mapStateToProps({contactsByFunctionOrType}, ownerProps) {

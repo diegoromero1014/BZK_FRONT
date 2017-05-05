@@ -1,11 +1,11 @@
 /**
  * Created by ahurtado on 11/23/2016.
  */
-import {APP_URL} from '../../constantsGlobal';
+import {APP_URL} from '../../../constantsGlobal';
 import * as constant from './constants';
 import axios from 'axios';
 
-export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, maxRows,order,columnOrder) {
+export function groupFindServer(keyWordName, pageNum, maxRows) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -20,37 +20,41 @@ export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, max
             "isSuccessful": true
         },
         "messageBody": {
-            "keyWordNameNit": keyWordNameNit,
-            "statusCovenant": statusCovenant,
+            "keyWordName": keyWordName,
             "pageNum": pageNum,
-            "maxRows": maxRows,
-            "order" : order,
-            "columnOrder" : columnOrder
+            "maxRows": maxRows
         }
     };
 
-    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
+    const request = axios.post(APP_URL + "/getGroupsFavoriteContact", json);
     return {
-        type: constant.FIND_ALERT_COVENANTS,
+        type: constant.FIND_GROUP_FAVORITE_CONTACTS,
         payload: request
     }
 }
 
 export function changePage(page) {
     return {
-        type: constant.CHANGE_PAGE_FOR_COVENANTS,
+        type: constant.CHANGE_PAGE_FOR_GROUP,
         currentPage: page
     }
 }
 
 export function changeKeyword(keyword) {
     return {
-        type: constant.CHANGE_KEYWORD_NAME_NIT_COVENANT,
-        keywordNameNit: keyword
+        type: constant.CHANGE_KEYWORD_NAME_GROUP,
+        keywordName: keyword
     }
 }
 
-export function defaultValues() {
+export function changeKeywordNameNewGroup(keyword) {
+    return {
+        type: constant.CHANGE_KEYWORD_NAME_NEW_GROUP,
+        keywordName: keyword
+    }
+}
+
+export function clearFilterGroup() {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -66,27 +70,51 @@ export function defaultValues() {
             "isSuccessful": true
         },
         "messageBody": {
-            "keyWordNameNit": null,
-            "statusCovenant": '0',
+            "keyWordName": '',
             "pageNum": 1,
             "maxRows": constant.NUMBER_RECORDS,
             "order" : 0,
             "columnOrder" : null
         }
     };
-    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
+    const request = axios.post(APP_URL + "/getGroupsFavoriteContact", json);
     return {
-        type: constant.INITIAL_VALUES,
+        type: constant.INITIAL_VALUES_GROUPS,
         payload: request
     }
 }
 
-export function clearFilter() {
 
+
+
+export function getGroupForId(id){
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
-            "username": "",
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": id
+    };
+
+    const request = axios.post(APP_URL + "/getGroupForId", json);
+    return {
+        type: constant.GET_GROUP_FOR_ID,
+        payload: request
+    }
+}
+
+export function getListContactGroupForId(id){
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -98,51 +126,156 @@ export function clearFilter() {
             "isSuccessful": true
         },
         "messageBody": {
-            "keyWordNameNit": null,
-            "statusCovenant": -1,
-            "pageNum": 1,
-            "maxRows": constant.NUMBER_RECORDS,
-            "order" : 0,
-            "columnOrder" : null
+            "groupId": id
         }
     };
-    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
+
+    const request = axios.post(APP_URL + "/getListContactGroupForId", json);
     return {
-        type: constant.CLEAR_FILTER_ALERT_COVENANT,
+        type: constant.GET_LIST_CONTACT_GROUP_FOR_ID,
         payload: request
     }
 }
 
-export function changeStatusCovenant(statusCovenant) {
+
+
+export function getValidateExistGroup(name){
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": name
+    };
+
+    let request = axios.post(APP_URL + "/getValidateExistGroup", json).then(function (response) {
+        console.log(response);
+        console.log('respuesta',response);
+    });
+    if(_.isNull(request)){
+        request={
+            id:null,
+            name:name
+        }
+    }
     return {
-        type: constant.CHANGE_STATUS_COVENANT,
-        statusCovenant
+        type: constant.VALID_EXISTS_GROUP,
+        payload: request
     }
 }
 
-export function clearClientOrder() {
+
+export function searchContactForGroup(typeDocument,numberDocument,clientId){
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username":"lmejias",
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            "typeDocument": typeDocument,
+            "numberDocument":numberDocument,
+            "clientId": clientId
+        }
+    }
+    var request = axios.post(APP_URL + "/getContactByDocument", json);
     return {
-        type: constant.CLEAR_CLIENT_ORDER
-    };
+        type: constant.SEARCH_CONTACT_FOR_GROUP,
+        payload: request
+    }
 }
 
-export function clearClientPagination() {
+
+export function addContactList(){
     return {
-        type: constant.CLEAR_CLIENT_PAGINATION
-    };
+        type: constant.ADD_CONTACT_LIST
+    }
 }
 
-export function updateNumberTotalCovenants(totalCovenants) {
+export function clearContactName(){
     return {
-        type: constant.UPDATE_NUMBER_TOTAL_COVENANTS,
-        totalCovenants
-    };
+        type: constant.CLEAR_CONTACT_NAME
+    }
 }
 
-export function orderColumnCovenants(orderClients, columnClients) {
+export function deleteContactList(idContact){
     return {
-        type: constant.ORDER_COLUMN_CLIENT,
-        orderClients,
-        columnClients
-    };
+        type: constant.DELETE_CONTACT_LIST,
+        idContact
+    }
+}
+
+
+
+export function saveGroupFavoriteContacts(group){
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username":"lmejias",
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": group
+    }
+    var request = axios.post(APP_URL + "/saveGroupFavoriteContacts", json);
+    return {
+        type: constant.SEARCH_CONTACT_FOR_GROUP,
+        payload: request
+    }
+}
+
+
+export function resetModal(){
+    return {
+        type: constant.RESET_MODAL
+    }
+}
+
+
+
+export function getEmailsForGroup(group){
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username":"lmejias",
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": group
+    }
+    var request = axios.post(APP_URL + "/getEmailsForGroup", json);
+    return {
+        type: constant.VIEW_EMAIL_CONTACTS,
+        payload: request
+    }
 }

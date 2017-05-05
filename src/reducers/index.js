@@ -53,6 +53,7 @@ import AECClient from '../components/risksManagement/AEC/reducer';
 import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
 import tabRisksManagment from '../components/risksManagement/reducer';
 import AECMyPendings from '../components/myPendings/AEC/reducer';
+import groupsFavoriteContactsReducer from '../components/contact/favoritesGroup/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -108,5 +109,6 @@ export default combineReducers({
     filterContactsReducer: filterContactsReducer,
     contactsByFunctionOrType: contactsByFunctionOrTypeReducer,
     tabRisksManagment: tabRisksManagment,
-    AECMyPendings: AECMyPendings
+    AECMyPendings: AECMyPendings,
+    groupsFavoriteContacts :groupsFavoriteContactsReducer
 });
