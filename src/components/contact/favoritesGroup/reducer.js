@@ -7,80 +7,181 @@ import {get} from 'lodash';
 
 const initialState = Immutable.Map({
     status: "withoutProcessing",
-    keywordNameNit: "",
-    statusCovenant: '0',
+    keywordName: "",
     pageNum: 1,
-    order: 0,
-    columnOrder: '',
-    responseCovenants: [],
-    totalCovenantsByFiltered: 0
+    responseGroup: [],
+    totalGroupByFiltered: 0,
+    validExistGroup: false,
+    group: Immutable.Map({
+        id: '',
+        name: '',
+        listContact: []
+    }),
+    contact: {
+        id: '',
+        firstName: '',
+        middleName: '',
+        firstLastName: '',
+        secondLastName: '',
+        emailAddress: '',
+        name: ''
+    }
 });
 
 export default (state = initialState, action = {}) => {
     switch (action.type) {
-        case actions.FIND_ALERT_COVENANTS:
-            const response = get(action.payload,'data.data',[]);
+        case actions.FIND_GROUP_FAVORITE_CONTACTS:
+            const response = get(action.payload, 'data.data', []);
             return state.withMutations(map => {
                 map
                     .set('status', 'processed')
-                    .set('totalCovenantsByFiltered', get(response, 'rowCount',0))
-                    .set('responseCovenants', get(response, 'rows',[]));
+                    .set('totalGroupByFiltered', get(response, 'rowCount', 0))
+                    .set('responseGroup', get(response, 'rows', []));
             });
-        case actions.CHANGE_PAGE_FOR_COVENANTS:
+
+
+        case actions.CHANGE_PAGE_FOR_GROUP:
             return state.set('pageNum', action.currentPage);
-        case actions.CHANGE_KEYWORD_NAME_NIT_COVENANT:
-            return state.set('keywordNameNit', action.keywordNameNit);
-        case actions.CLEAR_FILTER_ALERT_COVENANT:
-            const response2 = get(action.payload,'data.data',[]);
+
+
+        case actions.CHANGE_KEYWORD_NAME_GROUP:
+            return state.set('keywordName', action.keywordName);
+
+        case actions.CHANGE_KEYWORD_NAME_NEW_GROUP:
+            let newGroupChange = Immutable.Map({
+                id: state.get('group').get('id'),
+                name: action.keywordName,
+                listContact: state.get('group').get('listContact'),
+                pageNum: state.get('group').get('pageNum')
+            });
+
+            return state.set('group', newGroupChange);
+
+
+        case actions.INITIAL_VALUES_GROUPS:
+            const response3 = get(action.payload, 'data.data', []);
             return state.withMutations(map => {
                 map
                     .set('status', 'processed')
-                    .set('keywordNameNit', '')
-                    .set('statusCovenant', '-1')
+                    .set('keywordName', '')
                     .set('pageNum', 1)
-                    .set('columnOrder', '')
-                    .set('totalCovenantsByFiltered', get(response2, 'rowCount',0))
-                    .set('responseCovenants', get(response2, 'rows',[]));
+                    .set('totalGroupByFiltered', get(response3, 'rowCount', 0))
+                    .set('responseGroup', get(response3, 'rows', []));
             });
-        case actions.INITIAL_VALUES:
-            const response3 = get(action.payload,'data.data',[]);
-            return state.withMutations(map => {
-                map
-                    .set('status', 'processed')
-                    .set('keywordNameNit', '')
-                    .set('statusCovenant', '0')
-                    .set('pageNum', 1)
-                    .set('columnOrder', '')
-                    .set('totalCovenantsByFiltered', get(response3, 'rowCount',0))
-                    .set('responseCovenants', get(response3, 'rows',[]));
+
+
+        case actions.GET_GROUP_FOR_ID:
+            let response4 = get(action.payload, 'data.data', []);
+            let group = Immutable.Map({
+                id: response4.id,
+                name: response4.name,
+                listContact: state.get('group').get('listContact')
             });
-        case actions.CHANGE_STATUS_COVENANT:
-            return state.withMutations(map => {
-                map
-                    .set('statusCovenant', action.statusCovenant);
+            return state.set('group', group);
+
+
+        case actions.GET_LIST_CONTACT_GROUP_FOR_ID:
+            let response5 = get(action.payload, 'data.data', []);
+            console.log('response5', action.payload);
+            let groupList = Immutable.Map({
+                id: state.get('group').get('id'),
+                name: state.get('group').get('name'),
+                listContact: get(response5, 'rows', [])
             });
-        case actions.CLEAR_CLIENT_ORDER:
-            return state.withMutations(map => {
-                map
-                    .set('order', 0)
-                    .set('columnOrder', "")
+            return state.set('group', groupList);
+
+        case actions.VALID_EXISTS_GROUP:
+            let response6 = get(action.payload, 'data.data', []);
+            let nameSearch = '';
+            console.log('response', response6);
+            if (!_.isNull(response6.id)) {
+                console.log('entra null');
+                state.set('validExistGroup', true);
+                nameSearch = '';
+            } else {
+                nameSearch = response6.name;
+                state.set('validExistGroup', false);
+            }
+            let newGroupSearch = Immutable.Map({
+                id: state.get('group').get('id'),
+                name: nameSearch,
+                listContact: state.get('group').get('listContact')
             });
-        case actions.CLEAR_CLIENT_PAGINATION:
-            return state.withMutations(map => {
-                map
-                    .set('pageNum', 1)
+            return state.set('group', newGroupSearch);
+            return state;
+
+
+        case actions.SEARCH_CONTACT_FOR_GROUP:
+            let response7 = get(action.payload, 'data.contactDetail', []);
+            response7 = JSON.parse(response7);
+            console.log('response7.firstName', response7.firstName);
+            console.log('response7.firstName', response7);
+            let contactSearch = {
+                id: response7.id,
+                firstName: response7.firstName,
+                middleName: response7.middleName,
+                firstLastName: response7.firstLastName,
+                secondLastName: response7.secondLastName,
+                emailAddress: response7.emailAddress,
+                name: response7.firstName + " " + response7.middleName + " " + response7.firstLastName + " " + response7.secondLastName,
+            };
+            return state.set('contact', contactSearch);
+        case actions.ADD_CONTACT_LIST:
+            let addContactSearch = state.get('contact');
+            let list = state.get('group').get('listContact');
+            list.push(addContactSearch);
+            return state;
+
+        case actions.CLEAR_CONTACT_NAME:
+            let clearContactName = {
+                id: '',
+                firstName: '',
+                middleName: '',
+                firstLastName: '',
+                secondLastName: '',
+                emailAddress: '',
+                name: ''
+            };
+            return state.set('contact', clearContactName);
+
+
+        case actions.DELETE_CONTACT_LIST:
+            const id = action.idContact;
+            const listContact = state.get('group').get('listContact');
+            const listFinal = _.remove(listContact, (item)=> !_.isEqual(item.id, id));
+
+            const groupListContact = Immutable.Map({
+                id: state.get('group').get('id'),
+                name: state.get('group').get('name'),
+                listContact: listFinal
             });
-        case actions.ORDER_COLUMN_CLIENT:
-            return state.withMutations(map => {
-                map
-                    .set('order', action.order)
-                    .set('columnOrder', action.columnOrder)
+
+            return state.set('group', groupListContact);
+
+        case actions.SAVE_GROUP_FAVORITE_CONTACTS:
+            console.log(action.payload)
+            return state;
+
+
+        case actions.RESET_MODAL:
+            const resetModal = Immutable.Map({
+                id: '',
+                name: '',
+                listContact: []
             });
-        case actions.UPDATE_NUMBER_TOTAL_COVENANTS:
-            return state.withMutations(map => {
-                map
-                    .set('totalCovenantsByFiltered', action.totalClients);
-            });
+            state.set('validExistGroup', false);
+            return state.set('group', resetModal);
+
+
+        case actions.VIEW_EMAIL_CONTACTS:
+            //const resetModal = Immutable.Map({
+            //    id: '',
+            //    name: '',
+            //    listContact: []
+            //});
+            //state.set('validExistGroup', false);
+            return state;
+
         default:
             return state;
     }

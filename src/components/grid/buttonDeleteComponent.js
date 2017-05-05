@@ -26,7 +26,8 @@ import {
     DELETE_PARTICIPANT_VIEW,
     DELETE_TASK_VIEW,
     DELETE_TYPE_BUSINESS_PLAN,
-    DELETE_CONTACT_FROM_FUNCTION_OR_TYPE
+    DELETE_CONTACT_FROM_FUNCTION_OR_TYPE,
+    DELETE_GROUP
 } from './constants';
 import {
     clearBusinessPlanOrder,
@@ -37,7 +38,8 @@ import {deleteParticipant} from '../participantsVisitPre/actions';
 import {deleteTask} from '../visit/tasks/actions';
 import {deleteArea} from '../businessPlan/area/actions';
 import {deleteNeed} from '../businessPlan/need/actions';
-import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../draftDocuments/actions';
+import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../myPendings/draftDocuments/actions';
+import {clearFilterGroup} from '../contact/favoritesGroup/actions';
 
 class ButtonDeleteComponent extends Component {
 
@@ -120,6 +122,7 @@ class ButtonDeleteComponent extends Component {
             clearShareholderCreate, clearShareholderOrder, shareholdersByClientFindServer, clearBusinessPlanOrder,
             clearBusinessPlanPaginator, businessPlanByClientFindServer, draftsDocumentsByUser, clearDraftDocumentOrder,
             clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearContactsByFunctionPagination
+            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearFilterGroup
         } = this.props;
         if (this.state.showEx === true) {
             if (actionsDelete.typeDelete === DELETE_TYPE_CONTACT) {
@@ -164,6 +167,8 @@ class ButtonDeleteComponent extends Component {
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
+            }else if(actionsDelete.typeDelete == DELETE_GROUP){
+                clearFilterGroup();
             }
         }
         this.setState({showEx: false, showEr: false, show: false});
@@ -247,6 +252,8 @@ function mapDispatchToProps(dispatch) {
         clearContactsOrder,
         contactsByFunctionOrTypeFindServer,
         clearContactsByFunctionPagination
+        contactsByFunctionOrTypeFindServer,
+        clearFilterGroup
     }, dispatch);
 }
 

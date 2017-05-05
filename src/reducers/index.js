@@ -33,8 +33,8 @@ import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
 import dashboardReducer from '../components/dashboard/reducer';
 import clientProductReducer from '../components/clientEdit/products/reducer';
-import myPendingsReducer from '../components/myPendings/reducer';
-import draftDocumentsReducer from '../components/draftDocuments/reducer';
+import myPendingsReducer from '../components/myPendings/myTasks/reducer';
+import draftDocumentsReducer from '../components/myPendings/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
 import alertsReducer from '../components/alerts/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
@@ -52,6 +52,8 @@ import filterContactsReducer from '../components/filterContact/reducer';
 import AECClient from '../components/risksManagement/AEC/reducer';
 import contactsByFunctionOrTypeReducer from '../components/contactByFunctionOrType/reducer';
 import tabRisksManagment from '../components/risksManagement/reducer';
+import AECMyPendings from '../components/myPendings/AEC/reducer';
+import groupsFavoriteContactsReducer from '../components/contact/favoritesGroup/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -106,5 +108,7 @@ export default combineReducers({
     AECClient: AECClient,
     filterContactsReducer: filterContactsReducer,
     contactsByFunctionOrType: contactsByFunctionOrTypeReducer,
-    tabRisksManagment: tabRisksManagment
+    tabRisksManagment: tabRisksManagment,
+    AECMyPendings: AECMyPendings,
+    groupsFavoriteContacts :groupsFavoriteContactsReducer
 });

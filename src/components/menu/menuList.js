@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import MenuListItemFather from './menuListItemFather';
 import { connect } from 'react-redux';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
-import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS, MODULE_AEC } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
@@ -27,11 +27,11 @@ const itemContacts = {
 const itemMyPendings = {
     text: "Mis pendientes",
     icon: "tasks",
-    children: [
-        { text: "Mis tareas", link: "/dashboard/myPendings" },
-        { text: "Documentos en borrador", link: "/dashboard/draftDocuments" }
-    ]
+    children: []
 };
+const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
+const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
+const childrenMyPendingsMyDraftDocuments = { text: "Documentos en borrador", link: "/dashboard/myPendings/draftDocuments" };
 const itemAlerts = {
     text: "Alertas",
     icon: "alarm",
@@ -70,18 +70,21 @@ class MenuList extends Component {
             style={item.style}
             children={children}
             classIem={item.classIem}
-            />
+        />
     }
 
     componentWillMount() {
         menuItems = [];
-        const {getAlertsByUser} = this.props;
+        const { getAlertsByUser } = this.props;
         getAlertsByUser();
     }
 
     componentWillReceiveProps(nextProps) {
         menuItems = [];
-        const {navBar, alerts} = nextProps;
+        itemMyPendings.children = [];
+        itemMyPendings.children.push(childrenMyPendingsMyTaks);
+        itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);
+        const { navBar, alerts } = nextProps;
         if (_.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW)) {
             menuItems.push(itemManagerialView);
         }
@@ -93,6 +96,9 @@ class MenuList extends Component {
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS)) {
             menuItems.push(itemContacts);
+        }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_AEC)) {
+            itemMyPendings.children.push(childrenMyPendingsAEC);
         }
         menuItems.push(itemMyPendings);
         itemAlerts.children = [];
@@ -122,7 +128,7 @@ class MenuList extends Component {
     }
 
     render() {
-        const {navBar} = this.props;
+        const { navBar } = this.props;
         const currentDate = moment().locale('es');
         return (
             <div>
@@ -159,7 +165,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({navBar, alerts}, ownerProps) {
+function mapStateToProps({ navBar, alerts }, ownerProps) {
     return {
         navBar,
         alerts

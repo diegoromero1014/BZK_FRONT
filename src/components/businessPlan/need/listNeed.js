@@ -1,5 +1,4 @@
 import React, {Component,PropTypes} from 'react';
-import GridComponent from '../../grid/component';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';

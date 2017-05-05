@@ -753,7 +753,7 @@ class ModalComponentContact extends Component {
                         <Row>
                             <Col xs>
                                 <dl style={{ width: '100%' }}>
-                                    <dt><span>contactRelevantFeatures</span></dt>
+                                    <dt><span>Particularidades Relevantes del contacto</span></dt>
                                     <dd>
                                         <TextareaComponent
                                             name="contactRelevantFeatures"

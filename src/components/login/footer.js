@@ -6,7 +6,7 @@ import ModalComponentAgent from '../agent/modalComponent';
 
 const style = {
   width: "50px"
-}
+};
 class Footer extends Component{
 
   constructor(props){
@@ -44,13 +44,15 @@ class Footer extends Component{
               <div style={{height: '15px', width: '15px'}} onClick={this._clickButtonActiveLogs}></div>
             </div>
 					</div>
-          <Modal isOpen={this.state.modalIsOpen} contentLabel="" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+          <Modal isOpen={this.state.modalIsOpen} contentLabel=" " onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
               <div className="modalBt4-content modal-content" style={{width: '400px'}}>
                 <div className="modalBt4-header modal-header">
                   <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}} id="myModalLabel">Agentes</h4>
                   <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
-                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                    <span className="modal-title" aria-hidden="true" role="close">
+                      <i className="remove icon modal-icon-close" role="close"/>
+                    </span>
                     <span className="sr-only">Close</span>
                   </button>
                 </div>

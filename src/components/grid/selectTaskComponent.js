@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {TASK_STATUS} from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import {updateStatusTask, tasksByUser} from '../myPendings/actions';
-import {NUMBER_RECORDS} from '../myPendings/constants';
+import {updateStatusTask, tasksByUser} from '../myPendings/myTasks/actions';
+import {NUMBER_RECORDS} from '../myPendings/myTasks/constants';
 
 let key = 1;
 class SelectTaskComponent extends Component {

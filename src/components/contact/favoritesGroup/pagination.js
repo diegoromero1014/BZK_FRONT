@@ -1,40 +1,37 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {showLoading} from '../loading/actions';
-import {covenantsFindServer, changePage} from './actions';
+import {showLoading} from '../../loading/actions';
+import {groupFindServer, changePage} from './actions';
 import {NUMBER_RECORDS} from './constants';
 import {has} from 'lodash';
 
 class Pagination extends Component{
 
   _handlePagination(page){
-    const {covenantsFindServer,changePage,alertCovenant,showLoading} = this.props;
+    const {groupFindServer,changePage,groupsFavoriteContacts,showLoading} = this.props;
       changePage(page);
-      const keyWordNameNit = alertCovenant.get('keywordNameNit');
-      const order = alertCovenant.get('order');
-      const statusCovenant = alertCovenant.get('statusCovenant');
-      const columnOrder = alertCovenant.get('columnOrder');
+      const keywordName = groupsFavoriteContacts.get('keywordName');
       showLoading(true, 'Cargando..');
-      covenantsFindServer(keyWordNameNit, statusCovenant, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
-          if (has(data, 'payload.data.data')) {
+      groupFindServer(keywordName, page, NUMBER_RECORDS).then((data) => {
+          if (_.has(data, 'payload.data.data')) {
               showLoading(false, null);
           }
       });
   }
 
   render(){
-    const {alertCovenant} = this.props;
-    var page = alertCovenant.get('pageNum');
+    const {groupsFavoriteContacts} = this.props;
+    var page = groupsFavoriteContacts.get('pageNum');
     var firstPage = 1;
     if(page > 7){
       firstPage = page - 6;
     }
-    var countClients = alertCovenant.get('totalCovenantsByFiltered');
-    var lastPage = Math.ceil(countClients / NUMBER_RECORDS);
+    var countGroup = groupsFavoriteContacts.get('totalGroupByFiltered');
+    var lastPage = Math.ceil(countGroup / NUMBER_RECORDS);
     return (
       <div>
-        {countClients > NUMBER_RECORDS ?
+        {countGroup > NUMBER_RECORDS ?
           <div style={{borderTop:"2px solid #D9DEDF", width:"100%", paddingTop: "15px", paddingBottom:"15px", backgroundColor: '#FFF'}}>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
@@ -74,15 +71,15 @@ class Pagination extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
-      covenantsFindServer,
+      groupFindServer,
       changePage,
       showLoading
   }, dispatch);
 }
 
-function mapStateToProps({alertCovenant}, ownerProps){
+function mapStateToProps({groupsFavoriteContacts}, ownerProps){
   return {
-      alertCovenant
+      groupsFavoriteContacts
   };
 }
 

@@ -1,20 +1,22 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import Modal from 'react-modal';
-import {toggleModal} from './action';
-import {clearClienEdit} from '../contact/contactDetail/actions';
-import {bindActionCreators} from 'redux';
+import { toggleModal } from './action';
+import { clearClienEdit } from '../contact/contactDetail/actions';
+import { bindActionCreators } from 'redux';
 import * as views from './constants';
-import {clearSearchShareholder} from '../shareholder/shareholderDetail/actions';
-import {clearValuesAdressessKeys} from '../selectsComponent/actions';
+import { clearSearchShareholder } from '../shareholder/shareholderDetail/actions';
+import { clearValuesAdressessKeys } from '../selectsComponent/actions';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../shareholder/shareholderDetail/componentShareHolderDetail';
 import ModalTask from '../visit/tasks/modalTask';
 import ModalCreateTask from '../pendingTask/modalCreateTask';
 import ModalTrackingCovenant from '../risksManagement/covenants/createTracking/modalTrackingCovenant';
-import {get} from 'lodash';
+import { get } from 'lodash';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
+import ModalPendingAEC from '../myPendings/AEC/modalPendingAEC';
+import ModalViewEmailsGroup from '../contact/favoritesGroup/modalViewEmailsGroup';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -28,20 +30,20 @@ class ModalComponentDialog extends Component {
     }
 
     openModal() {
-        const {actions, clearValuesAdressessKeys, clearSearchShareholder} = this.props;
+        const { actions, clearValuesAdressessKeys, clearSearchShareholder } = this.props;
         switch (actions.component) {
             case views.VIEW_SHAREHOLDER:
                 clearValuesAdressessKeys();
                 clearSearchShareholder();
                 break;
         }
-        this.setState({modalIsOpen: true});
+        this.setState({ modalIsOpen: true });
     }
 
     closeModal() {
-        const {clearClienEdit} = this.props;
+        const { clearClienEdit } = this.props;
         const actions = this.props.actions;
-        this.setState({modalIsOpen: false});
+        this.setState({ modalIsOpen: false });
         if (actions.component === views.VIEW_CONTACT) {
             clearClienEdit();
         }
@@ -49,28 +51,34 @@ class ModalComponentDialog extends Component {
 
     _contectViewModal(actions, idx) {
         var cell;
-        const {closeModal} = this.props;
+        const { closeModal } = this.props;
         switch (actions.component) {
             case views.VIEW_CONTACT:
-                cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal}/>;
+                cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_SHAREHOLDER:
-                cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal}/>;
+                cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK:
-                cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal}/>;
+                cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient}/>;
+                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} />;
                 break;
             case views.VIEW_TRACKING_COVENANT:
-                cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal}/>;
+                cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_OBSERVATION:
-                cell = <ModalObservation alertPortfolioExpId={actions.id} isOpen={this.closeModal}/>;
+                cell = <ModalObservation alertPortfolioExpId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_AEC:
-                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal} />
+                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal}/>
+                break;
+            case views.VIEW_EMAILS_GROUP:
+                cell = <ModalViewEmailsGroup idGroup={actions.id} isOpen={this.closeModal}/>
+                break;
+            case views.VIEW_AEC_PENDING:
+                cell = <ModalPendingAEC aec={actions.aec} isOpen={this.closeModal} />
                 break;
         }
 
@@ -81,11 +89,11 @@ class ModalComponentDialog extends Component {
     render() {
         const modalTitle = this.props.modalTitle;
         const actions = this.props.actions;
-        const modalSize = get(actions,'modalSize','lg');
+        const modalSize = get(actions, 'modalSize', 'lg');
         return (
-            <td style={{padding: '10px', textAlign: 'center'}}>
+            <td style={{ padding: '10px', textAlign: 'center' }}>
                 <button className="btn btn-primary btn-sm" onClick={this.openModal}>
-                    <i className="zoom icon" style={{margin: '0em', fontSize: '1.2em'}}/>
+                    <i className="zoom icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
@@ -95,10 +103,10 @@ class ModalComponentDialog extends Component {
                     <div className={`modalBt4-dialog modalBt4-${modalSize}`}>
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
                                     id="myModalLabel">{modalTitle}</h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
-                                        role="close">
+                                    role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i
                                         className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
@@ -113,7 +121,7 @@ class ModalComponentDialog extends Component {
     }
 }
 
-function mapStateToProps({modal}, {idModal}) {
+function mapStateToProps({ modal }, { idModal }) {
     return {
         modalStatus: modal.get('modalState')
     };

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Route, Redirect} from 'react-router';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import React, { Component } from 'react';
+import { Route, Redirect } from 'react-router';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import MainMenuComponent from './components/menu/component';
 import LoginComponent from './components/login/component';
 import DashboardComponent from './components/dashboard/dashboardComponent';
@@ -21,8 +21,8 @@ import BusinessPlan from './components/businessPlan/createBusinessPlan/createBus
 import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
 import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
 import AdminAlertClientsPortfolioExpiration from './components/alertPortfolioExpirtation/portfolioExpirationAlertComponent';
-import ModalComponentPending from './components/myPendings/modalComponentPending';
-import ModalDraftDocuments from './components/draftDocuments/modalDraftDocuments';
+import ModalComponentPending from './components/myPendings/myTasks/modalComponentPending';
+import ModalDraftDocuments from './components/myPendings/draftDocuments/modalDraftDocuments';
 import ViewAlerts from './components/alerts/alertsComponent';
 import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
 import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
@@ -31,11 +31,13 @@ import editFormPipeline from './components/pipeline/editPipeline/formEditPipelin
 import FindContacts from './components/filterContact/findContacts';
 import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
 import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
+import AEC from './components/myPendings/AEC/componentAEC';
+import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
 
 class App extends Component {
     render() {
         return (
-            <div style={{width: "100%"}}>
+            <div style={{ width: "100%" }}>
                 {this.props.children}
             </div>
         );
@@ -44,7 +46,7 @@ class App extends Component {
 
 export default (
     <Grid>
-        <Redirect from="/" to="/login"/>
+        <Redirect from="/" to="/login" />
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
             <Route path="dashboard" component={DashboardComponent}>
@@ -65,8 +67,11 @@ export default (
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
                 <Route path="alertCovenants" component={AlertCovenants}></Route>
-                <Route path="myPendings" component={ModalComponentPending}></Route>
-                <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
+                <Route path="myPendings">
+                    <Route path="myTasks" component={ModalComponentPending}></Route>
+                    <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
+                    <Route path="AEC" component={AEC}></Route>
+                </Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
                 <Route path="contacts" component={FindContacts}></Route>
@@ -74,6 +79,7 @@ export default (
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
+            <Route path="favoriteGroup" component={FavoritesGroup}></Route>
         </Route>
     </Grid>
 );
