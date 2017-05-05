@@ -32,7 +32,7 @@ import FindContacts from './components/filterContact/findContacts';
 import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
 import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
 import AEC from './components/myPendings/AEC/componentAEC';
-import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
+import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
 
 class App extends Component {
     render() {
