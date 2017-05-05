@@ -280,7 +280,7 @@ class ModalCreateRelationship extends Component {
                     showErrorForm: true,
                     typeView: "error",
                     title: "Error creando relación",
-                    message: "Señor usuario, no puede relacionar el cliente seleccionado porque no pertenece a una de sus células."
+                    message: "Señor usuario, no puede relacionar el cliente porque no pertenece a una de sus células."
                 });
             }
         }
@@ -316,7 +316,7 @@ class ModalCreateRelationship extends Component {
                             showErrorForm: true,
                             title: "Error agregando clientes",
                             typeView: "error",
-                            message: "Señor usuario, los clientes que pertenecen al grupo económico seleccionado ya tienen una relación con el contacto."
+                            message: "Señor usuario, los clientes que pertenecen al grupo económico ya tienen una relación con el contacto o no pertenece a una de sus células."
                         });
                     } else {
                         _.map(valuesServer, (map) => valuesAdd.push(map));
@@ -387,7 +387,7 @@ class ModalCreateRelationship extends Component {
                                     </dd>
                                 </Col>
                                 <Col xs={12} md={6} lg={4}>
-                                    <dt><span>Entidad / Línea de negocio</span></dt>
+                                    <dt><span>Entidad/Línea de negocio</span></dt>
                                     <dd>
                                         <MultipleSelect
                                             name="contactLineOfBusiness"
@@ -421,19 +421,16 @@ class ModalCreateRelationship extends Component {
                                     <dt><span>Cliente </span></dt>
                                     <dd>
                                         <div className="ui dropdown search clientRelationship fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                            <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                                                <input className="prompt" id="clientRelationship"
-                                                    style={{ borderRadius: "3px" }}
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    value={nameClient.value}
-                                                    onChange={nameClient.onChange}
-                                                    placeholder="Ingrese un criterio de búsqueda..."
-                                                    onKeyPress={this.updateKeyValueClient}
-                                                />
-                                                <i className="search icon" id="iconClientRelationship"></i>
-                                            </div>
-                                            <div className="menu results"></div>
+                                            <ComboBoxFilter className="prompt" id="clientRelationship"
+                                                style={{ borderRadius: "3px" }}
+                                                autoComplete="off"
+                                                type="text"
+                                                {...nameClient}
+                                                value={nameClient.value}
+                                                placeholder="Ingrese un criterio de búsqueda..."
+                                                onKeyPress={this.updateKeyValueClient}
+                                                touched={true}
+                                            />
                                         </div>
                                     </dd>
                                 </Col>

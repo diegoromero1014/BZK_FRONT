@@ -217,8 +217,8 @@ class ListClientsContact extends Component {
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmDelete}
-                    title="Confirmación eliminación"
-                    text="Señor usuario, ¿Está seguro que desea eliminar las relaciones?"
+                    title="Confirmar eliminación"
+                    text="Señor usuario, ¿Está seguro que desea eliminar la(s) relación(es)?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
