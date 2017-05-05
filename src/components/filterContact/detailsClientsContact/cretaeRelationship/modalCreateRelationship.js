@@ -209,7 +209,7 @@ class ModalCreateRelationship extends Component {
             var e = { keyCode: 13, consultclick: true };
             thisForm.updateKeyValueClient(e);
         });
-        $("#inputEconomicGroup").click(function () {
+        $("#iconEconomicGroup").click(function () {
             var e = { keyCode: 13, consultclick: true };
             thisForm.updateKeyValueEconomicGroup(e);
         });
@@ -220,7 +220,7 @@ class ModalCreateRelationship extends Component {
             var e = { keyCode: 13, consultclick: true };
             thisForm.updateKeyValueClient(e);
         });
-        $("#inputEconomicGroup").click(function () {
+        $("#iconEconomicGroup").click(function () {
             var e = { keyCode: 13, consultclick: true };
             thisForm.updateKeyValueEconomicGroup(e);
         });
@@ -421,7 +421,7 @@ class ModalCreateRelationship extends Component {
                                     <dt><span>Cliente </span></dt>
                                     <dd>
                                         <div className="ui dropdown search clientRelationship fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                            <ComboBoxFilter className="prompt" id="clientRelationship"
+                                            <ComboBoxFilter className="prompt" id="clientRelationship" idIcon="iconClientRelationship"
                                                 style={{ borderRadius: "3px" }}
                                                 autoComplete="off"
                                                 type="text"
@@ -444,7 +444,7 @@ class ModalCreateRelationship extends Component {
                                     <dt><span>Grupo económico</span></dt>
                                     <dd>
                                         <div className="ui search economicGroup fluid">
-                                            <ComboBoxFilter className="prompt" id="economicGroup"
+                                            <ComboBoxFilter className="prompt" id="economicGroup" idIcon="iconEconomicGroup"
                                                 style={{ borderRadius: "3px" }}
                                                 autoComplete="off"
                                                 type="text"
