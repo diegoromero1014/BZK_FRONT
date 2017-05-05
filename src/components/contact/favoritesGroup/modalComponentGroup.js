@@ -5,11 +5,11 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import {getGroupForId,changeKeywordNameNewGroup,getListContactGroupForId,getValidateExistGroup,
     searchContactForGroup,addContactList,clearContactName,deleteContactList,saveGroupFavoriteContacts,
-    resetModal
+    resetModal,groupFindServer
 
 } from './actions';
 import GridComponent from '../../grid/component';
-import {DELETE_CONTACT_LIST_GROUP} from './constants';
+import {DELETE_CONTACT_LIST_GROUP,NUMBER_RECORDS} from './constants';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { CONTACT_ID_TYPE} from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
@@ -56,7 +56,7 @@ class ModalComponentGroup extends Component {
             getGroupForId(groupId);
             getListContactGroupForId(groupId);
         } else {
-            searchGroup.value='';
+            searchGroup.value = '';
             clearContactName();
             resetForm();
             resetModal();
@@ -71,9 +71,11 @@ class ModalComponentGroup extends Component {
 
 
     _saveGroupFavoriteContacts() {
-        const {groupsFavoriteContacts,saveGroupFavoriteContacts} = this.props;
+        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum} = this.props;
         const group = groupsFavoriteContacts.get('group');
         saveGroupFavoriteContacts(group.toJSON());
+        groupFindServer(keyWordName,pageNum,NUMBER_RECORDS);
+        this.closeModal();
     }
 
 
@@ -87,7 +89,11 @@ class ModalComponentGroup extends Component {
         if (exist >= 0) {
             swtShowMessage('error', 'Contacto duplicado', 'Señor usuario, el contacto ya esta en el grupo');
         } else {
-            addContactList();
+            if (_.size(list) === 50) {
+                swtShowMessage('error', 'Contactos máximos', 'Señor usuario, el grupo ya tiene la máxima cantidad de contactos');
+            } else {
+                addContactList();
+            }
             clearContactName();
             resetForm();
         }
@@ -160,7 +166,7 @@ class ModalComponentGroup extends Component {
         let { createGroup,searchContact,visibleMessage,visibleTable,visibleNameContact} = this.state;
         const data = groupsFavoriteContacts.get('group').get('listContact');
         const contactSearch = groupsFavoriteContacts.get('contact');
-        if (!_.isEqual(groupsFavoriteContacts.get('group').get('name').trim(),'')) {
+        if (!_.isEqual(groupsFavoriteContacts.get('group').get('name').trim(), '')) {
             searchGroup.value = groupsFavoriteContacts.get('group').get('name');
         }
 
@@ -184,8 +190,6 @@ class ModalComponentGroup extends Component {
         } else {
             visibleNameContact = 'none';
         }
-
-
 
 
         return (
@@ -323,13 +327,16 @@ function mapDispatchToProps(dispatch) {
         clearContactName,
         deleteContactList,
         saveGroupFavoriteContacts,
-        resetModal
+        resetModal,
+        groupFindServer
     }, dispatch);
 }
 
-function mapStateToProps({groupsFavoriteContacts,selectsReducer}, ownerProps) {
+function mapStateToProps({groupsFavoriteContacts,selectsReducer}, ownerProps){
+    const keyWordName = groupsFavoriteContacts.get('pageNum');
+    const pageNum = groupsFavoriteContacts.get('keywordName');
     return {
-        groupsFavoriteContacts, selectsReducer
+        groupsFavoriteContacts, selectsReducer,keyWordName,pageNum
     };
 }
 

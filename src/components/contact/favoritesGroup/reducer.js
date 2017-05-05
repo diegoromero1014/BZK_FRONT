@@ -12,6 +12,7 @@ const initialState = Immutable.Map({
     responseGroup: [],
     totalGroupByFiltered: 0,
     validExistGroup: false,
+    viewEmailGroup:'',
     group: Immutable.Map({
         id: '',
         name: '',
@@ -174,13 +175,8 @@ export default (state = initialState, action = {}) => {
 
 
         case actions.VIEW_EMAIL_CONTACTS:
-            //const resetModal = Immutable.Map({
-            //    id: '',
-            //    name: '',
-            //    listContact: []
-            //});
-            //state.set('validExistGroup', false);
-            return state;
+            let response8 = get(action.payload, 'data.data', []);
+            return state.set('viewEmailGroup', response8);
 
         default:
             return state;

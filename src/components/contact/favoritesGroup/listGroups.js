@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {groupFindServer} from './actions';
 import GridComponent from '../../grid/component';
 import {mapDataGrid} from './groupsFavoriteContactsUtilities';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS,MODAL_TITLE_EMAILS} from './constants';
 
 class ListGroups extends Component {
 
@@ -51,7 +51,7 @@ class ListGroups extends Component {
         const data = groupsFavoriteContacts.get('responseGroup');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={MODAL_TITLE_EMAILS}/>
             </div>
         );
     }

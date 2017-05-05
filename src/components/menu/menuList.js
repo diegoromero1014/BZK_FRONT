@@ -29,6 +29,7 @@ const itemMyPendings = {
     icon: "tasks",
     children: []
 };
+const childrenContactsGroupFavorito = { text: "Grupo favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
 const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
 const childrenMyPendingsMyDraftDocuments = { text: "Documentos en borrador", link: "/dashboard/myPendings/draftDocuments" };
@@ -84,6 +85,8 @@ class MenuList extends Component {
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
         itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);
+        itemContacts.children = [];
+        itemContacts.children.push(childrenContactsGroupFavorito);
         const { navBar, alerts } = nextProps;
         if (_.get(navBar.get('mapModulesAccess'), MODULE_MANAGERIAL_VIEW)) {
             menuItems.push(itemManagerialView);

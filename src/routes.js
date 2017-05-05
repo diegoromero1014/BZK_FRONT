@@ -77,9 +77,9 @@ export default (
                 <Route path="contacts" component={FindContacts}></Route>
                 <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
+                <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
-            <Route path="favoriteGroup" component={FavoritesGroup}></Route>
         </Route>
     </Grid>
 );

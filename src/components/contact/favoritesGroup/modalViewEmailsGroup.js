@@ -7,13 +7,10 @@ import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
 import {getEmailsForGroup} from './actions';
-import Textarea from '../../../ui/textarea/textareaComponent';
+import AreaNueva from '../../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import {showLoading} from '../../loading/actions';
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
-
-const fields = ["emails"];
-
 
 
 class ModalViewEmailsGroup extends Component {
@@ -24,20 +21,23 @@ class ModalViewEmailsGroup extends Component {
     }
 
     componentWillMount() {
-        let {getEmailsForGroup,idGroup,fields:{emails}} = this.props;
-        getEmailsForGroup(idGroup).then((data) => {
-            let emailsString = _.get(data.payload, 'data.data', []);
-            console.log(emailsString);
-            emails.value = emailsString;
-        });
+        let {getEmailsForGroup,idGroup} = this.props;
+        getEmailsForGroup(idGroup);
     }
-    _copy(){
 
+    _copy() {
+        let aux = document.createElement("input");
+        aux.setAttribute("value", document.getElementById("emailsGroups").value);
+        document.body.appendChild(aux);
+        aux.select();
+        document.execCommand("copy");
+        document.body.removeChild(aux);
+        swtShowMessage('success', 'Copia correcta', 'Señor usuario, los correos fueron copiados correctamente');
     }
 
 
     render() {
-        let {fields:{emails}} = this.props;
+        const emailsGroups = this.props.groupsFavoriteContacts.get('viewEmailGroup');
         return (
             <div>
                 <div className="modalBt4-body modal-body clearfix"
@@ -45,22 +45,30 @@ class ModalViewEmailsGroup extends Component {
                     <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
                         <Row style={{paddingTop: '10px'}}>
                             <Col xs={12} md={12} lg={12}>
-                                <h4>Correos electronicos</h4>
+                                <h4>Correos electrónicos</h4>
                                 <div>
-                                            <Textarea
-                                                name="actionArea"
-                                                type="text"
-                                                style={{width: '100%', height: '100%', textAlign: 'justify'}}
-                                                max="1000"
-                                                rows={5}
-                                                {...emails}
-                                            />
+                                    <AreaNueva
+                                        id="emailsGroups"
+                                        name="actionArea"
+                                        type="text"
+                                        disabled="disabled"
+                                        style={{width: '100%', height: '100%', textAlign: 'justify'}}
+                                        max="1000"
+                                        rows={5}
+                                        value={emailsGroups}
+                                    />
                                 </div>
                             </Col>
                         </Row>
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
+                    <button type="button"
+                            className="btn btn-primary modal-button-edit">
+                        <a href={`mailto:${emailsGroups}`} target="_top" style={{color:"#FFF"}}>
+                            Enviar correo
+                        </a>
+                    </button>
                     <button type="button" onClick={this._copy}
                             className="btn btn-primary modal-button-edit">Copiar
                     </button>
@@ -82,7 +90,4 @@ function mapStateToProps({groupsFavoriteContacts}, ownerProps) {
     };
 }
 
-export default reduxForm({
-    form: 'FORM_VIEW_EMAILS_GROUP',
-    fields
-}, mapStateToProps, mapDispatchToProps)(ModalViewEmailsGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalViewEmailsGroup);
