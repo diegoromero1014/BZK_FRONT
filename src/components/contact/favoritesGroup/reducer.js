@@ -12,7 +12,7 @@ const initialState = Immutable.Map({
     responseGroup: [],
     totalGroupByFiltered: 0,
     validExistGroup: false,
-    viewEmailGroup:'',
+    viewEmailGroup: '',
     group: Immutable.Map({
         id: '',
         name: '',
@@ -83,7 +83,7 @@ export default (state = initialState, action = {}) => {
 
         case actions.GET_LIST_CONTACT_GROUP_FOR_ID:
             let response5 = get(action.payload, 'data.data', []);
-            console.log('response5', action.payload);
+
             let groupList = Immutable.Map({
                 id: state.get('group').get('id'),
                 name: state.get('group').get('name'),
@@ -94,9 +94,9 @@ export default (state = initialState, action = {}) => {
         case actions.VALID_EXISTS_GROUP:
             let response6 = get(action.payload, 'data.data', []);
             let nameSearch = '';
-            console.log('response', response6);
+
             if (!_.isNull(response6.id)) {
-                console.log('entra null');
+
                 state.set('validExistGroup', true);
                 nameSearch = '';
             } else {
@@ -115,8 +115,7 @@ export default (state = initialState, action = {}) => {
         case actions.SEARCH_CONTACT_FOR_GROUP:
             let response7 = get(action.payload, 'data.contactDetail', []);
             response7 = JSON.parse(response7);
-            console.log('response7.firstName', response7.firstName);
-            console.log('response7.firstName', response7);
+
             let contactSearch = {
                 id: response7.id,
                 firstName: response7.firstName,
@@ -160,7 +159,6 @@ export default (state = initialState, action = {}) => {
             return state.set('group', groupListContact);
 
         case actions.SAVE_GROUP_FAVORITE_CONTACTS:
-            console.log(action.payload)
             return state;
 
 

@@ -121,8 +121,8 @@ class ButtonDeleteComponent extends Component {
             visitByClientFindServer, contactsByClientFindServer, actionsDelete, clearContactCreate, clearContactOrder,
             clearShareholderCreate, clearShareholderOrder, shareholdersByClientFindServer, clearBusinessPlanOrder,
             clearBusinessPlanPaginator, businessPlanByClientFindServer, draftsDocumentsByUser, clearDraftDocumentOrder,
-            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearContactsByFunctionPagination
-            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearFilterGroup
+            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearContactsByFunctionPagination,
+            clearFilterGroup
         } = this.props;
         if (this.state.showEx === true) {
             if (actionsDelete.typeDelete === DELETE_TYPE_CONTACT) {
@@ -251,7 +251,7 @@ function mapDispatchToProps(dispatch) {
         clearContactsByFunctionPagination,
         clearContactsOrder,
         contactsByFunctionOrTypeFindServer,
-        clearContactsByFunctionPagination
+        clearContactsByFunctionPagination,
         contactsByFunctionOrTypeFindServer,
         clearFilterGroup
     }, dispatch);
