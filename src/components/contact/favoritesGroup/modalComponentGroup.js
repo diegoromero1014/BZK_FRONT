@@ -71,11 +71,18 @@ class ModalComponentGroup extends Component {
 
 
     _saveGroupFavoriteContacts() {
-        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum} = this.props;
+        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum,swtShowMessage} = this.props;
         const group = groupsFavoriteContacts.get('group');
-        saveGroupFavoriteContacts(group.toJSON());
-        groupFindServer(keyWordName,pageNum,NUMBER_RECORDS);
-        this.closeModal();
+        const list = groupsFavoriteContacts.get('group').get('listContact');
+        console.log(_.size(list));
+        if(_.size(list) > 1){
+            saveGroupFavoriteContacts(group.toJSON());
+            groupFindServer(keyWordName,pageNum,NUMBER_RECORDS);
+            swtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito');
+            this.closeModal();
+        }else{
+            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos dos contactos');
+        }
     }
 
 
@@ -140,7 +147,7 @@ class ModalComponentGroup extends Component {
         const { fields: {tipoDocumento,numeroDocumento},swtShowMessage,searchContactForGroup } = this.props;
         if (!_.isEqual(numeroDocumento.value.trim(), '') && !_.isEqual(tipoDocumento.value.trim(), '')) {
             searchContactForGroup(tipoDocumento.value, numeroDocumento.value, '').then((data) => {
-                console.log('dataModal', data);
+
             });
         } else {
             swtShowMessage('error', 'Campos obligatorios', 'Señor usuario, para agregar un contacto debe ingresar los campos obligatorios.');
