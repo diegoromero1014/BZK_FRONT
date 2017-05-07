@@ -161,7 +161,7 @@ class ContactDetailsModalComponent extends Component {
     nonValidateEnter(true);
     const that = this;
     showLoading(true, MESSAGE_LOAD_DATA);
-    const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
+    const { fields: { contactFunctions, contactRelevantFeatures, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
     getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
       FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
     const idClient = callFromModuleContact ? null : window.localStorage.getItem('idClientSelected');
@@ -182,6 +182,7 @@ class ContactDetailsModalComponent extends Component {
         }
         contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
         contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+        contactRelevantFeatures.onChange(_.get(contact,'contactRelevantFeatures'));
       });
   }
 

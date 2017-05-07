@@ -20,6 +20,7 @@ const initialState = Immutable.Map({
     }),
     contact: {
         id: '',
+        contactIdentityNumber: '',
         firstName: '',
         middleName: '',
         firstLastName: '',
@@ -94,7 +95,7 @@ export default (state = initialState, action = {}) => {
         case actions.VALID_EXISTS_GROUP:
             let response6 = get(action.payload, 'data.data', []);
             let nameSearch = '';
-            console.log('asda',response6);
+            console.log('asda', response6);
             if (!_.isNull(response6) && !_.isNull(response6.id)) {
                 state.set('validExistGroup', true);
                 nameSearch = '';
@@ -116,6 +117,7 @@ export default (state = initialState, action = {}) => {
 
             let contactSearch = {
                 id: response7.id,
+                contactIdentityNumber: response7.contactIdentityNumber,
                 firstName: response7.firstName,
                 middleName: response7.middleName,
                 firstLastName: response7.firstLastName,
@@ -132,6 +134,7 @@ export default (state = initialState, action = {}) => {
         case actions.CLEAR_CONTACT_NAME:
             let clearContactName = {
                 id: '',
+                contactIdentityNumber: '',
                 firstName: '',
                 middleName: '',
                 firstLastName: '',
@@ -157,6 +160,15 @@ export default (state = initialState, action = {}) => {
 
         case actions.SAVE_GROUP_FAVORITE_CONTACTS:
             return state;
+
+        case actions.SAVE_NAME_GROUP:
+            const saveNameGroup = Immutable.Map({
+                id: state.get('group').get('id'),
+                name: action.name,
+                listContact: state.get('group').get('listContact')
+            });
+            console.log(saveNameGroup);
+            return state.set('group', saveNameGroup);
 
 
         case actions.RESET_MODAL:

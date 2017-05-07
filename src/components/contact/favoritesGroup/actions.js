@@ -233,7 +233,7 @@ export function saveGroupFavoriteContacts(group){
     }
     var request = axios.post(APP_URL + "/saveGroupFavoriteContacts", json);
     return {
-        type: constant.SEARCH_CONTACT_FOR_GROUP,
+        type: constant.SAVE_GROUP_FAVORITE_CONTACTS,
         payload: request
     }
 }
@@ -244,6 +244,15 @@ export function resetModal(){
         type: constant.RESET_MODAL
     }
 }
+
+
+export function saveNameGroup(name){
+    return {
+        type: constant.SAVE_NAME_GROUP,
+        name:name
+    }
+}
+
 
 
 
