@@ -182,7 +182,7 @@ class ContactDetailsModalComponent extends Component {
     componentWillMount() {
         const {
             nonValidateEnter, getMasterDataFields, getContactDetails, contactId,  callFromModuleContact, showLoading
-        } = this.props;
+            } = this.props;
         thisCallFromModuleContact = callFromModuleContact;
         nonValidateEnter(true);
         const that = this;
@@ -216,28 +216,28 @@ class ContactDetailsModalComponent extends Component {
     _downloadFileSocialStyle() {
         const {downloadFilePDF} = this.props;
         downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
-    //contactGender.onChange('');
-    this.setState({ generoData: genero });
-  }
+        //contactGender.onChange('');
+        this.setState({generoData: genero});
+    }
 
 
     _genero(val) {
-      const {fields: {contactTitle, contactGender}, selectsReducer, contactDetail} = this.props;
-      var femenino = ['Señora', 'Señorita', 'Doctora'];
-      var masculino = ['Señor', 'Doctor', 'Padre'];
-      var genero;
-      var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
-      if (_.indexOf(femenino, tratamiento) !== -1) {
-          genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
-      } else if (_.indexOf(masculino, tratamiento) !== -1) {
-          genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
-      } else {
-          genero = selectsReducer.get(FILTER_GENDER);
-      }
-      const contact = contactDetail.get('contactDetailList');
-      this.setState({generoData: genero});
-      contactGender.onChange(contact.gender);
-        
+        const {fields: {contactTitle, contactGender}, selectsReducer, contactDetail} = this.props;
+        var femenino = ['Señora', 'Señorita', 'Doctora'];
+        var masculino = ['Señor', 'Doctor', 'Padre'];
+        var genero;
+        var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
+        if (_.indexOf(femenino, tratamiento) !== -1) {
+            genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
+        } else if (_.indexOf(masculino, tratamiento) !== -1) {
+            genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
+        } else {
+            genero = selectsReducer.get(FILTER_GENDER);
+        }
+        const contact = contactDetail.get('contactDetailList');
+        this.setState({generoData: genero});
+        contactGender.onChange(contact.gender);
+
     }
 
     /* Cambio en los valores */
@@ -375,8 +375,8 @@ class ContactDetailsModalComponent extends Component {
                 contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
                 contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
                 contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-            }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
-        } = this.props;
+                }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
+            } = this.props;
         const {contactDetail, contactsByClientFindServer} = this.props;
         const contact = contactDetail.get('contactDetailList');
         const {saveContact} = this.props;
@@ -448,12 +448,12 @@ class ContactDetailsModalComponent extends Component {
         const {callFromModuleContact} = this.props;
         const {
             initialValues, fields: {
-                contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
-                contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-                contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
+            contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
+            contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
+            contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
             }, error, handleSubmit, selectsReducer, reducerGlobal
-        } = this.props;
+            } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                   onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -719,7 +719,7 @@ class ContactDetailsModalComponent extends Component {
                                     style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                   <Textarea className="form-control need-input"
-                            {...contactAddress}
+                      {...contactAddress}
                             validateEnter={true}
                             name="contactAddress"
                             maxLength="250"
@@ -903,6 +903,24 @@ class ContactDetailsModalComponent extends Component {
                                 </dd>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Particularidades relevantes del contacto</span></dt>
+                                    <dd>
+                                                 <Textarea
+                                                     name="contactRelevantFeatures"
+                                                     validateEnter={true}
+                                                     type="text"
+                                                     max="1000"
+                                                     style={{ width: '100%', height: '100%' }}
+                                                     rows={4}
+                                                     disabled={this.state.isEditable ? '' : 'disabled'}
+                                                     {...contactRelevantFeatures}
+                                                 /></dd>
+                                </dl>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
                 {!callFromModuleContact ?
@@ -999,11 +1017,12 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
             }
         };
     } else {
-        return {
-            contactDetail,
+        return { |
+        contactDetail,
             selectsReducer,
             reducerGlobal
-        };
+    }
+        ;
     }
 }
 
