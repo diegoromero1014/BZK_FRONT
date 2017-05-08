@@ -6,26 +6,36 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
-import {getEmailsForGroup} from './actions';
+import {getEmailsForGroup,clearEmails} from './actions';
 import AreaNueva from '../../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import {showLoading} from '../../loading/actions';
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import $ from 'jquery';
 
 
 class ModalViewEmailsGroup extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            emailView: false,
+        };
         this._copy = this._copy.bind(this);
     }
 
     componentWillMount() {
         let {getEmailsForGroup,idGroup} = this.props;
         getEmailsForGroup(idGroup);
+        this.setState({emailView:true});
+    }
+
+    componentWillUnmount(){
+        this.props.clearEmails();
     }
 
     _copy() {
+        const {swtShowMessage} = this.props;
         let aux = document.createElement("input");
         aux.setAttribute("value", document.getElementById("emailsGroups").value);
         document.body.appendChild(aux);
@@ -80,7 +90,7 @@ class ModalViewEmailsGroup extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getEmailsForGroup
+        getEmailsForGroup,swtShowMessage,clearEmails
     }, dispatch);
 }
 

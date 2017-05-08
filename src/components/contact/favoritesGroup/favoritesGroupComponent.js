@@ -27,9 +27,14 @@ class FavoritesGroup extends Component {
     }
 
     componentWillMount() {
-        const {updateTitleNavBar,clearFilterGroup} = this.props;
+        const {updateTitleNavBar,clearFilterGroup,showLoading} = this.props;
         updateTitleNavBar("Grupos de contactos favoritos");
-        clearFilterGroup();
+        showLoading(true, 'Cargando...');
+        clearFilterGroup().then((data) => {
+            if (_.has(data, 'payload.data.data')) {
+                showLoading(false, null);
+            }
+        });
     }
 
     _cleanSearch() {
@@ -62,7 +67,7 @@ class FavoritesGroup extends Component {
         }
 
         return (
-            <div style={{height: "115%"}}>
+            <div>
                 <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         <SearchGroup />
