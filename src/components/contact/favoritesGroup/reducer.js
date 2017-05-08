@@ -95,7 +95,7 @@ export default (state = initialState, action = {}) => {
         case actions.VALID_EXISTS_GROUP:
             let response6 = get(action.payload, 'data.data', []);
             let nameSearch = '';
-            console.log('asda', response6);
+
             if (!_.isNull(response6) && !_.isNull(response6.id)) {
                 state.set('validExistGroup', true);
                 nameSearch = '';
@@ -167,7 +167,7 @@ export default (state = initialState, action = {}) => {
                 name: action.name,
                 listContact: state.get('group').get('listContact')
             });
-            console.log(saveNameGroup);
+
             return state.set('group', saveNameGroup);
 
 

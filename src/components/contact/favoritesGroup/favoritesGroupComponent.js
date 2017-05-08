@@ -113,7 +113,7 @@ class FavoritesGroup extends Component {
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
                                 <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
-                                    id="myModalLabel">{TITTLE_MODAL_GROUP}</h4>
+                                    id="myModalLabel">Creación {TITTLE_MODAL_GROUP}</h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
                                         role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i

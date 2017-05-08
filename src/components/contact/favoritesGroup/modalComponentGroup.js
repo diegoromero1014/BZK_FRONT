@@ -83,18 +83,23 @@ class ModalComponentGroup extends Component {
 
     _handleValidateExistGroup() {
         const {fields:{searchGroup},getValidateExistGroup,swtShowMessage,resetForm,resetModal,saveNameGroup} = this.props;
-        getValidateExistGroup(searchGroup.value).then((data)=> {
-            const groupSearch = _.get(data.payload, 'data.data', null);
-            if (!_.isNull(groupSearch)) {
-                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                resetForm();
-                resetModal();
-                this.setState({disableName: '',disabled:'disabled'});
-            } else {
-                this.setState({disableName: 'disabled',disabled:''});
-                saveNameGroup(searchGroup.value);
-            }
-        });
+        if(!_.isEqual(searchGroup.value.trim(),'')){
+
+            getValidateExistGroup(searchGroup.value).then((data)=> {
+                const groupSearch = _.get(data.payload, 'data.data', null);
+                if (!_.isNull(groupSearch)) {
+                    swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                    resetForm();
+                    resetModal();
+                    this.setState({disableName: '',disabled:'disabled'});
+                } else {
+                    this.setState({disableName: 'disabled',disabled:''});
+                    saveNameGroup(searchGroup.value);
+                }
+            });
+        }else{
+            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede ser vacio');
+        }
     }
 
 
@@ -144,7 +149,7 @@ class ModalComponentGroup extends Component {
 
 
     _renderCellView(contact, idx) {
-        const message = "Señor usuario ¿está seguro que desea eliminar el grupo ";
+        const message = "Señor usuario ¿está seguro que desea eliminar el contacto ";
         const name = joinName(contact.firstName, contact.middleName, contact.firstLastName, contact.secondLastName);
         return <tr key={idx}>
             <td>{contact.contactIdentityNumber}</td>
@@ -193,6 +198,7 @@ class ModalComponentGroup extends Component {
 
     closeModal() {
         this.setState({modalIsOpen: false});
+        $('.remove.icon.modal-icon-close').click();
     }
 
 
@@ -214,7 +220,7 @@ class ModalComponentGroup extends Component {
                     listContact = _.get(data, 'payload', []);
                     //listContact = JSON.stringify(listContact.data.data.listContact);
                     listContact = listContact.data.data.listContact;
-                    console.log(listContact);
+
                     $('.ui.search.contactSearch')
                         .search({
                             cache: false,
@@ -332,7 +338,7 @@ class ModalComponentGroup extends Component {
                                         <tr>
                                             <th>Documento</th>
                                             <th>Nombre</th>
-                                            <th>Correo electronico</th>
+                                            <th>Correo electrónico</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -345,7 +351,7 @@ class ModalComponentGroup extends Component {
                             <Col xs={12} sm={12} md={12} lg={12} style={{display: visibleMessage}}>
                                 <div
                                     style={{padding: "15px", fontSize: '15px', textAlign: 'center', width: '100%'}}>
-                                    Aún no tiene contactos asociados
+                                    No se han adicionado contactos
                                 </div>
                             </Col>
                         </Row>
