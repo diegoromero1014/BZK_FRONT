@@ -120,7 +120,7 @@ class SearchBarContacts extends Component {
                             {filterContactsReducer.get('countContacts') === 0 && filterContactsReducer.get('status') === 'processed' ?
                                 <div style={{ textAlign: "center", marginTop: "15px" }}>
                                     <h4 className="form-item">
-                                        Señor usuario, no se encontraron contactos que cumplan el criterio debúsqueda.
+                                        Señor usuario, no se encontraron contactos que cumplan el criterio de búsqueda.
                                     </h4>
                                 </div> :
                                 contactItems.map(this._mapContactsItems)}
