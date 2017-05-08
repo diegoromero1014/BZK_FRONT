@@ -222,20 +222,22 @@ class ContactDetailsModalComponent extends Component {
 
 
     _genero(val) {
-        const {fields: {contactTitle, contactGender}, selectsReducer} = this.props;
-        var femenino = ['Señora', 'Señorita', 'Doctora'];
-        var masculino = ['Señor', 'Doctor', 'Padre'];
-        var genero;
-        var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
-        if (_.indexOf(femenino, tratamiento) !== -1) {
-            genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
-        } else if (_.indexOf(masculino, tratamiento) !== -1) {
-            genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
-        } else {
-            genero = selectsReducer.get(FILTER_GENDER);
-        }
-        contactGender.onChange('');
-        this.setState({generoData: genero});
+      const {fields: {contactTitle, contactGender}, selectsReducer, contactDetail} = this.props;
+      var femenino = ['Señora', 'Señorita', 'Doctora'];
+      var masculino = ['Señor', 'Doctor', 'Padre'];
+      var genero;
+      var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
+      if (_.indexOf(femenino, tratamiento) !== -1) {
+          genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
+      } else if (_.indexOf(masculino, tratamiento) !== -1) {
+          genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Masculino']);
+      } else {
+          genero = selectsReducer.get(FILTER_GENDER);
+      }
+      const contact = contactDetail.get('contactDetailList');
+      this.setState({generoData: genero});
+      contactGender.onChange(contact.gender);
+        
     }
 
     /* Cambio en los valores */
