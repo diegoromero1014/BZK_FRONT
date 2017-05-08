@@ -213,7 +213,7 @@ class ModalComponentGroup extends Component {
             if (_.size(list) === 50) {
                 swtShowMessage('error', 'Contactos máximos', 'Señor usuario, el grupo ya tiene la máxima cantidad de contactos');
             } else {
-                if (!_.isNull(_.get(contact, 'emailAddress', null))) {
+                if (!_.isNull(_.get(contactReduce, 'emailAddress', null))) {
                     addContactList();
                 } else {
                     swtShowMessage('error', 'Contacto', 'Señor usuario, el contacto no tiene correo electrónico');

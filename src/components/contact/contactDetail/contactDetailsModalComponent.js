@@ -1017,7 +1017,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
             }
         };
     } else {
-        return { |
+        return {
         contactDetail,
             selectsReducer,
             reducerGlobal
