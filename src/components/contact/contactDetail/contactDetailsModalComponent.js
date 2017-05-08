@@ -205,7 +205,7 @@ class ContactDetailsModalComponent extends Component {
     } else {
       genero = selectsReducer.get(FILTER_GENDER);
     }
-    contactGender.onChange('');
+    //contactGender.onChange('');
     this.setState({ generoData: genero });
   }
 
