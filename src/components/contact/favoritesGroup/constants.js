@@ -19,6 +19,7 @@ export const CLEAR_CONTACT_NAME= "CLEAR_CONTACT_NAME";
 export const DELETE_CONTACT_LIST = "DELETE_CONTACT_LIST";
 export const SAVE_GROUP_FAVORITE_CONTACTS = "SAVE_GROUP_FAVORITE_CONTACTS";
 export const RESET_MODAL = "RESET_MODAL";
-export const MODAL_TITLE_EMAILS = "Correos electronicos del grupo";
+export const MODAL_TITLE_EMAILS = "Correos electrónicos del grupo";
 export const SAVE_NAME_GROUP = "SAVE_NAME_GROUP";
+export const CLEAR_EMAILS= "CLEAR_EMAILS";
 
