@@ -12,7 +12,6 @@ import Pagination from './pagination';
 import {NUMBER_RECORDS,TITTLE_MODAL_GROUP} from './constants';
 import {clearFilterGroup} from './actions';
 import {showLoading} from '../../loading/actions';
-import ButtonCreateGroup from './buttonCreateGroup';
 import Modal from 'react-modal';
 import ModalComponentGroup from './modalComponentGroup';
 
@@ -106,7 +105,27 @@ class FavoritesGroup extends Component {
                         </Grid>
                     </Col>
                 </Row>
+                <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onRequestClose={this.closeModal}
+                    className="modalBt4-fade modal fade contact-detail-modal in">
+                    <div className="modalBt4-dialog modalBt4-lg">
+                        <div className="modalBt4-content modal-content">
+                            <div className="modalBt4-header modal-header">
+                                <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
+                                    id="myModalLabel">Creación {TITTLE_MODAL_GROUP}</h4>
+                                <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
+                                        role="close">
+                                    <span className="modal-title" aria-hidden="true" role="close"><i
+                                        className="remove icon modal-icon-close" role="close"></i></span>
+                                    <span className="sr-only">Close</span>
+                                </button>
+                            </div>
+                            <ModalComponentGroup groupId={groupId}/>
 
+                        </div>
+                    </div>
+                </Modal>
             </div>
         )
     }

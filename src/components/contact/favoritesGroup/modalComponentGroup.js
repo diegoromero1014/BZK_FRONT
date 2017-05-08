@@ -5,30 +5,39 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import {getGroupForId,changeKeywordNameNewGroup,getListContactGroupForId,getValidateExistGroup,
     searchContactForGroup,addContactList,clearContactName,deleteContactList,saveGroupFavoriteContacts,
-    resetModal,groupFindServer
+    resetModal,groupFindServer,saveNameGroup,clearFilterGroup
 
 } from './actions';
 import GridComponent from '../../grid/component';
-import {DELETE_CONTACT_LIST_GROUP,NUMBER_RECORDS} from './constants';
+import {
+    DELETE_CONTACT_LIST_GROUP,
+    NUMBER_RECORDS,
+    TITTLE_MODAL_GROUP,
+} from './constants';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { CONTACT_ID_TYPE} from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
-import Input from '../../../ui/input/inputComponent';
+import { contactsFindServer } from '../../filterContact/actions';
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import {joinName,shorterStringValue} from '../../../actionsGlobal';
+import Input from '../../../ui/input/inputComponent';
 import ButtonDeleteLocalComponent from '../../grid/buttonDeleteLocalComponent';
+import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
+import $ from 'jquery';
 import Immutable from 'immutable';
-import {joinName} from '../../../actionsGlobal';
 
-const fields = ['numeroDocumento', 'tipoDocumento', 'searchGroup'];
+
+var listContact = [];
+const fields = ['contact', 'searchGroup', 'tipoDocumento', 'numeroDocumento'];
+var thisForm;
 
 class ModalComponentGroup extends Component {
 
     constructor(props) {
         super(props);
+        thisForm = this;
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
-        //this._handleChangeNameKeyword = this._handleChangeNameKeyword.bind(this);
-        this._renderHeaders = this._renderHeaders.bind(this);
         this._renderCellView = this._renderCellView.bind(this);
         this._handleValidateExistGroup = this._handleValidateExistGroup.bind(this);
         this._searchContactForGroup = this._searchContactForGroup.bind(this);
@@ -37,6 +46,7 @@ class ModalComponentGroup extends Component {
         this._deleteContactList = this._deleteContactList.bind(this);
         this._onClickLimpiarNameGroup = this._onClickLimpiarNameGroup.bind(this);
         this._saveGroupFavoriteContacts = this._saveGroupFavoriteContacts.bind(this);
+        this.updateKeyValueContact = this.updateKeyValueContact.bind(this);
         this.state = {
             modalIsOpen: false,
             visibleMessage: 'block',
@@ -45,7 +55,8 @@ class ModalComponentGroup extends Component {
             searchContact: "none",
             createGroup: true,
             disableName: '',
-            disableSave: 'none'
+            disableSave: 'none',
+            disabled: 'disabled',
         };
     }
 
@@ -55,70 +66,71 @@ class ModalComponentGroup extends Component {
             getMasterDataFields,clearContactName,resetForm,
             resetModal,fields:{searchGroup}
             } = this.props;
+        resetForm();
+        resetModal();
         getMasterDataFields([CONTACT_ID_TYPE]);
         if (groupId != undefined) {
             getGroupForId(groupId);
             getListContactGroupForId(groupId);
-            this.setState({disableName: 'disabled'});
-            this.setState({disableSave: 'block'});
-            this.setState({searchContact: ''});
+            this.setState({disableName: 'disabled',disabled:''});
         } else {
             searchGroup.value = '';
             clearContactName();
             resetForm();
             resetModal();
-            this.setState({searchContact: 'none'});
-            this.setState({disableName: ''});
-            this.setState({disableSave: 'none'});
-            this.setState({searchContact: 'none'});
         }
     }
 
     _handleValidateExistGroup() {
-        const {fields:{searchGroup},getValidateExistGroup,swtShowMessage,resetForm,resetModal} = this.props;
-        getValidateExistGroup(searchGroup.value).then((data)=> {
-            const groupSearch = _.get(data.payload, 'data.data', null);
-            if (!_.isNull(groupSearch)) {
-                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                resetForm();
-                resetModal();
-                this.setState({disableName: ''});
-                this.setState({disableSave: 'none'});
-                this.setState({searchContact: 'none'});
-            } else {
-                this.setState({disableName: 'disabled'});
-                this.setState({disableSave: 'block'});
-                this.setState({searchContact: ''});
-            }
-        });
+        const {fields:{searchGroup},getValidateExistGroup,swtShowMessage,resetForm,resetModal,saveNameGroup} = this.props;
+        if(!_.isEqual(searchGroup.value.trim(),'')){
+
+            getValidateExistGroup(searchGroup.value).then((data)=> {
+                const groupSearch = _.get(data.payload, 'data.data', null);
+                if (!_.isNull(groupSearch)) {
+                    swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                    resetForm();
+                    resetModal();
+                    this.setState({disableName: '',disabled:'disabled'});
+                } else {
+                    this.setState({disableName: 'disabled',disabled:''});
+                    saveNameGroup(searchGroup.value);
+                }
+            });
+        }else{
+            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede ser vacio');
+        }
     }
 
 
     _saveGroupFavoriteContacts() {
-        const {groupsFavoriteContacts,saveGroupFavoriteContacts,groupFindServer,keyWordName,pageNum} = this.props;
+        const {groupsFavoriteContacts,clearFilterGroup,saveGroupFavoriteContacts,swtShowMessage,keyWordName,pageNum} = this.props;
         const group = groupsFavoriteContacts.get('group');
         const list = groupsFavoriteContacts.get('group').get('listContact');
-        console.log(_.size(list));
-        console.log(keyWordName);
-        console.log(pageNum);
 
         if (_.size(list) > 1) {
-            saveGroupFavoriteContacts(group.toJSON());
-            //groupFindServer(keyWordName, pageNum, NUMBER_RECORDS);
-            swtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito');
-            this.closeModal();
+            saveGroupFavoriteContacts(group.toJSON()).then((data)=>{
+                if(data.payload.data.status == 200){
+                    swtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito.');
+                    thisForm.closeModal();
+                    clearFilterGroup();
+                }else{
+                    console.log(data.payload.data);
+                    swtShowMessage('Error', 'Guardar', 'Señor usuario, se ha producido un error en el servidor.');
+                }
+            });
         } else {
-            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos un contacto');
+            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos dos contactos');
         }
     }
 
 
     _addContactList() {
-        const {addContactList,clearContactName,groupsFavoriteContacts,resetForm,swtShowMessage,fields:{numeroDocumento,tipoDocumento }} = this.props;
-        const contact = groupsFavoriteContacts.get('contact');
+        const {addContactList,clearContactName,groupsFavoriteContacts,resetForm,swtShowMessage,fields:{numeroDocumento,tipoDocumento,contact }} = this.props;
+        const contactReduce = groupsFavoriteContacts.get('contact');
         const list = groupsFavoriteContacts.get('group').get('listContact');
 
-        const exist = _.findIndex(list, (item)=>_.isEqual(item.id, contact.id));
+        const exist = _.findIndex(list, (item)=>_.isEqual(item.id, contactReduce.id));
 
         if (exist >= 0) {
             swtShowMessage('error', 'Contacto duplicado', 'Señor usuario, el contacto ya esta en el grupo');
@@ -129,52 +141,38 @@ class ModalComponentGroup extends Component {
                 addContactList();
             }
             clearContactName();
+            contact.onChange('');
             numeroDocumento.onChange('');
             tipoDocumento.onChange('');
         }
     }
 
 
-    _renderHeaders() {
-        const headersTable = [
-            {
-                title: "Nombre de contacto",
-                key: "nameContact"
-            },
-            {
-                title: "Correo Electronico",
-                key: "email"
-            },
-            {
-                title: "",
-                key: "deleteLocal"
-            }
-        ];
+    _renderCellView(contact, idx) {
+        const message = "Señor usuario ¿está seguro que desea eliminar el contacto ";
+        const name = joinName(contact.firstName, contact.middleName, contact.firstLastName, contact.secondLastName);
+        return <tr key={idx}>
+            <td>{contact.contactIdentityNumber}</td>
+            <td>{shorterStringValue(name, 50)}</td>
+            <td>{contact.emailAddress}</td>
+            <td className="collapsing">
+                <ButtonDeleteLocalComponent key={contact.id} message={`${message} ${name}?`} typeAction="icon"
+                                            fn={this._deleteContactList} args={[contact]}/>
+            </td>
+        </tr>
 
-        return headersTable;
     }
 
-    _renderCellView(data) {
-        const mensaje = "Señor usuario ¿está seguro que desea eliminar el grupo ";
-        return data.map((contact, idx) => ({
-            nameContact: joinName(contact.firstName, contact.middleName, contact.firstLastName, contact.secondLastName),
-            email: contact.emailAddress,
-            deleteLocal: {
-                component: <ButtonDeleteLocalComponent key={contact.id}
-                                                       message={mensaje + joinName(contact.firstName ,contact.middleName ,contact.firstLastName ,contact.secondLastName) + "?"}
-                                                       fn={this._deleteContactList} args={[contact]}/>
-            }
-        }));
-    }
 
     _deleteContactList(contact) {
         this.props.deleteContactList(contact.id);
     }
 
     _searchContactForGroup() {
-        const { fields: {tipoDocumento,numeroDocumento},swtShowMessage,searchContactForGroup } = this.props;
-        if (!_.isEqual(numeroDocumento.value.trim(), '') && !_.isEqual(tipoDocumento.value.trim(), '')) {
+        const { fields: {tipoDocumento,numeroDocumento,contact},swtShowMessage,searchContactForGroup } = this.props;
+        if (!_.isEqual(numeroDocumento.value.trim(), '') && !_.isEqual(tipoDocumento.value, '')) {
             searchContactForGroup(tipoDocumento.value, numeroDocumento.value, '').then((data) => {
+                thisForm._addContactList();
             });
         } else {
             swtShowMessage('error', 'Campos obligatorios', 'Señor usuario, para agregar un contacto debe ingresar los campos obligatorios.');
@@ -185,9 +183,7 @@ class ModalComponentGroup extends Component {
         const {resetForm,resetModal} =this.props;
         resetForm();
         resetModal();
-        this.setState({disableName: ''});
-        this.setState({disableSave: 'none'});
-        this.setState({searchContact: 'none'});
+        this.setState({disableName: '',disabled:'disabled'});
     }
 
     _onClickLimpiar() {
@@ -202,46 +198,88 @@ class ModalComponentGroup extends Component {
 
     closeModal() {
         this.setState({modalIsOpen: false});
+        $('.remove.icon.modal-icon-close').click();
     }
 
+
+    componentDidMount() {
+        $("#iconSearchContact").click(function () {
+            var e = {keyCode: 13, consultclick: true};
+            thisForm.updateKeyValueContact(e);
+        });
+    }
+
+
+    updateKeyValueContact(e) {
+        const { fields: { contact,tipoDocumento,numeroDocumento },swtShowMessage,contactsFindServer } = this.props;
+        if (e.keyCode === 13 || e.which === 13) {
+            e.consultclick ? "" : e.preventDefault();
+            if (contact.value !== "" && contact.value !== null && contact.value !== undefined && contact.value.length >= 3) {
+                $('.ui.search.contactSearch').toggleClass('loading');
+                contactsFindServer(contact.value, 0, -1).then((data) => {
+                    listContact = _.get(data, 'payload', []);
+                    //listContact = JSON.stringify(listContact.data.data.listContact);
+                    listContact = listContact.data.data.listContact;
+
+                    $('.ui.search.contactSearch')
+                        .search({
+                            cache: false,
+                            source: listContact,
+                            maxResults: 1500,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'id',
+                            ],
+                            onSelect: function (event) {
+                                tipoDocumento.onChange(event.idTypeDocument);
+                                numeroDocumento.onChange(event.numberDocument);
+                                return 'default';
+                            }
+                        });
+                    $('.ui.search.contactSearch').toggleClass('loading');
+                    setTimeout(function () {
+                        $('#contactSearch').focus();
+                    }, 150);
+                });
+            } else {
+                swtShowMessage('error', 'Error de búsqueda', 'Señor usuario, para realizar la búsqueda de contactos debe ingresar por lo menos tres caracteres.');
+            }
+        }
+    }
+
+
     render() {
-        let { groupId,fields:{numeroDocumento,tipoDocumento,searchGroup},groupsFavoriteContacts,selectsReducer} = this.props;
+        let { groupId,fields:{contact,searchGroup},groupsFavoriteContacts,selectsReducer} = this.props;
         let { createGroup,searchContact,visibleMessage,visibleTable,visibleNameContact} = this.state;
         const data = groupsFavoriteContacts.get('group').get('listContact');
-        const contactSearch = groupsFavoriteContacts.get('contact');
-        const contactSearchName = joinName(contactSearch.firstName, contactSearch.middleName, contactSearch.firstLastName, contactSearch.secondLastName);
 
 
         let countFilter = _.size(data);
 
         if (countFilter !== 0) {
             visibleTable = 'block';
-        }
-
-
-        console.log('contactSearchName', contactSearchName);
-
-        if (!_.isEqual(contactSearchName.trim(), '')) {
-            visibleNameContact = 'inline-flex';
+            visibleMessage = 'none';
         } else {
-            visibleNameContact = 'none';
+            visibleTable = 'none';
+            visibleMessage = 'block';
         }
-
 
         return (
             <div>
                 <div className="modalBt4-body modal-body"
-                     style={{overflowX: 'hidden', backgroundColor:"#ececec" ,minHeight:"400px !important"}}>
-
+                     style={{overflowX: 'hidden', minHeight:"400px"}}>
                     <div style={{margin:"-15px", padding:"15px 25px"}}>
                         <Row style={{borderBottom: "1px solid #D9DEDF"}}>
-                            <Col xs={4} sm={4} md={4} lg={4}>
+                            <Col xs={10} sm={10} md={10} lg={10}>
                                 <dt><span>Nombre del grupo (<span style={{ color: 'red' }}>*</span>)</span></dt>
                                 <div className="InputAddOn">
                                     <input type="text" style={{padding: '0px 11px !important'}}
                                            placeholder="Nombre de grupo"
                                            disabled={this.state.disableName}
                                         {...searchGroup}
+                                        maxlength="150"
+                                           maxLength="150"
                                            className="input-lg input InputAddOn-field"/>
                                     <button onClick={this._handleValidateExistGroup}
                                             className="button InputAddOn-item">
@@ -256,76 +294,36 @@ class ModalComponentGroup extends Component {
                                 </div>
                             </Col>
                         </Row>
-                        <Row style={{borderBottom: "1px solid #D9DEDF", paddingTop:"15px",display:searchContact}}>
-                            <Row style={{ width: '100%'}}>
-                                <Col xs={4} sm={4} md={4} lg={4}>
-                                    <dl style={{ width: '100%' }}>
-                                        <dt><span>Tipo de documento (<span style={{ color: 'red' }}>*</span>)</span>
-                                        </dt>
-                                        <dd><ComboBox
-                                            name="tipoDocumento" labelInput="Seleccione"
-                                            disabled={this.state.disabled}
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            data={selectsReducer.get(CONTACT_ID_TYPE) || []}
-                                            {...tipoDocumento}
-                                        /></dd>
-                                    </dl>
-                                </Col>
-                                <Col xs={4} sm={4} md={4} lg={4}>
-                                    <dl style={{ width: '100%' }}>
-                                        <dt><span>Número de documento (<span style={{ color: 'red' }}>*</span>)</span>
-                                        </dt>
-                                        <dd><Input
-                                            name="numeroDocumento"
-                                            type="text"
-                                            max="20"
-                                            disabled={this.state.disabled}
-                                            {...numeroDocumento}
-                                        /></dd>
-                                    </dl>
-                                </Col>
-                                <Col xs={4} sm={4} md={4} lg={4}>
-                                    <dl style={{ marginTop:"20px" }}>
-                                        <button type="button" className="btn btn-primary" style={{ marginLeft:"20px" }}
-                                                onClick={this._searchContactForGroup}>
-                                            <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                                               className="search icon"/>
-                                        </button>
-                                        <button type="button" className="btn btn-primary" style={{ marginLeft:"20px" }}
-                                                onClick={this._onClickLimpiar}>
-                                            <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                                               className="erase icon"/>
-                                        </button>
-                                    </dl>
-                                </Col>
-                            </Row>
-                            <Row style={{ width: '100%', display: visibleNameContact}}>
-                                <Col xs={8} sm={8} md={8} lg={8}>
-                                    <dl style={{ width: '100%' }}>
-                                        <dt><span>Nombre de contacto</span></dt>
-                                        <dd><Input
-                                            name="nombreContacto"
-                                            type="text"
-                                            max="20"
-                                            disabled="disabled"
-                                            value={contactSearchName}
-                                        /></dd>
-                                    </dl>
-                                </Col>
-                                <Col xs={4} sm={4} md={4} lg={4}>
-                                    <dl style={{width: '100%', marginTop:"20px" }}>
-                                        <button type="button" className="btn btn-primary" style={{ marginLeft:"20px" }}
-                                                onClick={this._addContactList}>
-                                            Agregar contacto
-                                        </button>
-                                    </dl>
-                                </Col>
-                            </Row>
+                        <Row style={{borderBottom: "1px solid #D9DEDF", paddingTop:"15px", paddingBottom:"10px"}}>
+                            <Col xs={12} md={9} lg={9}>
+                                <dt><span>Contacto </span></dt>
+                                <dd>
+                                    <div className="ui dropdown search contactSearch fluid"
+                                         style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+                                        <ComboBoxFilter className="prompt" id="contactSearch" idIcon="iconSearchContact"
+                                                        style={{ borderRadius: "3px" }}
+                                                        autoComplete="off"
+                                                        type="text"
+                                                        disabled={this.state.disabled}
+                                            {...contact}
+                                                        value={contact.value}
+                                                        placeholder="Ingrese un criterio de búsqueda..."
+                                                        onKeyPress={this.updateKeyValueContact}
+                                                        touched={true}
+                                        />
+                                    </div>
+                                </dd>
+                            </Col>
+                            <Col xs={12} md={2} lg={2}>
+                                <button className="btn btn-primary" type="button" onClick={this._searchContactForGroup}
+                                        disabled={this.state.disabled}  style={{ cursor: 'pointer', marginTop: '20px' }}>
+                                    <i className="plus icon"></i> Agregar
+                                </button>
+                            </Col>
                         </Row>
                         <Row>
                             <div
-                                style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%', display:visibleTable}}>
+                                style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
                                 Total: {countFilter}
                             </div>
                         </Row>
@@ -333,15 +331,35 @@ class ModalComponentGroup extends Component {
                             <Col xs={12} sm={12} md={12} lg={12} style={{display: visibleTable}}>
                                 <div className="horizontal-scroll-wrapper"
                                      style={{overflow: 'scroll', background: '#fff', maxHeight:"200px !important", overflow:"scroll"}}>
-                                    <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)}/>
+
+
+                                    <table className="ui striped table">
+                                        <thead>
+                                        <tr>
+                                            <th>Documento</th>
+                                            <th>Nombre</th>
+                                            <th>Correo electrónico</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {data.map(this._renderCellView)}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </Col>
+                            <Col xs={12} sm={12} md={12} lg={12} style={{display: visibleMessage}}>
+                                <div
+                                    style={{padding: "15px", fontSize: '15px', textAlign: 'center', width: '100%'}}>
+                                    No se han adicionado contactos
                                 </div>
                             </Col>
                         </Row>
                     </div>
 
                 </div>
-                <div className="modalBt4-footer modal-footer" style={{display:this.state.disableSave}}>
-                    <button type="button" onClick={this._saveGroupFavoriteContacts}
+                <div className="modalBt4-footer modal-footer">
+                    <button type="button" onClick={this._saveGroupFavoriteContacts} disabled={this.state.disabled}
                             className="btn btn-primary modal-button-edit">Guardar
                     </button>
                 </div>
@@ -365,7 +383,10 @@ function mapDispatchToProps(dispatch) {
         deleteContactList,
         saveGroupFavoriteContacts,
         resetModal,
-        groupFindServer
+        groupFindServer,
+        contactsFindServer,
+        saveNameGroup,
+        clearFilterGroup
     }, dispatch);
 }
 

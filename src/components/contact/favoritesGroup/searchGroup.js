@@ -57,14 +57,14 @@ class SearchGroup extends Component {
     render() {
         const { groupsFavoriteContacts } = this.props;
         var keyword = groupsFavoriteContacts.get('keywordName');
-        console.log();
+
         return (
             <div style={{ marginLeft: '17px' }}>
                 <div className="InputAddOn">
                     <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Buscar por nombre de grupo"
                         value={keyword} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword}
                         className="input-lg input InputAddOn-field" />
-                    <button id="searchClients" className="btn" title="Buscar clientes" type="button"
+                    <button id="searchClients" className="btn" title="Buscar grupo favoritos" type="button"
                         onClick={this._handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                     </button>

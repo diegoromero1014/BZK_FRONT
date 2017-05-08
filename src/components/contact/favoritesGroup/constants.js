@@ -7,7 +7,7 @@ export const INITIAL_VALUES_GROUPS = "INITIAL_VALUES_GROUPS";
 export const DELETE_GROUP  = "DELETE_GROUP";
 export const VIEW_LINK_GROUP = "VIEW_LINK_GROUP";
 export const VIEW_EMAIL_CONTACTS = "VIEW_EMAIL_CONTACTS";
-export const TITTLE_MODAL_GROUP = "Grupos de contactos favoritos";
+export const TITTLE_MODAL_GROUP = "grupo de contactos favoritos";
 export const GET_GROUP_FOR_ID = "GET_GROUP_FOR_ID";
 export const CHANGE_KEYWORD_NAME_NEW_GROUP = "CHANGE_KEYWORD_NAME_NEW_GROUP";
 export const GET_LIST_CONTACT_GROUP_FOR_ID= "GET_LIST_CONTACT_GROUP_FOR_ID";
@@ -20,4 +20,5 @@ export const DELETE_CONTACT_LIST = "DELETE_CONTACT_LIST";
 export const SAVE_GROUP_FAVORITE_CONTACTS = "SAVE_GROUP_FAVORITE_CONTACTS";
 export const RESET_MODAL = "RESET_MODAL";
 export const MODAL_TITLE_EMAILS = "Correos electronicos del grupo";
+export const SAVE_NAME_GROUP = "SAVE_NAME_GROUP";
 

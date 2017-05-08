@@ -9,7 +9,7 @@ export const mapDataGrid = (data = []) => {
         modalNameLink: {
             id: group.id,
             text:group.name,
-            modalTitle:TITTLE_MODAL_GROUP,
+            modalTitle:`Edicion ${TITTLE_MODAL_GROUP}`,
             component: VIEW_LINK_GROUP
         },
         actions: {
