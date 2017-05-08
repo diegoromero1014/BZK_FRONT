@@ -9,15 +9,22 @@ import { updateTitleNavBar } from '../../navBar/actions';
 import SearchGroup from './searchGroup';
 import ListGroup from './listGroups';
 import Pagination from './pagination';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS,TITTLE_MODAL_GROUP} from './constants';
 import {clearFilterGroup} from './actions';
 import {showLoading} from '../../loading/actions';
 import ButtonCreateGroup from './buttonCreateGroup';
+import Modal from 'react-modal';
+import ModalComponentGroup from './modalComponentGroup';
 
 class FavoritesGroup extends Component {
     constructor(props) {
         super(props);
+        this.closeModal = this.closeModal.bind(this);
+        this.openModal = this.openModal.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
+        this.state = {
+            modalIsOpen: false
+        };
     }
 
     componentWillMount() {
@@ -36,9 +43,17 @@ class FavoritesGroup extends Component {
         });
     }
 
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+
+    closeModal() {
+        this.setState({modalIsOpen: false});
+    }
+
 
     render() {
-        const {groupsFavoriteContacts} = this.props;
+        const {groupsFavoriteContacts,groupId} = this.props;
         const countFilter = groupsFavoriteContacts.get('totalGroupByFiltered');
         let visibleTable = "none";
         let visibleMessage = "block";
@@ -59,9 +74,11 @@ class FavoritesGroup extends Component {
                             <i className="erase icon"
                                style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
                         </button>
-                    </Col>
-                    <Col xsOffset={3} lg={1}>
-                        <ButtonCreateGroup/>
+                        <button className="btn btn-primary" type="button" title="Crear grupo" style={{marginLeft: "17px"}}
+                                onClick={this.openModal}>
+                            <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                        </button>
+
                     </Col>
                 </Row>
                 <Row>
@@ -89,6 +106,7 @@ class FavoritesGroup extends Component {
                         </Grid>
                     </Col>
                 </Row>
+
             </div>
         )
     }

@@ -113,7 +113,7 @@ class ListContactsByFunctionOrType extends Component {
 
 
             headersTable.push({
-                title: "Eliminar contacto",
+                title: "",
                 key: "delete"
             });
 

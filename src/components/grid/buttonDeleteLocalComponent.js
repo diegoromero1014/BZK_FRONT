@@ -30,7 +30,7 @@ class ButtonDeleteLocalComponent extends Component {
 
     render() {
         const {message,title} = this.props;
-        const titleText = (_.isUndefined(title))?"Confirmación eliminación":title;
+        const titleText = (_.isUndefined(title))?"Confirmar eliminación":title;
 
         return (
             <td style={{padding: '10px', textAlign: 'center'}}>
