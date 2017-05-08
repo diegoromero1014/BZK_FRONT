@@ -184,6 +184,8 @@ export default (state = initialState, action = {}) => {
         case actions.VIEW_EMAIL_CONTACTS:
             let response8 = get(action.payload, 'data.data', []);
             return state.set('viewEmailGroup', response8);
+        case actions.CLEAR_EMAILS:
+            return state.set('viewEmailGroup', '');
 
         default:
             return state;
