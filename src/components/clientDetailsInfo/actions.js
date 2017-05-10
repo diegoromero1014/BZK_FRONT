@@ -136,63 +136,54 @@ export function resetAccordion(){
 
 
 export function changeEconomicActivity(){
-    console.log('changeEconomicActivity');
     return{
         type: CHANGE_ACCORDION_ECONOMIC_ACTIVITY
     }
 }
 
 export function changeUbicationCorrespondence(){
-    console.log('changeUbicationCorrespondence');
     return{
         type: CHANGE_ACCORDION_UBICATION_CORRESPONDENCE
     }
 }
 
 export function changeInfoFinanciera(){
-    console.log('changeInfoFinanciera');
     return{
         type: CHANGE_ACCORDION_INFO_FINANCIERA
     }
 }
 
 export function changeDataComercial(){
-    console.log('changeDataComercial');
     return{
         type: CHANGE_ACCORDION_DATA_COMERCIAL
     }
 }
 
 export function changeNotes(){
-    console.log('changeNotes');
     return{
         type: CHANGE_ACCORDION_NOTES
     }
 }
 
 export function changeDeclarationOfOrigin(){
-    console.log('changeDeclarationOfOrigin');
     return{
         type: CHANGE_ACCORDION_DECLARATION_OF_ORIGIN
     }
 }
 
 export function changeInternationalOperations(){
-    console.log('changeInternationalOperations');
     return{
         type: CHANGE_ACCORDION_INTERNATIONAL_OPERATIONS
     }
 }
 
 export function changeDocumentInformationServices(){
-    console.log('changeDocumentInformationServices');
     return{
         type: CHANGE_ACCORDION_DOCUMENT_INFORMATION_SERVICES
     }
 }
 
 export function changeForeingProducts(){
-    console.log('changeForeingProducts');
     return{
         type: CHANGE_ACCORDION_FOREING_PRODUCTS
     }

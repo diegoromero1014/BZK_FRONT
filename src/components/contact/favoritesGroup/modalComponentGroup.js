@@ -123,14 +123,9 @@ class ModalComponentGroup extends Component {
                         showLoading(false, '');
                     }
                 } else {
-                    if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                        saveNameGroup(searchGroup.value);
-                        thisForm._saveGroupFavoriteContacts();
-                    } else {
-                        this.setState({disableName: '', disabled: '', validateExistGroup: true});
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
-                    }
+                    this.setState({disableName: '', disabled: '', validateExistGroup: true});
+                    saveNameGroup(searchGroup.value);
+                    thisForm._saveGroupFavoriteContacts();
                 }
             });
         } else {

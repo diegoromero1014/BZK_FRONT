@@ -9,7 +9,7 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED,TAB_INFO } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
@@ -22,8 +22,11 @@ class ComponentClientInformation extends Component {
     }
 
     componentWillMount() {
-        const {resetAccordion} = this.props;
-        resetAccordion();
+        const {resetAccordion,tabReducer} = this.props;
+        var tabActive = tabReducer.get('tabSelected');
+        if (tabActive === null) {
+            resetAccordion();
+        }
         $(window).scrollTop(0);
         const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading } = this.props;
         updateTitleNavBar("Mis clientes");
@@ -193,9 +196,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, navBar,tabReducer }, ownerProps) {
     return {
         clientInformacion,
+        tabReducer,
         navBar
     };
 }
