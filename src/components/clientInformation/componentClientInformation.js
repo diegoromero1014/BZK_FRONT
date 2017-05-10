@@ -12,6 +12,7 @@ import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGrou
 import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
+import { resetAccordion } from '../clientDetailsInfo/actions';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -21,6 +22,8 @@ class ComponentClientInformation extends Component {
     }
 
     componentWillMount() {
+        const {resetAccordion} = this.props;
+        resetAccordion();
         $(window).scrollTop(0);
         const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading } = this.props;
         updateTitleNavBar("Mis clientes");
@@ -185,7 +188,8 @@ function mapDispatchToProps(dispatch) {
         viewAlertClient,
         redirectUrl,
         clearEntities,
-        showLoading
+        showLoading,
+        resetAccordion
     }, dispatch);
 }
 

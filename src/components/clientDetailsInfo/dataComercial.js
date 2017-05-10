@@ -9,19 +9,8 @@ class DataComercial extends Component{
   render(){
     const {infoClient} = this.props;
     return(
-      <div className="tab-content-row" style={{marginTop: "30px", borderTop: "1px dotted #cea70b"}}>
-        <table>
-        <tbody>
-          <tr>
-            <td>
-              <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                <i className="book icon" style={{fontSize: "25px"}}></i>
-                <span className="title-middle"> Datos de conocimiento comercial</span>
-              </dl>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="tab-content-row" >
+
       <table style={{width: "100%"}}>
         <thead>
           <tr>
