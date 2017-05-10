@@ -10,15 +10,7 @@ class DeclarationOfOrigin extends Component{
   render(){
     const {infoClient} = this.props;
     return(
-      <div className="tab-content-row" style={{marginTop: "30px", borderTop: "1px dotted #cea70b"}}>
-        <Row>
-          <Col xs={12} md={12} lg={12} style={{paddingRight: "20px"}}>
-            <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-              <i className="money icon" style={{fontSize: "25px"}}></i>
-              <span className="title-middle"> Declaración de origen de bienes y/o fondos</span>
-            </dl>
-          </Col>
-        </Row>
+      <div className="tab-content-row" >
         <Row>
           <Col xs={8} md={8} lg={8} style={{paddingRight: "20px"}}>
             <span style={{fontWeight: "bold", color: "#4C5360"}}>Origen de bienes</span>

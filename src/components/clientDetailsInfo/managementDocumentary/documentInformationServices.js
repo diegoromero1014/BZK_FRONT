@@ -54,16 +54,10 @@ class DocumentInformationServices extends Component {
     render() {
         const { tabReducer } = this.props;
         return (
-            <div className="tab-content-row" style={{ marginTop: "30px", borderTop: "1px dotted #cea70b" }}>
+            <div className="tab-content-row">
                 <table>
                     <tbody>
                         <tr>
-                            <td>
-                                <dl style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                                    <i className="newspaper icon" style={{ fontSize: "25px" }}></i>
-                                    <span className="title-middle"> Consulta de servicios de información documental</span>
-                                </dl>
-                            </td>
                             <td>
                                 <a style={{ cursor: 'pointer', textDecoration: 'underline', marginLeft: '15px' }} onClick={this.consultManagementDocumentary}>Consultar</a>
                             </td>
