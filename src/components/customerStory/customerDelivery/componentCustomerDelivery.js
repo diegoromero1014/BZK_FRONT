@@ -4,9 +4,13 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { consultList } from '../../selectsComponent/actions';
 import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
-import {VALUE_REQUIERED} from '../../../constantsGlobal';
+import { VALUE_REQUIERED, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
+import { clientsByEconomicGroup } from '../actions';
+import { validateResponse } from '../../../actionsGlobal';
+import {changeStateSaveData} from '../../dashboard/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import _ from 'lodash';
 
 const fields = ["idCelula"];
@@ -24,7 +28,8 @@ class ComponentCustomerDelivery extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkEconomicGroup: false
+            checkEconomicGroup: false,
+            errorValidateClients: false
         };
         this._handleChangeCheck = this._handleChangeCheck.bind(this);
     }
@@ -34,8 +39,17 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { consultList } = this.props;
+        const { consultList, clientsByEconomicGroup, changeStateSaveData } = this.props;
         consultList(TEAM_FOR_EMPLOYEE);
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        clientsByEconomicGroup(window.localStorage.getItem('idClientSelected'), null).then((data) => {
+            console.log('data', data);
+            if (validateResponse(data)) {
+                changeStateSaveData(false, "");
+            } else {
+                swtShowMessage('error', 'Error validando clientes', 'Señor usuario, ocurrió un error validando los clientes.');
+            }
+        });
     }
 
     render() {
@@ -59,7 +73,7 @@ class ComponentCustomerDelivery extends Component {
                         &nbsp;&nbsp;Grupo económico
                     </label>
                 </Col>
-                <Col xs={12} md={12} lg={12} style={{marginTop: '10px'}} >
+                <Col xs={12} md={12} lg={12} style={{ marginTop: '10px' }} >
                     <ListClientsValidations />
                 </Col>
             </Row>
@@ -69,7 +83,9 @@ class ComponentCustomerDelivery extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        consultList
+        consultList,
+        clientsByEconomicGroup,
+        changeStateSaveData
     }, dispatch);
 }
 
