@@ -155,6 +155,7 @@ class ClientsFind extends Component {
             dataEconomicGroup={item.economicGroup}
             dataIsProspect={item.prospect}
             dataIsAccess={item.access}
+            dataDeleveryClient={item.deleveryClient}
         />
     }
 

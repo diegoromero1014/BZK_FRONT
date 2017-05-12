@@ -64,7 +64,7 @@ class TabClientInfo extends Component {
         let backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
         let backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" }
         let backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-        let backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+        let backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
 
         var tabActive = tabReducer.get('tabSelected');
         if (tabActive === null || tabActive === undefined || tabActive === "") {
@@ -98,7 +98,7 @@ class TabClientInfo extends Component {
             backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_SHAREHOLDER) {
             styleInfo = false;
             styleContacts = false;
@@ -125,7 +125,7 @@ class TabClientInfo extends Component {
             backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_VISITS) {
             styleInfo = false;
             styleContacts = false;
@@ -152,7 +152,7 @@ class TabClientInfo extends Component {
             backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_PREVISITS) {
             styleInfo = false;
             styleContacts = false;
@@ -179,7 +179,7 @@ class TabClientInfo extends Component {
             backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
 
         } else if (tabActive === TAB_PENDING_TASK) {
             styleInfo = false;
@@ -207,7 +207,7 @@ class TabClientInfo extends Component {
             backgroundPipeline = { height: "60px", borderBottomStyle: "none", width: "70px" };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         }
         else if (tabActive === TAB_PIPELINE) {
             styleInfo = false;
@@ -235,7 +235,7 @@ class TabClientInfo extends Component {
             };
             backgroundBusinessPlan = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         }
         else if (tabActive === TAB_BUSINESS_PLAN) {
             styleInfo = false;
@@ -263,7 +263,7 @@ class TabClientInfo extends Component {
                 width: "140px"
             };
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_RISKS_MANAGEMENT) {
             styleInfo = false;
             styleContacts = false;
@@ -290,7 +290,7 @@ class TabClientInfo extends Component {
                 borderBottomColor: "#3498db",
                 width: "140px"
             };
-            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "140px" };
+            backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_CUSTOMER_STORY) {
             styleInfo = false;
             styleContacts = false;
@@ -316,7 +316,7 @@ class TabClientInfo extends Component {
                 height: "60px",
                 borderBottomStyle: "solid",
                 borderBottomColor: "#3498db",
-                width: "140px"
+                width: "150px"
             };
         }
         return (
@@ -342,7 +342,7 @@ class TabClientInfo extends Component {
                         {_.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) &&
                             <li style={backgroundCustomerStory}
                                 onClick={this._handleClickTabItem.bind(this, TAB_CUSTOMER_STORY)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Historial clientes</a>
+                                <a className="button-link-url" style={{ marginRight: "15px" }}>Historial del cliente</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_PREVISITS) &&

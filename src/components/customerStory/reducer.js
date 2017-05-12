@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 const initialState = Immutable.Map({
     tabSelected: null,
-    listClientsDelivery: Immutable.List()
+    listClientsDelivery: []
 });
 
 export default (state = initialState, action) => {
@@ -12,22 +12,8 @@ export default (state = initialState, action) => {
         case UPDATE_ACTIVE_TAB_CS:
             return state.set("tabSelected", action.payload);
         case VALIDATE_CLIENTS:
-            console.log('action', action);
             const listClients = _.get(action, 'payload.data.data', []);
-            console.log('listClients', listClients);
-            const list = state.get('listClientsDelivery');
-            listClients.map(item => {
-                const uid = _.uniqueId('note_');
-                list.push({
-                    uid,
-                    clientNumber: item.clientNumber,
-                    nameClient: item.nameClient,
-                    updateClient: item.nameClient,
-                    deliveryComplete: item.deliveryComplete
-                })
-            });
-            console.log('list', list);
-            return state.set('listClientsDelivery', list);
+            return state.set('listClientsDelivery', listClients);
         default:
             return state;
     }
