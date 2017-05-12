@@ -23,7 +23,7 @@ class ComponentCustomerStory extends Component {
     }
 
     render() {
-        const { clientInformacion, customerStory, infoClient } = this.props;
+        const { clientInformacion, customerStory, infoClient, deleveryClient } = this.props;
         const { deleveryClient, expectedCelulaId, expectedCelulaName } = clientInformacion.get("responseClientInfo");
         var tabActive = customerStory.get('tabSelected');
         if (tabActive === null || tabActive === undefined || tabActive === "") {
