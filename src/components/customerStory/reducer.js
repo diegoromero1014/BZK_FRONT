@@ -1,10 +1,11 @@
 import Immutable from 'immutable';
-import { UPDATE_ACTIVE_TAB_CS, VALIDATE_CLIENTS } from './constants';
+import { UPDATE_ACTIVE_TAB_CS, VALIDATE_CLIENTS, GET_ALL_TEAMS } from './constants';
 import _ from 'lodash';
 
 const initialState = Immutable.Map({
     tabSelected: null,
-    listClientsDelivery: []
+    listClientsDelivery: [],
+    listTeams: []
 });
 
 export default (state = initialState, action) => {
@@ -14,6 +15,9 @@ export default (state = initialState, action) => {
         case VALIDATE_CLIENTS:
             const listClients = _.get(action, 'payload.data.data', []);
             return state.set('listClientsDelivery', listClients);
+        case GET_ALL_TEAMS:
+            const listTeams = _.get(action, 'payload.data.data', []);
+            return state.set('listTeams', listTeams);
         default:
             return state;
     }

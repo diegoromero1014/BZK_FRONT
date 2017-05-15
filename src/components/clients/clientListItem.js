@@ -24,6 +24,7 @@ class ClientListItem extends Component {
       redirectUrl("/dashboard/clientInformation");
     } else {
       if (_.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient) {
+        window.localStorage.setItem('idClientSelected', dataId);
         const { updateTabSeleted } = this.props;
         updateTabSeleted(TAB_CUSTOMER_STORY);
         redirectUrl("/dashboard/clientInformation");

@@ -7,7 +7,7 @@ import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
 import { VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
-import { clientsByEconomicGroup, updateTeamClients } from '../actions';
+import { clientsByEconomicGroup, updateTeamClients, getAllteams } from '../actions';
 import { validateResponse } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -70,8 +70,8 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { consultList } = this.props;
-        consultList(TEAM_FOR_EMPLOYEE);
+        const { consultList, getAllteams } = this.props;
+        getAllteams();
         this.consultClients(window.localStorage.getItem('idClientSelected'), null);
     }
 
@@ -112,7 +112,7 @@ class ComponentCustomerDelivery extends Component {
 
     render() {
         const { clientInformacion } = this.props;
-        const { fields: { idCelula }, customerStory, selectsReducer, handleSubmit } = this.props;
+        const { fields: { idCelula }, customerStory, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleSubmitDelivery)}>
                 <Row>
@@ -123,7 +123,7 @@ class ComponentCustomerDelivery extends Component {
                             labelInput="Célula"
                             valueProp={'id'}
                             textProp={'description'}
-                            data={selectsReducer.get('teamValueObjects')}
+                            data={customerStory.get('listTeams')}
                             {...idCelula}
                         />
                     </Col>
@@ -166,15 +166,15 @@ function mapDispatchToProps(dispatch) {
         changeStateSaveData,
         swtShowMessage,
         updateTeamClients,
-        consultInfoClient
+        consultInfoClient,
+        getAllteams
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, customerStory, selectsReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ navBar, customerStory, clientInformacion }, ownerProps) {
     return {
         navBar,
         customerStory,
-        selectsReducer,
         clientInformacion
     };
 }

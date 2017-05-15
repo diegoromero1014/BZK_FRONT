@@ -137,3 +137,10 @@ export const STYLE_CONTAINER_BUTTONS = {
     height: "50px",
     background: "rgba(255,255,255,0.75)"
 };
+
+//Data para los select de respuesta "Aprobar" - "Rechazar"
+export const VALUES_APROVE = [
+    { 'id': '', 'value': "Seleccione..." },
+    { 'id': true, 'value': "Aprobar" },
+    { 'id': false, 'value': "Rechazar" }
+];
