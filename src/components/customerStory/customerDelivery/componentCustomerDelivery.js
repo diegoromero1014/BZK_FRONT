@@ -98,7 +98,8 @@ class ComponentCustomerDelivery extends Component {
     }
 
     _saveUpdateTeamClient() {
-        const { fields: { idCelula }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData, consultInfoClient } = this.props;
+        const { fields: { idCelula, reasonTranfer }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData, 
+            consultInfoClient, clientInformacion } = this.props;
         //Valido si el cliente me lo estan asignando, para así no mostrar los campos de cmabio de célula
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -112,6 +113,8 @@ class ComponentCustomerDelivery extends Component {
         updateTeamClients(json).then((data) => {
             changeStateSaveData(false, "");
             if (validateResponse(data)) {
+                reasonTranfer.onChange('');
+                idCelula.onChange('');
                 swtShowMessage('success', 'Cliente(s) actualizado(s)', 'Señor usuario, el cambio de céula se registró correctamente, está acción se hará efectiva cuando el gerente de cuenta acepte los cambios.');
                 consultInfoClient();
             } else {
