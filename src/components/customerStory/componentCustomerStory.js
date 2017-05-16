@@ -6,7 +6,7 @@ import { Menu, Segment } from 'semantic-ui-react';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
 import { updateTabSeletedCS, aproveRejectDeliveryClient } from './actions';
-import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA } from '../../constantsGlobal';
+import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT } from '../../constantsGlobal';
 import { validateResponse } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import ComponentCustomerDelivery from './customerDelivery/componentCustomerDelivery';
@@ -14,6 +14,7 @@ import { consultInfoClient } from '../clientInformation/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import _ from 'lodash';
+import moment from 'moment';
 
 class ComponentCustomerStory extends Component {
 
@@ -70,21 +71,30 @@ class ComponentCustomerStory extends Component {
 
     render() {
         const { clientInformacion, customerStory, infoClient } = this.props;
-        const { deliveryClient, expectedCelulaId, expectedCelulaName } = clientInformacion.get("responseClientInfo");
+        const { deliveryClient, nameUserUpdateDelivery, dateUpdateDelivery, reasonTransferClient, 
+            expectedCelulaId, expectedCelulaName } = clientInformacion.get("responseClientInfo");
         var tabActive = customerStory.get('tabSelected');
         if (tabActive === null || tabActive === undefined || tabActive === "") {
             tabActive = TAB_STORY;
         }
+        const date = moment(dateUpdateDelivery);
+        const dateString = date.format("DD") + " " + date.format("MMM") + " " + date.format("YYYY");
         return (
             <div>
                 {!_.isNull(expectedCelulaId) && !_.isUndefined(expectedCelulaId) &&
                     <Row style={{ marginTop: '9px', paddingTop: '15px' }}>
-                        <Col xs={12} md={12} lg={5} style={{ paddingTop: '20px' }}>
-                            <span style={{ fontWeight: 'bold', color: '#EB984E' }}>Cliente pendiente de aprobación para la célula {expectedCelulaName}</span>
+                        <Col xs={12} md={12} lg={5}>
+                            <table>
+                                <tbody>
+                                    <tr><td><span style={{ fontWeight: "bold", color: "#EB984E" }}>Cliente pendiente de aprobación para la célula {expectedCelulaName}</span></td></tr>
+                                    <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Gestionó: <span style={{ fontWeight: "normal", color: "#818282" }}> {nameUserUpdateDelivery} - {dateString} </span></span></td></tr>
+                                    <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Motivo: <span style={{ fontWeight: "normal", color: "#818282" }}> {reasonTransferClient} </span></span></td></tr>
+                                </tbody>
+                            </table>
                         </Col>
                         {deliveryClient &&
                             <Col xs={12} md={4} lg={3} >
-                                <dt><span>Entrega estructura </span></dt>
+                                <dt><span>Entrega estructurada </span></dt>
                                 <dt>
                                     <ComboBox
                                         name="structuredDelivery"
@@ -105,7 +115,7 @@ class ComponentCustomerStory extends Component {
                             <Col xs={12} md={3} lg={2} style={{ paddingTop: '20px' }}>
                                 <button className="btn btn-primary" type="button" onClick={this._handleSubmitChangeTeam}
                                     style={{ float: 'right', cursor: 'pointer', marginRight: '10px' }}>
-                                    Realizar cambio
+                                    Guardar respuesta
                                 </button>
                             </Col>
                         }

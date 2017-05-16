@@ -3,7 +3,8 @@ import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { consultList } from '../../selectsComponent/actions';
-import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
+import { REASON_TRANFER } from '../../selectsComponent/constants';
+import { getMasterDataFields } from '../../selectsComponent/actions';
 import { VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
@@ -15,7 +16,7 @@ import { consultInfoClient } from '../../clientInformation/actions';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
 
-const fields = ["idCelula"];
+const fields = ["idCelula", "reasonTranfer"];
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
 const validate = values => {
@@ -24,6 +25,11 @@ const validate = values => {
         errors.idCelula = VALUE_REQUIERED;
     } else {
         errors.idCelula = null;
+    }
+    if (!values.reasonTranfer) {
+        errors.reasonTranfer = VALUE_REQUIERED;
+    } else {
+        errors.reasonTranfer = null;
     }
     return errors;
 }
@@ -70,8 +76,9 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { consultList, getAllteams } = this.props;
+        const { consultList, getAllteams, getMasterDataFields } = this.props;
         getAllteams();
+        getMasterDataFields([REASON_TRANFER]);
         this.consultClients(window.localStorage.getItem('idClientSelected'), null);
     }
 
@@ -92,12 +99,15 @@ class ComponentCustomerDelivery extends Component {
 
     _saveUpdateTeamClient() {
         const { fields: { idCelula }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData, consultInfoClient } = this.props;
+        //Valido si el cliente me lo estan asignando, para así no mostrar los campos de cmabio de célula
+        const { deliveryClient } = clientInformacion.get("responseClientInfo");
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         this.setState({ showConfirmUpdate: false });
         const idClients = _.map(customerStory.get('listClientsDelivery'), 'idClient');
         const json = {
             "clients": customerStory.get('listClientsDelivery'),
-            "idTeam": idCelula.value
+            "idTeam": idCelula.value,
+            "idReasonTransfer": reasonTranfer.value
         };
         updateTeamClients(json).then((data) => {
             changeStateSaveData(false, "");
@@ -111,37 +121,54 @@ class ComponentCustomerDelivery extends Component {
     }
 
     render() {
-        const { clientInformacion } = this.props;
-        const { fields: { idCelula }, customerStory, handleSubmit } = this.props;
+        const { fields: { idCelula, reasonTranfer }, customerStory, selectsReducer, handleSubmit, clientInformacion } = this.props;
+        const { deliveryClient } = clientInformacion.get("responseClientInfo");
         return (
             <form onSubmit={handleSubmit(this._handleSubmitDelivery)}>
-                <Row>
-                    <Col xs={12} md={6} lg={4} style={{ marginLeft: '7px' }}>
-                        <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <ComboBox
-                            name="Célula"
-                            labelInput="Célula"
-                            valueProp={'id'}
-                            textProp={'description'}
-                            data={customerStory.get('listTeams')}
-                            {...idCelula}
-                        />
-                    </Col>
-                    <Col xs={12} md={6} lg={4}>
-                        <label style={{ fontWeight: "bold", marginTop: '28px', marginLeft: '80px' }}>
-                            <input type="checkbox" checked={this.state.checkEconomicGroup} onClick={this._handleChangeCheck} />
-                            &nbsp;&nbsp;Grupo económico
+                {!deliveryClient &&
+                    <Row>
+                        <Col xs={12} md={6} lg={3} style={{ marginLeft: '7px' }}>
+                            <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <ComboBox
+                                name="Célula"
+                                labelInput="Célula"
+                                valueProp={'id'}
+                                textProp={'description'}
+                                data={customerStory.get('listTeams')}
+                                {...idCelula}
+                            />
+                        </Col>
+                        <Col xs={12} md={6} lg={3} style={{ marginLeft: '7px' }}>
+                            <dt><span>Motivo de traslado (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <ComboBox
+                                name="reasonTranfer"
+                                labelInput="Motivo de traslado"
+                                valueProp={'id'}
+                                textProp={'value'}
+                                data={selectsReducer.get(REASON_TRANFER)}
+                                {...reasonTranfer}
+                            />
+                        </Col>
+                        <Col xs={12} md={6} lg={4}>
+                            <label style={{ fontWeight: "bold", marginTop: '28px', marginLeft: '80px' }}>
+                                <input type="checkbox" checked={this.state.checkEconomicGroup} onClick={this._handleChangeCheck} />
+                                &nbsp;&nbsp; ¿Traslada todo el grupo económico?
                     </label>
-                    </Col>
+                        </Col>
+                    </Row>
+                }
+                <Row>
                     <Col xs={12} md={12} lg={12} style={{ marginTop: '10px' }} >
                         <ListClientsValidations />
                     </Col>
-                    <Col xs={12} md={12} lg={12} style={{ marginTop: '10px' }} >
-                        <button className="btn btn-primary" type="submit"
-                            style={{ float: 'right', cursor: 'pointer', marginRight: '10px' }}>
-                            Guardar
+                    {!deliveryClient &&
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: '10px' }} >
+                            <button className="btn btn-primary" type="submit"
+                                style={{ float: 'right', cursor: 'pointer', marginRight: '10px' }}>
+                                Guardar
                         </button>
-                    </Col>
+                        </Col>
+                    }
                 </Row>
                 <SweetAlert
                     type="warning"
@@ -167,15 +194,17 @@ function mapDispatchToProps(dispatch) {
         swtShowMessage,
         updateTeamClients,
         consultInfoClient,
-        getAllteams
+        getAllteams,
+        getMasterDataFields
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, customerStory, clientInformacion }, ownerProps) {
+function mapStateToProps({ navBar, customerStory, clientInformacion, selectsReducer }, ownerProps) {
     return {
         navBar,
         customerStory,
-        clientInformacion
+        clientInformacion,
+        selectsReducer
     };
 }
 
