@@ -425,7 +425,7 @@ class ContactDetailsModalComponent extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
-                    this.setState({isEditable: false});
+                    this._closeViewOrEditContact();
                     swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
                     contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
@@ -1028,7 +1028,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
 export default reduxForm({
     form: 'submitValidationContactDetails',
     fields,
-    destroyOnUnmount: false,
+    destroyOnUnmount: true,
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;

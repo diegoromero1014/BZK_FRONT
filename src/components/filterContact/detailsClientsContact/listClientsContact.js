@@ -243,10 +243,11 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ filterContactsReducer, contactDetail }, ownerProps) {
+function mapStateToProps({ filterContactsReducer, contactDetail, clientInformacion }, ownerProps) {
     return {
         filterContactsReducer,
-        contactDetail
+        contactDetail,
+        clientInformacion
     };
 }
 
