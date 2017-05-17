@@ -55,6 +55,8 @@ import tabRisksManagment from '../components/risksManagement/reducer';
 import AECMyPendings from '../components/myPendings/AEC/reducer';
 import groupsFavoriteContactsReducer from '../components/contact/favoritesGroup/reducer';
 import customerStory from '../components/customerStory/reducer';
+import structuredDeliveryEvents from '../components/customerStory/structuredDelivery/events/reducer';
+import structuredDelivery from '../components/customerStory/structuredDelivery/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -111,6 +113,8 @@ export default combineReducers({
     contactsByFunctionOrType: contactsByFunctionOrTypeReducer,
     tabRisksManagment: tabRisksManagment,
     AECMyPendings: AECMyPendings,
-    groupsFavoriteContacts :groupsFavoriteContactsReducer,
-    customerStory
+    groupsFavoriteContacts: groupsFavoriteContactsReducer,
+    customerStory,
+    structuredDeliveryEvents,
+    structuredDelivery
 });

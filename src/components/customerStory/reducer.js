@@ -12,9 +12,7 @@ export default (state = initialState, action) => {
         case UPDATE_ACTIVE_TAB_CS:
             return state.set("tabSelected", action.payload);
         case VALIDATE_CLIENTS:
-            console.log('action', action);
             const listClients = _.get(action, 'payload.data.data', []);
-            console.log('listClients', listClients);
             const list = state.get('listClientsDelivery');
             listClients.map(item => {
                 const uid = _.uniqueId('note_');
@@ -26,7 +24,6 @@ export default (state = initialState, action) => {
                     deliveryComplete: item.deliveryComplete
                 })
             });
-            console.log('list', list);
             return state.set('listClientsDelivery', list);
         default:
             return state;

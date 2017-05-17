@@ -166,12 +166,14 @@ class ModalComponentPendingTask extends Component {
               <Col xs>
                 <dl style={{ width: '100%' }}>
                   <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span></dt>
-                  <dd>  <DateTimePickerUi
-                    {...fecha}
-                    culture='es'
-                    format={"DD/MM/YYYY"}
-                    time={false}
-                    /></dd>
+                  <dd>  
+                    <DateTimePickerUi
+                      {...fecha}
+                      culture='es'
+                      format={"DD/MM/YYYY"}
+                      time={false}
+                    />
+                  </dd>
                 </dl>
               </Col>
               <Col xs>

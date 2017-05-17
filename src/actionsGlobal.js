@@ -145,13 +145,13 @@ export function mapDateValueFromTask(date) {
 
 }
 
-export function joinName(firstName, middleName, firstLastName, secondLastName){
+export function joinName(firstName, middleName, firstLastName, secondLastName) {
     var nameEntity = firstName;
-    if( !_.isEmpty(middleName) && !_.isNull(middleName) && !_.isUndefined(middleName) ){
+    if (!_.isEmpty(middleName) && !_.isNull(middleName) && !_.isUndefined(middleName)) {
         nameEntity = nameEntity + " " + middleName;
     }
     nameEntity = nameEntity + " " + firstLastName;
-    if( !_.isEmpty(secondLastName) && !_.isNull(secondLastName) && !_.isUndefined(secondLastName) ){
+    if (!_.isEmpty(secondLastName) && !_.isNull(secondLastName) && !_.isUndefined(secondLastName)) {
         nameEntity = nameEntity + " " + secondLastName;
     }
     return nameEntity;
@@ -250,4 +250,12 @@ export function validateResponse(response) {
         }
     }
     return true;
+}
+
+export function stringValidate(value) {
+    if (value !== '' && value !== undefined && value !== null) {
+        return true;
+    } else {
+        return false;
+    }
 }

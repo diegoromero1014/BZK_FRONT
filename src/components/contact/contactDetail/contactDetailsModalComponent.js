@@ -216,7 +216,6 @@ class ContactDetailsModalComponent extends Component {
     _downloadFileSocialStyle() {
         const {downloadFilePDF} = this.props;
         downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
-        //contactGender.onChange('');
         this.setState({generoData: genero});
     }
 
