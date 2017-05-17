@@ -1029,7 +1029,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
 export default reduxForm({
     form: 'submitValidationContactDetails',
     fields,
-    destroyOnUnmount: false,
+    destroyOnUnmount: true,
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;

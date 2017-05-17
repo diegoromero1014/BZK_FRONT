@@ -3,16 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../../globalComponents/actions';
+import ButtonOpenHistoricalClient from './buttonOpenHistoricalClient';
 
 class ListClientsValidations extends Component {
     constructor(props) {
         super(props);
         this._mapValuesDeliveryClients = this._mapValuesDeliveryClients.bind(this);
-        this._openModalHistoryClient = this._openModalHistoryClient.bind(this);
-    }
-
-    _openModalHistoryClient(){
-        console.log("Abrir modal de historial del cliente");
     }
 
     _mapValuesDeliveryClients(deliveryClient, idx) {
@@ -21,13 +17,7 @@ class ListClientsValidations extends Component {
             <td>{deliveryClient.nameClient}</td>
             <td>{deliveryClient.team}</td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
-                {deliveryClient.deliveryComplete ?
-                    <i className="green checkmark icon" title="Historial del cliente completo" 
-                        style={{ cursor: "pointer" }} onClick={this._openModalHistoryClient} />
-                    :
-                    <i className="red remove icon" title="El historial del cliente está incompleto" 
-                        style={{ cursor: "pointer" }} onClick={this._openModalHistoryClient} />
-                }
+                <ButtonOpenHistoricalClient deliveryComplete={deliveryClient.deliveryComplete} />
             </td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
                 {deliveryClient.updateClient ?
