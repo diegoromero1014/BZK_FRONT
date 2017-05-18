@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
+import { clientsByEconomicGroup } from '../actions';
+import StructuredDelivery from '../structuredDelivery/componentStructuredDelivery';
+import { validateResponse } from '../../../actionsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 class ButtonOpenHistoricalClient extends Component {
     constructor(props) {
@@ -19,11 +23,20 @@ class ButtonOpenHistoricalClient extends Component {
     }
 
     closeModal() {
+        const { clientsByEconomicGroup, customerStory, clientInformacion } = this.props;
+        const checkEconomicGroup = customerStory.get('checkEconomicGroup');
+        const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
+        const idClient = window.localStorage.getItem('idClientSelected');
         this.setState({ modalIsOpen: false });
+        clientsByEconomicGroup(checkEconomicGroup ? null: idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
+            if (!validateResponse(data)) {
+                swtShowMessage('error', 'Error validando clientes', 'Señor usuario, ocurrió un error validando los clientes.');
+            }
+        });
     }
 
     render() {
-        const { deliveryComplete } = this.props;
+        const { deliveryComplete, idClient } = this.props;
         return (
             <div>
                 {deliveryComplete ?
@@ -43,13 +56,20 @@ class ButtonOpenHistoricalClient extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <span>Holaaaaaaaa</span>
+                            <StructuredDelivery callFromDeliveryClient={true} closeModal={this.closeModal} idClientSeleted={idClient} />
                         </div>
                     </div>
                 </Modal>
             </div>
         );
     }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        clientsByEconomicGroup,
+        swtShowMessage
+    }, dispatch);
 }
 
 function mapStateToProps({ clientInformacion, customerStory }, ownerProps) {
@@ -59,4 +79,4 @@ function mapStateToProps({ clientInformacion, customerStory }, ownerProps) {
     };
 }
 
-export default connect(mapStateToProps, null)(ButtonOpenHistoricalClient);
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonOpenHistoricalClient);

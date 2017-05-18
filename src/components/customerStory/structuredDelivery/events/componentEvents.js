@@ -21,11 +21,13 @@ class ComponentEvents extends Component {
     }
 
     _mapEventsItems(event) {
+        const {callFromDeliveryClient} = this.props;
         return <EventItem
             index={event.uid}
             key={event.uid}
             name={event.name}
             date={event.date}
+            callFromDeliveryClient={callFromDeliveryClient}
         />
     }
 
@@ -47,7 +49,7 @@ class ComponentEvents extends Component {
                 </Row>
                 <Row style={{ marginBottom: "20px" }}>
                     {structuredDelivery.get('eventErrors') &&
-                        <div>
+                        <div style={{marginLeft: '10px'}}>
                             <div className="ui pointing below red basic label">
                                 Debe ingresar todos los campos
                             </div>

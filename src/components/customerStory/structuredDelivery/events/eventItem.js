@@ -53,7 +53,7 @@ class EventItem extends Component {
     }
 
     render() {
-        const { index } = this.props;
+        const { index, callFromDeliveryClient } = this.props;
         return (
             <Row key={index}>
                 <Col xs={10} md={8} lg={8} style={{ marginTop: "15px" }}>
@@ -80,7 +80,7 @@ class EventItem extends Component {
                         />
                     </div>
                 </Col>
-                <Col xs={1} md={1} lg={1} style={{ marginTop: "37px" }}>
+                <Col xs={1} md={1} lg={1} style={callFromDeliveryClient ? { marginTop: "54px" } : { marginTop: "37px" }}>
                     <button onClick={() => this.setState({ showConfirm: true })}
                         className="btn btn-sm  btn-danger"
                         type="button">

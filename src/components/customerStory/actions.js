@@ -1,5 +1,6 @@
 import { APP_URL } from '../../constantsGlobal';
-import { UPDATE_ACTIVE_TAB_CS, VALIDATE_CLIENTS, UPDATE_TEAM_CLIENTS, APROVE_DELIVERY_CLIENT, GET_ALL_TEAMS } from './constants';
+import { UPDATE_ACTIVE_TAB_CS, VALIDATE_CLIENTS, UPDATE_TEAM_CLIENTS, APROVE_DELIVERY_CLIENT, 
+    GET_ALL_TEAMS, CHANGE_ECONOMIC_GROUP } from './constants';
 import axios from 'axios';
 
 export function clientsByEconomicGroup(idClient, idEconomicGroup) {
@@ -110,5 +111,12 @@ export function getAllteams() {
     return {
         type: GET_ALL_TEAMS,
         payload: request
+    }
+}
+
+export function updateCheckEconomicGroup(value) {
+    return {
+        type: CHANGE_ECONOMIC_GROUP,
+        value
     }
 }

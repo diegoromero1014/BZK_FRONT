@@ -8,7 +8,7 @@ import { getMasterDataFields } from '../../selectsComponent/actions';
 import { VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
-import { clientsByEconomicGroup, updateTeamClients, getAllteams } from '../actions';
+import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
 import { validateResponse } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -49,6 +49,7 @@ class ComponentCustomerDelivery extends Component {
     }
 
     _handleChangeCheck() {
+        const {updateCheckEconomicGroup} = this.props;
         if (!this.state.checkEconomicGroup) {
             const { clientInformacion, clientsByEconomicGroup, swtShowMessage } = this.props;
             const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
@@ -61,6 +62,7 @@ class ComponentCustomerDelivery extends Component {
             this.consultClients(window.localStorage.getItem('idClientSelected'), null);
         }
         this.setState({ checkEconomicGroup: !this.state.checkEconomicGroup });
+        updateCheckEconomicGroup(!this.state.checkEconomicGroup);
     }
 
     consultClients(idClient, idEconomic) {
@@ -198,7 +200,8 @@ function mapDispatchToProps(dispatch) {
         updateTeamClients,
         consultInfoClient,
         getAllteams,
-        getMasterDataFields
+        getMasterDataFields,
+        updateCheckEconomicGroup
     }, dispatch);
 }
 

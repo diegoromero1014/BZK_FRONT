@@ -38,7 +38,7 @@ class componentStructuredDelivery extends Component {
 
     _submitStructuredDelivery() {
         const { fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData } = this.props;
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted } = this.props;
         if (stringValidate(corporateGobernance.value) || stringValidate(reciprocity.value) || stringValidate(specialConsiderations.value)
             || stringValidate(businessWithAffiliates.value) || stringValidate(mergers.value) || stringValidate(dificultSituations.value)
             || structuredDeliveryEvents.size > 0) {
@@ -52,9 +52,10 @@ class componentStructuredDelivery extends Component {
                     dateEvent: moment(event.date, 'DD/MM/YYYY').format("YYYY-MM-DD HH:mm:ss")
                 });
             });
+            const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
             var jsonStructuredDelivery = {
                 "id": id.value,
-                "idClient": window.localStorage.getItem('idClientSelected'),
+                "idClient": idClientSave,
                 "corporateGobernance": corporateGobernance.value,
                 "reciprocity": reciprocity.value,
                 "specialConsiderations": specialConsiderations.value,
@@ -91,17 +92,22 @@ class componentStructuredDelivery extends Component {
     }
 
     _closeEdit() {
+        const {closeModal} = this.props
         this.setState({
             showMessage: false
         });
+        if( !_.isUndefined(closeModal) ){
+            closeModal();
+        }
     }
 
     _getStructuredDeliveryDetail() {
         const { fields: { id, corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
             specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData } = this.props;
+            dificultSituationsDate }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData, idClientSeleted } = this.props;
         clearEvents();
-        structuredDeliveryDetail(window.localStorage.getItem('idClientSelected')).then((data) => {
+        const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
+        structuredDeliveryDetail(idClientSave).then((data) => {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             } else {
@@ -148,148 +154,159 @@ class componentStructuredDelivery extends Component {
     render() {
         const { fields: { corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
             specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate }, reducerGlobal, handleSubmit } = this.props;
+            dificultSituationsDate }, reducerGlobal, handleSubmit, callFromDeliveryClient } = this.props;
         return (
             <form className="my-custom-tab" onSubmit={handleSubmit(this._submitStructuredDelivery)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Gobierno corporativo - Junta directiva del cliente </span>
-                                {
-                                    corporateGobernanceDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {corporateGobernanceDate.value}</span>
-                                }
-                                <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={CORPORATE_GOVERNANCE_HELP} />
-                            </dt>
-                            <Textarea
-                                name="corporateGobernance"
-                                type="text"
-                                max="1000"
-                                title="La longitud máxima de caracteres es de 1000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...corporateGobernance}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Reciprocidades</span>
-                                {
-                                    reciprocityDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {reciprocityDate.value}</span>
-                                }
-                            </dt>
-                            <Textarea
-                                name="reciprocity"
-                                type="text"
-                                max="1000"
-                                title="La longitud máxima de caracteres es de 1000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...reciprocity}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Consideraciones especiales de cuotas de manejo</span>
-                                {
-                                    specialConsiderationsDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {specialConsiderationsDate.value}</span>
-                                }
-                            </dt>
-                            <Textarea
-                                name="specialConsiderations"
-                                type="text"
-                                max="1000"
-                                title="La longitud máxima de caracteres es de 1000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...specialConsiderations}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Negocios del cliente con filiales</span>
-                                {
-                                    businessWithAffiliatesDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {businessWithAffiliatesDate.value}</span>
-                                }
-                                <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={BUSINESS_WITH_AFFILIATES_HELP} />
-                            </dt>
-                            <Textarea
-                                name="businessWithAffiliates"
-                                type="text"
-                                max="2000"
-                                title="La longitud máxima de caracteres es de 2000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...businessWithAffiliates}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Fusiones - Adquisiciones</span>
-                                {
-                                    mergersDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mergersDate.value}</span>
-                                }
-                                <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={MERGERS_HELP} />
-                            </dt>
-                            <Textarea
-                                name="mergers"
-                                type="text"
-                                max="1000"
-                                title="La longitud máxima de caracteres es de 1000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...mergers}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ marginBottom: "20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ paddingRight: "15px" }}>
-                            <dt>
-                                <span>Situaciones difíciles - Nuevos mercados</span>
-                                {
-                                    dificultSituationsDate.value &&
-                                    <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {dificultSituationsDate.value}</span>
-                                }
-                            </dt>
-                            <Textarea
-                                name="dificultSituations"
-                                type="text"
-                                max="1000"
-                                title="La longitud máxima de caracteres es de 1000"
-                                style={{ width: '100%', height: '100px' }}
-                                {...dificultSituations}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <ComponentEvents />
-                <div style={{ marginLeft: '-35px', position: 'fixed', border: '1px solid rgb(194, 194, 194)', bottom: '0px', width: '100%', marginBottom: '0px', height: '50px', background: 'rgba(255, 255, 255, 0.74902)' }}>
-                    <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
-                        <button className="btn" type="submit" style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
+                style={callFromDeliveryClient ? { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%" } : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+                <div style={{ overflowX: 'hidden', marginLeft: '20px' }}
+                    className={callFromDeliveryClient ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ''} >
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Gobierno corporativo - Junta directiva del cliente </span>
+                                    {
+                                        corporateGobernanceDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {corporateGobernanceDate.value}</span>
+                                    }
+                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={CORPORATE_GOVERNANCE_HELP} />
+                                </dt>
+                                <Textarea
+                                    name="corporateGobernance"
+                                    type="text"
+                                    max="1000"
+                                    title="La longitud máxima de caracteres es de 1000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...corporateGobernance}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Reciprocidades</span>
+                                    {
+                                        reciprocityDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {reciprocityDate.value}</span>
+                                    }
+                                </dt>
+                                <Textarea
+                                    name="reciprocity"
+                                    type="text"
+                                    max="1000"
+                                    title="La longitud máxima de caracteres es de 1000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...reciprocity}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Consideraciones especiales de cuotas de manejo</span>
+                                    {
+                                        specialConsiderationsDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {specialConsiderationsDate.value}</span>
+                                    }
+                                </dt>
+                                <Textarea
+                                    name="specialConsiderations"
+                                    type="text"
+                                    max="1000"
+                                    title="La longitud máxima de caracteres es de 1000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...specialConsiderations}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Negocios del cliente con filiales</span>
+                                    {
+                                        businessWithAffiliatesDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {businessWithAffiliatesDate.value}</span>
+                                    }
+                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={BUSINESS_WITH_AFFILIATES_HELP} />
+                                </dt>
+                                <Textarea
+                                    name="businessWithAffiliates"
+                                    type="text"
+                                    max="2000"
+                                    title="La longitud máxima de caracteres es de 2000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...businessWithAffiliates}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Fusiones - Adquisiciones</span>
+                                    {
+                                        mergersDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mergersDate.value}</span>
+                                    }
+                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={MERGERS_HELP} />
+                                </dt>
+                                <Textarea
+                                    name="mergers"
+                                    type="text"
+                                    max="1000"
+                                    title="La longitud máxima de caracteres es de 1000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...mergers}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ paddingRight: "15px" }}>
+                                <dt>
+                                    <span>Situaciones difíciles - Nuevos mercados</span>
+                                    {
+                                        dificultSituationsDate.value &&
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {dificultSituationsDate.value}</span>
+                                    }
+                                </dt>
+                                <Textarea
+                                    name="dificultSituations"
+                                    type="text"
+                                    max="1000"
+                                    title="La longitud máxima de caracteres es de 1000"
+                                    style={{ width: '100%', height: '100px' }}
+                                    {...dificultSituations}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                    <ComponentEvents callFromDeliveryClient={callFromDeliveryClient}/>
+                </div>
+                {callFromDeliveryClient ?
+                    <div className="modalBt4-footer modal-footer">
+                        <button className="btn btn-primary modal-button-edit" type="submit">
                             <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
                         </button>
                     </div>
-                </div>
+                    :
+                    <div style={{ marginLeft: '-35px', position: 'fixed', border: '1px solid rgb(194, 194, 194)', bottom: '0px', width: '100%', marginBottom: '0px', height: '50px', background: 'rgba(255, 255, 255, 0.74902)' }}>
+                        <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
+                            <button className="btn" type="submit" style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
+                                <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                            </button>
+                        </div>
+                    </div>
+                }
                 <SweetAlert
                     type={this.state.typeMessage}
                     show={this.state.showMessage}

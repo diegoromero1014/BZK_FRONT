@@ -17,7 +17,7 @@ class ListClientsValidations extends Component {
             <td>{deliveryClient.nameClient}</td>
             <td>{deliveryClient.team}</td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenHistoricalClient deliveryComplete={deliveryClient.deliveryComplete} />
+                <ButtonOpenHistoricalClient deliveryComplete={deliveryClient.deliveryComplete} idClient={deliveryClient.idClient} />
             </td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
                 {deliveryClient.updateClient ?
