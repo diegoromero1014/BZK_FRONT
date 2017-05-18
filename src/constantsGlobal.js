@@ -144,3 +144,6 @@ export const VALUES_APROVE = [
     { 'id': true, 'value': "Aprobar" },
     { 'id': false, 'value': "Rechazar" }
 ];
+
+export const ORDER_ASC = 0;
+export const ORDER_DESC = 1;

@@ -2,21 +2,29 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { NUMBER_RECORDS } from './constants';
-import { getAECForEmployee, limitInf, changePage } from './actions';
+import { getAssigned, limitInf, changePage } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
 import { validateResponse } from '../../../actionsGlobal';
 
-class PaginationAEC extends Component {
+class paginationAssigned extends Component {
 
   constructor(props) {
     super(props)
-    this._handleFindAEC = this._handleFindAEC.bind(this);
+    this._handleFindAssigned = this._handleFindAssigned.bind(this);
   }
 
-  _handleFindAEC(limInf) {
-    const { getAECForEmployee, AECMyPendings } = this.props;
-    getAECForEmployee(limInf, NUMBER_RECORDS).then((data) => {
+  _handleFindAssigned(limInf) {
+    const { getAssigned, assignedReducer } = this.props;
+    var paginationAssigned = {
+      statusOfTask: null,
+      clientNumber: null,
+      clientName: null,
+      sortOrder: assignedReducer.get('sortOrder'),
+      pageNum: limInf,
+      maxRows: NUMBER_RECORDS
+    };
+    getAssigned(paginationAssigned).then((data) => {
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       }
@@ -30,21 +38,21 @@ class PaginationAEC extends Component {
     var limInf = (page - 1);
     limitInf(limInf);
     changePage(page);
-    this._handleFindAEC(limInf);
+    this._handleFindAssigned(limInf);
   }
 
   render() {
-    const { AECMyPendings, config } = this.props;
-    var page = AECMyPendings.get('page');
+    const { assignedReducer, config } = this.props;
+    var page = assignedReducer.get('page');
     var firstPage = 1;
     if (page > 4) {
       firstPage = page - 3;
     }
-    var rowCount = AECMyPendings.get('rowCount');
+    var rowCount = assignedReducer.get('rowCount');
     var lastPage = Math.ceil(rowCount / NUMBER_RECORDS);
     return (
       <div>
-        {rowCount > NUMBER_RECORDS ?
+        {rowCount > NUMBER_RECORDS &&
           <div style={{ borderTop: "2px solid #D9DEDF", width: "100%", marginTop: "15px", paddingTop: "15px", marginLeft: '5px' }}>
             <span style={{ fontWeight: 'bold' }}>Pág. {page} de {lastPage}</span>
             <div style={{ textAlign: "center" }} >
@@ -77,7 +85,7 @@ class PaginationAEC extends Component {
               </ul>
             </div>
           </div>
-          : <div></div>}
+        }
       </div>
     )
   }
@@ -85,16 +93,16 @@ class PaginationAEC extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getAECForEmployee,
+    getAssigned,
     limitInf,
     changePage
   }, dispatch);
 }
 
-function mapStateToProps({ AECMyPendings }, ownerProps) {
+function mapStateToProps({ assignedReducer }, ownerProps) {
   return {
-    AECMyPendings
+    assignedReducer
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaginationAEC);
+export default connect(mapStateToProps, mapDispatchToProps)(paginationAssigned);
