@@ -42,6 +42,15 @@ class EventItem extends Component {
             showConfirm: false
         });
         deleteEvent(index);
+        const {structuredDeliveryEvents, updateEventErrors} = this.props;
+        const arrayValues = _.remove(structuredDeliveryEvents.toArray(), (event) => event.uid !== index);
+        const errosName = _.filter(arrayValues, {"name": ""});
+        const errosDate = _.filter(arrayValues, {"date": ""});
+        if( _.size(errosName) > 0 || _.size(errosDate) ){
+             updateEventErrors(true);
+        } else {
+            updateEventErrors(false);
+        }
     }
 
     componentWillMount() {
