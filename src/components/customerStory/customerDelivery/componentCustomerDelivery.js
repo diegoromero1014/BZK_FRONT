@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import { consultList } from '../../selectsComponent/actions';
 import { REASON_TRANFER } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
-import { VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+import { OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
 import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
@@ -13,23 +13,35 @@ import { validateResponse } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
+import Input from '../../../ui/input/inputComponent';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
 
-const fields = ["idCelula", "reasonTranfer"];
+const fields = ["idCelula", "reasonTranfer", "otherReason"];
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
+var valuesReasonTranfer = [];
+
 const validate = values => {
     const errors = {}
     if (!values.idCelula) {
-        errors.idCelula = VALUE_REQUIERED;
+        errors.idCelula = OPTION_REQUIRED;
     } else {
         errors.idCelula = null;
     }
     if (!values.reasonTranfer) {
-        errors.reasonTranfer = VALUE_REQUIERED;
+        errors.reasonTranfer = OPTION_REQUIRED;
     } else {
         errors.reasonTranfer = null;
+        errors.otherReason = null;
+        const valueSeleted = _.map( _.filter(valuesReasonTranfer, {"id": parseInt(values.reasonTranfer)}), "value");
+        if (  _.isEqual(valueSeleted[0], OTHER)) {
+            if (!values.otherReason) {
+                errors.otherReason = VALUE_REQUIERED;
+            } else {
+                errors.otherReason = null;
+            }
+        }
     }
     return errors;
 }
@@ -46,10 +58,11 @@ class ComponentCustomerDelivery extends Component {
         this._handleSubmitDelivery = this._handleSubmitDelivery.bind(this);
         this.consultClients = this.consultClients.bind(this);
         this._saveUpdateTeamClient = this._saveUpdateTeamClient.bind(this);
+        this._onChangeReasonTransfer = this._onChangeReasonTransfer.bind(this);
     }
 
     _handleChangeCheck() {
-        const {updateCheckEconomicGroup} = this.props;
+        const { updateCheckEconomicGroup } = this.props;
         if (!this.state.checkEconomicGroup) {
             const { clientInformacion, clientsByEconomicGroup, swtShowMessage } = this.props;
             const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
@@ -80,8 +93,16 @@ class ComponentCustomerDelivery extends Component {
     componentWillMount() {
         const { consultList, getAllteams, getMasterDataFields } = this.props;
         getAllteams();
-        getMasterDataFields([REASON_TRANFER]);
+        getMasterDataFields([REASON_TRANFER]).then( (data) => {
+            valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
+        });
         this.consultClients(window.localStorage.getItem('idClientSelected'), null);
+    }
+
+    _onChangeReasonTransfer(valueReason){
+        const {fields: { reasonTranfer, otherReason }} = this.props;
+        reasonTranfer.onChange(valueReason);
+        otherReason.onChange(null);
     }
 
     _handleSubmitDelivery() {
@@ -100,7 +121,7 @@ class ComponentCustomerDelivery extends Component {
     }
 
     _saveUpdateTeamClient() {
-        const { fields: { idCelula, reasonTranfer }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData, 
+        const { fields: { idCelula, reasonTranfer, otherReason }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData,
             consultInfoClient, clientInformacion } = this.props;
         //Valido si el cliente me lo estan asignando, para así no mostrar los campos de cmabio de célula
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
@@ -110,13 +131,15 @@ class ComponentCustomerDelivery extends Component {
         const json = {
             "clients": customerStory.get('listClientsDelivery'),
             "idTeam": idCelula.value,
-            "idReasonTransfer": reasonTranfer.value
+            "idReasonTransfer": reasonTranfer.value,
+            "otherReason": otherReason.value
         };
         updateTeamClients(json).then((data) => {
             changeStateSaveData(false, "");
             if (validateResponse(data)) {
                 reasonTranfer.onChange('');
                 idCelula.onChange('');
+                otherReason.onChange('');
                 swtShowMessage('success', 'Cliente(s) actualizado(s)', 'Señor usuario, el cambio de céula se registró correctamente, está acción se hará efectiva cuando el gerente de cuenta acepte los cambios.');
                 consultInfoClient();
             } else {
@@ -126,7 +149,7 @@ class ComponentCustomerDelivery extends Component {
     }
 
     render() {
-        const { fields: { idCelula, reasonTranfer }, customerStory, selectsReducer, handleSubmit, clientInformacion } = this.props;
+        const { fields: { idCelula, reasonTranfer, otherReason }, customerStory, selectsReducer, handleSubmit, clientInformacion } = this.props;
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
         return (
             <form onSubmit={handleSubmit(this._handleSubmitDelivery)}>
@@ -152,14 +175,29 @@ class ComponentCustomerDelivery extends Component {
                                 textProp={'value'}
                                 data={selectsReducer.get(REASON_TRANFER)}
                                 {...reasonTranfer}
+                                onChange={(val) => this._onChangeReasonTransfer(val)}
                             />
                         </Col>
                         <Col xs={12} md={6} lg={4}>
                             <label style={{ fontWeight: "bold", marginTop: '28px', marginLeft: '80px' }}>
                                 <input type="checkbox" checked={this.state.checkEconomicGroup} onClick={this._handleChangeCheck} />
                                 &nbsp;&nbsp; ¿Traslada todo el grupo económico?
-                    </label>
+                            </label>
                         </Col>
+                        { _.isEqual( _.map( _.filter(valuesReasonTranfer, {"id": parseInt(reasonTranfer.value)}), "value")[0], OTHER) &&
+                            <Col xs={12} md={6} lg={6} style={{marginLeft: '7px', marginTop: '10px', paddingRight: '0px'}}>
+                                <dt><span>Otro motivo (</span><span style={{ color: "red" }}>*</span>)</dt>
+                                <dt>
+                                    <Input
+                                        name="otherReason"
+                                        type="text"
+                                        max="50"
+                                        placeholder="Otro motivo de traslado"
+                                        {...otherReason}
+                                    />
+                                </dt>
+                            </Col>
+                        }
                     </Row>
                 }
                 <Row>
