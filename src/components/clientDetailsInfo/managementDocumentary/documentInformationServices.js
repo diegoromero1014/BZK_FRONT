@@ -40,7 +40,6 @@ class DocumentInformationServices extends Component {
 
     _createDocumentsRecords(document, idx) {
         return <tr key={idx}>
-            <td>{document.documentCode}</td>
             <td>
                 <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
             </td>
@@ -69,7 +68,6 @@ class DocumentInformationServices extends Component {
                         <table style={{ width: "100%" }}>
                             <thead>
                                 <tr>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Código</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Nombre</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Estado</span></th>
