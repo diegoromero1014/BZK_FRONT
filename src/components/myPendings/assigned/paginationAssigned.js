@@ -4,8 +4,9 @@ import { bindActionCreators } from 'redux';
 import { NUMBER_RECORDS } from './constants';
 import { getAssigned, limitInf, changePage } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
+import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { validateResponse } from '../../../actionsGlobal';
+import { changeStateSaveData } from '../../dashboard/actions';
 
 class paginationAssigned extends Component {
 
@@ -15,7 +16,7 @@ class paginationAssigned extends Component {
   }
 
   _handleFindAssigned(limInf) {
-    const { getAssigned, assignedReducer } = this.props;
+    const { getAssigned, assignedReducer, changeStateSaveData } = this.props;
     var paginationAssigned = {
       statusOfTask: assignedReducer.get('statusOfTask'),
       clientNumberOrName: assignedReducer.get('clientNumberOrName'),
@@ -24,11 +25,14 @@ class paginationAssigned extends Component {
       pageNum: limInf,
       maxRows: NUMBER_RECORDS
     };
+    changeStateSaveData(true, MESSAGE_LOAD_DATA);
     getAssigned(paginationAssigned).then((data) => {
+      changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       }
     }, (reason) => {
+      changeStateSaveData(false, "");
       swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
     });
   }
@@ -95,7 +99,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getAssigned,
     limitInf,
-    changePage
+    changePage,
+    changeStateSaveData
   }, dispatch);
 }
 

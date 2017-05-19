@@ -4,9 +4,12 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { consultList } from '../../selectsComponent/actions';
 import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
-import { VALUE_REQUIERED, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+import {
+    VALUE_REQUIERED, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_SAVE_DATA
+} from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { validateResponse, formValidateKeyEnter, stringValidate } from '../../../actionsGlobal';
+import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -92,11 +95,11 @@ class componentStructuredDelivery extends Component {
     }
 
     _closeEdit() {
-        const {closeModal} = this.props
+        const { closeModal } = this.props
         this.setState({
             showMessage: false
         });
-        if( !_.isUndefined(closeModal) ){
+        if (!_.isUndefined(closeModal)) {
             closeModal();
         }
     }
@@ -159,7 +162,7 @@ class componentStructuredDelivery extends Component {
             <form className="my-custom-tab" onSubmit={handleSubmit(this._submitStructuredDelivery)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
                 style={callFromDeliveryClient ? { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%" } : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-                <div style={{ overflowX: 'hidden', marginLeft: '20px' }}
+                <div style={callFromDeliveryClient ? { overflowX: 'hidden', marginLeft: '20px' } : {}}
                     className={callFromDeliveryClient ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ''} >
                     <Row style={{ marginBottom: "20px" }}>
                         <Col xs={12} md={12} lg={12}>
@@ -168,7 +171,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Gobierno corporativo - Junta directiva del cliente </span>
                                     {
                                         corporateGobernanceDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {corporateGobernanceDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(corporateGobernanceDate.value)}</span>
                                     }
                                     <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={CORPORATE_GOVERNANCE_HELP} />
                                 </dt>
@@ -190,7 +193,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Reciprocidades</span>
                                     {
                                         reciprocityDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {reciprocityDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(reciprocityDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -211,7 +214,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Consideraciones especiales de cuotas de manejo</span>
                                     {
                                         specialConsiderationsDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {specialConsiderationsDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(specialConsiderationsDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -232,7 +235,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Negocios del cliente con filiales</span>
                                     {
                                         businessWithAffiliatesDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {businessWithAffiliatesDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(businessWithAffiliatesDate.value)}</span>
                                     }
                                     <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={BUSINESS_WITH_AFFILIATES_HELP} />
                                 </dt>
@@ -254,7 +257,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Fusiones - Adquisiciones</span>
                                     {
                                         mergersDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mergersDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(mergersDate.value)}</span>
                                     }
                                     <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={MERGERS_HELP} />
                                 </dt>
@@ -276,7 +279,7 @@ class componentStructuredDelivery extends Component {
                                     <span>Situaciones difíciles - Nuevos mercados</span>
                                     {
                                         dificultSituationsDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {dificultSituationsDate.value}</span>
+                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(dificultSituationsDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -290,7 +293,7 @@ class componentStructuredDelivery extends Component {
                             </div>
                         </Col>
                     </Row>
-                    <ComponentEvents callFromDeliveryClient={callFromDeliveryClient}/>
+                    <ComponentEvents callFromDeliveryClient={callFromDeliveryClient} />
                 </div>
                 {callFromDeliveryClient ?
                     <div className="modalBt4-footer modal-footer">

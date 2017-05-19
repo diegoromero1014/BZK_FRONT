@@ -6,8 +6,14 @@ import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import _ from 'lodash';
 import moment from 'moment';
-import { shorterStringValue, stringValidate, mapDateValueFromTask, validateResponse } from '../../../actionsGlobal';
-import { ORDER_ASC, ORDER_DESC, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
+import {
+  shorterStringValue, stringValidate, mapDateValueFromTask,
+  validateResponse
+} from '../../../actionsGlobal';
+import {
+  ORDER_ASC, ORDER_DESC, TITLE_ERROR_SWEET_ALERT,
+  MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA
+} from '../../../constantsGlobal';
 import GridComponent from '../../grid/component';
 import { VIEW_AEC_PENDING } from '../../modal/constants';
 import { getAssigned, changeSortOrder, clearListOfAssigned } from './actions';
@@ -15,6 +21,7 @@ import { NUMBER_RECORDS } from './constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { mapDateColor } from '../myTasks/pendingTaskUtilities';
 import { VIEW_TASK_ADMIN } from '../../modal/constants';
+import { changeStateSaveData } from '../../dashboard/actions';
 
 class listAssignedComponent extends Component {
 
@@ -32,9 +39,8 @@ class listAssignedComponent extends Component {
     this._closeModalEditTask = this._closeModalEditTask.bind(this);
   }
 
-
   _orderColumn(sortOrder) {
-    const { getAssigned, assignedReducer, changeSortOrder, swtShowMessage } = this.props;
+    const { getAssigned, assignedReducer, changeSortOrder, swtShowMessage, changeStateSaveData } = this.props;
     changeSortOrder(sortOrder);
     var paginationAssigned = {
       statusOfTask: assignedReducer.get('statusOfTask'),
@@ -44,7 +50,9 @@ class listAssignedComponent extends Component {
       pageNum: assignedReducer.get('limInf'),
       maxRows: NUMBER_RECORDS
     };
+    changeStateSaveData(true, MESSAGE_LOAD_DATA);
     getAssigned(paginationAssigned).then((data) => {
+      changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       } else {
@@ -61,12 +69,13 @@ class listAssignedComponent extends Component {
         }
       }
     }, (reason) => {
+      changeStateSaveData(false, "");
       swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
     });
   }
 
   _closeModalEditTask() {
-    const { assignedReducer, clearListOfAssigned, getAssigned } = this.props;
+    const { assignedReducer, clearListOfAssigned, getAssigned, changeStateSaveData } = this.props;
     clearListOfAssigned();
     var paginationAssigned = {
       statusOfTask: assignedReducer.get('statusOfTask'),
@@ -76,11 +85,14 @@ class listAssignedComponent extends Component {
       pageNum: this.state.limInf,
       maxRows: NUMBER_RECORDS
     };
+    changeStateSaveData(true, MESSAGE_LOAD_DATA);
     getAssigned(paginationAssigned).then((data) => {
+      changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       }
     }, (reason) => {
+      changeStateSaveData(false, "");
       swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
     });
   }
@@ -166,7 +178,8 @@ function mapDispatchToProps(dispatch) {
     getAssigned,
     changeSortOrder,
     swtShowMessage,
-    clearListOfAssigned
+    clearListOfAssigned,
+    changeStateSaveData
   }, dispatch);
 }
 

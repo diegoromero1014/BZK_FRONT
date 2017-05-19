@@ -8,7 +8,7 @@ import { validateResponse, validatePermissionsByModule } from '../../../actionsG
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR,
-    RED_COLOR
+    RED_COLOR, MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
 import {
     getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState,
@@ -23,6 +23,7 @@ import { Dropdown } from 'semantic-ui-react'
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { TASK_STATUS } from '../../selectsComponent/constants';
 import { MODULE_TASKS } from '../../../constantsGlobal';
+import { changeStateSaveData } from '../../dashboard/actions';
 
 const fields = ['stateTask', 'trafficLight', 'keywordClient'];
 const optionsColorExpiration = [
@@ -71,7 +72,7 @@ class ComponentAssigned extends Component {
     }
 
     _consultAssigned(keywordClientValue, stateTaskValue, trafficLightValue) {
-        const { swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
+        const { swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned, changeStateSaveData } = this.props;
         clearListOfAssigned();
         var paginationAssigned = {
             statusOfTask: stateTaskValue,
@@ -81,11 +82,14 @@ class ComponentAssigned extends Component {
             maxRows: NUMBER_RECORDS,
             homeworkTime: trafficLightValue
         };
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
         getAssigned(paginationAssigned).then((data) => {
+            changeStateSaveData(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
         }, (reason) => {
+            changeStateSaveData(false, "");
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
     }
@@ -101,7 +105,7 @@ class ComponentAssigned extends Component {
         const { fields: { keywordClient, stateTask, trafficLight }, changeHomeworkTime } = this.props;
         changeHomeworkTime(val);
         trafficLight.onChange(val);
-        this._consultAssigned(keywordClient, stateTask, val);
+        this._consultAssigned(keywordClient.value, stateTask.value, val);
     }
 
     _cleanSearch() {
@@ -221,7 +225,8 @@ function mapDispatchToProps(dispatch) {
         changeState,
         getMasterDataFields,
         changeSortOrder,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        changeStateSaveData
     }, dispatch);
 }
 
