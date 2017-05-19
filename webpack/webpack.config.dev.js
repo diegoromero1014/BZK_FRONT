@@ -25,6 +25,10 @@ var path = require('path'),
         module: {
             loaders: [
                 {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
                     test: /\.jsx?$/,
                     loaders: ['react-hot', 'babel'],
                     include: path.join(__dirname, '../src')
