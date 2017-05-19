@@ -25,9 +25,6 @@ class PaginationAEC extends Component {
     });
   }
 
-  componentWillMount() {
-  }
-
   _handlePaginar(page) {
     const { changePage, limitInf } = this.props;
     var limInf = (page - 1);

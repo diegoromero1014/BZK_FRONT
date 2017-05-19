@@ -9,9 +9,12 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
+import { resetAccordion } from '../clientDetailsInfo/actions';
+import {updateTabSeletedCS} from '../customerStory/actions';
+import {TAB_STORY} from '../customerStory/constants';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -21,18 +24,27 @@ class ComponentClientInformation extends Component {
     }
 
     componentWillMount() {
-        $(window).scrollTop(0);
-        const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading } = this.props;
-        updateTitleNavBar("Mis clientes");
-        showLoading(true, 'Cargando..');
-        consultInfoClient().then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin')) {
-                redirectUrl("/login");
+        if (!_.isNull(window.localStorage.getItem('idClientSelected')) && !_.isUndefined(window.localStorage.getItem('idClientSelected'))) {
+            const { resetAccordion, tabReducer } = this.props;
+            var tabActive = tabReducer.get('tabSelected');
+            if (tabActive === null) {
+                resetAccordion();
             }
-            showLoading(false, '');
-        });
-        viewAlertClient(true);
-
+            $(window).scrollTop(0);
+            const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
+            updateTitleNavBar("Mis clientes");
+            showLoading(true, 'Cargando..');
+            consultInfoClient().then((data) => {
+                if (!_.get(data, 'payload.data.validateLogin')) {
+                    redirectUrl("/login");
+                }
+                showLoading(false, '');
+            });
+            viewAlertClient(true);
+            updateTabSeletedCS(TAB_STORY);
+        } else {
+            redirectUrl("/login");
+        }
     }
 
     componentWillUnmount() {
@@ -185,13 +197,16 @@ function mapDispatchToProps(dispatch) {
         viewAlertClient,
         redirectUrl,
         clearEntities,
-        showLoading
+        showLoading,
+        resetAccordion,
+        updateTabSeletedCS
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, navBar, tabReducer }, ownerProps) {
     return {
         clientInformacion,
+        tabReducer,
         navBar
     };
 }

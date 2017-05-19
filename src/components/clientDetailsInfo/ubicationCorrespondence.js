@@ -15,19 +15,8 @@ class UbicationCorrespondence extends Component{
       addresses = addresses[0];
     }
     return(
-      <div className="tab-content-row" style={{marginTop: "40px",borderTop: "1px dotted #cea70b"}}>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <dl style={{fontSize: "25px", color: "#CEA70B", marginTop: "10px", marginBottom: "5px"}}>
-                  <i className="browser icon" style={{fontSize: "25px"}}></i>
-                  <span className="title-middle"> Información de ubicación y correspondencia</span>
-                </dl>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div >
+
         <h3 style={{borderBottom: "solid 1px", marginTop: "10px"}}>Dirección sede principal</h3>
         <table style={{width: "100%"}}>
             <thead>

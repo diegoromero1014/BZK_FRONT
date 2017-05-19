@@ -21,7 +21,7 @@ class ComponentAEC extends Component {
   }
 
   componentWillMount() {
-    const { updateTitleNavBar, getAECForEmployee } = this.props;
+    const { updateTitleNavBar, getAECForEmployee, swtShowMessage } = this.props;
     updateTitleNavBar("AEC");
     getAECForEmployee(0, NUMBER_RECORDS).then((data) => {
       if (!validateResponse(data)) {
@@ -69,7 +69,8 @@ class ComponentAEC extends Component {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     updateTitleNavBar,
-    getAECForEmployee
+    getAECForEmployee,
+    swtShowMessage
   }, dispatch);
 }
 

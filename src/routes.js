@@ -33,6 +33,7 @@ import ClientsContactsDetails from './components/filterContact/detailsClientsCon
 import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
 import AEC from './components/myPendings/AEC/componentAEC';
 import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
+import Assigned from './components/myPendings/assigned/componentAssigned';
 
 class App extends Component {
     render() {
@@ -71,6 +72,7 @@ export default (
                     <Route path="myTasks" component={ModalComponentPending}></Route>
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                     <Route path="AEC" component={AEC}></Route>
+                    <Route path="assigned" component={Assigned}></Route>
                 </Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>

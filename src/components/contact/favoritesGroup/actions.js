@@ -254,6 +254,12 @@ export function saveNameGroup(name){
 }
 
 
+export function clearEmails(){
+    return {
+        type: constant.CLEAR_EMAILS,
+        name:name
+    }
+}
 
 
 export function getEmailsForGroup(group){

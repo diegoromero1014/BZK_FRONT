@@ -7,7 +7,18 @@ import DeclarationOfOrigin from './DeclarationOfOrigin';
 import InternationalOperations from './internationalOperations';
 import DocumentInformationServices from './managementDocumentary/documentInformationServices';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { seletedButton, validateContactShareholder, sendErrorsUpdate } from './actions';
+import {
+    seletedButton, validateContactShareholder, sendErrorsUpdate,
+    changeEconomicActivity,
+    changeUbicationCorrespondence,
+    changeInfoFinanciera,
+    changeDataComercial,
+    changeNotes,
+    changeDeclarationOfOrigin,
+    changeInternationalOperations,
+    changeDocumentInformationServices,
+    changeForeingProducts,
+   } from './actions';
 import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT } from './constants';
 import Notas from './notas';
 import { bindActionCreators } from 'redux';
@@ -19,6 +30,8 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { MENU_CLOSED } from '../navBar/constants';
 import ButtonLinkClient from './linkingClient/buttonLinkClientComponent';
+import { Accordion, Icon } from 'semantic-ui-react';
+import TitleSectionComponent from '../titleSection/titleSection';
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -85,7 +98,18 @@ class DetailsInfoClient extends Component {
     }
 
     render() {
-        const { infoClient, reducerGlobal, linkedStatusKey } = this.props;
+        const { infoClient, reducerGlobal, linkedStatusKey,tabReducer,
+            changeEconomicActivity,
+            changeUbicationCorrespondence,
+            changeInfoFinanciera,
+            changeDataComercial,
+            changeNotes,
+            changeDeclarationOfOrigin,
+            changeInternationalOperations,
+            changeDocumentInformationServices,
+            changeForeingProducts,
+            }= this.props;
+        const accordion = tabReducer.get('accordion');
         var actualizationDateString = "";
         if (infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined) {
             var actualizationDate = moment(infoClient.actualizationDate).locale('es');
@@ -120,6 +144,9 @@ class DetailsInfoClient extends Component {
         };
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
+
+        //const active = Array.of(1, 2, 3);
+        const active = 0;
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
@@ -180,53 +207,124 @@ class DetailsInfoClient extends Component {
                         </tbody>
                     </table>
 
-                    <ActividadEconomica infoClient={infoClient} />
-                    <UbicationCorrespondence infoClient={infoClient} />
-                    <InfoFinanciera infoClient={infoClient} />
-                    <DataComercial infoClient={infoClient} />
-                    <div className="tab-content-row" style={{ marginTop: "30px", borderTop: "1px dotted #cea70b" }}>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <dl style={{
-                                            fontSize: "25px",
-                                            color: "#CEA70B",
-                                            marginTop: "5px",
-                                            marginBottom: "0px"
-                                        }}>
-                                            <i className="file outline icon" style={{ fontSize: "25px" }}></i>
-                                            <span className="title-middle"> Notas</span>
-                                        </dl>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    {notes.map(this._mapNoteItems)}
-                    <DeclarationOfOrigin infoClient={infoClient} />
-                    <InternationalOperations infoClient={infoClient} />
-                    <DocumentInformationServices />
-                    <div className="tab-content-row" style={{ marginTop: "30px", borderTop: "1px dotted #cea70b" }}>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <dl style={{
-                                            fontSize: "25px",
-                                            color: "#CEA70B",
-                                            marginTop: "5px",
-                                            marginBottom: "0px"
-                                        }}>
-                                            <i className="payment icon" style={{ fontSize: "25px" }}></i>
-                                            <span className="title-middle"> Productos</span>
-                                        </dl>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    {foreignProducts.map(this._mapProductItems)}
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.economicActivity}>
+                        <Accordion.Title onClick={changeEconomicActivity}>
+                            <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
+                                Actividad económica
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <ActividadEconomica infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.UbicationCorrespondence}>
+                        <Accordion.Title onClick={changeUbicationCorrespondence}>
+                            <TitleSectionComponent iconClass="browser" fontSize="25px" typeTitle={true}>
+                                Información de ubicación y correspondencia
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <UbicationCorrespondence infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.InfoFinanciera}>
+                        <Accordion.Title onClick={changeInfoFinanciera}>
+                            <TitleSectionComponent iconClass="suitcase " fontSize="25px" typeTitle={true}>
+                                Información financiera
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            <InfoFinanciera infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.DataComercial}>
+                        <Accordion.Title onClick={changeDataComercial}>
+                            <TitleSectionComponent iconClass="book" fontSize="25px" typeTitle={true}>
+                                Datos de conocimiento comercial
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            <DataComercial infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.notes}>
+                        <Accordion.Title onClick={changeNotes}>
+                            <TitleSectionComponent iconClass="file outline" fontSize="25px" typeTitle={true}>
+                                Notas
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            {notes.map(this._mapNoteItems)}
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.DeclarationOfOrigin}>
+                        <Accordion.Title onClick={changeDeclarationOfOrigin}>
+                            <TitleSectionComponent iconClass="money" fontSize="25px" typeTitle={true}>
+                                Declaración de origen de bienes y/o fondos
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            <DeclarationOfOrigin infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.InternationalOperations}>
+                        <Accordion.Title onClick={changeInternationalOperations}>
+                            <TitleSectionComponent iconClass="world" fontSize="25px" typeTitle={true}>
+                                Información operaciones internacionales
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            <InternationalOperations infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.DocumentInformationServices}>
+                        <Accordion.Title onClick={changeDocumentInformationServices}>
+                            <TitleSectionComponent iconClass="newspaper" fontSize="25px" typeTitle={true}>
+                                Consulta de servicios de información documental
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            <DocumentInformationServices />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <Accordion defaultActiveIndex={accordion.foreignProducts}>
+                        <Accordion.Title onClick={changeForeingProducts}>
+                            <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
+                                Productos
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                            {foreignProducts.map(this._mapProductItems)}
+                        </Accordion.Content>
+                    </Accordion>
+
+
+
                 </div>
                 {infoClient.haveAccessEdit && (allowEdit || allowLinked) &&
                     <div className="" style={containerButtons}>
@@ -263,17 +361,27 @@ function mapDispatchToProps(dispatch) {
         seletedButton,
         validateContactShareholder,
         sendErrorsUpdate,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        changeEconomicActivity,
+        changeUbicationCorrespondence,
+        changeInfoFinanciera,
+        changeDataComercial,
+        changeNotes,
+        changeDeclarationOfOrigin,
+        changeInternationalOperations,
+        changeDocumentInformationServices,
+        changeForeingProducts,
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, reducerGlobal, clientInformacion }) {
+function mapStateToProps({ navBar, reducerGlobal, clientInformacion ,tabReducer}) {
     const linkedStatusKey = _.get(clientInformacion.get('responseClientInfo'), 'linkedStatusKey', null);
     return {
         infoClient: Object.assign({}, clientInformacion.get('responseClientInfo')),
         menuState: navBar.get('status'),
         linkedStatusKey,
-        reducerGlobal
+        reducerGlobal,
+        tabReducer
     };
 }
 

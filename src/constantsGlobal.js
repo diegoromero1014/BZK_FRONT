@@ -14,9 +14,9 @@ export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando 
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
 export const SESSION_EXPIRED = "-2";
-export const MESSAGE_SAVE_DATA = "Guardando información";
-export const MESSAGE_DOWNLOAD_DATA = "Descargando información";
-export const MESSAGE_LOAD_DATA = "Cargando información";
+export const MESSAGE_SAVE_DATA = "Guardando";
+export const MESSAGE_DOWNLOAD_DATA = "Descargando";
+export const MESSAGE_LOAD_DATA = "Cargando";
 export const CONSUMING_SERVICE = "Consumiento servicio";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 export const AEC_NO_APLIED = "AEC: No aplica";
@@ -68,6 +68,8 @@ export const MESSAGE_ERROR = "error";
 export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
 
+export const OTHER = "Otro";
+
 //Variable de tipo de aplicacion
 export const FRONT_APP = "Front";
 
@@ -95,6 +97,7 @@ export const MODULE_ALERTS = "Alertas";
 export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
 export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
+export const MODULE_CUSTOMER_STORY = "Historial cliente";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -105,6 +108,7 @@ export const TAB_PENDING_TASK = 6;
 export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
+export const TAB_CUSTOMER_STORY = 10;
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
@@ -137,3 +141,13 @@ export const STYLE_CONTAINER_BUTTONS = {
     height: "50px",
     background: "rgba(255,255,255,0.75)"
 };
+
+//Data para los select de respuesta "Aprobar" - "Rechazar"
+export const VALUES_APROVE = [
+    { 'id': '', 'value': "Seleccione..." },
+    { 'id': true, 'value': "Aprobar" },
+    { 'id': false, 'value': "Rechazar" }
+];
+
+export const ORDER_ASC = 0;
+export const ORDER_DESC = 1;

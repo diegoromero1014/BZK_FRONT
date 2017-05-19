@@ -101,7 +101,7 @@ class ListContactsByFunctionOrType extends Component {
                 key: "contactType"
             },
             {
-                title: "Email del contacto",
+                title: "Correo del contacto",
                 key: "contactEmail"
             }
         ];

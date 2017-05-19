@@ -23,8 +23,6 @@ export default (state = initialContactDetail, action) => {
                     .set('listClientcontacts', _.isUndefined(listClientcontacts) ? [] : listClientcontacts)
                     .set('listDeleteClientContact', [])
             });
-            break;
-
         case CLEAR_EDIT_CONTACT:
             return state.set('contactDetailList', {});
         case SET_ARRAY_DELETE_CLIENT_CONTACT:

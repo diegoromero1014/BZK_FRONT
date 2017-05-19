@@ -40,7 +40,6 @@ class DocumentInformationServices extends Component {
 
     _createDocumentsRecords(document, idx) {
         return <tr key={idx}>
-            <td>{document.documentCode}</td>
             <td>
                 <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
             </td>
@@ -54,18 +53,12 @@ class DocumentInformationServices extends Component {
     render() {
         const { tabReducer } = this.props;
         return (
-            <div className="tab-content-row" style={{ marginTop: "30px", borderTop: "1px dotted #cea70b" }}>
-                <table>
+            <div>
+                <table style={{ width: "100%" }}>
                     <tbody>
                         <tr>
                             <td>
-                                <dl style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                                    <i className="newspaper icon" style={{ fontSize: "25px" }}></i>
-                                    <span className="title-middle"> Consulta de servicios de información documental</span>
-                                </dl>
-                            </td>
-                            <td>
-                                <a style={{ cursor: 'pointer', textDecoration: 'underline', marginLeft: '15px' }} onClick={this.consultManagementDocumentary}>Consultar</a>
+                                <a style={{ cursor: 'pointer', textDecoration: 'underline', marginBottom: '15px' }} onClick={this.consultManagementDocumentary}>Consultar</a>
                             </td>
                         </tr>
                     </tbody>
@@ -75,7 +68,6 @@ class DocumentInformationServices extends Component {
                         <table style={{ width: "100%" }}>
                             <thead>
                                 <tr>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Código</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Nombre</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo</span></th>
                                     <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Estado</span></th>

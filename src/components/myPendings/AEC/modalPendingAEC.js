@@ -45,7 +45,7 @@ class ModalPendingAEC extends Component {
     }
 
     _handleEditAEC() {
-        const { fields: { commercialObservations }, saveCommercialObservations, aec } = this.props;
+        const { fields: { commercialObservations }, saveCommercialObservations, aec, swtShowMessage } = this.props;
         const json = {
             idAEC: aec.idAEC,
             commercialObservations: commercialObservations.value
@@ -75,7 +75,7 @@ class ModalPendingAEC extends Component {
     }
 
     componentWillMount() {
-        const { fields: { commercialObservations }, nonValidateEnter, aec, getDetailAEC, clearDetailAEC } = this.props;
+        const { fields: { commercialObservations }, nonValidateEnter, aec, getDetailAEC, clearDetailAEC, swtShowMessage } = this.props;
         clearDetailAEC();
         nonValidateEnter(true);
         this.props.resetForm();
@@ -146,7 +146,8 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         saveCommercialObservations,
         getDetailAEC,
-        clearDetailAEC
+        clearDetailAEC,
+        swtShowMessage
     }, dispatch);
 }
 
