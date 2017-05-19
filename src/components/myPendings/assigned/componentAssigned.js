@@ -10,7 +10,10 @@ import {
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR,
     RED_COLOR
 } from '../../../constantsGlobal';
-import { getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState } from './actions';
+import {
+    getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState,
+    changeSortOrder
+} from './actions';
 import ListAssigned from './listAssigned';
 import PaginationAssigned from './paginationAssigned';
 import { NUMBER_RECORDS } from './constants';
@@ -53,6 +56,7 @@ class ComponentAssigned extends Component {
         this._consultAssigned = this._consultAssigned.bind(this);
         this._onChangeTypeStatus = this._onChangeTypeStatus.bind(this);
         this._onChangeTrafficLight = this._onChangeTrafficLight.bind(this);
+        this._cleanSearch = this._cleanSearch.bind(this);
     }
 
     _handleChangeKeyword(e) {
@@ -67,7 +71,7 @@ class ComponentAssigned extends Component {
 
     _consultAssigned(trafficLightValue) {
         const { fields: { stateTask, keywordClient, trafficLight }, swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
-        clearListOfAssigned(); 
+        clearListOfAssigned();
         var paginationAssigned = {
             statusOfTask: stateTask.value,
             clientNumberOrName: keywordClient.value,
@@ -97,6 +101,16 @@ class ComponentAssigned extends Component {
         changeHomeworkTime(val);
         trafficLight.onChange(val);
         this._consultAssigned(val);
+    }
+
+    _cleanSearch() {
+        const { fields: { trafficLight }, assignedReducer, changeSortOrder, changeState, changeHomeworkTime, changeClientNumberOrName } = this.props;
+        changeSortOrder();
+        changeState(null);
+        changeHomeworkTime(null);
+        changeClientNumberOrName(null);
+        trafficLight.onChange(null);
+        this._consultAssigned(null);
     }
 
     componentWillMount() {
@@ -197,7 +211,8 @@ function mapDispatchToProps(dispatch) {
         changeClientNumberOrName,
         changeHomeworkTime,
         changeState,
-        getMasterDataFields
+        getMasterDataFields,
+        changeSortOrder
     }, dispatch);
 }
 
