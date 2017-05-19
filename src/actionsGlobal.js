@@ -252,6 +252,10 @@ export function validateResponse(response) {
     return true;
 }
 
+/**
+ * Valida que una cadena sea diferente de null, vacío e indefinido.
+ * @param {*} value 
+ */
 export function stringValidate(value) {
     if (value !== '' && value !== undefined && value !== null) {
         return true;

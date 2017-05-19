@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
-import { validateResponse, validatePermissionsByModule } from '../../../actionsGlobal';
+import { validateResponse, validatePermissionsByModule, stringValidate } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR,
@@ -60,6 +60,7 @@ class ComponentAssigned extends Component {
         this._onChangeTypeStatus = this._onChangeTypeStatus.bind(this);
         this._onChangeTrafficLight = this._onChangeTrafficLight.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
+        this._findForKeyword = this._findForKeyword.bind(this);
     }
 
     _handleChangeKeyword(e) {
@@ -87,7 +88,7 @@ class ComponentAssigned extends Component {
         getAssigned(paginationAssigned).then((data) => {
             changeStateSaveData(false, "");
             if (!validateResponse(data)) {
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                ('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
         }, (reason) => {
             changeStateSaveData(false, "");
@@ -121,14 +122,23 @@ class ComponentAssigned extends Component {
         this._consultAssigned(null, null, null);
     }
 
+    _findForKeyword() {
+        const { fields: { stateTask, keywordClient, trafficLight }, swtShowMessage } = this.props;
+        if (stringValidate(keywordClient.value)) {
+            this._consultAssigned(keywordClient.value, stateTask.value, trafficLight.value);
+        } else {
+            swtShowMessage('error', 'Información faltante', 'Señor usuario, debe ingresar un valor para realizar la búsqueda.');
+        }
+    }
+
     componentWillMount() {
         const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields, validatePermissionsByModule } = this.props;
         getMasterDataFields([TASK_STATUS]);
         updateTitleNavBar("Asignadas");
         this._consultAssigned(null, null, null);
         validatePermissionsByModule(MODULE_TASKS).then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
+            if (!validateResponse(data)) {
+                ('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
         });
     }
@@ -155,7 +165,7 @@ class ComponentAssigned extends Component {
                                         onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
                                     />
                                     <button id="searchClients" className="btn" title="Buscar" type="button"
-                                        onClick={() => this._consultAssigned(keywordClient.value, stateTask.value, trafficLight.value)} style={{ backgroundColor: "#E0E2E2" }}
+                                        onClick={this._findForKeyword} style={{ backgroundColor: "#E0E2E2" }}
                                     >
                                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                                     </button>
