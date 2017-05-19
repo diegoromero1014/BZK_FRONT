@@ -13,6 +13,8 @@ import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO } from '../../constan
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
+import {updateTabSeletedCS} from '../customerStory/actions';
+import {TAB_STORY} from '../customerStory/constants';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -29,7 +31,7 @@ class ComponentClientInformation extends Component {
                 resetAccordion();
             }
             $(window).scrollTop(0);
-            const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading } = this.props;
+            const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
             updateTitleNavBar("Mis clientes");
             showLoading(true, 'Cargando..');
             consultInfoClient().then((data) => {
@@ -39,7 +41,7 @@ class ComponentClientInformation extends Component {
                 showLoading(false, '');
             });
             viewAlertClient(true);
-
+            updateTabSeletedCS(TAB_STORY);
         } else {
             redirectUrl("/login");
         }
@@ -196,7 +198,8 @@ function mapDispatchToProps(dispatch) {
         redirectUrl,
         clearEntities,
         showLoading,
-        resetAccordion
+        resetAccordion,
+        updateTabSeletedCS
     }, dispatch);
 }
 
