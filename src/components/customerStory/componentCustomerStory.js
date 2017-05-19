@@ -81,9 +81,10 @@ class ComponentCustomerStory extends Component {
         const date = moment(dateUpdateDelivery);
         const dateString = date.format("DD") + " " + date.format("MMM") + " " + date.format("YYYY");
         return (
-            <div>
+            <div className="tab-pane quickZoomIn animated"
+                style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
                 {!_.isNull(expectedCelulaId) && !_.isUndefined(expectedCelulaId) &&
-                    <Row style={{ marginTop: '9px', paddingTop: '15px' }}>
+                    <Row>
                         <Col xs={12} md={12} lg={5}>
                             <table>
                                 <tbody>
@@ -123,7 +124,7 @@ class ComponentCustomerStory extends Component {
                     </Row>
                 }
                 <div className="tab-pane quickZoomIn animated"
-                    style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
+                    style={{ width: "100%", marginBottom: "70px" }}>
                     <Menu pointing secondary>
                         <Menu.Item name="Historial" active={tabActive === TAB_STORY} onClick={this._handleItemClick.bind(this, TAB_STORY)} />
                         <Menu.Item name="Entrega clientes" active={tabActive === TAB_CUSTOMER_DELIVERY} onClick={this._handleItemClick.bind(this, TAB_CUSTOMER_DELIVERY)} />
