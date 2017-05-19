@@ -207,10 +207,6 @@ class DetailsInfoClient extends Component {
                         </tbody>
                     </table>
 
-
-
-
-
                     <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
                     <Accordion defaultActiveIndex={accordion.economicActivity}>
                         <Accordion.Title onClick={changeEconomicActivity}>
@@ -326,17 +322,6 @@ class DetailsInfoClient extends Component {
                             {foreignProducts.map(this._mapProductItems)}
                         </Accordion.Content>
                     </Accordion>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
