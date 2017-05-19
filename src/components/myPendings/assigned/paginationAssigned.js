@@ -17,10 +17,10 @@ class paginationAssigned extends Component {
   _handleFindAssigned(limInf) {
     const { getAssigned, assignedReducer } = this.props;
     var paginationAssigned = {
-      statusOfTask: null,
-      clientNumber: null,
-      clientName: null,
+      statusOfTask: assignedReducer.get('statusOfTask'),
+      clientNumberOrName: assignedReducer.get('clientNumberOrName'),
       sortOrder: assignedReducer.get('sortOrder'),
+      homeworkTime: assignedReducer.get('homeworkTime'),
       pageNum: limInf,
       maxRows: NUMBER_RECORDS
     };

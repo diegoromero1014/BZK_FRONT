@@ -6,16 +6,21 @@ import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
 import { validateResponse } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR, RED_COLOR } from '../../../constantsGlobal';
-import { getAssigned, clearListOfAssigned } from './actions';
+import {
+    TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR,
+    RED_COLOR
+} from '../../../constantsGlobal';
+import { getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState } from './actions';
 import ListAssigned from './listAssigned';
 import PaginationAssigned from './paginationAssigned';
 import { NUMBER_RECORDS } from './constants';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { reduxForm } from 'redux-form';
 import { Dropdown } from 'semantic-ui-react'
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { TASK_STATUS } from '../../selectsComponent/constants';
 
-const fields = ['stateTask', 'trafficLight'];
+const fields = ['stateTask', 'trafficLight', 'keywordClient'];
 const optionsColorExpiration = [
     {
         text: 'Seleccione...',
@@ -44,20 +49,33 @@ class ComponentAssigned extends Component {
         super(props);
         this.state = {
         }
+        this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+        this._consultAssigned = this._consultAssigned.bind(this);
+        this._onChangeTypeStatus = this._onChangeTypeStatus.bind(this);
+        this._onChangeTrafficLight = this._onChangeTrafficLight.bind(this);
     }
 
-    componentWillMount() {
-        const { updateTitleNavBar, swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
+    _handleChangeKeyword(e) {
+        const { fields: { keywordClient, trafficLight }, changeClientNumberOrName } = this.props;
+        if (e.keyCode === 13 || e.which === 13) {
+            this._consultAssigned(trafficLight.value);
+        } else {
+            keywordClient.onChange(e.target.value);
+            changeClientNumberOrName(e.target.value);
+        }
+    }
+
+    _consultAssigned(trafficLightValue) {
+        const { fields: { stateTask, keywordClient, trafficLight }, swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
+        clearListOfAssigned(); 
         var paginationAssigned = {
-            statusOfTask: null,
-            clientNumber: null,
-            clientName: null,
+            statusOfTask: stateTask.value,
+            clientNumberOrName: keywordClient.value,
             sortOrder: assignedReducer.get('sortOrder'),
             pageNum: assignedReducer.get('limInf'),
-            maxRows: NUMBER_RECORDS
+            maxRows: NUMBER_RECORDS,
+            homeworkTime: trafficLightValue
         };
-        updateTitleNavBar("Asignadas");
-        clearListOfAssigned();
         getAssigned(paginationAssigned).then((data) => {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -67,8 +85,29 @@ class ComponentAssigned extends Component {
         });
     }
 
+    _onChangeTypeStatus(val) {
+        const { fields: { stateTask, trafficLight }, changeState } = this.props;
+        changeState(val);
+        stateTask.onChange(val);
+        this._consultAssigned(trafficLight.value);
+    }
+
+    _onChangeTrafficLight(val) {
+        const { fields: { trafficLight }, changeHomeworkTime } = this.props;
+        changeHomeworkTime(val);
+        trafficLight.onChange(val);
+        this._consultAssigned(val);
+    }
+
+    componentWillMount() {
+        const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields } = this.props;
+        getMasterDataFields([TASK_STATUS]);
+        updateTitleNavBar("Asignadas");
+        this._consultAssigned(trafficLight.value);
+    }
+
     render() {
-        const { fields: { stateTask }, assignedReducer, selectsReducer } = this.props;
+        const { fields: { stateTask, keywordClient, trafficLight }, assignedReducer, selectsReducer } = this.props;
         const listAssigned = assignedReducer.get('assigned');
         var visibleTable = 'none';
         var visibleMessage = 'block';
@@ -83,8 +122,14 @@ class ComponentAssigned extends Component {
                         <Row>
                             <Col xs={12} sm={12} md={5} lg={5}>
                                 <div className="InputAddOn">
-                                    <input type="text" style={{ padding: '0px 11px !important' }} id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text" placeholder="Búsqueda por número o nombre del cliente" value={this.state.keywordMyPending} onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field" />
-                                    <button id="searchClients" className="btn" title="Buscar" type="button" onClick={this._handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
+                                    <input type="text" style={{ padding: '0px 11px !important' }}
+                                        id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text"
+                                        placeholder="Búsqueda por número o nombre del cliente" value={keywordClient.value}
+                                        onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
+                                    />
+                                    <button id="searchClients" className="btn" title="Buscar" type="button"
+                                        onClick={this._consultAssigned} style={{ backgroundColor: "#E0E2E2" }}
+                                    >
                                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                                     </button>
                                 </div>
@@ -99,12 +144,13 @@ class ComponentAssigned extends Component {
                                     onBlur={stateTask.onBlur}
                                     valueProp={'id'}
                                     textProp={'value'}
-                                    data={selectsReducer.get('dataTypeContact') || []}
+                                    data={selectsReducer.get(TASK_STATUS) || []}
                                 />
                             </Col>
                             <Col xs={12} sm={12} md={3} lg={3}>
-                                <Dropdown value={0}
-                                    onChange={(e, val) => { this._onChangeStatusCovenant(val.value) }}
+                                <Dropdown value={trafficLight.value}
+                                    {...trafficLight}
+                                    onChange={(e, val) => { this._onChangeTrafficLight(val.value) }}
                                     placeholder='Por favor, seleccione un estado' fluid search selection
                                     options={optionsColorExpiration}
                                 />
@@ -119,7 +165,7 @@ class ComponentAssigned extends Component {
                         </Row>
                     </Grid>
                 </div>
-                <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px' }}>
+                <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px', marginTop: '20px' }}>
                     <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
                         <Col style={{ width: '100%' }}>
                             <ListAssigned listAssigned={listAssigned} />
@@ -147,7 +193,11 @@ function mapDispatchToProps(dispatch) {
         updateTitleNavBar,
         swtShowMessage,
         getAssigned,
-        clearListOfAssigned
+        clearListOfAssigned,
+        changeClientNumberOrName,
+        changeHomeworkTime,
+        changeState,
+        getMasterDataFields
     }, dispatch);
 }
 
@@ -159,5 +209,6 @@ function mapStateToProps({ assignedReducer, selectsReducer }, ownerProps) {
 }
 
 export default reduxForm({
-    fields
+    fields,
+    form: 'submitAssigned'
 }, mapStateToProps, mapDispatchToProps)(ComponentAssigned);

@@ -10,7 +10,7 @@ const initialState = Immutable.Map({
     rowCount: 0,
     sortOrder: 0,
     clientNumberOrName: null,
-    state: null,
+    statusOfTask: null,
     homeworkTime: null
 });
 
@@ -31,13 +31,15 @@ export default (state = initialState, action = {}) => {
             return state.withMutations(map => {
                 map.set('assigned', [])
                     .set('rowCount', 0)
+                    .set('limInf', 0)
+                    .set('page', 1)
             });
         case constants.CHANGE_SORT_ORDER:
             return state.set('sortOrder', action.sortOrder);
         case constants.CHANGE_CLIENT_NUMBER_OR_NAME:
             return state.set('clientNumberOrName', action.clientNumberOrName);
         case constants.CHANGE_STATE:
-            return state.set('state', action.state);
+            return state.set('statusOfTask', action.state);
         case constants.CHANGE_HOMEWORK_TIME:
             return state.set('homeworkTime', action.homeworkTime);
         default:

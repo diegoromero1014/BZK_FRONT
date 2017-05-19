@@ -22,11 +22,11 @@ export function getAssigned(pagination) {
         },
         "messageBody": {
             "statusOfTask": pagination.statusOfTask,
-            "clientNumber": pagination.clientNumber,
-            "clientName": pagination.clientName,
+            "clientNumberOrName": pagination.clientNumberOrName,
             "sortOrder": pagination.sortOrder,
             "pageNum": pagination.pageNum,
-            "maxRows": pagination.maxRows
+            "maxRows": pagination.maxRows,
+            "homeworkTime": pagination.homeworkTime
         }
     };
 
