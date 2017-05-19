@@ -4,13 +4,16 @@ import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
-import { validateResponse } from '../../../actionsGlobal';
+import { validateResponse, validatePermissionsByModule } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, GREEN_COLOR, ORANGE_COLOR,
     RED_COLOR
 } from '../../../constantsGlobal';
-import { getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState } from './actions';
+import {
+    getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState,
+    changeSortOrder
+} from './actions';
 import ListAssigned from './listAssigned';
 import PaginationAssigned from './paginationAssigned';
 import { NUMBER_RECORDS } from './constants';
@@ -19,8 +22,7 @@ import { reduxForm } from 'redux-form';
 import { Dropdown } from 'semantic-ui-react'
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { TASK_STATUS } from '../../selectsComponent/constants';
-import {validatePermissionsByModule} from '../../../actionsGlobal';
-import {MODULE_TASKS} from '../../../constantsGlobal';
+import { MODULE_TASKS } from '../../../constantsGlobal';
 
 const fields = ['stateTask', 'trafficLight', 'keywordClient'];
 const optionsColorExpiration = [
@@ -55,24 +57,25 @@ class ComponentAssigned extends Component {
         this._consultAssigned = this._consultAssigned.bind(this);
         this._onChangeTypeStatus = this._onChangeTypeStatus.bind(this);
         this._onChangeTrafficLight = this._onChangeTrafficLight.bind(this);
+        this._cleanSearch = this._cleanSearch.bind(this);
     }
 
     _handleChangeKeyword(e) {
-        const { fields: { keywordClient, trafficLight }, changeClientNumberOrName } = this.props;
+        const { fields: { stateTask, keywordClient, trafficLight }, changeClientNumberOrName } = this.props;
         if (e.keyCode === 13 || e.which === 13) {
-            this._consultAssigned(trafficLight.value);
+            this._consultAssigned(keywordClient.value, stateTask.value, trafficLight.value);
         } else {
             keywordClient.onChange(e.target.value);
             changeClientNumberOrName(e.target.value);
         }
     }
 
-    _consultAssigned(trafficLightValue) {
-        const { fields: { stateTask, keywordClient, trafficLight }, swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
+    _consultAssigned(keywordClientValue, stateTaskValue, trafficLightValue) {
+        const { swtShowMessage, clearListOfAssigned, assignedReducer, getAssigned } = this.props;
         clearListOfAssigned();
         var paginationAssigned = {
-            statusOfTask: stateTask.value,
-            clientNumberOrName: keywordClient.value,
+            statusOfTask: stateTaskValue,
+            clientNumberOrName: keywordClientValue,
             sortOrder: assignedReducer.get('sortOrder'),
             pageNum: assignedReducer.get('limInf'),
             maxRows: NUMBER_RECORDS,
@@ -88,24 +91,36 @@ class ComponentAssigned extends Component {
     }
 
     _onChangeTypeStatus(val) {
-        const { fields: { stateTask, trafficLight }, changeState } = this.props;
+        const { fields: { keywordClient, stateTask, trafficLight }, changeState } = this.props;
         changeState(val);
         stateTask.onChange(val);
-        this._consultAssigned(trafficLight.value);
+        this._consultAssigned(keywordClient.value, val, trafficLight.value);
     }
 
     _onChangeTrafficLight(val) {
-        const { fields: { trafficLight }, changeHomeworkTime } = this.props;
+        const { fields: { keywordClient, stateTask, trafficLight }, changeHomeworkTime } = this.props;
         changeHomeworkTime(val);
         trafficLight.onChange(val);
-        this._consultAssigned(val);
+        this._consultAssigned(keywordClient, stateTask, val);
+    }
+
+    _cleanSearch() {
+        const { fields: { stateTask, keywordClient, trafficLight }, assignedReducer, changeSortOrder, changeState, changeHomeworkTime, changeClientNumberOrName } = this.props;
+        changeSortOrder();
+        changeState(null);
+        changeHomeworkTime(null);
+        changeClientNumberOrName(null);
+        stateTask.onChange(null);
+        keywordClient.onChange('');
+        trafficLight.onChange(null);
+        this._consultAssigned(null, null, null);
     }
 
     componentWillMount() {
         const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields, validatePermissionsByModule } = this.props;
         getMasterDataFields([TASK_STATUS]);
         updateTitleNavBar("Asignadas");
-        this._consultAssigned(trafficLight.value);
+        this._consultAssigned(null, null, null);
         validatePermissionsByModule(MODULE_TASKS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
@@ -205,6 +220,7 @@ function mapDispatchToProps(dispatch) {
         changeHomeworkTime,
         changeState,
         getMasterDataFields,
+        changeSortOrder,
         validatePermissionsByModule
     }, dispatch);
 }

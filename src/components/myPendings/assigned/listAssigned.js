@@ -14,7 +14,7 @@ import { getAssigned, changeSortOrder, clearListOfAssigned } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { mapDateColor } from '../myTasks/pendingTaskUtilities';
-import {VIEW_TASK_ADMIN } from '../../modal/constants';
+import { VIEW_TASK_ADMIN } from '../../modal/constants';
 
 class listAssignedComponent extends Component {
 
@@ -23,7 +23,8 @@ class listAssignedComponent extends Component {
     this.state = {
       actions: {},
       orderAsc: 'inline-block',
-      orderDesc: 'none'
+      orderDesc: 'none',
+      limInf: 0
     };
 
     this._renderHeaders = this._renderHeaders.bind(this);
@@ -36,9 +37,9 @@ class listAssignedComponent extends Component {
     const { getAssigned, assignedReducer, changeSortOrder, swtShowMessage } = this.props;
     changeSortOrder(sortOrder);
     var paginationAssigned = {
-      statusOfTask: null,
-      clientNumber: null,
-      clientName: null,
+      statusOfTask: assignedReducer.get('statusOfTask'),
+      clientNumberOrName: assignedReducer.get('clientNumberOrName'),
+      homeworkTime: assignedReducer.get('homeworkTime'),
       sortOrder: sortOrder,
       pageNum: assignedReducer.get('limInf'),
       maxRows: NUMBER_RECORDS
@@ -65,16 +66,16 @@ class listAssignedComponent extends Component {
   }
 
   _closeModalEditTask() {
-    const {assignedReducer, clearListOfAssigned, getAssigned} = this.props;
+    const { assignedReducer, clearListOfAssigned, getAssigned } = this.props;
+    clearListOfAssigned();
     var paginationAssigned = {
-      statusOfTask: null,
-      clientNumber: null,
-      clientName: null,
+      statusOfTask: assignedReducer.get('statusOfTask'),
+      clientNumberOrName: assignedReducer.get('clientNumberOrName'),
       sortOrder: assignedReducer.get('sortOrder'),
-      pageNum: assignedReducer.get('limInf'),
+      homeworkTime: assignedReducer.get('homeworkTime'),
+      pageNum: this.state.limInf,
       maxRows: NUMBER_RECORDS
     };
-    clearListOfAssigned();
     getAssigned(paginationAssigned).then((data) => {
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
