@@ -53,6 +53,7 @@ class ComponentAssigned extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            limInf: 0
         }
         this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
         this._consultAssigned = this._consultAssigned.bind(this);
@@ -78,7 +79,7 @@ class ComponentAssigned extends Component {
             statusOfTask: stateTaskValue,
             clientNumberOrName: keywordClientValue,
             sortOrder: assignedReducer.get('sortOrder'),
-            pageNum: assignedReducer.get('limInf'),
+            pageNum: this.state.limInf,
             maxRows: NUMBER_RECORDS,
             homeworkTime: trafficLightValue
         };
