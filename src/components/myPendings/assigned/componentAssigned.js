@@ -154,7 +154,7 @@ class ComponentAssigned extends Component {
                                         onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
                                     />
                                     <button id="searchClients" className="btn" title="Buscar" type="button"
-                                        onClick={this._consultAssigned} style={{ backgroundColor: "#E0E2E2" }}
+                                        onClick={() => this._consultAssigned(keywordClient.value, stateTask.value, trafficLight.value)} style={{ backgroundColor: "#E0E2E2" }}
                                     >
                                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                                     </button>
