@@ -10,10 +10,11 @@ import { shorterStringValue, stringValidate, mapDateValueFromTask, validateRespo
 import { ORDER_ASC, ORDER_DESC, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
 import GridComponent from '../../grid/component';
 import { VIEW_AEC_PENDING } from '../../modal/constants';
-import { getAssigned, changeSortOrder } from './actions';
+import { getAssigned, changeSortOrder, clearListOfAssigned } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { mapDateColor } from '../myTasks/pendingTaskUtilities';
+import {VIEW_TASK_ADMIN } from '../../modal/constants';
 
 class listAssignedComponent extends Component {
 
@@ -21,19 +22,15 @@ class listAssignedComponent extends Component {
     super(props);
     this.state = {
       actions: {},
-      modalIsOpen: false,
       orderAsc: 'inline-block',
       orderDesc: 'none'
     };
 
-    this.closeModal = this.closeModal.bind(this);
     this._renderHeaders = this._renderHeaders.bind(this);
     this._renderCellView = this._renderCellView.bind(this);
+    this._closeModalEditTask = this._closeModalEditTask.bind(this);
   }
 
-  closeModal() {
-    this.setState({ modalIsOpen: false });
-  }
 
   _orderColumn(sortOrder) {
     const { getAssigned, assignedReducer, changeSortOrder, swtShowMessage } = this.props;
@@ -61,6 +58,26 @@ class listAssignedComponent extends Component {
             orderDesc: 'none'
           });
         }
+      }
+    }, (reason) => {
+      swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+    });
+  }
+
+  _closeModalEditTask() {
+    const {assignedReducer, clearListOfAssigned, getAssigned} = this.props;
+    var paginationAssigned = {
+      statusOfTask: null,
+      clientNumber: null,
+      clientName: null,
+      sortOrder: assignedReducer.get('sortOrder'),
+      pageNum: assignedReducer.get('limInf'),
+      maxRows: NUMBER_RECORDS
+    };
+    clearListOfAssigned();
+    getAssigned(paginationAssigned).then((data) => {
+      if (!validateResponse(data)) {
+        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       }
     }, (reason) => {
       swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -113,9 +130,11 @@ class listAssignedComponent extends Component {
     return data.map(item => ({
       actions: {
         actionView: true,
-        idTask: item.idTask,
+        id: item.idTask,
         urlServer: "./component",
-        component: VIEW_AEC_PENDING
+        idClient: item.idClient,
+        functCloseModal: this._closeModalEditTask,
+        component: VIEW_TASK_ADMIN
       },
       documentClient: item.documentClient,
       nameClient: item.nameClient,
@@ -145,7 +164,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getAssigned,
     changeSortOrder,
-    swtShowMessage
+    swtShowMessage,
+    clearListOfAssigned
   }, dispatch);
 }
 

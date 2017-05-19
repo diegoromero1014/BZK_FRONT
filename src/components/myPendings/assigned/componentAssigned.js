@@ -22,6 +22,8 @@ import { reduxForm } from 'redux-form';
 import { Dropdown } from 'semantic-ui-react'
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { TASK_STATUS } from '../../selectsComponent/constants';
+import {validatePermissionsByModule} from '../../../actionsGlobal';
+import {MODULE_TASKS} from '../../../constantsGlobal';
 
 const fields = ['stateTask', 'trafficLight', 'keywordClient'];
 const optionsColorExpiration = [
@@ -114,10 +116,15 @@ class ComponentAssigned extends Component {
     }
 
     componentWillMount() {
-        const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields } = this.props;
+        const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields, validatePermissionsByModule } = this.props;
         getMasterDataFields([TASK_STATUS]);
         updateTitleNavBar("Asignadas");
         this._consultAssigned(trafficLight.value);
+        validatePermissionsByModule(MODULE_TASKS).then((data) => {
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            }
+        });
     }
 
     render() {
@@ -213,6 +220,7 @@ function mapDispatchToProps(dispatch) {
         changeState,
         getMasterDataFields,
         changeSortOrder
+        validatePermissionsByModule
     }, dispatch);
 }
 

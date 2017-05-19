@@ -130,12 +130,16 @@ class ModalCreateTask extends Component {
   }
 
   _closeViewOrEditTask() {
-    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator } = this.props;
+    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal } = this.props;
     this.setState({ isEditable: false, taskEdited: false, showErrtask: false });
     isOpen();
-    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-    clearMyPendingPaginator();
-    tasksByUser(0, NUMBER_RECORDS, "", "", "");
+    if (!_.isUndefined(functCloseModal) &&  !_.isNull(functCloseModal)) {
+      functCloseModal();
+    } else {
+      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+      clearMyPendingPaginator();
+      tasksByUser(0, NUMBER_RECORDS, "", "", "");
+    }
     this.props.resetForm();
   }
 
