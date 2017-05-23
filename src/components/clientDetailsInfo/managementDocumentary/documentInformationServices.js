@@ -54,11 +54,11 @@ class DocumentInformationServices extends Component {
         const { tabReducer } = this.props;
         return (
             <div>
-                <table style={{ width: "100%" }}>
+                <table style={{ width: "100%" ,marginBottom: '15px' }}>
                     <tbody>
                         <tr>
                             <td>
-                                <a style={{ cursor: 'pointer', textDecoration: 'underline', marginBottom: '15px' }} onClick={this.consultManagementDocumentary}>Consultar</a>
+                                <a style={{ cursor: 'pointer', textDecoration: 'underline'}} onClick={this.consultManagementDocumentary}>Consultar</a>
                             </td>
                         </tr>
                     </tbody>
