@@ -1,25 +1,26 @@
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
-import { bindActionCreators } from 'redux';
-import { Row, Col } from 'react-flexbox-grid';
-import { consultList } from '../../selectsComponent/actions';
-import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
+import React, {Component} from 'react';
+import {reduxForm} from 'redux-form';
+import {bindActionCreators} from 'redux';
+import {Row, Col} from 'react-flexbox-grid';
+import {consultList} from '../../selectsComponent/actions';
+import {TEAM_FOR_EMPLOYEE} from '../../selectsComponent/constants';
 import {
     VALUE_REQUIERED, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import {validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask} from '../../../actionsGlobal';
+import {changeStateSaveData} from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import {swtShowMessage} from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
-import { saveStructuredDelivery, structuredDeliveryDetail } from './actions';
+import {saveStructuredDelivery, structuredDeliveryDetail} from './actions';
 import _ from 'lodash';
-import { CORPORATE_GOVERNANCE_HELP, BUSINESS_WITH_AFFILIATES_HELP, MERGERS_HELP } from './constants';
+import {CORPORATE_GOVERNANCE_HELP, BUSINESS_WITH_AFFILIATES_HELP, MERGERS_HELP} from './constants';
 import moment from 'moment';
-import { setEvents, clearEvents } from './events/actions';
+import {setEvents, clearEvents} from './events/actions';
+import ToolTip from '../../toolTip/toolTipComponent';
 
 const fields = ["id", "corporateGobernance", "corporateGobernanceDate", "reciprocity", "reciprocityDate", "specialConsiderations",
     "specialConsiderationsDate", "businessWithAffiliates", "businessWithAffiliatesDate", "mergers", "mergersDate", "dificultSituations",
@@ -40,8 +41,10 @@ class componentStructuredDelivery extends Component {
     }
 
     _submitStructuredDelivery() {
-        const { fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted } = this.props;
+        const {
+            fields: {id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations},
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted
+        } = this.props;
         if (stringValidate(corporateGobernance.value) || stringValidate(reciprocity.value) || stringValidate(specialConsiderations.value)
             || stringValidate(businessWithAffiliates.value) || stringValidate(mergers.value) || stringValidate(dificultSituations.value)
             || structuredDeliveryEvents.size > 0) {
@@ -95,7 +98,7 @@ class componentStructuredDelivery extends Component {
     }
 
     _closeEdit() {
-        const { closeModal } = this.props
+        const {closeModal} = this.props
         this.setState({
             showMessage: false
         });
@@ -105,9 +108,13 @@ class componentStructuredDelivery extends Component {
     }
 
     _getStructuredDeliveryDetail() {
-        const { fields: { id, corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
-            specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData, idClientSeleted } = this.props;
+        const {
+            fields: {
+                id, corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
+                specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
+                dificultSituationsDate
+            }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData, idClientSeleted
+        } = this.props;
         clearEvents();
         const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
         structuredDeliveryDetail(idClientSave).then((data) => {
@@ -148,52 +155,69 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
-        const { clearEvents, changeStateSaveData } = this.props;
+        const {clearEvents, changeStateSaveData} = this.props;
         clearEvents();
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         this._getStructuredDeliveryDetail();
     }
 
     render() {
-        const { fields: { corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
-            specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate }, reducerGlobal, handleSubmit, callFromDeliveryClient } = this.props;
+        const {
+            fields: {
+                corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
+                specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
+                dificultSituationsDate
+            }, reducerGlobal, handleSubmit, callFromDeliveryClient
+        } = this.props;
         return (
             <form className="my-custom-tab" onSubmit={handleSubmit(this._submitStructuredDelivery)}
-                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                style={callFromDeliveryClient ? { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%" } : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-                <div style={callFromDeliveryClient ? { overflowX: 'hidden', marginLeft: '20px' } : {}}
-                    className={callFromDeliveryClient ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ''} >
-                    <Row style={{ marginBottom: "20px" }}>
+                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+                  style={callFromDeliveryClient ? {
+                      backgroundColor: "#FFFFFF",
+                      paddingTop: "10px",
+                      width: "100%"
+                  } : {backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
+                <div style={callFromDeliveryClient ? {overflowX: 'hidden', marginLeft: '20px'} : {}}
+                     className={callFromDeliveryClient ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ''}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
-                                    <span>Gobierno corporativo - Junta directiva del cliente </span>
+                                    <span>Gobierno corporativo - Junta directiva del cliente</span>
                                     {
                                         corporateGobernanceDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(corporateGobernanceDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(corporateGobernanceDate.value)}</span>
                                     }
-                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={CORPORATE_GOVERNANCE_HELP} />
+                                    <ToolTip text={CORPORATE_GOVERNANCE_HELP}>
+                                        <i className="help circle icon blue"
+                                           style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                    </ToolTip>
                                 </dt>
                                 <Textarea
                                     name="corporateGobernance"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...corporateGobernance}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: "20px" }}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
                                     <span>Reciprocidades</span>
                                     {
                                         reciprocityDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(reciprocityDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(reciprocityDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -201,20 +225,23 @@ class componentStructuredDelivery extends Component {
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...reciprocity}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: "20px" }}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
                                     <span>Consideraciones especiales de cuotas de manejo</span>
                                     {
                                         specialConsiderationsDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(specialConsiderationsDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(specialConsiderationsDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -222,64 +249,80 @@ class componentStructuredDelivery extends Component {
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...specialConsiderations}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: "20px" }}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
                                     <span>Negocios del cliente con filiales</span>
                                     {
                                         businessWithAffiliatesDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(businessWithAffiliatesDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(businessWithAffiliatesDate.value)}</span>
                                     }
-                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={BUSINESS_WITH_AFFILIATES_HELP} />
+                                    <ToolTip text={BUSINESS_WITH_AFFILIATES_HELP}>
+                                        <i className="help circle icon blue"
+                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                    </ToolTip>
                                 </dt>
                                 <Textarea
                                     name="businessWithAffiliates"
                                     type="text"
                                     max="2000"
                                     title="La longitud máxima de caracteres es de 2000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...businessWithAffiliates}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: "20px" }}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
                                     <span>Fusiones - Adquisiciones</span>
                                     {
                                         mergersDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(mergersDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(mergersDate.value)}</span>
                                     }
-                                    <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={MERGERS_HELP} />
+                                    <ToolTip text={MERGERS_HELP}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}
+                                       />
+                                    </ToolTip>
                                 </dt>
                                 <Textarea
                                     name="mergers"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...mergers}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: "20px" }}>
+                    <Row style={{marginBottom: "20px"}}>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{ paddingRight: "15px" }}>
+                            <div style={{paddingRight: "15px"}}>
                                 <dt>
                                     <span>Situaciones difíciles - Nuevos mercados</span>
                                     {
                                         dificultSituationsDate.value &&
-                                        <span style={{ fontWeight: "normal", color: "#B5B5B5" }}> - {mapDateValueFromTask(dificultSituationsDate.value)}</span>
+                                        <span style={{
+                                            fontWeight: "normal",
+                                            color: "#B5B5B5"
+                                        }}> - {mapDateValueFromTask(dificultSituationsDate.value)}</span>
                                     }
                                 </dt>
                                 <Textarea
@@ -287,25 +330,35 @@ class componentStructuredDelivery extends Component {
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
-                                    style={{ width: '100%', height: '100px' }}
+                                    style={{width: '100%', height: '100px'}}
                                     {...dificultSituations}
                                 />
                             </div>
                         </Col>
                     </Row>
-                    <ComponentEvents callFromDeliveryClient={callFromDeliveryClient} />
+                    <ComponentEvents callFromDeliveryClient={callFromDeliveryClient}/>
                 </div>
                 {callFromDeliveryClient ?
                     <div className="modalBt4-footer modal-footer">
                         <button className="btn btn-primary modal-button-edit" type="submit">
-                            <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                            <span style={{color: '#FFFFFF', padding: '10px'}}>Guardar</span>
                         </button>
                     </div>
                     :
-                    <div style={{ marginLeft: '-35px', position: 'fixed', border: '1px solid rgb(194, 194, 194)', bottom: '0px', width: '100%', marginBottom: '0px', height: '50px', background: 'rgba(255, 255, 255, 0.74902)' }}>
-                        <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
-                            <button className="btn" type="submit" style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
-                                <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                    <div style={{
+                        marginLeft: '-35px',
+                        position: 'fixed',
+                        border: '1px solid rgb(194, 194, 194)',
+                        bottom: '0px',
+                        width: '100%',
+                        marginBottom: '0px',
+                        height: '50px',
+                        background: 'rgba(255, 255, 255, 0.74902)'
+                    }}>
+                        <div style={{width: '580px', height: '100%', position: 'fixed', right: '0px'}}>
+                            <button className="btn" type="submit"
+                                    style={{float: 'right', margin: '8px 0px 0px 450px', position: 'fixed'}}>
+                                <span style={{color: '#FFFFFF', padding: '10px'}}>Guardar</span>
                             </button>
                         </div>
                     </div>
@@ -334,7 +387,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, customerStory, selectsReducer, reducerGlobal, structuredDeliveryEvents, structuredDelivery }, ownerProps) {
+function mapStateToProps({navBar, customerStory, selectsReducer, reducerGlobal, structuredDeliveryEvents, structuredDelivery}, ownerProps) {
     return {
         navBar,
         customerStory,
