@@ -220,7 +220,7 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"25px"}} ></div>
                     <Accordion defaultActiveIndex={accordion.UbicationCorrespondence}>
                         <Accordion.Title onClick={changeUbicationCorrespondence}>
                             <TitleSectionComponent iconClass="browser" fontSize="25px" typeTitle={true}>
