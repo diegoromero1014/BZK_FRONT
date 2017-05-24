@@ -199,3 +199,7 @@ input[disabled]{
     padding-top: 15px;
     text-transform: none;
 }
+
+.ui.popup > .header {
+	min-height: 0px;
+}

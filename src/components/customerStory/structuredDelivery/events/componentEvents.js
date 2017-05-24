@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { addEvent } from './actions';
 import {IMPORTANT_DATES_RELATIONSHIP} from '../constants';
 import EventItem from './eventItem';
+import ToolTip from '../../../toolTip/toolTipComponent';
 
 class ComponentEvents extends Component {
     constructor(props) {
@@ -45,7 +46,9 @@ class ComponentEvents extends Component {
                             <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
                             <i className="book icon" style={{ fontSize: "18px" }} />
                             <span style={{ fontSize: "20px" }}>Eventos o fechas importantes del cliente</span>
-                            <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} title={IMPORTANT_DATES_RELATIONSHIP} />
+                            <ToolTip text={IMPORTANT_DATES_RELATIONSHIP}>
+                                <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }}/>
+                            </ToolTip>
                         </div>
                     </Col>
                 </Row>
