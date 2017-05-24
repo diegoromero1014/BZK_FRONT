@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import ActividadEconomica from './actividadEconomica';
+import InventoryPolicy from './inventoryPolicy';
+import MainCustomer from './mainCustomer';
+import MainSupplier from './mainSupplier';
+import MainCompetitor from './mainCompetitor';
 import UbicationCorrespondence from './ubicationCorrespondence';
 import InfoFinanciera from './infoFinanciera';
 import DataComercial from './dataComercial';
@@ -7,19 +11,8 @@ import DeclarationOfOrigin from './DeclarationOfOrigin';
 import InternationalOperations from './internationalOperations';
 import DocumentInformationServices from './managementDocumentary/documentInformationServices';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import {
-    seletedButton, validateContactShareholder, sendErrorsUpdate,
-    changeEconomicActivity,
-    changeUbicationCorrespondence,
-    changeInfoFinanciera,
-    changeDataComercial,
-    changeNotes,
-    changeDeclarationOfOrigin,
-    changeInternationalOperations,
-    changeDocumentInformationServices,
-    changeForeingProducts,
-   } from './actions';
-import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT } from './constants';
+import { seletedButton, validateContactShareholder, sendErrorsUpdate, changeAccordionValue } from './actions';
+import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT, ACTIVE_TAB, INACTIVE_TAB } from './constants';
 import Notas from './notas';
 import { bindActionCreators } from 'redux';
 import Products from './product';
@@ -39,6 +32,7 @@ class DetailsInfoClient extends Component {
 
         this._clickButtonClientEdit = this._clickButtonClientEdit.bind(this);
         this._clickButtonClientUpdate = this._clickButtonClientUpdate.bind(this);
+        this._changeValueAccordion = this._changeValueAccordion.bind(this);
     }
 
     componentWillMount() {
@@ -97,18 +91,21 @@ class DetailsInfoClient extends Component {
         });
     }
 
+    _changeValueAccordion(tabSeleted) {
+        const { changeAccordionValue, tabReducer } = this.props;
+        var accordion = tabReducer.get('accordion');
+        var newAccordion = _.mapValues(accordion, (value, key) => {
+            if (_.isEqual(key, tabSeleted)) {
+                return _.isEqual(value, INACTIVE_TAB) ? ACTIVE_TAB : INACTIVE_TAB;
+            } else {
+                return value;
+            }
+        });
+        changeAccordionValue(newAccordion);
+    }
+
     render() {
-        const { infoClient, reducerGlobal, linkedStatusKey,tabReducer,
-            changeEconomicActivity,
-            changeUbicationCorrespondence,
-            changeInfoFinanciera,
-            changeDataComercial,
-            changeNotes,
-            changeDeclarationOfOrigin,
-            changeInternationalOperations,
-            changeDocumentInformationServices,
-            changeForeingProducts,
-            }= this.props;
+        const { infoClient, reducerGlobal, linkedStatusKey, tabReducer } = this.props;
         const accordion = tabReducer.get('accordion');
         var actualizationDateString = "";
         if (infoClient.actualizationDate !== null && infoClient.actualizationDate !== undefined) {
@@ -207,9 +204,9 @@ class DetailsInfoClient extends Component {
                         </tbody>
                     </table>
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
                     <Accordion defaultActiveIndex={accordion.economicActivity}>
-                        <Accordion.Title onClick={changeEconomicActivity}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('economicActivity')}>
                             <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
                                 Actividad económica
                             </TitleSectionComponent>
@@ -219,10 +216,58 @@ class DetailsInfoClient extends Component {
                         </Accordion.Content>
                     </Accordion>
 
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.inventoryPolicy}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('inventoryPolicy')}>
+                            <TitleSectionComponent iconClass="cubes" fontSize="25px" typeTitle={true}>
+                                Política de inventarios
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <InventoryPolicy infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.UbicationCorrespondence}>
-                        <Accordion.Title onClick={changeUbicationCorrespondence}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.mainCustomer}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('mainCustomer')}>
+                            <TitleSectionComponent iconClass="users" fontSize="25px" typeTitle={true}>
+                                Principales clientes
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <MainCustomer infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.mainSupplier}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('mainSupplier')}>
+                            <TitleSectionComponent iconClass="shipping" fontSize="25px" typeTitle={true}>
+                                Principales proveedores
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <MainSupplier infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.mainCompetition}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('mainCompetition')}>
+                            <TitleSectionComponent iconClass="factory" fontSize="25px" typeTitle={true}>
+                                Principales competidores
+                            </TitleSectionComponent>
+                        </Accordion.Title>
+                        <Accordion.Content >
+                            <MainCompetitor infoClient={infoClient} />
+                        </Accordion.Content>
+                    </Accordion>
+
+
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.ubicationCorrespondence}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('ubicationCorrespondence')}>
                             <TitleSectionComponent iconClass="browser" fontSize="25px" typeTitle={true}>
                                 Información de ubicación y correspondencia
                             </TitleSectionComponent>
@@ -233,9 +278,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.InfoFinanciera}>
-                        <Accordion.Title onClick={changeInfoFinanciera}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.infoFinanciera}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('infoFinanciera')}>
                             <TitleSectionComponent iconClass="suitcase " fontSize="25px" typeTitle={true}>
                                 Información financiera
                             </TitleSectionComponent>
@@ -246,9 +291,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.DataComercial}>
-                        <Accordion.Title onClick={changeDataComercial}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.dataComercial}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('dataComercial')}>
                             <TitleSectionComponent iconClass="book" fontSize="25px" typeTitle={true}>
                                 Datos de conocimiento comercial
                             </TitleSectionComponent>
@@ -259,9 +304,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
                     <Accordion defaultActiveIndex={accordion.notes}>
-                        <Accordion.Title onClick={changeNotes}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('notes')}>
                             <TitleSectionComponent iconClass="file outline" fontSize="25px" typeTitle={true}>
                                 Notas
                             </TitleSectionComponent>
@@ -272,9 +317,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.DeclarationOfOrigin}>
-                        <Accordion.Title onClick={changeDeclarationOfOrigin}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.declarationOfOrigin}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('declarationOfOrigin')}>
                             <TitleSectionComponent iconClass="money" fontSize="25px" typeTitle={true}>
                                 Declaración de origen de bienes y/o fondos
                             </TitleSectionComponent>
@@ -285,9 +330,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.InternationalOperations}>
-                        <Accordion.Title onClick={changeInternationalOperations}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.internationalOperations}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('internationalOperations')}>
                             <TitleSectionComponent iconClass="world" fontSize="25px" typeTitle={true}>
                                 Información operaciones internacionales
                             </TitleSectionComponent>
@@ -298,9 +343,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
-                    <Accordion defaultActiveIndex={accordion.DocumentInformationServices}>
-                        <Accordion.Title onClick={changeDocumentInformationServices}>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
+                    <Accordion defaultActiveIndex={accordion.documentInformationServices}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('documentInformationServices')}>
                             <TitleSectionComponent iconClass="newspaper" fontSize="25px" typeTitle={true}>
                                 Consulta de servicios de información documental
                             </TitleSectionComponent>
@@ -311,9 +356,9 @@ class DetailsInfoClient extends Component {
                     </Accordion>
 
 
-                    <div style={{borderTop: "1px dotted #cea70b", marginTop:"50px"}} ></div>
+                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
                     <Accordion defaultActiveIndex={accordion.foreignProducts}>
-                        <Accordion.Title onClick={changeForeingProducts}>
+                        <Accordion.Title onClick={() => this._changeValueAccordion('foreignProducts')}>
                             <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
                                 Productos
                             </TitleSectionComponent>
@@ -362,19 +407,11 @@ function mapDispatchToProps(dispatch) {
         validateContactShareholder,
         sendErrorsUpdate,
         validatePermissionsByModule,
-        changeEconomicActivity,
-        changeUbicationCorrespondence,
-        changeInfoFinanciera,
-        changeDataComercial,
-        changeNotes,
-        changeDeclarationOfOrigin,
-        changeInternationalOperations,
-        changeDocumentInformationServices,
-        changeForeingProducts,
+        changeAccordionValue
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, reducerGlobal, clientInformacion ,tabReducer}) {
+function mapStateToProps({ navBar, reducerGlobal, clientInformacion, tabReducer }) {
     const linkedStatusKey = _.get(clientInformacion.get('responseClientInfo'), 'linkedStatusKey', null);
     return {
         infoClient: Object.assign({}, clientInformacion.get('responseClientInfo')),

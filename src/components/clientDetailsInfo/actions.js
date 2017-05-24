@@ -2,10 +2,7 @@ import { APP_URL } from '../../constantsGlobal';
 import {
     UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER, UPDATE_CLIENT,
     CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES, UPDATE_ERROR_LINK_ENTITIES,
-    CONSULT_MANAGEMENT_DOCUMENTARY, CLEAR_MANAGEMENT_DOCUMENTARY, RESET_ACCORDION,
-    CHANGE_ACCORDION_ECONOMIC_ACTIVITY,CHANGE_ACCORDION_UBICATION_CORRESPONDENCE,CHANGE_ACCORDION_INFO_FINANCIERA,
-    CHANGE_ACCORDION_DATA_COMERCIAL,CHANGE_ACCORDION_NOTES,CHANGE_ACCORDION_DECLARATION_OF_ORIGIN,
-    CHANGE_ACCORDION_INTERNATIONAL_OPERATIONS,CHANGE_ACCORDION_DOCUMENT_INFORMATION_SERVICES,CHANGE_ACCORDION_FOREING_PRODUCTS
+    CONSULT_MANAGEMENT_DOCUMENTARY, CLEAR_MANAGEMENT_DOCUMENTARY, RESET_ACCORDION, CHANGE_ACCORDION
 } from './constants';
 import axios from 'axios';
 
@@ -135,56 +132,9 @@ export function resetAccordion(){
 }
 
 
-export function changeEconomicActivity(){
+export function changeAccordionValue(accordion){
     return{
-        type: CHANGE_ACCORDION_ECONOMIC_ACTIVITY
-    }
-}
-
-export function changeUbicationCorrespondence(){
-    return{
-        type: CHANGE_ACCORDION_UBICATION_CORRESPONDENCE
-    }
-}
-
-export function changeInfoFinanciera(){
-    return{
-        type: CHANGE_ACCORDION_INFO_FINANCIERA
-    }
-}
-
-export function changeDataComercial(){
-    return{
-        type: CHANGE_ACCORDION_DATA_COMERCIAL
-    }
-}
-
-export function changeNotes(){
-    return{
-        type: CHANGE_ACCORDION_NOTES
-    }
-}
-
-export function changeDeclarationOfOrigin(){
-    return{
-        type: CHANGE_ACCORDION_DECLARATION_OF_ORIGIN
-    }
-}
-
-export function changeInternationalOperations(){
-    return{
-        type: CHANGE_ACCORDION_INTERNATIONAL_OPERATIONS
-    }
-}
-
-export function changeDocumentInformationServices(){
-    return{
-        type: CHANGE_ACCORDION_DOCUMENT_INFORMATION_SERVICES
-    }
-}
-
-export function changeForeingProducts(){
-    return{
-        type: CHANGE_ACCORDION_FOREING_PRODUCTS
+        type: CHANGE_ACCORDION,
+        accordion
     }
 }

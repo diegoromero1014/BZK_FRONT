@@ -26,6 +26,8 @@ export const ORANGE_COLOR = "#f0ad4e";
 export const RED_COLOR = "#d9534f";
 export const GRAY_COLOR = "#c8c8c8";
 export const APP_NAME = "FRONT_OFFICE";
+export const YES = 1;
+export const NO = 0;
 
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
