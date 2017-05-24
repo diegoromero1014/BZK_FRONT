@@ -145,8 +145,8 @@ class DetailsInfoClient extends Component {
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
 
-        //const active = Array.of(1, 2, 3);
-        const active = 0;
+        const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit ;
+        const showFooterButtons = allowAccessAndEdit || allowLinked ;
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
@@ -322,34 +322,31 @@ class DetailsInfoClient extends Component {
                             {foreignProducts.map(this._mapProductItems)}
                         </Accordion.Content>
                     </Accordion>
-
-
-
                 </div>
-                {infoClient.haveAccessEdit && (allowEdit || allowLinked) &&
-                    <div className="" style={containerButtons}>
-                        <div style={{
-                            right: '0px',
-                            position: 'fixed',
-                            paddingRight: '15px'
-                        }}>
-                            <Row style={{ paddingTop: '8px' }}>
-                                {allowEdit &&
-                                    <Col style={paddingLink}>
-                                        <a style={styleLink} onClick={this._clickButtonClientEdit}>
-                                            <span>Editar/Modificar</span></a>
-                                    </Col>}
-                                {allowEdit &&
-                                    <Col style={paddingButtons} onClick={this._clickButtonClientUpdate}>
-                                        <button className="btn"><span >Actualizar</span></button>
-                                    </Col>
-                                }
-                                {allowLinked &&
-                                    <ButtonLinkClient infoClient={infoClient} />
-                                }
-                            </Row>
-                        </div>
+                { showFooterButtons &&
+                <div className="" style={containerButtons}>
+                    <div style={{
+                        right: '0px',
+                        position: 'fixed',
+                        paddingRight: '15px'
+                    }}>
+                        <Row style={{paddingTop: '8px'}}>
+                            { allowAccessAndEdit &&
+                            <Col style={paddingLink}>
+                                <a style={styleLink} onClick={this._clickButtonClientEdit}>
+                                    <span>Editar/Modificar</span></a>
+                            </Col>}
+                            {allowAccessAndEdit &&
+                            <Col style={paddingButtons} onClick={this._clickButtonClientUpdate}>
+                                <button className="btn"><span >Actualizar</span></button>
+                            </Col>
+                            }
+                            {allowLinked &&
+                            <ButtonLinkClient infoClient={infoClient}/>
+                            }
+                        </Row>
                     </div>
+                </div>
                 }
             </div>
         );
