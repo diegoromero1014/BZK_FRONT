@@ -33,7 +33,6 @@ class ActividadEconomica extends Component {
                 <table style={{ width: "100%" }}>
                     <thead>
                         <tr>
-                            <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></th>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>CIIU</span></th>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Sector</span></th>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>SubCIIU</span></th>
@@ -42,7 +41,6 @@ class ActividadEconomica extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.taxNatureKey}</td>
                             <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.ciiu}</td>
                             <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.sector}</td>
                             <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.subCiiuKey}</td>
@@ -51,7 +49,17 @@ class ActividadEconomica extends Component {
                     </tbody>
                 </table>
                 <Row>
-                    <Col xs={12} md={12} lg={12} style={{ textAlign: 'justify' }}>
+                    <Col xs={12} md={3} lg={3}>
+                        <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></dt>
+                        {infoClient.taxNatureKey}
+                    </Col>
+                    <Col xs={12} md={3} lg={3}>
+                        <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipología del cliente</span></dt>
+                        {infoClient.valueCustomerTypology}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12} md={12} lg={12} style={{ textAlign: 'justify', marginTop: '15px' }}>
                         <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Contexto</span></dt>
                         {_.isNull(contextClient) || _.isUndefined(contextClient) ? "" : contextClient.context}
                     </Col>
