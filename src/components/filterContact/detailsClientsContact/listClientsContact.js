@@ -125,9 +125,10 @@ class ListClientsContact extends Component {
         const { contactDetail, setArrayDeleteClientContact } = this.props;
         const { listRelationshipClients } = this.state;
         if (listRelationshipClients.length !== contactDetail.get('listClientcontacts').length) {
-            setArrayDeleteClientContact(_.map(contactDetail.get('listClientcontacts'), 'idClientContact', []));
+            const valuesRelationship = _.map(contactDetail.get('listClientcontacts'), 'idClientContact', []);
+            setArrayDeleteClientContact(valuesRelationship);
             this.setState({
-                listRelationshipClients: _.map(contactDetail.get('listClientcontacts'), 'idClientContact', [])
+                listRelationshipClients: valuesRelationship
             });
         } else {
             setArrayDeleteClientContact([]);

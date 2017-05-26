@@ -132,6 +132,8 @@ export default (state = initialState, action) => {
             return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FULLFILLMENT_COVENANT:
             return state.set('fullfillmentCovenant', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.CUSTOMER_TYPOLOGY:
+            return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
             return state;
     }

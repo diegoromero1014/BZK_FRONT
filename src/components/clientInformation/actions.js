@@ -1,5 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT} from './constants';
+import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
+  CHANGE_VALUE_LIST_CLIENT} from './constants';
 import axios from 'axios';
 
 export function consultInfoClient(){
@@ -50,5 +51,14 @@ export function updateFieldInfoClient(field, value) {
         type: UPDATE_FIELD_INFO_CLIENT,
         field,
         value
+    }
+}
+
+
+export function changeValueListClient(field, list) {
+    return {
+        type: CHANGE_VALUE_LIST_CLIENT,
+        field,
+        list
     }
 }

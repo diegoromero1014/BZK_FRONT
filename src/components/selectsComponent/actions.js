@@ -3,6 +3,7 @@ import axios from 'axios';
 import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
     TEAM_FOR_REGION_EMPLOYEE,CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
     PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS } from './constants';
+import {isUndefined, isNull} from 'lodash';
 
 export function consultDataSelect(field){
   const json = {
@@ -106,7 +107,7 @@ export function consultListWithParameterUbication(field, parentId){
 /**
  * @param fields lista de nombres de las listas que se quieren consultar
  */
-export function getMasterDataFields(fields) {
+export function getMasterDataFields(fields, onlyWithoutParents) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -121,7 +122,8 @@ export function getMasterDataFields(fields) {
       "isSuccessful": true
     },
     messageBody: {
-      "fields": fields
+      "fields": fields,
+      "onlyWithoutParents": isUndefined(onlyWithoutParents) || isNull(onlyWithoutParents) ? false : onlyWithoutParents
     }
   }
 

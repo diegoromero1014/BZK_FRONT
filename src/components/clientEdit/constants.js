@@ -5,3 +5,4 @@ export const MAXIMUM_OPERATIONS_FOREIGNS = 3;
 export const KEY_OPTION_OTHER_OPERATIONS_FOREIGNS = "Otro";
 export const KEY_OPTION_OTHER_ORIGIN_GOODS = "Otro";
 export const KEY_OPTION_OTHER_ORIGIN_RESOURCE = "Otro";
+export const GOVERNMENT = "Gobierno";

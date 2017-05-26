@@ -25,7 +25,8 @@ import {
     MAXIMUM_OPERATIONS_FOREIGNS,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
     KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE,
+    GOVERNMENT
 } from './constants';
 import {
     OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER,
@@ -51,10 +52,14 @@ import { updateClient } from '../clientDetailsInfo/actions';
 import BottonContactAdmin from '../clientDetailsInfo/bottonContactAdmin';
 import BottonShareholderAdmin from '../clientDetailsInfo/bottonShareholderAdmin';
 import ModalErrorsUpdateClient from './modalErrorsUpdateClient';
+import {swtShowMessage} from '../sweetAlertMessages/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
 import { showLoading } from '../loading/actions';
+import ClientTypology from '../contextClient/ClientTypology';
+import ContextEconomicActivity from '../contextClient/contextEconomicActivity';
+import ComponentListLineBusiness from '../contextClient/listLineOfBusiness/componentListLineBusiness';
 
 let idButton;
 let errorContact;
@@ -74,13 +79,13 @@ const valuesYesNo = [
     { 'id': false, 'value': "No" }
 ];
 
-const fields = ["razonSocial","idTypeClient","idNumber","description", "idCIIU", "idSubCIIU", "addressClient", "country", "city", 
+const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCIIU", "idSubCIIU", "addressClient", "country", "city",
     "province", "neighborhood", "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
     "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment"];
+    "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participation", "experience"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -98,6 +103,22 @@ var disabledOperationsForeigns = true;
 var otherOperationsForeignEnable = 'disabled';
 var otherOriginGoodsEnable = 'disabled';
 var otherOriginResourceEnable = 'disabled';
+
+const EDIT_STYLE = {
+    border: '1px solid #e5e9ec',
+    backgroundColor: '#F8F8F8',
+    borderRadius: '2px',
+    margin: '0px 28px 0 20px',
+    height: '60px'
+};
+
+const UPDATE_STYLE = {
+    border: '1px solid #e5e9ec',
+    backgroundColor: '#F8F8F8',
+    borderRadius: '2px',
+    margin: '0px 28px 0 20px',
+    height: '110px'
+};
 
 const validate = values => {
     const errors = {}
@@ -414,7 +435,8 @@ class clientEdit extends Component {
             messageError: '',
             otherOperationsForeignEnable: 'disabled',
             otherOriginGoodsEnable: 'disabled',
-            otherOriginResourceEnable: 'disabled'
+            otherOriginResourceEnable: 'disabled',
+            showFormAddLineOfBusiness: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -436,6 +458,9 @@ class clientEdit extends Component {
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
         this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
+        this._changeSegment = this._changeSegment.bind(this);
+        this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
+        this.showFormCreateLineBusiness = this.showFormCreateLineBusiness.bind(this);
     }
 
     _closeWindow() {
@@ -460,6 +485,10 @@ class clientEdit extends Component {
         initValueJustifyNonGeren = false;
         initValueJustifyNonLME = false;
         goBack();
+    }
+
+    showFormCreateLineBusiness(value) {
+        this.setState({ showFormAddLineOfBusiness: value });
     }
 
     _closeError() {
@@ -810,12 +839,12 @@ class clientEdit extends Component {
     _saveClient(typeSave) {
         const {
             fields: {
-            idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient, 
-            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales, 
-            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods, 
+            idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
+            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment
+            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -896,14 +925,16 @@ class clientEdit extends Component {
                 "originCityResource": originCityResource.value,
                 "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
                 "otherOperationsForeign": otherOperationsForeign.value,
-                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']')
+                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
+                "idCustomerTypology": customerTypology.value,
+                "contextClient": this._createJsonSaveContextClient()
             };
             const { createProspect, sendErrorsUpdate, updateClient } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect)
                 .then((data) => {
-                    if ( _.get(data, 'payload.data.status', 500) === 200 ) {
-                        if ( _.get(data, 'payload.data.responseCreateProspect', false) ) {
+                    if (_.get(data, 'payload.data.status', 500) === 200) {
+                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
                             if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
                                 messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
@@ -933,9 +964,24 @@ class clientEdit extends Component {
         }
     }
 
+    _createJsonSaveContextClient() {
+        const { fields: { contextClientField }, clientInformacion } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        const { contextClient } = infoClient;
+        if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
+            return {
+                'id': null,
+                'context': contextClientField.value
+            };
+        } else {
+            contextClient.context = contextClientField.value;
+            return contextClient;
+        }
+    }
+
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-        const { fields: { justifyNoGeren, marcGeren }, notes, tabReducer, selectsReducer, updateErrorsNotes } = this.props;
+        const { fields: { justifyNoGeren, marcGeren }, notes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         var dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
         var idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -962,14 +1008,20 @@ class clientEdit extends Component {
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
             if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
-                if (idButton === BUTTON_UPDATE) {
-                    this.setState({
-                        showConfirmSave: true
-                    });
+                if ( this.state.showFormAddLineOfBusiness ) {
+                    console.log("2");
+                    swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, actualmente se encuentra realizando una creación o una edición, para poder guardar la información del cliente, primero debe terminarla o cancelarla.');
                 } else {
-                    this._saveClient(BUTTON_EDIT);
+                    if (idButton === BUTTON_UPDATE) {
+                        this.setState({
+                            showConfirmSave: true
+                        });
+                    } else {
+                        this._saveClient(BUTTON_EDIT);
+                    }
                 }
             } else {
+                console.log("1");
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
         }
@@ -1028,6 +1080,7 @@ class clientEdit extends Component {
                         var dataOriginGoods = JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]');
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
+                        this._changeSegment(infoClient.segment, true);
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
@@ -1054,6 +1107,22 @@ class clientEdit extends Component {
         </div>
     }
 
+    _changeSegment(idSegment, firstConsult) {
+        const { fields: { segment, customerTypology }, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
+        const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
+        segment.onChange(idSegment);
+        if (!_.isUndefined(value)) {
+            if (_.isEqual(GOVERNMENT, value)) {
+                consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
+            } else {
+                getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
+            }
+            if (!firstConsult) {
+                customerTypology.onChange('');
+            }
+        }
+    }
+
     render() {
         const {
             fields: {
@@ -1062,7 +1131,8 @@ class clientEdit extends Component {
             liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
             centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-            otherOperationsForeign, segment, subSegment
+            otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
+            participation, experience
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1074,20 +1144,7 @@ class clientEdit extends Component {
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
-                    <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? {
-                        border: '1px solid #e5e9ec',
-                        backgroundColor: '#F8F8F8',
-                        borderRadius: '2px',
-                        margin: '0px 28px 0 20px',
-                        height: '60px'
-                    } :
-                        {
-                            border: '1px solid #e5e9ec',
-                            backgroundColor: '#F8F8F8',
-                            borderRadius: '2px',
-                            margin: '0px 28px 0 20px',
-                            height: '110px'
-                        }}>
+                    <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
                             {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                                 <div>
@@ -1115,7 +1172,7 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-                <Row style={{ padding: "10px 10px 10px 20px" }}>
+                <Row style={{ padding: "10px 28px 10px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
@@ -1157,8 +1214,6 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                </Row>
-                <Row style={{ padding: "0px 25px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ marginTop: "10px" }}>
                             <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -1173,11 +1228,11 @@ class clientEdit extends Component {
                                 style={{ marginBottom: '0px !important' }}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.SEGMENTS)}
+                                onChange={(val) => this._changeSegment(val, false)}
                                 touched={true}
                             />
                         </div>
                     </Col>
-
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ marginTop: "10px" }}>
                             <dt><span>Subsegmento (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -1195,27 +1250,29 @@ class clientEdit extends Component {
                             />
                         </div>
                     </Col>
-                </Row>
-                <Row style={{ padding: "0px 25px 20px 20px" }}>
+                    <ClientTypology customerTypology={customerTypology} data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
+
                     <Col xs={12} md={12} lg={12}>
-                        <dt>
-                            <span>Breve descripción de la empresa</span>
-                            <i className="help circle icon blue"
-                                style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
-                                title={TITLE_DESCRIPTION} />
-                        </dt>
-                        <dt>
-                            <Textarea
-                                name="description"
-                                type="text"
-                                style={{ width: '100%', height: '100%' }}
-                                onChange={val => this._onchangeValue("description", val)}
-                                placeholder="Ingrese la descripción"
-                                max="1000"
-                                rows={4}
-                                {...description}
-                            />
-                        </dt>
+                        <div style={{ marginTop: "10px" }}>
+                            <dt>
+                                <span>Breve descripción de la empresa</span>
+                                <i className="help circle icon blue"
+                                    style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
+                                    title={TITLE_DESCRIPTION} />
+                            </dt>
+                            <dt>
+                                <Textarea
+                                    name="description"
+                                    type="text"
+                                    style={{ width: '100%', height: '100%' }}
+                                    onChange={val => this._onchangeValue("description", val)}
+                                    placeholder="Ingrese la descripción"
+                                    max="1000"
+                                    rows={4}
+                                    {...description}
+                                />
+                            </dt>
+                        </div>
                     </Col>
                 </Row>
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
@@ -1228,7 +1285,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 20px 0px" }}>
+                <Row style={{ padding: "0px 10px 10px 0px" }}>
                     <Col xs>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt><span>Naturaleza tributaria</span></dt>
@@ -1294,8 +1351,13 @@ class clientEdit extends Component {
                             </span>
                         </div>
                     </Col>
+                    <ContextEconomicActivity contextClientField={contextClientField} />
+                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                        participation={participation} experience={experience}
+                        showForm={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormCreateLineBusiness} />
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
+
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
@@ -1331,7 +1393,7 @@ class clientEdit extends Component {
                         </table>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Dirección</span>
@@ -1351,9 +1413,9 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 20px 0px" }}>
+                <Row style={{ padding: "0px 20px 10px 0px" }}>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>País</span></dt>
                             <ComboBox
                                 name="country"
@@ -1371,7 +1433,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Departamento</span></dt>
                             <ComboBox
                                 name="province"
@@ -1387,7 +1449,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "15px", marginTop: "10px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "15px" }}>
                             <dt><span>Ciudad</span></dt>
                             <ComboBox
                                 name="city"
@@ -1402,7 +1464,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                <Row style={{ padding: "0px 20px 10px 20px" }}>
                     <Col xs={12} md={8} lg={8}>
                         <dt><span>Barrio</span></dt>
                         <dt style={{ marginRight: "17px" }}>
@@ -1981,7 +2043,7 @@ class clientEdit extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
+                            <i className="product hunt icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Descripción de los productos financieros en moneda extranjera</span>
                         </div>
                     </Col>
@@ -2108,12 +2170,14 @@ function mapDispatchToProps(dispatch) {
         sendErrorsUpdate,
         updateErrorsNotes,
         updateTitleNavBar,
-        showLoading
+        showLoading,
+        swtShowMessage
     }, dispatch);
 }
 
 function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
+    const { contextClient } = infoClient;
     return {
         clientInformacion,
         selectsReducer,
@@ -2163,7 +2227,9 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             otherOperationsForeign: infoClient.otherOperationsForeign,
             foreignProducts: infoClient.foreignProducts,
             segment: infoClient.segment,
-            subSegment: infoClient.subSegment
+            subSegment: infoClient.subSegment,
+            customerTypology: infoClient.idCustomerTypology,
+            contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? '' : contextClient.context
         }
     };
 }

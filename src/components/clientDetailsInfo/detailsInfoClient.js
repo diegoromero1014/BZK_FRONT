@@ -23,8 +23,9 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { MENU_CLOSED } from '../navBar/constants';
 import ButtonLinkClient from './linkingClient/buttonLinkClientComponent';
-import { Accordion, Icon } from 'semantic-ui-react';
 import TitleSectionComponent from '../titleSection/titleSection';
+import ComponentAccordion from '../accordion/componentAccordion';
+import { Accordion, Icon } from 'semantic-ui-react';
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -142,8 +143,8 @@ class DetailsInfoClient extends Component {
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
 
-        const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit ;
-        const showFooterButtons = allowAccessAndEdit || allowLinked ;
+        const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
+        const showFooterButtons = allowAccessAndEdit || allowLinked;
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
@@ -204,194 +205,83 @@ class DetailsInfoClient extends Component {
                         </tbody>
                     </table>
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.economicActivity}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('economicActivity')}>
-                            <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
-                                Actividad económica
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <ActividadEconomica infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
+                        codSection={accordion.economicActivity} title="Actividad económica" icon="payment"
+                        componentView={<ActividadEconomica infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.inventoryPolicy}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('inventoryPolicy')}>
-                            <TitleSectionComponent iconClass="cubes" fontSize="25px" typeTitle={true}>
-                                Política de inventarios
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <InventoryPolicy infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
+                        codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
+                        componentView={<InventoryPolicy infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.mainCustomer}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('mainCustomer')}>
-                            <TitleSectionComponent iconClass="users" fontSize="25px" typeTitle={true}>
-                                Principales clientes
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <MainCustomer infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
+                        codSection={accordion.mainCustomer} title="Principales clientes" icon="users"
+                        componentView={<MainCustomer infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.mainSupplier}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('mainSupplier')}>
-                            <TitleSectionComponent iconClass="shipping" fontSize="25px" typeTitle={true}>
-                                Principales proveedores
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <MainSupplier infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainSupplier')}
+                        codSection={accordion.mainSupplier} title="Principales proveedores" icon="shipping"
+                        componentView={<MainSupplier infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.mainCompetition}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('mainCompetition')}>
-                            <TitleSectionComponent iconClass="factory" fontSize="25px" typeTitle={true}>
-                                Principales competidores
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <MainCompetitor infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
+                        codSection={accordion.mainCompetition} title="Principales competidores" icon="factory"
+                        componentView={<MainCompetitor infoClient={infoClient} />} />
 
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
+                        codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"
+                        componentView={<UbicationCorrespondence infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.ubicationCorrespondence}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('ubicationCorrespondence')}>
-                            <TitleSectionComponent iconClass="browser" fontSize="25px" typeTitle={true}>
-                                Información de ubicación y correspondencia
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content >
-                            <UbicationCorrespondence infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('infoFinanciera')}
+                        codSection={accordion.infoFinanciera} title="Información financiera" icon="suitcase"
+                        componentView={<InfoFinanciera infoClient={infoClient} />} />
 
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('dataComercial')}
+                        codSection={accordion.dataComercial} title="Datos de conocimiento comercial" icon="book"
+                        componentView={<DataComercial infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.infoFinanciera}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('infoFinanciera')}>
-                            <TitleSectionComponent iconClass="suitcase " fontSize="25px" typeTitle={true}>
-                                Información financiera
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            <InfoFinanciera infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('notes')}
+                        codSection={accordion.notes} title="Notas" icon="file outline"
+                        componentView={notes.map(this._mapNoteItems)} />
 
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('declarationOfOrigin')}
+                        codSection={accordion.declarationOfOrigin} title="Declaración de origen de bienes y/o fondos" icon="money"
+                        componentView={<DeclarationOfOrigin infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.dataComercial}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('dataComercial')}>
-                            <TitleSectionComponent iconClass="book" fontSize="25px" typeTitle={true}>
-                                Datos de conocimiento comercial
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            <DataComercial infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
+                        codSection={accordion.internationalOperations} title="Información operaciones internacionales" icon="world"
+                        componentView={<InternationalOperations infoClient={infoClient} />} />
 
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
+                        codSection={accordion.documentInformationServices} title="Consulta de servicios de información documental" icon="newspaper"
+                        componentView={<DocumentInformationServices infoClient={infoClient} />} />
 
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.notes}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('notes')}>
-                            <TitleSectionComponent iconClass="file outline" fontSize="25px" typeTitle={true}>
-                                Notas
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            {notes.map(this._mapNoteItems)}
-                        </Accordion.Content>
-                    </Accordion>
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('foreignProducts')}
+                        codSection={accordion.foreignProducts} title="Productos" icon="product hunt"
+                        componentView={foreignProducts.map(this._mapProductItems)} />
 
-
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.declarationOfOrigin}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('declarationOfOrigin')}>
-                            <TitleSectionComponent iconClass="money" fontSize="25px" typeTitle={true}>
-                                Declaración de origen de bienes y/o fondos
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            <DeclarationOfOrigin infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
-
-
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.internationalOperations}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('internationalOperations')}>
-                            <TitleSectionComponent iconClass="world" fontSize="25px" typeTitle={true}>
-                                Información operaciones internacionales
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            <InternationalOperations infoClient={infoClient} />
-                        </Accordion.Content>
-                    </Accordion>
-
-
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.documentInformationServices}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('documentInformationServices')}>
-                            <TitleSectionComponent iconClass="newspaper" fontSize="25px" typeTitle={true}>
-                                Consulta de servicios de información documental
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            <DocumentInformationServices />
-                        </Accordion.Content>
-                    </Accordion>
-
-
-                    <div style={{ borderTop: "1px dotted #cea70b", marginTop: "25px" }} ></div>
-                    <Accordion defaultActiveIndex={accordion.foreignProducts}>
-                        <Accordion.Title onClick={() => this._changeValueAccordion('foreignProducts')}>
-                            <TitleSectionComponent iconClass="payment" fontSize="25px" typeTitle={true}>
-                                Productos
-                            </TitleSectionComponent>
-                        </Accordion.Title>
-                        <Accordion.Content>
-                            {foreignProducts.map(this._mapProductItems)}
-                        </Accordion.Content>
-                    </Accordion>
                 </div>
-                { showFooterButtons &&
-                <div className="" style={containerButtons}>
-                    <div style={{
-                        right: '0px',
-                        position: 'fixed',
-                        paddingRight: '15px'
-                    }}>
-                        <Row style={{paddingTop: '8px'}}>
-                            { allowAccessAndEdit &&
-                            <Col style={paddingLink}>
-                                <a style={styleLink} onClick={this._clickButtonClientEdit}>
-                                    <span>Editar/Modificar</span></a>
-                            </Col>}
-                            {allowAccessAndEdit &&
-                            <Col style={paddingButtons} onClick={this._clickButtonClientUpdate}>
-                                <button className="btn"><span >Actualizar</span></button>
-                            </Col>
-                            }
-                            {allowLinked &&
-                            <ButtonLinkClient infoClient={infoClient}/>
-                            }
-                        </Row>
+                {showFooterButtons &&
+                    <div className="" style={containerButtons}>
+                        <div style={{
+                            right: '0px',
+                            position: 'fixed',
+                            paddingRight: '15px'
+                        }}>
+                            <Row style={{ paddingTop: '8px' }}>
+                                {allowAccessAndEdit &&
+                                    <Col style={paddingLink}>
+                                        <a style={styleLink} onClick={this._clickButtonClientEdit}>
+                                            <span>Editar/Modificar</span></a>
+                                    </Col>}
+                                {allowAccessAndEdit &&
+                                    <Col style={paddingButtons} onClick={this._clickButtonClientUpdate}>
+                                        <button className="btn"><span >Actualizar</span></button>
+                                    </Col>
+                                }
+                                {allowLinked &&
+                                    <ButtonLinkClient infoClient={infoClient} />
+                                }
+                            </Row>
+                        </div>
                     </div>
-                </div>
                 }
             </div>
         );

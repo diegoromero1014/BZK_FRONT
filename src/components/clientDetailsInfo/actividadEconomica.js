@@ -48,7 +48,7 @@ class ActividadEconomica extends Component {
                         </tr>
                     </tbody>
                 </table>
-                <Row>
+                <Row style={{marginTop: '15px'}}>
                     <Col xs={12} md={3} lg={3}>
                         <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></dt>
                         {infoClient.taxNatureKey}
