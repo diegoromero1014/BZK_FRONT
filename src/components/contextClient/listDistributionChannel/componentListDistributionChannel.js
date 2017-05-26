@@ -8,10 +8,10 @@ import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import {LINE_OF_BUSINESS} from '../constants';
+import {DISTRIBUTION_CHANNEL} from '../constants';
 import _ from 'lodash';
 
-class ComponentListLineBusiness extends Component {
+class ComponentListDistributionChannel extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,72 +21,64 @@ class ComponentListLineBusiness extends Component {
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
-        this._mapValuesParitipation = this._mapValuesParitipation.bind(this);
-        this._viewInformationLineBusiness = this._viewInformationLineBusiness.bind(this);
+        this._mapValuesDistribution = this._mapValuesDistribution.bind(this);
+        this._viewInformationDistribution = this._viewInformationDistribution.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
-        this._deleteLineOfBusiness = this._deleteLineOfBusiness.bind(this);
+        this._deleteDistribution = this._deleteDistribution.bind(this);
     }
 
     validateInfo(e) {
         e.preventDefault();
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, swtShowMessage } = this.props;
+        const { distributionChannel, participation, fnShowForm, changeValueListClient, clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(contextLineBusiness.value) || _.isNull(contextLineBusiness.value) || _.isEmpty(contextLineBusiness.value)) {
+        if (_.isUndefined(distributionChannel.value) || _.isNull(distributionChannel.value) || _.isEmpty(distributionChannel.value)) {
             countErrors++;
         }
         if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
             countErrors++;
         }
-        if (_.isUndefined(experience.value) || _.isNull(experience.value) || _.isEmpty(experience.value)) {
-            countErrors++;
-        }
 
         if (_.isEqual(countErrors, 0)) {
-            var listParticipation = clientInformacion.get('listParticipation');
+            var listDistribution = clientInformacion.get('listDistribution');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
-                    "id": _.uniqueId('line_'),
-                    "lineOfBusiness": contextLineBusiness.value,
+                    "id": _.uniqueId('dist_'),
+                    "distributionChannel": distributionChannel.value,
                     "participation": participation.value,
-                    "experience": experience.value
                 };
-                listParticipation.push(newValue);
+                listDistribution.push(newValue);
             } else {
                 const updateValue = {
                     "id": this.state.entitySeleted.id,
-                    "lineOfBusiness": contextLineBusiness.value,
+                    "distributionChannel": distributionChannel.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value,
-                    "experience": experience.value
+                    "participation": participation.value
                 };
-                listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
-                listParticipation.push(updateValue);
+                listDistribution = _.remove(listDistribution, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
+                listDistribution.push(updateValue);
             }
-            changeValueListClient('listParticipation', listParticipation);
+            changeValueListClient('listDistribution', listDistribution);
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, agregar una línea de negocio debe de ingresar todos los valores.');
+            swtShowMessage('error', 'Canales de distrbución', 'Señor usuario, para agregar un canal de distrbución debe de ingresar todos los valores.');
         }
     }
 
     clearValues() {
-        const { contextLineBusiness, participation, experience, fnShowForm } = this.props;
-        contextLineBusiness.onChange('');
+        const { distributionChannel, participation, fnShowForm } = this.props;
+        distributionChannel.onChange('');
         participation.onChange('');
-        experience.onChange('');
-        fnShowForm(LINE_OF_BUSINESS, false);
+        fnShowForm(DISTRIBUTION_CHANNEL, false);
         this.setState({ entitySeleted: null });
     }
 
-    _viewInformationLineBusiness(entity) {
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient, clientInformacion } = this.props;
-        fnShowForm(LINE_OF_BUSINESS, true);
-        contextLineBusiness.onChange(entity.lineOfBusiness);
+    _viewInformationDistribution(entity) {
+        const { distributionChannel, participation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        fnShowForm(DISTRIBUTION_CHANNEL, true);
+        distributionChannel.onChange(entity.distributionChannel);
         participation.onChange(entity.participation.toString());
-        experience.onChange(entity.experience.toString());
         this.setState({ entitySeleted: entity });
     }
 
@@ -97,66 +89,65 @@ class ComponentListLineBusiness extends Component {
         });
     }
 
-    _deleteLineOfBusiness() {
+    _deleteDistribution() {
         const { changeValueListClient, clientInformacion } = this.props;
-        const listParticipation = clientInformacion.get('listParticipation');
-        const newListPart = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
-        changeValueListClient('listParticipation', newListPart);
+        const listDistribution = clientInformacion.get('listDistribution');
+        const newListPart = _.remove(listDistribution, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
+        changeValueListClient('listDistribution', newListPart);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
         });
     }
 
-    _mapValuesParitipation(entity, idx) {
+    _mapValuesDistribution(entity, idx) {
         return <tr key={idx}>
             <td className="collapsing">
-                <i className="zoom icon" title="Editar línea de negocio" style={{ cursor: "pointer" }}
-                    onClick={() => this._viewInformationLineBusiness(entity)} />
+                <i className="zoom icon" title="Editar canal de distribución" style={{ cursor: "pointer" }}
+                    onClick={() => this._viewInformationDistribution(entity)} />
             </td>
-            <td>{entity.lineOfBusiness}</td>
+            <td>{entity.distributionChannel}</td>
             <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{entity.experience}</td>
             <td className="collapsing">
-                <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
+                <i className="trash icon" title="Eliminar canal de distrbución" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
             </td>
         </tr>
     }
 
     render() {
-        const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm, clientInformacion } = this.props;
-        const listParticipation = clientInformacion.get('listParticipation');
+        const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion } = this.props;
+        const listDistribution = clientInformacion.get('listDistribution');
         return (
-            <Row style={{ marginLeft: '20px', marginTop: '30px', width: '100%' }}>
+            <Row style={{ marginLeft: '20px', marginTop: '40px', width: '100%' }}>
                 <Col xs={12} md={10} lg={11}>
                     <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
-                        <span className="section-title">Líneas de negocio y participación en ventas</span>
+                        <span className="section-title">Canales de distribución y participación en ventas</span>
                     </dl>
                 </Col>
                 <Col xs={6} md={2} lg={1}>
-                    <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
-                        onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                    <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
+                        onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                         <i className="plus white icon"></i>
                     </button>
                 </Col>
-                {showFormLinebusiness &&
+                {showFormDistribution &&
                     <Col xs={12} md={4} lg={3}>
                         <div>
-                            <dt><span>Línea de negocio (<span style={{ color: "red" }}>*</span>)</span></dt>
+                            <dt><span>Canal de distribución (<span style={{ color: "red" }}>*</span>)</span></dt>
                             <Input
-                                name="contextLineBusiness"
+                                name="distributionChannel"
                                 type="text"
                                 max="100"
-                                placeholder="Línea de neogcio"
-                                {...contextLineBusiness}
-                                error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
+                                placeholder="Canal de distribución"
+                                {...distributionChannel}
+                                error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
                                 touched={true}
                             />
                         </div>
                     </Col>
                 }
-                {showFormLinebusiness &&
+                {showFormDistribution &&
                     <Col xs={12} md={4} lg={3}>
                         <div>
                             <dt><span>Participación (%) (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -175,26 +166,7 @@ class ComponentListLineBusiness extends Component {
                         </div>
                     </Col>
                 }
-                {showFormLinebusiness &&
-                    <Col xs={12} md={4} lg={3}>
-                        <div>
-                            <dt><span>Experiencia (años) (<span style={{ color: "red" }}>*</span>)</span></dt>
-                            <Input
-                                name="experience"
-                                type="text"
-                                min={0}
-                                max="3"
-                                placeholder="Experiencia"
-                                {...experience}
-                                value={experience.value}
-                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
-                                error={_.isEmpty(experience.value) ? VALUE_REQUIERED : null}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
-                }
-                {showFormLinebusiness &&
+                {showFormDistribution &&
                     <Col xs={4} md={3} lg={3}>
                         <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                             style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
@@ -207,7 +179,7 @@ class ComponentListLineBusiness extends Component {
                     </Col>
                 }
                 {
-                    _.size(listParticipation) > 0 ?
+                    _.size(listDistribution) > 0 ?
                         <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
                             <table className="ui striped table">
                                 <thead>
@@ -215,19 +187,18 @@ class ComponentListLineBusiness extends Component {
                                         <th></th>
                                         <th>Línea de negocio</th>
                                         <th>Participación</th>
-                                        <th>Experiencia (años)</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {listParticipation.map(this._mapValuesParitipation)}
+                                    {listDistribution.map(this._mapValuesDistribution)}
                                 </tbody>
                             </table>
                         </Col>
                         :
                         <Col xs={12} md={12} lg={12}>
                             <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                <span className="form-item">No se han adicionado líneas de negocios</span>
+                                <span className="form-item">No se han adicionado canales de distribución</span>
                             </div>
                         </Col>
                 }
@@ -241,18 +212,17 @@ class ComponentListLineBusiness extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={() => this.setState({ showConfirmDelete: false })}
-                    onConfirm={this._deleteLineOfBusiness} />
+                    onConfirm={this._deleteDistribution} />
             </Row >
         );
     }
 }
 
-ComponentListLineBusiness.PropTypes = {
-    contextLineBusiness: PropTypes.object.isRequired,
+ComponentListDistributionChannel.PropTypes = {
+    distributionChannel: PropTypes.object.isRequired,
     participation: PropTypes.object.isRequired,
-    experience: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormLinebusiness: PropTypes.bool.isRequired
+    showFormDistribution: PropTypes.bool.isRequired
 }
 
 
@@ -270,4 +240,4 @@ function mapStateToProps({ clientInformacion }, ownerProps) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentListLineBusiness);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentListDistributionChannel);

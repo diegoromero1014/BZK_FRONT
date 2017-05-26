@@ -10,7 +10,8 @@ const initialState = Immutable.Map({
     validateLogin: true,
     responseClientInfo: {},
     economicGroup: null,
-    listParticipation: []
+    listParticipation: [],
+    listDistribution: [],
 });
 
 export default (state = initialState, action) => {
@@ -20,12 +21,14 @@ export default (state = initialState, action) => {
             const dataClient = isEmpty(clientInformation) ? [] : JSON.parse(clientInformation);
             const { contextClient } = dataClient;
             const listParticipation = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listParticipation;
+            const listDistribution = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listDistribution;
             return state.withMutations(map => {
                 map
                     .set('status', status)
                     .set('validateLogin', validateLogin)
                     .set('responseClientInfo', dataClient)
-                    .set('listParticipation', listParticipation);
+                    .set('listParticipation', listParticipation)
+                    .set('listDistribution', listDistribution);
             });
         case CLAER_CLIENT_INFO:
             return state.set("responseClientInfo", {});

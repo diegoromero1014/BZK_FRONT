@@ -57,9 +57,11 @@ import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
 import { showLoading } from '../loading/actions';
+import {LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL} from '../contextClient/constants';
 import ClientTypology from '../contextClient/ClientTypology';
 import ContextEconomicActivity from '../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../contextClient/listLineOfBusiness/componentListLineBusiness';
+import ComponentListDistributionChannel from '../contextClient/listDistributionChannel/componentListDistributionChannel';
 
 let idButton;
 let errorContact;
@@ -85,7 +87,8 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participation", "experience"];
+    "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
+    "distributionChannel", "participationDC"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -436,7 +439,8 @@ class clientEdit extends Component {
             otherOperationsForeignEnable: 'disabled',
             otherOriginGoodsEnable: 'disabled',
             otherOriginResourceEnable: 'disabled',
-            showFormAddLineOfBusiness: false
+            showFormAddLineOfBusiness: false,
+            showFormAddDistribution: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -460,7 +464,7 @@ class clientEdit extends Component {
         this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
         this._changeSegment = this._changeSegment.bind(this);
         this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
-        this.showFormCreateLineBusiness = this.showFormCreateLineBusiness.bind(this);
+        this.showFormOut = this.showFormOut.bind(this);
     }
 
     _closeWindow() {
@@ -487,8 +491,12 @@ class clientEdit extends Component {
         goBack();
     }
 
-    showFormCreateLineBusiness(value) {
-        this.setState({ showFormAddLineOfBusiness: value });
+    showFormOut(property, value) {
+        if( _.isEqual(LINE_OF_BUSINESS, property) ){
+            this.setState({ showFormAddLineOfBusiness: value });
+        } else if( _.isEqual(DISTRIBUTION_CHANNEL, property) ){
+            this.setState({ showFormAddDistribution: value });
+        }
     }
 
     _closeError() {
@@ -973,15 +981,22 @@ class clientEdit extends Component {
             item.id = item.id.toString().includes('line_') ? null : item.id;
             return item;
         });
+        const listDistribution = clientInformacion.get('listDistribution');
+        _.map(listDistribution, (item) => {
+            item.id = item.id.toString().includes('dist_') ? null : item.id;
+            return item;
+        });
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
                 'context': contextClientField.value,
-                'listLineOfBusiness': listLineOfBusiness
+                'listParticipation': listLineOfBusiness,
+                'listDistribution': listDistribution
             };
         } else {
             contextClient.context = contextClientField.value;
-            contextClient.listParticipation = listLineOfBusiness
+            contextClient.listParticipation = listLineOfBusiness;
+            contextClient.listDistribution = listDistribution;
             return contextClient;
         }
     }
@@ -1016,7 +1031,6 @@ class clientEdit extends Component {
             }
             if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
                 if ( this.state.showFormAddLineOfBusiness ) {
-                    console.log("2");
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, actualmente se encuentra realizando una creación o una edición, para poder guardar la información del cliente, primero debe terminarla o cancelarla.');
                 } else {
                     if (idButton === BUTTON_UPDATE) {
@@ -1028,7 +1042,6 @@ class clientEdit extends Component {
                     }
                 }
             } else {
-                console.log("1");
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
         }
@@ -1139,7 +1152,7 @@ class clientEdit extends Component {
             centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-            participation, experience
+            participationLB, experience, distributionChannel, participationDC
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1360,8 +1373,11 @@ class clientEdit extends Component {
                     </Col>
                     <ContextEconomicActivity contextClientField={contextClientField} />
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                        participation={participation} experience={experience}
-                        showForm={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormCreateLineBusiness} />
+                        participation={participationLB} experience={experience}
+                        showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
+
+                    <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC} 
+                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}/>
                 </Row>
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -2235,8 +2251,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             foreignProducts: infoClient.foreignProducts,
             segment: infoClient.segment,
             subSegment: infoClient.subSegment,
-            customerTypology: infoClient.idCustomerTypology,
-            contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? '' : contextClient.context
+            customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
+            contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context
         }
     };
 }
