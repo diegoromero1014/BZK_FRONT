@@ -968,13 +968,20 @@ class clientEdit extends Component {
         const { fields: { contextClientField }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
+        const listLineOfBusiness = clientInformacion.get('listParticipation');
+        _.map(listLineOfBusiness, (item) => {
+            item.id = item.id.toString().includes('line_') ? null : item.id;
+            return item;
+        });
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
-                'context': contextClientField.value
+                'context': contextClientField.value,
+                'listLineOfBusiness': listLineOfBusiness
             };
         } else {
             contextClient.context = contextClientField.value;
+            contextClient.listParticipation = listLineOfBusiness
             return contextClient;
         }
     }

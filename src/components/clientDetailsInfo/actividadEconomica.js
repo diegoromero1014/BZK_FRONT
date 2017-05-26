@@ -87,7 +87,7 @@ class ActividadEconomica extends Component {
                 </Row>
                 <Row style={{ marginTop: '20px', marginLeft: '1px' }}>
                     <h3 style={{ width: '100%' }}>Canales de distribución y participación en ventas</h3>
-                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.listDistribution ?
+                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedDistributionChannel ?
                         <span>No aplica</span>
                         :
                         <div style={{width: '100%'}}>

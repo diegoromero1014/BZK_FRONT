@@ -16,7 +16,7 @@ class ComponentListLineBusiness extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            idSeleted: null
+            entitySeleted: null
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -43,7 +43,7 @@ class ComponentListLineBusiness extends Component {
 
         if (_.isEqual(countErrors, 0)) {
             var listParticipation = clientInformacion.get('listParticipation');
-            if (_.isNull(this.state.idSeleted)) {
+            if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
                     "id": _.uniqueId('line_'),
                     "lineOfBusiness": contextLineBusiness.value,
@@ -53,17 +53,19 @@ class ComponentListLineBusiness extends Component {
                 listParticipation.push(newValue);
             } else {
                 const updateValue = {
-                    "id": this.state.idSeleted,
+                    "id": this.state.entitySeleted.id,
                     "lineOfBusiness": contextLineBusiness.value,
+                    "idCreatedUser": this.state.entitySeleted.idCreatedUser,
+                    "dateCreate": this.state.entitySeleted.dateCreate,
                     "participation": participation.value,
                     "experience": experience.value
                 };
-                listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.idSeleted));
+                listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listParticipation.push(updateValue);
             }
             changeValueListClient('listParticipation', listParticipation);
             this.clearValues();
-            this.setState({ idSeleted: null });
+            this.setState({ entitySeleted: null });
         } else {
             swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, agregar una línea de negocio debe de ingresar todos los valores.');
         }
@@ -75,7 +77,7 @@ class ComponentListLineBusiness extends Component {
         participation.onChange('');
         experience.onChange('');
         fnShowForm(false);
-        this.setState({ idSeleted: null });
+        this.setState({ entitySeleted: null });
     }
 
     _viewInformationLineBusiness(entity) {
@@ -84,7 +86,7 @@ class ComponentListLineBusiness extends Component {
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
         experience.onChange(entity.experience.toString());
-        this.setState({ idSeleted: entity.id });
+        this.setState({ entitySeleted: entity });
     }
 
     _openConfirmDelete(entity) {
