@@ -68,7 +68,7 @@ class ComponentListLineBusiness extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, agregar una línea de negocio debe de ingresar todos los valores.');
+            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe de ingresar todos los valores.');
         }
     }
 
@@ -159,7 +159,7 @@ class ComponentListLineBusiness extends Component {
                 {showFormLinebusiness &&
                     <Col xs={12} md={4} lg={3}>
                         <div>
-                            <dt><span>Participación (%) (<span style={{ color: "red" }}>*</span>)</span></dt>
+                            <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                             <Input
                                 name="participation"
                                 type="text"

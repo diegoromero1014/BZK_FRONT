@@ -150,7 +150,7 @@ class ComponentListDistributionChannel extends Component {
                 {showFormDistribution &&
                     <Col xs={12} md={4} lg={3}>
                         <div>
-                            <dt><span>Participación (%) (<span style={{ color: "red" }}>*</span>)</span></dt>
+                            <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                             <Input
                                 name="participation"
                                 type="text"
@@ -206,7 +206,7 @@ class ComponentListDistributionChannel extends Component {
                     type="warning"
                     show={this.state.showConfirmDelete}
                     title="Confirmar eliminación"
-                    text="Señor usuario, ¿Está seguro que desea eliminar la línea de negocio?"
+                    text="Señor usuario, ¿Está seguro que desea eliminar el canal de distrbución?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"

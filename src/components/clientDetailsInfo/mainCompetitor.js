@@ -23,7 +23,7 @@ class MainCompetitor extends Component {
         return (
             <div>
                 <Row>
-                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.listMainCompetitor ?
+                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedMainCompetitors ?
                         <span style={{ marginLeft: '12px' }}>No aplica</span>
                         :
                         <div style={{width: '100%'}}>

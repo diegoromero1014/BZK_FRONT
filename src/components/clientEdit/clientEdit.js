@@ -57,11 +57,13 @@ import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
 import { showLoading } from '../loading/actions';
-import {LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL} from '../contextClient/constants';
+import {LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS} from '../contextClient/constants';
 import ClientTypology from '../contextClient/ClientTypology';
 import ContextEconomicActivity from '../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../contextClient/listLineOfBusiness/componentListLineBusiness';
 import ComponentListDistributionChannel from '../contextClient/listDistributionChannel/componentListDistributionChannel';
+import InventorPolicy from '../contextClient/inventoryPolicy';
+import ComponentListMainClients from '../contextClient/listMainClients/componentListMainClients';
 
 let idButton;
 let errorContact;
@@ -88,7 +90,8 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
     "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
-    "distributionChannel", "participationDC"];
+    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient", 
+    "relevantInformationMainClient"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -440,7 +443,8 @@ class clientEdit extends Component {
             otherOriginGoodsEnable: 'disabled',
             otherOriginResourceEnable: 'disabled',
             showFormAddLineOfBusiness: false,
-            showFormAddDistribution: false
+            showFormAddDistribution: false,
+            showFormAddMainClient: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -496,6 +500,8 @@ class clientEdit extends Component {
             this.setState({ showFormAddLineOfBusiness: value });
         } else if( _.isEqual(DISTRIBUTION_CHANNEL, property) ){
             this.setState({ showFormAddDistribution: value });
+        } else if( _.isEqual(MAIN_CLIENTS, property) ){
+            this.setState({ showFormAddMainClient: value });
         }
     }
 
@@ -973,7 +979,7 @@ class clientEdit extends Component {
     }
 
     _createJsonSaveContextClient() {
-        const { fields: { contextClientField }, clientInformacion } = this.props;
+        const { fields: { contextClientField, inventoryPolicy }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -986,17 +992,27 @@ class clientEdit extends Component {
             item.id = item.id.toString().includes('dist_') ? null : item.id;
             return item;
         });
+        const listMainCustomer = clientInformacion.get('listMainCustomer');
+        _.map(listMainCustomer, (item) => {
+            item.id = item.id.toString().includes('mainC_') ? null : item.id;
+            return item;
+        });
+        console.log('listMainCustomer', listMainCustomer);
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
                 'context': contextClientField.value,
+                'inventoryPolicy': inventoryPolicy.value,
                 'listParticipation': listLineOfBusiness,
-                'listDistribution': listDistribution
+                'listDistribution': listDistribution,
+                'listMainCustomer': listMainCustomer
             };
         } else {
             contextClient.context = contextClientField.value;
+            contextClient.inventoryPolicy = inventoryPolicy.value;
             contextClient.listParticipation = listLineOfBusiness;
             contextClient.listDistribution = listDistribution;
+            contextClient.listMainCustomer = listMainCustomer;
             return contextClient;
         }
     }
@@ -1152,7 +1168,8 @@ class clientEdit extends Component {
             centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-            participationLB, experience, distributionChannel, participationDC
+            participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
+            termMainClient, relevantInformationMainClient
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1379,6 +1396,12 @@ class clientEdit extends Component {
                     <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC} 
                         showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}/>
                 </Row>
+
+                <InventorPolicy inventoryPolicy={inventoryPolicy} />
+
+                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC} 
+                    term={termMainClient} relevantInformation={relevantInformationMainClient}
+                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}/>
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -2252,7 +2275,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             segment: infoClient.segment,
             subSegment: infoClient.subSegment,
             customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
-            contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context
+            contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
+            inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy
         }
     };
 }

@@ -24,7 +24,7 @@ class MainSupplier extends Component {
         return (
             <div>
                 <Row>
-                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.listMainSupplier ?
+                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedMainSuppliers ?
                         <span style={{ marginLeft: '12px' }}>No aplica</span>
                         :
                         <div style={{width: '100%'}}>

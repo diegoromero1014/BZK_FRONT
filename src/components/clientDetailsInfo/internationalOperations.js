@@ -65,7 +65,7 @@ class InternationalOperations extends Component {
           _.isEqual(infoClient.operationsForeignCurrency, YES) &&
           <Row style={{ marginTop: '20px', marginLeft: '2px' }}>
             <h3 style={{ width: '100%' }}>Líneas de negocio y participación en ventas</h3>
-            {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.listMainCompetitor ?
+            {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedIntOperations ?
               <span>No aplica</span>
               :
               <div style={{ width: '100%' }}>

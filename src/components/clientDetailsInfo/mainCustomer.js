@@ -24,7 +24,7 @@ class MainCustomer extends Component {
         return (
             <div>
                 <Row>
-                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.listMainCustomer ?
+                    {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedMainClients ?
                         <span style={{marginLeft: '12px'}}>No aplica</span>
                         :
                         <div style={{width: '100%'}}>
