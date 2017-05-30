@@ -34,6 +34,7 @@ import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrTy
 import AEC from './components/myPendings/AEC/componentAEC';
 import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
 import Assigned from './components/myPendings/assigned/componentAssigned';
+import StudyCredit from './components/clients/studyCredit/componentStudyCredit';
 
 class App extends Component {
     render() {
@@ -55,6 +56,7 @@ export default (
                 <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
+                <Route path="creditStudy" component={StudyCredit}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="previsita" component={Previsita}></Route>

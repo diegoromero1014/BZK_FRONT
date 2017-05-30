@@ -83,6 +83,7 @@ export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
 export const FINALIZAR = "Finalizar";
 export const VINCULAR = "Vincular";
+export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";

@@ -115,8 +115,8 @@ class ComponentListLineBusiness extends Component {
                     onClick={() => this._viewInformationLineBusiness(entity)} />
             </td>
             <td>{entity.lineOfBusiness}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{entity.experience}</td>
+            <td>{entity.participation} %</td>
+            <td>{entity.experience}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />

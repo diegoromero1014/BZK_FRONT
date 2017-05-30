@@ -11,6 +11,7 @@ import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_CLIENTS } from '../constants';
 import _ from 'lodash';
+import { ORIGIN_STUDY_CREDIT } from '../constants';
 
 class ComponentListMainClients extends Component {
     constructor(props) {
@@ -123,9 +124,9 @@ class ComponentListMainClients extends Component {
                     onClick={() => this._viewInformationClient(entity)} />
             </td>
             <td>{entity.nameClient}</td>
-            <td style={{ textAlign: 'center' }}>{entity.term}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{shorterStringValue(entity.relevantInformation, 80)}</td>
+            <td>{entity.term}</td>
+            <td>{entity.participation} %</td>
+            <td>{shorterStringValue(entity.relevantInformation, 80)}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar cliente principal" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -134,7 +135,8 @@ class ComponentListMainClients extends Component {
     }
 
     render() {
-        const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm, clientInformacion } = this.props;
+        const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
+            clientInformacion, origin, valueCheckSectionMainClients, functionChangeCheckSectionMainClients } = this.props;
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         return (
             <div>
@@ -143,6 +145,11 @@ class ComponentListMainClients extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            {origin === ORIGIN_STUDY_CREDIT &&
+                                <input type="checkbox" id="checkSectionMainClients" style={{ marginRight: "10px" }}
+                                    checked={valueCheckSectionMainClients}
+                                    onClick={functionChangeCheckSectionMainClients} />
+                            }
                             <i className="users icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Principales clientes</span>
                         </div>
@@ -289,7 +296,10 @@ ComponentListMainClients.PropTypes = {
     term: PropTypes.object.isRequired,
     relevantInformation: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormMainClients: PropTypes.bool.isRequired
+    showFormMainClients: PropTypes.bool.isRequired,
+    valueCheckSectionMainClients: PropTypes.bool.isRequired,
+    origin: PropTypes.string.isRequired,
+    functionChangeCheckSectionMainClients: PropTypes.func
 }
 
 

@@ -123,9 +123,9 @@ class ComponentListMainSupplier extends Component {
                     onClick={() => this._viewInformationSupplier(entity)} />
             </td>
             <td>{entity.nameSupplier}</td>
-            <td style={{ textAlign: 'center' }}>{entity.term}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{shorterStringValue(entity.relevantInformation, 80)}</td>
+            <td>{entity.term}</td>
+            <td>{entity.participation} %</td>
+            <td>{shorterStringValue(entity.relevantInformation, 80)}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar proveedor principal" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
