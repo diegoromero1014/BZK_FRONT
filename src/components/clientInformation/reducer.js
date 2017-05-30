@@ -12,7 +12,9 @@ const initialState = Immutable.Map({
     economicGroup: null,
     listParticipation: [],
     listDistribution: [],
-    listMainCustomer: []
+    listMainCustomer: [],
+    listMainSupplier: [],
+    listMainCompetitor: []
 });
 
 export default (state = initialState, action) => {
@@ -24,6 +26,8 @@ export default (state = initialState, action) => {
             const listParticipation = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listParticipation;
             const listDistribution = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listDistribution;
             const listMainCustomer = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listMainCustomer;
+            const listMainSupplier = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listMainSupplier;
+            const listMainCompetitor = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listMainCompetitor;
             return state.withMutations(map => {
                 map
                     .set('status', status)
@@ -31,7 +35,9 @@ export default (state = initialState, action) => {
                     .set('responseClientInfo', dataClient)
                     .set('listParticipation', listParticipation)
                     .set('listDistribution', listDistribution)
-                    .set('listMainCustomer', listMainCustomer);
+                    .set('listMainCustomer', listMainCustomer)
+                    .set('listMainSupplier', listMainSupplier)
+                    .set('listMainCompetitor', listMainCompetitor);
             });
         case CLAER_CLIENT_INFO:
             return state.set("responseClientInfo", {});

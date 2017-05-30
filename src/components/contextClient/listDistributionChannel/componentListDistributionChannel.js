@@ -127,7 +127,7 @@ class ComponentListDistributionChannel extends Component {
                 </Col>
                 <Col xs={6} md={2} lg={1}>
                     <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
-                        onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                        onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                         <i className="plus white icon"></i>
                     </button>
                 </Col>
@@ -185,7 +185,7 @@ class ComponentListDistributionChannel extends Component {
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>Línea de negocio</th>
+                                        <th>Canal de distrbucción</th>
                                         <th>Participación</th>
                                         <th></th>
                                     </tr>

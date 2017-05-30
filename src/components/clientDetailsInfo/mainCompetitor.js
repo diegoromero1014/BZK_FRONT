@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Row } from 'react-flexbox-grid';
+import { Col, Row } from 'react-flexbox-grid';
 import { shorterStringValue } from '../../actionsGlobal';
 import _ from 'lodash';
 
@@ -27,7 +27,7 @@ class MainCompetitor extends Component {
                         <span style={{ marginLeft: '12px' }}>No aplica</span>
                         :
                         <div style={{width: '100%'}}>
-                            {!_.isNull(contextClient) && !_.isUndefined(contextClient) && _.size(contextClient.listMainCompetitor) > 0 &&
+                            {!_.isNull(contextClient) && !_.isUndefined(contextClient) && _.size(contextClient.listMainCompetitor) > 0 ?
                                 <table className='table table-striped' style={{ width: "100%" }}>
                                     <tr>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Nombre del competidor</span></td>
@@ -38,6 +38,12 @@ class MainCompetitor extends Component {
                                         {contextClient.listMainCompetitor.map(this.mapValuesMainCompetitor)}
                                     </tbody>
                                 </table>
+                                :
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                        <span className="form-item">No se han adicionado principales competidores</span>
+                                    </div>
+                                </Col>
                             }
                         </div>
                     }

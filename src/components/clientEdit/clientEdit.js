@@ -52,18 +52,21 @@ import { updateClient } from '../clientDetailsInfo/actions';
 import BottonContactAdmin from '../clientDetailsInfo/bottonContactAdmin';
 import BottonShareholderAdmin from '../clientDetailsInfo/bottonShareholderAdmin';
 import ModalErrorsUpdateClient from './modalErrorsUpdateClient';
-import {swtShowMessage} from '../sweetAlertMessages/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
 import { showLoading } from '../loading/actions';
-import {LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS} from '../contextClient/constants';
+import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_SUPPLIER, MAIN_COMPETITOR } from '../contextClient/constants';
 import ClientTypology from '../contextClient/ClientTypology';
 import ContextEconomicActivity from '../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../contextClient/listLineOfBusiness/componentListLineBusiness';
 import ComponentListDistributionChannel from '../contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '../contextClient/inventoryPolicy';
 import ComponentListMainClients from '../contextClient/listMainClients/componentListMainClients';
+import ComponentListMainSupplier from '../contextClient/listMainSupplier/componentListMainSupplier';
+import ComponentListMainCompetitor from '../contextClient/listMainCompetitor/componentListMainCompetitor';
+
 
 let idButton;
 let errorContact;
@@ -90,8 +93,9 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
     "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
-    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient", 
-    "relevantInformationMainClient"];
+    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
+    "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier", 
+    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -444,7 +448,9 @@ class clientEdit extends Component {
             otherOriginResourceEnable: 'disabled',
             showFormAddLineOfBusiness: false,
             showFormAddDistribution: false,
-            showFormAddMainClient: false
+            showFormAddMainClient: false,
+            showFormAddMainSupplier: false,
+            showFormAddMainCompetitor: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -496,12 +502,16 @@ class clientEdit extends Component {
     }
 
     showFormOut(property, value) {
-        if( _.isEqual(LINE_OF_BUSINESS, property) ){
+        if (_.isEqual(LINE_OF_BUSINESS, property)) {
             this.setState({ showFormAddLineOfBusiness: value });
-        } else if( _.isEqual(DISTRIBUTION_CHANNEL, property) ){
+        } else if (_.isEqual(DISTRIBUTION_CHANNEL, property)) {
             this.setState({ showFormAddDistribution: value });
-        } else if( _.isEqual(MAIN_CLIENTS, property) ){
+        } else if (_.isEqual(MAIN_CLIENTS, property)) {
             this.setState({ showFormAddMainClient: value });
+        } else if (_.isEqual(MAIN_SUPPLIER, property)) {
+            this.setState({ showFormAddMainSupplier: value });
+        } else if (_.isEqual(MAIN_COMPETITOR, property)) {
+            this.setState({ showFormAddMainCompetitor: value });
         }
     }
 
@@ -997,7 +1007,16 @@ class clientEdit extends Component {
             item.id = item.id.toString().includes('mainC_') ? null : item.id;
             return item;
         });
-        console.log('listMainCustomer', listMainCustomer);
+        const listMainSupplier = clientInformacion.get('listMainSupplier');
+        _.map(listMainSupplier, (item) => {
+            item.id = item.id.toString().includes('mainS_') ? null : item.id;
+            return item;
+        });
+        const listMainCompetitor = clientInformacion.get('listMainCompetitor');
+        _.map(listMainCompetitor, (item) => {
+            item.id = item.id.toString().includes('mainCom_') ? null : item.id;
+            return item;
+        });
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
@@ -1005,7 +1024,9 @@ class clientEdit extends Component {
                 'inventoryPolicy': inventoryPolicy.value,
                 'listParticipation': listLineOfBusiness,
                 'listDistribution': listDistribution,
-                'listMainCustomer': listMainCustomer
+                'listMainCustomer': listMainCustomer,
+                'listMainSupplier': listMainSupplier,
+                'listMainCompetitor': listMainCompetitor
             };
         } else {
             contextClient.context = contextClientField.value;
@@ -1013,6 +1034,8 @@ class clientEdit extends Component {
             contextClient.listParticipation = listLineOfBusiness;
             contextClient.listDistribution = listDistribution;
             contextClient.listMainCustomer = listMainCustomer;
+            contextClient.listMainSupplier = listMainSupplier;
+            contextClient.listMainCompetitor = listMainCompetitor;
             return contextClient;
         }
     }
@@ -1046,7 +1069,8 @@ class clientEdit extends Component {
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
             if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
-                if ( this.state.showFormAddLineOfBusiness ) {
+                if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
+                    this.state.showFormAddMainSupplier) {
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, actualmente se encuentra realizando una creación o una edición, para poder guardar la información del cliente, primero debe terminarla o cancelarla.');
                 } else {
                     if (idButton === BUTTON_UPDATE) {
@@ -1169,7 +1193,8 @@ class clientEdit extends Component {
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
             participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-            termMainClient, relevantInformationMainClient
+            termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
+            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1393,15 +1418,24 @@ class clientEdit extends Component {
                         participation={participationLB} experience={experience}
                         showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
 
-                    <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC} 
-                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}/>
+                    <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
+                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut} />
                 </Row>
 
                 <InventorPolicy inventoryPolicy={inventoryPolicy} />
 
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC} 
+                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                     term={termMainClient} relevantInformation={relevantInformationMainClient}
-                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}/>
+                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut} />
+
+                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                    term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                    showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut} />
+
+                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor} 
+                    fnShowForm={this.showFormOut} />
+
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>

@@ -136,7 +136,7 @@ class ComponentListLineBusiness extends Component {
                 </Col>
                 <Col xs={6} md={2} lg={1}>
                     <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
-                        onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                        onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                         <i className="plus white icon"></i>
                     </button>
                 </Col>

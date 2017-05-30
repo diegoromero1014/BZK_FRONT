@@ -9,10 +9,10 @@ import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { MAIN_CLIENTS } from '../constants';
+import { MAIN_SUPPLIER } from '../constants';
 import _ from 'lodash';
 
-class ComponentListMainClients extends Component {
+class ComponentListMainSupplier extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,18 +22,18 @@ class ComponentListMainClients extends Component {
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
-        this._mapValuesMainClients = this._mapValuesMainClients.bind(this);
-        this._viewInformationClient = this._viewInformationClient.bind(this);
+        this._mapValuesMainSupplier = this._mapValuesMainSupplier.bind(this);
+        this._viewInformationSupplier = this._viewInformationSupplier.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
-        this._deleteMainClients = this._deleteMainClients.bind(this);
+        this._deleteMainSupplier = this._deleteMainSupplier.bind(this);
     }
 
     validateInfo(e) {
         e.preventDefault();
-        const { nameClient, participation, term, relevantInformation, fnShowForm, changeValueListClient,
+        const { nameSupplier, participation, term, relevantInformation, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(nameClient.value) || _.isNull(nameClient.value) || _.isEmpty(nameClient.value)) {
+        if (_.isUndefined(nameSupplier.value) || _.isNull(nameSupplier.value) || _.isEmpty(nameSupplier.value)) {
             countErrors++;
         }
         if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
@@ -47,51 +47,51 @@ class ComponentListMainClients extends Component {
         }
 
         if (_.isEqual(countErrors, 0)) {
-            var listMainCustomer = clientInformacion.get('listMainCustomer');
+            var listMainSupplier = clientInformacion.get('listMainSupplier');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
-                    "id": _.uniqueId('mainC_'),
-                    "nameClient": nameClient.value,
+                    "id": _.uniqueId('mainS_'),
+                    "nameSupplier": nameSupplier.value,
                     "participation": participation.value,
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
-                listMainCustomer.push(newValue);
+                listMainSupplier.push(newValue);
             } else {
                 const updateValue = {
                     "id": this.state.entitySeleted.id,
-                    "nameClient": nameClient.value,
+                    "nameSupplier": nameSupplier.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
                     "participation": participation.value,
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
-                listMainCustomer = _.remove(listMainCustomer, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
-                listMainCustomer.push(updateValue);
+                listMainSupplier = _.remove(listMainSupplier, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
+                listMainSupplier.push(updateValue);
             }
-            changeValueListClient('listMainCustomer', listMainCustomer);
+            changeValueListClient('listMainSupplier', listMainSupplier);
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            swtShowMessage('error', 'Principales clientes', 'Señor usuario, para agregar un cliente principal debe de ingresar todos los valores.');
+            swtShowMessage('error', 'Principales proveedores', 'Señor usuario, para agregar un proveedor principal debe de ingresar todos los valores.');
         }
     }
 
     clearValues() {
-        const { nameClient, participation, term, relevantInformation, fnShowForm } = this.props;
-        nameClient.onChange('');
+        const { nameSupplier, participation, term, relevantInformation, fnShowForm } = this.props;
+        nameSupplier.onChange('');
         participation.onChange('');
         term.onChange('');
         relevantInformation.onChange('');
-        fnShowForm(MAIN_CLIENTS, false);
+        fnShowForm(MAIN_SUPPLIER, false);
         this.setState({ entitySeleted: null });
     }
 
-    _viewInformationClient(entity) {
-        const { nameClient, participation, term, relevantInformation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
-        fnShowForm(MAIN_CLIENTS, true);
-        nameClient.onChange(entity.nameClient);
+    _viewInformationSupplier(entity) {
+        const { nameSupplier, participation, term, relevantInformation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        fnShowForm(MAIN_SUPPLIER, true);
+        nameSupplier.onChange(entity.nameSupplier);
         participation.onChange(entity.participation.toString());
         term.onChange(entity.term.toString());
         relevantInformation.onChange(entity.relevantInformation.toString());
@@ -105,37 +105,37 @@ class ComponentListMainClients extends Component {
         });
     }
 
-    _deleteMainClients() {
+    _deleteMainSupplier() {
         const { changeValueListClient, clientInformacion } = this.props;
-        const listMainCustomer = clientInformacion.get('listMainCustomer');
-        const newListPart = _.remove(listMainCustomer, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
-        changeValueListClient('listMainCustomer', newListPart);
+        const listMainSupplier = clientInformacion.get('listMainSupplier');
+        const newListPart = _.remove(listMainSupplier, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
+        changeValueListClient('listMainSupplier', newListPart);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
         });
     }
 
-    _mapValuesMainClients(entity, idx) {
+    _mapValuesMainSupplier(entity, idx) {
         return <tr key={idx}>
             <td className="collapsing">
-                <i className="zoom icon" title="Editar cliente principal" style={{ cursor: "pointer" }}
-                    onClick={() => this._viewInformationClient(entity)} />
+                <i className="zoom icon" title="Editar proveedor principal" style={{ cursor: "pointer" }}
+                    onClick={() => this._viewInformationSupplier(entity)} />
             </td>
-            <td>{entity.nameClient}</td>
+            <td>{entity.nameSupplier}</td>
             <td style={{ textAlign: 'center' }}>{entity.term}</td>
             <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
             <td style={{ textAlign: 'center' }}>{shorterStringValue(entity.relevantInformation, 80)}</td>
             <td className="collapsing">
-                <i className="trash icon" title="Eliminar cliente principal" style={{ cursor: "pointer" }}
+                <i className="trash icon" title="Eliminar proveedor principal" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
             </td>
         </tr>
     }
 
     render() {
-        const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm, clientInformacion } = this.props;
-        const listMainCustomer = clientInformacion.get('listMainCustomer');
+        const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm, clientInformacion } = this.props;
+        const listMainSupplier = clientInformacion.get('listMainSupplier');
         return (
             <div>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -143,35 +143,35 @@ class ComponentListMainClients extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="users icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Principales clientes</span>
+                            <i className="shipping icon" style={{ fontSize: "25px" }} />
+                            <span className="title-middle"> Principales proveedores</span>
                         </div>
                     </Col>
                 </Row>
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
-                        <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
-                            onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                        <button className="btn" disabled={showFormMainSupplier} type="button" title="Agregar proveedor principal"
+                            onClick={() => fnShowForm(MAIN_SUPPLIER, true)} style={showFormMainSupplier ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                             <i className="plus white icon"></i>
                         </button>
                     </Col>
-                    {showFormMainClients &&
+                    {showFormMainSupplier &&
                         <Col xs={12} md={4} lg={3}>
                             <div>
-                                <dt><span>Nombre del cliente (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt><span>Nombre del proveedor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <Input
-                                    name="nameClient"
+                                    name="nameSupplier"
                                     type="text"
                                     max="100"
-                                    placeholder="Nombre del cliente"
-                                    {...nameClient}
-                                    error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
+                                    placeholder="Nombre del proveedor"
+                                    {...nameSupplier}
+                                    error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : null}
                                     touched={true}
                                 />
                             </div>
                         </Col>
                     }
-                    {showFormMainClients &&
+                    {showFormMainSupplier &&
                         <Col xs={12} md={4} lg={3}>
                             <div>
                                 <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -190,7 +190,7 @@ class ComponentListMainClients extends Component {
                             </div>
                         </Col>
                     }
-                    {showFormMainClients &&
+                    {showFormMainSupplier &&
                         <Col xs={12} md={4} lg={3}>
                             <div>
                                 <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -209,7 +209,7 @@ class ComponentListMainClients extends Component {
                             </div>
                         </Col>
                     }
-                    {showFormMainClients &&
+                    {showFormMainSupplier &&
                         <Col xs={4} md={3} lg={3}>
                             <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                                 style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
@@ -221,7 +221,7 @@ class ComponentListMainClients extends Component {
                             </button>
                         </Col>
                     }
-                    {showFormMainClients &&
+                    {showFormMainSupplier &&
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                             <div>
                                 <dt><span>Información relevante de los principales clientes (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -241,13 +241,13 @@ class ComponentListMainClients extends Component {
                         </Col>
                     }
                     {
-                        _.size(listMainCustomer) > 0 ?
+                        _.size(listMainSupplier) > 0 ?
                             <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
                                 <table className="ui striped table">
                                     <thead>
                                         <tr>
                                             <th></th>
-                                            <th>Nombre del cliente</th>
+                                            <th>Nombre del proveedor</th>
                                             <th>Plazo (días)</th>
                                             <th>Participación</th>
                                             <th>Información relevante</th>
@@ -255,14 +255,14 @@ class ComponentListMainClients extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {listMainCustomer.map(this._mapValuesMainClients)}
+                                        {listMainSupplier.map(this._mapValuesMainSupplier)}
                                     </tbody>
                                 </table>
                             </Col>
                             :
                             <Col xs={12} md={12} lg={12}>
                                 <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                    <span className="form-item">No se han adicionado principales clientes</span>
+                                    <span className="form-item">No se han adicionado principales proveedores</span>
                                 </div>
                             </Col>
                     }
@@ -270,7 +270,7 @@ class ComponentListMainClients extends Component {
                         type="warning"
                         show={this.state.showConfirmDelete}
                         title="Confirmar eliminación"
-                        text="Señor usuario, ¿Está seguro que desea eliminar el cliente principal?"
+                        text="Señor usuario, ¿Está seguro que desea eliminar el proveedor principal?"
                         confirmButtonColor='#DD6B55'
                         confirmButtonText='Sí, estoy seguro!'
                         cancelButtonText="Cancelar"
@@ -283,13 +283,13 @@ class ComponentListMainClients extends Component {
     }
 }
 
-ComponentListMainClients.PropTypes = {
-    nameClient: PropTypes.object.isRequired,
+ComponentListMainSupplier.PropTypes = {
+    nameSupplier: PropTypes.object.isRequired,
     participation: PropTypes.object.isRequired,
     term: PropTypes.object.isRequired,
     relevantInformation: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormMainClients: PropTypes.bool.isRequired
+    showFormMainSupplier: PropTypes.bool.isRequired
 }
 
 
@@ -307,4 +307,4 @@ function mapStateToProps({ clientInformacion }, ownerProps) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentListMainClients);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentListMainSupplier);

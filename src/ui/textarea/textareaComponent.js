@@ -72,7 +72,8 @@ TextareaComponent.PropTypes = {
     type: PropTypes.string.isRequired,
     min: PropTypes.string,
     defaultValue: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    error: PropTypes.string
 };
 
 function mapDispatchToProps(dispatch){
