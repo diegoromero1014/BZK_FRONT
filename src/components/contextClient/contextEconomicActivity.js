@@ -9,11 +9,13 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data } = this.props;
+        const { contextClientField, data, isCheckbox } = this.props;
         return (
             <Col xs={12} md={12} lg={12}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
-                    <dt><span>Contexto</span></dt>
+                    <dt>
+                        <span>Contexto</span>
+                    </dt>
                     <Textarea
                         name="contextClientField"
                         validateEnter={true}
@@ -21,7 +23,7 @@ class ContextEconomicActivity extends Component {
                         style={{ width: '100%' }}
                         max="5000"
                         rows={7}
-                        placeholder="Ingrese el contexto de cliente"
+                        placeholder="Ingrese el contexto del cliente"
                         {...contextClientField}
                         touched={true}
                     />
@@ -34,6 +36,5 @@ class ContextEconomicActivity extends Component {
 ContextEconomicActivity.PropTypes = {
     contextClientField: PropTypes.object.isRequired
 }
-
 
 export default ContextEconomicActivity;

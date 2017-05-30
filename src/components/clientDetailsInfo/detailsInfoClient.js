@@ -18,7 +18,7 @@ import { bindActionCreators } from 'redux';
 import Products from './product';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { EDITAR, MODULE_CLIENTS, VINCULAR } from '../../constantsGlobal';
+import { EDITAR, MODULE_CLIENTS, VINCULAR, ESTUDIO_DE_CREDITO } from '../../constantsGlobal';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { MENU_CLOSED } from '../navBar/constants';
@@ -34,6 +34,7 @@ class DetailsInfoClient extends Component {
         this._clickButtonClientEdit = this._clickButtonClientEdit.bind(this);
         this._clickButtonClientUpdate = this._clickButtonClientUpdate.bind(this);
         this._changeValueAccordion = this._changeValueAccordion.bind(this);
+        this._clickButtonStudyCredit = this._clickButtonStudyCredit.bind(this);
     }
 
     componentWillMount() {
@@ -92,6 +93,10 @@ class DetailsInfoClient extends Component {
         });
     }
 
+    _clickButtonStudyCredit() {
+        redirectUrl("/dashboard/creditStudy");
+    }
+
     _changeValueAccordion(tabSeleted) {
         const { changeAccordionValue, tabReducer } = this.props;
         var accordion = tabReducer.get('accordion');
@@ -142,6 +147,7 @@ class DetailsInfoClient extends Component {
         };
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
+        const allowCreditStudy = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ESTUDIO_DE_CREDITO), false);
 
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
         const showFooterButtons = allowAccessAndEdit || allowLinked;
@@ -278,6 +284,11 @@ class DetailsInfoClient extends Component {
                                 }
                                 {allowLinked &&
                                     <ButtonLinkClient infoClient={infoClient} />
+                                }
+                                {allowCreditStudy &&
+                                    <Col style={paddingButtons} onClick={this._clickButtonStudyCredit}>
+                                        <button className="btn"><span >Estudio de crédito</span></button>
+                                    </Col>
                                 }
                             </Row>
                         </div>
