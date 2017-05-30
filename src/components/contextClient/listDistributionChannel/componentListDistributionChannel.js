@@ -8,7 +8,7 @@ import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import {DISTRIBUTION_CHANNEL} from '../constants';
+import { DISTRIBUTION_CHANNEL } from '../constants';
 import _ from 'lodash';
 
 class ComponentListDistributionChannel extends Component {
@@ -119,101 +119,105 @@ class ComponentListDistributionChannel extends Component {
         const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
-            <Row style={{ marginLeft: '20px', marginTop: '40px', width: '100%' }}>
-                <Col xs={12} md={10} lg={11}>
-                    <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
-                        <span className="section-title">Canales de distribución y participación en ventas</span>
-                    </dl>
-                </Col>
-                <Col xs={6} md={2} lg={1}>
-                    <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
-                        onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                        <i className="plus white icon"></i>
-                    </button>
-                </Col>
-                {showFormDistribution &&
-                    <Col xs={12} md={4} lg={3}>
-                        <div>
-                            <dt><span>Canal de distribución (<span style={{ color: "red" }}>*</span>)</span></dt>
-                            <Input
-                                name="distributionChannel"
-                                type="text"
-                                max="100"
-                                placeholder="Canal de distribución"
-                                {...distributionChannel}
-                                error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
-                                touched={true}
-                            />
-                        </div>
+            <div style={{width: '100%'}}>
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px", width: '100%' }}>
+                            <span className="section-title">Canales de distribución y participación en ventas</span>
+                        </dl>
                     </Col>
-                }
-                {showFormDistribution &&
-                    <Col xs={12} md={4} lg={3}>
-                        <div>
-                            <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
-                            <Input
-                                name="participation"
-                                type="text"
-                                min={0}
-                                max="2"
-                                placeholder="Participación"
-                                {...participation}
-                                value={participation.value}
-                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
-                                error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
-                }
-                {showFormDistribution &&
-                    <Col xs={4} md={3} lg={3}>
-                        <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
-                            style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                </Row>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
+                    <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
+                        <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
+                            onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                             <i className="plus white icon"></i>
                         </button>
-                        <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
-                            style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                            <i className="remove white icon"></i>
-                        </button>
                     </Col>
-                }
-                {
-                    _.size(listDistribution) > 0 ?
-                        <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
-                            <table className="ui striped table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Canal de distrbucción</th>
-                                        <th>Participación</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {listDistribution.map(this._mapValuesDistribution)}
-                                </tbody>
-                            </table>
-                        </Col>
-                        :
-                        <Col xs={12} md={12} lg={12}>
-                            <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                <span className="form-item">No se han adicionado canales de distribución</span>
+                    {showFormDistribution &&
+                        <Col xs={12} md={4} lg={3}>
+                            <div>
+                                <dt><span>Canal de distribución (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <Input
+                                    name="distributionChannel"
+                                    type="text"
+                                    max="100"
+                                    placeholder="Canal de distribución"
+                                    {...distributionChannel}
+                                    error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
+                                    touched={true}
+                                />
                             </div>
                         </Col>
-                }
-                <SweetAlert
-                    type="warning"
-                    show={this.state.showConfirmDelete}
-                    title="Confirmar eliminación"
-                    text="Señor usuario, ¿Está seguro que desea eliminar el canal de distrbución?"
-                    confirmButtonColor='#DD6B55'
-                    confirmButtonText='Sí, estoy seguro!'
-                    cancelButtonText="Cancelar"
-                    showCancelButton={true}
-                    onCancel={() => this.setState({ showConfirmDelete: false })}
-                    onConfirm={this._deleteDistribution} />
-            </Row >
+                    }
+                    {showFormDistribution &&
+                        <Col xs={12} md={4} lg={3}>
+                            <div>
+                                <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <Input
+                                    name="participation"
+                                    type="text"
+                                    min={0}
+                                    max="2"
+                                    placeholder="Participación"
+                                    {...participation}
+                                    value={participation.value}
+                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                    error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                    touched={true}
+                                />
+                            </div>
+                        </Col>
+                    }
+                    {showFormDistribution &&
+                        <Col xs={4} md={3} lg={3}>
+                            <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                                <i className="plus white icon"></i>
+                            </button>
+                            <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
+                                <i className="remove white icon"></i>
+                            </button>
+                        </Col>
+                    }
+                    {
+                        _.size(listDistribution) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Canal de distrbucción</th>
+                                            <th>Participación</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listDistribution.map(this._mapValuesDistribution)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado canales de distribución</span>
+                                </div>
+                            </Col>
+                    }
+                    <SweetAlert
+                        type="warning"
+                        show={this.state.showConfirmDelete}
+                        title="Confirmar eliminación"
+                        text="Señor usuario, ¿Está seguro que desea eliminar el canal de distrbución?"
+                        confirmButtonColor='#DD6B55'
+                        confirmButtonText='Sí, estoy seguro!'
+                        cancelButtonText="Cancelar"
+                        showCancelButton={true}
+                        onCancel={() => this.setState({ showConfirmDelete: false })}
+                        onConfirm={this._deleteDistribution} />
+                </Row >
+            </div>
         );
     }
 }

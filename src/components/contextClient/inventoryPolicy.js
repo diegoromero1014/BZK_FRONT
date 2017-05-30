@@ -29,7 +29,7 @@ class InventorPolicy extends Component {
                             style={{ width: '100%' }}
                             max="1200"
                             rows={7}
-                            placeholder="Ingrese las políticas del inventario"
+                            placeholder="Ingrese las políticas de inventario"
                             {...inventoryPolicy}
                             touched={true}
                         />
