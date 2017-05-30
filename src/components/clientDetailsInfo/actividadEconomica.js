@@ -100,7 +100,7 @@ class ActividadEconomica extends Component {
                             {!_.isNull(contextClient) && !_.isUndefined(contextClient) && _.size(contextClient.listDistribution) > 0 ?
                                 <table className='table table-striped' style={{ width: "100%" }}>
                                     <tr>
-                                        <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Canal de distrbucción</span></td>
+                                        <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Canal de distribución</span></td>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Participación</span></td>
                                     </tr>
                                     <tbody>
@@ -110,7 +110,7 @@ class ActividadEconomica extends Component {
                                 :
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado canales de distrbución</span>
+                                        <span className="form-item">No se han adicionado canales de distribución</span>
                                     </div>
                                 </Col>
                             }
