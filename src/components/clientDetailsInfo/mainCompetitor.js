@@ -12,7 +12,7 @@ class MainCompetitor extends Component {
     mapValuesMainCompetitor(entity, idx) {
         return <tr key={idx}>
             <td>{entity.nameCompetitor}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
+            <td>{entity.participation} %</td>
             <td>{shorterStringValue(entity.observations, 130)}</td>
         </tr>
     }

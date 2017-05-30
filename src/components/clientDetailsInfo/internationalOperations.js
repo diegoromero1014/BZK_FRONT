@@ -16,7 +16,7 @@ class InternationalOperations extends Component {
     return <tr key={idx}>
       <td>{_.isEqual(entity.typeOperation, IMPORT) ? "Importación" : "Exportación"}</td>
       <td>{entity.nameCountry}</td>
-      <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
+      <td>{entity.participation} %</td>
       <td>{entity.customerCoverage ? "Si" : "No"}</td>
       <td>{shorterStringValue(entity.descriptionCoverage, 80)}</td>
     </tr>

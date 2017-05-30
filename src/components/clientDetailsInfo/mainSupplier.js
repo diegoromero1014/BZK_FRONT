@@ -12,8 +12,8 @@ class MainSupplier extends Component {
     mapValuesMainSupplier(entity, idx) {
         return <tr key={idx}>
             <td>{entity.nameSupplier}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{entity.term}</td>
+            <td>{entity.participation} %</td>
+            <td>{entity.term}</td>
             <td>{shorterStringValue(entity.relevantInformation, 85)}</td>
         </tr>
     }

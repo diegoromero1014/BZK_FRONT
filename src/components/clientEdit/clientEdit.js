@@ -57,7 +57,7 @@ import numeral from 'numeral';
 import _ from 'lodash';
 import $ from 'jquery';
 import { showLoading } from '../loading/actions';
-import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_SUPPLIER, MAIN_COMPETITOR } from '../contextClient/constants';
+import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_SUPPLIER, MAIN_COMPETITOR, INT_OPERATIONS } from '../contextClient/constants';
 import ClientTypology from '../contextClient/ClientTypology';
 import ContextEconomicActivity from '../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../contextClient/listLineOfBusiness/componentListLineBusiness';
@@ -66,6 +66,7 @@ import InventorPolicy from '../contextClient/inventoryPolicy';
 import ComponentListMainClients from '../contextClient/listMainClients/componentListMainClients';
 import ComponentListMainSupplier from '../contextClient/listMainSupplier/componentListMainSupplier';
 import ComponentListMainCompetitor from '../contextClient/listMainCompetitor/componentListMainCompetitor';
+import ComponentListIntOperations from '../contextClient/listInternationalOperations/componentListIntOperations';
 
 
 let idButton;
@@ -94,8 +95,9 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
     "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
     "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
-    "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier", 
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor"];
+    "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
+    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe", 
+    "idCountryIntOpe", "customerCoverageIntOpe", "descriptionCoverageIntOpe"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -450,7 +452,8 @@ class clientEdit extends Component {
             showFormAddDistribution: false,
             showFormAddMainClient: false,
             showFormAddMainSupplier: false,
-            showFormAddMainCompetitor: false
+            showFormAddMainCompetitor: false,
+            showFormAddIntOperatrions: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -512,6 +515,8 @@ class clientEdit extends Component {
             this.setState({ showFormAddMainSupplier: value });
         } else if (_.isEqual(MAIN_COMPETITOR, property)) {
             this.setState({ showFormAddMainCompetitor: value });
+        } else if (_.isEqual(INT_OPERATIONS, property)) {
+            this.setState({ showFormAddIntOperatrions: value });
         }
     }
 
@@ -1017,6 +1022,11 @@ class clientEdit extends Component {
             item.id = item.id.toString().includes('mainCom_') ? null : item.id;
             return item;
         });
+        const listOperations = clientInformacion.get('listOperations');
+        _.map(listOperations, (item) => {
+            item.id = item.id.toString().includes('mainIntO_') ? null : item.id;
+            return item;
+        });
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
@@ -1026,7 +1036,8 @@ class clientEdit extends Component {
                 'listDistribution': listDistribution,
                 'listMainCustomer': listMainCustomer,
                 'listMainSupplier': listMainSupplier,
-                'listMainCompetitor': listMainCompetitor
+                'listMainCompetitor': listMainCompetitor,
+                'listOperations': listOperations
             };
         } else {
             contextClient.context = contextClientField.value;
@@ -1036,6 +1047,7 @@ class clientEdit extends Component {
             contextClient.listMainCustomer = listMainCustomer;
             contextClient.listMainSupplier = listMainSupplier;
             contextClient.listMainCompetitor = listMainCompetitor;
+            contextClient.listOperations = listOperations;
             return contextClient;
         }
     }
@@ -1070,7 +1082,7 @@ class clientEdit extends Component {
             }
             if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
-                    this.state.showFormAddMainSupplier) {
+                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperatrions) {
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, actualmente se encuentra realizando una creación o una edición, para poder guardar la información del cliente, primero debe terminarla o cancelarla.');
                 } else {
                     if (idButton === BUTTON_UPDATE) {
@@ -1194,7 +1206,8 @@ class clientEdit extends Component {
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
             participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
             termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor
+            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe, 
+            idCountryIntOpe, customerCoverageIntOpe, descriptionCoverageIntOpe
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1433,7 +1446,7 @@ class clientEdit extends Component {
                     showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut} />
 
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor} 
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} />
 
 
@@ -2118,7 +2131,12 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
+
+                <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                    idCountry={idCountryIntOpe} customerCoverage={customerCoverageIntOpe} descriptionCoverage={descriptionCoverageIntOpe} 
+                    showFormIntOperations={this.state.showFormAddIntOperatrions} fnShowForm={this.showFormOut} />
+
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"

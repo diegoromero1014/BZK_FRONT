@@ -62,7 +62,7 @@ class ComponentListDistributionChannel extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            swtShowMessage('error', 'Canales de distrbución', 'Señor usuario, para agregar un canal de distrbución debe de ingresar todos los valores.');
+            swtShowMessage('error', 'Canales de distrbución', 'Señor usuario, para agregar un canal de distrbución debe ingresar todos los valores.');
         }
     }
 
@@ -131,7 +131,7 @@ class ComponentListDistributionChannel extends Component {
                     <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
                         <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
                             onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                            <i className="plus white icon"></i>
+                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
                         </button>
                     </Col>
                     {showFormDistribution &&
@@ -172,12 +172,12 @@ class ComponentListDistributionChannel extends Component {
                     {showFormDistribution &&
                         <Col xs={4} md={3} lg={3}>
                             <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
-                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon"></i>
+                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px', padding: "3px 0 0 5px" }}>
+                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
                             </button>
                             <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
                                 style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon"></i>
+                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
                             </button>
                         </Col>
                     }

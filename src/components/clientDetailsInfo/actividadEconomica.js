@@ -13,15 +13,15 @@ class ActividadEconomica extends Component {
     _mapValuesParticipation(entity, idx) {
         return <tr key={idx}>
             <td>{entity.lineOfBusiness}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
-            <td style={{ textAlign: 'center' }}>{entity.experience}</td>
+            <td >{entity.participation} %</td>
+            <td>{entity.experience}</td>
         </tr>
     }
 
     _mapValuesDistribution(entity, idx) {
         return <tr key={idx}>
             <td>{entity.distributionChannel}</td>
-            <td style={{ textAlign: 'center' }}>{entity.participation} %</td>
+            <td>{entity.participation} %</td>
         </tr>
     }
 

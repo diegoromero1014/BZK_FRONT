@@ -68,7 +68,7 @@ class ComponentListLineBusiness extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe de ingresar todos los valores.');
+            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.');
         }
     }
 
@@ -140,7 +140,7 @@ class ComponentListLineBusiness extends Component {
                     <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
                         <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
                             onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                            <i className="plus white icon"></i>
+                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
                         </button>
                     </Col>
                     {showFormLinebusiness &&
@@ -201,11 +201,11 @@ class ComponentListLineBusiness extends Component {
                         <Col xs={4} md={3} lg={3}>
                             <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                                 style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon"></i>
+                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
                             </button>
                             <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
                                 style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon"></i>
+                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
                             </button>
                         </Col>
                     }

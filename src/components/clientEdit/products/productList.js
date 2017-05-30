@@ -100,7 +100,7 @@ class ProductList extends Component {
         <div>
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} sm={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
-              <button className="btn" disabled={clientProductReducer.size === 3 || clientProductReducer.size > 3 ? 'disabled' : ''} style={{margin:"12px 0px 0px 12px", fontSize : '1.5em'}} type="button" onClick={this.openModal}>
+              <button className="btn  btn-secondary" disabled={clientProductReducer.size === 3 || clientProductReducer.size > 3 ? 'disabled' : ''} style={{margin:"12px 0px 0px 12px"}} type="button" onClick={this.openModal}>
                 <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
               </button>
               <Modal
