@@ -4,4 +4,9 @@ export const MAIN_CLIENTS = "MAIN_CLIENTS";
 export const MAIN_SUPPLIER = "MAIN_SUPPLIER";
 export const MAIN_COMPETITOR = "MAIN_COMPETITOR";
 export const INT_OPERATIONS = "INT_OPERATIONS";
-
+export const MESSAGE_LINE_OF_BUSINESS = 'Incluya una a una las líneas de negocio de la compañía con su respectiva participación en las ventas y tiempo de existencia de esa línea (en años).';
+export const MESSAGE_DISTRIBUTION_CHANNEL = 'Incluya uno a uno los canales de distribución de la compañía con su respectiva participación en las ventas si así aplica.';
+export const MESSAGE_MAIN_CLIENTS = 'Incluya uno a uno los principales clientes de la empresa con su respectivo plazo de pago otorgado en días y participación en las ventas.';
+export const MESSAGE_MAIN_SUPPLIER = 'Incluya uno a uno los principales proveedores de la empresa con el respectivo plazo de pago que le otorga en días y participación en las compras.';
+export const MESSAGE_MAIN_COMPETITOR = 'Incluya uno a uno los principales competidores de la empresa con su respectiva participación de mercado.';
+export const MESSAGE_INT_OPERATIONS = 'Informe si el cliente realiza operaciones internacionales. De hacerlo, indicar el tipo de operación que realiza (Exportación o Importación), países con los que realiza este tipo de operaciones y sus respectivos porcentajes de participación. Así mismo, indique si el cliente realiza cobertura en estas operaciones.';

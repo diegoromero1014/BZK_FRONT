@@ -9,7 +9,8 @@ import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { MAIN_COMPETITOR } from '../constants';
+import { MAIN_COMPETITOR, MESSAGE_MAIN_COMPETITOR } from '../constants';
+import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
 class ComponentListMainCompetitor extends Component {
@@ -126,7 +127,8 @@ class ComponentListMainCompetitor extends Component {
     }
 
     render() {
-        const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm, clientInformacion } = this.props;
+        const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
+            clientInformacion, changeValueListClient } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div>
@@ -137,119 +139,127 @@ class ComponentListMainCompetitor extends Component {
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="factory icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Principales competidores</span>
+                            <ToolTipComponent text={MESSAGE_MAIN_COMPETITOR}
+                                children={
+                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                        className="help circle icon blue" />
+                                }
+                            />
+                            <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
+                                onClick={() => changeValueListClient('noAppliedMainCompetitors', !clientInformacion.get('noAppliedMainCompetitors'))}
+                                checked={clientInformacion.get('noAppliedMainCompetitors')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
-                        <button className="btn" disabled={showFormMainCompetitor} type="button" title="Agregar competidor principal"
-                            onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                        </button>
-                    </Col>
-                    {showFormMainCompetitor &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="nameCompetitor"
-                                    type="text"
-                                    max="100"
-                                    placeholder="Nombre del competidor"
-                                    {...nameCompetitor}
-                                    error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormMainCompetitor &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="participation"
-                                    type="text"
-                                    min={0}
-                                    max="2"
-                                    placeholder="Participación"
-                                    {...participation}
-                                    value={participation.value}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
-                                    error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormMainCompetitor &&
-                        <Col xs={4} md={3} lg={3}>
-                            <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
-                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                            </button>
-                            <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
-                                style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
+                {!clientInformacion.get('noAppliedMainCompetitors') &&
+                    <Row style={{ padding: "0px 10px 10px 20px" }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
+                            <button className="btn" disabled={showFormMainCompetitor} type="button" title="Agregar competidor principal"
+                                onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </button>
                         </Col>
-                    }
-                    {showFormMainCompetitor &&
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
-                            <div>
-                                <dt><span>Observaciones (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Textarea
-                                    name="observations"
-                                    validateEnter={true}
-                                    type="text"
-                                    style={{ width: '100%' }}
-                                    max="1300"
-                                    rows={3}
-                                    placeholder="Observaciones"
-                                    {...observations}
-                                    error={_.isEmpty(observations.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {
-                        _.size(listMainCompetitor) > 0 ?
-                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
-                                <table className="ui striped table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Nombre del competidor</th>
-                                            <th>Participación</th>
-                                            <th>Observaciones</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {listMainCompetitor.map(this._mapValuesMainCompetitor)}
-                                    </tbody>
-                                </table>
-                            </Col>
-                            :
-                            <Col xs={12} md={12} lg={12}>
-                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                    <span className="form-item">No se han adicionado principales proveedores</span>
+                        {showFormMainCompetitor &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="nameCompetitor"
+                                        type="text"
+                                        max="100"
+                                        placeholder="Nombre del competidor"
+                                        {...nameCompetitor}
+                                        error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
+                                    />
                                 </div>
                             </Col>
-                    }
-                    <SweetAlert
-                        type="warning"
-                        show={this.state.showConfirmDelete}
-                        title="Confirmar eliminación"
-                        text="Señor usuario, ¿Está seguro que desea eliminar el competidor principal?"
-                        confirmButtonColor='#DD6B55'
-                        confirmButtonText='Sí, estoy seguro!'
-                        cancelButtonText="Cancelar"
-                        showCancelButton={true}
-                        onCancel={() => this.setState({ showConfirmDelete: false })}
-                        onConfirm={this._deleteMainCompetitor} />
-                </Row >
+                        }
+                        {showFormMainCompetitor &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="participation"
+                                        type="text"
+                                        min={0}
+                                        max="5"
+                                        placeholder="Participación"
+                                        {...participation}
+                                        value={participation.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormMainCompetitor &&
+                            <Col xs={4} md={3} lg={3}>
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                    style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                    style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
+                                    <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </Col>
+                        }
+                        {showFormMainCompetitor &&
+                            <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
+                                <div>
+                                    <dt><span>Observaciones (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Textarea
+                                        name="observations"
+                                        validateEnter={true}
+                                        type="text"
+                                        style={{ width: '100%' }}
+                                        max="1300"
+                                        rows={3}
+                                        placeholder="Observaciones"
+                                        {...observations}
+                                        error={_.isEmpty(observations.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {
+                            _.size(listMainCompetitor) > 0 ?
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                    <table className="ui striped table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Nombre del competidor</th>
+                                                <th>Participación</th>
+                                                <th>Observaciones</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listMainCompetitor.map(this._mapValuesMainCompetitor)}
+                                        </tbody>
+                                    </table>
+                                </Col>
+                                :
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                        <span className="form-item">No se han adicionado principales competidores</span>
+                                    </div>
+                                </Col>
+                        }
+                        <SweetAlert
+                            type="warning"
+                            show={this.state.showConfirmDelete}
+                            title="Confirmar eliminación"
+                            text="Señor usuario, ¿Está seguro que desea eliminar el competidor principal?"
+                            confirmButtonColor='#DD6B55'
+                            confirmButtonText='Sí, estoy seguro!'
+                            cancelButtonText="Cancelar"
+                            showCancelButton={true}
+                            onCancel={() => this.setState({ showConfirmDelete: false })}
+                            onConfirm={this._deleteMainCompetitor} />
+                    </Row >
+                }
             </div>
         );
     }

@@ -8,7 +8,8 @@ import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { LINE_OF_BUSINESS } from '../constants';
+import ToolTipComponent from '../../toolTip/toolTipComponent';
+import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
 
 class ComponentListLineBusiness extends Component {
@@ -125,7 +126,8 @@ class ComponentListLineBusiness extends Component {
     }
 
     render() {
-        const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm, clientInformacion } = this.props;
+        const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm,
+            clientInformacion, changeValueListClient } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={{ width: '100%' }}>
@@ -133,119 +135,128 @@ class ComponentListLineBusiness extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
                             <span className="section-title">Líneas de negocio y participación en ventas</span>
+                            <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}
+                                children={
+                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                        className="help circle icon blue" />
+                                }
+                            />
+                            <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
+                                onClick={() => changeValueListClient('noAppliedLineOfBusiness', !clientInformacion.get('noAppliedLineOfBusiness'))}
+                                checked={clientInformacion.get('noAppliedLineOfBusiness')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </dl>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
-                        <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
-                            onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                        </button>
-                    </Col>
-                    {showFormLinebusiness &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>Línea de negocio (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="contextLineBusiness"
-                                    type="text"
-                                    max="100"
-                                    placeholder="Línea de neogcio"
-                                    {...contextLineBusiness}
-                                    error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormLinebusiness &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="participation"
-                                    type="text"
-                                    min={0}
-                                    max="2"
-                                    placeholder="Participación"
-                                    {...participation}
-                                    value={participation.value}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
-                                    error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormLinebusiness &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>Experiencia (años) (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="experience"
-                                    type="text"
-                                    min={0}
-                                    max="3"
-                                    placeholder="Experiencia"
-                                    {...experience}
-                                    value={experience.value}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
-                                    error={_.isEmpty(experience.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormLinebusiness &&
-                        <Col xs={4} md={3} lg={3}>
-                            <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
-                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                            </button>
-                            <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
-                                style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
+                {!clientInformacion.get('noAppliedLineOfBusiness') &&
+                    <Row style={{ padding: "0px 10px 10px 20px" }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
+                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
+                                onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
+                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </button>
                         </Col>
-                    }
-                    {
-                        _.size(listParticipation) > 0 ?
-                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
-                                <table className="ui striped table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Línea de negocio</th>
-                                            <th>Participación</th>
-                                            <th>Experiencia (años)</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {listParticipation.map(this._mapValuesParitipation)}
-                                    </tbody>
-                                </table>
-                            </Col>
-                            :
-                            <Col xs={12} md={12} lg={12}>
-                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                    <span className="form-item">No se han adicionado líneas de negocio</span>
+                        {showFormLinebusiness &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>Línea de negocio (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="contextLineBusiness"
+                                        type="text"
+                                        max="100"
+                                        placeholder="Línea de neogcio"
+                                        {...contextLineBusiness}
+                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
+                                        touched={true}
+                                    />
                                 </div>
                             </Col>
-                    }
-                    <SweetAlert
-                        type="warning"
-                        show={this.state.showConfirmDelete}
-                        title="Confirmar eliminación"
-                        text="Señor usuario, ¿Está seguro que desea eliminar la línea de negocio?"
-                        confirmButtonColor='#DD6B55'
-                        confirmButtonText='Sí, estoy seguro!'
-                        cancelButtonText="Cancelar"
-                        showCancelButton={true}
-                        onCancel={() => this.setState({ showConfirmDelete: false })}
-                        onConfirm={this._deleteLineOfBusiness} />
-                </Row >
+                        }
+                        {showFormLinebusiness &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="participation"
+                                        type="text"
+                                        min={0}
+                                        max="5"
+                                        placeholder="Participación"
+                                        {...participation}
+                                        value={participation.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormLinebusiness &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>Experiencia (años) (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="experience"
+                                        type="text"
+                                        min={0}
+                                        max="3"
+                                        placeholder="Experiencia"
+                                        {...experience}
+                                        value={experience.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
+                                        error={_.isEmpty(experience.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormLinebusiness &&
+                            <Col xs={4} md={3} lg={3}>
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                    style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                    style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
+                                    <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </Col>
+                        }
+                        {
+                            _.size(listParticipation) > 0 ?
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                    <table className="ui striped table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Línea de negocio</th>
+                                                <th>Participación</th>
+                                                <th>Experiencia (años)</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listParticipation.map(this._mapValuesParitipation)}
+                                        </tbody>
+                                    </table>
+                                </Col>
+                                :
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                        <span className="form-item">No se han adicionado líneas de negocio</span>
+                                    </div>
+                                </Col>
+                        }
+                        <SweetAlert
+                            type="warning"
+                            show={this.state.showConfirmDelete}
+                            title="Confirmar eliminación"
+                            text="Señor usuario, ¿Está seguro que desea eliminar la línea de negocio?"
+                            confirmButtonColor='#DD6B55'
+                            confirmButtonText='Sí, estoy seguro!'
+                            cancelButtonText="Cancelar"
+                            showCancelButton={true}
+                            onCancel={() => this.setState({ showConfirmDelete: false })}
+                            onConfirm={this._deleteLineOfBusiness} />
+                    </Row >
+                }
             </div>
         );
     }
