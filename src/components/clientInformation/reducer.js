@@ -15,7 +15,13 @@ const initialState = Immutable.Map({
     listMainCustomer: [],
     listMainSupplier: [],
     listMainCompetitor: [],
-    listOperations: []
+    listOperations: [],
+    noAppliedLineOfBusiness: false,
+    noAppliedDistributionChannel: false,
+    noAppliedMainClients: false,
+    noAppliedMainSuppliers: false,
+    noAppliedMainCompetitors: false,
+    noAppliedIntOperations: false
 });
 
 export default (state = initialState, action) => {
@@ -30,6 +36,12 @@ export default (state = initialState, action) => {
             const listMainSupplier = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listMainSupplier;
             const listMainCompetitor = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listMainCompetitor;
             const listOperations = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : contextClient.listOperations;
+            const noAppliedLineOfBusiness = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedLineOfBusiness;
+            const noAppliedDistributionChannel = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedDistributionChannel;
+            const noAppliedMainClients = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedMainClients;
+            const noAppliedMainSuppliers = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedMainSuppliers;
+            const noAppliedMainCompetitors = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedMainCompetitors;
+            const noAppliedIntOperations = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedIntOperations;
             return state.withMutations(map => {
                 map
                     .set('status', status)
@@ -40,7 +52,13 @@ export default (state = initialState, action) => {
                     .set('listMainCustomer', listMainCustomer)
                     .set('listMainSupplier', listMainSupplier)
                     .set('listMainCompetitor', listMainCompetitor)
-                    .set('listOperations', listOperations);
+                    .set('listOperations', listOperations)
+                    .set('noAppliedLineOfBusiness', noAppliedLineOfBusiness)
+                    .set('noAppliedDistributionChannel', noAppliedDistributionChannel)
+                    .set('noAppliedMainClients', noAppliedMainClients)
+                    .set('noAppliedMainSuppliers', noAppliedMainSuppliers)
+                    .set('noAppliedMainCompetitors', noAppliedMainCompetitors)
+                    .set('noAppliedIntOperations', noAppliedIntOperations);
             });
         case CLAER_CLIENT_INFO:
             return state.set("responseClientInfo", {});

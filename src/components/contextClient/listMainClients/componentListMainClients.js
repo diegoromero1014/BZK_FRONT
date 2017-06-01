@@ -9,7 +9,8 @@ import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { MAIN_CLIENTS } from '../constants';
+import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS } from '../constants';
+import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_STUDY_CREDIT } from '../constants';
 
@@ -136,7 +137,7 @@ class ComponentListMainClients extends Component {
 
     render() {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
-            clientInformacion, origin, valueCheckSectionMainClients, functionChangeCheckSectionMainClients } = this.props;
+            clientInformacion, origin, valueCheckSectionMainClients, functionChangeCheckSectionMainClients, changeValueListClient } = this.props;
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         return (
             <div>
@@ -152,139 +153,148 @@ class ComponentListMainClients extends Component {
                             }
                             <i className="users icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Principales clientes</span>
+                            <ToolTipComponent text={MESSAGE_MAIN_CLIENTS}
+                                children={
+                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                        className="help circle icon blue" />
+                                }
+                            />
+                            <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
+                                onClick={() => changeValueListClient('noAppliedMainClients', !clientInformacion.get('noAppliedMainClients'))}
+                                checked={clientInformacion.get('noAppliedMainClients')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
-                        <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
-                            onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                        </button>
-                    </Col>
-                    {showFormMainClients &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>Nombre del cliente (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="nameClient"
-                                    type="text"
-                                    max="100"
-                                    placeholder="Nombre del cliente"
-                                    {...nameClient}
-                                    error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormMainClients &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="term"
-                                    type="text"
-                                    min={0}
-                                    max="3"
-                                    placeholder="Plazo"
-                                    {...term}
-                                    value={term.value}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
-                                    error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormMainClients &&
-                        <Col xs={12} md={4} lg={3}>
-                            <div>
-                                <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Input
-                                    name="participation"
-                                    type="text"
-                                    min={0}
-                                    max="2"
-                                    placeholder="Participación"
-                                    {...participation}
-                                    value={participation.value}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
-                                    error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {showFormMainClients &&
-                        <Col xs={4} md={3} lg={3}>
-                            <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
-                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
-                            </button>
-                            <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
-                                style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
+                {!clientInformacion.get('noAppliedMainClients') &&
+                    <Row style={{ padding: "0px 10px 10px 20px" }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
+                            <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
+                                onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </button>
                         </Col>
-                    }
-                    {showFormMainClients &&
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
-                            <div>
-                                <dt><span>Información relevante de los principales clientes (<span style={{ color: "red" }}>*</span>)</span></dt>
-                                <Textarea
-                                    name="relevantInformation"
-                                    validateEnter={true}
-                                    type="text"
-                                    style={{ width: '100%' }}
-                                    max="1300"
-                                    rows={3}
-                                    placeholder="Información relevante"
-                                    {...relevantInformation}
-                                    error={_.isEmpty(relevantInformation.value) ? VALUE_REQUIERED : null}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {
-                        _.size(listMainCustomer) > 0 ?
-                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
-                                <table className="ui striped table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Nombre del cliente</th>
-                                            <th>Plazo (días)</th>
-                                            <th>Participación</th>
-                                            <th>Información relevante</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {listMainCustomer.map(this._mapValuesMainClients)}
-                                    </tbody>
-                                </table>
-                            </Col>
-                            :
-                            <Col xs={12} md={12} lg={12}>
-                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                    <span className="form-item">No se han adicionado principales clientes</span>
+                        {showFormMainClients &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>Nombre del cliente (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="nameClient"
+                                        type="text"
+                                        max="100"
+                                        placeholder="Nombre del cliente"
+                                        {...nameClient}
+                                        error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
+                                        touched={true}
+                                    />
                                 </div>
                             </Col>
-                    }
-                    <SweetAlert
-                        type="warning"
-                        show={this.state.showConfirmDelete}
-                        title="Confirmar eliminación"
-                        text="Señor usuario, ¿Está seguro que desea eliminar el cliente principal?"
-                        confirmButtonColor='#DD6B55'
-                        confirmButtonText='Sí, estoy seguro!'
-                        cancelButtonText="Cancelar"
-                        showCancelButton={true}
-                        onCancel={() => this.setState({ showConfirmDelete: false })}
-                        onConfirm={this._deleteMainClients} />
-                </Row >
+                        }
+                        {showFormMainClients &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="term"
+                                        type="text"
+                                        min={0}
+                                        max="3"
+                                        placeholder="Plazo"
+                                        {...term}
+                                        value={term.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
+                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
+                                        touched={true}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormMainClients &&
+                            <Col xs={12} md={4} lg={3}>
+                                <div>
+                                    <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Input
+                                        name="participation"
+                                        type="text"
+                                        min={0}
+                                        max="5"
+                                        placeholder="Participación"
+                                        {...participation}
+                                        value={participation.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormMainClients &&
+                            <Col xs={4} md={3} lg={3}>
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                    style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                    style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
+                                    <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </Col>
+                        }
+                        {showFormMainClients &&
+                            <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
+                                <div>
+                                    <dt><span>Información relevante de los principales clientes (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <Textarea
+                                        name="relevantInformation"
+                                        validateEnter={true}
+                                        type="text"
+                                        style={{ width: '100%' }}
+                                        max="1300"
+                                        rows={3}
+                                        placeholder="Información relevante"
+                                        {...relevantInformation}
+                                        error={_.isEmpty(relevantInformation.value) ? VALUE_REQUIERED : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {
+                            _.size(listMainCustomer) > 0 ?
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                    <table className="ui striped table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Nombre del cliente</th>
+                                                <th>Plazo (días)</th>
+                                                <th>Participación</th>
+                                                <th>Información relevante</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listMainCustomer.map(this._mapValuesMainClients)}
+                                        </tbody>
+                                    </table>
+                                </Col>
+                                :
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                        <span className="form-item">No se han adicionado principales clientes</span>
+                                    </div>
+                                </Col>
+                        }
+                        <SweetAlert
+                            type="warning"
+                            show={this.state.showConfirmDelete}
+                            title="Confirmar eliminación"
+                            text="Señor usuario, ¿Está seguro que desea eliminar el cliente principal?"
+                            confirmButtonColor='#DD6B55'
+                            confirmButtonText='Sí, estoy seguro!'
+                            cancelButtonText="Cancelar"
+                            showCancelButton={true}
+                            onCancel={() => this.setState({ showConfirmDelete: false })}
+                            onConfirm={this._deleteMainClients} />
+                    </Row >
+                }
             </div>
         );
     }

@@ -4,23 +4,48 @@ import _ from 'lodash';
 import { shorterStringValue } from '../../actionsGlobal';
 import { YES, NO } from '../../constantsGlobal';
 import { IMPORT, EXPORT } from './constants';
+import { validateValueExist } from '../../actionsGlobal';
 
 class InternationalOperations extends Component {
 
   constructor(props) {
     super(props);
+    this.mapHeadersInternationalOperations = this.mapHeadersInternationalOperations.bind(this);
     this.mapValuesInternationalOperations = this.mapValuesInternationalOperations.bind(this);
+    this.mapOperations = this.mapOperations.bind(this);
   }
 
   mapValuesInternationalOperations(entity, idx) {
     return <tr key={idx}>
-      <td>{_.isEqual(entity.typeOperation, IMPORT) ? "Importación" : "Exportación"}</td>
       <td>{entity.nameCountry}</td>
       <td>{entity.participation} %</td>
-      <td>{entity.customerCoverage ? "Si" : "No"}</td>
-      <td>{shorterStringValue(entity.descriptionCoverage, 80)}</td>
     </tr>
   }
+
+  mapHeadersInternationalOperations(idx) {
+    return <tr key={idx}>
+      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>País</span></td>
+      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Participación</span></td>
+    </tr>
+  }
+
+  mapOperations(operations, idx) {
+    const title = _.isEqual(operations.typeOperation, IMPORT) ? "Importación" : "Exportación";
+    return <Row style={{marginTop: '5px'}}>
+      <Col xs={12} md={6} lg={3}><span style={{ fontWeight: "bold", color: "#4C5360" }}>{title}:</span> {operations.participation}%</Col>
+      <Col xs={12} md={6} lg={3}><span style={{ fontWeight: "bold", color: "#4C5360" }}>¿El cliente tiene coberturas?</span> {_.isEqual(operations.customerCoverage, true) ? "Si" : "No"}</Col>
+      <Col xs={12} md={12} lg={12}><span style={{ fontWeight: "bold", color: "#4C5360" }}>Descripción de la copbertura: </span>{operations.descriptionCoverage}</Col>
+      {_.size(operations.listCountryOperations) > 0 &&
+        <table className='table table-striped' style={{ width: '100%', marginTop: '10px' }}>
+          {this.mapHeadersInternationalOperations()}
+          <tbody>
+            {operations.listCountryOperations.map(this.mapValuesInternationalOperations)}
+          </tbody>
+        </table>
+      }
+    </Row>
+  }
+
 
   render() {
     const { infoClient } = this.props;
@@ -33,6 +58,8 @@ class InternationalOperations extends Component {
         operationsForeignCurrency = 'No'
       }
     }
+    const listImports = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : _.filter(contextClient.listOperations, ['typeOperation', IMPORT]);
+    const listExports = _.isUndefined(contextClient) || _.isNull(contextClient) ? [] : _.filter(contextClient.listOperations, ['typeOperation', EXPORT]);
     return (
       <div className="tab-content-row">
         <Row>
@@ -61,34 +88,23 @@ class InternationalOperations extends Component {
             <span style={{ width: "25%", verticalAlign: "initial" }}>{infoClient.otherOperationsForeign}</span>
           </Col>
         </Row>
-        {
-          _.isEqual(infoClient.operationsForeignCurrency, YES) &&
+        {_.isEqual(infoClient.operationsForeignCurrency, YES) &&
           <Row style={{ marginTop: '20px', marginLeft: '2px' }}>
             <h3 style={{ width: '100%' }}>Operaciones internacionales</h3>
-            {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedIntOperations ?
+            {validateValueExist(contextClient) && contextClient.noAppliedIntOperations ?
               <span>No aplica</span>
               :
               <div style={{ width: '100%' }}>
-                {!_.isNull(contextClient) && !_.isUndefined(contextClient) && _.size(contextClient.listOperations) > 0 ?
-                  <table className='table table-striped' style={{ width: "100%" }}>
-                    <tr>
-                      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo de operación</span></td>
-                      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>País</span></td>
-                      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Participación</span></td>
-                      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>¿El cliente tiene coberturas?</span></td>
-                      <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Descripción de la cobertura</span></td>
-                    </tr>
-                    <tbody>
-                      {contextClient.listOperations.map(this.mapValuesInternationalOperations)}
-                    </tbody>
-                  </table>
-                  :
-                  <Col xs={12} md={12} lg={12}>
-                    <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                      <span className="form-item">No se han adicionado operaciones internacionales</span>
-                    </div>
-                  </Col>
-                }
+                <Col xs={12} md={12} lg={12} >
+                  {validateValueExist(contextClient) && _.size(listImports) > 0 &&
+                    listImports.map(this.mapOperations)
+                  }
+                </Col>
+                <Col xs={12} md={12} lg={12} style={{marginTop: '15px'}}>
+                  {validateValueExist(contextClient) && _.size(listExports) > 0 &&
+                    listExports.map(this.mapOperations)
+                  }
+                </Col>
               </div>
             }
           </Row>

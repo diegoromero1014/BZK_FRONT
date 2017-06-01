@@ -263,3 +263,8 @@ export function stringValidate(value) {
         return false;
     }
 }
+
+
+export function validateValueExist( value ){
+    return _.isUndefined(value) || _.isNull(value) ? false : true;
+}

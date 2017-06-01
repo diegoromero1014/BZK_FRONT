@@ -96,8 +96,8 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
     "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
     "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe", 
-    "idCountryIntOpe", "customerCoverageIntOpe", "descriptionCoverageIntOpe"];
+    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
+    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 var isProspect = false;
@@ -1024,9 +1024,19 @@ class clientEdit extends Component {
         });
         const listOperations = clientInformacion.get('listOperations');
         _.map(listOperations, (item) => {
-            item.id = item.id.toString().includes('mainIntO_') ? null : item.id;
+            item.id = item.id === null || item.id.toString().includes('mainIntO_') ? null : item.id;
+            _.map(item.listCountryOperations, (country) => {
+                country.id = country.id === null || country.id.toString().includes('mainIntO_') ? null : item.id;
+                return country;
+            });
             return item;
         });
+        const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
+        const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
+        const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
+        const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
+        const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
+        const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'id': null,
@@ -1037,7 +1047,13 @@ class clientEdit extends Component {
                 'listMainCustomer': listMainCustomer,
                 'listMainSupplier': listMainSupplier,
                 'listMainCompetitor': listMainCompetitor,
-                'listOperations': listOperations
+                'listOperations': listOperations,
+                noAppliedLineOfBusiness,
+                noAppliedDistributionChannel,
+                noAppliedMainClients,
+                noAppliedMainSuppliers,
+                noAppliedMainCompetitors,
+                noAppliedIntOperations
             };
         } else {
             contextClient.context = contextClientField.value;
@@ -1048,6 +1064,12 @@ class clientEdit extends Component {
             contextClient.listMainSupplier = listMainSupplier;
             contextClient.listMainCompetitor = listMainCompetitor;
             contextClient.listOperations = listOperations;
+            contextClient.noAppliedLineOfBusiness = noAppliedLineOfBusiness;
+            contextClient.noAppliedDistributionChannel = noAppliedDistributionChannel;
+            contextClient.noAppliedMainClients = noAppliedMainClients;
+            contextClient.noAppliedMainSuppliers = noAppliedMainSuppliers;
+            contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
+            contextClient.noAppliedIntOperations = noAppliedIntOperations;
             return contextClient;
         }
     }
@@ -1206,8 +1228,8 @@ class clientEdit extends Component {
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
             participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
             termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe, 
-            idCountryIntOpe, customerCoverageIntOpe, descriptionCoverageIntOpe
+            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
+            idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe
             }, handleSubmit, tabReducer, selectsReducer, clientInformacion
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -2132,9 +2154,11 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
 
-                <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
-                    idCountry={idCountryIntOpe} customerCoverage={customerCoverageIntOpe} descriptionCoverage={descriptionCoverageIntOpe} 
-                    showFormIntOperations={this.state.showFormAddIntOperatrions} fnShowForm={this.showFormOut} />
+                {operationsForeignCurrency.value &&
+                    <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                        idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe} descriptionCoverage={descriptionCoverageIntOpe}
+                        showFormIntOperations={this.state.showFormAddIntOperatrions} fnShowForm={this.showFormOut} />
+                }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>

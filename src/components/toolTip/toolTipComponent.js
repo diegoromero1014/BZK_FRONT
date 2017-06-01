@@ -58,7 +58,7 @@ class ToolTipComponent extends Component {
 }
 
 ToolTipComponent.propTypes = {
-    text: PropTypes.string.isRequired,
+    text: PropTypes.element.isRequired,
     children: PropTypes.element.isRequired,
     title: PropTypes.string,
     position: PropTypes.string,
