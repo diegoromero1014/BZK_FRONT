@@ -11,7 +11,6 @@ import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_CLIENTS } from '../constants';
 import _ from 'lodash';
-import { ORIGIN_STUDY_CREDIT } from '../constants';
 
 class ComponentListMainClients extends Component {
     constructor(props) {
@@ -136,7 +135,7 @@ class ComponentListMainClients extends Component {
 
     render() {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
-            clientInformacion, origin, valueCheckSectionMainClients, functionChangeCheckSectionMainClients } = this.props;
+            clientInformacion, showCheckValidateSection, valueCheckSectionMainClients, functionChangeCheckSectionMainClients } = this.props;
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         return (
             <div>
@@ -150,7 +149,7 @@ class ComponentListMainClients extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
-                        {origin === ORIGIN_STUDY_CREDIT &&
+                        {showCheckValidateSection &&
                             <div>
                                 <input type="checkbox" id="checkSectionMainClients"
                                     checked={valueCheckSectionMainClients}
@@ -303,7 +302,7 @@ ComponentListMainClients.PropTypes = {
     fnShowForm: PropTypes.func.isRequired,
     showFormMainClients: PropTypes.bool.isRequired,
     valueCheckSectionMainClients: PropTypes.bool.isRequired,
-    origin: PropTypes.string.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
     functionChangeCheckSectionMainClients: PropTypes.func
 }
 

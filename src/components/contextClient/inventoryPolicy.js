@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
-import { ORIGIN_STUDY_CREDIT } from './constants';
 
 class InventorPolicy extends Component {
     constructor(props) {
@@ -10,7 +9,7 @@ class InventorPolicy extends Component {
     }
 
     render() {
-        const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, origin, functionChangeInventoryPolicy } = this.props;
+        const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -23,7 +22,7 @@ class InventorPolicy extends Component {
                     </div>
                 </Col>
                 <Col xs={12} md={12} lg={12}>
-                    {origin === ORIGIN_STUDY_CREDIT &&
+                    {showCheckValidateSection &&
                         <div>
                             <input type="checkbox" id="checkSectionInventoryPolicy"
                                 checked={valueCheckSectionInventoryPolicy} onClick={functionChangeInventoryPolicy} />
@@ -54,7 +53,7 @@ class InventorPolicy extends Component {
 InventorPolicy.PropTypes = {
     inventoryPolicy: PropTypes.object.isRequired,
     valueCheckSectionInventoryPolicy: PropTypes.bool.isRequired,
-    origin: PropTypes.string.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
     functionChangeInventoryPolicy: PropTypes.func
 }
 

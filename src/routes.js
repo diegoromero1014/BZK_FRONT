@@ -34,7 +34,7 @@ import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrTy
 import AEC from './components/myPendings/AEC/componentAEC';
 import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
 import Assigned from './components/myPendings/assigned/componentAssigned';
-import StudyCredit from './components/clients/studyCredit/componentStudyCredit';
+import StudyCredit from './components/clients/creditStudy/componentCreditStudy';
 
 class App extends Component {
     render() {

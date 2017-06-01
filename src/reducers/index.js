@@ -58,7 +58,7 @@ import customerStory from '../components/customerStory/reducer';
 import structuredDeliveryEvents from '../components/customerStory/structuredDelivery/events/reducer';
 import structuredDelivery from '../components/customerStory/structuredDelivery/reducer';
 import assignedReducer from '../components/myPendings/assigned/reducer'
-import studyCreditReducer from '../components/clients/studyCredit/reducer';
+import studyCreditReducer from '../components/clients/creditStudy/reducer';
 
 export default combineReducers({
     routing: routerReducer,
