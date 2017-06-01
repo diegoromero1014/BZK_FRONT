@@ -5,7 +5,7 @@ import {Row, Col} from 'react-flexbox-grid';
 import {consultList} from '../../selectsComponent/actions';
 import {TEAM_FOR_EMPLOYEE} from '../../selectsComponent/constants';
 import {
-    VALUE_REQUIERED, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';

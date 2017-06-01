@@ -146,11 +146,6 @@ class ComponentListMainClients extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            {origin === ORIGIN_STUDY_CREDIT &&
-                                <input type="checkbox" id="checkSectionMainClients" style={{ marginRight: "10px" }}
-                                    checked={valueCheckSectionMainClients}
-                                    onClick={functionChangeCheckSectionMainClients} />
-                            }
                             <i className="users icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Principales clientes</span>
                             <ToolTipComponent text={MESSAGE_MAIN_CLIENTS}
@@ -163,6 +158,16 @@ class ComponentListMainClients extends Component {
                                 onClick={() => changeValueListClient('noAppliedMainClients', !clientInformacion.get('noAppliedMainClients'))}
                                 checked={clientInformacion.get('noAppliedMainClients')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {origin === ORIGIN_STUDY_CREDIT &&
+                            <div>
+                                <input type="checkbox" id="checkSectionMainClients"
+                                    checked={valueCheckSectionMainClients}
+                                    onClick={functionChangeCheckSectionMainClients} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainClients') &&

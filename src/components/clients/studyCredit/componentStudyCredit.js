@@ -13,11 +13,19 @@ import ComponentListDistributionChannel from '../../contextClient/listDistributi
 import InventorPolicy from '../../contextClient/inventoryPolicy';
 import ComponentListMainClients from '../../contextClient/listMainClients/componentListMainClients';
 import * as constantsSelects from '../../selectsComponent/constants';
+import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
+import { getContextClient } from './actions';
+import { validateResponse } from '../../../actionsGlobal';
+import {
+    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_SAVE_DATA
+} from '../../../constantsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { GOVERNMENT } from '../../clientEdit/constants';
 
-const fields = ["customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
-    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
-    "relevantInformationMainClient"];
+const fields = ["customerTypology", "contextClient", "inventoryPolicy"];
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -82,15 +90,60 @@ class ComponentStudyCredit extends Component {
     }
 
     componentWillMount() {
-        const { updateTitleNavBar } = this.props;
-        updateTitleNavBar("Informe estudio de crédito");
+        const { fields: { customerTypology, contextClient, inventoryPolicy }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
+            clientInformacion, selectsReducer, consultListWithParameterUbication,
+            getMasterDataFields } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        if (_.isEmpty(infoClient)) {
+            redirectUrl("/dashboard/clientInformation");
+        } else {
+            var idClient = window.localStorage.getItem('idClientSelected');
+            getMasterDataFields([constantsSelects.SEGMENTS]).then((data) => {
+                const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
+                if (!_.isUndefined(value)) {
+                    if (_.isEqual(GOVERNMENT, value)) {
+                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, idSegment).then((data) => {
+                            customerTypology.onChange(infoClient.idCustomerTypology);
+                        });;
+                    } else {
+                        getMasterDataFields([constantsSelects.CUSTOMER_TYPOLOGY], true).then((data) => {
+                            customerTypology.onChange(infoClient.idCustomerTypology);
+                        });;
+                    }
+                }
+            }, (reason) => {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            });
+            updateTitleNavBar("Informe estudio de crédito");
+            changeStateSaveData(true, MESSAGE_LOAD_DATA);
+            getContextClient(idClient).then((data) => {
+                changeStateSaveData(false, "");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                } else {
+                    console.log('data', data);
+                    var contextClientInfo = data.payload.data.data;
+                    contextClient.onChange(contextClientInfo.context);
+                    inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
+                }
+            }, (reason) => {
+                changeStateSaveData(false, "");
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            });
+        }
     }
 
     render() {
-        const { selectsReducer, fields: { customerTypology, contextClientField, contextLineBusiness, participationLB, experience,
+        const { selectsReducer, fields: { customerTypology, contextClient, contextLineBusiness, participationLB, experience,
             distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC, termMainClient,
-            relevantInformationMainClient
+            relevantInformationMainClient, studyCreditReducer
         } } = this.props;
+        var contextClientInfo = studyCreditReducer.get('contextClient');
+        var fechaModString = '';
+        if (contextClientInfo.createdTimestamp !== null) {
+            var fechaModDateMoment = moment(contextClientInfo.createdTimestamp, "x").locale('es');
+            fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+        }
         return (
             <form style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }}>
                 <Row style={{ paddingTop: "10px", marginLeft: "20px" }}>
@@ -101,15 +154,21 @@ class ComponentStudyCredit extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <input type="checkbox" id="checkSectionActivityEconomic" style={{ marginRight: "10px" }}
-                                checked={this.state.valueCheckSectionActivityEconomic}
-                                onClick={this._handleChangeValueActivityEconomic} />
+
                             <i className="payment icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Actividad económica</span>
                         </div>
                     </Col>
+
+                    <Col xs={12} md={12} lg={12}>
+                        <input type="checkbox" id="checkSectionActivityEconomic"
+                            checked={this.state.valueCheckSectionActivityEconomic}
+                            onClick={this._handleChangeValueActivityEconomic} />
+                        <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                    </Col>
+
                 </Row>
-                <ContextEconomicActivity contextClientField={contextClientField} origin={ORIGIN_STUDY_CREDIT} />
+                <ContextEconomicActivity contextClientField={contextClient} origin={ORIGIN_STUDY_CREDIT} />
                 <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
                     participation={participationLB} experience={experience}
                     showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
@@ -123,6 +182,26 @@ class ComponentStudyCredit extends Component {
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
                     valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
                     functionChangeCheckSectionMainClients={this._handleChangeValueMainClients} />
+                <Row style={{ padding: "10px 10px 0px 20px" }}>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null ?
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                            : ''}
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null ?
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                            : ''}
+                    </Col>
+                </Row>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{contextClientInfo.updatedBy}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                    </Col>
+                </Row>
                 <div style={{
                     marginTop: "50px", position: "fixed",
                     border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
@@ -162,13 +241,21 @@ class ComponentStudyCredit extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        updateTitleNavBar
+        updateTitleNavBar,
+        getContextClient,
+        swtShowMessage,
+        changeStateSaveData,
+        consultListWithParameterUbication,
+        getMasterDataFields,
+        studyCreditReducer
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer }, ownerProps) {
+function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer }, ownerProps) {
     return {
-        selectsReducer
+        selectsReducer,
+        clientInformacion,
+        studyCreditReducer
     };
 }
 
