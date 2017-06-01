@@ -17,13 +17,19 @@ class InventorPolicy extends Component {
                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                         <div className="tab-content-row"
                             style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                        {origin === ORIGIN_STUDY_CREDIT &&
-                            <input type="checkbox" id="checkSectionInventoryPolicy" style={{ marginRight: "10px" }}
-                                checked={valueCheckSectionInventoryPolicy} onClick={functionChangeInventoryPolicy} />
-                        }
+
                         <i className="cubes icon" style={{ fontSize: "25px" }} />
                         <span className="title-middle"> Política de Inventarios</span>
                     </div>
+                </Col>
+                <Col xs={12} md={12} lg={12}>
+                    {origin === ORIGIN_STUDY_CREDIT &&
+                        <div>
+                            <input type="checkbox" id="checkSectionInventoryPolicy"
+                                checked={valueCheckSectionInventoryPolicy} onClick={functionChangeInventoryPolicy} />
+                            <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                        </div>
+                    }
                 </Col>
                 <Col xs={12} md={12} lg={12}>
                     <div style={{ marginTop: "15px", marginRight: '20px' }}>

@@ -145,21 +145,26 @@ class ComponentListMainClients extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            {origin === ORIGIN_STUDY_CREDIT &&
-                                <input type="checkbox" id="checkSectionMainClients" style={{ marginRight: "10px" }}
-                                    checked={valueCheckSectionMainClients}
-                                    onClick={functionChangeCheckSectionMainClients} />
-                            }
                             <i className="users icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Principales clientes</span>
                         </div>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {origin === ORIGIN_STUDY_CREDIT &&
+                            <div>
+                                <input type="checkbox" id="checkSectionMainClients"
+                                    checked={valueCheckSectionMainClients}
+                                    onClick={functionChangeCheckSectionMainClients} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
                     </Col>
                 </Row>
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
                         <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
                             onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                            <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
+                            <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                         </button>
                     </Col>
                     {showFormMainClients &&
@@ -220,11 +225,11 @@ class ComponentListMainClients extends Component {
                         <Col xs={4} md={3} lg={3}>
                             <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                                 style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                <i className="plus white icon" style={{padding: "3px 0 0 5px"}}></i>
+                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </button>
                             <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
                                 style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                <i className="remove white icon" style={{padding: "3px 0 0 5px"}}></i>
+                                <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </button>
                         </Col>
                     }
