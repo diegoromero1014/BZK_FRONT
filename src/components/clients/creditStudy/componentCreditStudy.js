@@ -25,7 +25,8 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { GOVERNMENT } from '../../clientEdit/constants';
 
-const fields = ["customerTypology", "contextClientField", "inventoryPolicy"];
+const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
+    "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "termMainClient", "relevantInformationMainClient"];
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -214,10 +215,9 @@ class ComponentStudyCredit extends Component {
     }
 
     render() {
-        const { selectsReducer, fields: { customerTypology, contextClientField, contextLineBusiness, participationLB, experience,
-            distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC, termMainClient,
-            relevantInformationMainClient
-        }, studyCreditReducer, handleSubmit } = this.props;
+        const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
+            contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
+            inventoryPolicy }, studyCreditReducer, handleSubmit } = this.props;
         var contextClientInfo = studyCreditReducer.get('contextClient');
         var showCheckValidateSection = false;
         var overdueCreditStudy = false;
