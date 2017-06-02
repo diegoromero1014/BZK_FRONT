@@ -15,7 +15,7 @@ import ComponentListMainClients from '../../contextClient/listMainClients/compon
 import * as constantsSelects from '../../selectsComponent/constants';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
-import { getContextClient, saveCreditStudy } from './actions';
+import { getContextClient, saveCreditStudy, validateInfoCreditStudy } from './actions';
 import { validateResponse } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
@@ -24,9 +24,18 @@ import {
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { GOVERNMENT } from '../../clientEdit/constants';
+import moment from 'moment';
+import {
+    A_SHAREHOLDER_WITH_OBSERVATION, ALL_SHAREHOLDERS_WITH_COMMENTS,
+    ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION
+} from './constants';
+import BottonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
 
 const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "termMainClient", "relevantInformationMainClient"];
+
+var errorMessageForShareholders = 'La información de los accionistas es válida, ';
+var contextClientInfo, numberOfShareholders, infoValidate;
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -39,8 +48,11 @@ class ComponentStudyCredit extends Component {
         this._handleChangeValueMainClients = this._handleChangeValueMainClients.bind(this);
         this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
         this._submitSaveContextClient = this._submitSaveContextClient.bind(this);
+        this._closeMessageSuccess = this._closeMessageSuccess.bind(this);
+        this._validateInfoStudyCredit = this._validateInfoStudyCredit.bind(this);
         this.state = {
             showConfirmExit: false,
+            showSuccessMessage: false,
             showFormAddLineOfBusiness: false,
             showFormAddDistribution: false,
             showFormAddMainClient: false,
@@ -93,7 +105,7 @@ class ComponentStudyCredit extends Component {
     }
 
     _createJsonSaveContextClient() {
-        const { fields: { contextClientField, inventoryPolicy }, clientInformacion } = this.props;
+        const { fields: { contextClientField, inventoryPolicy, customerTypology }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -126,9 +138,17 @@ class ComponentStudyCredit extends Component {
             item.id = item.id.toString().includes('mainIntO_') ? null : item.id;
             return item;
         });
+        const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
+        const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
+        const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
+        const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
+        const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
+        const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
+                'customerTypology': customerTypology.value,
                 'id': null,
+                'idClient': infoClient.id,
                 'context': contextClientField.value,
                 'inventoryPolicy': inventoryPolicy.value,
                 'listParticipation': listLineOfBusiness,
@@ -136,9 +156,16 @@ class ComponentStudyCredit extends Component {
                 'listMainCustomer': listMainCustomer,
                 'listMainSupplier': listMainSupplier,
                 'listMainCompetitor': listMainCompetitor,
-                'listOperations': listOperations
+                'listOperations': listOperations,
+                noAppliedLineOfBusiness,
+                noAppliedDistributionChannel,
+                noAppliedMainClients,
+                noAppliedMainSuppliers,
+                noAppliedMainCompetitors,
+                noAppliedIntOperations
             };
         } else {
+            contextClient.customerTypology = customerTypology.value;
             contextClient.context = contextClientField.value;
             contextClient.inventoryPolicy = inventoryPolicy.value;
             contextClient.listParticipation = listLineOfBusiness;
@@ -147,22 +174,57 @@ class ComponentStudyCredit extends Component {
             contextClient.listMainSupplier = listMainSupplier;
             contextClient.listMainCompetitor = listMainCompetitor;
             contextClient.listOperations = listOperations;
+            contextClient.noAppliedLineOfBusiness = noAppliedLineOfBusiness;
+            contextClient.noAppliedDistributionChannel = noAppliedDistributionChannel;
+            contextClient.noAppliedMainClients = noAppliedMainClients;
+            contextClient.noAppliedMainSuppliers = noAppliedMainSuppliers;
+            contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
+            contextClient.noAppliedIntOperations = noAppliedIntOperations;
             return contextClient;
         }
     }
 
     _submitSaveContextClient() {
-        const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
-        changeStateSaveData(true, MESSAGE_LOAD_DATA);
-        var contextCli = this._createJsonSaveContextClient();
-        console.log(contextCli);
-        saveCreditStudy(contextCli).then((data) => {
+        const { saveCreditStudy, swtShowMessage, changeStateSaveData, studyCreditReducer } = this.props;
+        var contextClientInfo = studyCreditReducer.get('contextClient');
+        if (contextClientInfo.overdueCreditStudy) {
+            if (this.state.valueCheckSectionActivityEconomic && this.state.valueCheckSectionInventoryPolicy &&
+                this.state.valueCheckSectionMainClients) {
+                changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                var contextCli = this._createJsonSaveContextClient();
+                saveCreditStudy(contextCli).then((data) => {
+                    changeStateSaveData(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    } else {
+                        this.setState({
+                            showSuccessMessage: true
+                        });
+                    }
+                }, (reason) => {
+                    changeStateSaveData(false, "");
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                });
+            } else {
+                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+            }
+        }
+    }
+
+    _closeMessageSuccess() {
+        this.setState({
+            showSuccessMessage: false
+        });
+        redirectUrl("/dashboard/clientInformation");
+    }
+
+    _validateInfoStudyCredit() {
+        const { swtShowMessage, changeStateSaveData, validateInfoCreditStudy } = this.props;
+        var idClient = window.localStorage.getItem('idClientSelected');
+        validateInfoCreditStudy(idClient).then((data) => {
             changeStateSaveData(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            } else {
-                console.log('data', data);
-                swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, se ha guardado el estudio de crédito exitosamente');
             }
         }, (reason) => {
             changeStateSaveData(false, "");
@@ -173,7 +235,7 @@ class ComponentStudyCredit extends Component {
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields } = this.props;
+            getMasterDataFields, validateInfoCreditStudy } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
@@ -202,7 +264,6 @@ class ComponentStudyCredit extends Component {
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 } else {
-                    console.log('data', data);
                     var contextClientInfo = data.payload.data.data;
                     contextClientField.onChange(contextClientInfo.context);
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
@@ -211,25 +272,60 @@ class ComponentStudyCredit extends Component {
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
+            this._validateInfoStudyCredit();
         }
     }
 
     render() {
         const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
             contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
-            inventoryPolicy }, studyCreditReducer, handleSubmit } = this.props;
-        var contextClientInfo = studyCreditReducer.get('contextClient');
+            inventoryPolicy }, studyCreditReducer, handleSubmit, getContextClient } = this.props;
+        contextClientInfo = studyCreditReducer.get('contextClient');
+        infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         var showCheckValidateSection = false;
         var overdueCreditStudy = false;
-        var fechaModString = '', updatedBy = null;
-        if (contextClientInfo !== null && contextClientInfo.updatedTimestamp !== null) {
-            updatedBy = contextClientInfo.updatedBy;
+        var fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString = '';
+        var errorShareholder = false;
+        if (contextClientInfo !== null) {
             overdueCreditStudy = contextClientInfo.overdueCreditStudy;
-            var fechaModDateMoment = moment(contextClientInfo.updatedTimestamp, "x").locale('es');
-            fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+            if (infoValidate !== null && !infoValidate.numberOfValidShareholders) {
+                numberOfShareholders = infoValidate.numberOfShareholdersWithComment;
+                if (numberOfShareholders.toUpperCase() === A_SHAREHOLDER_WITH_OBSERVATION.toUpperCase()) {
+                    errorShareholder = true;
+                    errorMessageForShareholders = ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION
+                } else {
+                    if (numberOfShareholders.toUpperCase() === ALL_SHAREHOLDERS_WITH_COMMENTS.toUpperCase()) {
+                        errorShareholder = true;
+                        errorMessageForShareholders = ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION;
+                    }
+                }
+            }
+            if (contextClientInfo.updatedTimestamp !== null) {
+                updatedBy = contextClientInfo.updatedBy;
+                var fechaModDateMoment = moment(contextClientInfo.updatedTimestamp, "x").locale('es');
+                fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+            }
+            if (contextClientInfo.createdTimestamp !== null) {
+                createdBy = contextClientInfo.createdBy;
+                var createdTimestamp = moment(contextClientInfo.createdTimestamp, "x").locale('es');
+                createdTimestampString = createdTimestamp.format("DD") + " " + createdTimestamp.format("MMM") + " " + createdTimestamp.format("YYYY") + ", " + createdTimestamp.format("hh:mm a");
+            }
         }
         return (
-            <form style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
+            <form id="formComponentCreditStudy" style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
+                <div>
+                    <p style={{ paddingTop: '10px' }}></p>
+                    <Row xs={12} md={12} lg={12} style={{
+                        border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
+                        borderRadius: '2px', margin: '0px 28px 0 20px', height: '60px'
+                    }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+                            <div>
+                                <BottonShareholderAdmin errorShareholder={errorShareholder} message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit} />
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
                 <Row style={{ paddingTop: "10px", marginLeft: "20px" }}>
                     <ClientTypology customerTypology={customerTypology} data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)} />
                 </Row>
@@ -268,22 +364,38 @@ class ComponentStudyCredit extends Component {
                     functionChangeCheckSectionMainClients={this._handleChangeValueMainClients} />
                 <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null ?
-                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                            : ''}
+                        {createdBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                        }
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null ?
+                        {createdBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                        }
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                        }
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null &&
                             <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                            : ''}
+                        }
                     </Col>
                 </Row>
                 <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestampString}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
                         <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                        <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
                 <div style={{
@@ -308,6 +420,13 @@ class ComponentStudyCredit extends Component {
                     </div>
                 </div>
                 <SweetAlert
+                    type="success"
+                    show={this.state.showSuccessMessage}
+                    title="Estudio de crédito"
+                    text={"Señor usuario, se ha guardado el estudio de crédito exitosamente"}
+                    onConfirm={() => this._closeMessageSuccess()}
+                />
+                <SweetAlert
                     type="warning"
                     show={this.state.showConfirmExit}
                     title="Confirmar salida"
@@ -331,7 +450,8 @@ function mapDispatchToProps(dispatch) {
         changeStateSaveData,
         consultListWithParameterUbication,
         getMasterDataFields,
-        saveCreditStudy
+        saveCreditStudy,
+        validateInfoCreditStudy
     }, dispatch);
 }
 

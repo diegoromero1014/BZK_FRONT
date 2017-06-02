@@ -67,7 +67,7 @@ import ComponentListMainClients from '../contextClient/listMainClients/component
 import ComponentListMainSupplier from '../contextClient/listMainSupplier/componentListMainSupplier';
 import ComponentListMainCompetitor from '../contextClient/listMainCompetitor/componentListMainCompetitor';
 import ComponentListIntOperations from '../contextClient/listInternationalOperations/componentListIntOperations';
-
+import { validateContactShareholder } from '../clientDetailsInfo/actions';
 
 let idButton;
 let errorContact;
@@ -79,6 +79,7 @@ var countOriginGoods = 0;
 var countOriginResource = 0;
 var initValueJustifyNonGeren = false;
 var initValueJustifyNonLME = false;
+var messageShareholder = '';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -1230,13 +1231,18 @@ class clientEdit extends Component {
             termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
             relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
             idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe
-            }, handleSubmit, tabReducer, selectsReducer, clientInformacion
+            }, handleSubmit, tabReducer, selectsReducer, clientInformacion, validateContactShareholder
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
         const isProspect = infoClient.isProspect;
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
+        if (errorShareholder) {
+            messageShareholder = 'Falta Accionistas';
+        } else {
+            messageShareholder = 'El cliente tiene información de accionista,';
+        }
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
@@ -1261,7 +1267,7 @@ class clientEdit extends Component {
                             {idButton === BUTTON_UPDATE ?
                                 <div>
                                     <BottonContactAdmin errorContact={errorContact} />
-                                    <BottonShareholderAdmin errorShareholder={errorShareholder} />
+                                    <BottonShareholderAdmin errorShareholder={errorShareholder} message={messageShareholder} functionToExecute={validateContactShareholder} />
                                 </div>
                                 :
                                 <div></div>
@@ -2293,7 +2299,8 @@ function mapDispatchToProps(dispatch) {
         updateErrorsNotes,
         updateTitleNavBar,
         showLoading,
-        swtShowMessage
+        swtShowMessage,
+        validateContactShareholder
     }, dispatch);
 }
 

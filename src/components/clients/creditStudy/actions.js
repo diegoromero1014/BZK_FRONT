@@ -1,5 +1,5 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_CONTEXT_CLIENT, SAVE_CREDIT_STUDY } from './constants';
+import { GET_CONTEXT_CLIENT, SAVE_CREDIT_STUDY, VALIDATE_INFO_CREDIT_STUDY } from './constants';
 import axios from 'axios';
 
 export function getContextClient(idClient) {
@@ -45,6 +45,29 @@ export function saveCreditStudy(jsonCreditStudy) {
     var request = axios.post(APP_URL + "/saveContextClient", jsonComplete);
     return {
         type: SAVE_CREDIT_STUDY,
+        payload: request
+    }
+}
+
+export function validateInfoCreditStudy(idClient) {
+    const jsonComplete = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        messageBody: idClient
+    }
+    var request = axios.post(APP_URL + "/validateInfoCreditStudy", jsonComplete);
+    return {
+        type: VALIDATE_INFO_CREDIT_STUDY,
         payload: request
     }
 }

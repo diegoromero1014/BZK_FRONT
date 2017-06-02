@@ -2,7 +2,8 @@ import Immutable from 'immutable';
 import * as actions from './constants';
 
 const initialState = Immutable.Map({
-    contextClient: null
+    contextClient: null,
+    validateInfoCreditStudy: null
 });
 
 export default (state = initialState, action) => {
@@ -11,6 +12,11 @@ export default (state = initialState, action) => {
             const response = action.payload.data;
             return state.withMutations(map => {
                 map.set('contextClient', response.data)
+            });
+        case actions.VALIDATE_INFO_CREDIT_STUDY:
+            const responseInfo = action.payload.data;
+            return state.withMutations(map => {
+                map.set('validateInfoCreditStudy', responseInfo.data)
             });
         default:
             return state;
