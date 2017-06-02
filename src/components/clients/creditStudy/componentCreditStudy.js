@@ -35,7 +35,8 @@ const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "pa
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "termMainClient", "relevantInformationMainClient"];
 
 var errorMessageForShareholders = 'La información de los accionistas es válida, ';
-var contextClientInfo, numberOfShareholders, infoValidate;
+var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection;
+var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder;
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -187,12 +188,17 @@ class ComponentStudyCredit extends Component {
     _submitSaveContextClient() {
         const { saveCreditStudy, swtShowMessage, changeStateSaveData, studyCreditReducer } = this.props;
         var contextClientInfo = studyCreditReducer.get('contextClient');
-        if (contextClientInfo.overdueCreditStudy) {
-            if (this.state.valueCheckSectionActivityEconomic && this.state.valueCheckSectionInventoryPolicy &&
-                this.state.valueCheckSectionMainClients) {
+        infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
+        if (!infoValidate.numberOfValidShareholders) {
+            document.getElementById('dashboardComponentScroll').scrollTop = 0;
+            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los accionistas para poder guardar.');
+        } else {
+            if (contextClientInfo.overdueCreditStudy && this.state.valueCheckSectionActivityEconomic &&
+                this.state.valueCheckSectionInventoryPolicy && this.state.valueCheckSectionMainClients) {
+                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+            } else {
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
-                var contextCli = this._createJsonSaveContextClient();
-                saveCreditStudy(contextCli).then((data) => {
+                saveCreditStudy(this._createJsonSaveContextClient()).then((data) => {
                     changeStateSaveData(false, "");
                     if (!validateResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -205,8 +211,6 @@ class ComponentStudyCredit extends Component {
                     changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 });
-            } else {
-                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
             }
         }
     }
@@ -276,16 +280,20 @@ class ComponentStudyCredit extends Component {
         }
     }
 
+    componentDidMount() {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
+
     render() {
         const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
             contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
             inventoryPolicy }, studyCreditReducer, handleSubmit, getContextClient } = this.props;
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
-        var showCheckValidateSection = false;
-        var overdueCreditStudy = false;
+        showCheckValidateSection = false;
+        overdueCreditStudy = false;
         var fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString = '';
-        var errorShareholder = false;
+        errorShareholder = false;
         if (contextClientInfo !== null) {
             overdueCreditStudy = contextClientInfo.overdueCreditStudy;
             if (infoValidate !== null && !infoValidate.numberOfValidShareholders) {
@@ -313,130 +321,132 @@ class ComponentStudyCredit extends Component {
         }
         return (
             <form id="formComponentCreditStudy" style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
-                <div>
-                    <p style={{ paddingTop: '10px' }}></p>
-                    <Row xs={12} md={12} lg={12} style={{
-                        border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
-                        borderRadius: '2px', margin: '0px 28px 0 20px', height: '60px'
-                    }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
-                            <div>
-                                <BottonShareholderAdmin errorShareholder={errorShareholder} message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit} />
+                <div id="containerCreditStudy">
+                    <div>
+                        <p style={{ paddingTop: '10px' }}></p>
+                        <Row xs={12} md={12} lg={12} style={{
+                            border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
+                            borderRadius: '2px', margin: '0px 28px 0 20px', height: '60px'
+                        }}>
+                            <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+                                <div>
+                                    <BottonShareholderAdmin errorShareholder={errorShareholder} message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit} />
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                    <Row style={{ paddingTop: "10px", marginLeft: "20px" }}>
+                        <ClientTypology customerTypology={customerTypology} data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)} />
+                    </Row>
+                    <Row style={{ padding: "20px 10px 0px 20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                <div className="tab-content-row"
+                                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+
+                                <i className="payment icon" style={{ fontSize: "25px" }} />
+                                <span className="title-middle"> Actividad económica</span>
                             </div>
                         </Col>
+                        {overdueCreditStudy &&
+                            <Col xs={12} md={12} lg={12}>
+                                <input type="checkbox" id="checkSectionActivityEconomic"
+                                    checked={this.state.valueCheckSectionActivityEconomic}
+                                    onClick={this._handleChangeValueActivityEconomic} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </Col>
+                        }
                     </Row>
-                </div>
-                <Row style={{ paddingTop: "10px", marginLeft: "20px" }}>
-                    <ClientTypology customerTypology={customerTypology} data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)} />
-                </Row>
-                <Row style={{ padding: "20px 10px 0px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Actividad económica</span>
-                        </div>
-                    </Col>
-                    {overdueCreditStudy &&
-                        <Col xs={12} md={12} lg={12}>
-                            <input type="checkbox" id="checkSectionActivityEconomic"
-                                checked={this.state.valueCheckSectionActivityEconomic}
-                                onClick={this._handleChangeValueActivityEconomic} />
-                            <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                    <ContextEconomicActivity contextClientField={contextClientField} />
+                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                        participation={participationLB} experience={experience}
+                        showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
+                    <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
+                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut} />
+                    <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
+                        valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
+                        functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
+                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
+                        term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
+                        showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
+                        valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
+                        functionChangeCheckSectionMainClients={this._handleChangeValueMainClients} />
+                    <Row style={{ padding: "10px 10px 0px 20px" }}>
+                        <Col xs={6} md={3} lg={3}>
+                            {createdBy !== null &&
+                                <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                            }
                         </Col>
-                    }
-                </Row>
-                <ContextEconomicActivity contextClientField={contextClientField} />
-                <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                    participation={participationLB} experience={experience}
-                    showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
-                <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
-                    showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut} />
-                <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
-                    valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
-                    functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                    term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
-                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
-                    valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
-                    functionChangeCheckSectionMainClients={this._handleChangeValueMainClients} />
-                <Row style={{ padding: "10px 10px 0px 20px" }}>
-                    <Col xs={6} md={3} lg={3}>
-                        {createdBy !== null &&
-                            <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
-                        }
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        {createdBy !== null &&
-                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
-                        }
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null &&
-                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                        }
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null &&
-                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                        }
-                    </Col>
-                </Row>
-                <Row style={{ padding: "5px 10px 0px 20px" }}>
-                    <Col xs={6} md={3} lg={3}>
-                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestampString}</span>
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
-                    </Col>
-                </Row>
-                <div style={{
-                    marginTop: "50px", position: "fixed",
-                    border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
-                    backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
-                }}>
-                    <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
-                        <button className="btn"
-                            style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                            type="submit">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
-                        </button>
-                        <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 240px",
-                            position: "fixed",
-                            backgroundColor: "#C1C1C1"
-                        }} type="button">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                        </button>
+                        <Col xs={6} md={3} lg={3}>
+                            {createdBy !== null &&
+                                <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                            }
+                        </Col>
+                        <Col xs={6} md={3} lg={3}>
+                            {updatedBy !== null &&
+                                <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                            }
+                        </Col>
+                        <Col xs={6} md={3} lg={3}>
+                            {updatedBy !== null &&
+                                <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                            }
+                        </Col>
+                    </Row>
+                    <Row style={{ padding: "5px 10px 0px 20px" }}>
+                        <Col xs={6} md={3} lg={3}>
+                            <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                        </Col>
+                        <Col xs={6} md={3} lg={3}>
+                            <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestampString}</span>
+                        </Col>
+                        <Col xs={6} md={3} lg={3}>
+                            <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                        </Col>
+                        <Col xs={6} md={3} lg={3}>
+                            <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                        </Col>
+                    </Row>
+                    <div style={{
+                        marginTop: "50px", position: "fixed",
+                        border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
+                        backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
+                    }}>
+                        <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
+                            <button className="btn"
+                                style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
+                                type="submit">
+                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
+                            </button>
+                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                                float: "right",
+                                margin: "8px 0px 0px 240px",
+                                position: "fixed",
+                                backgroundColor: "#C1C1C1"
+                            }} type="button">
+                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                            </button>
+                        </div>
                     </div>
+                    <SweetAlert
+                        type="success"
+                        show={this.state.showSuccessMessage}
+                        title="Estudio de crédito"
+                        text={"Señor usuario, se ha guardado el estudio de crédito exitosamente"}
+                        onConfirm={() => this._closeMessageSuccess()}
+                    />
+                    <SweetAlert
+                        type="warning"
+                        show={this.state.showConfirmExit}
+                        title="Confirmar salida"
+                        confirmButtonColor='#DD6B55'
+                        confirmButtonText='Sí, estoy seguro!'
+                        cancelButtonText="Cancelar"
+                        text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir?"
+                        showCancelButton={true}
+                        onCancel={() => this.setState({ showConfirmExit: false })}
+                        onConfirm={() => this._onConfirmExit()} />
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessMessage}
-                    title="Estudio de crédito"
-                    text={"Señor usuario, se ha guardado el estudio de crédito exitosamente"}
-                    onConfirm={() => this._closeMessageSuccess()}
-                />
-                <SweetAlert
-                    type="warning"
-                    show={this.state.showConfirmExit}
-                    title="Confirmar salida"
-                    confirmButtonColor='#DD6B55'
-                    confirmButtonText='Sí, estoy seguro!'
-                    cancelButtonText="Cancelar"
-                    text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir?"
-                    showCancelButton={true}
-                    onCancel={() => this.setState({ showConfirmExit: false })}
-                    onConfirm={() => this._onConfirmExit()} />
             </form>
         )
     }
