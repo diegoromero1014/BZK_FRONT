@@ -43,9 +43,6 @@ class ComponentListMainClients extends Component {
         if (_.isUndefined(term.value) || _.isNull(term.value) || _.isEmpty(term.value)) {
             countErrors++;
         }
-        if (_.isUndefined(relevantInformation.value) || _.isNull(relevantInformation.value) || _.isEmpty(relevantInformation.value)) {
-            countErrors++;
-        }
 
         if (_.isEqual(countErrors, 0)) {
             var listMainCustomer = clientInformacion.get('listMainCustomer');
@@ -248,7 +245,7 @@ class ComponentListMainClients extends Component {
                         {showFormMainClients &&
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                 <div>
-                                    <dt><span>Información relevante de los principales clientes (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <dt><span>Información relevante de los principales clientes</span></dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}

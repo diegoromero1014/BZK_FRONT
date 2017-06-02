@@ -40,9 +40,6 @@ class ComponentListMainCompetitor extends Component {
         if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
             countErrors++;
         }
-        if (_.isUndefined(observations.value) || _.isNull(observations.value) || _.isEmpty(observations.value)) {
-            countErrors++;
-        }
 
         if (_.isEqual(countErrors, 0)) {
             var listMainCompetitor = clientInformacion.get('listMainCompetitor');
@@ -210,7 +207,7 @@ class ComponentListMainCompetitor extends Component {
                         {showFormMainCompetitor &&
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                 <div>
-                                    <dt><span>Observaciones (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <dt><span>Observaciones</span></dt>
                                     <Textarea
                                         name="observations"
                                         validateEnter={true}

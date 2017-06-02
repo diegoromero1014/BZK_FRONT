@@ -66,9 +66,6 @@ class ComponentListIntOperations extends Component {
         if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
             countErrors++;
         }
-        if (_.isUndefined(descriptionCoverage.value) || _.isNull(descriptionCoverage.value) || _.isEmpty(descriptionCoverage.value)) {
-            countErrors++;
-        }
 
         if (_.isEqual(countErrors, 0)) {
             if (_.size(this.state.listCountrys) > 0) {
@@ -309,7 +306,7 @@ class ComponentListIntOperations extends Component {
                                 </Col>
                                 <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                     <div>
-                                        <dt><span>Descripción de la cobertura (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                        <dt><span>Descripción de la cobertura</span></dt>
                                         <Textarea
                                             name="descriptionCoverage"
                                             validateEnter={true}

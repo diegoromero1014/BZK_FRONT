@@ -39,9 +39,6 @@ class ComponentListLineBusiness extends Component {
         if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
             countErrors++;
         }
-        if (_.isUndefined(experience.value) || _.isNull(experience.value) || _.isEmpty(experience.value)) {
-            countErrors++;
-        }
 
         if (_.isEqual(countErrors, 0)) {
             var listParticipation = clientInformacion.get('listParticipation');
@@ -195,7 +192,7 @@ class ComponentListLineBusiness extends Component {
                         {showFormLinebusiness &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>
-                                    <dt><span>Experiencia (años) (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <dt><span>Experiencia (años)</span></dt>
                                     <Input
                                         name="experience"
                                         type="text"
