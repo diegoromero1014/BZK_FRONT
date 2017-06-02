@@ -207,8 +207,8 @@ class ComponentListIntOperations extends Component {
 
     _mapContrys(country, idx) {
         return <tr key={idx}>
-            <td>{country.nameCountry} %</td>
-            <td>{country.participation}</td>
+            <td>{country.nameCountry}</td>
+            <td>{country.participation} %</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar país" style={{ cursor: "pointer" }}
                     onClick={() => this._deleteCountry(country)} />
