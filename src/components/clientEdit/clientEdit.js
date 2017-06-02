@@ -1027,7 +1027,7 @@ class clientEdit extends Component {
         _.map(listOperations, (item) => {
             item.id = item.id === null || item.id.toString().includes('mainIntO_') ? null : item.id;
             _.map(item.listCountryOperations, (country) => {
-                country.id = country.id === null || country.id.toString().includes('mainIntO_') ? null : item.id;
+                country.id = country.id === null || country.id.toString().includes('mainIntO_') ? null : country.id;
                 return country;
             });
             return item;

@@ -22,6 +22,17 @@ export const TYPE_OPERATION = [
     { 'id': 1, 'value': "Exportación" }
 ];
 
+export const STYLE_FORM_COUNTRYS = {
+    width: "100%",
+    marginLeft: "8px",
+    marginTop: "10px",
+    marginBottom: "15px",
+    border: "1px solid #ECECEC",
+    marginRight: "33px",
+    borderRadius: "5px",
+    padding: "10px",
+}
+
 class ComponentListIntOperations extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +40,8 @@ class ComponentListIntOperations extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            listCountrys: []
+            listCountrys: [],
+            updateView: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -98,7 +110,7 @@ class ComponentListIntOperations extends Component {
 
     _addConstryParticipation(e) {
         e.preventDefault();
-        const { idCountry, participationCountry, selectsReducer } = this.props;
+        const { idCountry, participationCountry, selectsReducer, swtShowMessage } = this.props;
         var countErrors = 0;
         if (_.isUndefined(idCountry.value) || _.isNull(idCountry.value) || _.isEmpty(idCountry.value)) {
             countErrors++;
@@ -119,7 +131,7 @@ class ComponentListIntOperations extends Component {
             idCountry.onChange('');
             participationCountry.onChange('');
         } else {
-            swtShowMessage('error', 'Agregar país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
+            swtShowMessage('error', 'Error agregar país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
         }
     }
 
@@ -138,13 +150,15 @@ class ComponentListIntOperations extends Component {
         const { typeOperation, participation, idCountry, customerCoverage, descriptionCoverage,
             fnShowForm, changeValueListClient, clientInformacion } = this.props;
         fnShowForm(INT_OPERATIONS, true);
-        typeOperation.onChange(entity.typeOperation);
         participation.onChange(entity.participation.toString());
         idCountry.onChange(entity.idCountry);
         customerCoverage.onChange(entity.customerCoverage);
         descriptionCoverage.onChange(entity.descriptionCoverage.toString());
         const listCountrys = entity.listCountryOperations;
         this.setState({ entitySeleted: entity, listCountrys });
+        setTimeout(() => {
+            typeOperation.onChange(entity.typeOperation);
+        }, 100);
     }
 
     _openConfirmDelete(entity) {
@@ -224,7 +238,10 @@ class ComponentListIntOperations extends Component {
                                 }
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'))}
+                                onClick={() => {
+                                    changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'));
+                                    this.clearValues();
+                                }}
                                 checked={clientInformacion.get('noAppliedIntOperations')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </dl>
                     </Col>
@@ -247,6 +264,7 @@ class ComponentListIntOperations extends Component {
                                             labelInput="Tipo de operación"
                                             {...typeOperation}
                                             valueProp={'id'}
+                                            value={typeOperation.value}
                                             textProp={'value'}
                                             data={TYPE_OPERATION}
                                             error={_.isEmpty(typeOperation.value) ? VALUE_REQUIERED : null}
@@ -309,7 +327,7 @@ class ComponentListIntOperations extends Component {
                         }
 
                         {showFormIntOperations &&
-                            <Row style={{ width: '100%', marginLeft: '0px', marginTop: '10px', marginBottom: '15px' }}>
+                            <Row style={STYLE_FORM_COUNTRYS}>
                                 <Col xs={12} md={3} lg={2}>
                                     <div>
                                         <dt><span>País (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -350,12 +368,14 @@ class ComponentListIntOperations extends Component {
                                 </Col>
                                 {_.size(this.state.listCountrys) > 0 ?
                                     <Col xs={12} md={4} lg={6} style={{ marginTop: '5px' }}>
-                                        <table className="table table-striped" style={{ width: '100%' }}>
-                                            <tr>
-                                                <th>País</th>
-                                                <th>Participación</th>
-                                                <th></th>
-                                            </tr>
+                                        <table className="ui striped table" style={{ width: '100%' }}>
+                                            <thead>
+                                                <tr>
+                                                    <th>País</th>
+                                                    <th>Participación</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 {this.state.listCountrys.map(this._mapContrys)}
                                             </tbody>

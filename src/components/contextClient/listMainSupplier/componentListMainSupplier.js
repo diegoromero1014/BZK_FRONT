@@ -154,7 +154,10 @@ class ComponentListMainSupplier extends Component {
                                 }
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => changeValueListClient('noAppliedMainSuppliers', !clientInformacion.get('noAppliedMainSuppliers'))}
+                                onClick={() => {
+                                    changeValueListClient('noAppliedMainSuppliers', !clientInformacion.get('noAppliedMainSuppliers'))
+                                    this.clearValues();
+                                }}
                                 checked={clientInformacion.get('noAppliedMainSuppliers')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>

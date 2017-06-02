@@ -132,12 +132,15 @@ class ComponentListDistributionChannel extends Component {
                                 }
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => changeValueListClient('noAppliedDistributionChannel', !clientInformacion.get('noAppliedDistributionChannel'))}
+                                onClick={() => {
+                                    changeValueListClient('noAppliedDistributionChannel', !clientInformacion.get('noAppliedDistributionChannel'))
+                                    this.clearValues();
+                                }}
                                 checked={clientInformacion.get('noAppliedDistributionChannel')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </dl>
                     </Col>
                 </Row>
-                { !clientInformacion.get('noAppliedDistributionChannel') &&
+                {!clientInformacion.get('noAppliedDistributionChannel') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
                             <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
