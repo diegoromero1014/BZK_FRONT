@@ -215,7 +215,7 @@ class ComponentListMainSupplier extends Component {
                                         placeholder="Participación"
                                         {...participation}
                                         value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
@@ -236,7 +236,7 @@ class ComponentListMainSupplier extends Component {
                         {showFormMainSupplier &&
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                 <div>
-                                    <dt><span>Información relevante de los principales clientes (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                    <dt><span>Información relevante de los principales proveedores (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}

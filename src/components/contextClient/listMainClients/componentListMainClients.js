@@ -227,7 +227,7 @@ class ComponentListMainClients extends Component {
                                         placeholder="Participación"
                                         {...participation}
                                         value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
