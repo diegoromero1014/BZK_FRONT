@@ -193,8 +193,8 @@ class ComponentStudyCredit extends Component {
             document.getElementById('dashboardComponentScroll').scrollTop = 0;
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los accionistas para poder guardar.');
         } else {
-            if (contextClientInfo.overdueCreditStudy && this.state.valueCheckSectionActivityEconomic &&
-                this.state.valueCheckSectionInventoryPolicy && this.state.valueCheckSectionMainClients) {
+            if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
+                !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients)) {
                 swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
             } else {
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
