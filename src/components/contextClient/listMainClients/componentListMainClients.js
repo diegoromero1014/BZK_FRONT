@@ -154,7 +154,10 @@ class ComponentListMainClients extends Component {
                                 }
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => changeValueListClient('noAppliedMainClients', !clientInformacion.get('noAppliedMainClients'))}
+                                onClick={() => {
+                                    changeValueListClient('noAppliedMainClients', !clientInformacion.get('noAppliedMainClients'))
+                                    this.clearValues();
+                                }}
                                 checked={clientInformacion.get('noAppliedMainClients')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>

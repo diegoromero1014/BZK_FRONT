@@ -142,7 +142,10 @@ class ComponentListLineBusiness extends Component {
                                 }
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => changeValueListClient('noAppliedLineOfBusiness', !clientInformacion.get('noAppliedLineOfBusiness'))}
+                                onClick={() => {
+                                    changeValueListClient('noAppliedLineOfBusiness', !clientInformacion.get('noAppliedLineOfBusiness'))
+                                    this.clearValues();
+                                }}
                                 checked={clientInformacion.get('noAppliedLineOfBusiness')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </dl>
                     </Col>
