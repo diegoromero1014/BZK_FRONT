@@ -1010,7 +1010,7 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
                 contactTypeOfContact: contact.typeOfContact,
                 contactLineOfBusiness: '',
                 contactFunctions: '',
-                contactRelevantFeatures: '',
+                contactRelevantFeatures: contact.contactRelevantFeatures,
                 contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
                 contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
             }
