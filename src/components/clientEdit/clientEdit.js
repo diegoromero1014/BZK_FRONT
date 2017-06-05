@@ -1161,7 +1161,7 @@ class clientEdit extends Component {
                 sendErrorsUpdate([]);
                 redirectUrl("/dashboard/clientInformation");
             } else {
-                showLoading(true, 'Cargando...');
+                showLoading(true, MESSAGE_SAVE_DATA);
                 const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
