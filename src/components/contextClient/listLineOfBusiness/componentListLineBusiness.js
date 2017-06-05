@@ -18,7 +18,8 @@ class ComponentListLineBusiness extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            entitySeleted: null
+            entitySeleted: null,
+            errorForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -66,6 +67,7 @@ class ComponentListLineBusiness extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.');
         }
     }
@@ -76,7 +78,7 @@ class ComponentListLineBusiness extends Component {
         participation.onChange('');
         experience.onChange('');
         fnShowForm(LINE_OF_BUSINESS, false);
-        this.setState({ entitySeleted: null });
+        this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationLineBusiness(entity) {
@@ -166,7 +168,7 @@ class ComponentListLineBusiness extends Component {
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
                                         error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
-                                        touched={true}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -185,6 +187,7 @@ class ComponentListLineBusiness extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -203,6 +206,7 @@ class ComponentListLineBusiness extends Component {
                                         value={experience.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
                                         error={_.isEmpty(experience.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>

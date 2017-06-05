@@ -41,7 +41,9 @@ class ComponentListIntOperations extends Component {
             entityDelete: null,
             entitySeleted: null,
             listCountrys: [],
-            updateView: false
+            updateView: false,
+            errorForm: false,
+            errorCountryForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -101,6 +103,7 @@ class ComponentListIntOperations extends Component {
                 swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe agregar por lo menos un país.');
             }
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe ingresar todos los valores.');
         }
     }
@@ -127,8 +130,10 @@ class ComponentListIntOperations extends Component {
             this.setState({ listCountrys });
             idCountry.onChange('');
             participationCountry.onChange('');
+            this.setState({ errorCountryForm: false });
         } else {
-            swtShowMessage('error', 'Error agregar país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
+            this.setState({errorCountryForm: true});
+            swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
         }
     }
 
@@ -140,7 +145,7 @@ class ComponentListIntOperations extends Component {
         customerCoverage.onChange('');
         descriptionCoverage.onChange('');
         fnShowForm(INT_OPERATIONS, false);
-        this.setState({ entitySeleted: null, listCountrys: [] });
+        this.setState({ entitySeleted: null, listCountrys: [], errorForm: false, errorCountryForm: false });
     }
 
     _viewInformationIntOperations(entity) {
@@ -265,6 +270,7 @@ class ComponentListIntOperations extends Component {
                                             textProp={'value'}
                                             data={TYPE_OPERATION}
                                             error={_.isEmpty(typeOperation.value) ? VALUE_REQUIERED : null}
+                                            touched={this.state.errorForm}
                                         />
                                     </div>
                                 </Col>
@@ -281,6 +287,7 @@ class ComponentListIntOperations extends Component {
                                             value={participation.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
                                             error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                            touched={this.state.errorForm}
                                         />
                                     </div>
                                 </Col>
@@ -316,7 +323,6 @@ class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
-                                            error={_.isEmpty(descriptionCoverage.value) ? VALUE_REQUIERED : null}
                                         />
                                     </div>
                                 </Col>
@@ -338,6 +344,7 @@ class ComponentListIntOperations extends Component {
                                             textProp={'value'}
                                             data={selectsReducer.get(FILTER_COUNTRY) || []}
                                             error={_.isEmpty(idCountry.value) ? VALUE_REQUIERED : null}
+                                            touched={this.state.errorCountryForm}
                                         />
                                     </div>
                                 </Col>
@@ -354,6 +361,7 @@ class ComponentListIntOperations extends Component {
                                             value={participationCountry.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, participationCountry.value, true, 2)}
                                             error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : null}
+                                            touched={this.state.errorCountryForm}
                                         />
                                     </div>
                                 </Col>

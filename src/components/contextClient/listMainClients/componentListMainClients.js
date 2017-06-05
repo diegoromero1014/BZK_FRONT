@@ -19,7 +19,8 @@ class ComponentListMainClients extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            entitySeleted: null
+            entitySeleted: null,
+            errorForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -72,6 +73,7 @@ class ComponentListMainClients extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Principales clientes', 'Señor usuario, para agregar un cliente principal debe ingresar todos los valores.');
         }
     }
@@ -83,7 +85,7 @@ class ComponentListMainClients extends Component {
         term.onChange('');
         relevantInformation.onChange('');
         fnShowForm(MAIN_CLIENTS, false);
-        this.setState({ entitySeleted: null });
+        this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationClient(entity) {
@@ -188,7 +190,7 @@ class ComponentListMainClients extends Component {
                                         placeholder="Nombre del cliente"
                                         {...nameClient}
                                         error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
-                                        touched={true}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -207,7 +209,7 @@ class ComponentListMainClients extends Component {
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
-                                        touched={true}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -226,6 +228,7 @@ class ComponentListMainClients extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -255,7 +258,6 @@ class ComponentListMainClients extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
-                                        error={_.isEmpty(relevantInformation.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>

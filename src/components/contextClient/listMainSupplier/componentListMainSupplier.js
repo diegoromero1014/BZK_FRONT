@@ -19,7 +19,8 @@ class ComponentListMainSupplier extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            entitySeleted: null
+            entitySeleted: null,
+            errorForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -71,6 +72,7 @@ class ComponentListMainSupplier extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Principales proveedores', 'Señor usuario, para agregar un proveedor principal debe ingresar todos los valores.');
         }
     }
@@ -82,7 +84,7 @@ class ComponentListMainSupplier extends Component {
         term.onChange('');
         relevantInformation.onChange('');
         fnShowForm(MAIN_SUPPLIER, false);
-        this.setState({ entitySeleted: null });
+        this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationSupplier(entity) {
@@ -177,6 +179,7 @@ class ComponentListMainSupplier extends Component {
                                         placeholder="Nombre del proveedor"
                                         {...nameSupplier}
                                         error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -195,6 +198,7 @@ class ComponentListMainSupplier extends Component {
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -213,6 +217,7 @@ class ComponentListMainSupplier extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -242,7 +247,6 @@ class ComponentListMainSupplier extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
-                                        error={_.isEmpty(relevantInformation.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>

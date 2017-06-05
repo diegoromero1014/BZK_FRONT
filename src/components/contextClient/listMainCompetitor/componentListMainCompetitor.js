@@ -19,7 +19,8 @@ class ComponentListMainCompetitor extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            entitySeleted: null
+            entitySeleted: null,
+            errorForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -67,6 +68,7 @@ class ComponentListMainCompetitor extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
         }
     }
@@ -77,7 +79,7 @@ class ComponentListMainCompetitor extends Component {
         participation.onChange('');
         observations.onChange('');
         fnShowForm(MAIN_COMPETITOR, false);
-        this.setState({ entitySeleted: null });
+        this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationCompetitor(entity) {
@@ -170,6 +172,7 @@ class ComponentListMainCompetitor extends Component {
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
                                         error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -188,6 +191,7 @@ class ComponentListMainCompetitor extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -217,7 +221,6 @@ class ComponentListMainCompetitor extends Component {
                                         rows={3}
                                         placeholder="Observaciones"
                                         {...observations}
-                                        error={_.isEmpty(observations.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>

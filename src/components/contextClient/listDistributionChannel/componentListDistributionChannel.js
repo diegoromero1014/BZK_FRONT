@@ -18,7 +18,8 @@ class ComponentListDistributionChannel extends Component {
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
-            entitySeleted: null
+            entitySeleted: null,
+            errorForm: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -63,6 +64,7 @@ class ComponentListDistributionChannel extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
+            this.setState({errorForm: true});
             swtShowMessage('error', 'Canales de distrbución', 'Señor usuario, para agregar un canal de distrbución debe ingresar todos los valores.');
         }
     }
@@ -72,7 +74,7 @@ class ComponentListDistributionChannel extends Component {
         distributionChannel.onChange('');
         participation.onChange('');
         fnShowForm(DISTRIBUTION_CHANNEL, false);
-        this.setState({ entitySeleted: null });
+        this.setState({ entitySeleted: null, errorForm: false  });
     }
 
     _viewInformationDistribution(entity) {
@@ -159,6 +161,7 @@ class ComponentListDistributionChannel extends Component {
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
                                         error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
@@ -177,6 +180,7 @@ class ComponentListDistributionChannel extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>
