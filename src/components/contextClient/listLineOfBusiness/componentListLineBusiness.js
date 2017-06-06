@@ -205,8 +205,6 @@ class ComponentListLineBusiness extends Component {
                                         {...experience}
                                         value={experience.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
-                                        error={_.isEmpty(experience.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
                                     />
                                 </div>
                             </Col>

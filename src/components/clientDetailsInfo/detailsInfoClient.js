@@ -219,6 +219,14 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
                         componentView={<InventoryPolicy infoClient={infoClient} />} />
 
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
+                        codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"
+                        componentView={<UbicationCorrespondence infoClient={infoClient} />} />
+
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('infoFinanciera')}
+                        codSection={accordion.infoFinanciera} title="Información financiera" icon="suitcase"
+                        componentView={<InfoFinanciera infoClient={infoClient} />} />
+
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
                         codSection={accordion.mainCustomer} title="Principales clientes" icon="users"
                         componentView={<MainCustomer infoClient={infoClient} />} />
@@ -230,14 +238,6 @@ class DetailsInfoClient extends Component {
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
                         codSection={accordion.mainCompetition} title="Principales competidores" icon="factory"
                         componentView={<MainCompetitor infoClient={infoClient} />} />
-
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
-                        codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"
-                        componentView={<UbicationCorrespondence infoClient={infoClient} />} />
-
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('infoFinanciera')}
-                        codSection={accordion.infoFinanciera} title="Información financiera" icon="suitcase"
-                        componentView={<InfoFinanciera infoClient={infoClient} />} />
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('dataComercial')}
                         codSection={accordion.dataComercial} title="Datos de conocimiento comercial" icon="book"

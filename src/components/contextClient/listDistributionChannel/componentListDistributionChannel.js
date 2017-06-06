@@ -65,7 +65,7 @@ class ComponentListDistributionChannel extends Component {
             this.setState({ entitySeleted: null });
         } else {
             this.setState({errorForm: true});
-            swtShowMessage('error', 'Canales de distrbución', 'Señor usuario, para agregar un canal de distrbución debe ingresar todos los valores.');
+            swtShowMessage('error', 'Canales de distribución', 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.');
         }
     }
 
@@ -112,7 +112,7 @@ class ComponentListDistributionChannel extends Component {
             <td>{entity.distributionChannel}</td>
             <td>{entity.participation} %</td>
             <td className="collapsing">
-                <i className="trash icon" title="Eliminar canal de distrbución" style={{ cursor: "pointer" }}
+                <i className="trash icon" title="Eliminar canal de distribución" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
             </td>
         </tr>
@@ -204,7 +204,7 @@ class ComponentListDistributionChannel extends Component {
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Canal de distrbucción</th>
+                                                <th>Canal de distribucción</th>
                                                 <th>Participación</th>
                                                 <th></th>
                                             </tr>
@@ -225,7 +225,7 @@ class ComponentListDistributionChannel extends Component {
                             type="warning"
                             show={this.state.showConfirmDelete}
                             title="Confirmar eliminación"
-                            text="Señor usuario, ¿Está seguro que desea eliminar el canal de distrbución?"
+                            text="Señor usuario, ¿Está seguro que desea eliminar el canal de distribución?"
                             confirmButtonColor='#DD6B55'
                             confirmButtonText='Sí, estoy seguro!'
                             cancelButtonText="Cancelar"

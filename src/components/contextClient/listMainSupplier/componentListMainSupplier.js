@@ -9,7 +9,7 @@ import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER } from '../constants';
+import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
@@ -72,7 +72,7 @@ class ComponentListMainSupplier extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Principales proveedores', 'Señor usuario, para agregar un proveedor principal debe ingresar todos los valores.');
         }
     }
@@ -237,7 +237,14 @@ class ComponentListMainSupplier extends Component {
                         {showFormMainSupplier &&
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                 <div>
-                                    <dt><span>Información relevante de los principales proveedores</span></dt>
+                                    <dt><span>Información relevante de los principales proveedores</span>
+                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_SUPPLIERS}
+                                            children={
+                                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                                    className="help circle icon blue" />
+                                            }
+                                        />
+                                     </dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}
