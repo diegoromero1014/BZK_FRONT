@@ -33,8 +33,8 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case CONSULT_INFO_CLIENT:
-            const { status, validateLogin, clientInformation } = action.payload.data;
-            const dataClient = isEmpty(clientInformation) ? [] : JSON.parse(clientInformation);
+            const { status, validateLogin, data } = action.payload.data;
+            const dataClient = isEmpty(data) ? [] : JSON.parse(data);
             const contextClient = _.isUndefined(dataClient) || _.isNull(dataClient) ? null : dataClient.contextClient;
             const listParticipation = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listParticipation) ? [] : contextClient.listParticipation;
             const listDistribution = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listDistribution) ? [] : contextClient.listDistribution;
@@ -84,10 +84,10 @@ export default (state = initialState, action) => {
             return state.set("responseClientInfo", {});
 
         case CHANGE_CHECK_CLIENT:
-            const data = action.payload;
+            const dataClientResponse = action.payload;
             let responseClientInfo = state.get('responseClientInfo');
             if (responseClientInfo !== null && responseClientInfo !== undefined) {
-                responseClientInfo.certificateNoShareholder = data;
+                responseClientInfo.certificateNoShareholder = dataClientResponse;
                 return state.set("responseClientInfo", responseClientInfo);
             } else {
                 return state;
