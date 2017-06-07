@@ -64,10 +64,10 @@ export default (state = initialState, action) => {
             return state.set("responseClientInfo", {});
 
         case CHANGE_CHECK_CLIENT:
-            const data = action.payload;
+            const dataClientResponse = action.payload;
             let responseClientInfo = state.get('responseClientInfo');
             if (responseClientInfo !== null && responseClientInfo !== undefined) {
-                responseClientInfo.certificateNoShareholder = data;
+                responseClientInfo.certificateNoShareholder = dataClientResponse;
                 return state.set("responseClientInfo", responseClientInfo);
             } else {
                 return state;
