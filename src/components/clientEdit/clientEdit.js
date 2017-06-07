@@ -30,7 +30,7 @@ import {
 } from './constants';
 import {
     OPTION_REQUIRED, VALUE_REQUIERED, DATE_REQUIERED, ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER,
-    MESSAGE_SAVE_DATA
+    MESSAGE_SAVE_DATA, YES
 } from '../../constantsGlobal';
 import { BUTTON_UPDATE, BUTTON_EDIT, UPDATE } from '../clientDetailsInfo/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
@@ -1465,19 +1465,6 @@ class clientEdit extends Component {
 
                 <InventorPolicy inventoryPolicy={inventoryPolicy} />
 
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                    term={termMainClient} relevantInformation={relevantInformationMainClient}
-                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut} />
-
-                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
-                    term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
-                    showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut} />
-
-                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                    fnShowForm={this.showFormOut} />
-
-
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1810,7 +1797,20 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
+
+                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
+                    term={termMainClient} relevantInformation={relevantInformationMainClient}
+                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut} />
+
+                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                    term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                    showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut} />
+
+                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                    fnShowForm={this.showFormOut} />
+
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
@@ -2160,7 +2160,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
 
-                {operationsForeignCurrency.value &&
+                {_.isEqual(operationsForeignCurrency.value, "true") &&
                     <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
                         idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe} descriptionCoverage={descriptionCoverageIntOpe}
                         showFormIntOperations={this.state.showFormAddIntOperatrions} fnShowForm={this.showFormOut} />

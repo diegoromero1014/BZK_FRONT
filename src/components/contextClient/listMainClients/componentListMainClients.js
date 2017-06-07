@@ -9,7 +9,7 @@ import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS } from '../constants';
+import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS, MESSAGE_RELEVANT_MAIN_CLIENTS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
@@ -73,7 +73,7 @@ class ComponentListMainClients extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Principales clientes', 'Señor usuario, para agregar un cliente principal debe ingresar todos los valores.');
         }
     }
@@ -248,7 +248,14 @@ class ComponentListMainClients extends Component {
                         {showFormMainClients &&
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
                                 <div>
-                                    <dt><span>Información relevante de los principales clientes</span></dt>
+                                    <dt><span>Información relevante de los principales clientes</span>
+                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_CLIENTS}
+                                            children={
+                                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                                    className="help circle icon blue" />
+                                            }
+                                        />
+                                    </dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}

@@ -103,7 +103,7 @@ class ComponentListIntOperations extends Component {
                 swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe agregar por lo menos un país.');
             }
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe ingresar todos los valores.');
         }
     }
@@ -119,20 +119,24 @@ class ComponentListIntOperations extends Component {
             countErrors++;
         }
         if (_.isEqual(countErrors, 0)) {
-            const newCountry = {
-                "id": _.uniqueId('mainIntO_'),
-                "idCountry": idCountry.value,
-                "participation": participationCountry.value,
-                "nameCountry": _.find(selectsReducer.get(FILTER_COUNTRY), ['id', parseInt(idCountry.value)]).value,
-            };
-            const listCountrys = this.state.listCountrys;
-            listCountrys.push(newCountry);
-            this.setState({ listCountrys });
-            idCountry.onChange('');
-            participationCountry.onChange('');
-            this.setState({ errorCountryForm: false });
+            if ( _.size(_.filter(this.state.listCountrys, ["idCountry", idCountry.value.toString()])) === 0 ){
+                const newCountry = {
+                    "id": _.uniqueId('mainIntO_'),
+                    "idCountry": idCountry.value,
+                    "participation": participationCountry.value,
+                    "nameCountry": _.find(selectsReducer.get(FILTER_COUNTRY), ['id', parseInt(idCountry.value)]).value,
+                };
+                const listCountrys = this.state.listCountrys;
+                listCountrys.push(newCountry);
+                this.setState({ listCountrys });
+                idCountry.onChange('');
+                participationCountry.onChange('');
+                this.setState({ errorCountryForm: false });
+            } else {
+                swtShowMessage('error', 'Error agregando país', 'Señor usuario, el país que quiere agregar ya se encuentra en la lista de países.');
+            }
         } else {
-            this.setState({errorCountryForm: true});
+            this.setState({ errorCountryForm: true });
             swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
         }
     }

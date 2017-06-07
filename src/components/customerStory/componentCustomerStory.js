@@ -7,7 +7,7 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
 import StructuredDelivery from './structuredDelivery/componentStructuredDelivery';
 import { updateTabSeletedCS, aproveRejectDeliveryClient } from './actions';
-import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT } from '../../constantsGlobal';
+import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';
 import { validateResponse } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import ComponentCustomerDelivery from './customerDelivery/componentCustomerDelivery';
@@ -45,7 +45,7 @@ class ComponentCustomerStory extends Component {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             aproveRejectDeliveryClient(window.localStorage.getItem('idClientSelected'), valueAprove).then((data) => {
                 if (validateResponse(data)) {
-                    if ( _.isEqual(valueAprove, true) || _.isEqual(valueAprove, 'true') ) {
+                    if (_.isEqual(valueAprove, true) || _.isEqual(valueAprove, 'true')) {
                         consultInfoClient();
                         swtShowMessage('success', 'Entrega de clientes', 'Señor usuario, el cambio de célula del cliente se realizó de forma exitosa.');
                     } else {
@@ -61,7 +61,7 @@ class ComponentCustomerStory extends Component {
         }
     }
 
-    _changeValueComboAprove( val ){
+    _changeValueComboAprove(val) {
         console.log('valueAprove', val);
         this.setState({
             valueAprove: val,
@@ -71,8 +71,8 @@ class ComponentCustomerStory extends Component {
     }
 
     render() {
-        const { clientInformacion, customerStory, infoClient } = this.props;
-        const { deliveryClient, nameUserUpdateDelivery, dateUpdateDelivery, reasonTransferClient, 
+        const { clientInformacion, customerStory, infoClient, reducerGlobal } = this.props;
+        const { deliveryClient, nameUserUpdateDelivery, dateUpdateDelivery, reasonTransferClient,
             expectedCelulaId, expectedCelulaName } = clientInformacion.get("responseClientInfo");
         var tabActive = customerStory.get('tabSelected');
         if (tabActive === null || tabActive === undefined || tabActive === "") {
@@ -85,15 +85,17 @@ class ComponentCustomerStory extends Component {
                 style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
                 {!_.isNull(expectedCelulaId) && !_.isUndefined(expectedCelulaId) &&
                     <Row>
-                        <Col xs={12} md={12} lg={5}>
-                            <table>
-                                <tbody>
-                                    <tr><td><span style={{ fontWeight: "bold", color: "#EB984E" }}>Cliente pendiente de aprobación para la célula {expectedCelulaName}</span></td></tr>
-                                    <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Gestionó: <span style={{ fontWeight: "normal", color: "#818282" }}> {nameUserUpdateDelivery} - {dateString} </span></span></td></tr>
-                                    <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Motivo: <span style={{ fontWeight: "normal", color: "#818282" }}> {reasonTransferClient} </span></span></td></tr>
-                                </tbody>
-                            </table>
-                        </Col>
+                        {_.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ENTREGA_ESTRUCTURADA), false) &&
+                            <Col xs={12} md={12} lg={5}>
+                                <table>
+                                    <tbody>
+                                        <tr><td><span style={{ fontWeight: "bold", color: "#EB984E" }}>Cliente pendiente de aprobación para la célula {expectedCelulaName}</span></td></tr>
+                                        <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Gestionó: <span style={{ fontWeight: "normal", color: "#818282" }}> {nameUserUpdateDelivery} - {dateString} </span></span></td></tr>
+                                        <tr><td><span style={{ fontWeight: "bold", color: "#818282" }}>Motivo: <span style={{ fontWeight: "normal", color: "#818282" }}> {reasonTransferClient} </span></span></td></tr>
+                                    </tbody>
+                                </table>
+                            </Col>
+                        }
                         {deliveryClient &&
                             <Col xs={12} md={4} lg={3} >
                                 <dt><span>Entrega estructurada </span></dt>
@@ -106,8 +108,8 @@ class ComponentCustomerStory extends Component {
                                         data={VALUES_APROVE}
                                         value={this.state.valueAprove}
                                         error={this.state.errorAprove}
-                                        onChange={ (val) => this._changeValueComboAprove(val) }
-                                        onBlur= {() => console.log()}
+                                        onChange={(val) => this._changeValueComboAprove(val)}
+                                        onBlur={() => console.log()}
                                         touched={true}
                                     />
                                 </dt>
@@ -127,7 +129,9 @@ class ComponentCustomerStory extends Component {
                     style={{ width: "100%", marginBottom: "70px" }}>
                     <Menu pointing secondary>
                         <Menu.Item name="Historial" active={tabActive === TAB_STORY} onClick={this._handleItemClick.bind(this, TAB_STORY)} />
-                        <Menu.Item name="Entrega clientes" active={tabActive === TAB_CUSTOMER_DELIVERY} onClick={this._handleItemClick.bind(this, TAB_CUSTOMER_DELIVERY)} />
+                        {_.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ENTREGA_ESTRUCTURADA), false) &&
+                            <Menu.Item name="Entrega clientes" active={tabActive === TAB_CUSTOMER_DELIVERY} onClick={this._handleItemClick.bind(this, TAB_CUSTOMER_DELIVERY)} />
+                        }
                     </Menu>
                     <Segment>
                         {tabActive === TAB_STORY && <StructuredDelivery />}
@@ -150,11 +154,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, customerStory, clientInformacion }, ownerProps) {
+function mapStateToProps({ navBar, customerStory, clientInformacion, reducerGlobal }, ownerProps) {
     return {
         navBar,
         customerStory,
-        clientInformacion
+        clientInformacion,
+        reducerGlobal
     };
 }
 

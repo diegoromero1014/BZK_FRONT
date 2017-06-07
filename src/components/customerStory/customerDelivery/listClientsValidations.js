@@ -26,6 +26,12 @@ class ListClientsValidations extends Component {
                     <i className="red remove icon" title="El cliente no se encuentra actualizado" style={{ cursor: "pointer" }} />
                 }
             </td>
+            <td className="collapsing" style={{ textAlign: 'center' }}>
+                <ButtonOpenHistoricalClient mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} />
+            </td>
+            <td className="collapsing" style={{ textAlign: 'center' }}>
+                <ButtonOpenHistoricalClient mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
+            </td>
         </tr>
     }
 
@@ -44,6 +50,8 @@ class ListClientsValidations extends Component {
                                         <th>Célula</th>
                                         <th>Historial</th>
                                         <th>Actualización</th>
+                                        <th>Principales clientes</th>
+                                        <th>Principales proveedores</th>
                                     </tr>
                                 </thead>
                                 <tbody>
