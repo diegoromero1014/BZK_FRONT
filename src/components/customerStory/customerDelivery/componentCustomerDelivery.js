@@ -91,8 +91,9 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { consultList, getAllteams, getMasterDataFields } = this.props;
+        const { consultList, getAllteams, getMasterDataFields, updateCheckEconomicGroup } = this.props;
         getAllteams();
+        updateCheckEconomicGroup(false);
         getMasterDataFields([REASON_TRANFER]).then( (data) => {
             valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
         });
@@ -110,9 +111,13 @@ class ComponentCustomerDelivery extends Component {
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
         } else {
+            //Se valida si alguno de los clientes que se va a entregar tiene errores, ya sea actualización, historial, principales clientes o proveedores
             const validateErrorsUpdateClient = _.filter(customerStory.get('listClientsDelivery'), ['updateClient', false]);
             const validateErrorsDeliveryClient = _.filter(customerStory.get('listClientsDelivery'), ['deliveryComplete', false]);
-            if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0) {
+            const validateErrorsClients = _.filter(customerStory.get('listClientsDelivery'), ['mainClientsComplete', false]);
+            const validateErrorsSuppliers = _.filter(customerStory.get('listClientsDelivery'), ['mainSuppliersComplete', false]);
+            if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0 || 
+                _.size(validateErrorsClients) > 0 || _.size(validateErrorsSuppliers) > 0) {
                 swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
             } else {
                 this.setState({ showConfirmUpdate: true });

@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -20,7 +20,9 @@ class ComponentListMainClients extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: false
+            errorForm: false,
+            fieldReducerList: 'listMainCustomer',
+            fieldReducerNoApplied: 'noAppliedMainClients'
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -28,6 +30,16 @@ class ComponentListMainClients extends Component {
         this._viewInformationClient = this._viewInformationClient.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainClients = this._deleteMainClients.bind(this);
+    }
+
+    componentWillMount(){
+        const {nameList, nameNoApplied} = this.props;
+        if( validateValueExist(nameList) && validateValueExist(nameNoApplied) ){
+            this.setState({ 
+                fieldReducerList: nameList,
+                fieldReducerNoApplied: nameNoApplied
+            });
+        }
     }
 
     validateInfo(e) {
@@ -46,7 +58,7 @@ class ComponentListMainClients extends Component {
         }
 
         if (_.isEqual(countErrors, 0)) {
-            var listMainCustomer = clientInformacion.get('listMainCustomer');
+            var listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
                     "id": _.uniqueId('mainC_'),
@@ -69,7 +81,7 @@ class ComponentListMainClients extends Component {
                 listMainCustomer = _.remove(listMainCustomer, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listMainCustomer.push(updateValue);
             }
-            changeValueListClient('listMainCustomer', listMainCustomer);
+            changeValueListClient(this.state.fieldReducerList, listMainCustomer);
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
@@ -107,9 +119,9 @@ class ComponentListMainClients extends Component {
 
     _deleteMainClients() {
         const { changeValueListClient, clientInformacion } = this.props;
-        const listMainCustomer = clientInformacion.get('listMainCustomer');
+        const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         const newListPart = _.remove(listMainCustomer, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
-        changeValueListClient('listMainCustomer', newListPart);
+        changeValueListClient(this.state.fieldReducerList, newListPart);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
@@ -136,7 +148,7 @@ class ComponentListMainClients extends Component {
     render() {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
             clientInformacion, showCheckValidateSection, valueCheckSectionMainClients, functionChangeCheckSectionMainClients, changeValueListClient } = this.props;
-        const listMainCustomer = clientInformacion.get('listMainCustomer');
+        const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -154,10 +166,10 @@ class ComponentListMainClients extends Component {
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
-                                    changeValueListClient('noAppliedMainClients', !clientInformacion.get('noAppliedMainClients'))
+                                    changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied))
                                     this.clearValues();
                                 }}
-                                checked={clientInformacion.get('noAppliedMainClients')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
+                                checked={clientInformacion.get(this.state.fieldReducerNoApplied)} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
@@ -171,7 +183,7 @@ class ComponentListMainClients extends Component {
                         }
                     </Col>
                 </Row>
-                {!clientInformacion.get('noAppliedMainClients') &&
+                {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
                             <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
@@ -322,7 +334,9 @@ ComponentListMainClients.PropTypes = {
     showFormMainClients: PropTypes.bool.isRequired,
     valueCheckSectionMainClients: PropTypes.bool.isRequired,
     showCheckValidateSection: PropTypes.string.isRequired,
-    functionChangeCheckSectionMainClients: PropTypes.func
+    functionChangeCheckSectionMainClients: PropTypes.func,
+    nameList: PropTypes.string,
+    nameNoApplied: PropTypes.string
 }
 
 

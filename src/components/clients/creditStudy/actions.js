@@ -1,8 +1,9 @@
 import { APP_URL } from '../../../constantsGlobal';
 import { GET_CONTEXT_CLIENT, SAVE_CREDIT_STUDY, VALIDATE_INFO_CREDIT_STUDY } from './constants';
 import axios from 'axios';
+import _ from 'lodash';
 
-export function getContextClient(idClient) {
+export function getContextClient(idClient, type) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -21,7 +22,7 @@ export function getContextClient(idClient) {
 
     var request = axios.post(APP_URL + "/getContextClientByClient", json);
     return {
-        type: GET_CONTEXT_CLIENT,
+        type: _.isUndefined(type) || _.isNull(type) ? GET_CONTEXT_CLIENT : type,
         payload: request
     }
 }

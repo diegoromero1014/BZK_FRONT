@@ -1,6 +1,6 @@
 import { APP_URL } from '../../constantsGlobal';
 import { UPDATE_ACTIVE_TAB_CS, VALIDATE_CLIENTS, UPDATE_TEAM_CLIENTS, APROVE_DELIVERY_CLIENT, 
-    GET_ALL_TEAMS, CHANGE_ECONOMIC_GROUP } from './constants';
+    GET_ALL_TEAMS, CHANGE_ECONOMIC_GROUP, SAVE_CONTEXT_CLIENT  } from './constants';
 import axios from 'axios';
 
 export function clientsByEconomicGroup(idClient, idEconomicGroup) {
@@ -118,5 +118,29 @@ export function updateCheckEconomicGroup(value) {
     return {
         type: CHANGE_ECONOMIC_GROUP,
         value
+    }
+}
+
+export function saveContextClientDeliveryClients(jsonContext) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": jsonContext
+    };
+
+    var request = axios.post(APP_URL + "/saveMainClientsAndSuppliers", json);
+    return {
+        type: SAVE_CONTEXT_CLIENT,
+        payload: request
     }
 }

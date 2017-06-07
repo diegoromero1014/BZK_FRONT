@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../../globalComponents/actions';
 import ButtonOpenHistoricalClient from './buttonOpenHistoricalClient';
+import ButtonOpenMainClients from './buttonSaveListMainClients';
+import ButtonOpenMainSuppliers from './buttonSaveListMainSuppliers';
 
 class ListClientsValidations extends Component {
     constructor(props) {
@@ -27,10 +29,10 @@ class ListClientsValidations extends Component {
                 }
             </td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenHistoricalClient mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} />
+                <ButtonOpenMainClients mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} />
             </td>
             <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenHistoricalClient mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
+                <ButtonOpenMainSuppliers mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
             </td>
         </tr>
     }
@@ -50,8 +52,8 @@ class ListClientsValidations extends Component {
                                         <th>Célula</th>
                                         <th>Historial</th>
                                         <th>Actualización</th>
-                                        <th>Principales clientes</th>
-                                        <th>Principales proveedores</th>
+                                        <th style={{textAlign: 'center'}}>Principales clientes</th>
+                                        <th style={{textAlign: 'center'}}>Principales proveedores</th>
                                     </tr>
                                 </thead>
                                 <tbody>
