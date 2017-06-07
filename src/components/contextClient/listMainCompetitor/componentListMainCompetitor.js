@@ -68,7 +68,7 @@ class ComponentListMainCompetitor extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
         }
     }
@@ -127,7 +127,8 @@ class ComponentListMainCompetitor extends Component {
 
     render() {
         const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
-            clientInformacion, changeValueListClient } = this.props;
+            clientInformacion, changeValueListClient, valueCheckSectionMainCompetitor, showCheckValidateSection,
+            functionChangeMainCompetitor } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div>
@@ -151,6 +152,15 @@ class ComponentListMainCompetitor extends Component {
                                 }}
                                 checked={clientInformacion.get('noAppliedMainCompetitors')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {showCheckValidateSection &&
+                            <div>
+                                <input type="checkbox" id="checkSectionMainCompetitor"
+                                    checked={valueCheckSectionMainCompetitor} onClick={functionChangeMainCompetitor} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
@@ -273,7 +283,10 @@ ComponentListMainCompetitor.PropTypes = {
     participation: PropTypes.object.isRequired,
     observations: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormMainCompetitor: PropTypes.bool.isRequired
+    showFormMainCompetitor: PropTypes.bool.isRequired,
+    valueCheckSectionMainCompetitor: PropTypes.bool.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
+    functionChangeMainCompetitor: PropTypes.func
 }
 
 

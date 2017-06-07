@@ -15,6 +15,7 @@ import { FILTER_COUNTRY } from '../../selectsComponent/constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { IMPORT, EXPORT } from '../../clientDetailsInfo/constants';
 import _ from 'lodash';
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 export const TYPE_OPERATION = [
     { 'id': '', 'value': "Seleccione..." },
@@ -55,6 +56,7 @@ class ComponentListIntOperations extends Component {
         this._addConstryParticipation = this._addConstryParticipation.bind(this);
         this._mapContrys = this._mapContrys.bind(this);
         this._deleteCountry = this._deleteCountry.bind(this);
+        this._getTitleSection = this._getTitleSection.bind(this);
     }
 
     validateInfo(e) {
@@ -119,7 +121,7 @@ class ComponentListIntOperations extends Component {
             countErrors++;
         }
         if (_.isEqual(countErrors, 0)) {
-            if ( _.size(_.filter(this.state.listCountrys, ["idCountry", idCountry.value.toString()])) === 0 ){
+            if (_.size(_.filter(this.state.listCountrys, ["idCountry", idCountry.value.toString()])) === 0) {
                 const newCountry = {
                     "id": _.uniqueId('mainIntO_'),
                     "idCountry": idCountry.value,
@@ -227,29 +229,58 @@ class ComponentListIntOperations extends Component {
         customerCoverage.onChange(_.isNull(customerCoverage.value) ? true : !customerCoverage.value);
     }
 
+    _getTitleSection() {
+        const { origin } = this.props;
+        //Valida si el componente padre es estudio de crédito para retornar el título como una sección,
+        //de lo contrario lo retorna como una subsección
+        if (origin === ORIGIN_CREDIT_STUDY) {
+            return <div style={{ display: "inline" }}>
+                <div className="tab-content-row"
+                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                <i className="world icon" style={{ fontSize: "25px", color: "#CEA70B" }} />
+                <span className="title-middle" style={{ color: "#CEA70B" }}> Operaciones internacionales</span>
+            </div>;
+        } else {
+            return <span className="section-title">Operaciones internacionales</span>;
+        }
+    }
+
     render() {
         const { typeOperation, participation, idCountry, participationCountry, customerCoverage, descriptionCoverage,
-            showFormIntOperations, fnShowForm, clientInformacion, selectsReducer, changeValueListClient } = this.props;
+            showFormIntOperations, fnShowForm, clientInformacion, selectsReducer, changeValueListClient, origin, valueCheckSectionIntOperations,
+            showCheckValidateSection, functionChangeIntOperations } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
             <div style={{ width: '100%' }}>
-                <Row style={{ padding: "20px 10px 10px 20px" }}>
+                <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
-                            <span className="section-title">Operaciones internacionales</span>
-                            <ToolTipComponent text={MESSAGE_INT_OPERATIONS}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
-                            <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => {
-                                    changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'));
-                                    this.clearValues();
-                                }}
-                                checked={clientInformacion.get('noAppliedIntOperations')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
+                            <div style={{ fontSize: "25px", marginTop: "5px", marginBottom: "5px" }}>
+                                {this._getTitleSection()}
+                                <ToolTipComponent text={MESSAGE_INT_OPERATIONS}
+                                    children={
+                                        <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                            className="help circle icon blue" />
+                                    }
+                                />
+                                <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
+                                    onClick={() => {
+                                        changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'));
+                                        this.clearValues();
+                                    }}
+                                    checked={clientInformacion.get('noAppliedIntOperations')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
+                            </div>
                         </dl>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {showCheckValidateSection &&
+                            <div>
+                                <input type="checkbox" id="checkSectionIntOperations"
+                                    checked={this.state.valueCheckSectionIntOperations}
+                                    onClick={this._handleChangeValueIntOperations} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedIntOperations') &&
@@ -453,7 +484,11 @@ ComponentListIntOperations.PropTypes = {
     customerCoverage: PropTypes.object.isRequired,
     descriptionCoverage: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormIntOperations: PropTypes.bool.isRequired
+    showFormIntOperations: PropTypes.bool.isRequired,
+    origin: PropTypes.string,
+    valueCheckSectionIntOperations: PropTypes.bool.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
+    functionChangeIntOperations: PropTypes.func
 }
 
 

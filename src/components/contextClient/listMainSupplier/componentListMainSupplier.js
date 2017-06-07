@@ -134,7 +134,8 @@ class ComponentListMainSupplier extends Component {
 
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
-            clientInformacion, changeValueListClient } = this.props;
+            clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
+            functionChangeMainSupplier } = this.props;
         const listMainSupplier = clientInformacion.get('listMainSupplier');
         return (
             <div>
@@ -158,6 +159,15 @@ class ComponentListMainSupplier extends Component {
                                 }}
                                 checked={clientInformacion.get('noAppliedMainSuppliers')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {showCheckValidateSection &&
+                            <div>
+                                <input type="checkbox" id="checkSectionMainSupplier"
+                                    checked={valueCheckSectionMainSupplier} onClick={functionChangeMainSupplier} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainSuppliers') &&
@@ -244,7 +254,7 @@ class ComponentListMainSupplier extends Component {
                                                     className="help circle icon blue" />
                                             }
                                         />
-                                     </dt>
+                                    </dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}
@@ -308,7 +318,10 @@ ComponentListMainSupplier.PropTypes = {
     term: PropTypes.object.isRequired,
     relevantInformation: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormMainSupplier: PropTypes.bool.isRequired
+    showFormMainSupplier: PropTypes.bool.isRequired,
+    valueCheckSectionMainSupplier: PropTypes.bool.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
+    functionChangeMainSupplier: PropTypes.func
 }
 
 
