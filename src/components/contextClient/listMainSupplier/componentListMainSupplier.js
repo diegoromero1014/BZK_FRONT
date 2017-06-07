@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -13,6 +13,7 @@ import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS }
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
+
 class ComponentListMainSupplier extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,9 @@ class ComponentListMainSupplier extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: false
+            errorForm: false,
+            fieldReducerList: 'listMainSupplier',
+            fieldReducerNoApplied: 'noAppliedMainSuppliers'
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -28,6 +31,16 @@ class ComponentListMainSupplier extends Component {
         this._viewInformationSupplier = this._viewInformationSupplier.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainSupplier = this._deleteMainSupplier.bind(this);
+    }
+
+    componentWillMount() {
+        const { nameList, nameNoApplied } = this.props;
+        if (validateValueExist(nameList) && validateValueExist(nameNoApplied)) {
+            this.setState({
+                fieldReducerList: nameList,
+                fieldReducerNoApplied: nameNoApplied
+            });
+        }
     }
 
     validateInfo(e) {
@@ -45,7 +58,7 @@ class ComponentListMainSupplier extends Component {
             countErrors++;
         }
         if (_.isEqual(countErrors, 0)) {
-            var listMainSupplier = clientInformacion.get('listMainSupplier');
+            var listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
                     "id": _.uniqueId('mainS_'),
@@ -68,7 +81,7 @@ class ComponentListMainSupplier extends Component {
                 listMainSupplier = _.remove(listMainSupplier, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listMainSupplier.push(updateValue);
             }
-            changeValueListClient('listMainSupplier', listMainSupplier);
+            changeValueListClient(this.state.fieldReducerList, listMainSupplier);
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
@@ -106,9 +119,9 @@ class ComponentListMainSupplier extends Component {
 
     _deleteMainSupplier() {
         const { changeValueListClient, clientInformacion } = this.props;
-        const listMainSupplier = clientInformacion.get('listMainSupplier');
+        const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         const newListPart = _.remove(listMainSupplier, (item) => !_.isEqual(item.id, this.state.entityDelete.id));
-        changeValueListClient('listMainSupplier', newListPart);
+        changeValueListClient(this.state.fieldReducerList, newListPart);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
@@ -135,7 +148,7 @@ class ComponentListMainSupplier extends Component {
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
             clientInformacion, changeValueListClient } = this.props;
-        const listMainSupplier = clientInformacion.get('listMainSupplier');
+        const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -153,14 +166,14 @@ class ComponentListMainSupplier extends Component {
                             />
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
-                                    changeValueListClient('noAppliedMainSuppliers', !clientInformacion.get('noAppliedMainSuppliers'))
+                                    changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied))
                                     this.clearValues();
                                 }}
-                                checked={clientInformacion.get('noAppliedMainSuppliers')} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
+                                checked={clientInformacion.get(this.state.fieldReducerNoApplied)} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>
                 </Row>
-                {!clientInformacion.get('noAppliedMainSuppliers') &&
+                {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
                             <button className="btn" disabled={showFormMainSupplier} type="button" title="Agregar proveedor principal"
@@ -244,7 +257,7 @@ class ComponentListMainSupplier extends Component {
                                                     className="help circle icon blue" />
                                             }
                                         />
-                                     </dt>
+                                    </dt>
                                     <Textarea
                                         name="relevantInformation"
                                         validateEnter={true}
@@ -308,7 +321,9 @@ ComponentListMainSupplier.PropTypes = {
     term: PropTypes.object.isRequired,
     relevantInformation: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
-    showFormMainSupplier: PropTypes.bool.isRequired
+    showFormMainSupplier: PropTypes.bool.isRequired,
+    nameList: PropTypes.string,
+    nameNoApplied: PropTypes.string
 }
 
 

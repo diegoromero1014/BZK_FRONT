@@ -62,7 +62,6 @@ class ComponentCustomerStory extends Component {
     }
 
     _changeValueComboAprove(val) {
-        console.log('valueAprove', val);
         this.setState({
             valueAprove: val,
             errorAprove: false

@@ -3,6 +3,7 @@ import {
     CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
     CHANGE_VALUE_LIST_CLIENT
 } from './constants';
+import {UPDATE_CONTEXT_CLIENT} from '../customerStory/constants'
 import { isEmpty, set } from 'lodash';
 
 const initialState = Immutable.Map({
@@ -21,7 +22,12 @@ const initialState = Immutable.Map({
     noAppliedMainClients: false,
     noAppliedMainSuppliers: false,
     noAppliedMainCompetitors: false,
-    noAppliedIntOperations: false
+    noAppliedIntOperations: false,
+
+    otherListMainCustomer: [],
+    otherListMainSupplier: [],
+    otherNoAppliedMainClients: false,
+    otherNoAppliedMainSuppliers: false,
 });
 
 export default (state = initialState, action) => {
@@ -59,6 +65,20 @@ export default (state = initialState, action) => {
                     .set('noAppliedMainSuppliers', noAppliedMainSuppliers)
                     .set('noAppliedMainCompetitors', noAppliedMainCompetitors)
                     .set('noAppliedIntOperations', noAppliedIntOperations);
+            });
+        case UPDATE_CONTEXT_CLIENT:
+            var { data } = action.payload.data;
+            const otherListMainCustomer = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainCustomer) ? [] : data.listMainCustomer;
+            const otherListMainSupplier = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainSupplier) ? [] : data.listMainSupplier;
+
+            const otherNoAppliedMainClients = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainClients) ? false : data.noAppliedMainClients;
+            const otherNoAppliedMainSuppliers = _.isUndefined(data) || _.isNull(data)  || _.isNull(data.noAppliedMainSuppliers) ? false : data.noAppliedMainSuppliers;
+            return state.withMutations(map => {
+                map
+                    .set('otherListMainCustomer', otherListMainCustomer)
+                    .set('otherListMainSupplier', otherListMainSupplier)
+                    .set('otherNoAppliedMainClients', otherNoAppliedMainClients)
+                    .set('otherNoAppliedMainSuppliers', otherNoAppliedMainSuppliers);
             });
         case CLAER_CLIENT_INFO:
             return state.set("responseClientInfo", {});
