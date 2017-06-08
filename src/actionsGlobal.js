@@ -234,11 +234,11 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
     }
 }
 
-export function formatCurrency(value) {
+export function formatCurrency(value, measurement) {
     if (value === null || value === undefined || isNaN(value)) {
         return '';
     }
-    return numeral(value).format('0,000');
+    return numeral(value).format('0,000' + measurement);
 }
 
 export function validateResponse(response) {
@@ -265,6 +265,6 @@ export function stringValidate(value) {
 }
 
 
-export function validateValueExist( value ){
+export function validateValueExist(value) {
     return _.isUndefined(value) || _.isNull(value) ? false : true;
 }

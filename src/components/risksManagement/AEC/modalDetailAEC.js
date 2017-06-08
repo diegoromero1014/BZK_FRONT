@@ -68,8 +68,8 @@ class ModalDetailAEC extends Component {
                                 <dd style={{ minHeight: '26px' }}>{formatCurrency(detailAEC.daysLives)}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
-                                <dt style={{ paddingTop: '5px' }}>% Provisión esperada</dt>
-                                <dd style={{ minHeight: '26px' }}>{formatCurrency(detailAEC.provisionPercentage)}</dd>
+                                <dt style={{ paddingTop: '5px' }}>Porcentaje provisión esperada</dt>
+                                <dd style={{ minHeight: '26px' }}>{formatCurrency(detailAEC.provisionPercentage, '%')}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Saldo capital</dt>
