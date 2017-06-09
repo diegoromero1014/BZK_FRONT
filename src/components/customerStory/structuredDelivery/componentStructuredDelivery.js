@@ -6,7 +6,7 @@ import {consultList} from '../../selectsComponent/actions';
 import {TEAM_FOR_EMPLOYEE} from '../../selectsComponent/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA
+    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask} from '../../../actionsGlobal';
@@ -345,16 +345,7 @@ class componentStructuredDelivery extends Component {
                         </button>
                     </div>
                     :
-                    <div style={{
-                        marginLeft: '-35px',
-                        position: 'fixed',
-                        border: '1px solid rgb(194, 194, 194)',
-                        bottom: '0px',
-                        width: '100%',
-                        marginBottom: '0px',
-                        height: '50px',
-                        background: 'rgba(255, 255, 255, 0.74902)'
-                    }}>
+                    <div style={STYLE_BUTTON_BOTTOM}>
                         <div style={{width: '580px', height: '100%', position: 'fixed', right: '0px'}}>
                             <button className="btn" type="submit"
                                     style={{float: 'right', margin: '8px 0px 0px 450px', position: 'fixed'}}>

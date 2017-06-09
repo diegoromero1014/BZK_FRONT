@@ -84,7 +84,7 @@ export const DESCARGAR = "Descargar";
 export const FINALIZAR = "Finalizar";
 export const VINCULAR = "Vincular";
 export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
-export const ENTREGA_ESTRUCTURADA= "Entrega estructurada";
+export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -102,6 +102,7 @@ export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
 export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
+export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -153,5 +154,15 @@ export const VALUES_APROVE = [
     { 'id': false, 'value': "Rechazar" }
 ];
 
+export const STYLE_BUTTON_BOTTOM = {
+    marginLeft: '-35px',
+    position: 'fixed',
+    border: '1px solid rgb(194, 194, 194)',
+    bottom: '0px',
+    width: '100%',
+    marginBottom: '0px',
+    height: '50px',
+    background: 'rgba(255, 255, 255, 0.74902)'
+}
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;

@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, Segment } from 'semantic-ui-react';
-import { MODULE_COVENANTS, MODULE_AEC } from '../../constantsGlobal';
+import { MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES } from '../../constantsGlobal';
 import { consultModulesAccess } from '../navBar/actions';
 import ListCovenant from './covenants/listCovenants';
 import ListAEC from './AEC/listAEC';
-import { TAB_COVENANTS, TAB_AEC } from './constants';
+import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
 import { updateTabSeletedRisksManagment } from './actions';
+import ComponentSurvey from './qualitativeVariable/componentSurvey';
 
 class RisksManagementComponent extends Component {
     constructor(props) {
@@ -45,10 +46,14 @@ class RisksManagementComponent extends Component {
                     {_.get(navBar.get('mapModulesAccess'), MODULE_AEC) &&
                         <Menu.Item name={MODULE_AEC} active={tabActive === TAB_AEC} onClick={this._handleItemClick.bind(this, TAB_AEC)} />
                     }
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) &&
+                        <Menu.Item name={MODULE_QUALITATIVE_VARIABLES} active={tabActive === TAB_QUALITATIVE_VARIABLE} onClick={this._handleItemClick.bind(this, TAB_QUALITATIVE_VARIABLE)} />
+                    }
                 </Menu>
                 <Segment>
                     {_.get(navBar.get('mapModulesAccess'), MODULE_COVENANTS) && tabActive === TAB_COVENANTS && <ListCovenant />}
                     {_.get(navBar.get('mapModulesAccess'), MODULE_AEC) && tabActive === TAB_AEC && <ListAEC />}
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) && tabActive === TAB_QUALITATIVE_VARIABLE && <ComponentSurvey />}
                 </Segment>
             </div>
         );
