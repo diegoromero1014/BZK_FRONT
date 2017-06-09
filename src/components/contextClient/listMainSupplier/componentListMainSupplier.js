@@ -147,7 +147,8 @@ class ComponentListMainSupplier extends Component {
 
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
-            clientInformacion, changeValueListClient } = this.props;
+            clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
+            functionChangeMainSupplier, registrationRequired } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -172,6 +173,15 @@ class ComponentListMainSupplier extends Component {
                                 checked={clientInformacion.get(this.state.fieldReducerNoApplied)} /> <span style={{ fontSize: '11pt', color: 'black' }}>No aplica</span>
                         </div>
                     </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        {showCheckValidateSection &&
+                            <div>
+                                <input type="checkbox" id="checkSectionMainSupplier"
+                                    checked={valueCheckSectionMainSupplier} onClick={functionChangeMainSupplier} />
+                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                            </div>
+                        }
+                    </Col>
                 </Row>
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
@@ -192,7 +202,7 @@ class ComponentListMainSupplier extends Component {
                                         placeholder="Nombre del proveedor"
                                         {...nameSupplier}
                                         error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -211,7 +221,7 @@ class ComponentListMainSupplier extends Component {
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -230,7 +240,7 @@ class ComponentListMainSupplier extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -322,6 +332,9 @@ ComponentListMainSupplier.PropTypes = {
     relevantInformation: PropTypes.object.isRequired,
     fnShowForm: PropTypes.func.isRequired,
     showFormMainSupplier: PropTypes.bool.isRequired,
+    valueCheckSectionMainSupplier: PropTypes.bool.isRequired,
+    showCheckValidateSection: PropTypes.string.isRequired,
+    functionChangeMainSupplier: PropTypes.func,
     nameList: PropTypes.string,
     nameNoApplied: PropTypes.string
 }

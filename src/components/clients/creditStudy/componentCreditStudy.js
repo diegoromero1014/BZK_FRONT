@@ -5,18 +5,24 @@ import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../../navBar/actions';
 import { redirectUrl } from '../../globalComponents/actions';
 import SweetAlert from 'sweetalert-react';
-import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS } from '../../contextClient/constants';
+import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import ClientTypology from '../../contextClient/ClientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/componentListLineBusiness';
 import ComponentListDistributionChannel from '../../contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '../../contextClient/inventoryPolicy';
 import ComponentListMainClients from '../../contextClient/listMainClients/componentListMainClients';
+import ComponentListMainSupplier from '../../contextClient/listMainSupplier/componentListMainSupplier';
+import ComponentListMainCompetitor from '../../contextClient/listMainCompetitor/componentListMainCompetitor';
+import ComponentListIntOperations from '../../contextClient/listInternationalOperations/componentListIntOperations';
 import * as constantsSelects from '../../selectsComponent/constants';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
-import { getContextClient, saveCreditStudy, validateInfoCreditStudy } from './actions';
-import { validateResponse } from '../../../actionsGlobal';
+import {
+    getContextClient, saveCreditStudy, validateInfoCreditStudy,
+    updateNotApplyCreditContact
+} from './actions';
+import { validateResponse, stringValidate } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA
@@ -26,17 +32,23 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { GOVERNMENT } from '../../clientEdit/constants';
 import moment from 'moment';
 import {
-    A_SHAREHOLDER_WITH_OBSERVATION, ALL_SHAREHOLDERS_WITH_COMMENTS,
+    A_SHAREHOLDER_WITH_OBSERVATION, ALL_SHAREHOLDERS_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
     ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION
 } from './constants';
-import BottonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
+import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
+import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
 
 const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
-    "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "termMainClient", "relevantInformationMainClient"];
+    "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
+    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "termMainClient", "typeOperationIntOpera", "participationIntOpe",
+    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "nameMainSupplier",
+    "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact"];
 
 var errorMessageForShareholders = 'La información de los accionistas es válida, ';
+var messageContact = 'La información de los contactos es válida, ';
 var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection;
-var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder;
+var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact;
+var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -51,15 +63,35 @@ class ComponentStudyCredit extends Component {
         this._submitSaveContextClient = this._submitSaveContextClient.bind(this);
         this._closeMessageSuccess = this._closeMessageSuccess.bind(this);
         this._validateInfoStudyCredit = this._validateInfoStudyCredit.bind(this);
+        this._handleChangeValueMainCompetitor = this._handleChangeValueMainCompetitor.bind(this);
+        this._handleChangeValueMainSupplier = this._handleChangeValueMainSupplier.bind(this);
+        this._handleChangeValueIntOperations = this._handleChangeValueIntOperations.bind(this);
+        this._handleChangeValueNotApplyCreditContact = this._handleChangeValueNotApplyCreditContact.bind(this);
+        this._validateInformationToSave = this._validateInformationToSave.bind(this);
         this.state = {
             showConfirmExit: false,
             showSuccessMessage: false,
             showFormAddLineOfBusiness: false,
             showFormAddDistribution: false,
             showFormAddMainClient: false,
+            showFormAddMainCompetitor: false,
+            showFormAddMainSupplier: false,
+            showFormAddIntOperations: false,
+            lineofBusinessRequired: false,
+            distributionRequired: false,
+            mainClientRequired: false,
+            mainCompetitorRequired: false,
+            mainSupplierRequired: false,
+            intOperationsRequired: false,
             valueCheckSectionActivityEconomic: false,
             valueCheckSectionInventoryPolicy: false,
             valueCheckSectionMainClients: false,
+            valueCheckSectionMainCompetitor: false,
+            valueCheckSectionMainSupplier: false,
+            valueCheckSectionIntOperations: false,
+            valueCheckNotApplyCreditContact: false,
+            fieldContextRequired: false,
+            customerTypology: false
         }
     }
 
@@ -81,13 +113,77 @@ class ComponentStudyCredit extends Component {
         });
     }
 
+    _handleChangeValueMainCompetitor() {
+        this.setState({
+            valueCheckSectionMainCompetitor: !this.state.valueCheckSectionMainCompetitor
+        });
+    }
+
+    _handleChangeValueMainSupplier() {
+        this.setState({
+            valueCheckSectionMainSupplier: !this.state.valueCheckSectionMainSupplier
+        });
+    }
+
+    _handleChangeValueIntOperations() {
+        this.setState({
+            valueCheckSectionIntOperations: !this.state.valueCheckSectionIntOperations
+        });
+    }
+
+    _handleChangeValueNotApplyCreditContact() {
+        const { fields: { notApplyCreditContact }, updateNotApplyCreditContact, swtShowMessage,
+            changeStateSaveData } = this.props;
+        var jsonCreditContact = {
+            idClient: window.localStorage.getItem('idClientSelected'),
+            notApplyCreditContact: !notApplyCreditContact.value
+        }
+        notApplyCreditContact.onChange(!notApplyCreditContact.value);
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        updateNotApplyCreditContact(jsonCreditContact).then((data) => {
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            } else {
+                this._validateInfoStudyCredit();
+            }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+    }
+
     showFormOut(property, value) {
         if (_.isEqual(LINE_OF_BUSINESS, property)) {
-            this.setState({ showFormAddLineOfBusiness: value });
+            this.setState({
+                showFormAddLineOfBusiness: value,
+                lineofBusinessRequired: false
+            });
         } else if (_.isEqual(DISTRIBUTION_CHANNEL, property)) {
-            this.setState({ showFormAddDistribution: value });
+            this.setState({
+                showFormAddDistribution: value,
+                distributionRequired: false
+            });
         } else if (_.isEqual(MAIN_CLIENTS, property)) {
-            this.setState({ showFormAddMainClient: value });
+            this.setState({
+                showFormAddMainClient: value,
+                mainClientRequired: false
+            });
+        } else if (_.isEqual(MAIN_SUPPLIER, property)) {
+            this.setState({
+                showFormAddMainSupplier: value,
+                mainSupplierRequired: false
+            });
+        } else if (_.isEqual(MAIN_COMPETITOR, property)) {
+            this.setState({
+                showFormAddMainCompetitor: value,
+                mainCompetitorRequired: false
+            });
+        } else if (_.isEqual(INT_OPERATIONS, property)) {
+            this.setState({
+                showFormAddIntOperations: value,
+                intOperationsRequired: false
+            });
         }
     }
 
@@ -136,7 +232,11 @@ class ComponentStudyCredit extends Component {
         });
         const listOperations = clientInformacion.get('listOperations');
         _.map(listOperations, (item) => {
-            item.id = item.id.toString().includes('mainIntO_') ? null : item.id;
+            item.id = item.id === null || item.id.toString().includes('mainIntO_') ? null : item.id;
+            _.map(item.listCountryOperations, (country) => {
+                country.id = country.id === null || country.id.toString().includes('mainIntO_') ? null : country.id;
+                return country;
+            });
             return item;
         });
         const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
@@ -185,33 +285,125 @@ class ComponentStudyCredit extends Component {
         }
     }
 
-    _submitSaveContextClient() {
-        const { saveCreditStudy, swtShowMessage, changeStateSaveData, studyCreditReducer } = this.props;
+    _validateInformationToSave() {
+        const { fields: { contextClientField, customerTypology }, clientInformacion,
+            swtShowMessage, studyCreditReducer } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        const { contextClient } = infoClient;
+        var allowSave = true;
         var contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         if (!infoValidate.numberOfValidShareholders) {
+            allowSave = false;
             document.getElementById('dashboardComponentScroll').scrollTop = 0;
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los accionistas para poder guardar.');
         } else {
-            if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
-                !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients)) {
-                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+            if (errorContact) {
+                allowSave = false;
+                document.getElementById('dashboardComponentScroll').scrollTop = 0;
+                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
             } else {
-                changeStateSaveData(true, MESSAGE_LOAD_DATA);
-                saveCreditStudy(this._createJsonSaveContextClient()).then((data) => {
-                    changeStateSaveData(false, "");
-                    if (!validateResponse(data)) {
-                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                    } else {
-                        this.setState({
-                            showSuccessMessage: true
-                        });
-                    }
-                }, (reason) => {
-                    changeStateSaveData(false, "");
-                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                });
+                const listLineOfBusiness = clientInformacion.get('listParticipation');
+                const listDistribution = clientInformacion.get('listDistribution');
+                const listMainCustomer = clientInformacion.get('listMainCustomer');
+                const listMainSupplier = clientInformacion.get('listMainSupplier');
+                const listMainCompetitor = clientInformacion.get('listMainCompetitor');
+                const listOperations = clientInformacion.get('listOperations');
+                const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
+                const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
+                const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
+                const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
+                const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
+                const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+                if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
+                    this.setState({
+                        showFormAddLineOfBusiness: true,
+                        lineofBusinessRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (listDistribution.length === 0 &&
+                    (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
+                    this.setState({
+                        showFormAddDistribution: true,
+                        distributionRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (listMainCustomer.length === 0 &&
+                    (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
+                    this.setState({
+                        showFormAddMainClient: true,
+                        mainClientRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (listMainSupplier.length === 0 &&
+                    (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
+                    this.setState({
+                        showFormAddMainSupplier: true,
+                        mainSupplierRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (listMainCompetitor.length === 0 &&
+                    (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
+                    this.setState({
+                        showFormAddMainCompetitor: true,
+                        mainCompetitorRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
+                    (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
+                    this.setState({
+                        showFormAddIntOperations: true,
+                        intOperationsRequired: true
+                    });
+                    allowSave = false;
+                }
+                if (!stringValidate(contextClientField.value)) {
+                    allowSave = false;
+                    this.setState({
+                        fieldContextRequired: true
+                    });
+                }
+                if (!stringValidate(customerTypology.value)) {
+                    allowSave = false;
+                    this.setState({
+                        customerTypology: true
+                    });
+                }
+                if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
+                    !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
+                    !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
+                    !this.state.valueCheckSectionIntOperations)) {
+                    allowSave = false;
+                    swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+                }
             }
+        }
+        console.log('allowSave', allowSave);
+        return allowSave;
+    }
+
+    _submitSaveContextClient() {
+        if (this._validateInformationToSave()) {
+            const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
+            changeStateSaveData(true, MESSAGE_LOAD_DATA);
+            saveCreditStudy(this._createJsonSaveContextClient()).then((data) => {
+                changeStateSaveData(false, "");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                } else {
+                    this.setState({
+                        showSuccessMessage: true
+                    });
+                }
+            }, (reason) => {
+                changeStateSaveData(false, "");
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            });
         }
     }
 
@@ -245,7 +437,7 @@ class ComponentStudyCredit extends Component {
             redirectUrl("/dashboard/clientInformation");
         } else {
             var idClient = window.localStorage.getItem('idClientSelected');
-            getMasterDataFields([constantsSelects.SEGMENTS]).then((data) => {
+            getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
                     if (_.isEqual(GOVERNMENT, value)) {
@@ -282,30 +474,46 @@ class ComponentStudyCredit extends Component {
 
     componentDidMount() {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
+        const { fields: { notApplyCreditContact }, clientInformacion } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        notApplyCreditContact.onChange(infoClient.notApplyCreditContact);
     }
 
     render() {
         const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
             contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
-            inventoryPolicy }, studyCreditReducer, handleSubmit, getContextClient } = this.props;
+            inventoryPolicy, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
+            idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
+            participationMS, termMainSupplier, relevantInformationMainSupplier, valueCheckCreditContact, notApplyCreditContact },
+            studyCreditReducer, handleSubmit, getContextClient, clientInformacion } = this.props;
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         showCheckValidateSection = false;
         overdueCreditStudy = false;
-        var fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString = '';
+        infoClient = clientInformacion.get('responseClientInfo');
+        fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString = '';
         errorShareholder = false;
         if (contextClientInfo !== null) {
             overdueCreditStudy = contextClientInfo.overdueCreditStudy;
-            if (infoValidate !== null && !infoValidate.numberOfValidShareholders) {
-                numberOfShareholders = infoValidate.numberOfShareholdersWithComment;
-                if (numberOfShareholders.toUpperCase() === A_SHAREHOLDER_WITH_OBSERVATION.toUpperCase()) {
-                    errorShareholder = true;
-                    errorMessageForShareholders = ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION
-                } else {
-                    if (numberOfShareholders.toUpperCase() === ALL_SHAREHOLDERS_WITH_COMMENTS.toUpperCase()) {
+            if (infoValidate !== null) {
+                if (!infoValidate.numberOfValidShareholders) {
+                    numberOfShareholders = infoValidate.numberOfShareholdersWithComment;
+                    if (numberOfShareholders.toUpperCase() === A_SHAREHOLDER_WITH_OBSERVATION.toUpperCase()) {
                         errorShareholder = true;
-                        errorMessageForShareholders = ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION;
+                        errorMessageForShareholders = ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION + ' ';
+                    } else {
+                        if (numberOfShareholders.toUpperCase() === ALL_SHAREHOLDERS_WITH_COMMENTS.toUpperCase()) {
+                            errorShareholder = true;
+                            errorMessageForShareholders = ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION + ' ';
+                        }
                     }
+                }
+                if (infoValidate.validContacts === true) {
+                    errorContact = false;
+                    messageContact = "La información de los contactos es válida, ";
+                } else {
+                    errorContact = true;
+                    messageContact = "Falta un contacto con función 'Estudio de crédito' ";
                 }
             }
             if (contextClientInfo.updatedTimestamp !== null) {
@@ -326,17 +534,32 @@ class ComponentStudyCredit extends Component {
                         <p style={{ paddingTop: '10px' }}></p>
                         <Row xs={12} md={12} lg={12} style={{
                             border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
-                            borderRadius: '2px', margin: '0px 28px 0 20px', height: '60px'
+                            borderRadius: '2px', margin: '0px 28px 0 20px', height: '80px'
                         }}>
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
                                 <div>
-                                    <BottonShareholderAdmin errorShareholder={errorShareholder} message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit} />
+                                    <ButtonContactAdmin errorContact={errorContact} message={messageContact}
+                                        functionToExecute={this._validateInfoStudyCredit}
+                                    />
+                                    <ButtonShareholderAdmin errorShareholder={errorShareholder}
+                                        message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit}
+                                    />
                                 </div>
                             </Col>
                         </Row>
                     </div>
-                    <Row style={{ paddingTop: "10px", marginLeft: "20px" }}>
-                        <ClientTypology customerTypology={customerTypology} data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)} />
+                    <Row style={{ paddingTop: "10px", marginLeft: "10px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <input type="checkbox" id="checkNotApplyCreditContact" style={{ marginLeft: '10px' }}
+                                checked={notApplyCreditContact.value}
+                                onClick={this._handleChangeValueNotApplyCreditContact} />
+                            <span >No aplican contactos con función estudio de crédito</span>
+                        </Col>
+                        <Col xs={12} md={12} lg={12}>
+                            <ClientTypology customerTypology={customerTypology}
+                                data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
+                                fieldRequiered={this.state.customerTypology} />
+                        </Col>
                     </Row>
                     <Row style={{ padding: "20px 10px 0px 20px" }}>
                         <Col xs={12} md={12} lg={12}>
@@ -357,12 +580,13 @@ class ComponentStudyCredit extends Component {
                             </Col>
                         }
                     </Row>
-                    <ContextEconomicActivity contextClientField={contextClientField} />
+                    <ContextEconomicActivity contextClientField={contextClientField} fieldRequiered={this.state.fieldContextRequired} />
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                        participation={participationLB} experience={experience}
+                        participation={participationLB} experience={experience} registrationRequired={this.state.lineofBusinessRequired}
                         showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
                     <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
-                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut} />
+                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
+                        registrationRequired={this.state.distributionRequired} />
                     <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                         valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                         functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
@@ -370,7 +594,29 @@ class ComponentStudyCredit extends Component {
                         term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
                         showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
                         valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
-                        functionChangeCheckSectionMainClients={this._handleChangeValueMainClients} />
+                        functionChangeCheckSectionMainClients={this._handleChangeValueMainClients}
+                        registrationRequired={this.state.mainClientRequired} />
+                    <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                        term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                        showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut}
+                        showCheckValidateSection={overdueCreditStudy} registrationRequired={this.state.mainSupplierRequired}
+                        valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
+                        functionChangeMainSupplier={this._handleChangeValueMainSupplier} />
+                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                        observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                        fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
+                        valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
+                        functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
+                        registrationRequired={this.state.mainCompetitorRequired} />
+
+                    {_.isEqual(infoClient.operationsForeignCurrency, 1) &&
+                        <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                            idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe}
+                            descriptionCoverage={descriptionCoverageIntOpe} showFormIntOperations={this.state.showFormAddIntOperations}
+                            fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
+                            valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
+                            showCheckValidateSection={overdueCreditStudy} functionChangeIntOperations={this._handleChangeValueIntOperations} />
+                    }
                     <Row style={{ padding: "10px 10px 0px 20px" }}>
                         <Col xs={6} md={3} lg={3}>
                             {createdBy !== null &&
@@ -461,7 +707,8 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         getMasterDataFields,
         saveCreditStudy,
-        validateInfoCreditStudy
+        validateInfoCreditStudy,
+        updateNotApplyCreditContact
     }, dispatch);
 }
 

@@ -1,6 +1,8 @@
 export const GET_CONTEXT_CLIENT = 1;
 export const SAVE_CREDIT_STUDY = 2;
 export const VALIDATE_INFO_CREDIT_STUDY = 3;
+export const ORIGIN_CREDIT_STUDY = 4;
+export const UPDATE_NOT_APPLY_CREDIT_CONTACT = 5;
 export const A_SHAREHOLDER_WITH_OBSERVATION = 'uno';
 export const ALL_SHAREHOLDERS_WITH_COMMENTS = 'todos';
 export const ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION = 'Al menos un accionista debe tener observaciones';

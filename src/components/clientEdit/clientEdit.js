@@ -79,7 +79,7 @@ var countOriginGoods = 0;
 var countOriginResource = 0;
 var initValueJustifyNonGeren = false;
 var initValueJustifyNonLME = false;
-var messageShareholder = '';
+var messageShareholder = '', messageContact = '';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -1243,6 +1243,12 @@ class clientEdit extends Component {
         } else {
             messageShareholder = 'El cliente tiene información de accionista,';
         }
+        if (errorContact) {
+            messageContact = 'Falta Representante Legal';
+        } else {
+            messageContact = 'El cliente tiene información de Representante Legal,';
+
+        }
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
@@ -1266,7 +1272,7 @@ class clientEdit extends Component {
                             }
                             {idButton === BUTTON_UPDATE ?
                                 <div>
-                                    <BottonContactAdmin errorContact={errorContact} />
+                                    <BottonContactAdmin errorContact={errorContact} message={messageContact} functionToExecute={validateContactShareholder} />
                                     <BottonShareholderAdmin errorShareholder={errorShareholder} message={messageShareholder} functionToExecute={validateContactShareholder} />
                                 </div>
                                 :

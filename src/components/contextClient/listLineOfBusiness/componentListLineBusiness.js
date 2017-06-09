@@ -126,7 +126,7 @@ class ComponentListLineBusiness extends Component {
 
     render() {
         const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm,
-            clientInformacion, changeValueListClient } = this.props;
+            clientInformacion, changeValueListClient, registrationRequired } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={{ width: '100%' }}>
@@ -168,7 +168,7 @@ class ComponentListLineBusiness extends Component {
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
                                         error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -187,7 +187,7 @@ class ComponentListLineBusiness extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

@@ -3,7 +3,8 @@ import { Row, Col } from 'react-flexbox-grid';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
-
+import { VALUE_REQUIERED } from '../../constantsGlobal';
+import { stringValidate } from '../../actionsGlobal';
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class ContextEconomicActivity extends Component {
     }
 
     elementMessageContext() {
-        return <div style={{textAlign: 'justify'}}>
+        return <div style={{ textAlign: 'justify' }}>
             <span style={{ color: 'white' }}>Diligencie esta sección respondiendo a la pregunta ¿qué debería conocer el Grupo Bancolombia de este cliente? Recuerde que debe incluir puntos tales como:</span>
             <ul>
                 <li>¿Quién es? - ¿Qué hace? - Trayectoria - Estrategia de la compañía - Productos - Mercado objetivo - Proyectos a desarrollar</li>
@@ -24,7 +25,7 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox } = this.props;
+        const { contextClientField, data, isCheckbox, fieldRequiered } = this.props;
         return (
             <Col xs={12} md={12} lg={12}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
@@ -42,6 +43,7 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
+                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : ''}
                                 touched={true}
                             />
                         } />

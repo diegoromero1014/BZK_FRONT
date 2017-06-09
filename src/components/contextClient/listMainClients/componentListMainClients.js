@@ -32,10 +32,10 @@ class ComponentListMainClients extends Component {
         this._deleteMainClients = this._deleteMainClients.bind(this);
     }
 
-    componentWillMount(){
-        const {nameList, nameNoApplied} = this.props;
-        if( validateValueExist(nameList) && validateValueExist(nameNoApplied) ){
-            this.setState({ 
+    componentWillMount() {
+        const { nameList, nameNoApplied } = this.props;
+        if (validateValueExist(nameList) && validateValueExist(nameNoApplied)) {
+            this.setState({
                 fieldReducerList: nameList,
                 fieldReducerNoApplied: nameNoApplied
             });
@@ -147,7 +147,8 @@ class ComponentListMainClients extends Component {
 
     render() {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
-            clientInformacion, showCheckValidateSection, valueCheckSectionMainClients, functionChangeCheckSectionMainClients, changeValueListClient } = this.props;
+            clientInformacion, showCheckValidateSection, valueCheckSectionMainClients, functionChangeCheckSectionMainClients,
+            changeValueListClient, registrationRequired } = this.props;
         const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -202,7 +203,7 @@ class ComponentListMainClients extends Component {
                                         placeholder="Nombre del cliente"
                                         {...nameClient}
                                         error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -221,7 +222,7 @@ class ComponentListMainClients extends Component {
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -240,7 +241,7 @@ class ComponentListMainClients extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
