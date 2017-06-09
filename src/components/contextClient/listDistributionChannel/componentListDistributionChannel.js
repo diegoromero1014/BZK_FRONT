@@ -64,7 +64,7 @@ class ComponentListDistributionChannel extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Canales de distribución', 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.');
         }
     }
@@ -74,7 +74,7 @@ class ComponentListDistributionChannel extends Component {
         distributionChannel.onChange('');
         participation.onChange('');
         fnShowForm(DISTRIBUTION_CHANNEL, false);
-        this.setState({ entitySeleted: null, errorForm: false  });
+        this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationDistribution(entity) {
@@ -119,7 +119,8 @@ class ComponentListDistributionChannel extends Component {
     }
 
     render() {
-        const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion, changeValueListClient } = this.props;
+        const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion, changeValueListClient,
+            registrationRequired } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
             <div style={{ width: '100%' }}>
@@ -161,7 +162,7 @@ class ComponentListDistributionChannel extends Component {
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
                                         error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -180,7 +181,7 @@ class ComponentListDistributionChannel extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

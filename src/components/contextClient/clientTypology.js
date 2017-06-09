@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { Col } from 'react-flexbox-grid';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import _ from 'lodash';
+import { stringValidate } from '../../actionsGlobal';
+import { VALUE_REQUIERED } from '../../constantsGlobal';
 
 class ClientTypology extends Component {
     constructor(props) {
@@ -9,7 +11,7 @@ class ClientTypology extends Component {
     }
 
     render() {
-        const { customerTypology, data } = this.props;
+        const { customerTypology, data, fieldRequiered } = this.props;
         return (
             <Col xs={12} md={4} lg={4}>
                 <div style={{ marginTop: "10px" }}>
@@ -21,6 +23,7 @@ class ClientTypology extends Component {
                         textProp={'value'}
                         data={data}
                         {...customerTypology}
+                        error={!stringValidate(customerTypology.value) && fieldRequiered ? VALUE_REQUIERED : ''}
                         touched={true}
                     />
                 </div>

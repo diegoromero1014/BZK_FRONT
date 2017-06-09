@@ -128,7 +128,7 @@ class ComponentListMainCompetitor extends Component {
     render() {
         const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainCompetitor, showCheckValidateSection,
-            functionChangeMainCompetitor } = this.props;
+            functionChangeMainCompetitor, registrationRequired } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div>
@@ -182,7 +182,7 @@ class ComponentListMainCompetitor extends Component {
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
                                         error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -201,7 +201,7 @@ class ComponentListMainCompetitor extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

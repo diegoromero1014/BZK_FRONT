@@ -148,7 +148,7 @@ class ComponentListMainSupplier extends Component {
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
-            functionChangeMainSupplier } = this.props;
+            functionChangeMainSupplier, registrationRequired } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -202,7 +202,7 @@ class ComponentListMainSupplier extends Component {
                                         placeholder="Nombre del proveedor"
                                         {...nameSupplier}
                                         error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -221,7 +221,7 @@ class ComponentListMainSupplier extends Component {
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -240,7 +240,7 @@ class ComponentListMainSupplier extends Component {
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                        touched={this.state.errorForm}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

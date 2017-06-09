@@ -248,7 +248,7 @@ class ComponentListIntOperations extends Component {
     render() {
         const { typeOperation, participation, idCountry, participationCountry, customerCoverage, descriptionCoverage,
             showFormIntOperations, fnShowForm, clientInformacion, selectsReducer, changeValueListClient, origin, valueCheckSectionIntOperations,
-            showCheckValidateSection, functionChangeIntOperations } = this.props;
+            showCheckValidateSection, functionChangeIntOperations, registrationRequired } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
             <div style={{ width: '100%' }}>
@@ -305,7 +305,7 @@ class ComponentListIntOperations extends Component {
                                             textProp={'value'}
                                             data={TYPE_OPERATION}
                                             error={_.isEmpty(typeOperation.value) ? VALUE_REQUIERED : null}
-                                            touched={this.state.errorForm}
+                                            touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
                                 </Col>
@@ -322,7 +322,7 @@ class ComponentListIntOperations extends Component {
                                             value={participation.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
                                             error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
-                                            touched={this.state.errorForm}
+                                            touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
                                 </Col>
@@ -366,7 +366,7 @@ class ComponentListIntOperations extends Component {
 
                         {showFormIntOperations &&
                             <Row style={STYLE_FORM_COUNTRYS}>
-                                <Col xs={12} md={3} lg={2}>
+                                <Col xs={12} md={3} lg={3}>
                                     <div>
                                         <dt><span>País (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
@@ -383,9 +383,9 @@ class ComponentListIntOperations extends Component {
                                         />
                                     </div>
                                 </Col>
-                                <Col xs={12} md={3} lg={2}>
+                                <Col xs={12} md={5} lg={3}>
                                     <div>
-                                        <dt><span>% Participación del país (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                        <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
                                             name="participationCountry"
                                             type="text"
@@ -407,7 +407,7 @@ class ComponentListIntOperations extends Component {
                                     </button>
                                 </Col>
                                 {_.size(this.state.listCountrys) > 0 ?
-                                    <Col xs={12} md={4} lg={6} style={{ marginTop: '5px' }}>
+                                    <Col xs={12} md={2} lg={5} style={{ marginTop: '5px' }}>
                                         <table className="ui striped table" style={{ width: '100%' }}>
                                             <thead>
                                                 <tr>
@@ -422,7 +422,7 @@ class ComponentListIntOperations extends Component {
                                         </table>
                                     </Col>
                                     :
-                                    <Col xs={12} md={6} lg={6}>
+                                    <Col xs={12} md={6} lg={5}>
                                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                                             <span className="form-item">No se han adicionado países</span>
                                         </div>
@@ -454,7 +454,7 @@ class ComponentListIntOperations extends Component {
                                 :
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado opraciones internacionales</span>
+                                        <span className="form-item">No se han adicionado operaciones internacionales</span>
                                     </div>
                                 </Col>
                         }
