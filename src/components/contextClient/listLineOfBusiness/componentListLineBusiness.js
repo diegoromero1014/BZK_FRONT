@@ -11,6 +11,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 class ComponentListLineBusiness extends Component {
     constructor(props) {
@@ -67,7 +68,7 @@ class ComponentListLineBusiness extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         } else {
-            this.setState({errorForm: true});
+            this.setState({ errorForm: true });
             swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.');
         }
     }
@@ -126,14 +127,19 @@ class ComponentListLineBusiness extends Component {
 
     render() {
         const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm,
-            clientInformacion, changeValueListClient, registrationRequired } = this.props;
+            clientInformacion, changeValueListClient, registrationRequired, origin } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={{ width: '100%' }}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
-                            <span className="section-title">Líneas de negocio y participación en ventas</span>
+                            <span className="section-title">Líneas de negocio y participación en ventas </span>
+                            {origin === ORIGIN_CREDIT_STUDY &&
+                                <div style={{ display: "inline" }}>
+                                    (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                            }
                             <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}
                                 children={
                                     <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}

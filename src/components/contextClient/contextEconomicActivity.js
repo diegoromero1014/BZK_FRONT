@@ -5,6 +5,7 @@ import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import { VALUE_REQUIERED } from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
+import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
@@ -25,12 +26,17 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, fieldRequiered } = this.props;
+        const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
         return (
             <Col xs={12} md={12} lg={12}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
                     <dt>
-                        <span>Contexto</span>
+                        <span>Contexto </span>
+                        {origin === ORIGIN_CREDIT_STUDY &&
+                            <div style={{ display: "inline" }}>
+                                (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                        }
                     </dt>
                     <ToolTipComponent text={this.elementMessageContext()} position="right center" action="focus" size="tiny"
                         children={

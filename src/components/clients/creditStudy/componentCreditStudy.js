@@ -303,87 +303,92 @@ class ComponentStudyCredit extends Component {
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
                 swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
             } else {
-                const listLineOfBusiness = clientInformacion.get('listParticipation');
-                const listDistribution = clientInformacion.get('listDistribution');
-                const listMainCustomer = clientInformacion.get('listMainCustomer');
-                const listMainSupplier = clientInformacion.get('listMainSupplier');
-                const listMainCompetitor = clientInformacion.get('listMainCompetitor');
-                const listOperations = clientInformacion.get('listOperations');
-                const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
-                const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
-                const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
-                const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
-                const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
-                const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
-                if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
-                    this.setState({
-                        showFormAddLineOfBusiness: true,
-                        lineofBusinessRequired: true
-                    });
+                if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
+                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperatrions) {
                     allowSave = false;
-                }
-                if (listDistribution.length === 0 &&
-                    (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
-                    this.setState({
-                        showFormAddDistribution: true,
-                        distributionRequired: true
-                    });
-                    allowSave = false;
-                }
-                if (listMainCustomer.length === 0 &&
-                    (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
-                    this.setState({
-                        showFormAddMainClient: true,
-                        mainClientRequired: true
-                    });
-                    allowSave = false;
-                }
-                if (listMainSupplier.length === 0 &&
-                    (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
-                    this.setState({
-                        showFormAddMainSupplier: true,
-                        mainSupplierRequired: true
-                    });
-                    allowSave = false;
-                }
-                if (listMainCompetitor.length === 0 &&
-                    (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
-                    this.setState({
-                        showFormAddMainCompetitor: true,
-                        mainCompetitorRequired: true
-                    });
-                    allowSave = false;
-                }
-                if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
-                    (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
-                    this.setState({
-                        showFormAddIntOperations: true,
-                        intOperationsRequired: true
-                    });
-                    allowSave = false;
-                }
-                if (!stringValidate(contextClientField.value)) {
-                    allowSave = false;
-                    this.setState({
-                        fieldContextRequired: true
-                    });
-                }
-                if (!stringValidate(customerTypology.value)) {
-                    allowSave = false;
-                    this.setState({
-                        customerTypology: true
-                    });
-                }
-                if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
-                    !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
-                    !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
-                    !this.state.valueCheckSectionIntOperations)) {
-                    allowSave = false;
-                    swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+                    swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+                } else {
+                    const listLineOfBusiness = clientInformacion.get('listParticipation');
+                    const listDistribution = clientInformacion.get('listDistribution');
+                    const listMainCustomer = clientInformacion.get('listMainCustomer');
+                    const listMainSupplier = clientInformacion.get('listMainSupplier');
+                    const listMainCompetitor = clientInformacion.get('listMainCompetitor');
+                    const listOperations = clientInformacion.get('listOperations');
+                    const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
+                    const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
+                    const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
+                    const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
+                    const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
+                    const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+                    if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
+                        this.setState({
+                            showFormAddLineOfBusiness: true,
+                            lineofBusinessRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (listDistribution.length === 0 &&
+                        (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
+                        this.setState({
+                            showFormAddDistribution: true,
+                            distributionRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (listMainCustomer.length === 0 &&
+                        (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
+                        this.setState({
+                            showFormAddMainClient: true,
+                            mainClientRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (listMainSupplier.length === 0 &&
+                        (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
+                        this.setState({
+                            showFormAddMainSupplier: true,
+                            mainSupplierRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (listMainCompetitor.length === 0 &&
+                        (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
+                        this.setState({
+                            showFormAddMainCompetitor: true,
+                            mainCompetitorRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
+                        (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
+                        this.setState({
+                            showFormAddIntOperations: true,
+                            intOperationsRequired: true
+                        });
+                        allowSave = false;
+                    }
+                    if (!stringValidate(contextClientField.value)) {
+                        allowSave = false;
+                        this.setState({
+                            fieldContextRequired: true
+                        });
+                    }
+                    if (!stringValidate(customerTypology.value)) {
+                        allowSave = false;
+                        this.setState({
+                            customerTypology: true
+                        });
+                    }
+                    if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
+                        !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
+                        !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
+                        !this.state.valueCheckSectionIntOperations)) {
+                        allowSave = false;
+                        swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+                    }
                 }
             }
         }
-        console.log('allowSave', allowSave);
         return allowSave;
     }
 
@@ -529,170 +534,179 @@ class ComponentStudyCredit extends Component {
         }
         return (
             <form id="formComponentCreditStudy" style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
-                <div id="containerCreditStudy">
-                    <div>
-                        <p style={{ paddingTop: '10px' }}></p>
-                        <Row xs={12} md={12} lg={12} style={{
-                            border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
-                            borderRadius: '2px', margin: '0px 28px 0 20px', height: '80px'
-                        }}>
-                            <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
-                                <div>
-                                    <ButtonContactAdmin errorContact={errorContact} message={messageContact}
-                                        functionToExecute={this._validateInfoStudyCredit}
-                                    />
-                                    <ButtonShareholderAdmin errorShareholder={errorShareholder}
-                                        message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit}
-                                    />
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                    <Row style={{ paddingTop: "10px", marginLeft: "10px" }}>
-                        <Col xs={12} md={12} lg={12}>
-                            <input type="checkbox" id="checkNotApplyCreditContact" style={{ marginLeft: '10px' }}
-                                checked={notApplyCreditContact.value}
-                                onClick={this._handleChangeValueNotApplyCreditContact} />
-                            <span >No aplican contactos con función estudio de crédito</span>
-                        </Col>
-                        <Col xs={12} md={12} lg={12}>
-                            <ClientTypology customerTypology={customerTypology}
-                                data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
-                                fieldRequiered={this.state.customerTypology} />
-                        </Col>
-                    </Row>
-                    <Row style={{ padding: "20px 10px 0px 20px" }}>
-                        <Col xs={12} md={12} lg={12}>
-                            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                                <div className="tab-content-row"
-                                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-
-                                <i className="payment icon" style={{ fontSize: "25px" }} />
-                                <span className="title-middle"> Actividad económica</span>
+                <Row>
+                    <Col xs={12} sm={12} md={12} lg={12} style={{ marginLeft: '20px', paddingTop: '10px' }}>
+                        <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                    </Col>
+                </Row>
+                <div>
+                    <Row xs={12} md={12} lg={12} style={{
+                        border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
+                        borderRadius: '2px', margin: '10px 28px 0 20px', height: '80px'
+                    }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+                            <div>
+                                <ButtonContactAdmin errorContact={errorContact} message={messageContact}
+                                    functionToExecute={this._validateInfoStudyCredit}
+                                />
+                                <ButtonShareholderAdmin errorShareholder={errorShareholder}
+                                    message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit}
+                                />
                             </div>
                         </Col>
-                        {overdueCreditStudy &&
-                            <Col xs={12} md={12} lg={12}>
-                                <input type="checkbox" id="checkSectionActivityEconomic"
-                                    checked={this.state.valueCheckSectionActivityEconomic}
-                                    onClick={this._handleChangeValueActivityEconomic} />
-                                <span >Aprueba que la información en esta sección se encuentra actualizada</span>
-                            </Col>
-                        }
                     </Row>
-                    <ContextEconomicActivity contextClientField={contextClientField} fieldRequiered={this.state.fieldContextRequired} />
-                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                        participation={participationLB} experience={experience} registrationRequired={this.state.lineofBusinessRequired}
-                        showFormLinebusiness={this.state.showFormAddLineOfBusiness} fnShowForm={this.showFormOut} />
-                    <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
-                        showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
-                        registrationRequired={this.state.distributionRequired} />
-                    <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
-                        valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
-                        functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
-                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                        term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
-                        showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
-                        valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
-                        functionChangeCheckSectionMainClients={this._handleChangeValueMainClients}
-                        registrationRequired={this.state.mainClientRequired} />
-                    <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
-                        term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
-                        showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut}
-                        showCheckValidateSection={overdueCreditStudy} registrationRequired={this.state.mainSupplierRequired}
-                        valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
-                        functionChangeMainSupplier={this._handleChangeValueMainSupplier} />
-                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                        observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                        fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
-                        valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
-                        functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
-                        registrationRequired={this.state.mainCompetitorRequired} />
-
-                    {_.isEqual(infoClient.operationsForeignCurrency, 1) &&
-                        <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
-                            idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe}
-                            descriptionCoverage={descriptionCoverageIntOpe} showFormIntOperations={this.state.showFormAddIntOperations}
-                            fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
-                            valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
-                            showCheckValidateSection={overdueCreditStudy} functionChangeIntOperations={this._handleChangeValueIntOperations} />
-                    }
-                    <Row style={{ padding: "10px 10px 0px 20px" }}>
-                        <Col xs={6} md={3} lg={3}>
-                            {createdBy !== null &&
-                                <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
-                            }
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            {createdBy !== null &&
-                                <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
-                            }
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            {updatedBy !== null &&
-                                <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                            }
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            {updatedBy !== null &&
-                                <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                            }
-                        </Col>
-                    </Row>
-                    <Row style={{ padding: "5px 10px 0px 20px" }}>
-                        <Col xs={6} md={3} lg={3}>
-                            <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestampString}</span>
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
-                        </Col>
-                        <Col xs={6} md={3} lg={3}>
-                            <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
-                        </Col>
-                    </Row>
-                    <div style={{
-                        marginTop: "50px", position: "fixed",
-                        border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
-                        backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
-                    }}>
-                        <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
-                            <button className="btn"
-                                style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                                type="submit">
-                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
-                            </button>
-                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
-                                float: "right",
-                                margin: "8px 0px 0px 240px",
-                                position: "fixed",
-                                backgroundColor: "#C1C1C1"
-                            }} type="button">
-                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                            </button>
-                        </div>
-                    </div>
-                    <SweetAlert
-                        type="success"
-                        show={this.state.showSuccessMessage}
-                        title="Estudio de crédito"
-                        text={"Señor usuario, se ha guardado el estudio de crédito exitosamente"}
-                        onConfirm={() => this._closeMessageSuccess()}
-                    />
-                    <SweetAlert
-                        type="warning"
-                        show={this.state.showConfirmExit}
-                        title="Confirmar salida"
-                        confirmButtonColor='#DD6B55'
-                        confirmButtonText='Sí, estoy seguro!'
-                        cancelButtonText="Cancelar"
-                        text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir?"
-                        showCancelButton={true}
-                        onCancel={() => this.setState({ showConfirmExit: false })}
-                        onConfirm={() => this._onConfirmExit()} />
                 </div>
+                <Row style={{ paddingTop: "10px", marginLeft: "10px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <input type="checkbox" id="checkNotApplyCreditContact" style={{ marginLeft: '10px' }}
+                            checked={notApplyCreditContact.value}
+                            onClick={this._handleChangeValueNotApplyCreditContact} />
+                        <span >No aplican contactos con función estudio de crédito</span>
+                    </Col>
+                    <Col xs={12} md={12} lg={12}>
+                        <ClientTypology customerTypology={customerTypology}
+                            data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
+                            fieldRequiered={this.state.customerTypology}
+                            origin={ORIGIN_CREDIT_STUDY} />
+                    </Col>
+                </Row>
+                <Row style={{ padding: "20px 10px 0px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                            <div className="tab-content-row"
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+
+                            <i className="payment icon" style={{ fontSize: "25px" }} />
+                            <span className="title-middle"> Actividad económica</span>
+                        </div>
+                    </Col>
+                    {overdueCreditStudy &&
+                        <Col xs={12} md={12} lg={12}>
+                            <input type="checkbox" id="checkSectionActivityEconomic"
+                                checked={this.state.valueCheckSectionActivityEconomic}
+                                onClick={this._handleChangeValueActivityEconomic} />
+                            <span >Aprueba que la información en esta sección se encuentra actualizada</span>
+                        </Col>
+                    }
+                </Row>
+                <ContextEconomicActivity contextClientField={contextClientField}
+                    fieldRequiered={this.state.fieldContextRequired}
+                    origin={ORIGIN_CREDIT_STUDY} />
+                <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                    participation={participationLB} experience={experience}
+                    registrationRequired={this.state.lineofBusinessRequired}
+                    showFormLinebusiness={this.state.showFormAddLineOfBusiness}
+                    fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} />
+                <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
+                    showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
+                    registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY} />
+                <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
+                    valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
+                    functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
+                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
+                    term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
+                    showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
+                    valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
+                    functionChangeCheckSectionMainClients={this._handleChangeValueMainClients}
+                    registrationRequired={this.state.mainClientRequired} origin={ORIGIN_CREDIT_STUDY} />
+                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                    term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                    showFormMainSupplier={this.state.showFormAddMainSupplier} fnShowForm={this.showFormOut}
+                    showCheckValidateSection={overdueCreditStudy} registrationRequired={this.state.mainSupplierRequired}
+                    valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
+                    functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
+                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                    fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
+                    valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
+                    functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
+                    registrationRequired={this.state.mainCompetitorRequired} origin={ORIGIN_CREDIT_STUDY} />
+
+                {_.isEqual(infoClient.operationsForeignCurrency, 1) &&
+                    <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                        idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe}
+                        descriptionCoverage={descriptionCoverageIntOpe} showFormIntOperations={this.state.showFormAddIntOperations}
+                        fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
+                        valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
+                        showCheckValidateSection={overdueCreditStudy}
+                        unctionChangeIntOperations={this._handleChangeValueIntOperations}
+                        origin={ORIGIN_CREDIT_STUDY} />
+                }
+                <Row style={{ padding: "10px 10px 0px 20px" }}>
+                    <Col xs={6} md={3} lg={3}>
+                        {createdBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                        }
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {createdBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                        }
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                        }
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null &&
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                        }
+                    </Col>
+                </Row>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestampString}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                    </Col>
+                </Row>
+                <div style={{
+                    marginTop: "50px", position: "fixed",
+                    border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
+                    backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
+                }}>
+                    <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
+                        <button className="btn"
+                            style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
+                            type="submit">
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
+                        </button>
+                        <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                            float: "right",
+                            margin: "8px 0px 0px 240px",
+                            position: "fixed",
+                            backgroundColor: "#C1C1C1"
+                        }} type="button">
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                        </button>
+                    </div>
+                </div>
+                <SweetAlert
+                    type="success"
+                    show={this.state.showSuccessMessage}
+                    title="Estudio de crédito"
+                    text={"Señor usuario, se ha guardado el estudio de crédito exitosamente"}
+                    onConfirm={() => this._closeMessageSuccess()}
+                />
+                <SweetAlert
+                    type="warning"
+                    show={this.state.showConfirmExit}
+                    title="Confirmar salida"
+                    confirmButtonColor='#DD6B55'
+                    confirmButtonText='Sí, estoy seguro!'
+                    cancelButtonText="Cancelar"
+                    text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir?"
+                    showCancelButton={true}
+                    onCancel={() => this.setState({ showConfirmExit: false })}
+                    onConfirm={() => this._onConfirmExit()} />
             </form>
         )
     }
