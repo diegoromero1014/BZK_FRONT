@@ -47,7 +47,7 @@ class ComponentListDistributionChannel extends Component {
                 const newValue = {
                     "id": _.uniqueId('dist_'),
                     "distributionChannel": distributionChannel.value,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                 };
                 listDistribution.push(newValue);
             } else {
@@ -56,7 +56,7 @@ class ComponentListDistributionChannel extends Component {
                     "distributionChannel": distributionChannel.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value
+                    "participation": participation.value.replace(/,/g, "")
                 };
                 listDistribution = _.remove(listDistribution, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listDistribution.push(updateValue);

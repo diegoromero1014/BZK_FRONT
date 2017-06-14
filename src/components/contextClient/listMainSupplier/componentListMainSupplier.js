@@ -63,7 +63,7 @@ class ComponentListMainSupplier extends Component {
                 const newValue = {
                     "id": _.uniqueId('mainS_'),
                     "nameSupplier": nameSupplier.value,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
@@ -74,7 +74,7 @@ class ComponentListMainSupplier extends Component {
                     "nameSupplier": nameSupplier.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
@@ -106,7 +106,7 @@ class ComponentListMainSupplier extends Component {
         nameSupplier.onChange(entity.nameSupplier);
         participation.onChange(entity.participation.toString());
         term.onChange(entity.term.toString());
-        relevantInformation.onChange(entity.relevantInformation.toString());
+        relevantInformation.onChange( validateValueExist(entity.relevantInformation) ? entity.relevantInformation.toString() : "" );
         this.setState({ entitySeleted: entity });
     }
 

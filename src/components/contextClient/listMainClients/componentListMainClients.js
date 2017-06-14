@@ -64,7 +64,7 @@ class ComponentListMainClients extends Component {
                 const newValue = {
                     "id": _.uniqueId('mainC_'),
                     "nameClient": nameClient.value,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
@@ -75,7 +75,7 @@ class ComponentListMainClients extends Component {
                     "nameClient": nameClient.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "term": term.value,
                     "relevantInformation": relevantInformation.value
                 };
@@ -107,7 +107,7 @@ class ComponentListMainClients extends Component {
         nameClient.onChange(entity.nameClient);
         participation.onChange(entity.participation.toString());
         term.onChange(entity.term.toString());
-        relevantInformation.onChange(entity.relevantInformation.toString());
+        relevantInformation.onChange(validateValueExist(entity.relevantInformation) ? entity.relevantInformation.toString() : "");
         this.setState({ entitySeleted: entity });
     }
 

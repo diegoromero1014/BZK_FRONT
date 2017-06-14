@@ -48,7 +48,7 @@ class ComponentListLineBusiness extends Component {
                 const newValue = {
                     "id": _.uniqueId('line_'),
                     "lineOfBusiness": contextLineBusiness.value,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "experience": experience.value
                 };
                 listParticipation.push(newValue);
@@ -58,7 +58,7 @@ class ComponentListLineBusiness extends Component {
                     "lineOfBusiness": contextLineBusiness.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "experience": experience.value
                 };
                 listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
