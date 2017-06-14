@@ -1,5 +1,5 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER } from './constants';
+import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY } from './constants';
 import axios from 'axios';
 
 
@@ -17,7 +17,7 @@ export function getSurveyQualitativeVarible() {
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": ""
+        "messageBody": window.localStorage.getItem('idClientSelected')
     }
     var request = axios.post(APP_URL + "/getSurveyQualitativeVariable", json);
     return {
@@ -26,10 +26,47 @@ export function getSurveyQualitativeVarible() {
     }
 }
 
-export function saveAnswerQuestion( listQuestions ){
+export function clearSurvey(){
+    return {
+        type: CLEAR_SURVEY
+    }
+}
+
+export function changeFieldsEditables(value){
+    return {
+        type: FIELDS_EDITABLES,
+        value
+    }
+}
+
+export function saveAnswerQuestion( listQuestions, nameList ){
     return {
         type: SAVE_ANSWER,
-        listQuestions
+        listQuestions,
+        nameList
     }
+}
 
+
+export function saveResponseQualitativeSurvey(jsonSave) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": jsonSave
+    }
+    var request = axios.post(APP_URL + "/saveResponseQualitativeSurvey", json);
+    return {
+        type: SAVE_RESPONSE_SURVEY,
+        payload: request
+    }
 }

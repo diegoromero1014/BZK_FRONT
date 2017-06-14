@@ -12,7 +12,7 @@ import InternationalOperations from './internationalOperations';
 import DocumentInformationServices from './managementDocumentary/documentInformationServices';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { seletedButton, validateContactShareholder, sendErrorsUpdate, changeAccordionValue } from './actions';
-import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT, ACTIVE_TAB, INACTIVE_TAB } from './constants';
+import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT, CLOSE_TAB, OPEN_TAB } from './constants';
 import Notas from './notas';
 import { bindActionCreators } from 'redux';
 import Products from './product';
@@ -102,7 +102,7 @@ class DetailsInfoClient extends Component {
         var accordion = tabReducer.get('accordion');
         var newAccordion = _.mapValues(accordion, (value, key) => {
             if (_.isEqual(key, tabSeleted)) {
-                return _.isEqual(value, INACTIVE_TAB) ? ACTIVE_TAB : INACTIVE_TAB;
+                return _.isEqual(value, OPEN_TAB) ? CLOSE_TAB : OPEN_TAB;
             } else {
                 return value;
             }

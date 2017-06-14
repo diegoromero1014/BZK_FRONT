@@ -14,16 +14,20 @@ class ComponentVariable extends Component {
     }
 
     _mapQuestion(question, idx) {
-        return <ComponentQuestion question={question} key={idx} />
+        const { analyst } = this.props;
+        if ((analyst && question.analyst) || (!analyst && !question.analyst)) {
+            return <ComponentQuestion question={question} key={idx} />
+        }
+        return null;
     }
 
     render() {
         const { variable } = this.props;
         const listQuestions = !validateValueExist(variable) || !validateValueExist(variable.listQuestion) ? [] : variable.listQuestion;
         return (
-            <Row style={{ paddingTop: "10px", paddingBottom: "10px", paddingLeft: '15px' }}>
+            <Row style={{ paddingTop: "10px", paddingBottom: "10px", paddingLeft: '20px' }}>
                 <Col xs={12} md={12} lg={12} style={{ borderBottom: "1px solid #505050" }}>
-                    <span className="section-title" style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
+                    <span className="section-title" style={{ fontSize: "13pt", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
                         {variable.name}
                     </span>
                     <ToolTipComponent text={variable.description}

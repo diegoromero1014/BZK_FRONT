@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 import {
     UPDATE_ACTIVE_TAB, CLICK_BUTTON_UPDATE_EDIT, VALIDATE_CONTACT_SHAREHOLDER,
     CHANGE_VALUE_MODAL_ERRORS, MESSAGE_ERRORS_UPDATE, UPDATE_ERROR_NOTES, UPDATE_ERROR_LINK_ENTITIES,
-    CONSULT_MANAGEMENT_DOCUMENTARY, CLEAR_MANAGEMENT_DOCUMENTARY, RESET_ACCORDION, CHANGE_ACCORDION, INACTIVE_TAB
+    CONSULT_MANAGEMENT_DOCUMENTARY, CLEAR_MANAGEMENT_DOCUMENTARY, RESET_ACCORDION, CHANGE_ACCORDION, OPEN_TAB
 } from './constants';
 import _ from 'lodash';
 
@@ -18,19 +18,19 @@ const initialState = Immutable.Map({
     errorEditLinkEntitiesClient: false,
     listDocumentsManagementDocumentary: null,
     accordion: {
-        economicActivity: INACTIVE_TAB,
-        inventoryPolicy: INACTIVE_TAB,
-        mainCustomer: INACTIVE_TAB,
-        mainSupplier: INACTIVE_TAB,
-        mainCompetition: INACTIVE_TAB,
-        ubicationCorrespondence: INACTIVE_TAB,
-        infoFinanciera: INACTIVE_TAB,
-        dataComercial: INACTIVE_TAB,
-        notes: INACTIVE_TAB,
-        declarationOfOrigin: INACTIVE_TAB,
-        internationalOperations: INACTIVE_TAB,
-        documentInformationServices: INACTIVE_TAB,
-        foreignProducts: INACTIVE_TAB
+        economicActivity: OPEN_TAB,
+        inventoryPolicy: OPEN_TAB,
+        mainCustomer: OPEN_TAB,
+        mainSupplier: OPEN_TAB,
+        mainCompetition: OPEN_TAB,
+        ubicationCorrespondence: OPEN_TAB,
+        infoFinanciera: OPEN_TAB,
+        dataComercial: OPEN_TAB,
+        notes: OPEN_TAB,
+        declarationOfOrigin: OPEN_TAB,
+        internationalOperations: OPEN_TAB,
+        documentInformationServices: OPEN_TAB,
+        foreignProducts: OPEN_TAB
     },
 });
 
@@ -64,19 +64,19 @@ export default (state = initialState, action) => {
             });
         case RESET_ACCORDION:
             const resetAccordion = {
-                economicActivity: INACTIVE_TAB,
-                inventoryPolicy: INACTIVE_TAB,
-                mainCustomer: INACTIVE_TAB,
-                mainSupplier: INACTIVE_TAB,
-                mainCompetition: INACTIVE_TAB,
-                ubicationCorrespondence: INACTIVE_TAB,
-                infoFinanciera: INACTIVE_TAB,
-                dataComercial: INACTIVE_TAB,
-                notes: INACTIVE_TAB,
-                declarationOfOrigin: INACTIVE_TAB,
-                internationalOperations: INACTIVE_TAB,
-                documentInformationServices: INACTIVE_TAB,
-                foreignProducts: INACTIVE_TAB
+                economicActivity: OPEN_TAB,
+                inventoryPolicy: OPEN_TAB,
+                mainCustomer: OPEN_TAB,
+                mainSupplier: OPEN_TAB,
+                mainCompetition: OPEN_TAB,
+                ubicationCorrespondence: OPEN_TAB,
+                infoFinanciera: OPEN_TAB,
+                dataComercial: OPEN_TAB,
+                notes: OPEN_TAB,
+                declarationOfOrigin: OPEN_TAB,
+                internationalOperations: OPEN_TAB,
+                documentInformationServices: OPEN_TAB,
+                foreignProducts: OPEN_TAB
             };
             return state.set("accordion", resetAccordion);
 

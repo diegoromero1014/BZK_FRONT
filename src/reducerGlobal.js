@@ -48,6 +48,9 @@ export default (state = initialState, action) => {
     case constants.MODULE_MANAGERIAL_VIEW:
       const permissionsManagerialView = action.payload.data.data.permissions;
       return state.set('permissionsManagerialView', permissionsManagerialView);
+    case constants.MODULE_QUALITATIVE_VARIABLES:
+      const permissionsQualitativeV = action.payload.data.data.permissions;
+      return state.set('permissionsQualitativeV', permissionsQualitativeV);
     default:
       return state;
   }

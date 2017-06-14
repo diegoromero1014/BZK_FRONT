@@ -85,6 +85,8 @@ export const FINALIZAR = "Finalizar";
 export const VINCULAR = "Vincular";
 export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
+export const COMMERCIAL = "Comercial";
+export const ANALYST = "Analista";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";

@@ -9,22 +9,22 @@ import { size } from 'lodash';
 class ComponentFactor extends Component {
     constructor(props) {
         super(props);
-        this._mapVariables = this._mapVariables.bind();
+        this._mapVariables = this._mapVariables.bind(this);
     }
 
     _mapVariables(variable, idx) {
-        return <ComponentVariable variable={variable} key={idx} />;
+        const {analyst} = this.props;
+        return <ComponentVariable variable={variable} analyst={analyst} key={idx} />;
     }
 
     render() {
         const { factor } = this.props;
         const listVariables = !validateValueExist(factor) || !validateValueExist(factor.listVariables) ? [] : _.get(factor, 'listVariables');
         return (
-            <Row>
+            <Row style={{marginLeft: '5px'}}>
                 <Col xs={12} md={12} lg={12}>
-                    <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                        <div className="tab-content-row"
-                            style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                    <div style={{ fontSize: "15pt"}}>
+                        <div className="tab-content-row" style={{ width: "99%", marginBottom: "10px" }} />
                         <span className="title-middle"> {factor.name}</span>
                     </div>
                 </Col>

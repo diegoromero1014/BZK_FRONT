@@ -5,6 +5,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { connect } from 'react-redux';
 import { saveAnswerQuestion } from './actions';
 import { find, remove, uniqueId, isEqual } from 'lodash';
+import { validateValueExist } from '../../../actionsGlobal';
 
 class ComponentQuestion extends Component {
     constructor(props) {
@@ -16,18 +17,31 @@ class ComponentQuestion extends Component {
         this._onChangeAnswer = this._onChangeAnswer.bind(this);
     }
 
+    componentWillMount() {
+        const { question } = this.props;
+        if ( validateValueExist(question.idAnswer) ){
+            this.setState({ valueAnswer: question.idAnswer });
+        }
+    }
+
     _onChangeAnswer(idAnswer) {
         const { question, qualitativeVariableReducer, saveAnswerQuestion } = this.props;
-        const questionResponse = find(qualitativeVariableReducer.get('listQuestions'), ['id', parseInt(question.id)]);
+        let nameList = null;
+        if( question.analyst ){
+            nameList = "listQuestionsAnalyst";
+        } else {
+            nameList = "listQuestionsCommercial";
+        }
+        const questionResponse = find(qualitativeVariableReducer.get(nameList), ['id', parseInt(question.id)]);
         questionResponse.idAnswer = parseInt(idAnswer);
 
-        const listQuestions = remove(qualitativeVariableReducer.get('listQuestions'), (item) => !isEqual(item.id, parseInt(question.id)));
+        const listQuestions = remove(qualitativeVariableReducer.get(nameList), (item) => !isEqual(item.id, parseInt(question.id)));
         listQuestions.push(questionResponse);
         const answer = find(question.listAnswers, ['id', parseInt(idAnswer)]);
 
         setTimeout(() => {
             this.setState({ valueAnswer: idAnswer, scoreAnswer: answer.score });
-            saveAnswerQuestion(listQuestions);
+            saveAnswerQuestion(listQuestions, nameList);
         }, 300);
     }
 
@@ -36,17 +50,14 @@ class ComponentQuestion extends Component {
         return (
             <Row style={{ paddingTop: "10px", paddingLeft: '10px' }}>
                 <Col xs={6} md={8} lg={8}>
-                    {question.analyst ?
-                        <span style={{ color: "#D9534F" }}>Analista - </span>
-                        :
-                        <span style={{ color: "green" }}>Comecial - </span>
-                    }
                     <span style={{ textAlign: "justify" }}>{question.name}</span>
                 </Col>
                 <Col xs={5} md={4} lg={4}>
                     <ComboBox
                         name={uniqueId('question_')}
                         labelInput="Seleccione una respuesta"
+                        disabled={qualitativeVariableReducer.get('fieldsEditable') ? '' : 'disabled'}
+                        defaultValue={this.state.valueAnswer}
                         value={this.state.valueAnswer}
                         onBlur={() => console.log()}
                         valueProp={'id'}
