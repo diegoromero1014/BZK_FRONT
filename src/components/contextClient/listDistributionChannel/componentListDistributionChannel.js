@@ -11,6 +11,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { DISTRIBUTION_CHANNEL, MESSAGE_DISTRIBUTION_CHANNEL } from '../constants';
 import _ from 'lodash';
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 class ComponentListDistributionChannel extends Component {
     constructor(props) {
@@ -119,15 +120,20 @@ class ComponentListDistributionChannel extends Component {
     }
 
     render() {
-        const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion, changeValueListClient,
-            registrationRequired } = this.props;
+        const { distributionChannel, participation, showFormDistribution, fnShowForm, clientInformacion,
+            changeValueListClient, registrationRequired, origin } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
             <div style={{ width: '100%' }}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px", width: '100%' }}>
-                            <span className="section-title">Canales de distribución y participación en ventas</span>
+                            <span className="section-title">Canales de distribución y participación en ventas </span>
+                            {origin === ORIGIN_CREDIT_STUDY &&
+                                <div style={{ display: "inline" }}>
+                                    (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                            }
                             <ToolTipComponent text={MESSAGE_DISTRIBUTION_CHANNEL}
                                 children={
                                     <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}

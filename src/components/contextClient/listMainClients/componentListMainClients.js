@@ -12,6 +12,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS, MESSAGE_RELEVANT_MAIN_CLIENTS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 class ComponentListMainClients extends Component {
     constructor(props) {
@@ -147,8 +148,9 @@ class ComponentListMainClients extends Component {
 
     render() {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
-            clientInformacion, showCheckValidateSection, valueCheckSectionMainClients, functionChangeCheckSectionMainClients,
-            changeValueListClient, registrationRequired } = this.props;
+            clientInformacion, showCheckValidateSection, valueCheckSectionMainClients,
+            functionChangeCheckSectionMainClients, changeValueListClient, registrationRequired,
+            origin } = this.props;
         const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -158,7 +160,12 @@ class ComponentListMainClients extends Component {
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="users icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Principales clientes</span>
+                            <span className="title-middle"> Principales clientes </span>
+                            {origin === ORIGIN_CREDIT_STUDY &&
+                                <div style={{ display: "inline" }}>
+                                    (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                            }
                             <ToolTipComponent text={MESSAGE_MAIN_CLIENTS}
                                 children={
                                     <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}

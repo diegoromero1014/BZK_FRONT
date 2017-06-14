@@ -12,6 +12,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_COMPETITOR, MESSAGE_MAIN_COMPETITOR } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 class ComponentListMainCompetitor extends Component {
     constructor(props) {
@@ -128,7 +129,7 @@ class ComponentListMainCompetitor extends Component {
     render() {
         const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainCompetitor, showCheckValidateSection,
-            functionChangeMainCompetitor, registrationRequired } = this.props;
+            functionChangeMainCompetitor, registrationRequired, origin } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div>
@@ -138,7 +139,12 @@ class ComponentListMainCompetitor extends Component {
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="factory icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Principales competidores</span>
+                            <span className="title-middle"> Principales competidores </span>
+                            {origin === ORIGIN_CREDIT_STUDY &&
+                                <div style={{ display: "inline" }}>
+                                    (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                            }
                             <ToolTipComponent text={MESSAGE_MAIN_COMPETITOR}
                                 children={
                                     <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}

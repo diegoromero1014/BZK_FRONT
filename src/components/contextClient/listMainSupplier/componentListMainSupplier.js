@@ -12,7 +12,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
-
+import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 class ComponentListMainSupplier extends Component {
     constructor(props) {
@@ -148,7 +148,7 @@ class ComponentListMainSupplier extends Component {
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
-            functionChangeMainSupplier, registrationRequired } = this.props;
+            functionChangeMainSupplier, registrationRequired, origin } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -158,7 +158,12 @@ class ComponentListMainSupplier extends Component {
                             <div className="tab-content-row"
                                 style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="shipping icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Principales proveedores</span>
+                            <span className="title-middle"> Principales proveedores </span>
+                            {origin === ORIGIN_CREDIT_STUDY &&
+                                <div style={{ display: "inline" }}>
+                                    (<span style={{ color: "red" }}>*</span>)
+                            </div>
+                            }
                             <ToolTipComponent text={MESSAGE_MAIN_SUPPLIER}
                                 children={
                                     <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
