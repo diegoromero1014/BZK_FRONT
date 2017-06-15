@@ -629,7 +629,7 @@ class ComponentStudyCredit extends Component {
                         fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
                         valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
                         showCheckValidateSection={overdueCreditStudy}
-                        unctionChangeIntOperations={this._handleChangeValueIntOperations}
+                        functionChangeIntOperations={this._handleChangeValueIntOperations}
                         origin={ORIGIN_CREDIT_STUDY} />
                 }
                 <Row style={{ padding: "10px 10px 0px 20px" }}>
