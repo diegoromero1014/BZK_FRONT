@@ -239,7 +239,9 @@ class ComponentListIntOperations extends Component {
                     style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                 <i className="world icon" style={{ fontSize: "25px", color: "#CEA70B" }} />
                 <span className="title-middle" style={{ color: "#CEA70B" }}> Operaciones internacionales </span>
-                (<span style={{ color: "red" }}>*</span>)
+                <span style={{ color: "#CEA70B" }}>(</span>
+                <span style={{ color: "red" }}>*</span>
+                <span style={{ color: "#CEA70B" }}>)</span>
             </div>;
         } else {
             return <span className="section-title">Operaciones internacionales</span>;

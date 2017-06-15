@@ -68,6 +68,7 @@ import ComponentListMainSupplier from '../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from '../contextClient/listMainCompetitor/componentListMainCompetitor';
 import ComponentListIntOperations from '../contextClient/listInternationalOperations/componentListIntOperations';
 import { validateContactShareholder } from '../clientDetailsInfo/actions';
+import { saveCreditStudy } from '../clients/creditStudy/actions';
 
 let idButton;
 let errorContact;
@@ -956,41 +957,40 @@ class clientEdit extends Component {
                 "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
                 "otherOperationsForeign": otherOperationsForeign.value,
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
-                "idCustomerTypology": customerTypology.value,
-                "contextClient": this._createJsonSaveContextClient()
+                "idCustomerTypology": customerTypology.value
             };
-            const { createProspect, sendErrorsUpdate, updateClient } = this.props;
+            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            createProspect(jsonCreateProspect)
-                .then((data) => {
-                    if (_.get(data, 'payload.data.status', 500) === 200) {
-                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
-                            if (typeSave === BUTTON_EDIT) {
-                                changeStateSaveData(false, "");
-                                messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                                this.setState({ showEx: true });
-                            } else {
-                                updateClient(UPDATE).then((data) => {
-                                    changeStateSaveData(false, "");
-                                    if (!_.get(data, 'payload.data.validateLogin')) {
-                                        redirectUrl("/login");
-                                    } else {
-                                        messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                                        this.setState({ showEx: true });
-                                    }
-                                });
-                            }
+            createProspect(jsonCreateProspect).then((data) => {
+                if (_.get(data, 'payload.data.status', 500) === 200) {
+                    saveCreditStudy(this._createJsonSaveContextClient());
+                    if (_.get(data, 'payload.data.responseCreateProspect', false)) {
+                        if (typeSave === BUTTON_EDIT) {
+                            changeStateSaveData(false, "");
+                            messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
+                            this.setState({ showEx: true });
                         } else {
-                            this.setState({ showErrorClientExists: true });
+                            updateClient(UPDATE).then((data) => {
+                                changeStateSaveData(false, "");
+                                if (!_.get(data, 'payload.data.validateLogin')) {
+                                    redirectUrl("/login");
+                                } else {
+                                    messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                                    this.setState({ showEx: true });
+                                }
+                            });
                         }
                     } else {
-                        this.setState({ showEr: true });
+                        this.setState({ showErrorClientExists: true });
                     }
-                    changeStateSaveData(false, "");
-                }, (reason) => {
-                    changeStateSaveData(false, "");
+                } else {
                     this.setState({ showEr: true });
-                });
+                }
+                changeStateSaveData(false, "");
+            }, (reason) => {
+                changeStateSaveData(false, "");
+                this.setState({ showEr: true });
+            });
         }
     }
 
@@ -2306,7 +2306,8 @@ function mapDispatchToProps(dispatch) {
         updateTitleNavBar,
         showLoading,
         swtShowMessage,
-        validateContactShareholder
+        validateContactShareholder,
+        saveCreditStudy
     }, dispatch);
 }
 
