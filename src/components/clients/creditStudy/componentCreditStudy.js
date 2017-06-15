@@ -304,7 +304,7 @@ class ComponentStudyCredit extends Component {
                 swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
             } else {
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
-                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperatrions) {
+                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperations) {
                     allowSave = false;
                     swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
@@ -616,7 +616,7 @@ class ComponentStudyCredit extends Component {
                     valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
                     functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormMainCompetitor}
                     fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
                     functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}

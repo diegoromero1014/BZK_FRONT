@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber } from '../../../actionsGlobal';
+import { handleBlurValueNumber, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
@@ -87,7 +87,7 @@ class ComponentListLineBusiness extends Component {
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
-        experience.onChange(entity.experience.toString());
+        experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "" );
         this.setState({ entitySeleted: entity });
     }
 

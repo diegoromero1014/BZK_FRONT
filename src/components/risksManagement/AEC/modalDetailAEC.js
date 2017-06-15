@@ -69,7 +69,7 @@ class ModalDetailAEC extends Component {
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Porcentaje provisión esperada</dt>
-                                <dd style={{ minHeight: '26px' }}>{formatCurrency(detailAEC.provisionPercentage, '%')}</dd>
+                                <dd style={{ minHeight: '26px' }}>{formatCurrency(detailAEC.provisionPercentage) + '%'}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Saldo capital</dt>
