@@ -616,7 +616,7 @@ class ComponentStudyCredit extends Component {
                     valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
                     functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormMainCompetitor}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
                     functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
