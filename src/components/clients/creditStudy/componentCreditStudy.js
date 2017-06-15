@@ -304,7 +304,7 @@ class ComponentStudyCredit extends Component {
                 swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
             } else {
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
-                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperations) {
+                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperations || this.state.showFormAddMainCompetitor) {
                     allowSave = false;
                     swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
@@ -629,8 +629,7 @@ class ComponentStudyCredit extends Component {
                         fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
                         valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
                         showCheckValidateSection={overdueCreditStudy}
-                        functionChangeIntOperations={this._handleChangeValueIntOperations}
-                        origin={ORIGIN_CREDIT_STUDY} />
+                        functionChangeIntOperations={this._handleChangeValueIntOperations}/>
                 }
                 <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
