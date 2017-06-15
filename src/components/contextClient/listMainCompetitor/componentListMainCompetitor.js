@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -49,7 +49,7 @@ class ComponentListMainCompetitor extends Component {
                 const newValue = {
                     "id": _.uniqueId('mainCom_'),
                     "nameCompetitor": nameCompetitor.value,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "observations": observations.value
                 };
                 listMainCompetitor.push(newValue);
@@ -59,7 +59,7 @@ class ComponentListMainCompetitor extends Component {
                     "nameCompetitor": nameCompetitor.value,
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
-                    "participation": participation.value,
+                    "participation": participation.value.replace(/,/g, ""),
                     "observations": observations.value
                 };
                 listMainCompetitor = _.remove(listMainCompetitor, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
@@ -88,7 +88,7 @@ class ComponentListMainCompetitor extends Component {
         fnShowForm(MAIN_COMPETITOR, true);
         nameCompetitor.onChange(entity.nameCompetitor);
         participation.onChange(entity.participation.toString());
-        observations.onChange(entity.observations.toString());
+        observations.onChange( validateValueExist(entity.observations) ? entity.observations.toString() : "");
         this.setState({ entitySeleted: entity });
     }
 

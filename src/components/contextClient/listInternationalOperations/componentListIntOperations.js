@@ -78,7 +78,7 @@ class ComponentListIntOperations extends Component {
                     const newValue = {
                         "id": _.uniqueId('mainIntO_'),
                         "typeOperation": typeOperation.value,
-                        "participation": participation.value,
+                        "participation": participation.value.replace(/,/g, ""),
                         "customerCoverage": customerCoverage.value,
                         "descriptionCoverage": descriptionCoverage.value,
                         "listCountryOperations": this.state.listCountrys
@@ -90,7 +90,7 @@ class ComponentListIntOperations extends Component {
                         "typeOperation": typeOperation.value,
                         "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                         "dateCreate": this.state.entitySeleted.dateCreate,
-                        "participation": participation.value,
+                        "participation": participation.value.replace(/,/g, ""),
                         "customerCoverage": customerCoverage.value,
                         "descriptionCoverage": descriptionCoverage.value,
                         "listCountryOperations": this.state.listCountrys
@@ -125,7 +125,7 @@ class ComponentListIntOperations extends Component {
                 const newCountry = {
                     "id": _.uniqueId('mainIntO_'),
                     "idCountry": idCountry.value,
-                    "participation": participationCountry.value,
+                    "participation": participationCountry.value.replace(/,/g, ""),
                     "nameCountry": _.find(selectsReducer.get(FILTER_COUNTRY), ['id', parseInt(idCountry.value)]).value,
                 };
                 const listCountrys = this.state.listCountrys;
@@ -321,7 +321,7 @@ class ComponentListIntOperations extends Component {
                                             placeholder="Participación"
                                             {...participation}
                                             value={participation.value}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
                                             error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
