@@ -995,7 +995,7 @@ class clientEdit extends Component {
     }
 
     _createJsonSaveContextClient() {
-        const { fields: { contextClientField, inventoryPolicy }, clientInformacion } = this.props;
+        const { fields: { contextClientField, inventoryPolicy, customerTypology }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -1040,7 +1040,9 @@ class clientEdit extends Component {
         const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
+                'customerTypology': customerTypology.value,
                 'id': null,
+                'idClient': infoClient.id,
                 'context': contextClientField.value,
                 'inventoryPolicy': inventoryPolicy.value,
                 'listParticipation': listLineOfBusiness,
@@ -1057,6 +1059,7 @@ class clientEdit extends Component {
                 noAppliedIntOperations
             };
         } else {
+            contextClient.customerTypology = customerTypology.value;
             contextClient.context = contextClientField.value;
             contextClient.inventoryPolicy = inventoryPolicy.value;
             contextClient.listParticipation = listLineOfBusiness;
