@@ -238,7 +238,7 @@ export function formatCurrency(value, measurement) {
     if (value === null || value === undefined || isNaN(value)) {
         return '';
     }
-    return numeral(value).format('0,000' + measurement);
+    return numeral(value).format('0,000') + measurement;
 }
 
 export function validateResponse(response) {
