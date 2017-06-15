@@ -277,7 +277,7 @@ class ComponentListIntOperations extends Component {
                         {showCheckValidateSection &&
                             <div>
                                 <input type="checkbox" id="checkSectionIntOperations"
-                                    checked={this.state.valueCheckSectionIntOperations}
+                                    checked={valueCheckSectionIntOperations}
                                     onClick={this._handleChangeValueIntOperations} />
                                 <span >Aprueba que la información en esta sección se encuentra actualizada</span>
                             </div>

@@ -13,7 +13,6 @@ class ClientTypology extends Component {
 
     render() {
         const { customerTypology, data, fieldRequiered, origin } = this.props;
-        console.log('origin', origin);
         return (
             <Col xs={12} md={4} lg={4}>
                 <div style={{ marginTop: "10px" }}>
