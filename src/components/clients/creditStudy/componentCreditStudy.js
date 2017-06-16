@@ -446,7 +446,7 @@ class ComponentStudyCredit extends Component {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
                     if (_.isEqual(GOVERNMENT, value)) {
-                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, idSegment).then((data) => {
+                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then((data) => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
                         });;
                     } else {
