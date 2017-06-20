@@ -54,10 +54,10 @@ function sortSurvey(listFactors, analyst, listQuestionsCommercial, listQuestions
                 } else {
                     listQuestionsCommercial.push(clone(question));
                 }
-                return question.order;
+                return question.orderQuestion;
             });
-            return variable.order;
+            return variable.orderVariable;
         });
-        return factor.order;
+        return factor.orderFactor;
     });
 }
