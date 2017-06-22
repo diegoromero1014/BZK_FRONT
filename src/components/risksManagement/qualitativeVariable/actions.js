@@ -1,5 +1,5 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY } from './constants';
+import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY, CAHNGE_VALUE_MODAL } from './constants';
 import axios from 'axios';
 
 
@@ -46,6 +46,14 @@ export function saveAnswerQuestion( listQuestions, nameList ){
         nameList
     }
 }
+
+export function changeValueModalIsOpen( value ){
+    return {
+        type: CAHNGE_VALUE_MODAL,
+        value
+    }
+}
+
 
 
 export function saveResponseQualitativeSurvey(jsonSave) {

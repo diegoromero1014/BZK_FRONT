@@ -3,12 +3,13 @@ import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ComponentFactor from './componentFactor';
+import ModalViewSimulation from './modalViewSimulation';
 import _ from 'lodash';
-import { getSurveyQualitativeVarible, changeFieldsEditables, clearSurvey, saveResponseQualitativeSurvey } from './actions';
+import { getSurveyQualitativeVarible, changeFieldsEditables, clearSurvey, saveResponseQualitativeSurvey, changeValueModalIsOpen } from './actions';
 import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
 import { STYLE_BUTTON_BOTTOM, MODULE_QUALITATIVE_VARIABLES, ANALYST, EDITAR } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { size, filter, get, indexOf, concat, isEqual } from 'lodash';
+import { size, filter, get, indexOf, concat, isEqual} from 'lodash';
 import ComponentAccordion from '../../accordion/componentAccordion';
 import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
 import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
@@ -60,10 +61,9 @@ class ComponentSurvey extends Component {
     }
 
     _clickSaveSurvey() {
-        const { reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage } = this.props;
+        const { reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage, changeFieldsEditables } = this.props;
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
-        console.log('analyst', analyst);
         if (isEqual(analyst, ANALYST)) {
             filters = { 'idAnswer': null };
         } else {
@@ -86,34 +86,34 @@ class ComponentSurvey extends Component {
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
                     swtShowMessage('success', 'Guardar encuesta', 'Señor usuario, la encuesta de variables cualitativas se guardó exitosamente');
+                    changeFieldsEditables(false);
                 }
             });
         }
     }
 
     _clickSimulateSurvey() {
-        const { qualitativeVariableReducer, swtShowMessage } = this.props;
-        const listQuestionsWithoutAnswer = filter(qualitativeVariableReducer.get('listQuestions'), ['idAnswer', null]);
+        const { qualitativeVariableReducer, swtShowMessage, changeValueModalIsOpen } = this.props;
+        const listquestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
+        const listQuestionsWithoutAnswer = filter(listquestions, ['idAnswer', null]);
         if (size(listQuestionsWithoutAnswer) > 0) {
             swtShowMessage('error', 'Error simulando encuesta', 'Señor usuario, para simular el resultado de la encuesta debe contestar todas las preguntas.');
         } else {
-            swtShowMessage('warning', 'Simular encuesta', 'Señor usuario, aún no se ha desarrollado la funcionalidad de simular encuesta, ofrecemos disculpas por las molestias ocasionadas.');
-            console.log('Debo simular');
+            changeValueModalIsOpen(true);
         }
     }
 
     render() {
         const { reducerGlobal, qualitativeVariableReducer } = this.props;
-        const surveyCommercial = qualitativeVariableReducer.get('surveyCommercial');
-        const surveyAnalyst = qualitativeVariableReducer.get('surveyAnalyst');
-        const listFactorCommercial = !validateValueExist(surveyCommercial) || !validateValueExist(surveyCommercial.listFactor) ? [] : _.get(surveyCommercial, 'listFactor');
-        const listFactorAnalyst = !validateValueExist(surveyAnalyst) || !validateValueExist(surveyAnalyst.listFactor) ? [] : _.get(surveyAnalyst, 'listFactor');
+        const survey = qualitativeVariableReducer.get('survey');
+        const listFactorCommercial = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
+        const listFactorAnalyst = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         return (
             <Row>
-                {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
+                {size(listFactorCommercial) > 0  || size(listFactorAnalyst) > 0  ?
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ textAlign: "right", marginRight: '10px' }}>
-                            <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>{surveyCommercial.name}</span>
+                            <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>{survey.name}</span>
                             {get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), EDITAR), false) &&
                                 <button type="button" onClick={this._clickChangeEditableFields} className='btn btn-sm btn-primary'>
                                     Editar <i className={'icon edit'}></i>
@@ -148,6 +148,7 @@ class ComponentSurvey extends Component {
                         </div>
                     </Col>
                 }
+                <ModalViewSimulation />
             </Row>
         );
     }
@@ -160,7 +161,8 @@ function mapDispatchToProps(dispatch) {
         validatePermissionsByModule,
         clearSurvey,
         saveResponseQualitativeSurvey,
-        changeFieldsEditables
+        changeFieldsEditables,
+        changeValueModalIsOpen
     }, dispatch);
 }
 

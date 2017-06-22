@@ -1,14 +1,14 @@
 import Immutable from 'immutable';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES } from './constants';
+import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL } from './constants';
 import { get, sortBy, clone, remove } from 'lodash';
 import { validateValueExist } from '../../../actionsGlobal';
 
 const initialState = Immutable.Map({
-    surveyCommercial: [],
-    surveyAnalyst: [],
+    survey: [],
     listQuestionsCommercial: [],
     listQuestionsAnalyst: [],
-    fieldsEditable: false
+    fieldsEditable: false,
+    isOpenModalSimulation: false
 });
 
 export default (state = initialState, action) => {
@@ -20,11 +20,9 @@ export default (state = initialState, action) => {
             if (validateValueExist(response) && validateValueExist(response.listFactor)) {
                 response.listFactor = sortSurvey(response.listFactor, false, listQuestionsCommercial, listQuestionsAnalyst);
             }
-            const surveyAnalyst = clone(response);
             return state.withMutations(map => {
                 map
-                    .set('surveyCommercial', response)
-                    .set('surveyAnalyst', surveyAnalyst)
+                    .set('survey', response)
                     .set('listQuestionsCommercial', listQuestionsCommercial)
                     .set('listQuestionsAnalyst', listQuestionsAnalyst);
             });
@@ -32,6 +30,8 @@ export default (state = initialState, action) => {
             return state.set(action.nameList, action.listQuestions);
         case FIELDS_EDITABLES:
             return state.set('fieldsEditable', action.value);
+        case CAHNGE_VALUE_MODAL:
+            return state.set('isOpenModalSimulation', action.value);
         case CLEAR_SURVEY:
             return state.withMutations(map => {
                 map
