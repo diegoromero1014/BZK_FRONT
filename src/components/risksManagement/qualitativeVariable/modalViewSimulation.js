@@ -35,7 +35,7 @@ class ModalViewSimulation extends Component {
             let sumScoreFactor = 0;
             const listQuestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
             //Agrupo las preguntas con variable
-            let listQuestionsGroup = groupBy(listQuestions, 'idVarible');
+            let listQuestionsGroup = groupBy(listQuestions, 'idVariable');
             //Recorro cada variable, obteniendo por cada pregunta el score de la respuesta y retorno la suma de score por variable
             listQuestionsGroup = mapValues(listQuestionsGroup, (value, key) => {
                 const listScores = map(value, question => {
