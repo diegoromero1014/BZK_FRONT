@@ -13,7 +13,7 @@ import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
 import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR} from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
-import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
+import {OBJECTIVE_BUSINESS} from '../constants';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {detailBusiness, pdfDescarga} from '../actions';

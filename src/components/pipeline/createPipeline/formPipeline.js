@@ -13,7 +13,7 @@ import {
 } from '../../selectsComponent/constants';
 import { getMasterDataFields, getPipelineCurrencies, getClientNeeds } from '../../selectsComponent/actions';
 import {
-  LAST_PIPELINE_REVIEW, CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
+  CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
   LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS
 } from '../constants';
 import { createEditPipeline, changeModalIsOpen } from '../actions';
@@ -21,6 +21,7 @@ import {
   SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT,
   DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
+import {LAST_PIPELINE_REVIEW} from '../../../constantsParameters';
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber } from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import SweetAlert from 'sweetalert-react';
