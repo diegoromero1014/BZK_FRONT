@@ -35,7 +35,7 @@ class clientsEconomicGroup extends Component {
   render() {
     const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess } = this.props;
     return (
-      <div className="client-card" style={{ width: "265px", float: "left" }}>
+      <div className="economicGroup-card" style={{ width: "265px", float: "left" }}>
         <div className="celula-card-top">
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
@@ -44,9 +44,11 @@ class clientsEconomicGroup extends Component {
           </div>
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: dataIsAccess ? "#B0E0E6" : "#DCDCDC" }}>
-          <i className="trash outline icon" style={{ marginTop: "-14px", fontSize: '13pt' }}
-            onClick={() => this.setState({ showConfirmDelete: true })}
-            title="Eliminar cliente del grupo económico" />
+          {dataIsAccess &&
+            <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt', cursor: 'pointer' }}
+              onClick={() => this.setState({ showConfirmDelete: true })}
+              title="Eliminar cliente del grupo económico" />
+          }
         </div>
         {dataIsProspect &&
           <div className="prospect-corner prospect badge badge-important animated bounceIn" style={{ borderRadius: "10px" }}>P</div>

@@ -203,3 +203,13 @@ input[disabled]{
 .ui.popup > .header {
 	min-height: 0px;
 }
+
+.delete-tab{
+    color: #000 !important;
+}
+
+.delete-tab:hover{
+    color: #FF0000 !important;
+    font-size: 20px;
+    cursor: pointer;
+}

@@ -68,7 +68,7 @@ class ModalComponentEconomicGroup extends Component {
           <Col xs={12} md={12} lg={12}>
             <div className="news-page content">
               <div className="team-modal" style={{ textAlign: 'center', marginBottom: "30px" }}>
-                <div className="client-card" style={{ width: '300px', textAlign: 'left', height: '100px' }}>
+                <div className="economicGroup-card" style={{ width: '300px', textAlign: 'left', height: '100px' }}>
                   <div className="celula-card-top" style={{ borderBottom: '0px' }}>
                     <div className="celula-card-top-left">
                       <div className="celula-title">{nameEconomicGroup.length > 60 ? nameEconomicGroup.substring(0, 60) + "..." : nameEconomicGroup}</div>
