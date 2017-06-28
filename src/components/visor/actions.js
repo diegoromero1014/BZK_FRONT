@@ -1,5 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
-import { CONTENT_VISOR_URL, PARAM_CONTENT_VISOR_URL } from './constants';
+import { CONTENT_VISOR_URL } from './constants';
+import { CONTENDOR_VISOR_URL } from '../../constantsParameters';
+
 import axios from 'axios';
 
 export function getContentVisorURL() {
@@ -17,7 +19,7 @@ export function getContentVisorURL() {
       "isSuccessful": true
     },
     "messageBody": {
-      "name": PARAM_CONTENT_VISOR_URL
+      "name": CONTENDOR_VISOR_URL
     }
   };
 
