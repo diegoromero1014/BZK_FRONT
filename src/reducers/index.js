@@ -60,6 +60,7 @@ import structuredDelivery from '../components/customerStory/structuredDelivery/r
 import assignedReducer from '../components/myPendings/assigned/reducer'
 import studyCreditReducer from '../components/clients/creditStudy/reducer';
 import qualitativeVariableReducer from '../components/risksManagement/qualitativeVariable/reducer';
+import visorReducer from '../components/visor/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -122,5 +123,6 @@ export default combineReducers({
     structuredDelivery,
     assignedReducer,
     studyCreditReducer,
-    qualitativeVariableReducer
+    qualitativeVariableReducer,
+    visorReducer
 });

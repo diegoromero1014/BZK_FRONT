@@ -25,7 +25,7 @@ import {
 import { validateResponse, stringValidate } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA
+    MESSAGE_SAVE_DATA, YES
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -382,7 +382,7 @@ class ComponentStudyCredit extends Component {
                     if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
                         !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
                         !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
-                        !this.state.valueCheckSectionIntOperations)) {
+                        (_.isEqual(infoClient.operationsForeignCurrency, YES) && !this.state.valueCheckSectionIntOperations))) {
                         allowSave = false;
                         swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
                     }
@@ -446,7 +446,7 @@ class ComponentStudyCredit extends Component {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
                     if (_.isEqual(GOVERNMENT, value)) {
-                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, idSegment).then((data) => {
+                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then((data) => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
                         });;
                     } else {
@@ -616,20 +616,20 @@ class ComponentStudyCredit extends Component {
                     valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
                     functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormMainCompetitor}
+                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
                     functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
                     registrationRequired={this.state.mainCompetitorRequired} origin={ORIGIN_CREDIT_STUDY} />
 
-                {_.isEqual(infoClient.operationsForeignCurrency, 1) &&
+                {_.isEqual(infoClient.operationsForeignCurrency, YES) &&
                     <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
                         idCountry={idCountryIntOpe} participationCountry={participationIntOpeCountry} customerCoverage={customerCoverageIntOpe}
                         descriptionCoverage={descriptionCoverageIntOpe} showFormIntOperations={this.state.showFormAddIntOperations}
                         fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} registrationRequired={this.state.intOperationsRequired}
                         valueCheckSectionIntOperations={this.state.valueCheckSectionIntOperations}
                         showCheckValidateSection={overdueCreditStudy}
-                        functionChangeIntOperations={this._handleChangeValueIntOperations}/>
+                        functionChangeIntOperations={this._handleChangeValueIntOperations} />
                 }
                 <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>

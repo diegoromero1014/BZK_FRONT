@@ -12,8 +12,9 @@ import {consultDataSelect, consultList, getMasterDataFields} from '../../selects
 import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
 import {TITLE_OPPORTUNITY_BUSINESS,SAVE_DRAFT,SAVE_PUBLISHED, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {LAST_BUSINESS_REVIEW} from '../../../constantsParameters';
 import SweetAlert from 'sweetalert-react';
-import {OBJECTIVE_BUSINESS,LAST_BUSINESS_REVIEW} from '../constants';
+import {OBJECTIVE_BUSINESS} from '../constants';
 import {consultParameterServer, formValidateKeyEnter} from '../../../actionsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 import {createBusiness} from '../actions';

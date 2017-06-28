@@ -105,6 +105,7 @@ export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
 export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
+export const MODULE_VISOR = "Visor";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;

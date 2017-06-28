@@ -15,8 +15,9 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
   TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA} from '../../../constantsGlobal';
+import {LAST_PREVISIT_REVIEW} from '../../../constantsParameters';
 import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
-import {PROPUEST_OF_BUSINESS, LAST_PREVISIT_REVIEW} from '../constants';
+import {PROPUEST_OF_BUSINESS} from '../constants';
 import {createPrevisit} from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import {changeStateSaveData} from '../../dashboard/actions';

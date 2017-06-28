@@ -47,6 +47,10 @@ class ComponentClientInformation extends Component {
         }
     }
 
+    componentDidMount(){
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
+
     componentWillUnmount() {
         this.props.viewAlertClient(false);
         this.props.clearEntities();

@@ -35,6 +35,7 @@ import AEC from './components/myPendings/AEC/componentAEC';
 import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
 import Assigned from './components/myPendings/assigned/componentAssigned';
 import StudyCredit from './components/clients/creditStudy/componentCreditStudy';
+import Visor from './components/visor/visor';
 
 class App extends Component {
     render() {
@@ -82,6 +83,7 @@ export default (
                 <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
                 <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
+                <Route path="visor" component={Visor}></Route>
             </Route>
             <Route path="ui" component={uiTester}></Route>
         </Route>

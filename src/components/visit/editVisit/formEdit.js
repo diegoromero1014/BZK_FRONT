@@ -16,7 +16,6 @@ import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import TaskVisit from '../tasks/taskVisit';
 import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
 import RaitingInternal from '../../clientInformation/ratingInternal';
-import { LAST_VISIT_REVIEW } from '../constants';
 import { TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS } from '../../../constantsGlobal';
 import { FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, EDITAR, AEC_NO_APLIED } from '../../../constantsGlobal';
 import { createVisti, detailVisit, pdfDescarga } from '../actions';

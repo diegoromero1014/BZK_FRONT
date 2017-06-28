@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
     case actions.CONSULT_ECONOMIC_GROUP:
       const response = action.payload.data;
         return state.withMutations(map => {
-            map.set('economicGroupClients', response);
+            map.set('economicGroupClients', response.data);
         });
     default:
       return state;
