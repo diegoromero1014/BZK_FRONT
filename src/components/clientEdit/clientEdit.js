@@ -1137,6 +1137,10 @@ class clientEdit extends Component {
         }
     };
 
+    componentDidMount(){
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
+
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods }, errors } = nextProps;
         var errorsArray = _.toArray(errors);

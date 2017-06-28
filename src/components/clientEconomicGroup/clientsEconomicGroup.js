@@ -35,7 +35,7 @@ class clientsEconomicGroup extends Component {
   render() {
     const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess } = this.props;
     return (
-      <div className="economicGroup-card" style={{ width: "265px", float: "left" }}>
+      <div className="client-card" style={{ width: "265px", float: "left", cursor: 'auto' }}>
         <div className="celula-card-top">
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
