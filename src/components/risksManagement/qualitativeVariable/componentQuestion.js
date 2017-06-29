@@ -61,9 +61,9 @@ class ComponentQuestion extends Component {
                         value={this.state.valueAnswer}
                         onBlur={() => console.log()}
                         valueProp={'id'}
-                        textProp={'name'}
+                        textProp={'answerOption'}
                         onChange={(id) => this._onChangeAnswer(id)}
-                        data={question.listAnswers}
+                        data={question.listAnswerOption}
                     />
                 </Col>
             </Row>

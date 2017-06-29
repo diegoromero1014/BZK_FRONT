@@ -421,6 +421,9 @@ class ModalComponentShareholder extends Component {
                   <dt>
                     <div style={{width: "100%", float: "left"}}>
                       <span title="La longitud máxima del campo es de 150 caracteres">Observaciones</span>
+                      <i className="help circle icon blue" 
+                      title="Está observación corresponde a la experiencia o información relevante del accionista" 
+                      style={{"font-size": "15px", "cursor": "pointer", "margin-left": "2px"}}></i>
                     </div>
                   </dt>
                   <Textarea

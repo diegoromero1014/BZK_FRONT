@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import MenuListItemFather from './menuListItemFather';
 import { connect } from 'react-redux';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
-import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS, MODULE_AEC } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS, MODULE_AEC, MODULE_VISOR } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { getAlertsByUser } from '../alerts/actions';
 import moment from 'moment';
@@ -28,6 +28,11 @@ const itemMyPendings = {
     text: "Mis pendientes",
     icon: "tasks",
     children: []
+};
+const itemVisor = {
+    text: "Visor",
+    icon: "area chart",
+    link: "/dashboard/visor"
 };
 const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
@@ -101,6 +106,9 @@ class MenuList extends Component {
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS)) {
             menuItems.push(itemContacts);
+        }
+        if (_.get(navBar.get('mapModulesAccess'), MODULE_VISOR)) {
+            menuItems.push(itemVisor);
         }
         if (_.get(navBar.get('mapModulesAccess'), MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
