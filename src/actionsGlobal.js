@@ -234,12 +234,14 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
     }
 }
 
-export function formatCurrency(value) {
+export function formatCurrency(value, format) {
     if (value === null || value === undefined || isNaN(value)) {
         return '';
     }
-    return numeral(value).format('0,000');
+    var _format = validateValueExist(format) ? format : '0,000';
+    return numeral(value).format(_format);
 }
+
 
 export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {

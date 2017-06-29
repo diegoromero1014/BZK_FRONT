@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { redirectUrl } from '../../globalComponents/actions';
 import { Row, Col } from 'react-flexbox-grid';
 import { changeValueModalIsOpen } from './actions';
+import {formatCurrency} from '../../../actionsGlobal';
 import Modal from 'react-modal';
 import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy } from 'lodash';
 
@@ -125,7 +126,7 @@ class ModalViewSimulation extends Component {
                         </div>
                         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden' }}>
                             <div style={{ textAlign: "right", marginRight: '20px', marginTop: '10px', marginBottom: '5px' }}>
-                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {(this.state.totalSumPoints * 100) / this.state.scoreMax}%</span>
+                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {formatCurrency( ((this.state.totalSumPoints * 100) / this.state.scoreMax), '0.00' )}%</span>
                             </div>
                             {this.buildTableConclusion()}
                         </div>
