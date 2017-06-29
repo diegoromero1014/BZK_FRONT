@@ -37,7 +37,7 @@ class ComponentQuestion extends Component {
 
         const listQuestions = remove(qualitativeVariableReducer.get(nameList), (item) => !isEqual(item.id, parseInt(question.id)));
         listQuestions.push(questionResponse);
-        const answer = find(question.listAnswers, ['id', parseInt(idAnswer)]);
+        const answer = find(question.listAnswerOption, ['id', parseInt(idAnswer)]);
 
         setTimeout(() => {
             this.setState({ valueAnswer: idAnswer, scoreAnswer: answer.score });

@@ -39,7 +39,7 @@ class ModalViewSimulation extends Component {
             //Recorro cada variable, obteniendo por cada pregunta el score de la respuesta y retorno la suma de score por variable
             listQuestionsGroup = mapValues(listQuestionsGroup, (value, key) => {
                 const listScores = map(value, question => {
-                    return get(find(question.listAnswers, ['id', question.idAnswer]), 'score');
+                    return get(find(question.listAnswerOption, ['id', question.idAnswer]), 'score');
                 });
                 return sum(listScores);
             });
@@ -50,7 +50,6 @@ class ModalViewSimulation extends Component {
             });
             //Sumo el total de puntos de las variables para sacar el promedio
             let scoreMaxAverage = sumBy(listVaribles, 'scoreMax');
-
             //Valido la suma de las respuestas de la varibale con los rangos y obtengo la conclusión
             listQuestionsGroup = mapValues(listQuestionsGroup, (sumScoreByVariable, key) => {
                 const answer = find(listVaribles, ['id', parseInt(key)]);
@@ -60,7 +59,6 @@ class ModalViewSimulation extends Component {
                 sumScoreFactor += get(range, 'score', 0);
                 return get(range, 'name', '');
             });
-
             this.setState({ listCalculatedResults: listQuestionsGroup, 
                 totalSumPoints: sumScoreFactor,
                 scoreMax: scoreMaxAverage
