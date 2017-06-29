@@ -146,7 +146,7 @@ class ComponentCustomerDelivery extends Component {
                 idCelula.onChange(null);
                 otherReason.onChange(null);
                 this.props.resetForm();
-                swtShowMessage('success', 'Cliente(s) actualizado(s)', 'Señor usuario, el cambio de céula se registró correctamente, está acción se hará efectiva cuando el gerente de cuenta acepte los cambios.');
+                swtShowMessage('success', 'Cliente(s) actualizado(s)', 'Señor usuario, el cambio de célula se registró correctamente, está acción se hará efectiva cuando el gerente de cuenta acepte los cambios.');
                 consultInfoClient();
             } else {
                 swtShowMessage('error', 'Error actualizando cliente(s)', 'Señor usuario, ocurrió un error actualizando la célula .');
