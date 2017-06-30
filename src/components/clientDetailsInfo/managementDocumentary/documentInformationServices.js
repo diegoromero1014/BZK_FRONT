@@ -20,7 +20,7 @@ class DocumentInformationServices extends Component {
     }
 
     componentWillMount() {
-        const {clearManagementDocumentary} = this.props;
+        const { clearManagementDocumentary } = this.props;
         clearManagementDocumentary();
     }
 
@@ -29,7 +29,7 @@ class DocumentInformationServices extends Component {
         changeStateSaveData(true, CONSUMING_SERVICE);
         consultManagementDocumentaryService().then((data) => {
             changeStateSaveData(false, "");
-            if ( _.get(data, 'payload.data.status', 500) === 500 ) {
+            if (_.get(data, 'payload.data.status', 500) === 500) {
                 this.setState({ showEr: true });
             }
         }, (reason) => {
@@ -41,7 +41,11 @@ class DocumentInformationServices extends Component {
     _createDocumentsRecords(document, idx) {
         return <tr key={idx}>
             <td>
-                <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
+                {_.isUndefined(document.url) || _.isNull(document.url) || _.isEmpty(document.url) ?
+                    document.documentName
+                    :
+                    <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
+                }
             </td>
             <td>{document.documentType}</td>
             <td>{document.documentStatus}</td>
@@ -54,11 +58,11 @@ class DocumentInformationServices extends Component {
         const { tabReducer } = this.props;
         return (
             <div>
-                <table style={{ width: "100%" ,marginBottom: '15px' }}>
+                <table style={{ width: "100%", marginBottom: '15px' }}>
                     <tbody>
                         <tr>
                             <td>
-                                <a style={{ cursor: 'pointer', textDecoration: 'underline'}} onClick={this.consultManagementDocumentary}>Consultar</a>
+                                <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={this.consultManagementDocumentary}>Consultar</a>
                             </td>
                         </tr>
                     </tbody>
