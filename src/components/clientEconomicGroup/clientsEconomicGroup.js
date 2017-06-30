@@ -8,6 +8,7 @@ import { getClientsEconomicGroup, deleteRelationEconomicGroup } from './actions'
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse } from '../../actionsGlobal';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
+import { changeEconomicGroup } from '../clientInformation/actions';
 
 class clientsEconomicGroup extends Component {
   constructor(props) {
@@ -20,10 +21,15 @@ class clientsEconomicGroup extends Component {
 
   _removeClientOfEconomicGroup() {
     this.setState({ showConfirmDelete: false });
-    const { deleteRelationEconomicGroup, getClientsEconomicGroup, clientInformacion, dataId, swtShowMessage, changeStateSaveData } = this.props;
+    const { deleteRelationEconomicGroup, getClientsEconomicGroup, clientInformacion, dataId, swtShowMessage, 
+      changeStateSaveData, changeEconomicGroup } = this.props;
     deleteRelationEconomicGroup(dataId).then((data) => {
       if (validateResponse(data)) {
         const infoClient = clientInformacion.get('responseClientInfo');
+        if (_.isEqual(infoClient.id, dataId)) {
+          infoClient.economicGroup = _.get(data, 'payload.data.data');
+          changeEconomicGroup(_.get(data, 'payload.data.data'));
+        }
         swtShowMessage('success', 'Cliente eliminado', 'Señor usuario, el cliente fue eliminado correctamente del grupo económico');
         getClientsEconomicGroup(infoClient.economicGroup);
       } else {
@@ -74,6 +80,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     deleteRelationEconomicGroup,
     getClientsEconomicGroup,
+    changeEconomicGroup,
     swtShowMessage
   }, dispatch);
 }
