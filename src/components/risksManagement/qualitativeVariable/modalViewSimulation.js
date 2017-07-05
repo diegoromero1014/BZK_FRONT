@@ -18,7 +18,8 @@ class ModalViewSimulation extends Component {
         this.state = {
             listCalculatedResults: [],
             totalSumPoints: 0,
-            scoreMax: 0
+            scoreMax: 0,
+            points: 0
         };
         this.closeModal = this.closeModal.bind(this);
         this._mapFactor = this._mapFactor.bind(this);
@@ -84,6 +85,11 @@ class ModalViewSimulation extends Component {
                         <td><span style={{ fontWeight: 'bold' }}>Conclusión</span></td>
                     </tr>
                     {listFactor.map(this._mapFactor)}
+                    <tr>
+                        <td colSpan={3} style={{textAlign: 'right'}}>
+                            <span style={{ fontWeight: 'bold' }}>Puntos: {this.state.totalSumPoints}</span>
+                        </td>
+                    </tr>
                 </table>
             </Col>
         </Row>

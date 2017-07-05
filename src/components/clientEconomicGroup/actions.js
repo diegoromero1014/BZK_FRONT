@@ -1,5 +1,5 @@
 import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_ECONOMIC_GROUP, DELETE_RETAIONSHIP_ECONOMIC_GRUOP} from './constants';
+import {CONSULT_ECONOMIC_GROUP, DELETE_RETAIONSHIP_ECONOMIC_GRUOP, UPDATE_RELATIONSHIP} from './constants';
 import axios from 'axios';
 
 export function getClientsEconomicGroup(id){
@@ -47,6 +47,33 @@ export function deleteRelationEconomicGroup(idClient){
   var request = axios.post(APP_URL + "/deleteRelationEconomicGroup", json);
   return{
     type: DELETE_RETAIONSHIP_ECONOMIC_GRUOP,
+    payload: request
+  }
+}
+
+export function updateEconomicGroupClient(idClient, idEconomicGroup){
+  const json = {
+    "messageHeader":{
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "idClient": idClient,
+      "idEconomicGroup": idEconomicGroup
+    }
+  }
+
+  var request = axios.post(APP_URL + "/updateEconomicGroupClient", json);
+  return{
+    type: UPDATE_RELATIONSHIP,
     payload: request
   }
 }

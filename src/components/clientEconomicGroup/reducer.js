@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as actions from './constants';
+import _ from 'lodash';
 
 const initialState = Immutable.Map({
   economicGroupClients: []
@@ -8,10 +9,11 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     case actions.CONSULT_ECONOMIC_GROUP:
-      const response = action.payload.data;
-        return state.withMutations(map => {
-            map.set('economicGroupClients', response.data);
-        });
+      const response = action.payload.data.data;
+      response.listClients = _.remove(_.get(response, 'listClients', []), client => !_.isEqual(client.document, response.nitEconomicGroup));
+      return state.withMutations(map => {
+        map.set('economicGroupClients', response);
+      });
     default:
       return state;
   }
