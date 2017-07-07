@@ -558,7 +558,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
             data.payload.data.parameter !== undefined) {
             datePipelineLastReview = JSON.parse(data.payload.data.parameter).value;
-            datePipelineLastReview = moment(datePipelineLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+            datePipelineLastReview = moment(datePipelineLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
           }
         });
       }

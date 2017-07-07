@@ -515,7 +515,7 @@ class FormPrevisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           datePrevisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          datePrevisitLastReview = moment(datePrevisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+          datePrevisitLastReview = moment(datePrevisitLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
         }
       });
     }

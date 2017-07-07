@@ -237,7 +237,7 @@ class FormBusinessPlan extends Component {
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateBusinessLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateBusinessLastReview = moment(dateBusinessLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+          dateBusinessLastReview = moment(dateBusinessLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
         }
       });
     }
