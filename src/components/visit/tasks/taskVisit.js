@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {deleteTask, clearTasks} from './actions';
 import ListTasks from './listTasks';
+import ToolTip from '../../toolTip/toolTipComponent';
 
 const titleHelpTask = "En esta sección se podrán registrar las tareas que quedaron de la reunión.\n" +
         "Estas quedarán automáticamente creadas en la pestaña de tareas y desde allí se deberá " +
@@ -31,7 +32,9 @@ class TaskVisit extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
                 <i className="browser icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Pendientes </span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={titleHelpTask}/>
+                <ToolTip text={titleHelpTask}>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                </ToolTip>
             </div>
           </Col>
         </Row>

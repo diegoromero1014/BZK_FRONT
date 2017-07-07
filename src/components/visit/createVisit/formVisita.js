@@ -1,38 +1,43 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../../globalComponents/actions';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
-import {VISIT_TYPE} from '../../selectsComponent/constants';
-import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
-import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
-import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
-import TaskVisit from '../tasks/taskVisit';
-import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import { KEY_TYPE_VISIT} from '../constants';
-import {FILE_OPTION_SHOPPING_MAP, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, 
-  TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, 
-  MESSAGE_SAVE_DATA, AEC_NO_APLIED} from '../../../constantsGlobal';
-import {LAST_VISIT_REVIEW} from '../../../constantsParameters';
-import RaitingInternal from '../../clientInformation/ratingInternal';
-import {createVisti} from '../actions';
-import {consultParameterServer, formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
-import {downloadFilePdf} from '../../clientInformation/actions';
-import SweetAlert from 'sweetalert-react';
-import moment from 'moment';
-import ButtonAssociateComponent from './associateVisit';
-import {detailPrevisit} from '../../previsita/actions';
-import {addParticipant, clearParticipants} from '../../participantsVisitPre/actions';
-import {changeStateSaveData} from '../../dashboard/actions';
-import {clearIdPrevisit} from '../actions';
-import {MENU_CLOSED} from '../../navBar/constants';
-
+import React, {Component} from "react";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {redirectUrl} from "../../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import {consultDataSelect, consultList, getMasterDataFields} from "../../selectsComponent/actions";
+import {VISIT_TYPE} from "../../selectsComponent/constants";
+import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
+import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
+import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
+import TaskVisit from "../tasks/taskVisit";
+import {KEY_TYPE_VISIT} from "../constants";
+import {
+    AEC_NO_APLIED,
+    FILE_OPTION_SHOPPING_MAP,
+    MESSAGE_SAVE_DATA,
+    SAVE_DRAFT,
+    SAVE_PUBLISHED,
+    TITLE_BANC_PARTICIPANTS,
+    TITLE_CLIENT_PARTICIPANTS,
+    TITLE_CONCLUSIONS_VISIT,
+    TITLE_OTHERS_PARTICIPANTS
+} from "../../../constantsGlobal";
+import {LAST_VISIT_REVIEW} from "../../../constantsParameters";
+import RaitingInternal from "../../clientInformation/ratingInternal";
+import {clearIdPrevisit, createVisti} from "../actions";
+import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText} from "../../../actionsGlobal";
+import {downloadFilePdf} from "../../clientInformation/actions";
+import SweetAlert from "sweetalert-react";
+import moment from "moment";
+import ButtonAssociateComponent from "./associateVisit";
+import {detailPrevisit} from "../../previsita/actions";
+import {addParticipant, clearParticipants} from "../../participantsVisitPre/actions";
+import {changeStateSaveData} from "../../dashboard/actions";
+import {MENU_CLOSED} from "../../navBar/constants";
+import RichText from "../../richText/richTextComponent";
+import _ from "lodash";
+import ToolTip from "../../toolTip/toolTipComponent";
 
 const fields = ["tipoVisita","fechaVisita","desarrolloGeneral"];
 var dateVisitLastReview;
@@ -134,7 +139,7 @@ class FormVisita extends Component{
       });
     }
 
-    if ( (this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
+    if ( ( _.isEmpty(htmlToText(this.state.conclusionsVisit)) || this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
       errorInForm = true;
       this.setState({
         conclusionsVisitError: "Debe ingresar la conclusión de la visita"
@@ -278,7 +283,7 @@ class FormVisita extends Component{
 
   _changeConclusionsVisit(value){
     this.setState({
-      conclusionsVisit: value.target.value,
+      conclusionsVisit: value,
       conclusionsVisitError: null
     });
   }
@@ -312,7 +317,7 @@ class FormVisita extends Component{
         if( data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined ){
           dateVisitLastReview = JSON.parse(data.payload.data.parameter).value;
-          dateVisitLastReview = moment(dateVisitLastReview, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
+          dateVisitLastReview = moment(dateVisitLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
         }
       });
     }
@@ -495,15 +500,21 @@ class FormVisita extends Component{
             <div className="ui top attached tabular menu" style={{width:"100%"}}>
               <a className={`${this.state.activeItemTabClient} item`} style={{width:"33%"}}
                 data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la reunión por parte del cliente
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_CLIENT_PARTICIPANTS}/>
+                <ToolTip text={TITLE_CLIENT_PARTICIPANTS}>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                </ToolTip>
               </a>
               <a className={`${this.state.activeItemTabBanc} item`} style={{width:"40%"}}
                 data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la reunión por parte del Grupo Bancolombia
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_BANC_PARTICIPANTS}/>
+                <ToolTip text={TITLE_BANC_PARTICIPANTS}>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} />
+                </ToolTip>
               </a>
               <a className={`${this.state.activeItemTabOther} item`} style={{width:"26%"}}
                 data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la reunión
-                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} title={TITLE_OTHERS_PARTICIPANTS}/>
+                <ToolTip text={TITLE_OTHERS_PARTICIPANTS}>
+                <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}} />
+                </ToolTip>
               </a>
             </div>
             <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`} data-tab="first">
@@ -524,25 +535,27 @@ class FormVisita extends Component{
               <div className="tab-content-row" style={{borderTop: "1px dotted #cea70b", width:"100%", marginBottom:"10px"}}/>
               <i className="book icon" style={{fontSize: "18px"}}/>
               <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes (<span style={{color: "red"}}>*</span>)</span>
-              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}} title={TITLE_CONCLUSIONS_VISIT}/>
-              <i onClick={this._downloadFileShoppingMap}
+              <ToolTip text={TITLE_CONCLUSIONS_VISIT}>
+              <i className="help circle icon blue" style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+              </ToolTip>
+              <ToolTip text="Descargar pdf mapa de compras">
+                <i onClick={this._downloadFileShoppingMap}
                 style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
-                title="Descargar pdf mapa de compras"
-                className="red file pdf outline icon"></i>
+                className="red file pdf outline icon"/>
+              </ToolTip>
             </div>
           </Col>
         </Row>
         <Row style={{padding: "0px 23px 20px 20px"}}>
         <Col xs={12} md={12} lg={12}>
-          <Textarea
+          <RichText
             name="desarrolloGeneral"
             type="text"
-            max="3500"
             value={this.state.conclusionsVisit}
             touched={true}
             error={this.state.conclusionsVisitError}
             onChange={val => this._changeConclusionsVisit(val)}
-            title="La longitud máxima de caracteres es de 3500"
+            placeholder="Ingrese las conclusiones de la reunión"
             style={{width: '100%', height: '178px'}}
           />
         </Col>

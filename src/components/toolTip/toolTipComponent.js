@@ -31,10 +31,7 @@ export const TOOLTIP_ACTION = {
 };
 
 class ToolTipComponent extends Component {
-
-
     render() {
-
         const {children, text, position, title, action, style, size, inverted, wide} = this.props;
         const _header = isUndefined(title) ? null : title;
         const _position = isUndefined(position) ? 'top left' : position;
@@ -60,6 +57,7 @@ class ToolTipComponent extends Component {
 ToolTipComponent.propTypes = {
     children: PropTypes.element.isRequired,
     title: PropTypes.string,
+    text: PropTypes.string,
     position: PropTypes.string,
     action: PropTypes.string,
     style: PropTypes.object,

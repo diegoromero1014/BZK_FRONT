@@ -270,3 +270,10 @@ export function stringValidate(value) {
 export function validateValueExist(value) {
     return _.isUndefined(value) || _.isNull(value) ? false : true;
 }
+
+// converts HTML to text using Javascript
+export function htmlToText(html) {
+    const tag = document.createElement('div');
+    tag.innerHTML = html;
+    return tag.innerText.trim();
+}
