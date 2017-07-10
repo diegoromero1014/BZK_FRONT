@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 import {
     CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
-    CHANGE_VALUE_LIST_CLIENT
+    CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT
 } from './constants';
 import {UPDATE_CONTEXT_CLIENT} from '../customerStory/constants'
 import { isEmpty, set } from 'lodash';
@@ -82,6 +82,11 @@ export default (state = initialState, action) => {
             });
         case CLAER_CLIENT_INFO:
             return state.set("responseClientInfo", {});
+
+        case CHANGE_INFO_CLIENT:
+            const infoClientEconomic = state.get('responseClientInfo');
+            infoClientEconomic.economicGroup = action.economicGroup;
+            return state.set("responseClientInfo", infoClientEconomic);
 
         case CHANGE_CHECK_CLIENT:
             const dataClientResponse = action.payload;

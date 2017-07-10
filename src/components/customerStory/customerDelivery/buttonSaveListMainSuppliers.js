@@ -65,7 +65,6 @@ class ButtonSaveListMainSuppliers extends Component {
                     this.closeModal();
                 }
                 const checkEconomicGroup = customerStory.get('checkEconomicGroup');
-                console.log('checkEconomicGroup', checkEconomicGroup);
                 const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
                 const idClient = window.localStorage.getItem('idClientSelected');
                 clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {

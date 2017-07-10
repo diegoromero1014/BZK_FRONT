@@ -37,7 +37,7 @@ class ComponentQuestion extends Component {
 
         const listQuestions = remove(qualitativeVariableReducer.get(nameList), (item) => !isEqual(item.id, parseInt(question.id)));
         listQuestions.push(questionResponse);
-        const answer = find(question.listAnswers, ['id', parseInt(idAnswer)]);
+        const answer = find(question.listAnswerOption, ['id', parseInt(idAnswer)]);
 
         setTimeout(() => {
             this.setState({ valueAnswer: idAnswer, scoreAnswer: answer.score });
@@ -50,7 +50,7 @@ class ComponentQuestion extends Component {
         return (
             <Row style={{ paddingTop: "10px", paddingLeft: '10px' }}>
                 <Col xs={6} md={8} lg={8}>
-                    <span style={{ textAlign: "justify" }}>{question.name}</span>
+                    <span style={{ textAlign: "justify" }}>{question.question}</span>
                 </Col>
                 <Col xs={5} md={4} lg={4}>
                     <ComboBox
@@ -61,9 +61,9 @@ class ComponentQuestion extends Component {
                         value={this.state.valueAnswer}
                         onBlur={() => console.log()}
                         valueProp={'id'}
-                        textProp={'name'}
+                        textProp={'answerOption'}
                         onChange={(id) => this._onChangeAnswer(id)}
-                        data={question.listAnswers}
+                        data={question.listAnswerOption}
                     />
                 </Col>
             </Row>

@@ -7,12 +7,13 @@ import ModalViewSimulation from './modalViewSimulation';
 import _ from 'lodash';
 import { getSurveyQualitativeVarible, changeFieldsEditables, clearSurvey, saveResponseQualitativeSurvey, changeValueModalIsOpen } from './actions';
 import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
-import { STYLE_BUTTON_BOTTOM, MODULE_QUALITATIVE_VARIABLES, ANALYST, EDITAR } from '../../../constantsGlobal';
+import { STYLE_BUTTON_BOTTOM, MODULE_QUALITATIVE_VARIABLES, ANALYST, EDITAR, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { size, filter, get, indexOf, concat, isEqual} from 'lodash';
 import ComponentAccordion from '../../accordion/componentAccordion';
 import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
 import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class ComponentSurvey extends Component {
     constructor(props) {
@@ -61,7 +62,8 @@ class ComponentSurvey extends Component {
     }
 
     _clickSaveSurvey() {
-        const { reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage, changeFieldsEditables } = this.props;
+        const { reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage, 
+            changeFieldsEditables, changeStateSaveData } = this.props;
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
         if (isEqual(analyst, ANALYST)) {
@@ -74,6 +76,7 @@ class ComponentSurvey extends Component {
         if (size(listQuestionsWithoutAnswer) > 0) {
             swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, para guardar la encuesta debe diligenciar por completo las preguntas que pertenezcan a su rol.');
         } else {
+            changeStateSaveData(true, MESSAGE_SAVE_DATA);
             const filterQuestions = analyst ? listquestions : filter(listquestions, ['analyst', false]);
             const jsonSave = {
                 "idSurvey": get(qualitativeVariableReducer.get('survey'), 'id', null),
@@ -82,6 +85,7 @@ class ComponentSurvey extends Component {
                 "listQuestions": filterQuestions
             };
             saveResponseQualitativeSurvey(jsonSave).then((data) => {
+                changeStateSaveData(false);
                 if (!validateResponse(data)) {
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
@@ -162,7 +166,8 @@ function mapDispatchToProps(dispatch) {
         clearSurvey,
         saveResponseQualitativeSurvey,
         changeFieldsEditables,
-        changeValueModalIsOpen
+        changeValueModalIsOpen,
+        changeStateSaveData
     }, dispatch);
 }
 

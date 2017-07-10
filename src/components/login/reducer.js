@@ -37,7 +37,6 @@ export default (state = initialState, action) => {
             .set('error', false)
         });
       }
-      break;
 
     case CHANGE_STATUS_LOGIN:
       return state.withMutations( map => {

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { redirectUrl } from '../../globalComponents/actions';
 import { Row, Col } from 'react-flexbox-grid';
 import { changeValueModalIsOpen } from './actions';
+import {formatCurrency} from '../../../actionsGlobal';
 import Modal from 'react-modal';
 import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy } from 'lodash';
 
@@ -17,7 +18,8 @@ class ModalViewSimulation extends Component {
         this.state = {
             listCalculatedResults: [],
             totalSumPoints: 0,
-            scoreMax: 0
+            scoreMax: 0,
+            points: 0
         };
         this.closeModal = this.closeModal.bind(this);
         this._mapFactor = this._mapFactor.bind(this);
@@ -39,7 +41,7 @@ class ModalViewSimulation extends Component {
             //Recorro cada variable, obteniendo por cada pregunta el score de la respuesta y retorno la suma de score por variable
             listQuestionsGroup = mapValues(listQuestionsGroup, (value, key) => {
                 const listScores = map(value, question => {
-                    return get(find(question.listAnswers, ['id', question.idAnswer]), 'score');
+                    return get(find(question.listAnswerOption, ['id', question.idAnswer]), 'score');
                 });
                 return sum(listScores);
             });
@@ -50,7 +52,6 @@ class ModalViewSimulation extends Component {
             });
             //Sumo el total de puntos de las variables para sacar el promedio
             let scoreMaxAverage = sumBy(listVaribles, 'scoreMax');
-
             //Valido la suma de las respuestas de la varibale con los rangos y obtengo la conclusión
             listQuestionsGroup = mapValues(listQuestionsGroup, (sumScoreByVariable, key) => {
                 const answer = find(listVaribles, ['id', parseInt(key)]);
@@ -60,7 +61,6 @@ class ModalViewSimulation extends Component {
                 sumScoreFactor += get(range, 'score', 0);
                 return get(range, 'name', '');
             });
-
             this.setState({ listCalculatedResults: listQuestionsGroup, 
                 totalSumPoints: sumScoreFactor,
                 scoreMax: scoreMaxAverage
@@ -85,6 +85,11 @@ class ModalViewSimulation extends Component {
                         <td><span style={{ fontWeight: 'bold' }}>Conclusión</span></td>
                     </tr>
                     {listFactor.map(this._mapFactor)}
+                    <tr>
+                        <td colSpan={3} style={{textAlign: 'right'}}>
+                            <span style={{ fontWeight: 'bold' }}>Puntos: {this.state.totalSumPoints}</span>
+                        </td>
+                    </tr>
                 </table>
             </Col>
         </Row>
@@ -127,7 +132,7 @@ class ModalViewSimulation extends Component {
                         </div>
                         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden' }}>
                             <div style={{ textAlign: "right", marginRight: '20px', marginTop: '10px', marginBottom: '5px' }}>
-                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {(this.state.totalSumPoints * 100) / this.state.scoreMax}%</span>
+                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {formatCurrency( ((this.state.totalSumPoints * 100) / this.state.scoreMax), '0.00' )}%</span>
                             </div>
                             {this.buildTableConclusion()}
                         </div>

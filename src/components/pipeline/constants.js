@@ -11,7 +11,6 @@ export const FILTER_STATUS_PIPELINE_ID = 'FILTER_STATUS_PIPELINE_ID';
 export const GET_CSV_PIPELINE_BY_CLIENT = 'GET_CSV_PIPELINE_BY_CLIENT';
 export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
 export const GET_PIPELINE = "GET_PIPELINE";
-export const LAST_PIPELINE_REVIEW = "last_pipeline_review";
 export const OWNER_DRAFT = "OWNER_DRAFT";
 export const PIPELINE_STATUS = "pipelineStatus";
 export const CURRENCY_COP = "COP";

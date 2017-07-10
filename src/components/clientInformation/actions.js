@@ -1,6 +1,6 @@
 import {APP_URL} from '../../constantsGlobal';
 import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
-  CHANGE_VALUE_LIST_CLIENT} from './constants';
+  CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT} from './constants';
 import axios from 'axios';
 
 export function consultInfoClient(){
@@ -36,6 +36,13 @@ export function downloadFilePdf(idFileDownload){
 export function clearInfoClient(){
   return {
     type: CLAER_CLIENT_INFO
+  }
+}
+
+export function changeEconomicGroup(economicGroup){
+  return {
+    type: CHANGE_INFO_CLIENT,
+    economicGroup
   }
 }
 

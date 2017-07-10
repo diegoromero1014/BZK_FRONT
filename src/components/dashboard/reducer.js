@@ -14,7 +14,6 @@ export default (state = initialState, action) => {
           .set('showSaveData', action.value)
           .set('messageData', action.message)
       });
-      break;
     default:
       return state;
   }

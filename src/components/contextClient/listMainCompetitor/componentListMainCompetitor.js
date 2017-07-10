@@ -218,7 +218,7 @@ class ComponentListMainCompetitor extends Component {
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </button>
-                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button"  title="Cancelar" onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </button>

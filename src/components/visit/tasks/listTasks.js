@@ -40,8 +40,8 @@ class ListTasks extends Component {
     });
     if (tasks.size > 0) {
       var data = _.chain(tasks.toArray()).map(task => {
-        const { uuid, responsable, fechaForm, fecha, tarea, idResponsable, id } = task;
-        var descripcionTarea = tarea.length > 120 ? tarea.substring(0, 120) + "..." : tarea;
+        const { uuid, responsable, fechaForm, fecha, tarea,textTarea, idResponsable, id } = task;
+        var descripcionTarea = textTarea.length > 120 ? textTarea.substring(0, 120) + "..." : textTarea;
         var fechaDateMoment = moment(fecha, "DD/MM/YYYY").locale('es');
         var fechaDateMomentString = fechaDateMoment.format("DD") + " " + fechaDateMoment.format("MMM") + " " + fechaDateMoment.format("YYYY");
         return _.assign({}, {

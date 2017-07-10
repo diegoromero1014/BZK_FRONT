@@ -481,6 +481,12 @@ class clientEdit extends Component {
         this._changeSegment = this._changeSegment.bind(this);
         this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
         this.showFormOut = this.showFormOut.bind(this);
+
+        let _componentScroll = document.getElementById('dashboardComponentScroll');
+        if (_componentScroll) {
+            _componentScroll.scrollTop = 0;
+        }
+
     }
 
     _closeWindow() {
@@ -1130,6 +1136,10 @@ class clientEdit extends Component {
             }
         }
     };
+
+    componentDidMount(){
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
 
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods }, errors } = nextProps;
@@ -2270,7 +2280,7 @@ class clientEdit extends Component {
                     type="error"
                     show={this.state.showEr}
                     title="Error editando cliente"
-                    text="Señor usuario, ocurrió un error editando del cliente."
+                    text="Señor usuario, ocurrió un error editando el cliente."
                     onConfirm={() => this._closeError()}
                 />
                 <SweetAlert
