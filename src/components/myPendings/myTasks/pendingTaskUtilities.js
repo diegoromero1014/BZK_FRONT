@@ -35,6 +35,7 @@ export const mapDataGrid = (data = [], permissionsEdit) => {
     idTypeClient: item.idTypeClient,
     idNumberClient  : item.idNumberClient,
     clientName: item.clientName,
+    assignedBy: item.assignedBy,
     title: item.resume,
     changeStateTask: {
       idTask: item.id,
