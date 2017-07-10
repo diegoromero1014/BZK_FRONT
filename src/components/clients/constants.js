@@ -5,3 +5,6 @@ export const CHANGE_KEYWORD = "CHANGE_KEYWORD";
 export const CLEAR_CLIENTS = "CLEAR_CLIENTS";
 export const ID_OPTION_ALL_LEVEL_AEC = -1;
 export const AEC_NO_APLICA = "AEC: No aplica";
+export const GET_RECENT_CLIENTS = 1;
+export const DELETE_ALL_RECENT_CLIENTS = 2;
+export const DELETE_RECENT_CLIENT = 3;

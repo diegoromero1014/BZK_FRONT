@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { clientsFindServer, clearClients, changePage, changeKeyword } from './actions';
+import { clientsFindServer, clearClients, changePage, changeKeyword, getRecentClients } from './actions';
 import ClientListItem from './clientListItem';
 import SearchBarClient from './searchBarClient';
 import { NUMBER_RECORDS, ID_OPTION_ALL_LEVEL_AEC, AEC_NO_APLICA } from './constants';
@@ -15,11 +15,17 @@ import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../navBar/actions';
 import { clearContact } from '../contact/actions';
 import { clearInfoClient } from '../clientInformation/actions';
-import { SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR, TAB_RISKS_MANAGEMENT } from '../../constantsGlobal';
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import {
+    SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR, MESSAGE_LOAD_DATA,
+    TAB_RISKS_MANAGEMENT, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+} from '../../constantsGlobal';
+import { validatePermissionsByModule, validateResponse } from '../../actionsGlobal';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { updateTabSeletedRisksManagment } from '../risksManagement/actions';
 import { TAB_AEC } from '../risksManagement/constants';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../dashboard/actions';
+import Tooltip from '../toolTip/toolTipComponent';
 
 const fields = ["team", "certificationStatus", "linkedStatus", "levelAEC"];
 var levelsAEC;
@@ -46,7 +52,8 @@ class ClientsFind extends Component {
         } else {
             const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment } = this.props;
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, changeStateSaveData } = this.props;
+            changeStateSaveData(true, MESSAGE_LOAD_DATA);
             clearClients();
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
@@ -85,15 +92,29 @@ class ClientsFind extends Component {
                     }
                 }
             });
+            getRecentClients().then((data) => {
+                changeStateSaveData(false, "");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                }
+            });
         }
     }
 
     _cleanSearch() {
-        const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment } = this.props;
+        const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment,
+            getRecentClients, changeStateSaveData } = this.props;
         this.props.resetForm();
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
         clearClients();
         updateTabSeleted(null);
         updateTabSeletedRisksManagment(null);
+        getRecentClients().then((data) => {
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            }
+        });
     }
 
     _onChangeTeam(val) {
@@ -134,11 +155,13 @@ class ClientsFind extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { certificationStatus, team, linkedStatus, levelAEC } } = this.props;
-        const { clientsFindServer, clientR, changePage } = this.props;
+        const { fields: { certificationStatus, team, linkedStatus, levelAEC }, changeStateSaveData,
+            swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
         clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, linkedStatus.value, levelAEC.value).then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin')) {
-                redirectUrl("/login");
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
         });
         changePage(1);
@@ -178,17 +201,21 @@ class ClientsFind extends Component {
                             <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} linkingStatusus={linkedStatus.value} levelAEC={levelAEC.value} />
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
-                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
-                                <i className="erase icon"
-                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
-                            </button>
-                            {_.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) &&
-                                <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button"
-                                    title="Crear prospecto" style={{ marginLeft: "17px" }}>
-                                    <i className="add user icon"
+                            <Tooltip text="Limpiar búsqueda">
+                                <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                                    style={{ marginLeft: "17px" }}>
+                                    <i className="erase icon"
                                         style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                                 </button>
+                            </Tooltip>
+                            {_.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) &&
+                                <Tooltip text="Crear prospecto">
+                                    <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button"
+                                        style={{ marginLeft: "17px" }}>
+                                        <i className="add user icon"
+                                            style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                    </button>
+                                </Tooltip>
                             }
                         </Col>
                     </Row>
@@ -284,7 +311,10 @@ function mapDispatchToProps(dispatch) {
         clearInfoClient,
         validatePermissionsByModule,
         updateTabSeleted,
-        updateTabSeletedRisksManagment
+        updateTabSeletedRisksManagment,
+        getRecentClients,
+        swtShowMessage,
+        changeStateSaveData
     }, dispatch);
 }
 

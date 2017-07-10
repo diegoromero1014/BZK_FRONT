@@ -242,7 +242,10 @@ export function formatCurrency(value, format) {
     return numeral(value).format(_format);
 }
 
-
+/**
+ * Valida la respuesta de un servicio que utilice el DTO de MessageResponse
+ * @param {*} response 
+ */
 export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");

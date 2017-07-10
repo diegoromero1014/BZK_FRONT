@@ -5,7 +5,15 @@ import { MODULE_CUSTOMER_STORY } from '../../constantsGlobal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import {TAB_CUSTOMER_STORY} from '../../constantsGlobal';
+import {
+  TAB_CUSTOMER_STORY, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT,
+  MESSAGE_ERROR_SWEET_ALERT
+} from '../../constantsGlobal';
+import Tooltip from '../toolTip/toolTipComponent';
+import { deleteRecentClient, getRecentClients } from './actions';
+import { changeStateSaveData } from '../dashboard/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { validateResponse } from '../../actionsGlobal';
 
 class ClientListItem extends Component {
   constructor(props) {
@@ -14,6 +22,7 @@ class ClientListItem extends Component {
       showEr: false
     }
     this._handleClickClientItem = this._handleClickClientItem.bind(this);
+    this._deleteRecentClient = this._deleteRecentClient.bind(this);
     this._closeError = this._closeError.bind(this);
   }
 
@@ -38,13 +47,31 @@ class ClientListItem extends Component {
     this.setState({ showEr: false });
   }
 
+  _deleteRecentClient() {
+    const { deleteRecentClient, swtShowMessage, dataId, getRecentClients } = this.props;
+    changeStateSaveData(true, MESSAGE_LOAD_DATA);
+    deleteRecentClient(dataId).then((data) => {
+      changeStateSaveData(false, "");
+      if (!validateResponse(data)) {
+        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+      } else {
+        getRecentClients().then((data) => {
+          changeStateSaveData(false, "");
+          if (!validateResponse(data)) {
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+          }
+        });
+      }
+    });
+  }
+
   render() {
     const { dataId, dataName, dataDocumentType, dataDocument, dataAccountManager, dataEconomicGroup,
       dataIsProspect, dataIsAccess, dataDeleveryClient, navBar } = this.props;
     return (
       <div>
-        <div className="client-card" onClick={this._handleClickClientItem} style={{ float: "left" }}>
-          <div className="celula-card-top">
+        <div className="client-card" style={{ float: "left" }}>
+          <div className="celula-card-top" onClick={this._handleClickClientItem}>
             <div className="celula-card-top-left">
               <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
               <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
@@ -53,13 +80,21 @@ class ClientListItem extends Component {
             </div>
           </div>
           <div className="celula-card-bottom"
-            style={{ backgroundColor: dataIsAccess ? "#B0E0E6" : _.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient ? "#FAB87D" : "#DCDCDC" }}>
+            style={{
+              backgroundColor: dataIsAccess ? "#B0E0E6" : _.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient ? "#FAB87D" : "#DCDCDC",
+              cursor: "initial"
+            }}>
             {dataIsAccess ?
-              <i className="chevron circle right icon blue" style={{ marginTop: "-15px" }}></i>
+              <i className="chevron circle right icon blue" style={{ marginTop: "-15px", cursor: "pointer" }}
+                onClick={this._handleClickClientItem} />
               :
               _.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient ?
-                <i className="chevron circle right icon orange" style={{ marginTop: "-15px" }}></i> : ''
+                <i className="chevron circle right icon orange" style={{ marginTop: "-15px", cursor: "pointer" }} /> : ''
             }
+            <Tooltip text="Eliminar de recientes">
+              <i className="delete icon" style={{ marginTop: "-1px", float: "right", color: "#616060", cursor: "pointer" }}
+                onClick={this._deleteRecentClient} />
+            </Tooltip>
           </div>
           {dataIsProspect &&
             <div className="prospect-corner prospect badge badge-important animated bounceIn" style={{ borderRadius: "10px" }}>P</div>
@@ -90,7 +125,10 @@ ClientListItem.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    updateTabSeleted
+    updateTabSeleted,
+    deleteRecentClient,
+    swtShowMessage,
+    getRecentClients
   }, dispatch);
 }
 
