@@ -48,7 +48,7 @@ class ClientsFind extends Component {
         this.state = {
             valueTeam: "",
             valueCertification: "",
-            showConfirmDeleteRecentClientes: true
+            showConfirmDeleteRecentClientes: false
         }
     }
 
