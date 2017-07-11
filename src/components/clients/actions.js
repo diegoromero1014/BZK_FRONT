@@ -1,7 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
   CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS, GET_RECENT_CLIENTS,
-  DELETE_ALL_RECENT_CLIENT, DELETE_RECENT_CLIENT
+  DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT
 } from './constants';
 import axios from 'axios';
 
@@ -100,7 +100,7 @@ export function deleteAllRecentClients() {
 
   var request = axios.post(APP_URL + "/deleteAllRecentClients", json);
   return {
-    type: DELETE_ALL_RECENT_CLIENT,
+    type: DELETE_ALL_RECENT_CLIENTS,
     payload: request
   }
 }

@@ -52,16 +52,6 @@ class ClientsFind extends Component {
         }
     }
 
-    _deleteAllRecentClientes() {
-        const { deleteAllRecentClients, changeStateSaveData } = this.props;
-        deleteAllRecentClients().then((data) => {
-            changeStateSaveData(false, "");
-            if (!validateResponse(data)) {
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }
-        });
-    }
-
     componentWillMount() {
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
@@ -202,6 +192,28 @@ class ClientsFind extends Component {
         redirectUrl("/dashboard/createPropspect");
     }
 
+    _deleteAllRecentClientes() {
+        const { deleteAllRecentClients, changeStateSaveData, swtShowMessage, getRecentClients } = this.props;
+        this.setState({
+            showConfirmDeleteRecentClientes: false
+        });
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        deleteAllRecentClients().then((data) => {
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            } else {
+                changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                getRecentClients((data) => {
+                    changeStateSaveData(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    }
+                });
+            }
+        });
+    }
+
     render() {
         const { fields: { team, certificationStatus, linkedStatus, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
         const { clientR, selectsReducer } = this.props;
@@ -307,7 +319,7 @@ class ClientsFind extends Component {
                             <div style={{ marginTop: "15px" }}>
                                 <Tooltip text="Quitar todos los clientes de recientes">
                                     <h5 className="form-item" style={{ fontSize: "16px", marginRight: "20px", float: "right" }}>
-                                        <a href="#" onClick={this._deleteAllRecentClientes}>Quitar todos</a >
+                                        <a href="#" onClick={() => this.setState({ showConfirmDeleteRecentClientes: true })}>Quitar todos</a >
                                     </h5>
                                 </Tooltip>
                             </div>
@@ -362,7 +374,9 @@ function mapDispatchToProps(dispatch) {
         updateTabSeletedRisksManagment,
         getRecentClients,
         swtShowMessage,
-        changeStateSaveData
+        changeStateSaveData,
+        deleteAllRecentClients,
+        getRecentClients
     }, dispatch);
 }
 

@@ -35,12 +35,15 @@ export default (state = initialState, action) => {
       });
     case actions.GET_RECENT_CLIENTS:
       const responseRecentClients = action.payload.data.data;
+      var showingRecentClients = true;
+      if (responseRecentClients.rowCount === 0) {
+        showingRecentClients = false;
+      }
       return state.withMutations(map => {
         map
-          .set('status', 'processed')
           .set('countClients', responseRecentClients.rowCount)
           .set('responseClients', responseRecentClients.rows)
-          .set('showingRecentClients', true);
+          .set('showingRecentClients', showingRecentClients);
       });
     default:
       return state;
