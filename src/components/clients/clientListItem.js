@@ -91,7 +91,7 @@ class ClientListItem extends Component {
               _.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient ?
                 <i className="chevron circle right icon orange" style={{ marginTop: "-15px", cursor: "pointer" }} /> : ''
             }
-            <Tooltip text="Eliminar de recientes">
+            <Tooltip text="Quitar de recientes">
               <i className="delete icon" style={{ marginTop: "-1px", float: "right", color: "#616060", cursor: "pointer" }}
                 onClick={this._deleteRecentClient} />
             </Tooltip>

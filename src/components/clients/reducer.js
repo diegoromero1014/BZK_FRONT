@@ -6,7 +6,8 @@ const initialState = Immutable.Map({
   keyword: "",
   page: 1,
   countClients: 0,
-  responseClients: []
+  responseClients: [],
+  showingRecentClients: true
 });
 
 export default (state = initialState, action) => {
@@ -17,7 +18,8 @@ export default (state = initialState, action) => {
         map
           .set('status', 'processed')
           .set('countClients', response.rowCount)
-          .set('responseClients', response.rows);
+          .set('responseClients', response.rows)
+          .set('showingRecentClients', false);
       });
     case actions.CHANGE_PAGE:
       return state.set('page', action.currentPage);
@@ -37,7 +39,8 @@ export default (state = initialState, action) => {
         map
           .set('status', 'processed')
           .set('countClients', responseRecentClients.rowCount)
-          .set('responseClients', responseRecentClients.rows);
+          .set('responseClients', responseRecentClients.rows)
+          .set('showingRecentClients', true);
       });
     default:
       return state;
