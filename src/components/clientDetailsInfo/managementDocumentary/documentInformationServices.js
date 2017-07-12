@@ -6,7 +6,10 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { CONSUMING_SERVICE } from '../../../constantsGlobal';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import SweetAlert from 'sweetalert-react';
+import {shorterStringValue} from '../../../actionsGlobal';
+import Tooltip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
+
 
 class DocumentInformationServices extends Component {
 
@@ -39,20 +42,25 @@ class DocumentInformationServices extends Component {
     }
 
     _createDocumentsRecords(document, idx) {
+        var splitDocumentName = _.capitalize(shorterStringValue(document.documentName, 30));
+
         return <tr key={idx}>
-            <td>
+            <td><Tooltip text={_.capitalize(document.documentName)}>
                 {_.isUndefined(document.url) || _.isNull(document.url) || _.isEmpty(document.url) ?
-                    document.documentName
+                    <span>{splitDocumentName}</span>
                     :
-                    <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
+                    <a style={{cursor: 'pointer', textDecoration: 'underline'}}
+                       onClick={() => window.open(document.url, '_blank')}>{splitDocumentName}</a>
                 }
+            </Tooltip>
             </td>
-            <td>{document.documentType}</td>
-            <td>{document.documentStatus}</td>
-            <td>{document.obligatory}</td>
+            <td>{_.capitalize(document.documentType)}</td>
+            <td>{_.capitalize(document.documentStatus)}</td>
+            <td>{_.capitalize(document.obligatory)}</td>
             <td>{document.expiryDate}</td>
         </tr>
     }
+
 
     render() {
         const { tabReducer } = this.props;
