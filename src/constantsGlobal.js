@@ -138,7 +138,7 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
 
-export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
+export const STYLE_BUTTONS_ACTIONS = {paddingRight: '7px', paddingLeft: '7px'};
 export const STYLE_CONTAINER_BUTTONS = {
     position: "fixed",
     border: "1px solid #C2C2C2",
@@ -152,9 +152,9 @@ export const STYLE_CONTAINER_BUTTONS = {
 
 //Data para los select de respuesta "Aprobar" - "Rechazar"
 export const VALUES_APROVE = [
-    { 'id': '', 'value': "Seleccione..." },
-    { 'id': true, 'value': "Aprobar" },
-    { 'id': false, 'value': "Rechazar" }
+    {'id': '', 'value': "Seleccione..."},
+    {'id': true, 'value': "Aprobar"},
+    {'id': false, 'value': "Rechazar"}
 ];
 
 export const STYLE_BUTTON_BOTTOM = {

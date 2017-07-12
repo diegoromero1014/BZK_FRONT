@@ -242,7 +242,10 @@ export function formatCurrency(value, format) {
     return numeral(value).format(_format);
 }
 
-
+/**
+ * Valida la respuesta de un servicio que utilice el DTO de MessageResponse
+ * @param {*} response 
+ */
 export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
@@ -269,4 +272,11 @@ export function stringValidate(value) {
 
 export function validateValueExist(value) {
     return _.isUndefined(value) || _.isNull(value) ? false : true;
+}
+
+// converts HTML to text using Javascript
+export function htmlToText(html) {
+    const tag = document.createElement('div');
+    tag.innerHTML = html;
+    return tag.innerText.trim();
 }

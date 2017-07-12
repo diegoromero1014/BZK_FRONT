@@ -60,7 +60,10 @@
 "app/client_by_segment",
 "app/pipeline",
 "app/aec_summary",
-"app/flags";
+"app/flags",
+"modules/quill.snow",
+"modules/quill.snow.es";
+
 
 // Helpers
 @import "common/helpers"; // helpers must be at the bottom of the stylesheet to get higher priority by source order

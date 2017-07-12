@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { clientsFindServer, clearClients, changePage, changeKeyword } from './actions';
+import {
+    clientsFindServer, clearClients, changePage, changeKeyword, getRecentClients,
+    deleteAllRecentClients
+} from './actions';
 import ClientListItem from './clientListItem';
 import SearchBarClient from './searchBarClient';
 import { NUMBER_RECORDS, ID_OPTION_ALL_LEVEL_AEC, AEC_NO_APLICA } from './constants';
@@ -15,11 +18,18 @@ import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../navBar/actions';
 import { clearContact } from '../contact/actions';
 import { clearInfoClient } from '../clientInformation/actions';
-import { SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR, TAB_RISKS_MANAGEMENT } from '../../constantsGlobal';
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import {
+    SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR, MESSAGE_LOAD_DATA,
+    TAB_RISKS_MANAGEMENT, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+} from '../../constantsGlobal';
+import { validatePermissionsByModule, validateResponse } from '../../actionsGlobal';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { updateTabSeletedRisksManagment } from '../risksManagement/actions';
 import { TAB_AEC } from '../risksManagement/constants';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../dashboard/actions';
+import Tooltip from '../toolTip/toolTipComponent';
+import SweetAlert from 'sweetalert-react';
 
 const fields = ["team", "certificationStatus", "linkedStatus", "levelAEC"];
 var levelsAEC;
@@ -34,9 +44,11 @@ class ClientsFind extends Component {
         this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
         this._handleClientsFind = this._handleClientsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
+        this._deleteAllRecentClientes = this._deleteAllRecentClientes.bind(this);
         this.state = {
             valueTeam: "",
-            valueCertification: ""
+            valueCertification: "",
+            showConfirmDeleteRecentClientes: false
         }
     }
 
@@ -46,7 +58,8 @@ class ClientsFind extends Component {
         } else {
             const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment } = this.props;
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, changeStateSaveData } = this.props;
+            changeStateSaveData(true, MESSAGE_LOAD_DATA);
             clearClients();
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
@@ -85,15 +98,29 @@ class ClientsFind extends Component {
                     }
                 }
             });
+            getRecentClients().then((data) => {
+                changeStateSaveData(false, "");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                }
+            });
         }
     }
 
     _cleanSearch() {
-        const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment } = this.props;
+        const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment,
+            getRecentClients, changeStateSaveData } = this.props;
         this.props.resetForm();
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
         clearClients();
         updateTabSeleted(null);
         updateTabSeletedRisksManagment(null);
+        getRecentClients().then((data) => {
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            }
+        });
     }
 
     _onChangeTeam(val) {
@@ -134,11 +161,13 @@ class ClientsFind extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { certificationStatus, team, linkedStatus, levelAEC } } = this.props;
-        const { clientsFindServer, clientR, changePage } = this.props;
+        const { fields: { certificationStatus, team, linkedStatus, levelAEC }, changeStateSaveData,
+            swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
         clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, linkedStatus.value, levelAEC.value).then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin')) {
-                redirectUrl("/login");
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
         });
         changePage(1);
@@ -163,13 +192,34 @@ class ClientsFind extends Component {
         redirectUrl("/dashboard/createPropspect");
     }
 
+    _deleteAllRecentClientes() {
+        const { deleteAllRecentClients, changeStateSaveData, swtShowMessage, getRecentClients } = this.props;
+        this.setState({
+            showConfirmDeleteRecentClientes: false
+        });
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        deleteAllRecentClients().then((data) => {
+            changeStateSaveData(false, "");
+            if (!validateResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            } else {
+                changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                getRecentClients((data) => {
+                    changeStateSaveData(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    }
+                });
+            }
+        });
+    }
+
     render() {
         const { fields: { team, certificationStatus, linkedStatus, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
         const { clientR, selectsReducer } = this.props;
         var countClients = clientR.get('countClients');
         var status = clientR.get('status');
         var clientItems = clientR.get('responseClients');
-
         return (
             <div>
                 <form>
@@ -178,17 +228,21 @@ class ClientsFind extends Component {
                             <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} linkingStatusus={linkedStatus.value} levelAEC={levelAEC.value} />
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
-                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
-                                <i className="erase icon"
-                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
-                            </button>
-                            {_.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) &&
-                                <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button"
-                                    title="Crear prospecto" style={{ marginLeft: "17px" }}>
-                                    <i className="add user icon"
+                            <Tooltip text="Limpiar búsqueda">
+                                <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                                    style={{ marginLeft: "17px" }}>
+                                    <i className="erase icon"
                                         style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                                 </button>
+                            </Tooltip>
+                            {_.get(reducerGlobal.get('permissionsPropsect'), _.indexOf(reducerGlobal.get('permissionsPropsect'), VISUALIZAR), false) &&
+                                <Tooltip text="Crear prospecto">
+                                    <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button"
+                                        style={{ marginLeft: "17px" }}>
+                                        <i className="add user icon"
+                                            style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                    </button>
+                                </Tooltip>
                             }
                         </Col>
                     </Row>
@@ -250,6 +304,28 @@ class ClientsFind extends Component {
                         </Col>
                     </Row>
                 </form>
+                <Row style={{ marginLeft: "3px", marginRigth: "10px" }}>
+                    <Col xs={10} md={10} lg={10}>
+                        {clientR.get('showingRecentClients') &&
+                            <div style={{ marginTop: "15px" }}>
+                                <h5 className="form-item" style={{ fontSize: "16px", marginLeft: "3px" }}>
+                                    Clientes recientes
+                                        </h5>
+                            </div>
+                        }
+                    </Col>
+                    <Col xs={2} md={2} lg={2}>
+                        {clientR.get('showingRecentClients') &&
+                            <div style={{ marginTop: "15px" }}>
+                                <Tooltip text="Quitar todos los clientes de recientes">
+                                    <h5 className="form-item" style={{ fontSize: "16px", marginRight: "20px", float: "right" }}>
+                                        <a href="#" onClick={() => this.setState({ showConfirmDeleteRecentClientes: true })}>Quitar todos</a >
+                                    </h5>
+                                </Tooltip>
+                            </div>
+                        }
+                    </Col>
+                </Row>
                 <Row style={{ paddingLeft: "10px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div className="news-page content">
@@ -266,6 +342,17 @@ class ClientsFind extends Component {
                         <Pagination valueTeam={team.value} valueCertification={certificationStatus.value} />
                     </Col>
                 </Row>
+                <SweetAlert
+                    type="warning"
+                    show={this.state.showConfirmDeleteRecentClientes}
+                    title="Clientes recientes"
+                    confirmButtonColor='#DD6B55'
+                    confirmButtonText='Sí, estoy seguro!'
+                    cancelButtonText="Cancelar"
+                    text="Señor usuario, ¿esta seguro de quitar todos los clientes recientes?"
+                    showCancelButton={true}
+                    onCancel={() => this.setState({ showConfirmDeleteRecentClientes: false })}
+                    onConfirm={() => this._deleteAllRecentClientes()} />
             </div>
         )
     }
@@ -284,7 +371,12 @@ function mapDispatchToProps(dispatch) {
         clearInfoClient,
         validatePermissionsByModule,
         updateTabSeleted,
-        updateTabSeletedRisksManagment
+        updateTabSeletedRisksManagment,
+        getRecentClients,
+        swtShowMessage,
+        changeStateSaveData,
+        deleteAllRecentClients,
+        getRecentClients
     }, dispatch);
 }
 

@@ -12,6 +12,7 @@ export default (state = initialState, action) => {
         uuid: task.uuid,
         id: task.id,
         tarea: task.tarea,
+        textTarea: task.textTarea,
         idResponsable: task.idResponsable,
         responsable: task.responsable,
         fecha: task.fecha,
@@ -30,6 +31,7 @@ export default (state = initialState, action) => {
         }), function (item) {
           item.id = taskEdit.id;
           item.tarea = taskEdit.tarea;
+          item.textTarea = taskEdit.textTarea;
           item.idResponsable = taskEdit.idResponsable;
           item.responsable = taskEdit.responsable;
           item.fecha = taskEdit.fecha;

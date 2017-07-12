@@ -50,7 +50,7 @@ class ComponentQuestion extends Component {
         return (
             <Row style={{ paddingTop: "10px", paddingLeft: '10px' }}>
                 <Col xs={6} md={8} lg={8}>
-                    <span style={{ textAlign: "justify" }}>{question.question}</span>
+                    <span style={{ textAlign: "justify", wordWrap: 'break-word' }}>{question.question}</span>
                 </Col>
                 <Col xs={5} md={4} lg={4}>
                     <ComboBox
