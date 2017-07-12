@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { consultManagementDocumentaryService, clearManagementDocumentary } from '../actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { CONSUMING_SERVICE } from '../../../constantsGlobal';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {consultManagementDocumentaryService, clearManagementDocumentary} from '../actions';
+import {changeStateSaveData} from '../../dashboard/actions';
+import {CONSUMING_SERVICE} from '../../../constantsGlobal';
+import {Grid, Row, Col} from 'react-flexbox-grid';
 import SweetAlert from 'sweetalert-react';
+import {shorterStringValue} from '../../../actionsGlobal';
+import Tooltip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
 class DocumentInformationServices extends Component {
@@ -20,75 +22,83 @@ class DocumentInformationServices extends Component {
     }
 
     componentWillMount() {
-        const { clearManagementDocumentary } = this.props;
+        const {clearManagementDocumentary} = this.props;
         clearManagementDocumentary();
     }
 
     consultManagementDocumentary() {
-        const { consultManagementDocumentaryService, changeStateSaveData } = this.props;
+        const {consultManagementDocumentaryService, changeStateSaveData} = this.props;
         changeStateSaveData(true, CONSUMING_SERVICE);
         consultManagementDocumentaryService().then((data) => {
             changeStateSaveData(false, "");
             if (_.get(data, 'payload.data.status', 500) === 500) {
-                this.setState({ showEr: true });
+                this.setState({showEr: true});
             }
         }, (reason) => {
             changeStateSaveData(false, "");
-            this.setState({ showEr: true });
+            this.setState({showEr: true});
         });
     }
 
     _createDocumentsRecords(document, idx) {
+        var splitDocumentName = _.capitalize(shorterStringValue(document.documentName, 30));
+
         return <tr key={idx}>
-            <td>
+            <td><Tooltip text={_.capitalize(document.documentName)}>
                 {_.isUndefined(document.url) || _.isNull(document.url) || _.isEmpty(document.url) ?
-                    document.documentName
+                    <span>{splitDocumentName}</span>
                     :
-                    <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.open(document.url, '_blank')}>{document.documentName}</a>
+                    <a style={{cursor: 'pointer', textDecoration: 'underline'}}
+                       onClick={() => window.open(document.url, '_blank')}>{splitDocumentName}</a>
                 }
+            </Tooltip>
             </td>
-            <td>{document.documentType}</td>
-            <td>{document.documentStatus}</td>
-            <td>{document.obligatory}</td>
+            <td>{_.capitalize(document.documentType)}</td>
+            <td>{_.capitalize(document.documentStatus)}</td>
+            <td>{_.capitalize(document.obligatory)}</td>
             <td>{document.expiryDate}</td>
         </tr>
     }
 
     render() {
-        const { tabReducer } = this.props;
+        const {tabReducer} = this.props;
         return (
             <div>
-                <table style={{ width: "100%", marginBottom: '15px' }}>
+                <table style={{width: "100%", marginBottom: '15px'}}>
                     <tbody>
-                        <tr>
-                            <td>
-                                <a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={this.consultManagementDocumentary}>Consultar</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            <a style={{cursor: 'pointer', textDecoration: 'underline'}}
+                               onClick={this.consultManagementDocumentary}>Consultar</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 {tabReducer.get('listDocumentsManagementDocumentary') !== undefined && tabReducer.get('listDocumentsManagementDocumentary') !== null ?
                     <div>
-                        <table style={{ width: "100%" }}>
+                        <table style={{width: "100%"}}>
                             <thead>
-                                <tr>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Nombre</span></th>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo</span></th>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Estado</span></th>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Obligatoriedad</span></th>
-                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Fecha de expiración</span></th>
-                                </tr>
+                            <tr>
+                                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Nombre</span></th>
+                                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Tipo</span></th>
+                                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Estado</span></th>
+                                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Obligatoriedad</span></th>
+                                <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Fecha de expiración</span></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {tabReducer.get('listDocumentsManagementDocumentary').map(this._createDocumentsRecords)}
+                            {tabReducer.get('listDocumentsManagementDocumentary').map(this._createDocumentsRecords)}
                             </tbody>
                         </table>
                     </div>
                     :
-                    <Grid style={{ width: "100%", marginTop: '15px' }}>
+                    <Grid style={{width: "100%", marginTop: '15px'}}>
                         <Row center="xs">
                             <Col xs={12} sm={8} md={12} lg={12}>
-                                <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No hay documentos para el cliente</span>
+                                <span style={{
+                                    fontWeight: 'bold',
+                                    color: '#4C5360'
+                                }}>No hay documentos para el cliente</span>
                             </Col>
                         </Row>
                     </Grid>
@@ -99,7 +109,7 @@ class DocumentInformationServices extends Component {
                     show={this.state.showEr}
                     title="Error consultando documentos"
                     text="Señor usuario, ocurrió un error tratando de consultar los documentos del cliente."
-                    onConfirm={() => this.setState({ showEr: false })}
+                    onConfirm={() => this.setState({showEr: false})}
                 />
             </div>
         );
@@ -114,7 +124,7 @@ function mapDispatchToProps(dispacth) {
     }, dispacth);
 }
 
-function mapStateToProps({ reducerGlobal, tabReducer }) {
+function mapStateToProps({reducerGlobal, tabReducer}) {
     return {
         reducerGlobal,
         tabReducer
