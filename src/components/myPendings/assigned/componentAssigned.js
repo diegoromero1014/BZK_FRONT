@@ -160,7 +160,7 @@ class ComponentAssigned extends Component {
                             <Col xs={12} sm={12} md={5} lg={5}>
                                 <div className="InputAddOn">
                                     <input type="text" style={{ padding: '0px 11px !important' }}
-                                        id="searchExpression" onKeyPress={this._handleChangeKeyword} type="text"
+                                        id="searchExpression" onKeyPress={this._handleChangeKeyword}
                                         placeholder="Búsqueda por número o nombre del cliente" value={keywordClient.value}
                                         onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
                                     />

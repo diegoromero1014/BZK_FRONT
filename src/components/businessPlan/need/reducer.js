@@ -14,6 +14,7 @@ export default (state = initialState, action) => {
         needType: need.needType,
         needIdType: need.needIdType,
         descriptionNeed: need.descriptionNeed,
+        descriptionNeedText: need.descriptionNeedText,
         needProduct:need.needProduct,
         needIdProduct:need.needIdProduct,
         needImplementation: need.needImplementation,
@@ -41,6 +42,7 @@ export default (state = initialState, action) => {
            item.needType= needEdit.needType;
            item.needIdType= needEdit.needIdType;
            item.descriptionNeed= needEdit.descriptionNeed;
+           item.descriptionNeedText= needEdit.descriptionNeedText;
            item.needProduct=needEdit.needProduct;
            item.needIdProduct=needEdit.needIdProduct;
            item.needImplementation=needEdit.needImplementation;

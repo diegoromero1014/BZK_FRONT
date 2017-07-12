@@ -211,7 +211,6 @@ class ModalTask extends Component {
                         <Row>
                             <Col xs={12} md={12} lg={12}>
                                 <dt><span>Tarea (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
                                     <RichText
                                         name="description"
                                         type="text"
@@ -219,7 +218,6 @@ class ModalTask extends Component {
                                         {...tarea}
                                         placeholder="Ingrese la descripción"
                                     />
-                                </dt>
                             </Col>
                         </Row>
                     </div>

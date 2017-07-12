@@ -345,42 +345,42 @@ class FormPrevisita extends Component {
 
         //Validaciones de la metodología challenger y si estoy guardando como definitivo
         if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
-            if (_.isEmpty(htmlToText(this.state.acondicionamiento)) ||  this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.acondicionamiento)) || this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
                 errorInForm = true;
                 this.setState({
                     acondicionamientoError: "Debe ingresar un valor",
                     acondicionamientoTouch: true
                 });
             }
-            if ( _.isEmpty(htmlToText(this.state.replanteamiento)) || this.state.replanteamiento === null || this.state.replanteamiento === undefined || this.state.replanteamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.replanteamiento)) || this.state.replanteamiento === null || this.state.replanteamiento === undefined || this.state.replanteamiento === "") {
                 errorInForm = true;
                 this.setState({
                     replanteamientoError: "Debe ingresar un valor",
                     replanteamientoTouch: true
                 });
             }
-            if ( _.isEmpty(htmlToText(this.state.ahogamiento)) || this.state.ahogamiento === null || this.state.ahogamiento === undefined || this.state.ahogamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.ahogamiento)) || this.state.ahogamiento === null || this.state.ahogamiento === undefined || this.state.ahogamiento === "") {
                 errorInForm = true;
                 this.setState({
                     ahogamientoError: "Debe ingresar un valor",
                     ahogamientoTouch: true
                 });
             }
-            if ( _.isEmpty(htmlToText(this.state.impacto)) ||  this.state.impacto === null || this.state.impacto === undefined || this.state.impacto === "") {
+            if (_.isEmpty(htmlToText(this.state.impacto)) || this.state.impacto === null || this.state.impacto === undefined || this.state.impacto === "") {
                 errorInForm = true;
                 this.setState({
                     impactoError: "Debe ingresar un valor",
                     impactoTouch: true
                 });
             }
-            if ( _.isEmpty(htmlToText(this.state.nuevoModo)) || this.state.nuevoModo === null || this.state.nuevoModo === undefined || this.state.nuevoModo === "") {
+            if (_.isEmpty(htmlToText(this.state.nuevoModo)) || this.state.nuevoModo === null || this.state.nuevoModo === undefined || this.state.nuevoModo === "") {
                 errorInForm = true;
                 this.setState({
                     nuevoModoError: "Debe ingresar un valor",
                     nuevoModoTouch: true
                 });
             }
-            if ( _.isEmpty(htmlToText(this.state.nuestraSolucion)) || this.state.nuestraSolucion === null || this.state.nuestraSolucion === undefined || this.state.nuestraSolucion === "") {
+            if (_.isEmpty(htmlToText(this.state.nuestraSolucion)) || this.state.nuestraSolucion === null || this.state.nuestraSolucion === undefined || this.state.nuestraSolucion === "") {
                 errorInForm = true;
                 this.setState({
                     nuestraSolucionError: "Debe ingresar un valor",
@@ -554,9 +554,10 @@ class FormPrevisita extends Component {
                         <div style={{paddingRight: "15px"}}>
                             <dt>
                                 <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={titleMessageTypePrevisit}/>
+                                <ToolTip text={titleMessageTypePrevisit}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </ToolTip>
                             </dt>
                             <ComboBox
                                 name="tipoVisita"
@@ -612,23 +613,26 @@ class FormPrevisita extends Component {
                             <a className={`${this.state.activeItemTabClient} item`} style={{width: "33%"}}
                                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
                                 reunión por parte del cliente
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_CLIENT_PARTICIPANTS}/>
+                                <ToolTip text={TITLE_CLIENT_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </ToolTip>
                             </a>
                             <a className={`${this.state.activeItemTabBanc} item`} style={{width: "40%"}}
                                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
                                 reunión por parte del Grupo Bancolombia
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_BANC_PARTICIPANTS}/>
+                                <ToolTip text={TITLE_BANC_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </ToolTip>
                             </a>
                             <a className={`${this.state.activeItemTabOther} item`} style={{width: "26%"}}
                                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
                                 reunión
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_OTHERS_PARTICIPANTS}/>
+                                <ToolTip text={TITLE_OTHERS_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </ToolTip>
                             </a>
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`}

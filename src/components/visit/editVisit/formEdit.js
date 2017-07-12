@@ -1,58 +1,53 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../../globalComponents/actions';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
-import {VISIT_TYPE} from '../../selectsComponent/constants';
-import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
-import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
-import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
-import TaskVisit from '../tasks/taskVisit';
-import BotonCreateContactComponent from '../../contact/createContact/botonCreateContactComponent';
-import RaitingInternal from '../../clientInformation/ratingInternal';
+import React, {Component} from "react";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {redirectUrl} from "../../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import {consultDataSelect, consultList, getMasterDataFields} from "../../selectsComponent/actions";
+import {VISIT_TYPE} from "../../selectsComponent/constants";
+import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
+import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
+import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
+import TaskVisit from "../tasks/taskVisit";
+import RaitingInternal from "../../clientInformation/ratingInternal";
 import {
-    TITLE_CONCLUSIONS_VISIT,
-    TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS,
-    TITLE_CLIENT_PARTICIPANTS,
-    getTitleConclusionsVisit
-} from '../../../constantsGlobal';
-import {
+    AEC_NO_APLIED,
+    EDITAR,
     FILE_OPTION_SHOPPING_MAP,
+    getTitleConclusionsVisit,
+    MESSAGE_SAVE_DATA,
     SAVE_DRAFT,
     SAVE_PUBLISHED,
-    MESSAGE_SAVE_DATA,
-    EDITAR,
-    AEC_NO_APLIED
-} from '../../../constantsGlobal';
-import {createVisti, detailVisit, pdfDescarga} from '../actions';
-import {addParticipant, filterUsersBanco} from '../../participantsVisitPre/actions';
-import {downloadFilePdf} from '../../clientInformation/actions';
-import {changeStateSaveData} from '../../dashboard/actions';
-import {formValidateKeyEnter, nonValidateEnter, htmlToText} from '../../../actionsGlobal';
-import {MENU_CLOSED} from '../../navBar/constants';
-import {addTask} from '../tasks/actions';
-import SweetAlert from 'sweetalert-react';
-import moment from 'moment';
-import _ from 'lodash';
+    TITLE_BANC_PARTICIPANTS,
+    TITLE_CLIENT_PARTICIPANTS,
+    TITLE_CONCLUSIONS_VISIT,
+    TITLE_OTHERS_PARTICIPANTS
+} from "../../../constantsGlobal";
+import {createVisti, detailVisit, pdfDescarga} from "../actions";
+import {addParticipant, filterUsersBanco} from "../../participantsVisitPre/actions";
+import {downloadFilePdf} from "../../clientInformation/actions";
+import {changeStateSaveData} from "../../dashboard/actions";
+import {formValidateKeyEnter, htmlToText, nonValidateEnter,shorterStringValue} from "../../../actionsGlobal";
+import {MENU_CLOSED} from "../../navBar/constants";
+import {addTask} from "../tasks/actions";
+import SweetAlert from "sweetalert-react";
+import moment from "moment";
+import _ from "lodash";
 import RichText from "../../richText/richTextComponent";
 import ToolTip from "../../toolTip/toolTipComponent";
+import {showLoading} from "../../loading/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
-var dateVisitLastReview;
-var typeMessage = "success";
-var titleMessage = "";
-var message = "";
-var typeButtonClick;
+let dateVisitLastReview;
+let typeMessage = "success";
+let titleMessage = "";
+let message = "";
+let typeButtonClick;
 
 const validate = values => {
-    var errors = {};
+    let errors = {};
     return errors;
 };
 
@@ -145,7 +140,7 @@ class FormEdit extends Component {
     _submitCreateVisita() {
         const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer, tasks, changeStateSaveData} = this.props;
         const detailVisit = visitReducer.get('detailVisit');
-        var errorInForm = false;
+        let errorInForm = false;
 
         if (this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "") {
             errorInForm = true;
@@ -167,10 +162,10 @@ class FormEdit extends Component {
         }
 
         if (!errorInForm) {
-            var dataClient = [], dataBanco = [], dataOthers = [];
+            let dataClient = [], dataBanco = [], dataOthers = [];
             _.forEach(participants.toArray(), function (value, key) {
                 if (_.isEqual(value.tipoParticipante, 'client')) {
-                    var contactParticipantCliente = null;
+                    let contactParticipantCliente = null;
                     if (value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined) {
                         contactParticipantCliente = _.filter(detailVisit.data.participatingContacts, ['id', value.idParticipante]);
                     }
@@ -180,7 +175,7 @@ class FormEdit extends Component {
                     });
                 } else {
                     if (_.isEqual(value.tipoParticipante, 'banco')) {
-                        var contactParticipantBanco = null;
+                        let contactParticipantBanco = null;
                         if (value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined) {
                             contactParticipantBanco = _.filter(detailVisit.data.participatingEmployees, ['id', value.idParticipante]);
                         }
@@ -202,10 +197,10 @@ class FormEdit extends Component {
             });
 
             if (dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT) {
-                var tareas = [];
+                let tareas = [];
                 _.map(tasks.toArray(),
                     function (task) {
-                        var data = {
+                        let data = {
                             "id": task.id,
                             "task": task.tarea,
                             "employee": task.idResponsable,
@@ -216,7 +211,7 @@ class FormEdit extends Component {
                     }
                 );
 
-                var visitJson = {
+                let visitJson = {
                     "id": detailVisit.data.id,
                     "client": window.localStorage.getItem('idClientSelected'),
                     "visitTime": moment(this.state.dateVisit).format('x'),
@@ -290,7 +285,7 @@ class FormEdit extends Component {
     }
 
     _changeDateVisitOnBlur(value) {
-        var date = value.target.value;
+        let date = value.target.value;
         if (date === '' || date === undefined || date === null) {
             this.setState({
                 dateVisitError: "Debe seleccionar una opción"
@@ -306,13 +301,14 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask} = this.props;
+        const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask,showLoading} = this.props;
         nonValidateEnter(true);
         this.setState({idVisit: id});
         getMasterDataFields([VISIT_TYPE]);
+        showLoading(true, 'Cargando...');
         detailVisit(id).then((result) => {
             const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
-            var part = result.payload.data.data;
+            let part = result.payload.data.data;
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
 
             this.setState({
@@ -324,7 +320,7 @@ class FormEdit extends Component {
             //Adicionar participantes por parte del cliente
             _.forIn(part.participatingContacts, function (value, key) {
                 const uuid = _.uniqueId('participanClient_');
-                var clientParticipant = {
+                let clientParticipant = {
                     tipoParticipante: 'client',
                     idParticipante: value.id,
                     nombreParticipante: value.contactName,
@@ -344,7 +340,7 @@ class FormEdit extends Component {
             //Adicionar participantes por parte de bancolombia
             _.forIn(part.participatingEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanBanco_');
-                var clientParticipant = {
+                let clientParticipant = {
                     tipoParticipante: 'banco',
                     idParticipante: value.id,
                     nombreParticipante: value.employeeName,
@@ -363,7 +359,7 @@ class FormEdit extends Component {
             //Adicionar otros participantes
             _.forIn(part.relatedEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanOther_');
-                var otherParticipant = {
+                let otherParticipant = {
                     tipoParticipante: 'other',
                     idParticipante: value.id,
                     nombreParticipante: value.name,
@@ -382,7 +378,7 @@ class FormEdit extends Component {
             //Adicionar tareas
             _.forIn(part.userTasks, function (value, key) {
                 const uuid = _.uniqueId('task_');
-                var task = {
+                let task = {
                     uuid,
                     id: value.id,
                     tarea: value.task,
@@ -394,6 +390,7 @@ class FormEdit extends Component {
                 };
                 addTask(task);
             });
+            showLoading(false,null);
         });
     }
 
@@ -406,18 +403,18 @@ class FormEdit extends Component {
         const detailVisit = visitReducer.get('detailVisit');
         const infoClient = clientInformacion.get('responseClientInfo');
         const {aecStatus} = infoClient;
-        var showAECNoAplica = false;
-        var showAECNivel = true;
+        let showAECNoAplica = false;
+        let showAECNivel = true;
         if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
             showAECNoAplica = true;
             showAECNivel = false;
         }
-        var fechaModString = '';
-        var fechaCreateString = '';
-        var createdBy = '';
-        var updatedBy = '';
-        var positionCreatedBy = '';
-        var positionUpdatedBy = '';
+        let fechaModString = '';
+        let fechaCreateString = '';
+        let createdBy = '';
+        let updatedBy = '';
+        let positionCreatedBy = '';
+        let positionUpdatedBy = '';
 
         if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
             createdBy = detailVisit.data.createdByName;
@@ -425,11 +422,11 @@ class FormEdit extends Component {
             positionCreatedBy = detailVisit.data.positionCreatedBy;
             positionUpdatedBy = detailVisit.data.positionUpdatedBy;
             if (detailVisit.data.updatedTimestamp !== null) {
-                var fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
+                let fechaModDateMoment = moment(detailVisit.data.updatedTimestamp, "x").locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
             if (detailVisit.data.createdTimestamp !== null) {
-                var fechaCreateDateMoment = moment(detailVisit.data.createdTimestamp, "x").locale('es');
+                let fechaCreateDateMoment = moment(detailVisit.data.createdTimestamp, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
         }
@@ -781,14 +778,15 @@ function mapDispatchToProps(dispatch) {
         addTask,
         downloadFilePdf,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        showLoading
     }, dispatch);
 }
 
 function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar}, ownerProps) {
     const detailVisit = visitReducer.get('detailVisit');
     if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
-        var visitTime = detailVisit.data.visitTime;
+        let visitTime = detailVisit.data.visitTime;
         return {
             initialValues: {
                 tipoVisita: detailVisit.data.visitType,

@@ -69,12 +69,9 @@ RichText.modules = {};
 RichText.modules.toolbar = [
     [{'size': ['small', false, 'large', 'huge']}],  // header dropdown
     [{'color': []}, {'background': []}],         // dropdown with defaults
-    [{'align': []}],                               // text align
+    ['bold', 'italic', 'underline'],       // toggled buttons
+    [{'list': 'ordered'}, {'list': 'bullet'}],    //
     ['clean'],
-    ['bold', 'italic', 'underline', 'strike'],       // toggled buttons
-    [{'list': 'ordered'}, {'list': 'bullet'}],    // lists
-    [{'indent': '-1'}, {'indent': '+1'}],         // outdent/indent
-    [{'direction': 'rtl'}]                      // text direction
 ];
 
 /*

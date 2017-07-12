@@ -5,6 +5,7 @@ import { tasksByClientFindServer, orderColumnUserTask, clearUserTaskOrder, clear
 import GridComponent from '../grid/component';
 import { NUMBER_RECORDS } from './constants';
 import moment from 'moment';
+import {shorterStringValue} from '../../actionsGlobal';
 
 let v1 = "";
 class ListPendingTaskComponent extends Component {
@@ -74,8 +75,7 @@ class ListPendingTaskComponent extends Component {
           "clientContactId": value.idClientContact
         }
       };
-      var task = value.task;
-      _.set(value, 'tasks', task.length > 50 ? task.substring(0, 50) + "..." : task);
+      _.set(value, 'taskText', shorterStringValue(value.taskText,50));
       _.set(value, 'actions', {
         actionView: true,
         id: value,
@@ -102,7 +102,7 @@ class ListPendingTaskComponent extends Component {
       },
       {
         title: "Tarea",
-        key: "tasks"
+        key: "taskText"
       },
       {
         title: "Responsable",

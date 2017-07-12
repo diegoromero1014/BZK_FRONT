@@ -21,7 +21,8 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPend
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
+import { formatLongDateToDateWithNameMonth, htmlToText} from '../../actionsGlobal';
+import RichText from '../richText/richTextComponent';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateVisit"];
 var usersBanco = [];
@@ -39,7 +40,7 @@ const validate = values => {
   } else {
     errors.fecha = null;
   }
-  if (!values.tarea) {
+  if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
     errors.tarea = "Debe ingresar un valor";
   } else {
     errors.tarea = null;
@@ -59,7 +60,7 @@ class ModalCreateTask extends Component {
       isEditable: false,
       taskEdited: false,
       showErrtask: false
-    }
+    };
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._closeViewOrEditTask = this._closeViewOrEditTask.bind(this);
     this._handleEditTask = this._handleEditTask.bind(this);
@@ -187,6 +188,7 @@ class ModalCreateTask extends Component {
   render() {
     const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
       selectsReducer, reducerGlobal, handleSubmit } = this.props;
+    const styleRow = {};
     return (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -209,7 +211,7 @@ class ModalCreateTask extends Component {
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Estado (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt style={{ paddingTop: "0px" }}>
-                  <ComboBox name="idEstado" labelInput="Seleccione"
+                  <ComboBox name="idEstado"
                     {...idEstado}
                     valueProp={'id'}
                     textProp={'value'}
@@ -228,10 +230,13 @@ class ModalCreateTask extends Component {
                 }
               </Col>
             </Row>
-            <Row style={{ padding: "0px 10px 0px 0px" }}>
+            <Row style={{padding: "10px 14px 0px 2px"}}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
-                <dt style={{ paddingTop: "0px" }}>
+              </Col>
+            </Row>
+            <Row style={{ padding: "0px 10px 0px 0px" }}>
+              <Col xs={12} md={12} lg={12}>
                   <ComboBoxFilter
                     name="inputParticipantBanc"
                     labelInput="Ingrese un criterio de búsqueda..."
@@ -244,29 +249,32 @@ class ModalCreateTask extends Component {
                     disabled={this.state.isEditable ? '' : 'disabled'}
                     max="255"
                   />
-                </dt>
               </Col>
             </Row>
-            <Row style={{ padding: "0px 10px 0px 0px" }}>
+            <Row style={{padding: "10px 14px 0px 2px"}}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
-                <dt style={{ paddingTop: "0px" }}>
-                  <Textarea
-                    {...tarea}
-                    name="createTask"
-                    type="text"
-                    max="1000"
-                    title="La longitud máxima de caracteres es de 1000"
-                    style={{ width: '100%', height: '120px' }}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
-                </dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
+                  <RichText
+                    {...tarea}
+                    name="createTask"
+                    placeholder="Ingrese una tarea"
+                    style={{ width: '100%', height: '120px' }}
+                    readOnly={!this.state.isEditable}
+                    disabled={this.state.isEditable ? '' : 'disabled'}
+                  />
+              </Col>
+            </Row>
+            <Row style={{padding: "30px 14px 0px 2px"}}>
+              <Col xs={12} md={12} lg={12}>
                 <dt><span>Observaciones</span></dt>
-                <dt style={{ paddingTop: "0px" }}>
+              </Col>
+            </Row>
+            <Row style={{ padding: "0px 10px 0px 0px" }}>
+              <Col xs={12} md={12} lg={12}>
                   <Textarea
                     {...advance}
                     name="advanceTask"
@@ -276,7 +284,6 @@ class ModalCreateTask extends Component {
                     style={{ width: '100%', height: '120px' }}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                   />
-                </dt>
               </Col>
             </Row>
           </div>

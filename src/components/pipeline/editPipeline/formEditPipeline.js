@@ -1,48 +1,68 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import React, {Component} from "react";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {redirectUrl} from "../../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import Input from "../../../ui/input/inputComponent";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import {getClientNeeds, getMasterDataFields, getPipelineCurrencies} from "../../selectsComponent/actions";
 import {
-    consultDataSelect, consultList, getMasterDataFields, getPipelineCurrencies,
-    getClientNeeds
-} from '../../selectsComponent/actions';
+    BUSINESS_CATEGORY,
+    FILTER_COUNTRY,
+    LINE_OF_BUSINESS,
+    PIPELINE_BUSINESS,
+    PIPELINE_INDEXING,
+    PIPELINE_PRIORITY,
+    PIPELINE_PRODUCTS,
+    PIPELINE_STATUS,
+    PROBABILITY,
+    PRODUCTS
+} from "../../selectsComponent/constants";
 import {
-    PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY,
-    PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY
-} from '../../selectsComponent/constants';
+    DATE_FORMAT,
+    DATE_START_AFTER,
+    EDITAR,
+    MESSAGE_SAVE_DATA,
+    ONLY_POSITIVE_INTEGER,
+    OPTION_REQUIRED,
+    REVIEWED_DATE_FORMAT,
+    SAVE_DRAFT,
+    SAVE_PUBLISHED,
+    VALUE_REQUIERED
+} from "../../../constantsGlobal";
 import {
-    SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, DATETIME_FORMAT, REVIEWED_DATE_FORMAT,
-    DATE_START_AFTER, MESSAGE_SAVE_DATA, EDITAR, ONLY_POSITIVE_INTEGER
-} from '../../../constantsGlobal';
+    CURRENCY_COP,
+    CURRENCY_LABEL_COP,
+    CURRENCY_LABEL_OTHER_OPTION,
+    INTEGER,
+    LINE_OF_BUSINESS_LEASING,
+    ORIGIN_PIPELIN_BUSINESS,
+    POSITIVE_INTEGER,
+    PROPUEST_OF_BUSINESS,
+    REAL
+} from "../constants";
+import {createEditPipeline, getPipelineById, pdfDescarga} from "../actions";
 import {
-    PROPUEST_OF_BUSINESS, POSITIVE_INTEGER, INTEGER, REAL, CURRENCY_LABEL_COP,
-    CURRENCY_COP, CURRENCY_LABEL_OTHER_OPTION, LINE_OF_BUSINESS_LEASING,
-    ORIGIN_PIPELIN_BUSINESS
-} from '../constants';
-import { createEditPipeline, getPipelineById, pdfDescarga } from '../actions';
-import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter,
-    handleBlurValueNumber
-} from '../../../actionsGlobal';
-import SweetAlert from 'sweetalert-react';
-import moment from 'moment';
-import { filterUsersBanco } from '../../participantsVisitPre/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { MENU_CLOSED } from '../../navBar/constants';
-import _ from 'lodash';
-import $ from 'jquery';
-import numeral from 'numeral';
-import HeaderPipeline from '../headerPipeline';
-import { editBusiness, addBusiness, clearBusiness } from '../business/ducks';
-import Business from '../business/business';
+    consultParameterServer,
+    formValidateKeyEnter,
+    handleBlurValueNumber,
+    nonValidateEnter
+} from "../../../actionsGlobal";
+import SweetAlert from "sweetalert-react";
+import moment from "moment";
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {changeStateSaveData} from "../../dashboard/actions";
+import {MENU_CLOSED} from "../../navBar/constants";
+import _ from "lodash";
+import $ from "jquery";
+import numeral from "numeral";
+import HeaderPipeline from "../headerPipeline";
+import {addBusiness, clearBusiness, editBusiness} from "../business/ducks";
+import Business from "../business/business";
+import RichText from '../../richText/richTextComponent';
+import {showLoading} from '../../loading/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "business", "product",
@@ -561,10 +581,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentWillMount() {
+
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
                     termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
-                    business, product, priority, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness } = this.props;
+                    business, product, priority, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness,showLoading } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -581,6 +602,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (_.isEmpty(infoClient)) {
                 redirectUrl("/dashboard/clientInformation");
             } else {
+                showLoading(true, 'Cargando...');
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
@@ -593,7 +615,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     addBusiness(pipeline);
                                 });
                                 this._consultInfoPipeline(data);
+                                showLoading(false,null);
                             });
+                        }else{
+                            showLoading(false,null);
                         }
                     });
             }
@@ -1141,13 +1166,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             </Row>
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
-                                    <Textarea
+                                    <RichText
                                         name="observations"
-                                        type="text"
-                                        max="3500"
                                         {...observations}
-                                        title="La longitud máxima de caracteres es de 3500"
+                                        placeholder="Ingrese una observación."
                                         style={{ width: '100%', height: '178px' }}
+                                        readOnly={!this.state.isEditable}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                     />
                                 </Col>
@@ -1156,7 +1180,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{
                                         textAlign: "left",
-                                        marginTop: "0px",
+                                        marginTop: "10px",
                                         marginBottom: "20px",
                                         marginLeft: "20px"
                                     }}>
@@ -1323,7 +1347,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             nonValidateEnter,
             editBusiness,
             addBusiness,
-            clearBusiness
+            clearBusiness,
+            showLoading
         }, dispatch);
     }
 

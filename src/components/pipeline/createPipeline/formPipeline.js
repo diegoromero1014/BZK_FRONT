@@ -1,41 +1,64 @@
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
-import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Row, Col } from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import React, {Component} from "react";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {redirectUrl} from "../../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import Input from "../../../ui/input/inputComponent";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import Textarea from "../../../ui/textarea/textareaComponent";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {
-  PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, FILTER_COUNTRY,
-  PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY
-} from '../../selectsComponent/constants';
-import { getMasterDataFields, getPipelineCurrencies, getClientNeeds } from '../../selectsComponent/actions';
+    BUSINESS_CATEGORY,
+    FILTER_COUNTRY,
+    LINE_OF_BUSINESS,
+    PIPELINE_BUSINESS,
+    PIPELINE_INDEXING,
+    PIPELINE_PRIORITY,
+    PIPELINE_PRODUCTS,
+    PIPELINE_STATUS,
+    PROBABILITY,
+    PRODUCTS
+} from "../../selectsComponent/constants";
+import {getClientNeeds, getMasterDataFields, getPipelineCurrencies} from "../../selectsComponent/actions";
 import {
-  CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION,
-  LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS
-} from '../constants';
-import { createEditPipeline, changeModalIsOpen } from '../actions';
+    CURRENCY_COP,
+    CURRENCY_LABEL_COP,
+    CURRENCY_LABEL_OTHER_OPTION,
+    LINE_OF_BUSINESS_LEASING,
+    ORIGIN_PIPELIN_BUSINESS
+} from "../constants";
+import {changeModalIsOpen, createEditPipeline} from "../actions";
 import {
-  SAVE_DRAFT, SAVE_PUBLISHED, OPTION_REQUIRED, VALUE_REQUIERED, DATE_FORMAT, REVIEWED_DATE_FORMAT,
-  DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER
-} from '../../../constantsGlobal';
-import {LAST_PIPELINE_REVIEW} from '../../../constantsParameters';
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, handleBlurValueNumber } from '../../../actionsGlobal';
-import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
-import SweetAlert from 'sweetalert-react';
-import moment from 'moment';
-import { filterUsersBanco } from '../../participantsVisitPre/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { MENU_CLOSED } from '../../navBar/constants';
-import _ from 'lodash';
-import $ from 'jquery';
-import numeral from 'numeral';
-import Business from '../business/business';
-import { addBusiness, clearBusiness } from '../business/ducks';
-import HeaderPipeline from '../headerPipeline';
-import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
+    DATE_FORMAT,
+    DATE_START_AFTER,
+    MESSAGE_SAVE_DATA,
+    ONLY_POSITIVE_INTEGER,
+    OPTION_REQUIRED,
+    SAVE_DRAFT,
+    SAVE_PUBLISHED,
+    VALUE_REQUIERED
+} from "../../../constantsGlobal";
+import {LAST_PIPELINE_REVIEW} from "../../../constantsParameters";
+import {
+    consultParameterServer,
+    formValidateKeyEnter,
+    handleBlurValueNumber,
+    nonValidateEnter
+} from "../../../actionsGlobal";
+import SweetAlert from "sweetalert-react";
+import moment from "moment";
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {changeStateSaveData} from "../../dashboard/actions";
+import {MENU_CLOSED} from "../../navBar/constants";
+import _ from "lodash";
+import $ from "jquery";
+import numeral from "numeral";
+import Business from "../business/business";
+import {addBusiness, clearBusiness} from "../business/ducks";
+import HeaderPipeline from "../headerPipeline";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import RichText from '../../richText/richTextComponent';
+import {showLoading} from '../../loading/actions';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
   "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "business", "product", "reviewedDate",
@@ -986,19 +1009,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               </Row>
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
-                  <Textarea
+                  <RichText
                     name="observations"
-                    type="text"
-                    max="3500"
                     {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations) }
-                    title="La longitud máxima de caracteres es de 3500"
+                    placeholder="Ingrese una observación."
                     style={{ width: '100%', height: '178px' }}
                   />
                 </Col>
               </Row>
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
                 <Col xs={12} md={12} lg={12}>
-                  <div style={{ textAlign: "left", marginTop: "0px", marginBottom: "20px", marginLeft: "20px" }}>
+                  <div style={{ textAlign: "left", marginTop: "10px", marginBottom: "20px", marginLeft: "20px" }}>
                     <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato pipeline: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{datePipelineLastReview}</span>
                   </div>
                 </Col>

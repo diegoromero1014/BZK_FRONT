@@ -1,35 +1,34 @@
-import moment from 'moment';
-import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import SweetAlert from 'sweetalert-react';
-import {DateTimePicker} from 'react-widgets';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import Input from '../../../ui/input/inputComponent';
-import {filterUsersBanco} from '../../participantsVisitPre/actions';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {getMasterDataFields} from '../../selectsComponent/actions';
-import {STATUS_AREAS} from './constants';
-import {addArea, editArea} from './actions';
-import _ from 'lodash';
-import $ from 'jquery';
+import moment from "moment";
+import {reduxForm} from "redux-form";
+import React, {Component} from "react";
+import {bindActionCreators} from "redux";
+import SweetAlert from "sweetalert-react";
+import {Col, Row} from "react-flexbox-grid";
+import momentLocalizer from "react-widgets/lib/localizers/moment";
+import Input from "../../../ui/input/inputComponent";
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import {getMasterDataFields} from "../../selectsComponent/actions";
+import {STATUS_AREAS} from "./constants";
+import {addArea, editArea} from "./actions";
+import _ from "lodash";
+import $ from "jquery";
+import RichText from "../../richText/richTextComponent";
+import {htmlToText} from "../../../actionsGlobal";
 
 const fields = ["idEmployee","areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
 const errors = {};
-var usersBanco = [];
-var idUsuario, nameUsuario;
+let usersBanco = [];
+let idUsuario, nameUsuario;
 const validate = (values) => {
   if(!values.areaDes){
     errors.areaDes = "Debe ingresar un valor";
   }else{
     errors.areaDes = null;
   }
-  if(!values.actionArea){
+  if(!values.actionArea || _.isEmpty(htmlToText(values.actionArea))){
     errors.actionArea = "Debe ingresar un valor";
   }else{
     errors.actionArea = null;
@@ -106,7 +105,7 @@ class ModalArea extends Component {
 
   _handleCreateArea(){
     const {fields:{idEmployee,areaDes, actionArea, areaResponsable, areaDate,statusArea}, handleSubmit, error, addArea, editArea, areaEdit,selectsReducer} = this.props;
-    var status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id',  parseInt(statusArea.value)]), '[0].value');
+    let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id',  parseInt(statusArea.value)]), '[0].value');
     if(areaResponsable.value !== nameUsuario){
       nameUsuario = areaResponsable.value;
       idUsuario = idEmployee.value;
@@ -126,7 +125,7 @@ class ModalArea extends Component {
         });
       }else{
         const uuid = _.uniqueId('area_');
-        var area = {
+        let area = {
           uuid,
           areaDes: areaDes.value,
           actionArea :actionArea.value,
@@ -211,19 +210,14 @@ class ModalArea extends Component {
                 <Row>
                   <Col xs={12} md={12} lg={12}>
                     <dt><span>Acciones necesarias (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
-                      <Textarea
+                      <RichText
                         name="actionArea"
-                        type="text"
-                        style={{width: '100%', height: '100%'}}
-                        max="3500"
-                        rows={5}
+                        style={{width: '100%', height: '180px'}}
                         {...actionArea}
                         />
-                    </dt>
                   </Col>
                 </Row>
-                <Row>
+                <Row style={{paddingTop: '20px'}}>
                   <Col xs={12} md={12} lg={12}>
                     <dt><span>Responsable  (<span style={{color: "red"}}>*</span>)</span></dt>
                     <dt style={{paddingTop:"0px"}}>

@@ -1,35 +1,39 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../../globalComponents/actions';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {PREVISIT_TYPE} from '../../selectsComponent/constants';
-import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
-import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
-import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
-import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
+import React, {Component} from "react";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {redirectUrl} from "../../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import Input from "../../../ui/input/inputComponent";
+import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import {PREVISIT_TYPE} from "../../selectsComponent/constants";
+import {getMasterDataFields} from "../../selectsComponent/actions";
+import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
+import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
+import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import {
-    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, EDITAR
-} from '../../../constantsGlobal';
-import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText} from '../../../actionsGlobal';
-import {PROPUEST_OF_BUSINESS} from '../constants';
-import {addParticipant} from '../../participantsVisitPre/actions';
-import {detailPrevisit, pdfDescarga, createPrevisit} from '../actions';
-import Challenger from '../../methodologyChallenger/component';
-import {changeStateSaveData} from '../../dashboard/actions';
-import {MENU_CLOSED} from '../../navBar/constants';
-import SweetAlert from 'sweetalert-react';
-import moment from 'moment';
-import $ from 'jquery';
+    EDITAR,
+    MESSAGE_SAVE_DATA,
+    SAVE_DRAFT,
+    SAVE_PUBLISHED,
+    TITLE_BANC_PARTICIPANTS,
+    TITLE_CLIENT_PARTICIPANTS,
+    TITLE_OTHERS_PARTICIPANTS
+} from "../../../constantsGlobal";
+import {consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter} from "../../../actionsGlobal";
+import {PROPUEST_OF_BUSINESS} from "../constants";
+import {addParticipant} from "../../participantsVisitPre/actions";
+import {createPrevisit, detailPrevisit, pdfDescarga} from "../actions";
+import Challenger from "../../methodologyChallenger/component";
+import {changeStateSaveData} from "../../dashboard/actions";
+import {MENU_CLOSED} from "../../navBar/constants";
+import SweetAlert from "sweetalert-react";
+import moment from "moment";
+import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import _ from "lodash";
-import ToolTip from "../../toolTip/toolTipComponent";
+import Tooltip from "../../toolTip/toolTipComponent";
+import {showLoading} from "../../loading/actions";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -50,24 +54,24 @@ var titleMessageTarget = "En este campo deberá registrar de manera clara cual e
 var titleMessageTypePrevisit = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
     "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
 
-var dateVisitLastReview;
-var showMessageCreatePreVisit = false;
-var typeMessage = "success";
-var titleMessage = "";
-var message = "";
-var typeButtonClick;
-var valueTypePrevisit = null;
-var idTypeVisitAux = null;
-var idTypeVisitAuxTwo = null;
-var contollerErrorChangeType = false;
+let dateVisitLastReview;
+let showMessageCreatePreVisit = false;
+let typeMessage = "success";
+let titleMessage = "";
+let message = "";
+let typeButtonClick;
+let valueTypePrevisit = null;
+let idTypeVisitAux = null;
+let idTypeVisitAuxTwo = null;
+let contollerErrorChangeType = false;
 
-var fechaModString = '';
-var fechaCreateString = '';
-var createdBy = '';
-var updatedBy = '';
-var positionCreatedBy = '';
-var positionUpdatedBy = '';
-var firstLoadInfo = false;
+let fechaModString = '';
+let fechaCreateString = '';
+let createdBy = '';
+let updatedBy = '';
+let positionCreatedBy = '';
+let positionUpdatedBy = '';
+let firstLoadInfo = false;
 
 const validate = values => {
     const errors = {};
@@ -113,7 +117,7 @@ class FormEditPrevisita extends Component {
             nuestraSolucion: "",
             nuestraSolucionTouch: false,
             nuestraSolucionError: "",
-        }
+        };
         this._submitCreatePrevisita = this._submitCreatePrevisita.bind(this);
         this._changeTypePreVisit = this._changeTypePreVisit.bind(this);
         this._changeDatePreVisit = this._changeDatePreVisit.bind(this);
@@ -177,8 +181,8 @@ class FormEditPrevisita extends Component {
         } else {
             firstLoadInfo = true;
         }
-        var lugarSelector = $('.txtLugar');
-        var input = lugarSelector.find("input");
+        let lugarSelector = $('.txtLugar');
+        let input = lugarSelector.find("input");
         input.focus();
     }
 
@@ -228,7 +232,7 @@ class FormEditPrevisita extends Component {
     }
 
     _changeDatePreVisitOnBlur(value) {
-        var date = value.target.value;
+        let date = value.target.value;
         if (date === '' || date === undefined || date === null) {
             this.setState({
                 dateVisitError: "Debe seleccionar una opción"
@@ -339,7 +343,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {participants, createPrevisit, changeStateSaveData, id} = this.props;
-        var errorInForm = false;
+        let errorInForm = false;
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -370,14 +374,14 @@ class FormEditPrevisita extends Component {
 
         //Validaciones de la metodología challenger y si estoy guardando como definitivo
         if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
-            if ( _.isEmpty(htmlToText(this.state.acondicionamiento)) || this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.acondicionamiento)) || this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
                 errorInForm = true;
                 this.setState({
                     acondicionamientoError: "Debe ingresar un valor",
                     acondicionamientoTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.replanteamiento)) ||  this.state.replanteamiento === null || this.state.replanteamiento === undefined || this.state.replanteamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.replanteamiento)) || this.state.replanteamiento === null || this.state.replanteamiento === undefined || this.state.replanteamiento === "") {
                 errorInForm = true;
                 this.setState({
                     replanteamientoError: "Debe ingresar un valor",
@@ -391,21 +395,21 @@ class FormEditPrevisita extends Component {
                     ahogamientoTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.impacto)) ||  this.state.impacto === null || this.state.impacto === undefined || this.state.impacto === "") {
+            if (_.isEmpty(htmlToText(this.state.impacto)) || this.state.impacto === null || this.state.impacto === undefined || this.state.impacto === "") {
                 errorInForm = true;
                 this.setState({
                     impactoError: "Debe ingresar un valor",
                     impactoTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.nuevoModo)) ||  this.state.nuevoModo === null || this.state.nuevoModo === undefined || this.state.nuevoModo === "") {
+            if (_.isEmpty(htmlToText(this.state.nuevoModo)) || this.state.nuevoModo === null || this.state.nuevoModo === undefined || this.state.nuevoModo === "") {
                 errorInForm = true;
                 this.setState({
                     nuevoModoError: "Debe ingresar un valor",
                     nuevoModoTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.nuestraSolucion)) ||  this.state.nuestraSolucion === null || this.state.nuestraSolucion === undefined || this.state.nuestraSolucion === "") {
+            if (_.isEmpty(htmlToText(this.state.nuestraSolucion)) || this.state.nuestraSolucion === null || this.state.nuestraSolucion === undefined || this.state.nuestraSolucion === "") {
                 errorInForm = true;
                 this.setState({
                     nuestraSolucionError: "Debe ingresar un valor",
@@ -423,11 +427,11 @@ class FormEditPrevisita extends Component {
             });
         }
         if (!errorInForm) {
-            var dataBanco = [];
+            let dataBanco = [];
             _.map(participants.toArray(),
                 function (participant) {
                     if (participant.tipoParticipante === "banco") {
-                        var data = {
+                        let data = {
                             "id": null,
                             "employee": participant.idParticipante
                         }
@@ -439,11 +443,11 @@ class FormEditPrevisita extends Component {
                 dataBanco = [];
             }
 
-            var dataClient = [];
+            let dataClient = [];
             _.map(participants.toArray(),
                 function (participant) {
                     if (participant.tipoParticipante === "client") {
-                        var data = {
+                        let data = {
                             "id": null,
                             "contact": participant.idParticipante
                         }
@@ -537,16 +541,17 @@ class FormEditPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const {nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer} = this.props;
+        const {nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer,showLoading} = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
         } else {
             getMasterDataFields([PREVISIT_TYPE]);
+            showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
                 const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
-                var part = result.payload.data.data;
+                let part = result.payload.data.data;
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
                 this.setState({
@@ -566,7 +571,7 @@ class FormEditPrevisita extends Component {
                 //Adicionar participantes por parte del cliente
                 _.forIn(part.participatingContacts, function (value, key) {
                     const uuid = _.uniqueId('participanClient_');
-                    var clientParticipant = {
+                    let clientParticipant = {
                         tipoParticipante: 'client',
                         idParticipante: value.contact,
                         nombreParticipante: value.contactName,
@@ -586,7 +591,7 @@ class FormEditPrevisita extends Component {
                 //Adicionar participantes por parte de bancolombia
                 _.forIn(part.participatingEmployees, function (value, key) {
                     const uuid = _.uniqueId('participanBanco_');
-                    var clientParticipant = {
+                    let clientParticipant = {
                         tipoParticipante: 'banco',
                         idParticipante: value.employee,
                         nombreParticipante: value.employeeName,
@@ -605,7 +610,7 @@ class FormEditPrevisita extends Component {
                 //Adicionar otros participantes
                 _.forIn(part.relatedEmployees, function (value, key) {
                     const uuid = _.uniqueId('participanOther_');
-                    var otherParticipant = {
+                    let otherParticipant = {
                         tipoParticipante: 'other',
                         idParticipante: value.id,
                         nombreParticipante: value.name,
@@ -624,7 +629,7 @@ class FormEditPrevisita extends Component {
                 //Adicionar tareas
                 _.forIn(part.userTasks, function (value, key) {
                     const uuid = _.uniqueId('task_');
-                    var task = {
+                    let task = {
                         uuid,
                         tarea: value.task,
                         idResponsable: value.employee,
@@ -633,6 +638,7 @@ class FormEditPrevisita extends Component {
                     }
                     addTask(task);
                 });
+                showLoading(false,null);
             });
         }
     }
@@ -651,11 +657,11 @@ class FormEditPrevisita extends Component {
             positionCreatedBy = detailPrevisit.data.positionCreatedBy;
             positionUpdatedBy = detailPrevisit.data.positionUpdatedBy;
             if (detailPrevisit.data.updatedTimestamp !== null) {
-                var fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp, "x").locale('es');
+                let fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp, "x").locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
             if (detailPrevisit.data.createdTimestamp !== null) {
-                var fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp, "x").locale('es');
+                let fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
         }
@@ -693,9 +699,10 @@ class FormEditPrevisita extends Component {
                         <div style={{paddingRight: "15px"}}>
                             <dt>
                                 <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={titleMessageTypePrevisit}/>
+                                <Tooltip text={titleMessageTypePrevisit}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </Tooltip>
                             </dt>
                             <ComboBox
                                 name="tipoVisita"
@@ -755,23 +762,26 @@ class FormEditPrevisita extends Component {
                             <a className={`${this.state.activeItemTabClient} item`} style={{width: "33%"}}
                                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
                                 reunión por parte del cliente
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_CLIENT_PARTICIPANTS}/>
+                                <Tooltip text={TITLE_CLIENT_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </Tooltip>
                             </a>
                             <a className={`${this.state.activeItemTabBanc} item`} style={{width: "40%"}}
                                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
                                 reunión por parte del Grupo Bancolombia
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_BANC_PARTICIPANTS}/>
+                                <Tooltip text={TITLE_BANC_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </Tooltip>
                             </a>
                             <a className={`${this.state.activeItemTabOther} item`} style={{width: "26%"}}
                                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
                                 reunión
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}
-                                   title={TITLE_OTHERS_PARTICIPANTS}/>
+                                <Tooltip text={TITLE_OTHERS_PARTICIPANTS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </Tooltip>
                             </a>
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`}
@@ -797,9 +807,10 @@ class FormEditPrevisita extends Component {
                             <i className="book icon" style={{fontSize: "18px"}}/>
                             <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span
                                 style={{color: "red"}}>*</span>)</span>
-                            <i className="help circle icon blue"
-                               style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}
-                               title={titleMessageTarget}/>
+                            <Tooltip text={titleMessageTarget}>
+                                <i className="help circle icon blue"
+                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                            </Tooltip>
                         </div>
                     </Col>
                 </Row>
@@ -828,10 +839,10 @@ class FormEditPrevisita extends Component {
                                      style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
                                 <i className="browser icon" style={{fontSize: "20px"}}/>
                                 <span style={{fontSize: "20px"}}> Metodología Challenger </span>
-                                <ToolTip text={titleMethodologyChallenger}>
+                                <Tooltip text={titleMethodologyChallenger}>
                                     <i className="help circle icon blue"
                                        style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
-                                </ToolTip>
+                                </Tooltip>
                             </div>
                         </Col>
                     </Row>
@@ -876,9 +887,10 @@ class FormEditPrevisita extends Component {
                                  style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
                             <i className="book icon" style={{fontSize: "18px"}}/>
                             <span style={{fontSize: "20px"}}> Pendientes, quejas y reclamos </span>
-                            <i className="help circle icon blue"
-                               style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}
-                               title={titleMessagePendient}/>
+                            <Tooltip text={titleMessagePendient}>
+                                <i className="help circle icon blue"
+                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                            </Tooltip>
                         </div>
                     </Col>
                 </Row>
@@ -1040,7 +1052,8 @@ function mapDispatchToProps(dispatch) {
         createPrevisit,
         consultParameterServer,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        showLoading
     }, dispatch);
 }
 
