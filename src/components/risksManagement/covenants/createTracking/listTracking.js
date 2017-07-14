@@ -46,7 +46,7 @@ class ListTracking extends Component {
                                     <tr>
                                         <th>Fecha seguimiento</th>
                                         <th>Covenant vigente</th>
-                                        <th>Cumplimineto del covenant</th>
+                                        <th>Cumplimiento del covenant</th>
                                         <th>Valor observado</th>
                                     </tr>
                                 </thead>
