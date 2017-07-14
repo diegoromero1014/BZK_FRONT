@@ -73,7 +73,7 @@ class ModalComponentEconomicGroup extends Component {
       if (stringValidate(nameClient) && nameClient.length >= 3) {
         $('.ui.search.clientRelationship').toggleClass('loading');
         clientsFindServer(nameClient, 0, 150, "", "", "").then((data) => {
-          clients = JSON.parse(_.get(data, 'payload.data.listClients', []));
+          clients = _.get(data, 'payload.data.data.rows', []);
           $('.ui.search.clientRelationship')
             .search({
               cache: false,

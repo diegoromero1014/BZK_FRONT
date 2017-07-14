@@ -296,7 +296,7 @@ class ModalComponentShareholder extends Component {
                   <dl style={{width: '100%'}}>
                     <dt><span>Tipo de documento (<span style={{color: 'red'}}>*</span>)</span></dt>
                     <dd>
-                    <ComboBox name="tipoDocumento" labelInput="Seleccione"
+                    <ComboBox name="tipoDocumento"
                       {...tipoDocumento}
                       disabled = {this.state.disabled}
                       valueProp={'id'}
@@ -330,7 +330,7 @@ class ModalComponentShareholder extends Component {
               <Row style={{visibility: this.state.noExiste}}>
                 <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de persona (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <ComboBox name="tipoPersona" labelInput="Seleccione"
+                  <ComboBox name="tipoPersona"
                     {...tipoPersona}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -342,7 +342,7 @@ class ModalComponentShareholder extends Component {
                 </Col>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>Tipo de accionista (</span><span style={{color: "red"}}>*</span>)</dt>
-                  <ComboBox name="tipoAccionista" labelInput="Seleccione"
+                  <ComboBox name="tipoAccionista"
                     {...tipoAccionista}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -409,7 +409,7 @@ class ModalComponentShareholder extends Component {
                 </Col>
                 <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" }: {display: "none"}}>
                   <dt><span>Género</span></dt>
-                  <ComboBox name="genero" labelInput="Seleccione"
+                  <ComboBox name="genero"
                     {...genero}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -442,7 +442,7 @@ class ModalComponentShareholder extends Component {
               <Row>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>País</span></dt>
-                  <ComboBox name="pais" labelInput="Seleccione"
+                  <ComboBox name="pais"
                     {...pais}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -453,7 +453,7 @@ class ModalComponentShareholder extends Component {
                 </Col>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>Departamento</span></dt>
-                  <ComboBox name="departamento" labelInput="Seleccione"
+                  <ComboBox name="departamento"
                     {...departamento}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -464,7 +464,7 @@ class ModalComponentShareholder extends Component {
                 </Col>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>Ciudad</span></dt>
-                  <ComboBox name="ciudad" labelInput="Seleccione"
+                  <ComboBox name="ciudad"
                     {...ciudad}
                     valueProp={'id'}
                     textProp = {'value'}
@@ -485,11 +485,10 @@ class ModalComponentShareholder extends Component {
                 </Col>
                 <Col xs={12} md={4} lg={4}>
                   <dt><span>País de residencia fiscal</span></dt>
-                  <ComboBox name="paisResidencia" labelInput="Seleccione"
+                  <ComboBox name="paisResidencia"
                     {...paisResidencia}
                     valueProp={'id'}
                     textProp = {'value'}
-                    labelInput="Seleccione"
                     labelInput="Seleccione"
                     data={selectsReducer.get(FILTER_COUNTRY) || []}
                   />
