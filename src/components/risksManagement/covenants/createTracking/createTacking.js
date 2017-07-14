@@ -39,7 +39,7 @@ class CreateTracking extends Component {
                         {infoCovenant.showButtonAddTrackingCovenant &&
                             <Col xs={12} md={12} lg={12} style={{ paddingRight: "8px", textAlign: "right" }}>
                                 <button className="btn btn-primary" onClick={this._addTracking} style={{ float: 'right', cursor: 'pointer' }} title="Agregar seguimiento">
-                                    <i className="white plus icon"></i>Agrear seguimiento
+                                    <i className="white plus icon"></i>Agregar seguimiento
                                 </button>
                             </Col>
                         }

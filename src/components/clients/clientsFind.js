@@ -203,10 +203,8 @@ class ClientsFind extends Component {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             } else {
-                changeStateSaveData(true, MESSAGE_LOAD_DATA);
-                getRecentClients((data) => {
-                    changeStateSaveData(false, "");
-                    if (!validateResponse(data)) {
+                getRecentClients((dataClients) => {
+                    if (!validateResponse(dataClients)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                     }
                 });

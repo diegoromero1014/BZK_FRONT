@@ -67,7 +67,7 @@ class ClientListItem extends Component {
 
   render() {
     const { dataId, dataName, dataDocumentType, dataDocument, dataAccountManager, dataEconomicGroup,
-      dataIsProspect, dataIsAccess, dataDeleveryClient, navBar } = this.props;
+      dataIsProspect, dataIsAccess, dataDeleveryClient, navBar, clientR } = this.props;
     return (
       <div>
         <div className="client-card" style={{ float: "left" }}>
@@ -91,10 +91,12 @@ class ClientListItem extends Component {
               _.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient ?
                 <i className="chevron circle right icon orange" style={{ marginTop: "-15px", cursor: "pointer" }} /> : ''
             }
-            <Tooltip text="Quitar de recientes">
-              <i className="delete icon" style={{ marginTop: "-1px", float: "right", color: "#616060", cursor: "pointer" }}
-                onClick={this._deleteRecentClient} />
-            </Tooltip>
+            {clientR.get('showingRecentClients') &&
+              <Tooltip text="Quitar de recientes">
+                <i className="delete icon" style={{ marginTop: "-1px", float: "right", color: "#616060", cursor: "pointer" }}
+                  onClick={this._deleteRecentClient} />
+              </Tooltip>
+            }
           </div>
           {dataIsProspect &&
             <div className="prospect-corner prospect badge badge-important animated bounceIn" style={{ borderRadius: "10px" }}>P</div>
@@ -132,9 +134,10 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ navBar }, ownerProps) {
+function mapStateToProps({ navBar, clientR }, ownerProps) {
   return {
-    navBar
+    navBar,
+    clientR
   };
 }
 
