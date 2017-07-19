@@ -61,6 +61,7 @@ import assignedReducer from '../components/myPendings/assigned/reducer'
 import studyCreditReducer from '../components/clients/creditStudy/reducer';
 import qualitativeVariableReducer from '../components/risksManagement/qualitativeVariable/reducer';
 import visorReducer from '../components/visor/reducer';
+import riskGroupReducer from '../components/clientRiskGroup/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -124,5 +125,6 @@ export default combineReducers({
     assignedReducer,
     studyCreditReducer,
     qualitativeVariableReducer,
-    visorReducer
+    visorReducer,
+    riskGroupReducer
 });
