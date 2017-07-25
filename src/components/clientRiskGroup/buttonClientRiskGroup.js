@@ -3,7 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import { BLUE_COLOR } from '../../constantsGlobal';
+import ModalComponentRiskGroup from "./modalComponentRiskGroup";
+import { GRAY_COLOR } from '../../constantsGlobal';
 
 
 
@@ -34,8 +35,8 @@ class buttonClientRiskGroup extends Component {
     render() {
         return (
             <div>
-                <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
-                    <i className="sitemap icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
+                <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
+                    <i className="thermometer icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
                 </button>
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
@@ -47,7 +48,7 @@ class buttonClientRiskGroup extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            {/*<ModalComponentEconomicGroup isOpen={this.closeModal} />*/}
+                            {<ModalComponentRiskGroup isOpen={this.closeModal} />}
                         </div>
                     </div>
                 </Modal>
@@ -68,4 +69,4 @@ function mapStateToProps({riskGroupReducer}, ownerProps){
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(buttonClientEconomicGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(buttonClientRiskGroup);

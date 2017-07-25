@@ -8,13 +8,14 @@ import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
+import ButtonRiskGrouo from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
-import {updateTabSeletedCS} from '../customerStory/actions';
-import {TAB_STORY} from '../customerStory/constants';
+import { updateTabSeletedCS } from '../customerStory/actions';
+import { TAB_STORY } from '../customerStory/constants';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -47,7 +48,7 @@ class ComponentClientInformation extends Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
 
@@ -75,7 +76,7 @@ class ComponentClientInformation extends Component {
                 <header className="header-client-detail" style={{ boxShadow: "-3px 2px 5px 0 rgba(0, 0, 0, 0.2)" }}>
                     <Row>
                         <Col xs={11} sm={11} md={11} lg={11}>
-                            <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>
+                            <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px", marginTop: "3px" }}>
                                 <div style={{ marginBottom: '10px' }}>
                                     <h3 style={{ wordBreak: 'keep-all', marginRight: "10px" }} className="inline title-head">
                                         {infoClient.clientName}
@@ -176,6 +177,12 @@ class ComponentClientInformation extends Component {
                                             <ButtonTeamComponent />
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
+                                            <ButtonRiskGrouo />
+                                        </td>
+                                    </tr>
+
                                     {infoClient.economicGroup &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>

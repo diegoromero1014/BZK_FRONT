@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import {reduxForm} from 'redux-form';
-import {Combobox, DateTimePicker, Multiselect} from 'react-widgets';
+import React, { Component, PropTypes } from 'react';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import { reduxForm } from 'redux-form';
+import { Combobox, DateTimePicker, Multiselect } from 'react-widgets';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {
     consultDataSelect,
@@ -14,10 +14,10 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {downloadFilePDF} from '../actions';
-import {formValidateKeyEnter, nonValidateEnter} from '../../../actionsGlobal';
+import { downloadFilePDF } from '../actions';
+import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import {changeStateSaveData} from '../../dashboard/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
 import {
     CONTACT_ID_TYPE,
     FILTER_FUNCTION_ID,
@@ -36,8 +36,8 @@ import {
     FILTER_SPORTS,
     FILTER_SOCIAL_STYLE
 } from '../../selectsComponent/constants';
-import {getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer} from './actions';
-import {contactsByClientFindServer, clearContactOrder, clearContactCreate} from '../actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
@@ -47,11 +47,11 @@ import {
     INVALID_EMAIL,
     MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {NUMBER_RECORDS} from '../constants';
-import {showLoading} from '../../loading/actions';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { NUMBER_RECORDS } from '../constants';
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
     "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -181,47 +181,47 @@ class ContactDetailsModalComponent extends Component {
     /* Carga la información del contacto */
     componentWillMount() {
         const {
-            nonValidateEnter, getMasterDataFields, getContactDetails, contactId,  callFromModuleContact, showLoading
+            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading
             } = this.props;
         thisCallFromModuleContact = callFromModuleContact;
         nonValidateEnter(true);
         const that = this;
         showLoading(true, MESSAGE_LOAD_DATA);
-        const {fields: {contactFunctions, contactHobbies, contactSports, contactLineOfBusiness}} = this.props;
+        const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
         const idClient = callFromModuleContact ? null : window.localStorage.getItem('idClientSelected');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
             FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]).then(function (data) {
-            getContactDetails(contactId, idClient)
-                .then(function (data) {
-                    showLoading(false, "");
-                    const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-                    if (contact.country !== undefined && contact.country !== null) {
-                        that._uploadProvincesByCountryId(contact.country);
-                    }
-                    if (contact.province !== undefined && contact.province !== null) {
-                        that._uploadCitiesByProvinceId(contact.province);
-                    }
-                    if (!callFromModuleContact) {
-                        contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
-                        contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-                    }
-                    contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-                    contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-                });
-        });
+                getContactDetails(contactId, idClient)
+                    .then(function (data) {
+                        showLoading(false, "");
+                        const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                        if (contact.country !== undefined && contact.country !== null) {
+                            that._uploadProvincesByCountryId(contact.country);
+                        }
+                        if (contact.province !== undefined && contact.province !== null) {
+                            that._uploadCitiesByProvinceId(contact.province);
+                        }
+                        if (!callFromModuleContact) {
+                            contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
+                            contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
+                        }
+                        contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+                        contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+                    });
+            });
 
 
     }
 
     _downloadFileSocialStyle() {
-        const {downloadFilePDF} = this.props;
+        const { downloadFilePDF } = this.props;
         downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
-        this.setState({generoData: genero});
+        this.setState({ generoData: genero });
     }
 
 
     _genero(val) {
-        const {fields: {contactTitle, contactGender}, selectsReducer, contactDetail} = this.props;
+        const { fields: { contactTitle, contactGender }, selectsReducer, contactDetail } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
@@ -234,7 +234,7 @@ class ContactDetailsModalComponent extends Component {
             genero = selectsReducer.get(FILTER_GENDER);
         }
         const contact = contactDetail.get('contactDetailList');
-        this.setState({generoData: genero});
+        this.setState({ generoData: genero });
         contactGender.onChange(contact.gender);
 
     }
@@ -244,77 +244,77 @@ class ContactDetailsModalComponent extends Component {
 
         switch (type) {
             case "contactIdentityNumber":
-                var {fields: {contactIdentityNumber}} = this.props;
+                var { fields: { contactIdentityNumber } } = this.props;
                 contactIdentityNumber.onChange(val);
                 break;
             case "contactFirstName":
-                var {fields: {contactFirstName}} = this.props;
+                var { fields: { contactFirstName } } = this.props;
                 contactFirstName.onChange(val);
                 break;
             case "contactFirstLastName":
-                var {fields: {contactFirstLastName}} = this.props;
+                var { fields: { contactFirstLastName } } = this.props;
                 contactFirstLastName.onChange(val);
                 break;
             case "contactMiddleName":
-                var {fields: {contactMiddleName}} = this.props;
+                var { fields: { contactMiddleName } } = this.props;
                 contactMiddleName.onChange(val);
                 break;
             case "contactSecondLastName":
-                var {fields: {contactSecondLastName}} = this.props;
+                var { fields: { contactSecondLastName } } = this.props;
                 contactSecondLastName.onChange(val);
                 break;
             case "contactPostalCode":
-                var {fields: {contactPostalCode}} = this.props;
+                var { fields: { contactPostalCode } } = this.props;
                 contactPostalCode.onChange(val);
                 break;
             case "contactTelephoneNumber":
-                var {fields: {contactTelephoneNumber}} = this.props;
+                var { fields: { contactTelephoneNumber } } = this.props;
                 contactTelephoneNumber.onChange(val);
                 break;
             case "contactExtension":
-                var {fields: {contactExtension}} = this.props;
+                var { fields: { contactExtension } } = this.props;
                 contactExtension.onChange(val);
                 break;
             case "contactMobileNumber":
-                var {fields: {contactMobileNumber}} = this.props;
+                var { fields: { contactMobileNumber } } = this.props;
                 contactMobileNumber.onChange(val);
                 break;
             case "contactEmailAddress":
-                var {fields: {contactEmailAddress}} = this.props;
+                var { fields: { contactEmailAddress } } = this.props;
                 contactEmailAddress.onChange(val);
                 break;
             case "contactAddress":
-                var {fields: {contactAddress}} = this.props;
+                var { fields: { contactAddress } } = this.props;
                 contactAddress.onChange(val);
                 break;
             case "contactCountry":
-                var {fields: {contactCountry}} = this.props;
+                var { fields: { contactCountry } } = this.props;
                 contactCountry.onChange(val);
                 break;
             case "contactProvince":
-                var {fields: {contactProvince}} = this.props;
+                var { fields: { contactProvince } } = this.props;
                 contactProvince.onChange(val);
                 break;
             case "contactCity":
-                var {fields: {contactCity}} = this.props;
+                var { fields: { contactCity } } = this.props;
                 contactCity.onChange(val);
                 break;
             case "contactDateOfBirth":
-                const {fields: {contactDateOfBirth}} = this.props;
+                const { fields: { contactDateOfBirth } } = this.props;
                 contactDateOfBirth.onChange(val);
                 break;
             default:
                 break;
         }
-        const {clearState} = this.props;
+        const { clearState } = this.props;
         clearState();
     }
 
     _onChangeCountry(val) {
-        const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
+        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         if (val !== undefined && val !== null) {
             contactCountry.onChange(val);
-            const {consultListWithParameterUbication} = this.props;
+            const { consultListWithParameterUbication } = this.props;
             consultListWithParameterUbication(FILTER_PROVINCE, val);
         }
         contactProvince.onChange('');
@@ -322,26 +322,26 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _onChangeProvince(val) {
-        const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
+        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         if (val !== undefined && val !== null) {
             contactProvince.onChange(val);
-            const {consultListWithParameterUbication} = this.props;
+            const { consultListWithParameterUbication } = this.props;
             consultListWithParameterUbication(FILTER_CITY, val);
         }
         contactCity.onChange('');
     }
 
     _uploadProvincesByCountryId(countryId) {
-        const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
-        const {consultListWithParameterUbication} = this.props;
+        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
+        const { consultListWithParameterUbication } = this.props;
         if (countryId !== undefined && countryId !== null) {
             consultListWithParameterUbication(FILTER_PROVINCE, countryId);
         }
     }
 
     _uploadCitiesByProvinceId(provinceId) {
-        const {fields: {contactCountry, contactProvince, contactCity}} = this.props;
-        const {consultListWithParameterUbication} = this.props;
+        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
+        const { consultListWithParameterUbication } = this.props;
         if (provinceId !== undefined && provinceId !== null) {
             consultListWithParameterUbication(FILTER_CITY, provinceId);
         }
@@ -354,8 +354,8 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _closeViewOrEditContact() {
-        const {isOpen, clearClienEdit, clearContactOrder, clearContactCreate, callFromModuleContact} = this.props;
-        this.setState({isEditable: false});
+        const { isOpen, clearClienEdit, clearContactOrder, clearContactCreate, callFromModuleContact } = this.props;
+        this.setState({ isEditable: false });
         if (!callFromModuleContact) {
             isOpen();
             this.props.resetForm();
@@ -371,14 +371,14 @@ class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-                contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
+            contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
                 }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
             } = this.props;
-        const {contactDetail, contactsByClientFindServer} = this.props;
+        const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
-        const {saveContact} = this.props;
+        const { saveContact } = this.props;
         const jsonUpdateContact = {
             "client": window.localStorage.getItem('idClientSelected'),
             "id": contact.id,
@@ -444,30 +444,30 @@ class ContactDetailsModalComponent extends Component {
     }
 
     render() {
-        const {callFromModuleContact} = this.props;
+        const { callFromModuleContact } = this.props;
         const {
             initialValues, fields: {
             contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-            contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
-            contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-            contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
+                contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
+                contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
             }, error, handleSubmit, selectsReducer, reducerGlobal
             } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
-                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     id="modalEditCotact"
-                     style={callFromModuleContact ? {backgroundColor: '#FFF'} : {}}>
-                    <dt className="business-title" style={{fontSize: '17px'}}>
-                        <span style={{paddingLeft: '20px'}}>Información básica</span>
+                    id="modalEditCotact"
+                    style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
+                    <dt className="business-title" style={{ fontSize: '17px' }}>
+                        <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
                             <Col xs={12} sm={12} md={4} lg={4}>
                                 <dt><span>Tipo de documento</span></dt>
                                 <dt>
-                                    <p style={{fontWeight: "normal"}}>
+                                    <p style={{ fontWeight: "normal" }}>
                                         {(contactType.value !== "" && contactType.value !== null && contactType.value !== undefined && !_.isEmpty(selectsReducer.get(CONTACT_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(contactType.value)]), '[0].value') : ''}
                                     </p>
                                 </dt>
@@ -475,24 +475,24 @@ class ContactDetailsModalComponent extends Component {
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>Número de documento</span></dt>
                                 <dt>
-                                    <p style={{fontWeight: "normal"}}>
+                                    <p style={{ fontWeight: "normal" }}>
                                         {contactIdentityNumber.value}
                                     </p>
                                 </dt>
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), EDITAR), false) &&
-                                <button type="button" onClick={this._editContact}
-                                        className={'btn btn-primary modal-button-edit'} style={{marginTop: '35px'}}>
-                                    Editar <i className={'icon edit'}></i>
-                                </button>
+                                    <button type="button" onClick={this._editContact}
+                                        className={'btn btn-primary modal-button-edit'} style={{ marginTop: '35px' }}>
+                                        Editar <i className={'icon edit'}></i>
+                                    </button>
                                 }
                             </Col>
                         </Row>
                         <Row>
                             <Col xs={12} sm={12} md={4} lg={4}>
                                 <dt><span>{'Tratamiento ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <ComboBox
                                         name="contactTitle"
@@ -507,7 +507,7 @@ class ContactDetailsModalComponent extends Component {
                                 </dd>
                             </Col>
                             <Col xs={12} sm={12} md={4} lg={4}>
-                                <dt><span>{'Género ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span>
+                                <dt><span>{'Género ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span>
                                 </dt>
                                 <dd>
                                     <ComboBox
@@ -523,7 +523,7 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Primer nombre ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <Input
                                         name="contactFirstName"
@@ -550,7 +550,7 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Primer apellido ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <Input
                                         name="contactFirstLastName"
@@ -576,7 +576,7 @@ class ContactDetailsModalComponent extends Component {
                         </Row>
                         <Row>
                             <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Cargo ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span>
+                                <dt><span>{'Cargo ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span>
                                 </dt>
                                 <dd>
                                     <ComboBox
@@ -592,7 +592,7 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Área dependencia ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <ComboBox
                                         name="contactDependency"
@@ -625,9 +625,9 @@ class ContactDetailsModalComponent extends Component {
                                 <dt>
                                     {'Estilo social'}
                                     <i onClick={this._downloadFileSocialStyle}
-                                       style={{marginLeft: "10px", cursor: "pointer"}}
-                                       title="Descargar archivo de estilo social"
-                                       className="red file pdf outline icon"></i>
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        title="Descargar archivo de estilo social"
+                                        className="red file pdf outline icon"></i>
                                 </dt>
                                 <dd>
                                     <ComboBox
@@ -657,12 +657,12 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                         </Row>
                     </div>
-                    <dt className="business-title"><span style={{paddingLeft: '20px'}}>Información de ubicación y correspondencia</span>
+                    <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información de ubicación y correspondencia</span>
                     </dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
                             <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>País (</span><span style={{color: 'red'}}>*</span><span>)</span></dt>
+                                <dt><span>País (</span><span style={{ color: 'red' }}>*</span><span>)</span></dt>
                                 <dd>
                                     <ComboBox
                                         name="contactCountry"
@@ -680,7 +680,7 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Departamento ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <ComboBox
                                         name="contactProvince"
@@ -697,7 +697,7 @@ class ContactDetailsModalComponent extends Component {
                                 </dd>
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Ciudad ('}</span><span style={{color: 'red'}}>{'*'}</span><span>{')'}</span>
+                                <dt><span>{'Ciudad ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span>
                                 </dt>
                                 <dd>
                                     <ComboBox
@@ -715,16 +715,16 @@ class ContactDetailsModalComponent extends Component {
                         <Row>
                             <Col xs={12} sm={12} md={12} lg={12}>
                                 <dt><span>{'Dirección ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
-                  <Textarea className="form-control need-input"
-                      {...contactAddress}
-                            validateEnter={true}
-                            name="contactAddress"
-                            maxLength="250"
-                            disabled={this.state.isEditable ? '' : 'disabled'}
-                      //onChange={val => this._onchangeValue("address", val)}
-                  />
+                                    <Textarea className="form-control need-input"
+                                        {...contactAddress}
+                                        validateEnter={true}
+                                        name="contactAddress"
+                                        maxLength="250"
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                    //onChange={val => this._onchangeValue("address", val)}
+                                    />
                                 </dd>
                             </Col>
                         </Row>
@@ -756,7 +756,7 @@ class ContactDetailsModalComponent extends Component {
                                 </dd>
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Teléfono ('}</span><span style={{color: 'red'}}>*</span><span>{')'}</span>
+                                <dt><span>{'Teléfono ('}</span><span style={{ color: 'red' }}>*</span><span>{')'}</span>
                                 </dt>
                                 <dd>
                                     <Input
@@ -799,7 +799,7 @@ class ContactDetailsModalComponent extends Component {
                             </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Correo electrónico ('}</span><span
-                                    style={{color: 'red'}}>{'*'}</span><span>{')'}</span></dt>
+                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
                                 <dd>
                                     <Input
                                         name="contactEmailAddress"
@@ -815,63 +815,63 @@ class ContactDetailsModalComponent extends Component {
                     </div>
 
                     {!callFromModuleContact &&
-                    <div>
-                        <dt className="business-title"><span
-                            style={{paddingLeft: '20px'}}>Clasificación del contacto</span></dt>
-                        <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
-                            <Row>
-                                <Col xs>
-                                    <dt><span>Tipo de contacto (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                    <dd>
-                                        <ComboBox
-                                            name="contactTypeOfContact"
-                                            labelInput="Seleccione"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            {...contactTypeOfContact}
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
-                                        />
-                                    </dd>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs>
-                                    <dt><span>Entidad / Línea de negocio</span></dt>
-                                    <dd>
-                                        <MultipleSelect
-                                            name="contactLineOfBusiness"
-                                            labelInput="Seleccione"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            {...contactLineOfBusiness}
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
-                                        />
-                                    </dd>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs>
-                                    <dt><span>Función (<span style={{color: 'red'}}>*</span>)</span></dt>
-                                    <dd>
-                                        <MultipleSelect
-                                            name="contactFunctions"
-                                            labelInput="Seleccione"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            {...contactFunctions}
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
-                                        />
-                                    </dd>
-                                </Col>
-                            </Row>
+                        <div>
+                            <dt className="business-title"><span
+                                style={{ paddingLeft: '20px' }}>Clasificación del contacto</span></dt>
+                            <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                                <Row>
+                                    <Col xs>
+                                        <dt><span>Tipo de contacto (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                        <dd>
+                                            <ComboBox
+                                                name="contactTypeOfContact"
+                                                labelInput="Seleccione"
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
+                                                {...contactTypeOfContact}
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
+                                            />
+                                        </dd>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs>
+                                        <dt><span>Entidad / Línea de negocio</span></dt>
+                                        <dd>
+                                            <MultipleSelect
+                                                name="contactLineOfBusiness"
+                                                labelInput="Seleccione"
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
+                                                {...contactLineOfBusiness}
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                data={selectsReducer.get(FILTER_TYPE_LBO_ID) || []}
+                                            />
+                                        </dd>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs>
+                                        <dt><span>Función (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                                        <dd>
+                                            <MultipleSelect
+                                                name="contactFunctions"
+                                                labelInput="Seleccione"
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
+                                                {...contactFunctions}
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                data={selectsReducer.get(FILTER_FUNCTION_ID) || []}
+                                            />
+                                        </dd>
+                                    </Col>
+                                </Row>
+                            </div>
                         </div>
-                    </div>
                     }
-                    <dt className="business-title"><span style={{paddingLeft: '20px'}}>Hobbies y deportes</span></dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
+                    <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Hobbies y deportes</span></dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
                             <Col xs={12} sm={12} md={6} lg={6}>
                                 <dt><span>{'Hobbies'}</span></dt>
@@ -907,16 +907,16 @@ class ContactDetailsModalComponent extends Component {
                                 <dl style={{ width: '100%' }}>
                                     <dt><span>Particularidades relevantes del contacto</span></dt>
                                     <dd>
-                                                 <Textarea
-                                                     name="contactRelevantFeatures"
-                                                     validateEnter={true}
-                                                     type="text"
-                                                     max="1000"
-                                                     style={{ width: '100%', height: '100%' }}
-                                                     rows={4}
-                                                     disabled={this.state.isEditable ? '' : 'disabled'}
-                                                     {...contactRelevantFeatures}
-                                                 /></dd>
+                                        <Textarea
+                                            name="contactRelevantFeatures"
+                                            validateEnter={true}
+                                            type="text"
+                                            max="1000"
+                                            style={{ width: '100%', height: '100%' }}
+                                            rows={4}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                            {...contactRelevantFeatures}
+                                        /></dd>
                                 </dl>
                             </Col>
                         </Row>
@@ -930,7 +930,7 @@ class ContactDetailsModalComponent extends Component {
                             disabled={this.state.isEditable ? '' : 'disabled'}
                         >{'Guardar'}</button>
                     </div> :
-                    <div style={{float: 'right', cursor: 'pointer', marginRight: '35px'}}>
+                    <div style={{ float: 'right', cursor: 'pointer', marginRight: '35px' }}>
                         <button
                             type="submit"
                             className="btn btn-primary modal-button-edit"
@@ -944,7 +944,7 @@ class ContactDetailsModalComponent extends Component {
                     show={this.state.showErrorForm}
                     title="Campos obligatorios"
                     text="Señor usuario, para editar un contacto debe ingresar los campos obligatorios."
-                    onConfirm={() => this.setState({showErrorForm: false})}
+                    onConfirm={() => this.setState({ showErrorForm: false })}
                 />
             </form>
         );
@@ -975,7 +975,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerProps) {
+function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, ownerProps) {
     const contact = contactDetail.get('contactDetailList');
     if (contact) {
         return {
@@ -1017,11 +1017,10 @@ function mapStateToProps({contactDetail, selectsReducer, reducerGlobal}, ownerPr
         };
     } else {
         return {
-        contactDetail,
+            contactDetail,
             selectsReducer,
             reducerGlobal
-    }
-        ;
+        };
     }
 }
 
@@ -1032,6 +1031,6 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;
-        thisForm.setState({showErrorForm: true});
+        thisForm.setState({ showErrorForm: true });
     }
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

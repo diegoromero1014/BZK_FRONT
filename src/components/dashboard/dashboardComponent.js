@@ -34,7 +34,7 @@ class Dashboard extends Component {
                     <NavBarComponent />
                     <div
                       id="dashboardComponentScroll"
-                      style={{backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden", marginTop: "3px"}}>
+                      style={{backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden"}}>
                       {this.props.children}
                         <LoadingComponent />
                       {dashboardReducer.get('showSaveData') &&
