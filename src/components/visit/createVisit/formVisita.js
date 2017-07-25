@@ -68,6 +68,7 @@ class FormVisita extends Component{
       activeItemTabOther: '',
       conclusionsVisit: "",
       conclusionsVisitError: null,
+      orderContactId: 0
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
@@ -153,7 +154,8 @@ class FormVisita extends Component{
           if( participant.tipoParticipante === "banco" ){
             var data = {
               "id": null,
-              "employee": participant.idParticipante
+              "employee": participant.idParticipante,
+              "order": participant.order
             }
             dataBanco.push(data)
           }
@@ -169,7 +171,8 @@ class FormVisita extends Component{
             if(participant.tipoParticipante === "client"){
               var data = {
                 "id": null,
-                "contact": participant.idParticipante
+                "contact": participant.idParticipante,
+                "order": participant.order
               }
               dataClient.push(data);
             }
@@ -186,7 +189,8 @@ class FormVisita extends Component{
                 "id": null,
                 "name": participant.nombreParticipante.replace('-', ''),
                 "position": participant.cargo.replace('-', ''),
-                "company": participant.empresa.replace('-', '')
+                "company": participant.empresa.replace('-', ''),
+                "order": participant.order
               }
               dataOthers.push(data);
             }
@@ -328,6 +332,7 @@ class FormVisita extends Component{
     clearParticipants();
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
+      let listParticipants=[];
       const typeVisitSeleted = _.filter(selectsReducer.get(VISIT_TYPE), ['key', KEY_TYPE_VISIT]);
       this.setState({
         typeVisit: typeVisitSeleted[0].id,
@@ -350,8 +355,9 @@ class FormVisita extends Component{
           : ' - ' + value.attitudeOverGroupName,
           fecha: Date.now(),
           uuid,
+          order: _.isNull(value.participantOrder)? 0 : value.participantOrder
         }
-        addParticipant(clientParticipant);
+        listParticipants.push(clientParticipant);
       });
 
       //Adicionar participantes por parte de bancolombia
@@ -369,8 +375,9 @@ class FormVisita extends Component{
           actitudBanco: '',
           fecha: Date.now(),
           uuid,
+          order: _.isNull(value.participantOrder)? 0 : value.participantOrder
         }
-        addParticipant(clientParticipant);
+        listParticipants.push(clientParticipant);
       });
 
       //Adicionar otros participantes
@@ -388,8 +395,9 @@ class FormVisita extends Component{
           actitudBanco: '',
           fecha: Date.now(),
           uuid,
+          order: _.isNull(value.participantOrder)? 0 : value.participantOrder
         }
-        addParticipant(otherParticipant);
+        listParticipants.push(otherParticipant);
       });
     });
   }
