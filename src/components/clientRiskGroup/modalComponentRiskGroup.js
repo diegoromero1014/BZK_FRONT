@@ -12,14 +12,16 @@ import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS,
 import { stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, editNameRiskGroup } from './actions';
+import ModalComponentDeleteRiskGroup from './modalComponentDeleteRiskGroup';
 import ClientsRiskGroup from './clientsRiskGroup';
 import { showLoading } from '../loading/actions';
+import Modal from 'react-modal';
 
 import _ from 'lodash';
 import $ from 'jquery';
 
 
-const fields = ["groupName", "groupObservations"]
+const fields = ["groupName", "groupCode", "groupObservations"]
 const validate = values => {
   const errors = {};
 
@@ -27,6 +29,12 @@ const validate = values => {
     errors.groupName = VALUE_REQUIERED;
   } else {
     errors.groupName = null;
+  }
+
+  if (!values.groupCode) {
+    errors.groupCode = VALUE_REQUIERED;
+  } else {
+    errors.groupCode = null;
   }
 
   if (!values.groupObservations) {
@@ -46,8 +54,12 @@ class ModalComponentRiskGroup extends Component {
       showError: false,
       showErrorForm: false,
       allowEditGroup: false,
+      modalDelteRiskGroupIsOpen: false,
       riskGroup: {}
     };
+
+    this.openModalDelteRiskGroup = this.openModalDelteRiskGroup.bind(this);
+    this.closeModalDelteRiskGroup = this.closeModalDelteRiskGroup.bind(this);
 
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
@@ -55,12 +67,21 @@ class ModalComponentRiskGroup extends Component {
     thisForm = this;
   }
 
+  
+    openModalDelteRiskGroup() {
+        this.setState({ modalDelteRiskGroupIsOpen: true });
+    }
+
+    closeModalDelteRiskGroup() {
+        this.setState({ modalDelteRiskGroupIsOpen: false });
+    }
+
   _closeError() {
     this.setState({ showError: false, messageError: '' });
   }
 
   componentWillMount() {
-    const { fields: { groupName }, getClientsRiskGroup, clientInformacion, nonValidateEnter, showLoading } = this.props;
+    const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion, nonValidateEnter, showLoading } = this.props;
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
@@ -75,6 +96,7 @@ class ModalComponentRiskGroup extends Component {
         riskGroup: _.get(data, 'payload.data.data')
       })
       groupName.onChange(riskGroup.name);
+      groupCode.onChange(riskGroup.code);
 
       showLoading(false, "");
 
@@ -88,6 +110,8 @@ class ModalComponentRiskGroup extends Component {
       dataName={data.clientName}
       dataDocumentType={data.documentType}
       dataDocument={data.documentNumber}
+      client = {data}
+
     />
   }
 
@@ -96,6 +120,10 @@ class ModalComponentRiskGroup extends Component {
       case "groupName":
         var { fields: { groupName } } = this.props;
         groupName.onChange(val);
+        break;
+      case "groupCode":
+        var { fields: { groupCode } } = this.props;
+        groupCode.onChange(val);
         break;
       case "groupObservations":
         var { fields: { groupObservations } } = this.props;
@@ -110,22 +138,40 @@ class ModalComponentRiskGroup extends Component {
 
   }
   _handlerSubmitGroup() {
-    const { fields: { groupName, groupObservations }, clientInformacion, editNameRiskGroup, swtShowMessage } = this.props;
+    const { fields: { groupName, groupCode, groupObservations }, clientInformacion, editNameRiskGroup, swtShowMessage } = this.props;
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
-    const jsonUpdateGroup = {
-      clientId: infoClient.id,
-      name: groupName.value !== undefined ? groupName.value : null,
-      notification: groupObservations.value !== undefined ? groupObservations.value : null
-    }
-    console.log(jsonUpdateGroup)
+    const riskGroup = Object.assign({}, this.state.riskGroup);
 
-   editNameRiskGroup(jsonUpdateGroup).then((resutl) => {
+    const jsonUpdateGroup = {
+      id: riskGroup.id,
+      name: groupName.value !== undefined ? groupName.value : null,
+      code: groupCode.value !== undefined ? groupCode.value : null,
+      observation: groupObservations.value !== undefined ? groupObservations.value : null
+    }
+    const self = this;
+
+    editNameRiskGroup(jsonUpdateGroup).then((data) => {
+
+      if (validateResponse(data)) {
+        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobado por el analista de Riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
+        self.setState({
+          showError: false,
+          showErrorForm: false,
+          allowEditGroup: false,
+          riskGroup: Object.assign(self.state.riskGroup, {
+            name: groupName.value,
+            code: groupCode.value
+          })
+        });
+      } else {
+        swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de editar el grupo de riesgo.');
+      }
 
     }, (reason) => {
       // changeStateSaveData(false, "");
-       swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
+      swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
     })
 
 
@@ -136,14 +182,14 @@ class ModalComponentRiskGroup extends Component {
 
     const {
             fields: {
-                groupName, groupObservations
+                groupName, groupCode, groupObservations
               },
       riskGroupReducer,
       clientInformacion,
       handleSubmit
             } = this.props;
     //riskGroupReducer.get('economicGroupClients')
-    console.log("this.state.riskGroup", this.state.riskGroup)
+    //console.log("this.state.riskGroup", this.state.riskGroup)
 
     const riskGroup = Object.assign({}, this.state.riskGroup);
     const members = Object.assign([], this.state.riskGroup.members);
@@ -158,9 +204,29 @@ class ModalComponentRiskGroup extends Component {
           onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
           <Row style={{ padding: "10px 20px 20px 20px" }}>
 
-            <Col xs={10} md={8} lg={6}>
+            <Col xs={10} md={6} lg={this.state.allowEditGroup? 3 : 2}>
               <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                <dt><span>Nombre de grupo </span>
+                <dt><span>Código del grupo </span>
+                  {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
+                </dt>
+                {!this.state.allowEditGroup &&
+                  <p>{riskGroup.code}</p>
+                }
+                {this.state.allowEditGroup &&
+                  <Input name="groupCode"
+                    type="text"
+                    max="60"
+                    {...groupCode}
+                    onChange={val => this._onchangeValue("groupCode", val)}
+                  />
+
+                }
+              </div>
+            </Col>
+
+            <Col xs={10} md={6} lg={ this.state.allowEditGroup? 9 : 5}>
+              <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                <dt><span>Nombre del grupo </span>
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                 </dt>
                 {!this.state.allowEditGroup &&
@@ -177,7 +243,27 @@ class ModalComponentRiskGroup extends Component {
                 }
               </div>
             </Col>
-            <Col xs={2} md={4} lg={6} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }} >
+
+
+
+            {this.state.allowEditGroup &&
+              <Col md={12}>
+
+                <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                  <dt><span>Observaciones </span>
+                    <span>(<span style={{ color: "red" }}>*</span>)</span>
+                  </dt>
+                  <Textarea className="form-control need-input"
+                    {...groupObservations}
+                    name="groupObservations"
+                    maxLength="250"
+                    onChange={val => this._onchangeValue("groupObservations", val)}
+                  />
+                </div>
+              </Col>
+            }
+
+            <Col xs={2} md={4} lg={ this.state.allowEditGroup? 12 : 5 } style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
               {this.state.allowEditGroup &&
                 <div>
                   <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }} >
@@ -193,32 +279,33 @@ class ModalComponentRiskGroup extends Component {
                     <i className="edit icon"></i> Editar </button>
                 </div>
               }
-              <button className="btn btn-danger" type="button"
+              <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
                 style={{ cursor: 'pointer', marginLeft: "20px" }}>
                 <i className="trash icon"></i> Elimnar </button>
+
+                <Modal isOpen={this.state.modalDelteRiskGroupIsOpen} onRequestClose={this.closeModalDelteRiskGroup} className="modalBt4-fade modal fade contact-detail-modal in">
+                    <div className="modalBt4-dialog modalBt4-md">
+                        <div className="modalBt4-content modal-content">
+                            <div className="modalBt4-header modal-header">
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Eliminar grupo de riesgo</h4>
+                                <button type="button" onClick={this.closeModalDelteRiskGroup} className="close" data-dismiss="modal" role="close">
+                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                                    <span className="sr-only">Close</span>
+                                </button>
+                            </div>
+                            {<ModalComponentDeleteRiskGroup riskGroup={riskGroup} isOpen={this.closeModalDelteRiskGroup} />}
+                        </div>
+                    </div>
+                </Modal>
+
+
             </Col>
 
-            {this.state.allowEditGroup &&
-              <Col md={12}>
-
-                <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                  <dt><span>Nombre de grupo </span>
-                    <span>(<span style={{ color: "red" }}>*</span>)</span>
-                  </dt>
-                  <Textarea className="form-control need-input"
-                    {...groupObservations}
-                    name="groupObservations"
-                    maxLength="250"
-                    onChange={val => this._onchangeValue("groupObservations", val)}
-                  />
-                </div>
-              </Col>
-            }
             <SweetAlert
               type="error"
               show={this.state.showErrorForm}
               title="Campos obligatorios"
-              text="Señor usuario, para editar un contacto debe ingresar los campos obligatorios."
+              text="Señor usuario, para editar un grupo de riesgo debe ingresar los campos obligatorios."
               onConfirm={() => this.setState({ showErrorForm: false })}
             />
           </Row>

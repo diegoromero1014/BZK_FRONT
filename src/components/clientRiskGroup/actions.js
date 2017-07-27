@@ -42,14 +42,14 @@ export function removeClientRiskGroup(id) {
     },
     "messageBody": id
   }
-  var request = axios.post(APP_URL + "/removeClientRiskGroup", json);
+  var request = axios.post(APP_URL + "/requestRemoveClientRiskGroup", json);
   return {
     type: CONSULT_RISK_GROUP,
     payload: request
   }
 }
 
-export function deleteRiskGroup(id) {
+export function deleteRiskGroup(data) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -63,9 +63,9 @@ export function deleteRiskGroup(id) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": id
+    "messageBody": data
   }
-  var request = axios.post(APP_URL + "/deleteRiskGroup", json);
+  var request = axios.post(APP_URL + "/requestDeleteRiskGroup", json);
   return {
     type: CONSULT_RISK_GROUP,
     payload: request
@@ -117,11 +117,7 @@ export function editNameRiskGroup(data) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": {
-      clientId: data.clientId,
-      name: data.groupName,
-      notification: data.groupNotification
-    }
+    "messageBody":data
   }
   var request = axios.post(APP_URL + "/editNameRiskgroup", json);
   return {
