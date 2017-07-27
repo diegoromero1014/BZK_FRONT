@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Menu, Segment } from 'semantic-ui-react';
-import { MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES } from '../../constantsGlobal';
-import { consultModulesAccess } from '../navBar/actions';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {Menu, Segment} from 'semantic-ui-react';
+import {MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES} from '../../constantsGlobal';
+import {consultModulesAccess} from '../navBar/actions';
 import ListCovenant from './covenants/listCovenants';
 import ListAEC from './AEC/listAEC';
-import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
-import { updateTabSeletedRisksManagment } from './actions';
+import {TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE} from './constants';
+import {updateTabSeletedRisksManagment} from './actions';
 import ComponentSurvey from './qualitativeVariable/componentSurvey';
+import _ from 'lodash';
 
 class RisksManagementComponent extends Component {
     constructor(props) {
@@ -20,40 +21,50 @@ class RisksManagementComponent extends Component {
     }
 
     _handleItemClick(module) {
-        const { updateTabSeletedRisksManagment } = this.props;
+        const {updateTabSeletedRisksManagment} = this.props;
         updateTabSeletedRisksManagment(module);
     }
 
     componentWillMount() {
-        const { consultModulesAccess } = this.props;
+        const {consultModulesAccess} = this.props;
         consultModulesAccess();
     }
 
     render() {
-        const { navBar, tabRisksManagment } = this.props;
-        const { viewCovenants, viewAEC } = this.state;
-        var tabActive = tabRisksManagment.get('tabSelected');
+        const {navBar, tabRisksManagment} = this.props;
+        let tabActive = tabRisksManagment.get('tabSelected');
         if (tabActive === null || tabActive === undefined || tabActive === "") {
-            tabActive = TAB_COVENANTS;
+            if (_.get(navBar.get('mapModulesAccess'), MODULE_COVENANTS)) {
+                tabActive = TAB_COVENANTS;
+            } else if (_.get(navBar.get('mapModulesAccess'), MODULE_AEC)) {
+                tabActive = TAB_AEC;
+            } else if (_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES)) {
+                tabActive = TAB_QUALITATIVE_VARIABLE;
+            }
         }
         return (
             <div className="tab-pane quickZoomIn animated"
-                style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
+                 style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
                 <Menu pointing secondary>
                     {_.get(navBar.get('mapModulesAccess'), MODULE_COVENANTS) &&
-                        <Menu.Item name={MODULE_COVENANTS} active={tabActive === TAB_COVENANTS} onClick={this._handleItemClick.bind(this, TAB_COVENANTS)} />
+                    <Menu.Item name={MODULE_COVENANTS} active={tabActive === TAB_COVENANTS}
+                               onClick={this._handleItemClick.bind(this, TAB_COVENANTS)}/>
                     }
                     {_.get(navBar.get('mapModulesAccess'), MODULE_AEC) &&
-                        <Menu.Item name={MODULE_AEC} active={tabActive === TAB_AEC} onClick={this._handleItemClick.bind(this, TAB_AEC)} />
+                    <Menu.Item name={MODULE_AEC} active={tabActive === TAB_AEC}
+                               onClick={this._handleItemClick.bind(this, TAB_AEC)}/>
                     }
                     {_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) &&
-                        <Menu.Item name={MODULE_QUALITATIVE_VARIABLES} active={tabActive === TAB_QUALITATIVE_VARIABLE} onClick={this._handleItemClick.bind(this, TAB_QUALITATIVE_VARIABLE)} />
+                    <Menu.Item name={MODULE_QUALITATIVE_VARIABLES} active={tabActive === TAB_QUALITATIVE_VARIABLE}
+                               onClick={this._handleItemClick.bind(this, TAB_QUALITATIVE_VARIABLE)}/>
                     }
                 </Menu>
                 <Segment>
-                    {_.get(navBar.get('mapModulesAccess'), MODULE_COVENANTS) && tabActive === TAB_COVENANTS && <ListCovenant />}
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_COVENANTS) && tabActive === TAB_COVENANTS &&
+                    <ListCovenant />}
                     {_.get(navBar.get('mapModulesAccess'), MODULE_AEC) && tabActive === TAB_AEC && <ListAEC />}
-                    {_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) && tabActive === TAB_QUALITATIVE_VARIABLE && <ComponentSurvey />}
+                    {_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) && tabActive === TAB_QUALITATIVE_VARIABLE &&
+                    <ComponentSurvey />}
                 </Segment>
             </div>
         );
@@ -67,7 +78,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, tabRisksManagment }, ownerProps) {
+function mapStateToProps({navBar, tabRisksManagment}, ownerProps) {
     return {
         navBar,
         tabRisksManagment
