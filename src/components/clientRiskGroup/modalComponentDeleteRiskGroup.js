@@ -81,10 +81,10 @@ class modalComponentDeleteRiskGroup extends Component {
             'Grupo de riesgo pendiente por eliminación',
             'Señor usuario, La eliminación debe ser aprobado por el analista de Riesgos.');
           isOpen();
-          self.setState({
-            showError: false,
-            showErrorForm: false
-          });
+          // self.setState({
+          //   showError: false,
+          //   showErrorForm: false
+          // });
         } else {
           swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de eliminar el grupo de riesgo.');
         }

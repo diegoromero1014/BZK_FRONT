@@ -79,10 +79,10 @@ class modalComponentRemoveMember extends Component {
             'Retirar cliente',
             'Señor usuario, para retirar el cliente debe ser aprobado por el analista de Riesgos.');
           isOpen();
-          self.setState({
-            showError: false,
-            showErrorForm: false
-          });
+          // self.setState({
+          //   showError: false,
+          //   showErrorForm: false
+          // });
         } else {
           swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
         }
