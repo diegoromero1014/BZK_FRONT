@@ -24,7 +24,6 @@ export default (state = initialState, action) => {
         case contants.DELETE_PARTICIPANT:
             const orderDelete = state.get(action.index).order;
             const stateOrdered = state.delete(action.index);
-            
             state.map(item => {
                 if (item.order > orderDelete && item.tipoParticipante == action.tab) {
                     return _.set(item, 'order', item.order - 1);

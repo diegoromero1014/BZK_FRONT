@@ -49,7 +49,6 @@ class ParticipantesCliente extends Component {
                 return item.idParticipante === idContacto.value;
             });
             if (particip === undefined) {
-                console.log("Clientes>>",participants.order);
                 const uuid = _.uniqueId('participanClient_');
                 var clientParticipant = {
                     tipoParticipante: 'client',
