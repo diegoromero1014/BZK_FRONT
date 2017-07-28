@@ -27,7 +27,7 @@ import $ from 'jquery';
 
 
 const fields = [
-  "clientName", "conformationReasonId", "segmentClient"
+  "clientName", "conformationReasonId", "segmentClient", "justification"
 ]
 const validate = values => {
   const errors = {};
@@ -48,6 +48,12 @@ const validate = values => {
     errors.segmentClient = VALUE_REQUIERED;
   } else {
     errors.segmentClient = null;
+  }
+
+  if (!values.justification) {
+    errors.justification = VALUE_REQUIERED;
+  } else {
+    errors.justification = null;
   }
 
   return errors;
@@ -76,7 +82,7 @@ class memberRiskGroup extends Component {
 
   componentWillMount() {
 
-    const { fields: { clientName }, consultDataSelect, consultList, clientsBasicInfo } = this.props;
+    const { consultDataSelect, consultList, clientsBasicInfo } = this.props;
     consultDataSelect(constants.SEGMENTS).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
         redirectUrl("/login");
@@ -105,6 +111,10 @@ class memberRiskGroup extends Component {
         var { fields: { segmentClient } } = this.props;
         segmentClient.onChange(val);
         break;
+      case "justification":
+        var { fields: { justification } } = this.props;
+        justification.onChange(val);
+        break;
 
       default:
         break;
@@ -114,7 +124,7 @@ class memberRiskGroup extends Component {
 
 
   _handlerSubmitGroup() {
-    const { fields: { clientName, conformationReasonId, segmentClient }, riskGroup,
+    const { fields: { clientName, conformationReasonId, segmentClient, justification }, riskGroup,
       swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber, addClientRiskGroup } = this.props;
     const jsonUpdateGroup = {
       idClient: clientsBasicInfo.idClient,
@@ -123,36 +133,38 @@ class memberRiskGroup extends Component {
       clientName: clientName.value,
       segmentClientId: segmentClient.value,
       conformationReasonId: conformationReasonId.value,
-      riskGroupId: riskGroup.id
+      riskGroupId: riskGroup.id,
+      justification: justification.value
     }
     const self = this;
 
     addClientRiskGroup(jsonUpdateGroup).then((data) => {
       if (validateResponse(data)) {
-
         let result = _.get(data, 'payload.data.data', "");
         if (result != "hasGroup" && result != "error") {
           swtShowMessage('success',
             'Cliente pendiente por Aprobacion',
             'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de Riesgos.');
+          // isOpen();
+          this.setState({
+            showForm: true,
+            disabledPrimaryFields: true,
+            clientsBasicInfo: _.get(data, 'payload.data.data', {})
+          });
+
         } else {
           let msjError = 'Señor usuario, ocurrió un error tratando de agregar el cliente.';
           let msjHasGroup = 'Señor usuario, este cliente ya pertenece a un grupo de riesgo.';
           swtShowMessage('error', 'Error agregando el cliente', (result == "hasGroup" ? msjHasGroup : msjError));
         }
 
-        this.setState({
-          showForm: true,
-          disabledPrimaryFields: true,
-          clientsBasicInfo: _.get(data, 'payload.data.data', {})
-        });
 
+        isOpen();
 
       } else {
         swtShowMessage('error', 'Error agregando el cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente.');
       }
 
-      isOpen();
 
     }, (reason) => {
       this.setState({ showConfirmCreateUser: true });
@@ -168,17 +180,16 @@ class memberRiskGroup extends Component {
 
   render() {
 
-    const { fields: { clientName, conformationReasonId, segmentClient }, handleSubmit, clientsBasicInfo, isOpen } = this.props;
+    const { fields: { clientName, conformationReasonId, segmentClient, justification }, handleSubmit, clientsBasicInfo, isOpen } = this.props;
     const { selectsReducer, clientR } = this.props;
 
 
     return (
 
-      <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
+      <form id={"submitMemberForm"} onSubmit={handleSubmit(this._handlerSubmitGroup)}
         onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
         <div id="content-modal-rosk-group" className="modalBt4-body modal-body business-content editable-form-content clearfix"
-          style={{ overflowX: "hidden", marginBottom: '15px', height: "auto" }}>
-
+          style={{ overflow: "hidden", height: "428px", paddingBottom: "0" }}>
 
           <Row style={{ padding: "10px 20px 20px 20px" }}>
 
@@ -234,6 +245,20 @@ class memberRiskGroup extends Component {
               />
             </Col>
 
+            <Col xs={12} md={6} lg={12}>
+              <dt><span>Justificación </span>
+                <span>(<span style={{ color: "red" }}>*</span>)</span>
+              </dt>
+              <Textarea className="form-control need-input"
+                {...justification}
+                name="justification"
+                maxLength="250"
+                onChange={val => this._onchangeValue("justification", val)}
+              />
+
+            </Col>
+
+
             <SweetAlert
               type="error"
               show={this.state.showErrorForm}
@@ -244,14 +269,8 @@ class memberRiskGroup extends Component {
           </Row>
 
         </div >
-        <div className="modalBt4-footer modal-footer" style={{ position: "absolute", width: "100%", bottom: "0" }}>
-          <button className="btn btn-prymary" type="submit"
-            style={{ cursor: 'pointer', marginLeft: "20px" }}>
-            <i className="trash icon"></i> Agregar </button>
-          <button className="btn btn-default active" type="button"
-            style={{ cursor: 'pointer', marginLeft: "20px" }} onClick={() => { isOpen() }}>
-            Cancelar </button>
-        </div>
+
+
       </form >
 
 
@@ -284,7 +303,7 @@ function mapStateToProps({ riskGroupReducer, clientInformacion, selectsReducer, 
 }
 
 export default reduxForm({
-  form: 'submitMember',
+  form: 'submitMemberForm',
   fields,
   destroyOnUnmount: true,
   validate,

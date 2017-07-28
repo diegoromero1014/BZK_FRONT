@@ -94,7 +94,8 @@ export function addClientRiskGroup(data) {
       clientName: data.clientName,
       segmentClientId: data.segmentClientId,
       conformationReasonId: data.conformationReasonId,
-      riskGroupId: data.riskGroupId
+      riskGroupId: data.riskGroupId,
+      justification: data.justification 
     }
   }
   var request = axios.post(APP_URL + "/requestAddClientRiskGroup", json);

@@ -93,7 +93,8 @@ class ModalComponentRiskGroup extends Component {
   }
 
   componentWillMount() {
-    const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion, nonValidateEnter, showLoading } = this.props;
+    const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion, 
+    nonValidateEnter, showLoading, isOpen, swtShowMessage } = this.props;
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
@@ -103,15 +104,21 @@ class ModalComponentRiskGroup extends Component {
     this.setState({ allowEditGroup: false })
 
     getClientsRiskGroup(infoClient.id).then((data) => {
-      let riskGroup = _.get(data, 'payload.data.data')
-      this.setState({
-        riskGroup: _.get(data, 'payload.data.data')
-      })
-      groupName.onChange(riskGroup.name);
-      groupCode.onChange(riskGroup.code);
+      if (validateResponse(data)) {
 
-      showLoading(false, "");
+        let riskGroup = _.get(data, 'payload.data.data')
+        this.setState({
+          riskGroup: _.get(data, 'payload.data.data')
+        })
+        groupName.onChange(riskGroup.name);
+        groupCode.onChange(riskGroup.code);
 
+      } else {
+        swtShowMessage('error', 'Error cosultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de cosultar el grupo de riesgo.');
+        isOpen();
+      }
+
+        showLoading(false, "");
     });
 
   }
