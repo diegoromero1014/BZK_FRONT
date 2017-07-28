@@ -88,13 +88,16 @@ export function addClientRiskGroup(data) {
       "isSuccessful": true
     },
     "messageBody": {
-      documentType: data.documentType,
+      idClient: data.idClient,
+      documentTypeId: data.documentTypeId,
       documentNumber: data.documentNumber,
-      name: data.name,
-      segment: data.segment
+      clientName: data.clientName,
+      segmentClientId: data.segmentClientId,
+      conformationReasonId: data.conformationReasonId,
+      riskGroupId: data.riskGroupId
     }
   }
-  var request = axios.post(APP_URL + "/addClientRiskGroup", json);
+  var request = axios.post(APP_URL + "/requestAddClientRiskGroup", json);
   return {
     type: CONSULT_RISK_GROUP,
     payload: request

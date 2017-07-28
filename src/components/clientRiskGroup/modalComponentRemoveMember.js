@@ -73,12 +73,14 @@ class modalComponentRemoveMember extends Component {
 
     removeClientRiskGroup(jsonUpdateGroup).then((data) => {
 
-      if (_.get(data, 'payload.data.data', false)) {
-        if (validateResponse(data)) {
+      if (validateResponse(data)) {
+        if (_.get(data, 'payload.data.data', false)) {
           swtShowMessage('success',
             'Retirar cliente',
             'Señor usuario, para retirar el cliente debe ser aprobado por el analista de Riesgos.');
           isOpen();
+
+          
           // self.setState({
           //   showError: false,
           //   showErrorForm: false

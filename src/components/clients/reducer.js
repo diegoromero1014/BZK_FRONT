@@ -45,6 +45,14 @@ export default (state = initialState, action) => {
           .set('responseClients', responseRecentClients.rows)
           .set('showingRecentClients', showingRecentClients);
       });
+    case actions.CLIENTS_FIND_TYPE_NUMBER_BASIC:
+      let responseClients = action.payload.data.data;
+      console.log(responseClients)
+      return  state.withMutations(map => {
+        map
+          .set('clientsBasicInfo', responseClients.rows);
+      }); 
+     
     default:
       return state;
   }

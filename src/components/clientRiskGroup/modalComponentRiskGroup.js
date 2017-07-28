@@ -13,6 +13,7 @@ import { stringValidate, validateValueExist, validateResponse, formValidateKeyEn
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, editNameRiskGroup } from './actions';
 import ModalComponentDeleteRiskGroup from './modalComponentDeleteRiskGroup';
+import ModalComponentMemberRiskGroup from './modalComponentMemberRiskGroup';
 import ClientsRiskGroup from './clientsRiskGroup';
 import { showLoading } from '../loading/actions';
 import Modal from 'react-modal';
@@ -55,11 +56,14 @@ class ModalComponentRiskGroup extends Component {
       showErrorForm: false,
       allowEditGroup: false,
       modalDelteRiskGroupIsOpen: false,
+      modalMemberIsOpen: false,
       riskGroup: {}
     };
 
     this.openModalDelteRiskGroup = this.openModalDelteRiskGroup.bind(this);
     this.closeModalDelteRiskGroup = this.closeModalDelteRiskGroup.bind(this);
+    this.openModalMember = this.openModalMember.bind(this);
+    this.closeModalMember = this.closeModalMember.bind(this);
 
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
@@ -67,14 +71,22 @@ class ModalComponentRiskGroup extends Component {
     thisForm = this;
   }
 
-  
-    openModalDelteRiskGroup() {
-        this.setState({ modalDelteRiskGroupIsOpen: true });
-    }
 
-    closeModalDelteRiskGroup() {
-        this.setState({ modalDelteRiskGroupIsOpen: false });
-    }
+  openModalDelteRiskGroup() {
+    this.setState({ modalDelteRiskGroupIsOpen: true });
+  }
+
+  closeModalDelteRiskGroup() {
+    this.setState({ modalDelteRiskGroupIsOpen: false });
+  }
+
+  openModalMember() {
+    this.setState({ modalMemberIsOpen: true });
+  }
+
+  closeModalMember() {
+    this.setState({ modalMemberIsOpen: false });
+  }
 
   _closeError() {
     this.setState({ showError: false, messageError: '' });
@@ -110,8 +122,7 @@ class ModalComponentRiskGroup extends Component {
       dataName={data.clientName}
       dataDocumentType={data.documentType}
       dataDocument={data.documentNumber}
-      client = {data}
-
+      client={data}
     />
   }
 
@@ -204,7 +215,7 @@ class ModalComponentRiskGroup extends Component {
           onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
           <Row style={{ padding: "10px 20px 20px 20px" }}>
 
-            <Col xs={10} md={6} lg={this.state.allowEditGroup? 3 : 2}>
+            <Col xs={10} md={6} lg={this.state.allowEditGroup ? 3 : 2}>
               <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                 <dt><span>Código del grupo </span>
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
@@ -224,7 +235,7 @@ class ModalComponentRiskGroup extends Component {
               </div>
             </Col>
 
-            <Col xs={10} md={6} lg={ this.state.allowEditGroup? 9 : 5}>
+            <Col xs={10} md={6} lg={this.state.allowEditGroup ? 9 : 5}>
               <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                 <dt><span>Nombre del grupo </span>
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
@@ -263,7 +274,7 @@ class ModalComponentRiskGroup extends Component {
               </Col>
             }
 
-            <Col xs={2} md={4} lg={ this.state.allowEditGroup? 12 : 5 } style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
+            <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 5} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
               {this.state.allowEditGroup &&
                 <div>
                   <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }} >
@@ -283,20 +294,20 @@ class ModalComponentRiskGroup extends Component {
                 style={{ cursor: 'pointer', marginLeft: "20px" }}>
                 <i className="trash icon"></i> Elimnar </button>
 
-                <Modal isOpen={this.state.modalDelteRiskGroupIsOpen} onRequestClose={this.closeModalDelteRiskGroup} className="modalBt4-fade modal fade contact-detail-modal in">
-                    <div className="modalBt4-dialog modalBt4-md">
-                        <div className="modalBt4-content modal-content">
-                            <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Eliminar grupo de riesgo</h4>
-                                <button type="button" onClick={this.closeModalDelteRiskGroup} className="close" data-dismiss="modal" role="close">
-                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
-                                    <span className="sr-only">Close</span>
-                                </button>
-                            </div>
-                            {<ModalComponentDeleteRiskGroup riskGroup={riskGroup} isOpen={this.closeModalDelteRiskGroup} />}
-                        </div>
+              <Modal isOpen={this.state.modalDelteRiskGroupIsOpen} onRequestClose={this.closeModalDelteRiskGroup} className="modalBt4-fade modal fade contact-detail-modal in">
+                <div className="modalBt4-dialog modalBt4-md">
+                  <div className="modalBt4-content modal-content">
+                    <div className="modalBt4-header modal-header">
+                      <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Eliminar grupo de riesgo</h4>
+                      <button type="button" onClick={this.closeModalDelteRiskGroup} className="close" data-dismiss="modal" role="close">
+                        <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                        <span className="sr-only">Close</span>
+                      </button>
                     </div>
-                </Modal>
+                    {<ModalComponentDeleteRiskGroup riskGroup={riskGroup} isOpen={this.closeModalDelteRiskGroup} />}
+                  </div>
+                </div>
+              </Modal>
 
 
             </Col>
@@ -313,6 +324,30 @@ class ModalComponentRiskGroup extends Component {
 
         <hr style={{ width: "100%", height: "1px", margin: "0px" }} />
         <Row style={{ padding: "10px 20px 20px 20px" }}>
+          <Col lg={12} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }} >
+
+            <button className="btn btn-primary" type="button" onClick={this.openModalMember}
+              style={{ cursor: 'pointer', marginLeft: "20px" }} >
+              <i className="plus icon"></i> Agregar cliente </button>
+
+
+            <Modal isOpen={this.state.modalMemberIsOpen} onRequestClose={this.closeModalMember} className="modalBt4-fade modal fade contact-detail-modal in">
+              <div className="modalBt4-dialog modalBt4-lg">
+                <div className="modalBt4-content modal-content">
+                  <div className="modalBt4-header modal-header">
+                    <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Agregar cliente</h4>
+                    <button type="button" onClick={this.closeModalMember} className="close" data-dismiss="modal" role="close">
+                      <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                      <span className="sr-only">Close</span>
+                    </button>
+                  </div>
+                  {<ModalComponentMemberRiskGroup riskGroup={riskGroup} isOpen={this.closeModalMember} />}
+                </div>
+              </div>
+            </Modal>
+
+          </Col>
+
           <div className="team-modal" style={{ width: "100%", display: "grid", gridTemplateColumns: "30% 30% 30%", justifyContent: "space-around", marginBottom: "30px" }}>
             {members.length === 0 ?
               <div style={{ textAlign: "center", marginTop: "15px" }}> <h4 className="form-item">Señor usuario, no hay clientes asociados a este grupo económico.</h4> </div>

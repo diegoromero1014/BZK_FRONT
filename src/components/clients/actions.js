@@ -1,7 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
   CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS, GET_RECENT_CLIENTS,
-  DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT
+  DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT, CLIENTS_FIND_TYPE_NUMBER_BASIC
 } from './constants';
 import axios from 'axios';
 
@@ -128,3 +128,34 @@ export function deleteRecentClient(idClient) {
     payload: request
   }
 }
+
+
+//retorna la informacion basica del cliente
+export function findClientByTypeAndNumber(data) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      typeDocument: data.typeDocument,
+      numberDocument: data.numberDocument
+    }
+  }
+  var request = axios.post(APP_URL + "/getClientByDocumentTypeAndNumber", json);
+  return {
+    type: CLIENTS_FIND_TYPE_NUMBER_BASIC,
+    payload: request
+  }
+}
+
+
+
