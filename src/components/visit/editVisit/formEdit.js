@@ -26,7 +26,7 @@ import {
     TITLE_OTHERS_PARTICIPANTS
 } from "../../../constantsGlobal";
 import {createVisti, detailVisit, pdfDescarga} from "../actions";
-import {addParticipant, filterUsersBanco} from "../../participantsVisitPre/actions";
+import {addParticipant, filterUsersBanco,addListParticipant} from "../../participantsVisitPre/actions";
 import {downloadFilePdf} from "../../clientInformation/actions";
 import {changeStateSaveData} from "../../dashboard/actions";
 import {formValidateKeyEnter, htmlToText, nonValidateEnter,shorterStringValue} from "../../../actionsGlobal";
@@ -171,7 +171,8 @@ class FormEdit extends Component {
                     }
                     dataClient.push({
                         "id": contactParticipantCliente.length > 0 ? value.idParticipante : null,
-                        "contact": value.idParticipante
+                        "contact": value.idParticipante,
+                        "order": value.order
                     });
                 } else {
                     if (_.isEqual(value.tipoParticipante, 'banco')) {
@@ -181,7 +182,8 @@ class FormEdit extends Component {
                         }
                         dataBanco.push({
                             "id": contactParticipantBanco.length > 0 ? value.idParticipante : null,
-                            "employee": value.idParticipante
+                            "employee": value.idParticipante,
+                            "order": value.order
                         });
                     } else {
                         if (_.isEqual(value.tipoParticipante, 'other')) {
@@ -189,7 +191,8 @@ class FormEdit extends Component {
                                 "id": value.idParticipante,
                                 "name": value.nombreParticipante.replace('-', ''),
                                 "position": value.cargo.replace('-', ''),
-                                "company": value.empresa.replace('-', '')
+                                "company": value.empresa.replace('-', ''),
+                                "order": value.order
                             });
                         }
                     }
@@ -307,8 +310,9 @@ class FormEdit extends Component {
         getMasterDataFields([VISIT_TYPE]);
         showLoading(true, 'Cargando...');
         detailVisit(id).then((result) => {
-            const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
+            const {fields: {participantesCliente}, addListParticipant, visitReducer, contactsByClient} = this.props;
             let part = result.payload.data.data;
+            let listParticipants=[];
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
 
             this.setState({
@@ -318,7 +322,7 @@ class FormEdit extends Component {
             });
 
             //Adicionar participantes por parte del cliente
-            _.forIn(part.participatingContacts, function (value, key) {
+            _.forIn( part.participatingContacts, function (value, key) {
                 const uuid = _.uniqueId('participanClient_');
                 let clientParticipant = {
                     tipoParticipante: 'client',
@@ -333,8 +337,10 @@ class FormEdit extends Component {
                         : ' - ' + value.attitudeOverGroupName,
                     fecha: Date.now(),
                     uuid,
+                    order: _.isNull(value.order)? 0 : value.order
+
                 }
-                addParticipant(clientParticipant);
+                listParticipants.push(clientParticipant);
             });
 
             //Adicionar participantes por parte de bancolombia
@@ -352,8 +358,9 @@ class FormEdit extends Component {
                     actitudBanco: '',
                     fecha: Date.now(),
                     uuid,
+                    order: _.isNull(value.order)? 0 : value.order
                 }
-                addParticipant(clientParticipant);
+                listParticipants.push(clientParticipant);
             });
 
             //Adicionar otros participantes
@@ -371,10 +378,11 @@ class FormEdit extends Component {
                     actitudBanco: '',
                     fecha: Date.now(),
                     uuid,
+                    order: _.isNull(value.order)? 0 : value.order
                 }
-                addParticipant(otherParticipant);
+               listParticipants.push(otherParticipant);
             });
-
+            addListParticipant(listParticipants);
             //Adicionar tareas
             _.forIn(part.userTasks, function (value, key) {
                 const uuid = _.uniqueId('task_');
@@ -779,7 +787,8 @@ function mapDispatchToProps(dispatch) {
         downloadFilePdf,
         changeStateSaveData,
         nonValidateEnter,
-        showLoading
+        showLoading,
+        addListParticipant
     }, dispatch);
 }
 

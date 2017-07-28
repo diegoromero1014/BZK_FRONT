@@ -32,7 +32,7 @@ export function pdfDescarga(idclient, idVisit){
   window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es");
 }
 
-export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,order,statusDocumentId){
+export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,participatingOrder,statusDocumentId){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -52,7 +52,7 @@ export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,ord
       "pageNum": pageNum,
       "maxRows" : maxRows,
       "columnOrder": columnOrder,
-      "order": order,
+      "order": participatingOrder,
       "statusDocumentId":statusDocumentId
    }
   }

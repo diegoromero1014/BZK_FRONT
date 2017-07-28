@@ -1,22 +1,22 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import * as constants from './constants';
 import axios from 'axios';
 
-export function filterUsersBanco(filterUser){
+export function filterUsersBanco(filterUser) {
   const json = {
-      messageHeader: {
-        "timestamp": new Date().getTime(),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-      messageBody: filterUser
-    };
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: filterUser
+  };
   var request = axios.post(APP_URL + "/findUsersByName", json);
   return {
     type: constants.FILTER_USER_BANCO,
@@ -24,22 +24,30 @@ export function filterUsersBanco(filterUser){
   }
 }
 
-export function deleteParticipant(index){
+export function deleteParticipant(index, tab) {
   return {
-      type: constants.DELETE_PARTICIPANT,
-      index
-    };
+    type: constants.DELETE_PARTICIPANT,
+    index,
+    tab
+  };
 }
 
-export function addParticipant(participant){
+export function addParticipant(participant) {
   return {
-      type: constants.ADD_PARTICIPANT,
-      data : participant
-    };
+    type: constants.ADD_PARTICIPANT,
+    data: participant
+  };
 }
 
-export function clearParticipants(){
+export function clearParticipants() {
   return {
-      type: constants.CLEAR_PARTICIPANTS
-    };
+    type: constants.CLEAR_PARTICIPANTS
+  };
+}
+
+export function addListParticipant(listParticipant) {
+  return {
+    type: constants.ADD_LIST_PARTICIPANT,
+    listParticipant
+  };
 }

@@ -22,7 +22,7 @@ import {
 } from "../../../constantsGlobal";
 import {consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter} from "../../../actionsGlobal";
 import {PROPUEST_OF_BUSINESS} from "../constants";
-import {addParticipant} from "../../participantsVisitPre/actions";
+import {addParticipant,addListParticipant} from "../../participantsVisitPre/actions";
 import {createPrevisit, detailPrevisit, pdfDescarga} from "../actions";
 import Challenger from "../../methodologyChallenger/component";
 import {changeStateSaveData} from "../../dashboard/actions";
@@ -433,7 +433,8 @@ class FormEditPrevisita extends Component {
                     if (participant.tipoParticipante === "banco") {
                         let data = {
                             "id": null,
-                            "employee": participant.idParticipante
+                            "employee": participant.idParticipante,
+                            "order": participant.order
                         }
                         dataBanco.push(data)
                     }
@@ -449,7 +450,8 @@ class FormEditPrevisita extends Component {
                     if (participant.tipoParticipante === "client") {
                         let data = {
                             "id": null,
-                            "contact": participant.idParticipante
+                            "contact": participant.idParticipante,
+                            "order": participant.order
                         }
                         dataClient.push(data);
                     }
@@ -470,7 +472,8 @@ class FormEditPrevisita extends Component {
                                 "id": null,
                                 "name": participant.nombreParticipante.replace('-', '').trim(),
                                 "position": participant.cargo.replace('-', '').trim(),
-                                "company": participant.empresa.replace('-', '').trim()
+                                "company": participant.empresa.replace('-', '').trim(),
+                                "order": participant.order
                             }
                             dataOthers.push(data);
                         }
@@ -550,8 +553,9 @@ class FormEditPrevisita extends Component {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const {fields: {participantesCliente}, addParticipant, visitReducer, contactsByClient} = this.props;
+                const {fields: {participantesCliente},addListParticipant, addParticipant, visitReducer, contactsByClient} = this.props;
                 let part = result.payload.data.data;
+                let listParticipants=[];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
                 this.setState({
@@ -584,8 +588,9 @@ class FormEditPrevisita extends Component {
                             : ' - ' + value.attitudeOverGroupName,
                         fecha: Date.now(),
                         uuid,
+                        order: _.isNull(value.order)? 0 : value.order
                     }
-                    addParticipant(clientParticipant);
+                    listParticipants.push(clientParticipant);
                 });
 
                 //Adicionar participantes por parte de bancolombia
@@ -603,8 +608,9 @@ class FormEditPrevisita extends Component {
                         actitudBanco: '',
                         fecha: Date.now(),
                         uuid,
+                        order: _.isNull(value.order)? 0 : value.order
                     }
-                    addParticipant(clientParticipant);
+                    listParticipants.push(clientParticipant);
                 });
 
                 //Adicionar otros participantes
@@ -622,10 +628,12 @@ class FormEditPrevisita extends Component {
                         actitudBanco: '',
                         fecha: Date.now(),
                         uuid,
+                        order: _.isNull(value.order)? 0 : value.order
                     }
-                    addParticipant(otherParticipant);
+                    
+                    listParticipants.push(otherParticipant);
                 });
-
+                addListParticipant(listParticipants);
                 //Adicionar tareas
                 _.forIn(part.userTasks, function (value, key) {
                     const uuid = _.uniqueId('task_');
@@ -1053,7 +1061,8 @@ function mapDispatchToProps(dispatch) {
         consultParameterServer,
         changeStateSaveData,
         nonValidateEnter,
-        showLoading
+        showLoading,
+        addListParticipant
     }, dispatch);
 }
 

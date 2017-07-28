@@ -62,7 +62,7 @@ class ParticipantesCliente extends Component {
                     actitudBanco: actitudGrupo.value === null || actitudGrupo.value === undefined || actitudGrupo.value === '' ?
                         '' : ' - ' + actitudGrupo.value,
                     fecha: Date.now(),
-                    uuid,
+                    uuid                 
                 }
                 addParticipant(clientParticipant);
                 idContacto.onChange('');

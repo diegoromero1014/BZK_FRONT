@@ -404,7 +404,8 @@ class FormPrevisita extends Component {
                     if (participant.tipoParticipante === "banco") {
                         var data = {
                             "id": null,
-                            "employee": participant.idParticipante
+                            "employee": participant.idParticipante,
+                            "order": participant.order
                         }
                         dataBanco.push(data)
                     }
@@ -419,7 +420,8 @@ class FormPrevisita extends Component {
                     if (participant.tipoParticipante === "client") {
                         var data = {
                             "id": null,
-                            "contact": participant.idParticipante
+                            "contact": participant.idParticipante,
+                            "order": participant.order
                         }
                         dataClient.push(data);
                     }
@@ -439,7 +441,8 @@ class FormPrevisita extends Component {
                                 "id": null,
                                 "name": participant.nombreParticipante.replace('-', '').trim(),
                                 "position": participant.cargo.replace('-', '').trim(),
-                                "company": participant.empresa.replace('-', '').trim()
+                                "company": participant.empresa.replace('-', '').trim(),
+                                "order": participant.order
                             }
                             dataOthers.push(data);
                         }
