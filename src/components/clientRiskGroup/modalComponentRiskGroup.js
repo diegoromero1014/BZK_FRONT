@@ -173,6 +173,7 @@ class ModalComponentRiskGroup extends Component {
         swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
 
         getClientsRiskGroup(infoClient.id);
+        groupObservations.onChange("");
 
         self.setState({
           showError: false,
