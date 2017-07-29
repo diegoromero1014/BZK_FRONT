@@ -38,7 +38,9 @@ const initialState = Immutable.Map({
     region: [],
     zone: [],
     validCovenant: [],
-    fullfillmentCovenant: []
+    fullfillmentCovenant: [],
+    segment: [],
+    reasonConformation: []
 });
 
 
@@ -134,6 +136,10 @@ export default (state = initialState, action) => {
             return state.set('fullfillmentCovenant', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CUSTOMER_TYPOLOGY:
             return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.SEGMENTS:
+            return state.set('segment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.REASON_CONFORMATION:
+            return state.set('reasonConformation', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
             return state;
     }
