@@ -93,8 +93,8 @@ class ModalComponentRiskGroup extends Component {
   }
 
   componentWillMount() {
-    const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion, 
-    nonValidateEnter, showLoading, isOpen, swtShowMessage } = this.props;
+    const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion,
+      nonValidateEnter, showLoading, isOpen, swtShowMessage } = this.props;
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
@@ -118,7 +118,7 @@ class ModalComponentRiskGroup extends Component {
         isOpen();
       }
 
-        showLoading(false, "");
+      showLoading(false, "");
     });
 
   }
@@ -150,9 +150,6 @@ class ModalComponentRiskGroup extends Component {
       default:
         break;
     }
-    // const { clearState } = this.props;
-    // clearState();
-    // console.log(clearState);
 
   }
   _handlerSubmitGroup() {
@@ -188,7 +185,6 @@ class ModalComponentRiskGroup extends Component {
       }
 
     }, (reason) => {
-      // changeStateSaveData(false, "");
       swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
     })
 
@@ -198,21 +194,13 @@ class ModalComponentRiskGroup extends Component {
 
   render() {
 
-    const {
-            fields: {
-                groupName, groupCode, groupObservations
-              },
-      riskGroupReducer,
-      clientInformacion,
-      handleSubmit
-            } = this.props;
-    //riskGroupReducer.get('economicGroupClients')
-    //console.log("this.state.riskGroup", this.state.riskGroup)
+    const { fields: { groupName, groupCode, groupObservations },
+      riskGroupReducer, clientInformacion, handleSubmit } = this.props;
 
-    const riskGroup = Object.assign({}, this.state.riskGroup);
-    const members = Object.assign([], this.state.riskGroup.members);
-    // const members = [];
-    // const riskGroup = {};
+    const riskGroup = riskGroupReducer.get('riskGroupClients')
+
+    const _riskGroup = Object.assign({}, riskGroup);
+    const members = Object.assign([], _riskGroup.members);
 
 
     return (
@@ -228,7 +216,7 @@ class ModalComponentRiskGroup extends Component {
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                 </dt>
                 {!this.state.allowEditGroup &&
-                  <p>{riskGroup.code}</p>
+                  <p>{riskGroup ? riskGroup.code : ""}</p>
                 }
                 {this.state.allowEditGroup &&
                   <Input name="groupCode"
@@ -248,7 +236,7 @@ class ModalComponentRiskGroup extends Component {
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                 </dt>
                 {!this.state.allowEditGroup &&
-                  <p>{riskGroup.name}</p>
+                  <p>{riskGroup ? riskGroup.name : ""}</p>
                 }
                 {this.state.allowEditGroup &&
                   <Input name="groupName"
@@ -385,7 +373,6 @@ function mapStateToProps({ riskGroupReducer, clientInformacion }, ownerProps) {
   };
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(ModalComponentRiskGroup);
 export default reduxForm({
   form: 'submitGroupEdit',
   fields,

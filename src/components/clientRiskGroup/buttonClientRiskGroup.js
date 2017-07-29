@@ -35,7 +35,7 @@ class buttonClientRiskGroup extends Component {
     render() {
         return (
             <div>
-                <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
+                <button className="btn btn-primary" type="button" title="Ver grupo de riesgo" style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
                     <i className="thermometer icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
                 </button>
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">

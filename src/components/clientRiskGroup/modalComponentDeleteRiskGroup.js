@@ -80,11 +80,6 @@ class modalComponentDeleteRiskGroup extends Component {
           swtShowMessage('success',
             'Grupo de riesgo pendiente por eliminación',
             'Señor usuario, La eliminación debe ser aprobado por el analista de Riesgos.');
-          isOpen();
-          // self.setState({
-          //   showError: false,
-          //   showErrorForm: false
-          // });
         } else {
           swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de eliminar el grupo de riesgo.');
         }
@@ -92,9 +87,10 @@ class modalComponentDeleteRiskGroup extends Component {
       } else {
         swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de eliminar el grupo de riesgo.');
       }
+      isOpen();
 
     }, (reason) => {
-      // changeStateSaveData(false, "");
+       isOpen();
       swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error eliminando el grupo de riesgo.');
     })
 
@@ -110,9 +106,9 @@ class modalComponentDeleteRiskGroup extends Component {
 
       <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
         onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
-        <div id="content-modal-rosk-group" className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: "hidden", marginBottom: '15px', height: "auto" }}>
+        <div id="content-modal-rosk-group" className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: "hidden", height: "auto" }}>
 
-          <Row style={{ padding: "10px 20px 20px 20px" }}>
+          <Row style={{ padding: "10px 20px 0px" }}>
 
             <Col md={12}>
 

@@ -40,16 +40,18 @@ class clientsRiskGroup extends Component {
     const { dataName, dataDocumentType, dataDocument, key, client } = this.props;
     return (
       <div key={key} className="client-card" style={{ width: "100%", marginBottom: "15px", cursor: 'auto', height: "auto" }}>
-        <div className="celula-card-top" style={{ height: "auto" }}>
+        <div className="celula-card-top" style={{ height: "auto", minHeight: "79px" }}>
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
           </div>
         </div>
-        <div className="celula-card-bottom" style={{ backgroundColor: "#B0E0E6" }}>
-          <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
-            onClick={this.openModalRemoveClient}
-            title="Remover cliente grupo de riesgo" />
+        <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6") }}>
+          {!client.isPending &&
+            <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
+              onClick={this.openModalRemoveClient}
+              title="Remover cliente grupo de riesgo" />
+          }
 
 
           <Modal isOpen={this.state.modalRemoveClientIsOpen} onRequestClose={this.closeModalRemoveClient} className="modalBt4-fade modal fade contact-detail-modal in">
@@ -70,17 +72,6 @@ class clientsRiskGroup extends Component {
 
         </div>
 
-        <SweetAlert
-          type="warning"
-          show={this.state.showConfirmDelete}
-          title="Grupo económico"
-          confirmButtonColor='#2671d7'
-          confirmButtonText='Sí'
-          cancelButtonText="No"
-          text="¿Señor usuario, está seguro que desea eliminar el cliente del grupo económico?"
-          showCancelButton={true}
-          onCancel={() => this.setState({ showConfirmDelete: false })}
-          onConfirm={() => console.log("removing")} />
       </div>
     );
   }

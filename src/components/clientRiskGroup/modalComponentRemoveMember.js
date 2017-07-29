@@ -63,13 +63,14 @@ class modalComponentRemoveMember extends Component {
 
 
   _handlerSubmitGroup() {
-    const { fields: { justification }, removeClientRiskGroup, swtShowMessage, client, isOpen } = this.props;
+    const { fields: { justification }, removeClientRiskGroup, swtShowMessage, client, isOpen, getClientsRiskGroup, clientInformacion } = this.props;
 
     const jsonUpdateGroup = {
       id: client.id,
       justification: justification.value !== undefined ? justification.value : null
     }
     const self = this;
+    const infoClient = clientInformacion.get('responseClientInfo');
 
     removeClientRiskGroup(jsonUpdateGroup).then((data) => {
 
@@ -78,9 +79,8 @@ class modalComponentRemoveMember extends Component {
           swtShowMessage('success',
             'Retirar cliente',
             'Señor usuario, para retirar el cliente debe ser aprobado por el analista de Riesgos.');
-          isOpen();
+          getClientsRiskGroup(infoClient.id);
 
-          
           // self.setState({
           //   showError: false,
           //   showErrorForm: false
@@ -92,9 +92,9 @@ class modalComponentRemoveMember extends Component {
       } else {
         swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
       }
+      isOpen();
 
     }, (reason) => {
-      // changeStateSaveData(false, "");
       swtShowMessage('error', 'Error retirando cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
     })
 
@@ -110,9 +110,9 @@ class modalComponentRemoveMember extends Component {
 
       <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
         onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
-        <div id="content-modal-rosk-group" className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: "hidden", marginBottom: '15px', height: "auto" }}>
+        <div id="content-modal-rosk-group" className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: "hidden", height: "auto" }}>
 
-          <Row style={{ padding: "10px 20px 20px 20px" }}>
+          <Row style={{ padding: "10px 20px 0px" }}>
 
             <Col md={12}>
 

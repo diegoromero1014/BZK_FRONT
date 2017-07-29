@@ -177,11 +177,14 @@ class ComponentClientInformation extends Component {
                                             <ButtonTeamComponent />
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
-                                            <ButtonRiskGrouo />
-                                        </td>
-                                    </tr>
+                                    {
+                                        infoClient.hasRiskGroup &&
+                                        <tr>
+                                            <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
+                                                <ButtonRiskGrouo />
+                                            </td>
+                                        </tr>
+                                    }
 
                                     {infoClient.economicGroup &&
                                         <tr>

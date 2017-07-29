@@ -66,6 +66,7 @@ class modalComponentMemberRiskGroup extends Component {
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this.confirmExtClients = this.confirmExtClients.bind(this);
     thisForm = this;
   }
 
@@ -91,8 +92,6 @@ class modalComponentMemberRiskGroup extends Component {
     switch (file) {
       case "idType":
         var { fields: { idType } } = this.props;
-        console.log(idType);
-        console.log(val);
         idType.onChange(val);
         break;
       case "idNumber":
@@ -125,18 +124,26 @@ class modalComponentMemberRiskGroup extends Component {
       } else {
         swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
       }
-
+     
 
     }, (reason) => {
       this.setState({ showConfirmCreateUser: true });
-      // changeStateSaveData(false, "");
-      // swtShowMessage('error', 'Error retirando cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
     })
+  }
 
-
-    //    
-
-
+  confirmExtClients(confirm) {
+    if (confirm) {
+      this.setState({
+        showConfirmCreateUser: false,
+        disabledPrimaryFields: true,
+        showForm: true,
+        clientsBasicInfo: {}
+      })
+    } else {
+      this.setState({
+        showConfirmCreateUser: false
+      })
+    }
   }
 
   render() {
@@ -154,16 +161,17 @@ class modalComponentMemberRiskGroup extends Component {
           <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
             onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
 
-            <Row style={{ padding: "10px 20px 20px 20px" }}>
+            <Row style={{ padding: "10px 20px 0px" }}>
 
 
-              <Col xs={12} md={5} lg={5}>
+              <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
                 <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
                   onChange={val => this._onchangeValue("idType", val)}
                   labelInput="Seleccion el tipo de documento del prospecto"
                   {...idType}
+                  disabled={this.state.disabledPrimaryFields ? "disabled" : ""}
                   valueProp={'id'}
                   textProp={'value'}
                   data={selectsReducer.get('dataTypeDocument')}
@@ -171,32 +179,28 @@ class modalComponentMemberRiskGroup extends Component {
 
 
               </Col>
-              <Col xs={12} md={5} lg={5} style={{ paddingRight: "30px" }}>
+              <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6} style={{ paddingRight: "30px" }}>
                 <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="documento"
                   type="text"
                   max="20"
+                  disabled={this.state.disabledPrimaryFields}
                   placeholder="Ingrese el número de documento del prospecto"
                   {...idNumber}
                 />
               </Col>
-              <Col xs={2} md={4} lg={2}>
-                <button className="btn btn-primary" type="submit" title="Buscar cliente"
-                  style={{ marginLeft: "30px", marginTop: "20px", fontSize: '1.2em', paddingTop: "4px !important" }}>
-                  <i className="search icon" ></i>
-                </button>
-              </Col>
+              {!this.state.disabledPrimaryFields &&
+                <Col xs={2} md={4} lg={2} style={{ height: "73px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+
+                  <button className="btn btn-primary" type="submit" title="Buscar cliente"
+                    style={{ fontSize: '1.2em' }}>
+                    <i className="search icon" ></i>
+                  </button>
+                </Col>
+              }
 
 
-              <SweetAlert
-                type="error"
-                show={this.state.showErrorForm}
-                showCancelButton={true}
-                title="Campos obligatorios"
-                text="Señor usuario, para eliminar un grupo de riesgo debe ingresar los campos obligatorios."
-                onConfirm={() => this.setState({ showErrorForm: false })}
-              />
 
               <SweetAlert
                 type="warning"
@@ -210,6 +214,7 @@ class modalComponentMemberRiskGroup extends Component {
                   showForm: true,
                   clientsBasicInfo: {}
                 })}
+                onCancel={() => this.setState({ showConfirmCreateUser: false })}
               />
             </Row>
           </form >
@@ -226,9 +231,11 @@ class modalComponentMemberRiskGroup extends Component {
         </div >
 
         <div className="modalBt4-footer modal-footer" >
-          <button className="btn btn-prymary" type="submit"
-            form={"submitMemberForm"} style={{ cursor: 'pointer', marginLeft: "20px" }}>
-            <i className="trash icon"></i> Agregar </button>
+          {this.state.showForm &&
+            <button className="btn btn-prymary" type="submit"
+              form={"submitMemberForm"} style={{ cursor: 'pointer', marginLeft: "20px" }}>
+              <i className="trash icon"></i> Agregar </button>
+          }
           <button className="btn btn-default active" type="button"
             style={{ cursor: 'pointer', marginLeft: "20px" }} onClick={() => { isOpen() }}>
             Cancelar </button>

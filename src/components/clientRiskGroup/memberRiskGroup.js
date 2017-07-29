@@ -94,7 +94,6 @@ class memberRiskGroup extends Component {
       }
     });
 
-    // clientName.onChange(clientsBasicInfo.nameClient);
   }
 
   _onchangeValue(file, val) {
@@ -125,7 +124,9 @@ class memberRiskGroup extends Component {
 
   _handlerSubmitGroup() {
     const { fields: { clientName, conformationReasonId, segmentClient, justification }, riskGroup,
-      swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber, addClientRiskGroup } = this.props;
+      swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber,
+      addClientRiskGroup, getClientsRiskGroup, clientInformacion } = this.props;
+
     const jsonUpdateGroup = {
       idClient: clientsBasicInfo.idClient,
       documentTypeId: documentType,
@@ -136,6 +137,9 @@ class memberRiskGroup extends Component {
       riskGroupId: riskGroup.id,
       justification: justification.value
     }
+
+    const infoClient = clientInformacion.get('responseClientInfo');
+
     const self = this;
 
     addClientRiskGroup(jsonUpdateGroup).then((data) => {
@@ -145,7 +149,8 @@ class memberRiskGroup extends Component {
           swtShowMessage('success',
             'Cliente pendiente por Aprobacion',
             'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de Riesgos.');
-          // isOpen();
+          getClientsRiskGroup(infoClient.id);
+
           this.setState({
             showForm: true,
             disabledPrimaryFields: true,
@@ -157,24 +162,18 @@ class memberRiskGroup extends Component {
           let msjHasGroup = 'Señor usuario, este cliente ya pertenece a un grupo de riesgo.';
           swtShowMessage('error', 'Error agregando el cliente', (result == "hasGroup" ? msjHasGroup : msjError));
         }
-
-
-        isOpen();
-
+        
       } else {
         swtShowMessage('error', 'Error agregando el cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente.');
       }
 
+      isOpen();
 
     }, (reason) => {
       this.setState({ showConfirmCreateUser: true });
-      // changeStateSaveData(false, "");
       swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente.');
       isOpen();
     })
-
-
-    //    
 
   }
 
@@ -195,37 +194,32 @@ class memberRiskGroup extends Component {
 
             <Col xs={12} md={6} lg={6} style={{ paddingRight: "30px" }}>
               <dt><span>Nombre del cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
-              {clientsBasicInfo.nameClient &&
-                <p>{clientsBasicInfo.nameClient}</p>
-              }
-              {!clientsBasicInfo.nameClient &&
-                <Input
-                  name="nombre"
-                  type="text"
-                  onChange={val => this._onchangeValue("clientName", val)}
-                  placeholder="Ingrese el nombre del cliente"
-                  {...clientName}
-                />
-              }
+
+              <Input
+                name="nombre"
+                type="text"
+                onChange={val => this._onchangeValue("clientName", val)}
+                placeholder="Ingrese el nombre del cliente"
+                disabled={!!clientsBasicInfo.idClient}
+                {...clientName}
+              />
+
             </Col>
 
             <Col xs={12} md={6} lg={6} style={{ paddingRight: "30px" }}>
               <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
 
-              {clientsBasicInfo.segmentId &&
-                <p>{clientsBasicInfo.segment}</p>
-              }
-              {!clientsBasicInfo.segmentId &&
-                <ComboBox
-                  name="semento"
-                  labelInput="Seleccione un segemento"
-                  onChange={val => this._onchangeValue("segmentClient", val)}
-                  {...segmentClient}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  data={selectsReducer.get('segment')}
-                />
-              }
+              <ComboBox
+                name="semento"
+                labelInput="Seleccione un segemento"
+                onChange={val => this._onchangeValue("segmentClient", val)}
+                {...segmentClient}
+                valueProp={'id'}
+                textProp={'value'}
+                disabled={clientsBasicInfo.idClient ? "disabled" : ""}
+                data={selectsReducer.get('segment')}
+              />
+
 
 
 
