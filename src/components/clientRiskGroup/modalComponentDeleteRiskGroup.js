@@ -79,7 +79,7 @@ class modalComponentDeleteRiskGroup extends Component {
         if (_.get(data, 'payload.data.data', false)) {
           swtShowMessage('success',
             'Grupo de riesgo pendiente por eliminación',
-            'Señor usuario, La eliminación debe ser aprobado por el analista de Riesgos.');
+            'Señor usuario, la eliminación debe ser aprobada por el analista de riesgos.');
         } else {
           swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de eliminar el grupo de riesgo.');
         }

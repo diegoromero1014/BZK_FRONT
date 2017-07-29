@@ -114,7 +114,7 @@ class ModalComponentRiskGroup extends Component {
         groupCode.onChange(riskGroup.code);
 
       } else {
-        swtShowMessage('error', 'Error cosultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de cosultar el grupo de riesgo.');
+        swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
         isOpen();
       }
 
@@ -170,7 +170,10 @@ class ModalComponentRiskGroup extends Component {
     editNameRiskGroup(jsonUpdateGroup).then((data) => {
 
       if (validateResponse(data)) {
-        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobado por el analista de Riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
+        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
+
+        getClientsRiskGroup(infoClient.id);
+
         self.setState({
           showError: false,
           showErrorForm: false,
@@ -180,6 +183,7 @@ class ModalComponentRiskGroup extends Component {
             code: groupCode.value
           })
         });
+
       } else {
         swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de editar el grupo de riesgo.');
       }
@@ -199,6 +203,9 @@ class ModalComponentRiskGroup extends Component {
 
     const riskGroup = riskGroupReducer.get('riskGroupClients')
 
+
+    console.log(riskGroup);
+
     const _riskGroup = Object.assign({}, riskGroup);
     const members = Object.assign([], _riskGroup.members);
 
@@ -210,13 +217,13 @@ class ModalComponentRiskGroup extends Component {
           onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
           <Row style={{ padding: "10px 20px 20px 20px" }}>
 
-            <Col xs={10} md={6} lg={this.state.allowEditGroup ? 3 : 2}>
+            <Col xs={10} md={6} lg={3}>
               <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                 <dt><span>Código del grupo </span>
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                 </dt>
                 {!this.state.allowEditGroup &&
-                  <p>{riskGroup ? riskGroup.code : ""}</p>
+                  <p style={{ wordBreak: "break-word" }}>{riskGroup ? riskGroup.code : ""}</p>
                 }
                 {this.state.allowEditGroup &&
                   <Input name="groupCode"
@@ -236,7 +243,7 @@ class ModalComponentRiskGroup extends Component {
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                 </dt>
                 {!this.state.allowEditGroup &&
-                  <p>{riskGroup ? riskGroup.name : ""}</p>
+                  <p style={{ wordBreak: "break-word" }}>{riskGroup ? riskGroup.name : ""}</p>
                 }
                 {this.state.allowEditGroup &&
                   <Input name="groupName"
@@ -245,7 +252,6 @@ class ModalComponentRiskGroup extends Component {
                     {...groupName}
                     onChange={val => this._onchangeValue("groupName", val)}
                   />
-
                 }
               </div>
             </Col>
@@ -269,7 +275,7 @@ class ModalComponentRiskGroup extends Component {
               </Col>
             }
 
-            <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 5} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
+            <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 4} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
               {this.state.allowEditGroup &&
                 <div>
                   <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }} >

@@ -78,7 +78,7 @@ class modalComponentRemoveMember extends Component {
         if (_.get(data, 'payload.data.data', false)) {
           swtShowMessage('success',
             'Retirar cliente',
-            'Señor usuario, para retirar el cliente debe ser aprobado por el analista de Riesgos.');
+            'Señor usuario, para retirar el cliente debe ser aprobado por el analista de riesgos.');
           getClientsRiskGroup(infoClient.id);
 
           // self.setState({
@@ -133,7 +133,7 @@ class modalComponentRemoveMember extends Component {
               type="error"
               show={this.state.showErrorForm}
               title="Campos obligatorios"
-              text="Señor usuario, para remover un miembro del grupo de riesgo debe ingresar los campos obligatorios."
+              text="Señor usuario, para remover un cliente del grupo de riesgo debe ingresar los campos obligatorios."
               onConfirm={() => this.setState({ showErrorForm: false })}
             />
           </Row>

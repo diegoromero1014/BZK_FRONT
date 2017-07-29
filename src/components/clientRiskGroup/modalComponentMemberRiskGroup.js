@@ -122,9 +122,8 @@ class modalComponentMemberRiskGroup extends Component {
           clientsBasicInfo: _.get(data, 'payload.data.data', {})
         });
       } else {
-        swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
+        swtShowMessage('error', 'Error consultando el cliente', 'Señor usuario, ocurrió un error tratando de consultar el cliente.');
       }
-     
 
     }, (reason) => {
       this.setState({ showConfirmCreateUser: true });
@@ -169,7 +168,7 @@ class modalComponentMemberRiskGroup extends Component {
                 <ComboBox
                   name="tipoDocumento"
                   onChange={val => this._onchangeValue("idType", val)}
-                  labelInput="Seleccion el tipo de documento del prospecto"
+                  labelInput="Seleccione el tipo de documento"
                   {...idType}
                   disabled={this.state.disabledPrimaryFields ? "disabled" : ""}
                   valueProp={'id'}
@@ -186,7 +185,7 @@ class modalComponentMemberRiskGroup extends Component {
                   type="text"
                   max="20"
                   disabled={this.state.disabledPrimaryFields}
-                  placeholder="Ingrese el número de documento del prospecto"
+                  placeholder="Ingrese el número de documento"
                   {...idNumber}
                 />
               </Col>
@@ -207,7 +206,7 @@ class modalComponentMemberRiskGroup extends Component {
                 show={this.state.showConfirmCreateUser}
                 showCancelButton={true}
                 title="Busqueda de cliente"
-                text="Señor usuario, el usuario no fue encontrado, desea crear uno."
+                text="Señor usuario, el cliente no fue encontrado, desea crear uno."
                 onConfirm={() => this.setState({
                   showConfirmCreateUser: false,
                   disabledPrimaryFields: true,

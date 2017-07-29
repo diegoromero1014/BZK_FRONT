@@ -147,8 +147,8 @@ class memberRiskGroup extends Component {
         let result = _.get(data, 'payload.data.data', "");
         if (result != "hasGroup" && result != "error") {
           swtShowMessage('success',
-            'Cliente pendiente por Aprobacion',
-            'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de Riesgos.');
+            'Cliente pendiente por Aprobación',
+            'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de riesgos.');
           getClientsRiskGroup(infoClient.id);
 
           this.setState({
@@ -226,10 +226,10 @@ class memberRiskGroup extends Component {
             </Col>
 
             <Col xs={12} md={6} lg={6}>
-              <dt><span>Razon de conformación (</span><span style={{ color: "red" }}>*</span>)</dt>
+              <dt><span>Razón de conformación (</span><span style={{ color: "red" }}>*</span>)</dt>
               <ComboBox
                 name="razonConformacion"
-                labelInput="Seleccione la razon de conformación"
+                labelInput="Seleccione la razón de conformación"
                 {...conformationReasonId}
                 onChange={val => this._onchangeValue("conformationReasonId", val)}
 

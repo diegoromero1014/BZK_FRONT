@@ -1,5 +1,8 @@
 import { APP_URL } from '../../constantsGlobal';
-import { CONSULT_RISK_GROUP } from './constants';
+import {
+  CONSULT_RISK_GROUP,
+  REMOVE_CLIENT_RISK_GROUP, DELETE_RISK_GROUP, ADD_CLIENT_RISK_GROUP, EDIT_NAME_RISK_GROUP
+} from './constants';
 import axios from 'axios';
 
 export function getClientsRiskGroup(id) {
@@ -44,7 +47,7 @@ export function removeClientRiskGroup(id) {
   }
   var request = axios.post(APP_URL + "/requestRemoveClientRiskGroup", json);
   return {
-    type: CONSULT_RISK_GROUP,
+    type: REMOVE_CLIENT_RISK_GROUP,
     payload: request
   }
 }
@@ -67,7 +70,7 @@ export function deleteRiskGroup(data) {
   }
   var request = axios.post(APP_URL + "/requestDeleteRiskGroup", json);
   return {
-    type: CONSULT_RISK_GROUP,
+    type: DELETE_RISK_GROUP,
     payload: request
   }
 }
@@ -95,12 +98,12 @@ export function addClientRiskGroup(data) {
       segmentClientId: data.segmentClientId,
       conformationReasonId: data.conformationReasonId,
       riskGroupId: data.riskGroupId,
-      justification: data.justification 
+      justification: data.justification
     }
   }
   var request = axios.post(APP_URL + "/requestAddClientRiskGroup", json);
   return {
-    type: CONSULT_RISK_GROUP,
+    type: ADD_CLIENT_RISK_GROUP,
     payload: request
   }
 }
@@ -121,11 +124,11 @@ export function editNameRiskGroup(data) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody":data
+    "messageBody": data
   }
   var request = axios.post(APP_URL + "/editNameRiskgroup", json);
   return {
-    type: CONSULT_RISK_GROUP,
+    type: EDIT_NAME_RISK_GROUP,
     payload: request
   }
 }
