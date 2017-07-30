@@ -204,9 +204,6 @@ class ModalComponentRiskGroup extends Component {
 
     const riskGroup = riskGroupReducer.get('riskGroupClients')
 
-
-    console.log(riskGroup);
-
     const _riskGroup = Object.assign({}, riskGroup);
     const members = Object.assign([], _riskGroup.members);
 
