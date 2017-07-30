@@ -198,6 +198,7 @@ class memberRiskGroup extends Component {
               <Input
                 name="nombre"
                 type="text"
+                max="100"
                 onChange={val => this._onchangeValue("clientName", val)}
                 placeholder="Ingrese el nombre del cliente"
                 disabled={!!clientsBasicInfo.idClient}
