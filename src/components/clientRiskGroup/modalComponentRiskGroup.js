@@ -291,7 +291,7 @@ class ModalComponentRiskGroup extends Component {
               }
               <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
                 style={{ cursor: 'pointer', marginLeft: "20px" }}>
-                <i className="trash icon"></i> Elimnar </button>
+                <i className="trash icon"></i> Eliminar </button>
 
               <Modal isOpen={this.state.modalDelteRiskGroupIsOpen} onRequestClose={this.closeModalDelteRiskGroup} className="modalBt4-fade modal fade contact-detail-modal in">
                 <div className="modalBt4-dialog modalBt4-md">
