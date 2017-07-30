@@ -72,6 +72,7 @@ class memberRiskGroup extends Component {
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this.requestAddMemberRiskGroup = this.requestAddMemberRiskGroup.bind(this);
 
     thisForm = this;
   }
@@ -121,8 +122,7 @@ class memberRiskGroup extends Component {
 
   }
 
-
-  _handlerSubmitGroup() {
+  requestAddMemberRiskGroup() {
     const { fields: { clientName, conformationReasonId, segmentClient, justification }, riskGroup,
       swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber,
       addClientRiskGroup, getClientsRiskGroup, clientInformacion } = this.props;
@@ -162,7 +162,7 @@ class memberRiskGroup extends Component {
           let msjHasGroup = 'Señor usuario, este cliente ya pertenece a un grupo de riesgo.';
           swtShowMessage('error', 'Error agregando el cliente', (result == "hasGroup" ? msjHasGroup : msjError));
         }
-        
+
       } else {
         swtShowMessage('error', 'Error agregando el cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente.');
       }
@@ -174,6 +174,15 @@ class memberRiskGroup extends Component {
       swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente.');
       isOpen();
     })
+
+  }
+
+  _handlerSubmitGroup() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(() => {
+      this.requestAddMemberRiskGroup();
+    })
+
 
   }
 

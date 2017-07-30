@@ -147,7 +147,7 @@ class modalComponentMemberRiskGroup extends Component {
 
   render() {
 
-    const { fields: { idType, idNumber }, handleSubmit, isOpen, riskGroup } = this.props;
+    const { fields: { idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
     const { selectsReducer, clientR } = this.props;
 
 
@@ -190,7 +190,7 @@ class modalComponentMemberRiskGroup extends Component {
                 />
               </Col>
               {!this.state.disabledPrimaryFields &&
-                <Col xs={2} md={4} lg={2} style={{ paddingTop: '25pt'}}>
+                <Col xs={2} md={4} lg={2} style={{ paddingTop: '25pt' }}>
                   <button className="btn btn-primary" type="submit" title="Buscar cliente"
                     style={{ fontSize: '1.2em' }}>
                     <i className="search icon" ></i>
@@ -219,6 +219,7 @@ class modalComponentMemberRiskGroup extends Component {
 
           {this.state.showForm &&
             <MemberRiskGroup
+              validateHasRiskGroup={validateHasRiskGroup}
               isOpen={isOpen}
               riskGroup={riskGroup}
               clientsBasicInfo={this.state.clientsBasicInfo}

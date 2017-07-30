@@ -44,6 +44,7 @@ class modalComponentDeleteRiskGroup extends Component {
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this.requestDeleteRiskGroup = this.requestDeleteRiskGroup.bind(this);
 
     thisForm = this;
   }
@@ -62,9 +63,8 @@ class modalComponentDeleteRiskGroup extends Component {
 
   }
 
-
-  _handlerSubmitGroup() {
-    const { fields: { justification }, deleteRiskGroup, swtShowMessage, riskGroup, isOpen } = this.props;
+  requestDeleteRiskGroup() {
+    const { fields: { justification }, deleteRiskGroup, swtShowMessage, riskGroup, isOpen, validateHasRiskGroup } = this.props;
 
     const jsonUpdateGroup = {
       id: riskGroup.id,
@@ -90,10 +90,17 @@ class modalComponentDeleteRiskGroup extends Component {
       isOpen();
 
     }, (reason) => {
-       isOpen();
+      isOpen();
       swtShowMessage('error', 'Error eliminando grupo de riesgo', 'Señor usuario, ocurrió un error eliminando el grupo de riesgo.');
     })
+  }
 
+
+  _handlerSubmitGroup() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(() => {
+      this.requestDeleteRiskGroup();
+    });
 
   }
 

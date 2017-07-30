@@ -37,7 +37,7 @@ class clientsRiskGroup extends Component {
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, key, client } = this.props;
+    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup } = this.props;
     return (
       <div key={key} className="client-card" style={{ width: "100%", marginBottom: "15px", cursor: 'auto', height: "auto" }}>
         <div className="celula-card-top" style={{ height: "auto", minHeight: "93px" }}>
@@ -64,7 +64,7 @@ class clientsRiskGroup extends Component {
                     <span className="sr-only">Close</span>
                   </button>
                 </div>
-                {<ModalComponentRemoveMember client={client} isOpen={this.closeModalRemoveClient} />}
+                {<ModalComponentRemoveMember validateHasRiskGroup={validateHasRiskGroup} client={client} isOpen={this.closeModalRemoveClient} />}
               </div>
             </div>
           </Modal>

@@ -44,6 +44,7 @@ class modalComponentRemoveMember extends Component {
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
     this._onchangeValue = this._onchangeValue.bind(this);
+    this.requestRemoveMemberRiskGroup = this.requestRemoveMemberRiskGroup.bind(this);
     thisForm = this;
   }
 
@@ -61,8 +62,7 @@ class modalComponentRemoveMember extends Component {
 
   }
 
-
-  _handlerSubmitGroup() {
+  requestRemoveMemberRiskGroup() {
     const { fields: { justification }, removeClientRiskGroup, swtShowMessage, client, isOpen, getClientsRiskGroup, clientInformacion } = this.props;
 
     const jsonUpdateGroup = {
@@ -98,7 +98,13 @@ class modalComponentRemoveMember extends Component {
       swtShowMessage('error', 'Error retirando cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
     })
 
+  }
 
+  _handlerSubmitGroup() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(()=>{
+      this.requestRemoveMemberRiskGroup();
+    })
   }
 
   render() {
