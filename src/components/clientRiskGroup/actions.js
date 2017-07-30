@@ -29,7 +29,7 @@ export function getClientsRiskGroup(id) {
 }
 
 
-export function removeClientRiskGroup(id) {
+export function removeClientRiskGroup(data) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -43,7 +43,7 @@ export function removeClientRiskGroup(id) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": id
+    "messageBody":data
   }
   var request = axios.post(APP_URL + "/requestRemoveClientRiskGroup", json);
   return {
