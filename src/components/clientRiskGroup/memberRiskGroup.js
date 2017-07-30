@@ -147,7 +147,7 @@ class memberRiskGroup extends Component {
         let result = _.get(data, 'payload.data.data', "");
         if (result != "hasGroup" && result != "error") {
           swtShowMessage('success',
-            'Cliente pendiente por Aprobación',
+            'Cliente pendiente por aprobación',
             'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de riesgos.');
           getClientsRiskGroup(infoClient.id);
 
