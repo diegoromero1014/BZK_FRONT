@@ -40,7 +40,7 @@ class clientsRiskGroup extends Component {
     const { dataName, dataDocumentType, dataDocument, key, client } = this.props;
     return (
       <div key={key} className="client-card" style={{ width: "100%", marginBottom: "15px", cursor: 'auto', height: "auto" }}>
-        <div className="celula-card-top" style={{ height: "auto", minHeight: "79px" }}>
+        <div className="celula-card-top" style={{ height: "auto", minHeight: "93px" }}>
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
