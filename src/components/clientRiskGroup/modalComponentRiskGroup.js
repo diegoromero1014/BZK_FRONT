@@ -170,7 +170,7 @@ class ModalComponentRiskGroup extends Component {
     editNameRiskGroup(jsonUpdateGroup).then((data) => {
 
       if (validateResponse(data)) {
-        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
+        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, la edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado se regresará a el valor anterior.');
 
         getClientsRiskGroup(infoClient.id);
         groupObservations.onChange("");
