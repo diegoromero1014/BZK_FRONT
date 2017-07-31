@@ -11,7 +11,8 @@ const initialState = Immutable.Map({
   permissionsTasks: [],
   permissionsPipeline: [],
   permissionsBussinessPlan: [],
-  permissionsManagerialView: []
+  permissionsManagerialView: [],
+  permissionsRiskGroup: [],
 });
 
 export default (state = initialState, action) => {
@@ -51,6 +52,9 @@ export default (state = initialState, action) => {
     case constants.MODULE_QUALITATIVE_VARIABLES:
       const permissionsQualitativeV = action.payload.data.data.permissions;
       return state.set('permissionsQualitativeV', permissionsQualitativeV);
+    case constants.MODULE_RISK_GROUP:
+      const permissionsRiskGroup = action.payload.data.data.permissions;
+      return state.set('permissionsRiskGroup', permissionsRiskGroup);
     default:
       return state;
   }
