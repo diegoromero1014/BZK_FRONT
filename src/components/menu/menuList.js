@@ -30,7 +30,7 @@ const itemMyPendings = {
     children: []
 };
 const itemVisor = {
-    text: "Visor",
+    text: "Transaccional",
     icon: "area chart",
     link: "/dashboard/visor"
 };
