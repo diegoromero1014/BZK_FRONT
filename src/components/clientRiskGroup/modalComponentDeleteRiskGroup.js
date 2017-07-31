@@ -145,7 +145,7 @@ class modalComponentDeleteRiskGroup extends Component {
         <div className="modalBt4-footer modal-footer">
           <button className="btn btn-danger" type="submit"
             style={{ cursor: 'pointer', marginLeft: "20px" }}>
-            <i className="trash icon"></i> Elimnar </button>
+           Elimnar </button>
         </div>
       </form >
 
