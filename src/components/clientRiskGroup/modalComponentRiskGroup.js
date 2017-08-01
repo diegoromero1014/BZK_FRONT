@@ -8,19 +8,25 @@ import Textarea from '../../ui/textarea/textareaComponent';
 
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+
 import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, MESSAGE_LOAD_DATA, VALUE_REQUIERED } from '../../constantsGlobal';
+import { MODULE_RISK_GROUP } from '../../constantsGlobal';
 import { stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
-import { getClientsRiskGroup, editNameRiskGroup } from './actions';
+import { getClientsRiskGroup, editNameRiskGroup, hasClientRequest } from './actions';
 import ModalComponentDeleteRiskGroup from './modalComponentDeleteRiskGroup';
 import ModalComponentMemberRiskGroup from './modalComponentMemberRiskGroup';
 import ClientsRiskGroup from './clientsRiskGroup';
 import { showLoading } from '../loading/actions';
 import Modal from 'react-modal';
+import { validatePermissionsByModule } from '../../actionsGlobal';
 
 import _ from 'lodash';
 import $ from 'jquery';
 
+
+export const EDITAR = "Editar";
+export const ELIMINAR = "Eliminar";
 
 const fields = ["groupName", "groupCode", "groupObservations"]
 const validate = values => {
@@ -64,6 +70,7 @@ class ModalComponentRiskGroup extends Component {
     this.closeModalDelteRiskGroup = this.closeModalDelteRiskGroup.bind(this);
     this.openModalMember = this.openModalMember.bind(this);
     this.closeModalMember = this.closeModalMember.bind(this);
+    this.updateRiskGroup = this.updateRiskGroup.bind(this);
 
     this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
     this._closeError = this._closeError.bind(this);
@@ -73,6 +80,9 @@ class ModalComponentRiskGroup extends Component {
 
 
   openModalDelteRiskGroup() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(() => { });
+
     this.setState({ modalDelteRiskGroupIsOpen: true });
   }
 
@@ -81,6 +91,9 @@ class ModalComponentRiskGroup extends Component {
   }
 
   openModalMember() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(() => { });
+
     this.setState({ modalMemberIsOpen: true });
   }
 
@@ -95,6 +108,10 @@ class ModalComponentRiskGroup extends Component {
   componentWillMount() {
     const { fields: { groupName, groupCode }, getClientsRiskGroup, clientInformacion,
       nonValidateEnter, showLoading, isOpen, swtShowMessage } = this.props;
+    const { validatePermissionsByModule } = this.props;
+
+
+    validatePermissionsByModule(MODULE_RISK_GROUP)
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
@@ -124,12 +141,15 @@ class ModalComponentRiskGroup extends Component {
   }
 
   _mapClientItems(data, index) {
+    const { validateHasRiskGroup } = this.props;
+
     return <ClientsRiskGroup
       key={data.id}
       dataName={data.clientName}
       dataDocumentType={data.documentType}
       dataDocument={data.documentNumber}
       client={data}
+      validateHasRiskGroup={validateHasRiskGroup}
     />
   }
 
@@ -152,8 +172,10 @@ class ModalComponentRiskGroup extends Component {
     }
 
   }
-  _handlerSubmitGroup() {
+
+  updateRiskGroup() {
     const { fields: { groupName, groupCode, groupObservations }, clientInformacion, editNameRiskGroup, swtShowMessage } = this.props;
+
 
     const infoClient = clientInformacion.get('responseClientInfo');
 
@@ -170,9 +192,10 @@ class ModalComponentRiskGroup extends Component {
     editNameRiskGroup(jsonUpdateGroup).then((data) => {
 
       if (validateResponse(data)) {
-        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, La edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado, se regresará al nombre anterior.');
+        swtShowMessage('success', 'Grupo de riesgo modificado', 'Señor usuario, la edición del nombre debe ser aprobada por el analista de riesgos. En caso de no ser aprobado se regresará a el valor anterior.');
 
         getClientsRiskGroup(infoClient.id);
+        groupObservations.onChange("");
 
         self.setState({
           showError: false,
@@ -192,19 +215,28 @@ class ModalComponentRiskGroup extends Component {
       swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
     })
 
+  }
 
-
+  _handlerSubmitGroup() {
+    const { validateHasRiskGroup } = this.props;
+    validateHasRiskGroup(() => {
+      this.updateRiskGroup()
+    });
   }
 
   render() {
 
-    const { fields: { groupName, groupCode, groupObservations },
-      riskGroupReducer, clientInformacion, handleSubmit } = this.props;
+    const { fields: { groupName, groupCode, groupObservations }, validateHasRiskGroup,
+      riskGroupReducer, clientInformacion, handleSubmit, reducerGlobal } = this.props;
 
-    const riskGroup = riskGroupReducer.get('riskGroupClients')
+    const riskGroup = riskGroupReducer.get('riskGroupClients');
 
+    const infoClient = clientInformacion.get('responseClientInfo');
 
-    console.log(riskGroup);
+    // const RISK_GROUP_GRANTS = _.get(navBar.get('mapModulesAccess'), MODULE_RISK_GROUP);
+
+    const allowEdit = _.get(reducerGlobal.get('permissionsRiskGroup'), _.indexOf(reducerGlobal.get('permissionsRiskGroup'), EDITAR), false);
+    const allowDelete = _.get(reducerGlobal.get('permissionsRiskGroup'), _.indexOf(reducerGlobal.get('permissionsRiskGroup'), ELIMINAR), false);
 
     const _riskGroup = Object.assign({}, riskGroup);
     const members = Object.assign([], _riskGroup.members);
@@ -216,28 +248,23 @@ class ModalComponentRiskGroup extends Component {
         <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
           onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }} >
           <Row style={{ padding: "10px 20px 20px 20px" }}>
-
-            <Col xs={10} md={6} lg={3}>
-              <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                <dt><span>Código del grupo </span>
-                  {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
-                </dt>
-                {!this.state.allowEditGroup &&
-                  <p style={{ wordBreak: "break-word" }}>{riskGroup ? riskGroup.code : ""}</p>
-                }
-                {this.state.allowEditGroup &&
+            {this.state.allowEditGroup &&
+              <Col xs={10} md={6} lg={3}>
+                <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                  <dt><span>Código del grupo </span>
+                    {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
+                  </dt>
                   <Input name="groupCode"
                     type="text"
                     max="60"
                     {...groupCode}
                     onChange={val => this._onchangeValue("groupCode", val)}
                   />
+                </div>
+              </Col>
+            }
 
-                }
-              </div>
-            </Col>
-
-            <Col xs={10} md={6} lg={this.state.allowEditGroup ? 9 : 5}>
+            <Col xs={10} md={6} lg={this.state.allowEditGroup ? 9 : 8}>
               <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                 <dt><span>Nombre del grupo </span>
                   {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
@@ -276,24 +303,27 @@ class ModalComponentRiskGroup extends Component {
             }
 
             <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 4} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "10px" }} >
-              {this.state.allowEditGroup &&
+              {this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit &&
                 <div>
                   <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }} >
-                    <i className="plus icon"></i> Guardar </button>
+                     Guardar </button>
                   <button className="btn btn-default active" type="button" onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
                     style={{ cursor: 'pointer', marginLeft: "20px" }} > Cancelar </button>
                 </div>
               }
-              {!this.state.allowEditGroup &&
+              {!this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit &&
                 <div>
                   <button className="btn btn-primary" type="button" onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
                     style={{ cursor: 'pointer' }} >
-                    <i className="edit icon"></i> Editar </button>
+                   Editar </button>
                 </div>
               }
-              <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
-                style={{ cursor: 'pointer', marginLeft: "20px" }}>
-                <i className="trash icon"></i> Elimnar </button>
+              {allowDelete && infoClient.haveAccessEdit &&
+                <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
+                  style={{ cursor: 'pointer', marginLeft: "20px" }}>
+                  Eliminar </button>
+              }
+
 
               <Modal isOpen={this.state.modalDelteRiskGroupIsOpen} onRequestClose={this.closeModalDelteRiskGroup} className="modalBt4-fade modal fade contact-detail-modal in">
                 <div className="modalBt4-dialog modalBt4-md">
@@ -305,7 +335,7 @@ class ModalComponentRiskGroup extends Component {
                         <span className="sr-only">Close</span>
                       </button>
                     </div>
-                    {<ModalComponentDeleteRiskGroup riskGroup={riskGroup} isOpen={this.closeModalDelteRiskGroup} />}
+                    {<ModalComponentDeleteRiskGroup validateHasRiskGroup={validateHasRiskGroup} riskGroup={riskGroup} isOpen={this.closeModalDelteRiskGroup} />}
                   </div>
                 </div>
               </Modal>
@@ -329,7 +359,7 @@ class ModalComponentRiskGroup extends Component {
 
             <button className="btn btn-primary" type="button" onClick={this.openModalMember}
               style={{ cursor: 'pointer', marginLeft: "20px" }} >
-              <i className="plus icon"></i> Agregar cliente </button>
+               Agregar cliente </button>
 
 
             <Modal isOpen={this.state.modalMemberIsOpen} onRequestClose={this.closeModalMember} className="modalBt4-fade modal fade contact-detail-modal in">
@@ -342,7 +372,7 @@ class ModalComponentRiskGroup extends Component {
                       <span className="sr-only">Close</span>
                     </button>
                   </div>
-                  {<ModalComponentMemberRiskGroup riskGroup={riskGroup} isOpen={this.closeModalMember} />}
+                  {<ModalComponentMemberRiskGroup validateHasRiskGroup={validateHasRiskGroup} riskGroup={riskGroup} isOpen={this.closeModalMember} />}
                 </div>
               </div>
             </Modal>
@@ -368,14 +398,16 @@ function mapDispatchToProps(dispatch) {
     nonValidateEnter,
     showLoading,
     editNameRiskGroup,
-    swtShowMessage
+    swtShowMessage,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({ riskGroupReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ riskGroupReducer, clientInformacion, reducerGlobal }, ownerProps) {
   return {
     riskGroupReducer,
-    clientInformacion
+    clientInformacion,
+    reducerGlobal
   };
 }
 

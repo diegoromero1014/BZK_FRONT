@@ -147,7 +147,7 @@ class modalComponentMemberRiskGroup extends Component {
 
   render() {
 
-    const { fields: { idType, idNumber }, handleSubmit, isOpen, riskGroup } = this.props;
+    const { fields: { idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
     const { selectsReducer, clientR } = this.props;
 
 
@@ -178,7 +178,7 @@ class modalComponentMemberRiskGroup extends Component {
 
 
               </Col>
-              <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6} style={{ paddingRight: "30px" }}>
+              <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
                 <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="documento"
@@ -190,8 +190,7 @@ class modalComponentMemberRiskGroup extends Component {
                 />
               </Col>
               {!this.state.disabledPrimaryFields &&
-                <Col xs={2} md={4} lg={2} style={{ height: "73px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-
+                <Col xs={2} md={4} lg={2} style={{ paddingTop: '25pt' }}>
                   <button className="btn btn-primary" type="submit" title="Buscar cliente"
                     style={{ fontSize: '1.2em' }}>
                     <i className="search icon" ></i>
@@ -220,6 +219,7 @@ class modalComponentMemberRiskGroup extends Component {
 
           {this.state.showForm &&
             <MemberRiskGroup
+              validateHasRiskGroup={validateHasRiskGroup}
               isOpen={isOpen}
               riskGroup={riskGroup}
               clientsBasicInfo={this.state.clientsBasicInfo}
@@ -233,7 +233,7 @@ class modalComponentMemberRiskGroup extends Component {
           {this.state.showForm &&
             <button className="btn btn-prymary" type="submit"
               form={"submitMemberForm"} style={{ cursor: 'pointer', marginLeft: "20px" }}>
-              <i className="trash icon"></i> Agregar </button>
+               Agregar </button>
           }
           <button className="btn btn-default active" type="button"
             style={{ cursor: 'pointer', marginLeft: "20px" }} onClick={() => { isOpen() }}>

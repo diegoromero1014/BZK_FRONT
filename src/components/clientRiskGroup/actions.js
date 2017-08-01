@@ -1,7 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
   CONSULT_RISK_GROUP,
-  REMOVE_CLIENT_RISK_GROUP, DELETE_RISK_GROUP, ADD_CLIENT_RISK_GROUP, EDIT_NAME_RISK_GROUP
+  REMOVE_CLIENT_RISK_GROUP, DELETE_RISK_GROUP, ADD_CLIENT_RISK_GROUP, EDIT_NAME_RISK_GROUP, HAS_RISK_GROUP
 } from './constants';
 import axios from 'axios';
 
@@ -29,7 +29,7 @@ export function getClientsRiskGroup(id) {
 }
 
 
-export function removeClientRiskGroup(id) {
+export function removeClientRiskGroup(data) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -43,7 +43,7 @@ export function removeClientRiskGroup(id) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": id
+    "messageBody": data
   }
   var request = axios.post(APP_URL + "/requestRemoveClientRiskGroup", json);
   return {
@@ -129,6 +129,29 @@ export function editNameRiskGroup(data) {
   var request = axios.post(APP_URL + "/editNameRiskgroup", json);
   return {
     type: EDIT_NAME_RISK_GROUP,
+    payload: request
+  }
+}
+
+export function hasClientRequest(id) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": id
+  }
+  var request = axios.post(APP_URL + "/clientHasGroup", json);
+  return {
+    type: HAS_RISK_GROUP,
     payload: request
   }
 }
