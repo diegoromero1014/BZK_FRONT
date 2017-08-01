@@ -64,6 +64,22 @@ class ModalComponentEconomicGroup extends Component {
     />
   }
 
+  componentDidMount() {
+    self = this;
+    $("#iconClientRelationship").click(function () {
+      var e = { keyCode: 13, consultclick: true };
+      self.updateKeyValueClient(e);
+    });
+  }
+
+  componentWillUpdate() {
+    self = this;
+    $("#iconClientRelationship").click(function () {
+      var e = { keyCode: 13, consultclick: true };
+      self.updateKeyValueClient(e);
+    });
+  }
+
   updateKeyValueClient(e) {
     const { clientsFindServer, swtShowMessage } = this.props;
     const self = this;
