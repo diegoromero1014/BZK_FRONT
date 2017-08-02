@@ -28,7 +28,7 @@ import RichText from "../../richText/richTextComponent";
 
 const fields = ["dateBusiness", "objectiveBusiness", "opportunities"];
 var dateBusinessLastReview;
-var showMessageCreateBusiness = false;
+var showMessageCreateBusiness= false;
 var typeMessage = "success";
 var titleMessage = "";
 var message = "";
