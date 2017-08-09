@@ -1,19 +1,32 @@
-import React, { Component } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Row, Col} from 'react-flexbox-grid';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import ComponentFactor from './componentFactor';
 import ModalViewSimulation from './modalViewSimulation';
 import _ from 'lodash';
-import { getSurveyQualitativeVarible, changeFieldsEditables, clearSurvey, saveResponseQualitativeSurvey, changeValueModalIsOpen } from './actions';
-import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
-import { STYLE_BUTTON_BOTTOM, MODULE_QUALITATIVE_VARIABLES, ANALYST, EDITAR, MESSAGE_SAVE_DATA, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { size, filter, get, indexOf, concat, isEqual } from 'lodash';
+import {
+    getSurveyQualitativeVarible,
+    changeFieldsEditables,
+    clearSurvey,
+    saveResponseQualitativeSurvey,
+    changeValueModalIsOpen
+} from './actions';
+import {validatePermissionsByModule, validateValueExist, validateResponse} from '../../../actionsGlobal';
+import {
+    STYLE_BUTTON_BOTTOM,
+    MODULE_QUALITATIVE_VARIABLES,
+    ANALYST,
+    EDITAR,
+    MESSAGE_SAVE_DATA,
+    MESSAGE_LOAD_DATA
+} from '../../../constantsGlobal';
+import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import {size, filter, get, indexOf, concat, isEqual} from 'lodash';
 import ComponentAccordion from '../../accordion/componentAccordion';
-import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
-import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
-import { changeStateSaveData } from '../../dashboard/actions';
+import {OPEN_TAB, CLOSE_TAB} from '../../clientDetailsInfo/constants';
+import {COMMERCIAL_SECTION, ANALYST_SECTION} from './constants';
+import {changeStateSaveData} from '../../dashboard/actions';
 
 class ComponentSurvey extends Component {
     constructor(props) {
@@ -31,14 +44,14 @@ class ComponentSurvey extends Component {
 
     _changeOpenSection(type) {
         if (isEqual(type, ANALYST_SECTION)) {
-            this.setState({ openCommercial: isEqual(this.state.openCommercial, CLOSE_TAB) ? OPEN_TAB : CLOSE_TAB });
+            this.setState({openCommercial: isEqual(this.state.openCommercial, CLOSE_TAB) ? OPEN_TAB : CLOSE_TAB});
         } else {
-            this.setState({ openAnalyst: isEqual(this.state.openAnalyst, CLOSE_TAB) ? OPEN_TAB : CLOSE_TAB });
+            this.setState({openAnalyst: isEqual(this.state.openAnalyst, CLOSE_TAB) ? OPEN_TAB : CLOSE_TAB});
         }
     }
 
     componentWillMount() {
-        const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
+        const {clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData} = this.props;
         clearSurvey(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         validatePermissionsByModule(MODULE_QUALITATIVE_VARIABLES).then((data) => {
@@ -55,23 +68,25 @@ class ComponentSurvey extends Component {
     }
 
     _clickChangeEditableFields() {
-        const { qualitativeVariableReducer, changeFieldsEditables } = this.props;
+        const {qualitativeVariableReducer, changeFieldsEditables} = this.props;
         changeFieldsEditables(!qualitativeVariableReducer.get('fieldsEditable'));
     }
 
     _mapFactors(factor, analyst, idx) {
-        return <ComponentFactor key={idx} analyst={analyst} factor={factor} />
+        return <ComponentFactor key={idx} analyst={analyst} factor={factor}/>
     }
 
     _clickSaveSurvey() {
-        const { reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage,
-            changeFieldsEditables, changeStateSaveData } = this.props;
+        const {
+            reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage,
+            changeFieldsEditables, changeStateSaveData
+        } = this.props;
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
         if (isEqual(analyst, ANALYST)) {
-            filters = { 'idAnswer': null };
+            filters = {'idAnswer': null};
         } else {
-            filters = { 'idAnswer': null, 'analyst': false };
+            filters = {'idAnswer': null, 'analyst': false};
         }
         const listquestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
         const listQuestionsWithoutAnswer = filter(listquestions, filters);
@@ -99,7 +114,7 @@ class ComponentSurvey extends Component {
     }
 
     _clickSimulateSurvey() {
-        const { qualitativeVariableReducer, swtShowMessage, changeValueModalIsOpen } = this.props;
+        const {qualitativeVariableReducer, swtShowMessage, changeValueModalIsOpen} = this.props;
         const listquestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
         const listQuestionsWithoutAnswer = filter(listquestions, ['idAnswer', null]);
         if (size(listQuestionsWithoutAnswer) > 0) {
@@ -110,7 +125,7 @@ class ComponentSurvey extends Component {
     }
 
     render() {
-        const { reducerGlobal, qualitativeVariableReducer } = this.props;
+        const {reducerGlobal, qualitativeVariableReducer} = this.props;
         const survey = qualitativeVariableReducer.get('survey');
         const listFactorCommercial = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const listFactorAnalyst = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
@@ -119,40 +134,47 @@ class ComponentSurvey extends Component {
             <Row>
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{ textAlign: "right", marginRight: '10px' }}>
-                            <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>{survey.name}</span>
+                        <div style={{textAlign: "right", marginRight: '10px'}}>
+                            <span
+                                style={{color: "#818282", paddingRight: '10px', fontSize: '12pt'}}>{survey.name}</span>
                             {get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), EDITAR), false) &&
-                                <button type="button" onClick={this._clickChangeEditableFields} className='btn btn-sm btn-primary'>
-                                    Editar <i className={'icon edit'}></i>
-                                </button>
+                            <button type="button" onClick={this._clickChangeEditableFields}
+                                    className='btn btn-sm btn-primary'>
+                                Editar <i className={'icon edit'}></i>
+                            </button>
                             }
                         </div>
 
                         <ComponentAccordion functionChange={() => this._changeOpenSection(COMMERCIAL_SECTION)}
-                            codSection={this.state.openCommercial} title="Comercial" componentView={listFactorCommercial.map((item) => this._mapFactors(item, false))} />
+                                            codSection={this.state.openCommercial} title="Comercial"
+                                            componentView={listFactorCommercial.map((item) => this._mapFactors(item, false))}/>
 
                         <ComponentAccordion functionChange={() => this._changeOpenSection(ANALYST_SECTION)}
-                            codSection={this.state.openAnalyst} title="Analista" componentView={listFactorAnalyst.map((item) => this._mapFactors(item, true))} />
+                                            codSection={this.state.openAnalyst} title="Analista"
+                                            componentView={listFactorAnalyst.map((item) => this._mapFactors(item, true))}/>
 
 
                         <div style={STYLE_BUTTON_BOTTOM}>
-                            <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
-                                {!isEqual(analyst, ANALYST) &&
-                                    <button className="btn" type="buttom" onClick={this._clickSimulateSurvey}
-                                        style={{ float: 'right', margin: '8px 0px 0px 330px', position: 'fixed', backgroundColor: "#00B5AD" }}>
-                                        <span style={{ color: '#FFFFFF', padding: '10px' }}>Calificar</span>
-                                    </button>
-                                }
+                            <div style={{width: '580px', height: '100%', position: 'fixed', right: '0px'}}>
+                                <button className="btn" type="buttom" onClick={this._clickSimulateSurvey}
+                                        style={{
+                                            float: 'right',
+                                            margin: '8px 0px 0px 330px',
+                                            position: 'fixed',
+                                            backgroundColor: "#00B5AD"
+                                        }}>
+                                    <span style={{color: '#FFFFFF', padding: '10px'}}>Calificar</span>
+                                </button>
                                 <button className="btn" type="buttom" onClick={this._clickSaveSurvey}
-                                    style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
-                                    <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                                        style={{float: 'right', margin: '8px 0px 0px 450px', position: 'fixed'}}>
+                                    <span style={{color: '#FFFFFF', padding: '10px'}}>Guardar</span>
                                 </button>
                             </div>
                         </div>
                     </Col>
                     :
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                        <div style={{textAlign: "center", marginTop: "20px", marginBottom: "20px"}}>
                             <span className="form-item">La encuesta de variables cualitativas no se encuentra configurada.</span>
                         </div>
                     </Col>
@@ -176,7 +198,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ reducerGlobal, clientInformacion, qualitativeVariableReducer }, ownerProps) {
+function mapStateToProps({reducerGlobal, clientInformacion, qualitativeVariableReducer}, ownerProps) {
     return {
         reducerGlobal,
         clientInformacion,
