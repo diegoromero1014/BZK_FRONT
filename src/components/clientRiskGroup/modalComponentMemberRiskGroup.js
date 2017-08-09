@@ -50,7 +50,7 @@ const validate = values => {
   return errors;
 };
 
-var thisForm;
+let thisForm;
 class modalComponentMemberRiskGroup extends Component {
   constructor(props) {
     super(props);
@@ -91,11 +91,11 @@ class modalComponentMemberRiskGroup extends Component {
 
     switch (file) {
       case "idType":
-        var { fields: { idType } } = this.props;
+        let { fields: { idType } } = this.props;
         idType.onChange(val);
         break;
       case "idNumber":
-        var { fields: { idNumber } } = this.props;
+        let { fields: { idNumber } } = this.props;
         idNumber.onChange(val);
         break;
 
@@ -111,7 +111,7 @@ class modalComponentMemberRiskGroup extends Component {
     const jsonUpdateGroup = {
       typeDocument: idType.value !== undefined ? idType.value : null,
       numberDocument: idNumber.value !== undefined ? idNumber.value : null
-    }
+    };
     const self = this;
 
     findClientByTypeAndNumber(jsonUpdateGroup).then((data) => {
@@ -149,8 +149,6 @@ class modalComponentMemberRiskGroup extends Component {
 
     const { fields: { idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
     const { selectsReducer, clientR } = this.props;
-
-
     return (
       <div>
 
@@ -197,9 +195,6 @@ class modalComponentMemberRiskGroup extends Component {
                   </button>
                 </Col>
               }
-
-
-
               <SweetAlert
                 type="warning"
                 show={this.state.showConfirmCreateUser}

@@ -3,22 +3,38 @@ import * as actions from './constants';
 import _ from 'lodash';
 
 const initialState = Immutable.Map({
-  riskGroupClients: null,
-  hasRiskGroup: false
+    riskGroupClients: null,
+    hasRiskGroup: false
 });
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case actions.CONSULT_RISK_GROUP:
-      let response = action.payload.data.data;
-      return state.withMutations(map => {
-        map.set('riskGroupClients', response);
-      });
-    case actions.HAS_RISK_GROUP:
-      return state.withMutations(map => {
-        map.set('hasRiskGroup', action.payload.data.data);
-      });
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case actions.CONSULT_RISK_GROUP:
+            let response = action.payload.data.data;
+            return state.withMutations(map => {
+                map.set('riskGroupClients', response);
+            });
+        case actions.HAS_RISK_GROUP:
+            return state.withMutations(map => {
+                map.set('hasRiskGroup', action.payload.data.data);
+            });
+        case actions.UPDATE_NAME_RISK_GROUP:
+            const editRiskGroup = action.riskGroup;
+            let riskGroupOld = state.get('riskGroupClients');
+            _.set(riskGroupOld, 'code', editRiskGroup.code);
+            _.set(riskGroupOld, 'name', editRiskGroup.name);
+            _.set(riskGroupOld, 'observation', editRiskGroup.observation);
+            return state.withMutations(map => {
+                map.set('riskGroupClients', riskGroupOld);
+            });
+        case actions.CHANGE_PENDING:
+            const isPending = action.isPending;
+            let riskGroupTmp = state.get('riskGroupClients');
+            _.set(riskGroupTmp, 'isPending',isPending);
+            return state.withMutations(map => {
+                map.set('riskGroupClients', riskGroupTmp);
+            });
+        default:
+            return state;
+    }
 }

@@ -37,7 +37,7 @@ class clientsRiskGroup extends Component {
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup } = this.props;
+    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup,isPending } = this.props;
     return (
       <div key={key} className="client-card" style={{ width: "100%", marginBottom: "15px", cursor: 'auto', height: "auto" }}>
         <div className="celula-card-top" style={{ height: "auto", minHeight: "93px" }}>
@@ -47,7 +47,7 @@ class clientsRiskGroup extends Component {
           </div>
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6") }}>
-          {!client.isPending &&
+          {!client.isPending && !isPending &&
             <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={this.openModalRemoveClient}
               title="Remover cliente grupo de riesgo" />
