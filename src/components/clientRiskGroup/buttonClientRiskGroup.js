@@ -63,11 +63,10 @@ class buttonClientRiskGroup extends Component {
     render() {
         const { riskGroupReducer } = this.props;
         const hasRiskGroup = riskGroupReducer.get('hasRiskGroup');
-
         return (
             <div>
                 <button className="btn btn-primary" type="button" title="Ver grupo de riesgo" style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
-                    <i className="thermometer icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
+                    <i className="address book icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
                 </button>
                 <Modal isOpen={hasRiskGroup ? this.state.modalIsOpen : false} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">

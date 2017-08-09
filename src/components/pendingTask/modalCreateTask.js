@@ -163,7 +163,7 @@ class ModalCreateTask extends Component {
         "closingDate": fecha.value !== '' && fecha.value !== null && fecha.value !== undefined ? moment(fecha.value, "DD/MM/YYYY").format('x') : null,
         "employeeName": responsable.value,
         "employeeId": idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
-      }
+      };
       changeStateSaveData(true, MESSAGE_SAVE_DATA);
       createPendingTaskNew(messageBody).then((data) => {
         changeStateSaveData(false, "");
@@ -230,7 +230,7 @@ class ModalCreateTask extends Component {
                 }
               </Col>
             </Row>
-            <Row style={{padding: "10px 14px 0px 2px"}}>
+            <Row style={{padding: "0px 14px 0px 2px"}}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
@@ -251,7 +251,7 @@ class ModalCreateTask extends Component {
                   />
               </Col>
             </Row>
-            <Row style={{padding: "10px 14px 0px 2px"}}>
+            <Row style={{padding: "0px 14px 0px 2px"}}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
@@ -268,7 +268,7 @@ class ModalCreateTask extends Component {
                   />
               </Col>
             </Row>
-            <Row style={{padding: "30px 14px 0px 2px"}}>
+            <Row style={{padding: "20px 14px 0px 2px"}}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Observaciones</span></dt>
               </Col>
