@@ -6,11 +6,15 @@ export const DELETE_PARTICIPANT_VIEW = "DELETE_PARTICIPANT_VIEW";
 export const DELETE_TASK_VIEW = "DELETE_TASK_VIEW";
 export const DELETE_AREA_VIEW = "DELETE_AREA_VIEW";
 export const DELETE_NEED_VIEW = "DELETE_NEED_VIEW";
-export const DELETE_TYPE_PREVISIT ="DELETE_TYPE_PREVISIT";
-export const DELETE_TYPE_PIPELINE= 'DELETE_TYPE_PIPELINE';
-export const DELETE_TYPE_BUSINESS_PLAN= 'DELETE_TYPE_BUSINESS_PLAN';
+export const DELETE_TYPE_PREVISIT = "DELETE_TYPE_PREVISIT";
+export const DELETE_TYPE_PIPELINE = 'DELETE_TYPE_PIPELINE';
+export const DELETE_TYPE_BUSINESS_PLAN = 'DELETE_TYPE_BUSINESS_PLAN';
 export const DELETE_CONTACT_FROM_FUNCTION_OR_TYPE = 'DELETE_CONTACT_FROM_FUNCTION_OR_TYPE';
 export const VIEW_CONTACT = "VIEW_CONTACT";
-export const DELETE_GROUP  = "DELETE_GROUP";
+export const DELETE_GROUP = "DELETE_GROUP";
 export const VIEW_LINK_GROUP = "VIEW_LINK_GROUP";
 export const VIEW_EMAIL_CONTACTS = "VIEW_EMAIL_CONTACTS";
+//se utilizan en el componente del botón de eliminación para
+//determinar si se coloca un botón o solo un icono para eliminar
+export const ACTION_ICON = "icon";
+export const ACTION_BUTTON = "button";

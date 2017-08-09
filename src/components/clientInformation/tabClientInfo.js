@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { redirectUrl } from '../globalComponents/actions';
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
-import ShareholderInfo from '../shareholder/component';
+import Partners from '../clients/partners/tabComponent';
 import PrevisitaInfo from '../previsita/component';
 import VisitaInfo from '../visit/component';
 import PipelineInfo from '../pipeline/component';
@@ -15,7 +15,8 @@ import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { consultModulesAccess } from '../navBar/actions';
 import {
     MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
-    MODULE_PIPELINE, MODULE_BUSSINESS_PLAN, MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY
+    MODULE_PIPELINE, MODULE_BUSSINESS_PLAN, MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY,
+    MODULE_BOARD_MEMBERS, MODULE_PARTNERS
 } from '../../constantsGlobal';
 import {
     TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS,
@@ -334,9 +335,11 @@ class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Contactos</a>
                             </li>
                         }
-                        {_.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS) &&
+                        {((_.get(navBar.get('mapModulesAccess'), MODULE_PARTNERS)) &&
+                            (((_.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS))) 
+                            || (_.get(navBar.get('mapModulesAccess'), MODULE_BOARD_MEMBERS)))) &&
                             <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, TAB_SHAREHOLDER)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Accionistas</a>
+                                <a className="button-link-url" style={{ marginRight: "15px" }}>Accionistas/Miembros de junta</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) &&
@@ -386,7 +389,7 @@ class TabClientInfo extends Component {
                     }}>
                         {styleInfo && <DetailsInfoClient infoClient={infoClient} />}
                         {styleContacts && <ContactInfo infoClient={infoClient} />}
-                        {styleShareholders && <ShareholderInfo infoClient={infoClient} />}
+                        {styleShareholders && <Partners infoClient={infoClient} />}
                         {stylePrevisitas && <PrevisitaInfo infoClient={infoClient} />}
                         {styleVisits && <VisitaInfo infoClient={infoClient} />}
                         {stylePendings && <PendingInfo infoClient={infoClient} />}

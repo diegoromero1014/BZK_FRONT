@@ -184,7 +184,6 @@ class ModalComponentGroup extends Component {
                     thisForm.closeModal();
                     clearFilterGroup();
                 } else {
-                    console.log(data.payload.data);
                     swtShowMessage('Error', 'Guardar', 'Señor usuario, se ha producido un error en el servidor.');
                 }
             });

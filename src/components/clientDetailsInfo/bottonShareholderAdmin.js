@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import ShareholderInfo from '../shareholder/component';
+import ShareholderInfo from '../clients/partners/shareholder/component';
 import { redirectUrl } from '../globalComponents/actions';
 import { MODULE_SHAREHOLDERS } from '../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';

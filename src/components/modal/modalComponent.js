@@ -17,6 +17,7 @@ import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
 import ModalPendingAEC from '../myPendings/AEC/modalPendingAEC';
 import ModalViewEmailsGroup from '../contact/favoritesGroup/modalViewEmailsGroup';
+import ModalBoardMembers from '../clients/partners/boardMembers/createEditBoardMembers/modalBoardMembers';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -63,7 +64,7 @@ class ModalComponentDialog extends Component {
                 cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal}/>;
+                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal} />;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;
@@ -72,13 +73,16 @@ class ModalComponentDialog extends Component {
                 cell = <ModalObservation alertPortfolioExpId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_AEC:
-                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal}/>
+                cell = <ModalDetailAEC idAEC={actions.id} isOpen={this.closeModal} />
                 break;
             case views.VIEW_EMAILS_GROUP:
-                cell = <ModalViewEmailsGroup idGroup={actions.id} isOpen={this.closeModal}/>
+                cell = <ModalViewEmailsGroup idGroup={actions.id} isOpen={this.closeModal} />
                 break;
             case views.VIEW_AEC_PENDING:
                 cell = <ModalPendingAEC aec={actions.aec} isOpen={this.closeModal} />
+                break;
+            case views.VIEW_BOARD_MEMBERS:
+                cell = <ModalBoardMembers boardMember={actions.boardMember} isOpen={this.closeModal} />
                 break;
         }
 
@@ -99,7 +103,6 @@ class ModalComponentDialog extends Component {
                     isOpen={this.state.modalIsOpen}
                     onRequestClose={this.closeModal}
                     className="modalBt4-fade modal fade contact-detail-modal in">
-
                     <div className={`modalBt4-dialog modalBt4-${modalSize}`}>
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">

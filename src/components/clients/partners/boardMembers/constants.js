@@ -1,0 +1,12 @@
+export const GET_BOARD_MEMBERS = 'GET_BOARD_MEMBERS';
+export const FIRST_PAGE = 1;
+export const NUMBER_RECORDS = 10;
+export const CLEAR_BOARD_MEMBERS = 'CLEAR_BOARD_MEMBERS';
+export const CHANGE_PAGE = "CHANGE_PAGE";
+export const LOWER_LIMIT = "LOWER_LIMIT";
+export const SAVE = "SAVE";
+export const DELETE = "DELETE";
+export const VALIDATE_EXISTS = "VALIDATE_EXISTS";
+export const CLEAR_FILTERS = "CLEAR_FILTERS";
+export const CHANGE_KEYWORD = "CHANGE_KEYWORD";
+export const LOWER_INITIAL_LIMIT = 0;

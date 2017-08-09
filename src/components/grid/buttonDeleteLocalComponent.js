@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import SweetAlert from 'sweetalert-react';
-
-import {clearFilterGroup} from '../contact/favoritesGroup/actions';
+import { clearFilterGroup } from '../contact/favoritesGroup/actions';
+import { ACTION_BUTTON, ACTION_ICON } from './constants';
 
 class ButtonDeleteLocalComponent extends Component {
 
@@ -17,41 +17,41 @@ class ButtonDeleteLocalComponent extends Component {
     }
 
     _onConfirmDelete() {
-        this.setState({show: false});
+        this.setState({ show: false });
         this.props.fn.apply(this, this.props.args);
     }
 
     _confirmDeleteEntity(e) {
-        this.setState({show: true});
+        this.setState({ show: true });
     }
 
     _closeAlert(e) {
-        this.setState({show: false});
+        this.setState({ show: false });
     }
 
     _renderBtnAction() {
-        const {typeAction} = this.props;
+        const { typeAction } = this.props;
         switch (typeAction) {
-            case 'button':
+            case ACTION_BUTTON:
                 return (<button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{margin: '0em', fontSize: '1.2em'}} className='trash outline icon'/>
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} className='trash outline icon' />
                 </button>);
-            case 'icon':
+            case ACTION_ICON:
                 return (<i className='trash outline icon' title='Eliminar' style={{ cursor: "pointer" }}
-                           onClick={this._confirmDeleteEntity}/>);
-            default :
+                    onClick={this._confirmDeleteEntity} />);
+            default:
                 return (<button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{margin: '0em', fontSize: '1.2em'}} title='Eliminar' className='trash outline icon'/>
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} title='Eliminar' className='trash outline icon' />
                 </button>);
         }
 
     }
 
     render() {
-        const {message,title} = this.props;
+        const { message, title } = this.props;
         const titleText = (_.isUndefined(title)) ? "Confirmar eliminación" : title;
         return (
-            <div style={{padding: '10px', textAlign: 'center'}}>
+            <div style={{ padding: '10px', textAlign: 'center' }}>
                 {this._renderBtnAction()}
                 <SweetAlert
                     type="warning"
@@ -63,7 +63,7 @@ class ButtonDeleteLocalComponent extends Component {
                     text={message}
                     showCancelButton={true}
                     onCancel={this._closeAlert}
-                    onConfirm={this._onConfirmDelete}/>
+                    onConfirm={this._onConfirmDelete} />
             </div>);
     }
 }

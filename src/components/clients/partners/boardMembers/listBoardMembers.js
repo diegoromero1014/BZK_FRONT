@@ -1,0 +1,148 @@
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import SweetAlert from 'sweetalert-react';
+import Modal from 'react-modal';
+import _ from 'lodash';
+import moment from 'moment';
+import { shorterStringValue, joinName, validateResponse } from '../../../../actionsGlobal';
+import GridComponent from '../../../grid/component';
+import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
+import { CONTACT_ID_TYPE } from '../../../selectsComponent/constants';
+import { deleteBoardMemberByClient, getBoardMembers } from './actions';
+import {
+  TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, ELIMINAR,
+  MESSAGE_LOAD_DATA
+} from '../../../../constantsGlobal';
+import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { FIRST_PAGE, NUMBER_RECORDS } from './constants';
+import { changeStateSaveData } from '../../../dashboard/actions';
+
+class ListBoardMembers extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      actions: {},
+      modalIsOpen: false
+    };
+
+    this.closeModal = this.closeModal.bind(this);
+    this._renderHeaders = this._renderHeaders.bind(this);
+    this._renderCellView = this._renderCellView.bind(this);
+    this._deleteBoardMember = this._deleteBoardMember.bind(this);
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
+  _deleteBoardMember(idBoardMember) {
+    const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData, boardMembersReducer } = this.props;
+    changeStateSaveData(true, MESSAGE_LOAD_DATA);
+    deleteBoardMemberByClient(idBoardMember).then((data) => {
+      changeStateSaveData(false, "");
+      if (!validateResponse(data)) {
+        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+      } else {
+        swtShowMessage('success', "Miembro de junta", 'Señor usuario, el miembro de junta se eliminó exitosamente');
+        getBoardMembers(window.localStorage.getItem('idClientSelected'), boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
+          if (!validateResponse(data)) {
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+          }
+        }, (reason) => {
+          swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+      }
+    }, (reason) => {
+      changeStateSaveData(false, "");
+      swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+    });
+  }
+
+  _renderHeaders() {
+    return [
+      {
+        title: "",
+        key: "actions",
+        width: '20px'
+      },
+      {
+        title: "Tipo de documento",
+        key: "typeOfDocument"
+      },
+      {
+        title: "Número de documento",
+        key: "numberDocument"
+      },
+      {
+        title: "Nombre",
+        key: "name"
+      },
+      {
+        title: "",
+        key: "deleteNew"
+      }
+    ]
+  }
+
+  _renderCellView(data = []) {
+    const { selectsReducer, reducerGlobal } = this.props;
+    const thisSelf = this;
+    return _.map(data, item => {
+      const deleteNew = {
+        message: 'Señor usuario ¿está seguro que desea eliminar el miembro de junta: ' + joinName(item.firstName, item.middleName, item.firstLastName, item.secondLastName) + "?",
+        fn: thisSelf._deleteBoardMember,
+        argsFn: [item.idBoardMember]
+      };
+      const jsonRow = {
+        actions: {
+          actionView: true,
+          boardMember: item,
+          urlServer: "./component",
+          component: VIEW_BOARD_MEMBERS
+        },
+        typeOfDocument: item.typeOfDocument,
+        numberDocument: item.numberDocument,
+        name: joinName(item.firstName, item.middleName, item.firstLastName, item.secondLastName)
+      }
+      if (_.get(reducerGlobal.get('permissionsBoardMembers'), _.indexOf(reducerGlobal.get('permissionsBoardMembers'), ELIMINAR), false)) {
+        _.set(jsonRow, 'deleteNew', deleteNew);
+      }
+      return jsonRow;
+    })
+  }
+
+  render() {
+    const { listBoardMembers } = this.props;
+    const modalTitle = 'Detalle del miembro de junta';
+    return (
+      <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll', overflowX: 'hidden' }}>
+        <GridComponent headers={this._renderHeaders} data={this._renderCellView(listBoardMembers)} modalTitle={modalTitle} />
+      </div>
+    );
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    deleteBoardMemberByClient,
+    swtShowMessage,
+    getBoardMembers,
+    changeStateSaveData
+  }, dispatch);
+}
+
+function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer }, ownerProps) {
+  return {
+    selectsReducer,
+    reducerGlobal,
+    boardMembersReducer
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListBoardMembers);
+
+

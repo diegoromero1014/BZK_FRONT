@@ -5,9 +5,9 @@ import ClientReducer from '../components/clients/reducer';
 import NavBarReducer from '../components/navBar/reducer';
 import ClientInformationReducer from '../components/clientInformation/reducer';
 import modalReducer from '../components/modal/reducer';
-import ShareHolderReducer from '../components/shareholder/reducer';
+import ShareHolderReducer from '../components/clients/partners/shareholder/reducer';
 import contactsReducer from '../components/contact/reducer';
-import shareholdersReducer from '../components/shareholder/reducer';
+import shareholdersReducer from '../components/clients/partners/shareholder/reducer';
 import propspectReducer from '../components/propspect/reducer';
 import selectsReducer from '../components/selectsComponent/reducer';
 import { reducer as formReducer } from 'redux-form';
@@ -15,8 +15,8 @@ import notesReducer from '../components/clientEdit/notes/reducer';
 import contactDetail from '../components/contact/contactDetail/reducer';
 import deleteGridReducer from '../components/grid/reducer';
 import createContactReducer from '../components/contact/createContact/reducer';
-import createShareholderReducer from '../components/shareholder/createShareholder/reducer';
-import editShareholderReducer from '../components/shareholder/shareholderDetail/reducer';
+import createShareholderReducer from '../components/clients/partners/shareholder/createShareholder/reducer';
+import editShareholderReducer from '../components/clients/partners/shareholder/shareholderDetail/reducer';
 import previsitReducer from '../components/previsita/reducer';
 import visitReducer from '../components/visit/reducer';
 import pipelineReducer from '../components/pipeline/reducer';
@@ -61,7 +61,7 @@ import assignedReducer from '../components/myPendings/assigned/reducer'
 import studyCreditReducer from '../components/clients/creditStudy/reducer';
 import qualitativeVariableReducer from '../components/risksManagement/qualitativeVariable/reducer';
 import visorReducer from '../components/visor/reducer';
-import riskGroupReducer from '../components/clientRiskGroup/reducer';
+import boardMembersReducer from '../components/clients/partners/boardMembers/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -126,5 +126,5 @@ export default combineReducers({
     studyCreditReducer,
     qualitativeVariableReducer,
     visorReducer,
-    riskGroupReducer
+    boardMembersReducer
 });
