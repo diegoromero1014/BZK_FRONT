@@ -1,6 +1,30 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY, CAHNGE_VALUE_MODAL } from './constants';
+import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY, CAHNGE_VALUE_MODAL, GET_ALLOW_SURVEY_QUALITATIVE } from './constants';
 import axios from 'axios';
+
+
+export function getAllowSurveyQualitativeVarible(idClient) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": idClient
+    }
+    var request = axios.post(APP_URL + "/getAllowSurveyQualitativeVariable", json);
+    return {
+        type: GET_ALLOW_SURVEY_QUALITATIVE,
+        payload: request
+    }
+}
 
 
 export function getSurveyQualitativeVarible() {

@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL } from './constants';
+import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL, GET_ALLOW_SURVEY_QUALITATIVE } from './constants';
 import { get, sortBy, clone, remove } from 'lodash';
 import { validateValueExist } from '../../../actionsGlobal';
 
@@ -39,6 +39,9 @@ export default (state = initialState, action) => {
                     .set('listQuestions', [])
                     .set('fieldsEditable', false);
             });
+        case GET_ALLOW_SURVEY_QUALITATIVE:
+            const response_allow = get(action.payload.data, 'data', false);
+            return state.set('allowSurveyQualitative', (response_allow == true));
         default:
             return state;
     }
