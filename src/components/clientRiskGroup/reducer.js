@@ -4,7 +4,8 @@ import _ from 'lodash';
 
 const initialState = Immutable.Map({
     riskGroupClients: null,
-    hasRiskGroup: false
+    hasRiskGroup: false,
+    showModal: false
 });
 
 export default (state = initialState, action) => {
@@ -33,6 +34,11 @@ export default (state = initialState, action) => {
             _.set(riskGroupTmp, 'isPending',isPending);
             return state.withMutations(map => {
                 map.set('riskGroupClients', riskGroupTmp);
+            });
+        case actions.SHOW_MODAL_RISK_GROUP:
+            const show = action.show;
+            return state.withMutations(map => {
+                map.set('showModal', show);
             });
         default:
             return state;

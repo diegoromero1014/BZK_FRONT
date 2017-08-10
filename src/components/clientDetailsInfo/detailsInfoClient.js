@@ -1,31 +1,30 @@
-import React, { Component, PropTypes } from 'react';
-import ActividadEconomica from './actividadEconomica';
-import InventoryPolicy from './inventoryPolicy';
-import MainCustomer from './mainCustomer';
-import MainSupplier from './mainSupplier';
-import MainCompetitor from './mainCompetitor';
-import UbicationCorrespondence from './ubicationCorrespondence';
-import InfoFinanciera from './infoFinanciera';
-import DataComercial from './dataComercial';
-import DeclarationOfOrigin from './DeclarationOfOrigin';
-import InternationalOperations from './internationalOperations';
-import DocumentInformationServices from './managementDocumentary/documentInformationServices';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { seletedButton, validateContactShareholder, sendErrorsUpdate, changeAccordionValue } from './actions';
-import { BUTTON_UPDATE, BUTTON_EDIT, CONSULT, CLOSE_TAB, OPEN_TAB } from './constants';
-import Notas from './notas';
-import { bindActionCreators } from 'redux';
-import Products from './product';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { EDITAR, MODULE_CLIENTS, VINCULAR, ESTUDIO_DE_CREDITO } from '../../constantsGlobal';
-import { validatePermissionsByModule } from '../../actionsGlobal';
-import { redirectUrl } from '../globalComponents/actions';
-import { MENU_CLOSED } from '../navBar/constants';
-import ButtonLinkClient from './linkingClient/buttonLinkClientComponent';
-import TitleSectionComponent from '../titleSection/titleSection';
-import ComponentAccordion from '../accordion/componentAccordion';
-import { Accordion, Icon } from 'semantic-ui-react';
+import React, {Component, PropTypes} from "react";
+import ActividadEconomica from "./actividadEconomica";
+import InventoryPolicy from "./inventoryPolicy";
+import MainCustomer from "./mainCustomer";
+import MainSupplier from "./mainSupplier";
+import MainCompetitor from "./mainCompetitor";
+import UbicationCorrespondence from "./ubicationCorrespondence";
+import InfoFinanciera from "./infoFinanciera";
+import DataComercial from "./dataComercial";
+import DeclarationOfOrigin from "./DeclarationOfOrigin";
+import InternationalOperations from "./internationalOperations";
+import DocumentInformationServices from "./managementDocumentary/documentInformationServices";
+import {Col, Row} from "react-flexbox-grid";
+import {changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder} from "./actions";
+import {BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB} from "./constants";
+import Notas from "./notas";
+import {bindActionCreators} from "redux";
+import Products from "./product";
+import {connect} from "react-redux";
+import moment from "moment";
+import {EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR} from "../../constantsGlobal";
+import {validatePermissionsByModule} from "../../actionsGlobal";
+import {redirectUrl} from "../globalComponents/actions";
+import {MENU_CLOSED} from "../navBar/constants";
+import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
+import ComponentAccordion from "../accordion/componentAccordion";
+import {showModalRiskGroup} from "../clientRiskGroup/actions";
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -35,6 +34,7 @@ class DetailsInfoClient extends Component {
         this._clickButtonClientUpdate = this._clickButtonClientUpdate.bind(this);
         this._changeValueAccordion = this._changeValueAccordion.bind(this);
         this._clickButtonStudyCredit = this._clickButtonStudyCredit.bind(this);
+        this.openModalRiskGroup = this.openModalRiskGroup.bind(this);
     }
 
     componentWillMount() {
@@ -95,6 +95,10 @@ class DetailsInfoClient extends Component {
 
     _clickButtonStudyCredit() {
         redirectUrl("/dashboard/creditStudy");
+    }
+
+    openModalRiskGroup() {
+        this.props.showModalRiskGroup(true);
     }
 
     _changeValueAccordion(tabSeleted) {
@@ -178,7 +182,7 @@ class DetailsInfoClient extends Component {
                                     </dl>
                                 </td>
                                 <td style={{ width: "25%", verticalAlign: "initial" }}>
-                                    <span style={{ marginLeft: "0px" }}>{infoClient.riskGroup}</span>
+                                    <a  onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{infoClient.riskGroup}</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -305,7 +309,8 @@ function mapDispatchToProps(dispatch) {
         validateContactShareholder,
         sendErrorsUpdate,
         validatePermissionsByModule,
-        changeAccordionValue
+        changeAccordionValue,
+        showModalRiskGroup
     }, dispatch);
 }
 
