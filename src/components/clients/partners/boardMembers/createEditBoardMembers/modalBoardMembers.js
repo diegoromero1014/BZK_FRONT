@@ -28,7 +28,7 @@ import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName"];
 const errors = {};
 let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
-let positionCreatedBy = '', positionUpdatedBy = '';
+let positionCreatedBy = '', positionUpdatedBy = '', showAuditFields = false;
 
 const validate = (values) => {
     if (!values.typeOfDocument) {
@@ -89,6 +89,7 @@ class ModalCreateBoardMembers extends Component {
         this._handleBoardMember = this._handleBoardMember.bind(this);
         this._validateExistBoardMember = this._validateExistBoardMember.bind(this);
         this._editBoardMember = this._editBoardMember.bind(this);
+        this._sendAuditInformation = this._sendAuditInformation.bind(this);
         this.state = {
             //controla si se muestra el formulario completo, valores (hidden, visible)
             showCompleteForm: 'hidden',
@@ -175,13 +176,14 @@ class ModalCreateBoardMembers extends Component {
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 } else {
-                    var allowShowCompleteForm = false, cleanFields = false;
+                    var allowShowCompleteForm = false, cleanFieldsBoardMember = false;
                     const detailBoardMember = _.get(data, 'payload.data.data', null);
                     if (detailBoardMember != null) {
                         if (_.get(detailBoardMember, 'idClientBoardMember', null) !== null) {
                             swtShowMessage('warning', 'Relación existente', 'Señor usuario, el miembro de junta ya presenta una relación con el cliente');
-                            cleanFields = true;
+                            cleanFieldsBoardMember = true;
                             allowShowCompleteForm = false;
+                            showAuditFields = false;
                         } else {
                             idBoardMember.onChange(detailBoardMember.idBoardMember);
                             typeOfDocument.onChange(detailBoardMember.idTypeOfDocument);
@@ -191,12 +193,16 @@ class ModalCreateBoardMembers extends Component {
                             firstLastName.onChange(detailBoardMember.firstLastName);
                             secondLastName.onChange(detailBoardMember.secondLastName);
                             allowShowCompleteForm = true;
+                            showAuditFields = true;
+                            this._sendAuditInformation(false, detailBoardMember.userNameCreate, detailBoardMember.userNameUpdate, detailBoardMember.dateUpdate, detailBoardMember.dateCreate);
                         }
                     } else {
                         allowShowCompleteForm = true;
-                        cleanFields = true;
+                        cleanFieldsBoardMember = true;
+                        showAuditFields = false;
+                        this._sendAuditInformation(true, null, null, null, null);
                     }
-                    if (cleanFields) {
+                    if (cleanFieldsBoardMember) {
                         idBoardMember.onChange('');
                         firstName.onChange('');
                         middleName.onChange('');
@@ -222,9 +228,39 @@ class ModalCreateBoardMembers extends Component {
         }
     }
 
+    /**
+     * Recibe la información de auditoría del miembro de junta, la procesa y guarda en 
+     * las variables que se usan en la vista
+     * @param {*} userNameCreate 
+     * @param {*} userNameUpdate 
+     * @param {*} dateUpdate 
+     * @param {*} dateCreate 
+     */
+    _sendAuditInformation(cleanFields, userNameCreate, userNameUpdate, dateUpdate, dateCreate) {
+        if (cleanFields) {
+            createdBy = '';
+            updatedBy = '';
+            fechaModString = '';
+            fechaCreateString = '';
+        } else {
+            createdBy = userNameCreate;
+            updatedBy = userNameUpdate;
+            if (dateUpdate !== null) {
+                let fechaModDateMoment = moment(dateUpdate, "x").locale('es');
+                fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+            }
+            if (dateCreate !== null) {
+                let fechaCreateDateMoment = moment(dateCreate, "x").locale('es');
+                fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
+            }
+        }
+    }
+
     componentWillMount() {
         const { boardMember } = this.props;
-        if (boardMember !== undefined) {
+        if (!_.isUndefined(boardMember)) {
+            showAuditFields = true;
+            this._sendAuditInformation(false, boardMember.userNameCreate, boardMember.userNameUpdate, boardMember.dateUpdate, boardMember.dateCreate);
             this.setState({
                 showCompleteForm: 'visible',
                 isEditable: false
@@ -239,18 +275,6 @@ class ModalCreateBoardMembers extends Component {
     render() {
         const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
             middleName, firstLastName, secondLastName }, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
-        if (!_.isUndefined(boardMember)) {
-            createdBy = boardMember.userNameCreate;
-            updatedBy = boardMember.userNameUpdate;
-            if (boardMember.dateUpdate !== null) {
-                let fechaModDateMoment = moment(boardMember.dateUpdate, "x").locale('es');
-                fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
-            }
-            if (boardMember.dateCreate !== null) {
-                let fechaCreateDateMoment = moment(boardMember.dateCreate, "x").locale('es');
-                fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
-            }
-        }
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -333,7 +357,7 @@ class ModalCreateBoardMembers extends Component {
                                 />
                             </Col>
                         </Row>
-                        {!_.isUndefined(boardMember) &&
+                        {showAuditFields &&
                             < Row style={{ padding: "20px 10px 0px 0px", visibility: this.state.showCompleteForm }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
@@ -353,7 +377,7 @@ class ModalCreateBoardMembers extends Component {
                                 </Col>
                             </Row>
                         }
-                        {!_.isUndefined(boardMember) &&
+                        {showAuditFields &&
                             <Row style={{ padding: "5px 10px 0px    0px", visibility: this.state.showCompleteForm }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
