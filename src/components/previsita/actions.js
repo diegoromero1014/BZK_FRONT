@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as constants from './constants';
 
 export function pdfDescarga(idclient, idPrevisit){
-  window.open(APP_URL + "/pdfReportPreVisit?idClient="+idclient+"&idPrevisit="+idPrevisit+"&language=es");
+  window.open(APP_URL + "/pdfReportPreVisit?idClient="+idclient+"&idPrevisit="+idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
 
 export function createPrevisit(jsonVisit){

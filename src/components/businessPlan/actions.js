@@ -184,5 +184,5 @@ export function changeOwnerDraft(ownerDraft){
 }
 
 export function pdfDescarga(clientId, businessPlanId) {
-  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es");
+  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
