@@ -13,6 +13,7 @@ const initialState = Immutable.Map({
   permissionsBussinessPlan: [],
   permissionsManagerialView: [],
   permissionsRiskGroup: [],
+  permissionsBoardMembers: []
 });
 
 export default (state = initialState, action) => {
@@ -55,6 +56,9 @@ export default (state = initialState, action) => {
     case constants.MODULE_RISK_GROUP:
       const permissionsRiskGroup = action.payload.data.data.permissions;
       return state.set('permissionsRiskGroup', permissionsRiskGroup);
+    case constants.MODULE_BOARD_MEMBERS:
+      const permissionsBoardMembers = action.payload.data.data.permissions;
+      return state.set('permissionsBoardMembers', permissionsBoardMembers);
     default:
       return state;
   }

@@ -7,7 +7,7 @@ import DashboardComponent from './components/dashboard/dashboardComponent';
 import ClientsFind from './components/clients/clientsFind';
 import ContactComponent from './components/contact/component';
 import modalComponent from './components/modal/modalComponent';
-import ShareholderComponent from './components/shareholder/component';
+import ShareholderComponent from './components/clients/partners/shareholder/component';
 import ComponentClientInformation from './components/clientInformation/componentClientInformation';
 import CreatePropspect from './components/propspect/createPropspect';
 import ClientEdit from './components/clientEdit/clientEdit';

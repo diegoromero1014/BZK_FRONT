@@ -30,7 +30,6 @@ export const APP_NAME = "FRONT_OFFICE";
 export const YES = 1;
 export const NO = 0;
 
-
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
     "Si en la visita se presentó una propuesta de negocio al cliente, se deberá indicar ¿qué tan real es el " +
@@ -94,7 +93,9 @@ export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
 export const MODULE_CLIENTS = "Clientes";
 export const MODULE_PROSPECT = "Prospectos";
 export const MODULE_CONTACTS = "Contactos";
+export const MODULE_PARTNERS = "Socios";
 export const MODULE_SHAREHOLDERS = "Accionistas";
+export const MODULE_BOARD_MEMBERS = "Miembros de junta";
 export const MODULE_PREVISITS = "Previsitas";
 export const MODULE_VISITS = "Visitas";
 export const MODULE_TASKS = "Tareas";
@@ -140,7 +141,7 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
 
-export const STYLE_BUTTONS_ACTIONS = {paddingRight: '7px', paddingLeft: '7px'};
+export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
 export const STYLE_CONTAINER_BUTTONS = {
     position: "fixed",
     border: "1px solid #C2C2C2",
@@ -154,9 +155,9 @@ export const STYLE_CONTAINER_BUTTONS = {
 
 //Data para los select de respuesta "Aprobar" - "Rechazar"
 export const VALUES_APROVE = [
-    {'id': '', 'value': "Seleccione..."},
-    {'id': true, 'value': "Aprobar"},
-    {'id': false, 'value': "Rechazar"}
+    { 'id': '', 'value': "Seleccione..." },
+    { 'id': true, 'value': "Aprobar" },
+    { 'id': false, 'value': "Rechazar" }
 ];
 
 export const STYLE_BUTTON_BOTTOM = {

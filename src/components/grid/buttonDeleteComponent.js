@@ -1,13 +1,13 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import SweetAlert from 'sweetalert-react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {deleteServer} from './actions';
-import {contactsByClientFindServer, clearContactCreate, clearContactOrder} from '../contact/actions';
-import {shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder} from '../shareholder/actions';
-import {visitByClientFindServer, clearVisitOrder, clearVisitPaginator} from '../visit/actions';
-import {pipelineByClientFindServer, clearPipelineOrder, clearPipelinePaginator} from '../pipeline/actions';
-import {clearPrevisitOrder, clearPrevisitPaginator, previsitByClientFindServer} from '../previsita/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { deleteServer } from './actions';
+import { contactsByClientFindServer, clearContactCreate, clearContactOrder } from '../contact/actions';
+import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../shareholder/actions';
+import { visitByClientFindServer, clearVisitOrder, clearVisitPaginator } from '../visit/actions';
+import { pipelineByClientFindServer, clearPipelineOrder, clearPipelinePaginator } from '../pipeline/actions';
+import { clearPrevisitOrder, clearPrevisitPaginator, previsitByClientFindServer } from '../previsita/actions';
 import {
     clearFilter,
     clearContactsByFunctionPagination,
@@ -34,12 +34,12 @@ import {
     clearBusinessPlanPaginator,
     businessPlanByClientFindServer
 } from '../businessPlan/actions';
-import {deleteParticipant} from '../participantsVisitPre/actions';
-import {deleteTask} from '../visit/tasks/actions';
-import {deleteArea} from '../businessPlan/area/actions';
-import {deleteNeed} from '../businessPlan/need/actions';
-import {draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator} from '../myPendings/draftDocuments/actions';
-import {clearFilterGroup} from '../contact/favoritesGroup/actions';
+import { deleteParticipant } from '../participantsVisitPre/actions';
+import { deleteTask } from '../visit/tasks/actions';
+import { deleteArea } from '../businessPlan/area/actions';
+import { deleteNeed } from '../businessPlan/need/actions';
+import { draftsDocumentsByUser, clearDraftDocumentOrder, clearDraftDocumentPaginator } from '../myPendings/draftDocuments/actions';
+import { clearFilterGroup } from '../contact/favoritesGroup/actions';
 
 class ButtonDeleteComponent extends Component {
 
@@ -56,22 +56,22 @@ class ButtonDeleteComponent extends Component {
     }
 
     _onConfirmDelete(e) {
-        const {actionsDelete, deleteServer, participants, tasks, areas, needs} = this.props;
+        const { actionsDelete, deleteServer, participants, tasks, areas, needs } = this.props;
         if (actionsDelete.typeDelete !== DELETE_PARTICIPANT_VIEW && actionsDelete.typeDelete !== DELETE_TASK_VIEW) {
             deleteServer(actionsDelete.urlServer, actionsDelete.json, actionsDelete.typeDelete).then((data) => {
                 if ((_.get(data, 'payload.status') === 200)) {
-                    this.setState({showEx: true});
+                    this.setState({ showEx: true });
                 } else {
-                    this.setState({showEr: true});
+                    this.setState({ showEr: true });
                 }
             }, (reason) => {
-                this.setState({showEr: true});
+                this.setState({ showEr: true });
             });
         } else {
             var indexDelete;
             if (actionsDelete.typeDelete === DELETE_PARTICIPANT_VIEW) {
-                this.setState({show: false});
-                const {deleteParticipant} = this.props;
+                this.setState({ show: false });
+                const { deleteParticipant } = this.props;
                 if (actionsDelete.tipo === "client" || actionsDelete.tipo === "banco") {
                     indexDelete = participants.findIndex(function (item) {
                         return item.idParticipante === actionsDelete.id;
@@ -87,24 +87,22 @@ class ButtonDeleteComponent extends Component {
                 }
             } else {
                 if (actionsDelete.typeDelete === DELETE_TASK_VIEW) {
-                    this.setState({show: false});
-                    const {deleteTask} = this.props;
+                    this.setState({ show: false });
+                    const { deleteTask } = this.props;
                     indexDelete = tasks.findIndex(function (item) {
                         return item.uuid === actionsDelete.id;
                     });
                     deleteTask(indexDelete);
-                }
-                else if (actionsDelete.typeDelete === DELETE_NEED_VIEW) {
-                    this.setState({show: false});
-                    const {deleteNeed} = this.props;
+                }else if (actionsDelete.typeDelete === DELETE_NEED_VIEW) {
+                    this.setState({ show: false });
+                    const { deleteNeed } = this.props;
                     indexDelete = needs.findIndex(function (item) {
                         return item.uuid === actionsDelete.id;
                     });
                     deleteNeed(indexDelete);
-                }
-                else if (actionsDelete.typeDelete === DELETE_AREA_VIEW) {
-                    this.setState({show: false});
-                    const {deleteArea} = this.props;
+                } else if (actionsDelete.typeDelete === DELETE_AREA_VIEW) {
+                    this.setState({ show: false });
+                    const { deleteArea } = this.props;
                     indexDelete = areas.findIndex(function (item) {
                         return item.uuid === actionsDelete.id;
                     });
@@ -121,7 +119,7 @@ class ButtonDeleteComponent extends Component {
             visitByClientFindServer, contactsByClientFindServer, actionsDelete, clearContactCreate, clearContactOrder,
             clearShareholderCreate, clearShareholderOrder, shareholdersByClientFindServer, clearBusinessPlanOrder,
             clearBusinessPlanPaginator, businessPlanByClientFindServer, draftsDocumentsByUser, clearDraftDocumentOrder,
-            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType,clearContactsByFunctionPagination,
+            clearDraftDocumentPaginator, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType, clearContactsByFunctionPagination,
             clearFilterGroup
         } = this.props;
         if (this.state.showEx === true) {
@@ -167,24 +165,24 @@ class ButtonDeleteComponent extends Component {
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
-            }else if(actionsDelete.typeDelete == DELETE_GROUP){
+            } else if (actionsDelete.typeDelete == DELETE_GROUP) {
                 clearFilterGroup();
             }
         }
-        this.setState({showEx: false, showEr: false, show: false});
+        this.setState({ showEx: false, showEr: false, show: false });
     }
 
     _confirmDeleteEntity(e) {
         e.preventDefault();
-        this.setState({show: true});
+        this.setState({ show: true });
     }
 
     render() {
-        const {actionsDelete, deleteGridReducer} = this.props;
+        const { actionsDelete, deleteGridReducer } = this.props;
         return (
-            <td style={{padding: '10px', textAlign: 'center'}}>
+            <td style={{ padding: '10px', textAlign: 'center' }}>
                 <button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{margin: '0em', fontSize: '1.2em'}} className="trash outline icon"></i>
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash outline icon"></i>
                 </button>
                 <SweetAlert
                     type="warning"
@@ -195,8 +193,8 @@ class ButtonDeleteComponent extends Component {
                     cancelButtonText="Cancelar"
                     text={actionsDelete.mensaje}
                     showCancelButton={true}
-                    onCancel={() => this.setState({show: false})}
-                    onConfirm={() => this._onConfirmDelete()}/>
+                    onCancel={() => this.setState({ show: false })}
+                    onConfirm={() => this._onConfirmDelete()} />
                 <SweetAlert
                     type="success"
                     show={this.state.showEx}
@@ -255,7 +253,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({deleteGridReducer, participants, tasks, needs, areas, contactsByFunctionOrType}, ownerProps) {
+function mapStateToProps({ deleteGridReducer, participants, tasks, needs, areas, contactsByFunctionOrType }, ownerProps) {
     return {
         deleteGridReducer,
         participants,

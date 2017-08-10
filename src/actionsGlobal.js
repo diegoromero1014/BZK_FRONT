@@ -258,7 +258,8 @@ export function validateResponse(response) {
 }
 
 /**
- * Valida que una cadena sea diferente de null, vacío e indefinido.
+ * Valida que una cadena sea diferente de null, vacío e indefinido, 
+ * retorna verdadero si es diferente de todos los valores.
  * @param {*} value 
  */
 export function stringValidate(value) {
@@ -268,7 +269,6 @@ export function stringValidate(value) {
         return false;
     }
 }
-
 
 export function validateValueExist(value) {
     return _.isUndefined(value) || _.isNull(value) ? false : true;
