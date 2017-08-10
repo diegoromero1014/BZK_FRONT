@@ -149,7 +149,7 @@ export function getPipelineById(pipelineId) {
 }
 
 export function pdfDescarga(idclient, idPipeline) {
-  window.open(APP_URL + "/pdfReportPipeline?idClient=" + idclient + "&idPipeline=" + idPipeline + "&language=es");
+  window.open(APP_URL + "/pdfReportPipeline?idClient=" + idclient + "&idPipeline=" + idPipeline + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
 
 export function changeOwnerDraftPipeline(ownerDraft) {
