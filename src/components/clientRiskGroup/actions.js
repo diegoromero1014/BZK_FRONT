@@ -8,7 +8,8 @@ import {
     HAS_RISK_GROUP,
     UPDATE_NAME_RISK_GROUP,
     CHANGE_PENDING,
-    VALIDATE_RISK_GROUP_CODE_EXITS
+    VALIDATE_RISK_GROUP_CODE_EXITS,
+    SHOW_MODAL_RISK_GROUP
 } from './constants';
 import axios from 'axios';
 
@@ -51,7 +52,7 @@ export function removeClientRiskGroup(data) {
             "isSuccessful": true
         },
         "messageBody": data
-    }
+    };
     const request = axios.post(APP_URL + "/requestRemoveClientRiskGroup", json);
     return {
         type: REMOVE_CLIENT_RISK_GROUP,
@@ -172,6 +173,12 @@ export function updateIsPendingRiskGroup(isPending) {
     return {
         type: CHANGE_PENDING,
         isPending
+    }
+}
+export function showModalRiskGroup(show) {
+    return {
+        type: SHOW_MODAL_RISK_GROUP,
+        show
     }
 }
 
