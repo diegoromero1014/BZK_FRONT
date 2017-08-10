@@ -122,7 +122,7 @@ class memberRiskGroup extends Component {
                 if (result != "hasGroup" && result != "error") {
                     swtShowMessage('success',
                         'Cliente pendiente por aprobación',
-                        'Señor usuario, para agregar el cliente, debe ser aprobado por el analista de riesgos.');
+                        'Señor usuario, para agregar el cliente debe ser aprobado por el analista de riesgos.');
                     getClientsRiskGroup(infoClient.id);
 
                     this.setState({
