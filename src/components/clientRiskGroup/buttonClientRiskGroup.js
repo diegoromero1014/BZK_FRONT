@@ -17,11 +17,9 @@ class buttonClientRiskGroup extends Component {
 
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
-        this.validateHasRiskGroup = this.validateHasRiskGroup.bind(this);
     }
 
     openModal() {
-        this.validateHasRiskGroup(() => { });
         this.props.showModalRiskGroup(true);
     }
 
@@ -29,18 +27,16 @@ class buttonClientRiskGroup extends Component {
         this.props.showModalRiskGroup(false);
     }
 
-    validateHasRiskGroup(fn) {
+    componentWillMount() {
         const { clientInformacion, hasClientRequest, swtShowMessage, showLoading } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         showLoading(true, MESSAGE_LOAD_DATA);
 
         hasClientRequest(infoClient.id).then((data) => {
             if (validateResponse(data)) {
-                let hasRiskGroup = _.get(data, 'payload.data.data')
+                let hasRiskGroup = _.get(data, 'payload.data.data');
                 if (!hasRiskGroup) {
-                    swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, este client no posee ningún grupo de riesgo asignado.');
-                } else {
-                    fn();
+                    swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, este cliente no posee ningún grupo de riesgo asignado.');
                 }
             } else {
                 swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
@@ -48,7 +44,6 @@ class buttonClientRiskGroup extends Component {
             showLoading(false, "");
         })
     }
-
 
     render() {
         const { riskGroupReducer } = this.props;
