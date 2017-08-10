@@ -38,10 +38,10 @@ class ListBoardMembers extends Component {
     this.setState({ modalIsOpen: false });
   }
 
-  _deleteBoardMember(idBoardMember) {
+  _deleteBoardMember(idClientBoardMember) {
     const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData, boardMembersReducer } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
-    deleteBoardMemberByClient(idBoardMember).then((data) => {
+    deleteBoardMemberByClient(idClientBoardMember).then((data) => {
       changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -94,7 +94,7 @@ class ListBoardMembers extends Component {
       const deleteNew = {
         message: 'Señor usuario ¿está seguro que desea eliminar el miembro de junta: ' + joinName(item.firstName, item.middleName, item.firstLastName, item.secondLastName) + "?",
         fn: thisSelf._deleteBoardMember,
-        argsFn: [item.idBoardMember]
+        argsFn: [item.idClientBoardMember]
       };
       const jsonRow = {
         actions: {
