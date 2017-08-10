@@ -27,6 +27,8 @@ import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
 
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName"];
 const errors = {};
+let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
+let positionCreatedBy = '', positionUpdatedBy = '';
 
 const validate = (values) => {
     if (!values.typeOfDocument) {
@@ -85,11 +87,9 @@ class ModalCreateBoardMembers extends Component {
     constructor(props) {
         super(props);
         this._handleBoardMember = this._handleBoardMember.bind(this);
-        this._closeCreate = this._closeCreate.bind(this);
         this._validateExistBoardMember = this._validateExistBoardMember.bind(this);
         this._editBoardMember = this._editBoardMember.bind(this);
         this.state = {
-            showSuccess: false,
             //controla si se muestra el formulario completo, valores (hidden, visible)
             showCompleteForm: 'hidden',
             //controla si se puede editar la información del miembro de junta, valores (true, false)
@@ -108,33 +108,14 @@ class ModalCreateBoardMembers extends Component {
     }
 
     /**
-     * Cierra el modal después de completar el guardado de un miembro de junta
-     */
-    _closeCreate() {
-        const { isOpen, getBoardMembers, validateExistsBoardMember, swtShowMessage,
-            boardMembersReducer } = this.props;
-        this.setState({
-            showSuccess: false
-        });
-        getBoardMembers(window.localStorage.getItem('idClientSelected'), boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
-            if (!validateResponse(data)) {
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }
-        }, (reason) => {
-            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-        });
-        isOpen();
-        this.props.resetForm();
-    }
-
-    /**
      * Se ejecuta cuando se da clic en el botón guardar, valida si es para crear o actualizar 
      * un miembro de junta
      */
     _handleBoardMember() {
         const { fields: { idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
             firstLastName, secondLastName }, saveBoardMember, validateExistsBoardMember,
-            swtShowMessage, changeStateSaveData, changeKeyword, clearFilters } = this.props;
+            swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
+            getBoardMembers, boardMembersReducer } = this.props;
         var boardMember = {
             idClientBoardMember: null,
             idClient: window.localStorage.getItem('idClientSelected'),
@@ -153,11 +134,17 @@ class ModalCreateBoardMembers extends Component {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             } else {
                 if (data.payload.data.data) {
-                    this.setState({
-                        showSuccess: true
-                    });
                     clearFilters();
                     changeKeyword('');
+                    getBoardMembers(window.localStorage.getItem('idClientSelected'), boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
+                        if (!validateResponse(data)) {
+                            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                        }
+                    }, (reason) => {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    });
+                    swtShowMessage('success', 'Miembro de junta', 'Señor usuario, el miembro de junta se ha guardado exitosamente');
+                    isOpen();
                 } else {
                     swtShowMessage('error', 'Información inválida', 'Señor usuario, ya existe un miembro de junta con ese tipo de documento y número de documento');
                 }
@@ -184,6 +171,7 @@ class ModalCreateBoardMembers extends Component {
             };
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             validateExistsBoardMember(jsonBoardMember).then((data) => {
+                changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 } else {
@@ -251,6 +239,18 @@ class ModalCreateBoardMembers extends Component {
     render() {
         const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
             middleName, firstLastName, secondLastName }, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
+        if (!_.isUndefined(boardMember)) {
+            createdBy = boardMember.userNameCreate;
+            updatedBy = boardMember.userNameUpdate;
+            if (boardMember.dateUpdate !== null) {
+                let fechaModDateMoment = moment(boardMember.dateUpdate, "x").locale('es');
+                fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
+            }
+            if (boardMember.dateCreate !== null) {
+                let fechaCreateDateMoment = moment(boardMember.dateCreate, "x").locale('es');
+                fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
+            }
+        }
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -333,6 +333,42 @@ class ModalCreateBoardMembers extends Component {
                                 />
                             </Col>
                         </Row>
+                        {!_.isUndefined(boardMember) &&
+                            < Row style={{ padding: "20px 10px 0px 0px", visibility: this.state.showCompleteForm }}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null ?
+                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                                        : ''}
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null ?
+                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                                        : ''}
+                                </Col>
+                            </Row>
+                        }
+                        {!_.isUndefined(boardMember) &&
+                            <Row style={{ padding: "5px 10px 0px    0px", visibility: this.state.showCompleteForm }}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                                </Col>
+                            </Row>
+                        }
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
@@ -342,14 +378,7 @@ class ModalCreateBoardMembers extends Component {
                         <span>Guardar</span>
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccess}
-                    title="Miembro de junta"
-                    text="Señor usuario, el miembro de junta ha sido guardado exitosamente"
-                    onConfirm={() => this._closeCreate()}
-                />
-            </form>
+            </form >
         );
     }
 }

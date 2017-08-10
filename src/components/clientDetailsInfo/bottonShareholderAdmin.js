@@ -54,7 +54,7 @@ class BottonShareholderAdmin extends Component {
                   <span className="sr-only">Close</span>
                 </button>
               </div>
-              <div style={{ marginLeft: '10px', marginRight: '10px' }}>
+              <div style={{ margin: '20px'}}>
                 <ShareholderInfo infoClient={infoClient} />
               </div>
             </div>

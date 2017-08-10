@@ -339,7 +339,7 @@ class TabClientInfo extends Component {
                             (((_.get(navBar.get('mapModulesAccess'), MODULE_SHAREHOLDERS))) 
                             || (_.get(navBar.get('mapModulesAccess'), MODULE_BOARD_MEMBERS)))) &&
                             <li style={backgroundShareholders} onClick={this._handleClickTabItem.bind(this, TAB_SHAREHOLDER)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Accionistas/Miembros de junta</a>
+                                <a className="button-link-url" style={{ marginRight: "15px" }}>Accionistas/Junta</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) &&
