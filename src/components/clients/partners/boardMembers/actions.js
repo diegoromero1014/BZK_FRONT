@@ -96,7 +96,7 @@ export function validateExistsBoardMember(boardMember) {
   }
 }
 
-export function deleteBoardMemberByClient(idBoardMember) {
+export function deleteBoardMemberByClient(idClientBoardMember) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -111,7 +111,7 @@ export function deleteBoardMemberByClient(idBoardMember) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": idBoardMember
+    "messageBody": idClientBoardMember
   }
   var request = axios.post(APP_URL + "/deleteBoardMemberByClient", json);
   return {
