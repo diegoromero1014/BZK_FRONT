@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import SearchBoardMembers from './searchBoardMembers';
 import { getBoardMembers, clearFilters, changeKeyword } from './actions';
-import { FIRST_PAGE, NUMBER_RECORDS } from './constants';
+import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, CREAR, MODULE_BOARD_MEMBERS
@@ -47,7 +47,7 @@ class ComponentBoardMembers extends Component {
                         openMessagePermissions: true
                     });
                 } else {
-                    getBoardMembers(idClient, boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
+                    getBoardMembers(idClient, LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
                         if (!validateResponse(data)) {
                             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         }

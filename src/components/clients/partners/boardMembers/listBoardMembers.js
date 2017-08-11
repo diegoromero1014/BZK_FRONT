@@ -10,7 +10,7 @@ import { shorterStringValue, joinName, validateResponse } from '../../../../acti
 import GridComponent from '../../../grid/component';
 import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
 import { CONTACT_ID_TYPE } from '../../../selectsComponent/constants';
-import { deleteBoardMemberByClient, getBoardMembers } from './actions';
+import { deleteBoardMemberByClient, getBoardMembers, clearFilters } from './actions';
 import {
   TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, ELIMINAR,
   MESSAGE_LOAD_DATA
@@ -43,7 +43,8 @@ class ListBoardMembers extends Component {
    * @param {*} idClientBoardMember 
    */
   _deleteBoardMember(idClientBoardMember) {
-    const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData, boardMembersReducer } = this.props;
+    const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData,
+      boardMembersReducer, clearFilters } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
     deleteBoardMemberByClient(idClientBoardMember).then((data) => {
       changeStateSaveData(false, "");
@@ -51,6 +52,7 @@ class ListBoardMembers extends Component {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       } else {
         swtShowMessage('success', "Miembro de junta", 'Señor usuario, el miembro de junta se eliminó exitosamente');
+        clearFilters();
         getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
           if (!validateResponse(data)) {
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -134,7 +136,8 @@ function mapDispatchToProps(dispatch) {
     deleteBoardMemberByClient,
     swtShowMessage,
     getBoardMembers,
-    changeStateSaveData
+    changeStateSaveData,
+    clearFilters
   }, dispatch);
 }
 
