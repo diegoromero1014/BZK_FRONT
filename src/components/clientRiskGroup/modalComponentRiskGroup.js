@@ -164,7 +164,7 @@ class ModalComponentRiskGroup extends Component {
         const self = this;
         editNameRiskGroup(jsonUpdateGroup).then((data2) => {
             if (validateResponse(data2)) {
-                swtShowMessage('success', 'Edición grupo de riesgo', 'Señor usuario, el grupo de riesgo editado exitosamente. Recuerde que el cambio esta sujeto a rechazo por parte del analista de riesgo');
+                swtShowMessage('success', 'Edición grupo de riesgo', 'Señor usuario, el grupo de riesgo fue editado exitosamente. Recuerde que el cambio esta sujeto a rechazo por parte del analista de riesgo');
                 getClientsRiskGroup(infoClient.id);
                 groupObservations.onChange("");
                 updateValuesRiskGroup(jsonUpdateGroup);
