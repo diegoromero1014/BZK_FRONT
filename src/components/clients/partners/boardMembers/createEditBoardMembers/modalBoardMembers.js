@@ -10,7 +10,7 @@ import InputComponent from '../../../../../ui/input/inputComponent';
 import ComboBoxFilter from "../../../../../ui/comboBoxFilter/comboBoxFilter";
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
-import { SAVE, FIRST_PAGE, NUMBER_RECORDS } from "../constants";
+import { SAVE, FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from "../constants";
 import {
     validateExistsBoardMember, saveBoardMember, getBoardMembers, clearFilters,
     changeKeyword
@@ -69,11 +69,13 @@ function GetBtnAllowEditOrBtnSearchExists(props) {
     } else {
         if (_.get(props.reducerGlobal.get('permissionsBoardMembers'), _.indexOf(props.reducerGlobal.get('permissionsBoardMembers'), EDITAR), false)) {
             return <Col xs>
-                <dl style={{ width: '100%' }}><button type="button" onClick={props.thisSelf._editBoardMember}
-                    className={'btn btn-primary modal-button-edit'} style={{ marginTop: '35px' }}>
-                    Editar
-            <i className={'icon edit'}></i>
-                </button>
+                <dl style={{ width: '100%' }}>
+                    <button type="button" onClick={props.thisSelf._editBoardMember}
+                        className={'btn btn-primary modal-button-edit'}
+                        style={{ marginTop: '35px' }}>
+                        Editar
+            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
+                    </button>
                 </dl>
             </Col>
         } else {
@@ -137,7 +139,7 @@ class ModalCreateBoardMembers extends Component {
                 if (data.payload.data.data) {
                     clearFilters();
                     changeKeyword('');
-                    getBoardMembers(window.localStorage.getItem('idClientSelected'), boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
+                    getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
                         if (!validateResponse(data)) {
                             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         }
@@ -366,14 +368,14 @@ class ModalCreateBoardMembers extends Component {
                                     <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy !== null ?
+                                    {updatedBy !== null &&
                                         <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                                        : ''}
+                                    }
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy !== null ?
+                                    {updatedBy !== null &&
                                         <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                                        : ''}
+                                    }
                                 </Col>
                             </Row>
                         }
@@ -386,10 +388,14 @@ class ModalCreateBoardMembers extends Component {
                                     <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                                    {updatedBy !== null &&
+                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                                    }
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                                    {updatedBy !== null &&
+                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                                    }
                                 </Col>
                             </Row>
                         }
