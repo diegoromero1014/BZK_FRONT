@@ -63,6 +63,7 @@ import qualitativeVariableReducer from '../components/risksManagement/qualitativ
 import visorReducer from '../components/visor/reducer';
 import boardMembersReducer from '../components/clients/partners/boardMembers/reducer';
 import riskGroupReducer from '../components/clientRiskGroup/reducer';
+import partnersReducer from '../components/clients/partners/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -128,5 +129,6 @@ export default combineReducers({
     qualitativeVariableReducer,
     visorReducer,
     boardMembersReducer,
-    riskGroupReducer
+    riskGroupReducer,
+    tabPartners: partnersReducer
 });
