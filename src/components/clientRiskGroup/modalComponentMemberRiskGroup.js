@@ -166,7 +166,7 @@ class modalComponentMemberRiskGroup extends Component {
                 <ComboBox
                   name="tipoDocumento"
                   onChange={val => this._onchangeValue("idType", val)}
-                  labelInput="Seleccione el tipo de documento"
+                  labelInput="Seleccione..."
                   {...idType}
                   disabled={this.state.disabledPrimaryFields ? "disabled" : ""}
                   valueProp={'id'}
@@ -183,7 +183,7 @@ class modalComponentMemberRiskGroup extends Component {
                   type="text"
                   max="20"
                   disabled={this.state.disabledPrimaryFields}
-                  placeholder="Ingrese el número de documento"
+                  placeholder="Número de documento"
                   {...idNumber}
                 />
               </Col>
@@ -199,8 +199,9 @@ class modalComponentMemberRiskGroup extends Component {
                 type="warning"
                 show={this.state.showConfirmCreateUser}
                 showCancelButton={true}
-                title="Busqueda de cliente"
-                text="Señor usuario, el cliente no fue encontrado, desea crear uno."
+                cancelButtonText="Cancelar"
+                title="Búsqueda de cliente"
+                text="Señor usuario, el cliente no fue encontrado, desea crearlo?"
                 onConfirm={() => this.setState({
                   showConfirmCreateUser: false,
                   disabledPrimaryFields: true,

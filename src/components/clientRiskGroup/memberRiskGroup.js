@@ -177,7 +177,7 @@ class memberRiskGroup extends Component {
                             type="text"
                             max="100"
                             onChange={val => this._onchangeValue("clientName", val)}
-                            placeholder="Ingrese el nombre del cliente"
+                            placeholder="Nombre del cliente"
                             disabled={!!clientsBasicInfo.idClient}
                             {...clientName}
                         />
@@ -189,6 +189,7 @@ class memberRiskGroup extends Component {
                             name="semento"
                             type="text"
                             max="100"
+                            placeholder="Semento"
                             onChange={val => this._onchangeValue("segmentClient", val)}
                             disabled={'disabled'}
                             {...segmentClient}
@@ -198,10 +199,9 @@ class memberRiskGroup extends Component {
                         <dt><span>Razón de conformación (</span><span style={{color: "red"}}>*</span>)</dt>
                         <ComboBox
                             name="razonConformacion"
-                            labelInput="Seleccione la razón de conformación"
+                            labelInput="Seleccione..."
                             {...conformationReasonId}
                             onChange={val => this._onchangeValue("conformationReasonId", val)}
-
                             valueProp={'id'}
                             textProp={'value'}
                             data={selectsReducer.get('reasonConformation')}
