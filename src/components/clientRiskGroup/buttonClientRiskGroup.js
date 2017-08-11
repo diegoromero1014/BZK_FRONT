@@ -40,12 +40,12 @@ class buttonClientRiskGroup extends Component {
                     updateFieldInfoClient('riskGroup', null);
                     updateFieldInfoClient('hasRiskGroup', false);
                     showModalRiskGroup(false);
-                    swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, este cliente no posee ningún grupo de riesgo asignado.');
+                    swtShowMessage('warning', 'Grupo de riesgo', 'Señor usuario, este cliente no posee ningún grupo de riesgo asignado.');
                 }else{
                     fn();
                 }
             } else {
-                swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
+                swtShowMessage('error', 'Error consultando grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
             }
             showLoading(false, "");
         })
