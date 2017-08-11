@@ -130,9 +130,7 @@ class ComponentSurvey extends Component {
         const listFactorCommercial = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const listFactorAnalyst = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
-        console.log('analyst', analyst);
         const commercial = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), COMMERCIAL), false);
-        console.log('commercial', commercial);
         return (
             <Row>
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
