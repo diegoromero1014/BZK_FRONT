@@ -8,7 +8,7 @@ import {hasClientRequest, showModalRiskGroup} from "./actions";
 import {showLoading} from "../loading/actions";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import {validateResponse} from "../../actionsGlobal";
-
+import {updateFieldInfoClient} from '../clientInformation/actions';
 
 class buttonClientRiskGroup extends Component {
 
@@ -29,7 +29,7 @@ class buttonClientRiskGroup extends Component {
     }
 
     validateHasRiskGroup(fn){
-        const { clientInformacion, hasClientRequest, swtShowMessage, showLoading } = this.props;
+        const { clientInformacion, hasClientRequest, swtShowMessage, showLoading,updateFieldInfoClient,showModalRiskGroup } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         showLoading(true, MESSAGE_LOAD_DATA);
 
@@ -37,6 +37,9 @@ class buttonClientRiskGroup extends Component {
             if (validateResponse(data)) {
                 let hasRiskGroup = _.get(data, 'payload.data.data');
                 if (!hasRiskGroup) {
+                    updateFieldInfoClient('riskGroup', null);
+                    updateFieldInfoClient('hasRiskGroup', false);
+                    showModalRiskGroup(false);
                     swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, este cliente no posee ningún grupo de riesgo asignado.');
                 }else{
                     fn();
@@ -54,14 +57,13 @@ class buttonClientRiskGroup extends Component {
 
     render() {
         const { riskGroupReducer } = this.props;
-        const hasRiskGroup = riskGroupReducer.get('hasRiskGroup');
         const stateShowModal = riskGroupReducer.get('showModal');
         return (
             <div>
                 <button className="btn btn-primary" type="button" title="Ver grupo de riesgo" style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
                     <i className="address book icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
                 </button>
-                <Modal isOpen={hasRiskGroup ? stateShowModal : false} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+                <Modal isOpen={stateShowModal} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
@@ -86,7 +88,8 @@ function mapDispatchToProps(dispatch) {
         hasClientRequest,
         showLoading,
         swtShowMessage,
-        showModalRiskGroup
+        showModalRiskGroup,
+        updateFieldInfoClient
     }, dispatch);
 }
 

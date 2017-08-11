@@ -8,7 +8,7 @@ import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
-import ButtonRiskGrouo from '../clientRiskGroup/buttonClientRiskGroup';
+import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
@@ -170,7 +170,7 @@ class ComponentClientInformation extends Component {
                                 height: '100%',
                                 width: '50%',
                                 float: 'right'
-                            } : { height: '50%', width: '50%', float: 'right' }}>
+                            } : { height: '100%', width: '50%', float: 'right' }}>
                                 <tbody>
                                     <tr>
                                         <td style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
@@ -181,7 +181,7 @@ class ComponentClientInformation extends Component {
                                         infoClient.hasRiskGroup &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
-                                                <ButtonRiskGrouo />
+                                                <ButtonRiskGroup />
                                             </td>
                                         </tr>
                                     }

@@ -1,38 +1,28 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Row, Col} from 'react-flexbox-grid';
-import {redirectUrl} from '../globalComponents/actions';
-import {reduxForm} from 'redux-form';
-import Input from '../../ui/input/inputComponent';
-import Textarea from '../../ui/textarea/textareaComponent';
+import React, {Component} from "react";
+import {Col, Row} from "react-flexbox-grid";
+import {reduxForm} from "redux-form";
+import Input from "../../ui/input/inputComponent";
+import Textarea from "../../ui/textarea/textareaComponent";
 
-import SweetAlert from 'sweetalert-react';
-import {swtShowMessage} from '../sweetAlertMessages/actions';
+import SweetAlert from "sweetalert-react";
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 
+import {MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED} from "../../constantsGlobal";
 import {
-    REQUEST_ERROR,
-    ERROR_MESSAGE_REQUEST,
-    MESSAGE_USER_WITHOUT_PERMISSIONS,
-    MESSAGE_LOAD_DATA,
-    VALUE_REQUIERED
-} from '../../constantsGlobal';
-import {MODULE_RISK_GROUP} from '../../constantsGlobal';
-import {
-    validateResponse,
     formValidateKeyEnter,
-    nonValidateEnter
-} from '../../actionsGlobal';
-import {bindActionCreators} from 'redux';
-import {getClientsRiskGroup, editNameRiskGroup, updateValuesRiskGroup, validateRiskGroupCodeExists} from './actions';
-import ModalComponentDeleteRiskGroup from './modalComponentDeleteRiskGroup';
-import ModalComponentMemberRiskGroup from './modalComponentMemberRiskGroup';
-import ClientsRiskGroup from './clientsRiskGroup';
-import {showLoading} from '../loading/actions';
-import Modal from 'react-modal';
-import {validatePermissionsByModule} from '../../actionsGlobal';
+    nonValidateEnter,
+    validatePermissionsByModule,
+    validateResponse
+} from "../../actionsGlobal";
+import {bindActionCreators} from "redux";
+import {editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, validateRiskGroupCodeExists} from "./actions";
+import ModalComponentDeleteRiskGroup from "./modalComponentDeleteRiskGroup";
+import ModalComponentMemberRiskGroup from "./modalComponentMemberRiskGroup";
+import ClientsRiskGroup from "./clientsRiskGroup";
+import {showLoading} from "../loading/actions";
+import Modal from "react-modal";
 
-import _ from 'lodash';
-import $ from 'jquery';
+import _ from "lodash";
 
 
 export const EDITAR = "Editar";
@@ -119,7 +109,7 @@ class ModalComponentRiskGroup extends Component {
     componentWillMount() {
         const {
             fields: {groupName, groupCode}, getClientsRiskGroup, clientInformacion,
-            nonValidateEnter, showLoading, isOpen, swtShowMessage
+            nonValidateEnter, showLoading, isOpen, swtShowMessage, validateHasRiskGroup
         } = this.props;
         const {validatePermissionsByModule} = this.props;
 
@@ -132,22 +122,22 @@ class ModalComponentRiskGroup extends Component {
         showLoading(true, MESSAGE_LOAD_DATA);
 
         this.setState({allowEditGroup: false});
-
-        getClientsRiskGroup(infoClient.id).then((data) => {
-            if (validateResponse(data)) {
-                let riskGroup = _.get(data, 'payload.data.data');
-                groupName.onChange(riskGroup.name);
-                groupCode.onChange(riskGroup.code);
-                if (riskGroup.isPending != null && riskGroup.isPending) {
-                    swtShowMessage('warning', 'Grupo de riesgo pendiente', 'Señor usuario, el grupo de riesgo se encuentra pendiente de aprobar eliminación por parte del analista de riegos.');
+        validateHasRiskGroup(()=>{
+            getClientsRiskGroup(infoClient.id).then((data) => {
+                if (validateResponse(data)) {
+                    let riskGroup = _.get(data, 'payload.data.data');
+                    groupName.onChange(riskGroup.name);
+                    groupCode.onChange(riskGroup.code);
+                    if (riskGroup.isPending != null && riskGroup.isPending) {
+                        swtShowMessage('warning', 'Grupo de riesgo pendiente', 'Señor usuario, el grupo de riesgo se encuentra pendiente de aprobar eliminación por parte del analista de riegos.');
+                    }
+                } else {
+                    swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
+                    isOpen();
                 }
-            } else {
-                swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
-                isOpen();
-            }
-            showLoading(false, "");
+                showLoading(false, "");
+            });
         });
-
     }
 
     _mapClientItems(data, index) {
@@ -421,7 +411,7 @@ class ModalComponentRiskGroup extends Component {
                     }}>
                         {members.length === 0 ?
                             <div style={{textAlign: "center", marginTop: "15px"}}><h4 className="form-item">Señor
-                                usuario, no hay clientes asociados a este grupo económico.</h4></div>
+                                usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
                             :
                             members.map(this._mapClientItems)}
                     </div>
