@@ -57,7 +57,7 @@ class RisksManagementComponent extends Component {
                 tabActive = TAB_COVENANTS;
             } else if (_.get(navBar.get('mapModulesAccess'), MODULE_AEC)) {
                 tabActive = TAB_AEC;
-            } else if (_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES)) {
+            } else if (_.get(navBar.get('mapModulesAccess'), MODULE_QUALITATIVE_VARIABLES) && allowQualitativeVariable) {
                 tabActive = TAB_QUALITATIVE_VARIABLE;
             }
         }
