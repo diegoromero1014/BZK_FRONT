@@ -16,7 +16,7 @@ import {
   MESSAGE_LOAD_DATA
 } from '../../../../constantsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
-import { FIRST_PAGE, NUMBER_RECORDS } from './constants';
+import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import { changeStateSaveData } from '../../../dashboard/actions';
 
 class ListBoardMembers extends Component {
@@ -38,6 +38,10 @@ class ListBoardMembers extends Component {
     this.setState({ modalIsOpen: false });
   }
 
+  /**
+   * Elimina la relación de un miembro de junta con el cliente y refresca la lista
+   * @param {*} idClientBoardMember 
+   */
   _deleteBoardMember(idClientBoardMember) {
     const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData, boardMembersReducer } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
@@ -47,7 +51,7 @@ class ListBoardMembers extends Component {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
       } else {
         swtShowMessage('success', "Miembro de junta", 'Señor usuario, el miembro de junta se eliminó exitosamente');
-        getBoardMembers(window.localStorage.getItem('idClientSelected'), boardMembersReducer.get('lowerLimit'), NUMBER_RECORDS, '').then((data) => {
+        getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
           if (!validateResponse(data)) {
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
           }
