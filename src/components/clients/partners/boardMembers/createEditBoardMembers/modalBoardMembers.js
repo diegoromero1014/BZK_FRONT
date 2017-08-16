@@ -28,7 +28,7 @@ import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName"];
 const errors = {};
 let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
-let positionCreatedBy = '', positionUpdatedBy = '', showAuditFields = false;
+let showAuditFields = false;
 
 const validate = (values) => {
     if (!values.typeOfDocument) {
