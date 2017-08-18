@@ -1,3 +1,4 @@
 export const VALIDATE_LOGIN = "VALIDATE_LOGIN";
 export const CHANGE_STATUS_LOGIN = "CHANGE_STATUS_LOGIN";
 export const CLEAR_STATE = "CLEAR_STATE";
+export const LOADING_LOGIN = "Iniciando sesión...";

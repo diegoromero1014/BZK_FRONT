@@ -23,7 +23,7 @@ class NavBarComponent extends Component {
       return (
           <div className="header-quick-nav" style={{height: "60px", width: "100%"}}>
               <div className="pull-left" style={{paddingLeft: "5px !important"}}>
-                  <ul className="nav" style={{paddingLeft: "0px"}}>
+                  <ul className="nav" style={{paddingLeft: "0px", paddingTop: '10pt'}}>
                       <li style={{fontSize: "30px"}}>
                           {titleNavBar}
                       </li>

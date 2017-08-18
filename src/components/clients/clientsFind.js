@@ -1,35 +1,44 @@
-import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from "react";
+import {Col, Row} from "react-flexbox-grid";
+import {bindActionCreators} from "redux";
 import {
-    clientsFindServer, clearClients, changePage, changeKeyword, getRecentClients,
-    deleteAllRecentClients
-} from './actions';
-import ClientListItem from './clientListItem';
-import SearchBarClient from './searchBarClient';
-import { NUMBER_RECORDS, ID_OPTION_ALL_LEVEL_AEC, AEC_NO_APLICA } from './constants';
-import Pagination from './pagination';
-import { redirectUrl } from '../globalComponents/actions';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import { consultList, getMasterDataFields } from '../selectsComponent/actions';
-import * as constants from '../selectsComponent/constants';
-import { reduxForm } from 'redux-form';
-import { updateTitleNavBar } from '../navBar/actions';
-import { clearContact } from '../contact/actions';
-import { clearInfoClient } from '../clientInformation/actions';
+    changeKeyword,
+    changePage,
+    clearClients,
+    clientsFindServer,
+    deleteAllRecentClients,
+    getRecentClients
+} from "./actions";
+import ClientListItem from "./clientListItem";
+import SearchBarClient from "./searchBarClient";
+import {AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS} from "./constants";
+import Pagination from "./pagination";
+import {redirectUrl} from "../globalComponents/actions";
+import ComboBox from "../../ui/comboBox/comboBoxComponent";
+import {consultList, getMasterDataFields} from "../selectsComponent/actions";
+import * as constants from "../selectsComponent/constants";
+import {reduxForm} from "redux-form";
+import {updateTitleNavBar} from "../navBar/actions";
+import {clearContact} from "../contact/actions";
+import {clearInfoClient} from "../clientInformation/actions";
 import {
-    SESSION_EXPIRED, MODULE_PROSPECT, MODULE_CLIENTS, VISUALIZAR, CREAR, MESSAGE_LOAD_DATA,
-    TAB_RISKS_MANAGEMENT, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
-} from '../../constantsGlobal';
-import { validatePermissionsByModule, validateResponse } from '../../actionsGlobal';
-import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import { updateTabSeletedRisksManagment } from '../risksManagement/actions';
-import { TAB_AEC } from '../risksManagement/constants';
-import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../dashboard/actions';
-import Tooltip from '../toolTip/toolTipComponent';
-import SweetAlert from 'sweetalert-react';
+    MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA,
+    MODULE_CLIENTS,
+    MODULE_PROSPECT,
+    SESSION_EXPIRED,
+    TAB_RISKS_MANAGEMENT,
+    TITLE_ERROR_SWEET_ALERT,
+    VISUALIZAR
+} from "../../constantsGlobal";
+import {validatePermissionsByModule, validateResponse} from "../../actionsGlobal";
+import {updateTabSeleted} from "../clientDetailsInfo/actions";
+import {updateTabSeletedRisksManagment} from "../risksManagement/actions";
+import {TAB_AEC} from "../risksManagement/constants";
+import {swtShowMessage} from "../sweetAlertMessages/actions";
+import Tooltip from "../toolTip/toolTipComponent";
+import SweetAlert from "sweetalert-react";
+import {showLoading} from '../loading/actions';
 
 const fields = ["team", "certificationStatus", "linkedStatus", "levelAEC"];
 var levelsAEC;
@@ -58,8 +67,8 @@ class ClientsFind extends Component {
         } else {
             const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, changeStateSaveData } = this.props;
-            changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading } = this.props;
+            showLoading(true, MESSAGE_LOAD_DATA);
             clearClients();
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
@@ -99,7 +108,7 @@ class ClientsFind extends Component {
                 }
             });
             getRecentClients().then((data) => {
-                changeStateSaveData(false, "");
+                showLoading(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 }
@@ -109,14 +118,14 @@ class ClientsFind extends Component {
 
     _cleanSearch() {
         const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment,
-            getRecentClients, changeStateSaveData } = this.props;
+            getRecentClients, showLoading } = this.props;
         this.props.resetForm();
-        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        showLoading(true, MESSAGE_LOAD_DATA);
         clearClients();
         updateTabSeleted(null);
         updateTabSeletedRisksManagment(null);
         getRecentClients().then((data) => {
-            changeStateSaveData(false, "");
+            showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
@@ -161,11 +170,12 @@ class ClientsFind extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { certificationStatus, team, linkedStatus, levelAEC }, changeStateSaveData,
+        const { fields: { certificationStatus, team, linkedStatus, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
-        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        showLoading(true, MESSAGE_LOAD_DATA);
+
         clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, linkedStatus.value, levelAEC.value).then((data) => {
-            changeStateSaveData(false, "");
+            showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
@@ -193,13 +203,13 @@ class ClientsFind extends Component {
     }
 
     _deleteAllRecentClientes() {
-        const { deleteAllRecentClients, changeStateSaveData, swtShowMessage, getRecentClients } = this.props;
+        const { deleteAllRecentClients, showLoading, swtShowMessage, getRecentClients } = this.props;
         this.setState({
             showConfirmDeleteRecentClientes: false
         });
-        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        showLoading(true, MESSAGE_LOAD_DATA);
         deleteAllRecentClients().then((data) => {
-            changeStateSaveData(false, "");
+            showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             } else {
@@ -372,7 +382,7 @@ function mapDispatchToProps(dispatch) {
         updateTabSeletedRisksManagment,
         getRecentClients,
         swtShowMessage,
-        changeStateSaveData,
+        showLoading,
         deleteAllRecentClients,
         getRecentClients
     }, dispatch);

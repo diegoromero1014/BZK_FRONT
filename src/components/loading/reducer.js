@@ -7,14 +7,14 @@ export const SHOW_LOADING = "SHOW_LOADING";
 
 const initialState = Immutable.Map({
     showLoading: false,
-    textLoading: 'Cargando..',
+    textLoading: 'Cargando...',
 });
 
 export default (state = initialState, action = {}) => {
     switch (action.type) {
         case SHOW_LOADING:
             return state.withMutations(map => {
-                const textLoading = get(action, 'textLoading', 'Cargando..');
+                const textLoading = get(action, 'textLoading', 'Cargando...');
                 map
                     .set('showLoading', action.show)
                     .set('textLoading', textLoading)

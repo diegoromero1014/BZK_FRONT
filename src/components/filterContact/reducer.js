@@ -5,6 +5,7 @@ import _ from 'lodash';
 const initialState = Immutable.Map({
     status: "withoutProcessing",
     keyword: "",
+    searchIntoAllContacts: false,
     page: 1,
     countContacts: 0,
     responseContacts: [],
@@ -28,8 +29,10 @@ export default (state = initialState, action = {}) => {
             return state.set('page', action.currentPage);
         case constants.CHANGE_KEYWORD:
             return state.set('keyword', action.keyword);
+        case constants.CHANGE_SEARCH_INTO_ALL_CONTACTS:
+            return state.set('searchIntoAllContacts', !state.get('searchIntoAllContacts'));
         case constants.CHANGE_VALUE_IS_OPEN:
-            if( _.isEqual(constants.OPEN_CREATE_MODAL, action.typeModal) ){
+            if (_.isEqual(constants.OPEN_CREATE_MODAL, action.typeModal)) {
                 return state.set('modalCreateIsOpen', action.payload);
             } else {
                 return state.set('modalIsOpen', action.payload);
@@ -41,6 +44,7 @@ export default (state = initialState, action = {}) => {
                 map
                     .set('status', 'withoutProcessing')
                     .set('keyword', '')
+                    .set('searchIntoAllContacts', false)
                     .set('page', 1)
                     .set('countContacts', 0)
                     .set('responseContacts', []);

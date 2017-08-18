@@ -1,9 +1,9 @@
-import { APP_URL } from '../../constantsGlobal';
+import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
 
 
-export function contactsFindServer(keyword, limInf, limSup) {
+export function contactsFindServer(keyword, searchIntoAllContacts, limInf, limSup) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -19,6 +19,7 @@ export function contactsFindServer(keyword, limInf, limSup) {
         },
         "messageBody": {
             "keyword": keyword,
+            "searchIntoAllContacts":searchIntoAllContacts,
             "limInf": limInf,
             "limSup": limSup
         }
@@ -54,7 +55,7 @@ export function clearContacts() {
 export function changeValueOpenModal(value, type) {
     return {
         type: constants.CHANGE_VALUE_IS_OPEN,
-        payload: value, 
+        payload: value,
         typeModal: _.isUndefined(type) ? null : type
     }
 }
@@ -90,7 +91,7 @@ export function updateRelationshipClientcontact(jsonBody) {
     }
 }
 
-export function modifyClientRelationship(arrayClients){
+export function modifyClientRelationship(arrayClients) {
     return {
         type: constants.MODIFY_CLIENT_RELATIONSHIP,
         payload: arrayClients
@@ -119,5 +120,11 @@ export function clientsByEconomicGroup(idEconomicGroup) {
     return {
         type: constants.CLIENTS_BY_ECONOMIC_GROUP,
         payload: request
+    }
+}
+
+export function changeSearchAllIntoContacts() {
+    return {
+        type: constants.CHANGE_SEARCH_INTO_ALL_CONTACTS
     }
 }

@@ -1,32 +1,32 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import Modal from 'react-modal';
-import {getGroupForId,changeKeywordNameNewGroup,getListContactGroupForId,getValidateExistGroup,
-    searchContactForGroup,addContactList,clearContactName,deleteContactList,saveGroupFavoriteContacts,
-    resetModal,groupFindServer,saveNameGroup,clearFilterGroup
-
-} from './actions';
-import GridComponent from '../../grid/component';
+import React, {Component} from "react";
+import {bindActionCreators} from "redux";
+import {reduxForm} from "redux-form";
+import {Col, Row} from "react-flexbox-grid";
 import {
-    DELETE_CONTACT_LIST_GROUP,
-    NUMBER_RECORDS,
-    TITTLE_MODAL_GROUP,
-} from './constants';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { CONTACT_ID_TYPE} from '../../selectsComponent/constants';
-import { getMasterDataFields } from '../../selectsComponent/actions';
-import { contactsFindServer } from '../../filterContact/actions';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
-import {joinName,shorterStringValue} from '../../../actionsGlobal';
-import {showLoading} from '../../loading/actions';
-import Input from '../../../ui/input/inputComponent';
-import ButtonDeleteLocalComponent from '../../grid/buttonDeleteLocalComponent';
-import ComboBoxFilter from '../../../ui/comboBoxFilter/comboBoxFilter';
-import {MESSAGE_LOAD_DATA,ERROR_MESSAGE_REQUEST} from '../../../constantsGlobal';
-import $ from 'jquery';
-import Immutable from 'immutable';
+    addContactList,
+    changeKeywordNameNewGroup,
+    clearContactName,
+    clearFilterGroup,
+    deleteContactList,
+    getGroupForId,
+    getListContactGroupForId,
+    getValidateExistGroup,
+    groupFindServer,
+    resetModal,
+    saveGroupFavoriteContacts,
+    saveNameGroup,
+    searchContactForGroup
+} from "./actions";
+import {CONTACT_ID_TYPE} from "../../selectsComponent/constants";
+import {getMasterDataFields} from "../../selectsComponent/actions";
+import {contactsFindServer} from "../../filterContact/actions";
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
+import {joinName, shorterStringValue} from "../../../actionsGlobal";
+import {showLoading} from "../../loading/actions";
+import ButtonDeleteLocalComponent from "../../grid/buttonDeleteLocalComponent";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import {MESSAGE_LOAD_DATA} from "../../../constantsGlobal";
+import $ from "jquery";
 
 
 var listContact = [];
@@ -289,9 +289,8 @@ class ModalComponentGroup extends Component {
             e.consultclick ? "" : e.preventDefault();
             if (contact.value !== "" && contact.value !== null && contact.value !== undefined && contact.value.length >= 3) {
                 $('.ui.search.contactSearch').toggleClass('loading');
-                contactsFindServer(contact.value, 0, -1).then((data) => {
+                contactsFindServer(contact.value,false, 0, -1).then((data) => {
                     listContact = _.get(data, 'payload', []);
-                    //listContact = JSON.stringify(listContact.data.data.listContact);
                     listContact = listContact.data.data.listContact;
 
                     $('.ui.search.contactSearch')

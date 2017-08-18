@@ -712,12 +712,11 @@
 		}
 	}
 	.celula-card-top {
-		border-bottom: 1px solid $default-border-color;
-		margin-bottom: 1px;
 		height: 116px;
 		padding: 12px;
 		.celula-card-top-left {
 			display: inline-block;
+			margin: 5pt;
 			.celula-title {
 				font-size: 13px;
 				font-weight: bold;
@@ -744,7 +743,7 @@
 		position: relative;
 		line-height: 18px;
 		border-radius: 0px 0px 7px 7px;
-    height: 26px;
+    	height: 27px;
 
 		.celula-card-bottom-right {
 			position: absolute;
@@ -771,8 +770,6 @@
 		}
 	}
 	.contact-card-top {
-		border-bottom: 1px solid $default-border-color;
-		margin-bottom: 1px;
 		height: 105px;
 		padding: 12px;
 		.contact-card-top-left {
@@ -804,7 +801,7 @@
 		position: relative;
 		line-height: 18px;
 		border-radius: 0px 0px 8px 8px;
-    	height: 22px;
+    	height: 23px;
 		background-color: #B0E0E6;
 
 		.contact-card-bottom-right {

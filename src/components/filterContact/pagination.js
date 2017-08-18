@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {Row} from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { contactsFindServer, changePage } from './actions';
 import { NUMBER_RECORDS } from './constants';
@@ -11,8 +12,9 @@ class Pagination extends Component {
     _handlePaginar(page) {
         const { filterContactsReducer, contactsFindServer, changePage, changeStateSaveData } = this.props;
         var limInf = (page - 1) * NUMBER_RECORDS;
+        const searchIntoAllContacts = filterContactsReducer.get('searchIntoAllContacts');
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
-        contactsFindServer(filterContactsReducer.get('keyword'), limInf, NUMBER_RECORDS).then( (data) => {
+        contactsFindServer(filterContactsReducer.get('keyword'), searchIntoAllContacts,limInf, NUMBER_RECORDS).then( (data) => {
             changeStateSaveData(false, "");
         });
         changePage(page);
@@ -28,7 +30,7 @@ class Pagination extends Component {
         var countContacts = filterContactsReducer.get('countContacts');
         var lastPage = Math.ceil(countContacts / NUMBER_RECORDS);
         return (
-            <div>
+            <Row style={{width: '100%'}}>
                 {countContacts > NUMBER_RECORDS ?
                     <div style={{ borderTop: "2px solid #D9DEDF", width: "100%", marginTop: "15px", paddingTop: "15px", paddingBottom: "15px" }}>
                         <div style={{ textAlign: "center" }} >
@@ -62,7 +64,7 @@ class Pagination extends Component {
                         </div>
                     </div>
                     : <div></div>}
-            </div>
+            </Row>
         )
     }
 }
