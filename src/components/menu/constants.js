@@ -1,1 +1,1 @@
-export const TOGGLE_MENU = "TOGGLE_MENU";
+export const INITIAL_MENU = "INITIAL_MENU";

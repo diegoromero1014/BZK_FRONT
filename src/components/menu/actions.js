@@ -1,7 +1,8 @@
 import * as actions from './constants';
 
-export function toggleMenu() {
+export function initalMenuPermissions(menu) {
     return {
-        type: actions.TOGGLE_MENU
+        type: actions.INITIAL_MENU,
+        menu
     }
 }

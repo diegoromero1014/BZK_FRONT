@@ -64,6 +64,7 @@ import visorReducer from '../components/visor/reducer';
 import boardMembersReducer from '../components/clients/partners/boardMembers/reducer';
 import riskGroupReducer from '../components/clientRiskGroup/reducer';
 import partnersReducer from '../components/clients/partners/reducer';
+import menuReducer from '../components/menu/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -130,5 +131,6 @@ export default combineReducers({
     visorReducer,
     boardMembersReducer,
     riskGroupReducer,
-    tabPartners: partnersReducer
+    tabPartners: partnersReducer,
+    menu: menuReducer
 });

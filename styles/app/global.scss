@@ -237,3 +237,15 @@ p {
   margin: 0em 0em 1em;
   line-height: 1.42 !important;
 }
+
+a.item{
+  color: #FFFFFF !important;
+}
+a.item:hover{
+  color: #FFFFFF !important;
+}
+
+
+.ui.vertical.menu .dropdown.item:not(.upward) .menu {
+   top: 0px !important;
+}

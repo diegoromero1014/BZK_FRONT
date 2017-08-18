@@ -53,8 +53,7 @@ class MenuListItemFather extends Component {
     render() {
         const {iconClassName, labelText, linkUrl, style, children} = this.props;
         return (
-            <div onMouseOver={this._mouseHoverItemFather}
-                    onMouseOut={this._mouseOutItemFather}>
+            <div onMouseOver={this._mouseHoverItemFather} onMouseOut={this._mouseOutItemFather}>
                 <li style={style} onClick={this._handleClickMenuItemFather.bind(this)} className="cursorMenuList">
                     <a className="menuItemStyle">
                         <div style={{ paddingTop: '8px' }}>
