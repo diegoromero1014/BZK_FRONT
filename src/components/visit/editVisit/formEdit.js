@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import {bindActionCreators} from "redux";
-import {redirectUrl} from "../../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import { redirectUrl } from "../../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {consultDataSelect, consultList, getMasterDataFields} from "../../selectsComponent/actions";
-import {VISIT_TYPE} from "../../selectsComponent/constants";
+import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
+import { VISIT_TYPE } from "../../selectsComponent/constants";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
@@ -25,19 +25,24 @@ import {
     TITLE_CONCLUSIONS_VISIT,
     TITLE_OTHERS_PARTICIPANTS
 } from "../../../constantsGlobal";
-import {createVisti, detailVisit, pdfDescarga} from "../actions";
-import {addParticipant, filterUsersBanco,addListParticipant} from "../../participantsVisitPre/actions";
-import {downloadFilePdf} from "../../clientInformation/actions";
-import {changeStateSaveData} from "../../dashboard/actions";
-import {formValidateKeyEnter, htmlToText, nonValidateEnter,shorterStringValue} from "../../../actionsGlobal";
-import {MENU_CLOSED} from "../../navBar/constants";
-import {addTask} from "../tasks/actions";
+import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit } from "../actions";
+import { addParticipant, filterUsersBanco, addListParticipant } from "../../participantsVisitPre/actions";
+import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
+import { downloadFilePdf } from "../../clientInformation/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { formValidateKeyEnter, htmlToText, nonValidateEnter, shorterStringValue, validateValueExist } from "../../../actionsGlobal";
+import { MENU_CLOSED } from "../../navBar/constants";
+import { addTask } from "../tasks/actions";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
 import _ from "lodash";
 import RichText from "../../richText/richTextComponent";
 import ToolTip from "../../toolTip/toolTipComponent";
-import {showLoading} from "../../loading/actions";
+import { showLoading } from "../../loading/actions";
+import ButtonAssociateComponent from "../createVisit/associateVisit";
+import { detailPrevisit } from "../../previsita/actions";
+import { KEY_TYPE_VISIT } from "../constants";
+
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -45,6 +50,7 @@ let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
+var idPrevisitSeleted = null;
 
 const validate = values => {
     let errors = {};
@@ -78,6 +84,9 @@ class FormEdit extends Component {
         this._changeDateVisitOnBlur = this._changeDateVisitOnBlur.bind(this);
         this._downloadFileShoppingMap = this._downloadFileShoppingMap.bind(this);
         this._changeConclusionsVisit = this._changeConclusionsVisit.bind(this);
+        this._consultInfoPrevisit = this._consultInfoPrevisit.bind(this);
+        this._addParticipantsToReducer = this._addParticipantsToReducer.bind(this);
+        this._executeFunctionFromAssociatePrevisit = this._executeFunctionFromAssociatePrevisit.bind(this);
     }
 
     _editVisit() {
@@ -88,7 +97,7 @@ class FormEdit extends Component {
     }
 
     _downloadFileShoppingMap() {
-        const {downloadFilePdf} = this.props;
+        const { downloadFilePdf } = this.props;
         downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
     }
 
@@ -128,17 +137,18 @@ class FormEdit extends Component {
     }
 
     _onClickPDF() {
-        const {pdfDescarga} = this.props;
+        const { pdfDescarga } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), this.state.idVisit);
     }
 
     _closeConfirmCloseVisit() {
-        this.setState({showConfirm: false});
+        this.setState({ showConfirm: false });
         redirectUrl("/dashboard/clientInformation");
     }
 
     _submitCreateVisita() {
-        const {fields: {tipoVisita, fechaVisita, desarrolloGeneral}, participants, visitReducer, tasks, changeStateSaveData} = this.props;
+        const { fields: { tipoVisita, fechaVisita, desarrolloGeneral }, participants, visitReducer, tasks,
+            changeStateSaveData, clearIdPrevisit } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
         let errorInForm = false;
 
@@ -154,7 +164,7 @@ class FormEdit extends Component {
                 dateVisitError: "Debe seleccionar una opción"
             });
         }
-        if ((  _.isEmpty(htmlToText(this.state.conclusionsVisit)) || this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
+        if ((_.isEmpty(htmlToText(this.state.conclusionsVisit)) || this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
             errorInForm = true;
             this.setState({
                 conclusionsVisitError: "Debe ingresar la conclusión de la visita"
@@ -164,7 +174,7 @@ class FormEdit extends Component {
         if (!errorInForm) {
             let dataClient = [], dataBanco = [], dataOthers = [];
             _.forEach(participants.toArray(), function (value, key) {
-                if (_.isEqual(value.tipoParticipante, 'client')) {
+                if (_.isEqual(value.tipoParticipante, KEY_PARTICIPANT_CLIENT)) {
                     let contactParticipantCliente = null;
                     if (value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined) {
                         contactParticipantCliente = _.filter(detailVisit.data.participatingContacts, ['id', value.idParticipante]);
@@ -175,7 +185,7 @@ class FormEdit extends Component {
                         "order": value.order
                     });
                 } else {
-                    if (_.isEqual(value.tipoParticipante, 'banco')) {
+                    if (_.isEqual(value.tipoParticipante, KEY_PARTICIPANT_BANCO)) {
                         let contactParticipantBanco = null;
                         if (value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined) {
                             contactParticipantBanco = _.filter(detailVisit.data.participatingEmployees, ['id', value.idParticipante]);
@@ -186,7 +196,7 @@ class FormEdit extends Component {
                             "order": value.order
                         });
                     } else {
-                        if (_.isEqual(value.tipoParticipante, 'other')) {
+                        if (_.isEqual(value.tipoParticipante, KEY_PARTICIPANT_OTHER)) {
                             dataOthers.push({
                                 "id": value.idParticipante,
                                 "name": value.nombreParticipante.replace('-', ''),
@@ -224,10 +234,12 @@ class FormEdit extends Component {
                     "comments": this.state.conclusionsVisit,
                     "visitType": this.state.typeVisit,
                     "userTasks": tareas,
-                    "documentStatus": typeButtonClick
+                    "documentStatus": typeButtonClick,
+                    "preVisitId": idPrevisitSeleted
                 }
-                const {createVisti} = this.props;
+                const { createVisti } = this.props;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                clearIdPrevisit();
                 createVisti(visitJson).then((data) => {
                     changeStateSaveData(false, "");
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -237,12 +249,12 @@ class FormEdit extends Component {
                             typeMessage = "success";
                             titleMessage = "Edición visita";
                             message = "Señor usuario, la visita se editó de forma exitosa.";
-                            this.setState({showMessageCreateVisit: true});
+                            this.setState({ showMessageCreateVisit: true });
                         } else {
                             typeMessage = "error";
                             titleMessage = "Edición visita";
                             message = "Señor usuario, ocurrió un error editando la visita.";
-                            this.setState({showMessageCreateVisit: true});
+                            this.setState({ showMessageCreateVisit: true });
                         }
                     }
                 }, (reason) => {
@@ -250,16 +262,16 @@ class FormEdit extends Component {
                     typeMessage = "error";
                     titleMessage = "Edición visita";
                     message = "Señor usuario, ocurrió un error editando la visita.";
-                    this.setState({showMessageCreateVisit: true});
+                    this.setState({ showMessageCreateVisit: true });
                 });
             } else {
-                this.setState({showErrorSaveVisit: true});
+                this.setState({ showErrorSaveVisit: true });
             }
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
             message = "Señor usuario, debe ingresar todos los campos obligatorios.";
-            this.setState({showMessageCreateVisit: true});
+            this.setState({ showMessageCreateVisit: true });
         }
     }
 
@@ -270,7 +282,7 @@ class FormEdit extends Component {
     _onCloseButton() {
         message = "¿Está seguro que desea salir de la pantalla de edición de visita?";
         titleMessage = "Confirmación salida";
-        this.setState({showConfirm: true});
+        this.setState({ showConfirm: true });
     }
 
     _changeTypeVisit(value) {
@@ -303,18 +315,30 @@ class FormEdit extends Component {
         });
     }
 
+    _executeFunctionFromAssociatePrevisit() {
+        const { visitReducer } = this.props;
+        //Verifico si la visita se asocia a una previsita, para así cargar los datos
+        if (!_.isUndefined(visitReducer.get("idPrevisit")) && !_.isNull(visitReducer.get("idPrevisit")) && visitReducer.get("idPrevisit") > 0) {
+            idPrevisitSeleted = visitReducer.get("idPrevisit");
+            this._consultInfoPrevisit();
+        } else {
+            idPrevisitSeleted = null;
+        }
+    }
+
     componentWillMount() {
-        const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask,showLoading} = this.props;
+        const { nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask, showLoading } = this.props;
         nonValidateEnter(true);
-        this.setState({idVisit: id});
+        idPrevisitSeleted = null;
+        this.setState({ idVisit: id });
         getMasterDataFields([VISIT_TYPE]);
         showLoading(true, 'Cargando...');
         detailVisit(id).then((result) => {
-            const {fields: {participantesCliente}, addListParticipant, visitReducer, contactsByClient} = this.props;
+            const { fields: { participantesCliente }, addListParticipant, visitReducer, contactsByClient } = this.props;
             let part = result.payload.data.data;
-            let listParticipants=[];
+            let listParticipants = [];
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
-
+            idPrevisitSeleted = part.preVisitId;
             this.setState({
                 typeVisit: part.visitType,
                 dateVisit: new Date(moment(part.visitTime, "x")),
@@ -322,22 +346,19 @@ class FormEdit extends Component {
             });
 
             //Adicionar participantes por parte del cliente
-            _.forIn( part.participatingContacts, function (value, key) {
+            _.forIn(part.participatingContacts, function (value, key) {
                 const uuid = _.uniqueId('participanClient_');
                 let clientParticipant = {
-                    tipoParticipante: 'client',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
                     idParticipante: value.id,
                     nombreParticipante: value.contactName,
-                    cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
-                        : ' - ' + value.contactPositionName,
+                    cargo: !validateValueExist(value.contactPositionName) ? '' : ' - ' + value.contactPositionName,
                     empresa: '',
-                    estiloSocial: value.socialStyleName === null || value.socialStyleName === undefined || value.socialStyleName === '' ? ''
-                        : ' - ' + value.socialStyleName,
-                    actitudBanco: value.attitudeOverGroupName === null || value.attitudeOverGroupName === undefined || value.attitudeOverGroupName === '' ? ''
-                        : ' - ' + value.attitudeOverGroupName,
+                    estiloSocial: !validateValueExist(value.socialStyleName) ? '' : ' - ' + value.socialStyleName,
+                    actitudBanco: !validateValueExist(value.attitudeOverGroupName) ? '' : ' - ' + value.attitudeOverGroupName,
                     fecha: Date.now(),
                     uuid,
-                    order: _.isNull(value.order)? 0 : value.order
+                    order: _.isNull(value.order) ? 0 : value.order
 
                 }
                 listParticipants.push(clientParticipant);
@@ -347,18 +368,16 @@ class FormEdit extends Component {
             _.forIn(part.participatingEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanBanco_');
                 let clientParticipant = {
-                    tipoParticipante: 'banco',
+                    tipoParticipante: KEY_PARTICIPANT_BANCO,
                     idParticipante: value.id,
                     nombreParticipante: value.employeeName,
-                    cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
-                        : ' - ' + value.positionName,
-                    empresa: value.lineBusinessName === null || value.lineBusinessName === undefined || value.lineBusinessName === '' ? ''
-                        : ' - ' + value.lineBusinessName,
+                    cargo: !validateValueExist(value.positionName) ? '' : ' - ' + value.positionName,
+                    empresa: !validateValueExist(value.lineBusinessName) ? '' : ' - ' + value.lineBusinessName,
                     estiloSocial: '',
                     actitudBanco: '',
                     fecha: Date.now(),
                     uuid,
-                    order: _.isNull(value.order)? 0 : value.order
+                    order: _.isNull(value.order) ? 0 : value.order
                 }
                 listParticipants.push(clientParticipant);
             });
@@ -367,20 +386,18 @@ class FormEdit extends Component {
             _.forIn(part.relatedEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanOther_');
                 let otherParticipant = {
-                    tipoParticipante: 'other',
+                    tipoParticipante: KEY_PARTICIPANT_OTHER,
                     idParticipante: value.id,
                     nombreParticipante: value.name,
-                    cargo: value.position === null || value.position === undefined || value.position === '' ? ''
-                        : ' - ' + value.position,
-                    empresa: value.company === null || value.company === undefined || value.company === '' ? ''
-                        : ' - ' + value.company,
+                    cargo: !validateValueExist(value.position) ? '' : ' - ' + value.position,
+                    empresa: !validateValueExist(value.company) ? '' : ' - ' + value.company,
                     estiloSocial: '',
                     actitudBanco: '',
                     fecha: Date.now(),
                     uuid,
-                    order: _.isNull(value.order)? 0 : value.order
+                    order: _.isNull(value.order) ? 0 : value.order
                 }
-               listParticipants.push(otherParticipant);
+                listParticipants.push(otherParticipant);
             });
             addListParticipant(listParticipants);
             //Adicionar tareas
@@ -398,19 +415,117 @@ class FormEdit extends Component {
                 };
                 addTask(task);
             });
-            showLoading(false,null);
+            showLoading(false, null);
         });
     }
 
+    _consultInfoPrevisit() {
+        const { detailPrevisit, selectsReducer, participants } = this.props;
+        detailPrevisit(idPrevisitSeleted).then((result) => {
+            var previsitConsult = result.payload.data.data;
+            const listParticipants = {
+                _client: [],
+                _banco: [],
+                _others: []
+            };
+            const typeVisitSeleted = _.filter(selectsReducer.get(VISIT_TYPE), ['key', KEY_TYPE_VISIT]);
+            this.setState({
+                typeVisit: typeVisitSeleted[0].id,
+                dateVisit: new Date(moment(previsitConsult.visitTime, "x"))
+            });
+
+
+            //Validar si debo agregar participantes por parte del cliente. banco y otros
+            const lists = _.groupBy(participants.toArray(), 'tipoParticipante');
+            const valuesClient = _.get(lists, KEY_PARTICIPANT_CLIENT, null);
+            const valuesBanco = _.get(lists, KEY_PARTICIPANT_BANCO, null);
+            const valuesOthers = _.get(lists, KEY_PARTICIPANT_OTHER, null);
+
+            //Solo agrego los participantes de la previsita si no se han adicionado ningúno en la visita
+            if (_.isNull(valuesClient) || _.size(valuesClient) <= 0) {
+                //Adicionar participantes por parte del cliente
+                _.forIn(previsitConsult.participatingContacts, function (value, key) {
+                    const uuid = _.uniqueId('participanClient_');
+                    var clientParticipant = {
+                        tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                        idParticipante: value.contact,
+                        nombreParticipante: value.contactName,
+                        cargo: !validateValueExist(value.contactPositionName) ? '' : ' - ' + value.contactPositionName,
+                        empresa: '',
+                        estiloSocial: !validateValueExist(value.socialStyleName) ? '' : ' - ' + value.socialStyleName,
+                        actitudBanco: !validateValueExist(value.attitudeOverGroupName) ? '' : ' - ' + value.attitudeOverGroupName,
+                        fecha: Date.now(),
+                        uuid,
+                        order: _.isNull(value.participantOrder) ? 0 : value.participantOrder
+                    }
+                    listParticipants._client.push(clientParticipant);
+                });
+                this._addParticipantsToReducer(listParticipants._client);
+            }
+
+            if (_.isNull(valuesBanco) || _.size(valuesBanco) <= 0) {
+                //Adicionar participantes por parte de bancolombia
+                _.forIn(previsitConsult.participatingEmployees, function (value, key) {
+                    const uuid = _.uniqueId('participanBanco_');
+                    var clientParticipant = {
+                        tipoParticipante: KEY_PARTICIPANT_BANCO,
+                        idParticipante: value.employee,
+                        nombreParticipante: value.employeeName,
+                        cargo: !validateValueExist(value.positionName) ? '' : ' - ' + value.positionName,
+                        empresa: !validateValueExist(value.lineBusinessName) ? '' : ' - ' + value.lineBusinessName,
+                        estiloSocial: '',
+                        actitudBanco: '',
+                        fecha: Date.now(),
+                        uuid,
+                        order: _.isNull(value.participantOrder) ? 0 : value.participantOrder
+                    }
+                    listParticipants._banco.push(clientParticipant);
+                });
+                this._addParticipantsToReducer(listParticipants._banco);
+            }
+
+            if (_.isNull(valuesOthers) || _.size(valuesOthers) <= 0) {
+                //Adicionar otros participantes
+                _.forIn(previsitConsult.relatedEmployees, function (value, key) {
+                    const uuid = _.uniqueId('participanOther_');
+                    var otherParticipant = {
+                        tipoParticipante: KEY_PARTICIPANT_OTHER,
+                        idParticipante: null,
+                        nombreParticipante: value.name,
+                        cargo: !validateValueExist(value.position) ? '' : ' - ' + value.position,
+                        empresa: !validateValueExist(value.company) ? '' : ' - ' + value.company,
+                        estiloSocial: '',
+                        actitudBanco: '',
+                        fecha: Date.now(),
+                        uuid,
+                        order: _.isNull(value.participantOrder) ? 0 : value.participantOrder
+                    }
+                    listParticipants._others.push(otherParticipant);
+                });
+
+                this._addParticipantsToReducer(listParticipants._others);
+            }
+
+        });
+    }
+
+    _addParticipantsToReducer(list) {
+        const { addParticipant } = this.props;
+        _.map(list, (participant) => {
+            addParticipant(participant);
+        });
+    }
+
+
     render() {
         const {
-            fields: {tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes},
+            fields: { tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes },
             selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal, navBar
         } = this.props;
         const ownerDraft = visitReducer.get('ownerDraft');
         const detailVisit = visitReducer.get('detailVisit');
         const infoClient = clientInformacion.get('responseClientInfo');
-        const {aecStatus} = infoClient;
+        const { aecStatus } = infoClient;
         let showAECNoAplica = false;
         let showAECNivel = true;
         if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -440,89 +555,93 @@ class FormEdit extends Component {
         }
         return (
             <form onSubmit={handleSubmit(this._submitCreateVisita)}
-                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                  className="my-custom-tab"
-                  style={{
-                      backgroundColor: "#FFFFFF",
-                      marginTop: "0px",
-                      paddingTop: "10px",
-                      width: "100%",
-                      paddingBottom: "50px"
-                  }}>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+                className="my-custom-tab"
+                style={{
+                    backgroundColor: "#FFFFFF",
+                    marginTop: "0px",
+                    paddingTop: "10px",
+                    width: "100%",
+                    paddingBottom: "50px"
+                }}>
                 <header className="header-client-detail">
-                    <div className="company-detail" style={{marginLeft: "20px", marginRight: "20px"}}>
+                    <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>
                         <div>
-                            <h3 style={{wordBreak: 'keep-all'}} className="inline title-head">
+                            <h3 style={{ wordBreak: 'keep-all' }} className="inline title-head">
                                 {infoClient.clientName}
                             </h3>
                             {infoClient.isProspect &&
-                            <span style={{
-                                borderRadius: "2px",
-                                fontSize: "15px",
-                                height: "30px",
-                                display: "inline !important",
-                                textTransform: "none !important",
-                                marginLeft: "10px"
-                            }}
-                                  className="label label-important bounceIn animated prospect">Prospecto</span>
+                                <span style={{
+                                    borderRadius: "2px",
+                                    fontSize: "15px",
+                                    height: "30px",
+                                    display: "inline !important",
+                                    textTransform: "none !important",
+                                    marginLeft: "10px"
+                                }}
+                                    className="label label-important bounceIn animated prospect">Prospecto</span>
                             }
                             {showAECNivel &&
-                            <span style={{
-                                borderRadius: "2px",
-                                fontSize: "15px",
-                                height: "30px",
-                                display: "inline !important",
-                                textTransform: "none !important",
-                                marginLeft: "10px",
-                                backgroundColor: "#ec5f48"
-                            }}
-                                  className="label label-important bounceIn animated aec-status">{aecStatus}</span>
+                                <span style={{
+                                    borderRadius: "2px",
+                                    fontSize: "15px",
+                                    height: "30px",
+                                    display: "inline !important",
+                                    textTransform: "none !important",
+                                    marginLeft: "10px",
+                                    backgroundColor: "#ec5f48"
+                                }}
+                                    className="label label-important bounceIn animated aec-status">{aecStatus}</span>
                             }
                             {showAECNoAplica &&
-                            <span style={{
-                                borderRadius: "2px",
-                                fontSize: "15px",
-                                height: "30px",
-                                display: "inline !important",
-                                textTransform: "none !important",
-                                marginLeft: "10px",
-                                backgroundColor: "#3498db"
-                            }}
-                                  className="label label-important bounceIn animated aec-normal">AEC: No aplica</span>
+                                <span style={{
+                                    borderRadius: "2px",
+                                    fontSize: "15px",
+                                    height: "30px",
+                                    display: "inline !important",
+                                    textTransform: "none !important",
+                                    marginLeft: "10px",
+                                    backgroundColor: "#3498db"
+                                }}
+                                    className="label label-important bounceIn animated aec-normal">AEC: No aplica</span>
                             }
-                            <div style={{width: "150px", display: "inline-flex"}}>
-                                <span style={{marginLeft: "10px"}}><RaitingInternal
-                                    valueRaiting={infoClient.internalRatingKey}/></span>
+                            <div style={{ width: "150px", display: "inline-flex" }}>
+                                <span style={{ marginLeft: "10px" }}><RaitingInternal
+                                    valueRaiting={infoClient.internalRatingKey} /></span>
                             </div>
                         </div>
                     </div>
                 </header>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
-                    <Col xs={10} sm={10} md={10} lg={10}>
-                        <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
+                    <Col xs={12} sm={8} md={8} lg={8}>
+                        <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
-                    <Col xs={2} sm={2} md={2} lg={2}>
+                    <Col xs={4} sm={3} md={2} lg={2} style={{ paddingRight: '0px' }}>
                         {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), EDITAR), false) &&
-                        <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'}
-                                style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>Editar <i
-                            className={'icon edit'}></i></button>
+                            <button type="button" onClick={this._editVisit} className={'btn btn-primary modal-button-edit'}
+                                style={{ float: 'right', marginTop: '-15px' }}>Editar <i
+                                    className={'icon edit'}></i>
+                            </button>
                         }
                     </Col>
+                    {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), EDITAR), false) &&
+                        <ButtonAssociateComponent fnExecute={this._executeFunctionFromAssociatePrevisit} />
+                    }
                 </Row>
-                <Row style={{padding: "10px 10px 10px 20px"}}>
+                <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="browser icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Datos de la reunión</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="browser icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Datos de la reunión</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Tipo de reunión (</span><span style={{color: "red"}}>*</span>)
+                            <span>Tipo de reunión (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <ComboBox
@@ -541,9 +660,9 @@ class FormEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha de reunión - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                            <span>Fecha de reunión - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <DateTimePickerUi
@@ -560,70 +679,70 @@ class FormEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs>
-                        <div className="ui top attached tabular menu" style={{width: "100%"}}>
-                            <a className={`${this.state.activeItemTabClient} item`} style={{width: "33%"}}
-                               data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
+                        <div className="ui top attached tabular menu" style={{ width: "100%" }}>
+                            <a className={`${this.state.activeItemTabClient} item`} style={{ width: "33%" }}
+                                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
                                 reunión por parte del cliente
                                 <ToolTip text={TITLE_CLIENT_PARTICIPANTS}>
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                    <i className="help circle icon blue"
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
 
                             </a>
-                            <a className={`${this.state.activeItemTabBanc} item`} style={{width: "40%"}}
-                               data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
+                            <a className={`${this.state.activeItemTabBanc} item`} style={{ width: "40%" }}
+                                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
                                 reunión por parte del Grupo Bancolombia
                                 <ToolTip text={TITLE_BANC_PARTICIPANTS}>
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                    <i className="help circle icon blue"
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </a>
-                            <a className={`${this.state.activeItemTabOther} item`} style={{width: "26%"}}
-                               data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
+                            <a className={`${this.state.activeItemTabOther} item`} style={{ width: "26%" }}
+                                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
                                 reunión
                                 <ToolTip text={TITLE_OTHERS_PARTICIPANTS}>
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                    <i className="help circle icon blue"
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </a>
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`}
-                             data-tab="first">
-                            <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="first">
+                            <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`}
-                             data-tab="second">
-                            <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="second">
+                            <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`}
-                             data-tab="third">
-                            <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="third">
+                            <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Conclusiones de la reunión - acuerdos y compromisos de las partes (<span
-                                style={{color: "red"}}>*</span>)</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Conclusiones de la reunión - acuerdos y compromisos de las partes (<span
+                                style={{ color: "red" }}>*</span>)</span>
                             <ToolTip text={TITLE_CONCLUSIONS_VISIT}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </ToolTip>
                             <ToolTip text="Descargar pdf mapa de compras">
                                 <i onClick={this._downloadFileShoppingMap}
-                                   style={{marginLeft: "2px", cursor: "pointer", fontSize: "18px"}}
-                                   className="red file pdf outline icon"/>
+                                    style={{ marginLeft: "2px", cursor: "pointer", fontSize: "18px" }}
+                                    className="red file pdf outline icon" />
                             </ToolTip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="desarrolloGeneral"
@@ -632,51 +751,51 @@ class FormEdit extends Component {
                             error={this.state.conclusionsVisitError}
                             onChange={val => this._changeConclusionsVisit(val)}
                             placeholder="Ingrese las conclusiones de la reunión"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                             readOnly={!this.state.isEditable}
                             disabled={this.state.isEditable ? '' : 'disabled'}
                         />
                     </Col>
                 </Row>
-                <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'}/>
-                <Row style={{padding: "10px 10px 0px 20px"}}>
+                <TaskVisit disabled={this.state.isEditable ? '' : 'disabled'} />
+                <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
                         {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
                             : ''}
                     </Col>
                     <Col xs={6} md={3} lg={3}>
                         {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
                             : ''}
                     </Col>
                 </Row>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy}</span>
                     </Col>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy}</span>
                     </Col>
                 </Row>
                 <Row>
@@ -692,7 +811,7 @@ class FormEdit extends Component {
                                 fontWeight: "bold",
                                 color: "#818282"
                             }}>Fecha última revisión formato visita: </span><span
-                            style={{marginLeft: "0px", color: "#818282"}}>{dateVisitLastReview}</span>
+                                style={{ marginLeft: "0px", color: "#818282" }}>{dateVisitLastReview}</span>
                         </div>
                     </Col>
                 </Row>
@@ -706,23 +825,23 @@ class FormEdit extends Component {
                     height: "50px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                                style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px -120px",
-                                    position: "fixed",
-                                    backgroundColor: "#00B5AD"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar como borrador</span>
+                            style={this.state.isEditable === true && ownerDraft === 0 ? {
+                                float: "right",
+                                margin: "8px 0px 0px -120px",
+                                position: "fixed",
+                                backgroundColor: "#00B5AD"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                                style={this.state.isEditable === true ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px 107px",
-                                    position: "fixed"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar definitivo</span>
+                            style={this.state.isEditable === true ? {
+                                float: "right",
+                                margin: "8px 0px 0px 107px",
+                                position: "fixed"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onClickPDF} style={{
                             float: "right",
@@ -730,7 +849,7 @@ class FormEdit extends Component {
                             position: "fixed",
                             backgroundColor: "#eb984e"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Descargar pdf</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={{
                             float: "right",
@@ -738,7 +857,7 @@ class FormEdit extends Component {
                             position: "fixed",
                             backgroundColor: "rgb(193, 193, 193)"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
@@ -747,7 +866,7 @@ class FormEdit extends Component {
                     show={this.state.showErrorSaveVisit}
                     title="Error participantes"
                     text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({showErrorSaveVisit: false})}
+                    onConfirm={() => this.setState({ showErrorSaveVisit: false })}
                 />
                 <SweetAlert
                     type={typeMessage}
@@ -765,8 +884,8 @@ class FormEdit extends Component {
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
-                    onCancel={() => this.setState({showConfirm: false})}
-                    onConfirm={this._closeConfirmCloseVisit}/>
+                    onCancel={() => this.setState({ showConfirm: false })}
+                    onConfirm={this._closeConfirmCloseVisit} />
             </form>
         );
     }
@@ -788,11 +907,13 @@ function mapDispatchToProps(dispatch) {
         changeStateSaveData,
         nonValidateEnter,
         showLoading,
-        addListParticipant
+        addListParticipant,
+        clearIdPrevisit,
+        detailPrevisit
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar}, ownerProps) {
+function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar }, ownerProps) {
     const detailVisit = visitReducer.get('detailVisit');
     if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
         let visitTime = detailVisit.data.visitTime;

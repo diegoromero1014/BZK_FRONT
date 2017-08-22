@@ -1,36 +1,37 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
+import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
-export function pdfDescarga(idclient, idPrevisit){
-  window.open(APP_URL + "/pdfReportPreVisit?idClient="+idclient+"&idPrevisit="+idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
+export function pdfDescarga(idclient, idPrevisit) {
+  window.open(APP_URL + "/pdfReportPreVisit?idClient=" + idclient + "&idPrevisit=" + idPrevisit + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
 
-export function createPrevisit(jsonVisit){
+export function createPrevisit(jsonVisit) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": jsonVisit
   }
 
   var request = axios.post(APP_URL + "/savePreVisit", json);
-  return{
+  return {
     type: constants.CREATE_PREVISIT,
     payload: request
   }
 }
 
-export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId) {
+export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, consultAsocietePrevisit) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -46,12 +47,13 @@ export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrd
     },
     "messageBody": {
       "clientId": clientId,
-      "groupId":"",
+      "groupId": "",
       "pageNum": pageNum,
-      "maxRows" : maxRows,
+      "maxRows": maxRows,
       "columnOrder": columnOrder,
       "order": order,
-      "statusDocumentId":statusDocumentId
+      "statusDocumentId": statusDocumentId,
+      "consultAsocietePrevisit": !validateIsNullOrUndefined(consultAsocietePrevisit) ? consultAsocietePrevisit : false
     }
   };
 
@@ -94,7 +96,7 @@ export function clearPrevisitOrder() {
   };
 }
 
-export function changeOwnerDraftPrevisit(ownerDraft){
+export function changeOwnerDraftPrevisit(ownerDraft) {
   return {
     type: constants.OWNER_DRAFT,
     ownerDraft: ownerDraft
@@ -109,27 +111,27 @@ export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
   };
 }
 
-export function detailPrevisit(idPrevisit){
+export function detailPrevisit(idPrevisit) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
     },
     "messageBody": {
-         "id": idPrevisit
-     }
+      "id": idPrevisit
+    }
   }
 
   var request = axios.post(APP_URL + "/preVisitDocumentDetail", json);
-  return{
+  return {
     type: constants.GET_DETAIL_PREVISIT,
     payload: request
   }
@@ -151,7 +153,7 @@ export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasP
     },
     "messageBody": {
       "clientId": clientId,
-      "hasParticipatingContacts":  hasParticipatingContacts,
+      "hasParticipatingContacts": hasParticipatingContacts,
       "hasParticipatingEmployees": hasParticipatingEmployees,
       "hasRelatedEmployees": hasRelatedEmployees
     }

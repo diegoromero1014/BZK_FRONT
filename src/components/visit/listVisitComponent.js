@@ -125,7 +125,7 @@ class ListVisitComponent extends Component {
             if(value.idPrevisit !== null && value.idPrevisit !== 0){
               _.set(value, 'actionsPdf', {
                 title: "Ver >>",
-                urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es"
+                urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken')
               });
             }
             var dateVisitFormat = moment(value.dateVisit).locale('es');

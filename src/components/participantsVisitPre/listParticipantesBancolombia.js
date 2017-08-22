@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import GridComponent from '../grid/component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DELETE_PARTICIPANT_VIEW } from './constants';
+import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_BANCO } from './constants';
 import { deleteParticipant } from './actions';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
@@ -38,7 +38,7 @@ class ListParticipantesBancolombia extends Component {
       showConfirmDeleteParticiBanc: false,
       idParticipantSelect: null
     });
-    deleteParticipant(indexDelete, "banco");
+    deleteParticipant(indexDelete, KEY_PARTICIPANT_BANCO);
   }
 
   _mapValuesData(userData, idx) {
@@ -94,7 +94,7 @@ function orderListParticipantBank(participants, disabled) {
           'delete': {
             typeDelete: DELETE_PARTICIPANT_VIEW,
             id: idParticipante,
-            tipo: 'banco',
+            tipo: KEY_PARTICIPANT_BANCO,
             mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
           }
         });

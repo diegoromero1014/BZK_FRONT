@@ -5,7 +5,7 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { connect } from 'react-redux';
 import { saveAnswerQuestion } from './actions';
 import { find, remove, uniqueId, isEqual } from 'lodash';
-import { validateValueExist } from '../../../actionsGlobal';
+import { validateIsNullOrUndefined } from '../../../actionsGlobal';
 
 class ComponentQuestion extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class ComponentQuestion extends Component {
 
     componentWillMount() {
         const { question } = this.props;
-        if ( validateValueExist(question.idAnswer) ){
+        if ( !validateIsNullOrUndefined(question.idAnswer) ){
             this.setState({ valueAnswer: question.idAnswer });
         }
     }
