@@ -3,6 +3,7 @@ import {
     GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PREVISIT,
     CLEAR_PREVISIT, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT
 } from './constants';
+import {orderBy} from 'lodash';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -20,10 +21,11 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case GET_PREVISIT_LIST:
             const response = action.payload.data;
+            const orderedList = orderBy(JSON.parse(response.previsitList),'datePrevisit','desc');
             return state.withMutations(map => {
                 map.set('status', response.status)
                     .set('rowCount', response.rowCount)
-                    .set('previsitList', JSON.parse(response.previsitList));
+                    .set('previsitList', orderedList );
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
