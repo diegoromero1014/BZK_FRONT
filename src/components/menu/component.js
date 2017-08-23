@@ -22,6 +22,7 @@ import {showLoading} from "../loading/actions";
 import {initialMenuPermissions} from "../menu/actions";
 import {Header, Image} from "semantic-ui-react";
 import {redirectUrl} from '../../actionsGlobal';
+import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -140,7 +141,7 @@ class MenuComponent extends Component {
         return (
             <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
                 <Header style={{ backgroundColor: '#00448c !important'}} textAlign='center'>
-                    <Image src='../../img/svg/logo_bancolombia_blanco_biztrack.svg' size='small'/>
+                    <Image src={ImageBrand} size='small'/>
                 </Header>
                 <MenuListComponent />
                 <SwtAlertMessage />
