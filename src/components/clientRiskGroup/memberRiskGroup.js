@@ -168,10 +168,8 @@ class memberRiskGroup extends Component {
                  style={{overflow: "hidden", height: "428px", paddingBottom: "0"}}>
 
                 <Row style={{padding: "10px 20px 20px 20px"}}>
-
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "30px"}}>
+                    <Col xs={12} md={6} lg={6}>
                         <dt><span>Nombre del cliente (</span><span style={{color: "red"}}>*</span>)</dt>
-
                         <Input
                             name="nombre"
                             type="text"
@@ -181,9 +179,8 @@ class memberRiskGroup extends Component {
                             disabled={!!clientsBasicInfo.idClient}
                             {...clientName}
                         />
-
                     </Col>
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "30px"}}>
+                    <Col xs={12} md={6} lg={6}>
                         <dt><span>Segmento</span></dt>
                         <Input
                             name="semento"
