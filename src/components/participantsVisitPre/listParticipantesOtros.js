@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import GridComponent from '../grid/component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DELETE_PARTICIPANT_VIEW } from './constants';
+import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_OTHER } from './constants';
 import { deleteParticipant } from './actions';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
@@ -38,7 +38,7 @@ class ListParticipantesOtros extends Component {
       showConfirmDeleteParticiOther: false,
       idParticipantSelect: null
     });
-    deleteParticipant(indexDelete, 'other');
+    deleteParticipant(indexDelete, KEY_PARTICIPANT_OTHER);
   }
 
   _mapValuesData(otherData, idx) {
@@ -94,13 +94,13 @@ function orderListParticipant(participants, disabled) {
           'delete': {
             typeDelete: DELETE_PARTICIPANT_VIEW,
             id: idParticipante,
-            tipo: 'other',
+            tipo: KEY_PARTICIPANT_OTHER,
             mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
           }
         });
       }
     })
-      .filter(participant => _.isEqual(participant.tipo, 'other'))
+      .filter(participant => _.isEqual(participant.tipo, KEY_PARTICIPANT_OTHER))
       .orderBy('order', 'asc')
       .value();
 

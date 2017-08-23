@@ -5,3 +5,6 @@ export const DELETE_PARTICIPANT = "DELETE_PARTICIPANT";
 export const CLEAR_PARTICIPANTS = "CLEAR_PARTICIPANTS";
 export const FILTER_USER_BANCO = "FILTER_USER_BANCO";
 export const NUMBER_CONTACTS = 300;
+export const KEY_PARTICIPANT_CLIENT = "client";
+export const KEY_PARTICIPANT_BANCO = "banco";
+export const KEY_PARTICIPANT_OTHER = "other";

@@ -9,8 +9,9 @@ import SweetAlert from 'sweetalert-react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { contactsByClientFindServer } from '../contact/actions';
-import { NUMBER_CONTACTS } from './constants';
+import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
 import { APP_URL } from '../../constantsGlobal';
+import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
 
@@ -37,24 +38,21 @@ class ParticipantesBancolombia extends Component {
   }
 
   _addParticipantBanc() {
-    const {fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant} = this.props;
-    if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined &&
-      idUsuario.value !== "" && idUsuario.value !== null && idUsuario.value !== undefined) {
+    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant } = this.props;
+    if (validateValue(nameUsuario.value) && !validateIsNullOrUndefined(idUsuario.value)) {
       var particip = participants.find(function (item) {
-        if (item.tipoParticipante === "banco") {
+        if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
       if (particip === undefined) {
         const uuid = _.uniqueId('participanBanco_');
         var clientParticipant = {
-          tipoParticipante: 'banco',
+          tipoParticipante: KEY_PARTICIPANT_BANCO,
           idParticipante: idUsuario.value,
           nombreParticipante: nameUsuario.value,
-          cargo: cargoUsuario.value === null || cargoUsuario.value === undefined || cargoUsuario.value === '' ?
-            '' : ' - ' + cargoUsuario.value,
-          empresa: empresaUsuario.value === null || empresaUsuario.value === undefined || empresaUsuario.value === '' ?
-            '' : ' - ' + empresaUsuario.value,
+          cargo: !validateValueExist(cargoUsuario.value) ? '' : ' - ' + cargoUsuario.value,
+          empresa: !validateValueExist(empresaUsuario.value) ? '' : ' - ' + empresaUsuario.value,
           estiloSocial: '',
           actitudBanco: '',
           fecha: Date.now(),
@@ -78,7 +76,7 @@ class ParticipantesBancolombia extends Component {
   }
 
   _updateValue(value) {
-    const {fields: {idUsuario, nameUsuario, cargoUsuario}, contactsByClient} = this.props;
+    const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
     _.map(contactClient, contact => {
@@ -87,7 +85,7 @@ class ParticipantesBancolombia extends Component {
         return contact;
       }
     });
-    if (userSelected !== null && userSelected !== undefined) {
+    if (validateValue(userSelected)) {
       idUsuario.onChange(userSelected.id);
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);
@@ -96,7 +94,7 @@ class ParticipantesBancolombia extends Component {
   }
 
   componentWillMount() {
-    const {clearParticipants, contactsByClient, contactsByClientFindServer} = this.props;
+    const { clearParticipants, contactsByClient, contactsByClientFindServer } = this.props;
     clearParticipants();
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
@@ -122,7 +120,7 @@ class ParticipantesBancolombia extends Component {
   }
 
   updateKeyValueUsersBanco(e) {
-    const {fields: {objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario}, filterUsersBanco} = this.props;
+    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
     const selfThis = this;
     if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
@@ -160,14 +158,14 @@ class ParticipantesBancolombia extends Component {
   }
 
   render() {
-    const {fields: {
+    const { fields: {
       idUsuario, nameUsuario, cargoUsuario, empresaUsuario
-    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled} = this.props;
+    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled } = this.props;
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
     })
-      .filter(participant => _.isEqual(participant.tipoParticipante, 'banco'))
+      .filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_BANCO))
       .value();
 
     if (data.length === 10) {
@@ -198,7 +196,7 @@ class ParticipantesBancolombia extends Component {
                         placeholder="Ingrese un criterio de búsqueda..."
                         onKeyPress={this.updateKeyValueUsersBanco}
                         onSelect={val => this._updateValue(val)}
-                        />
+                      />
                       <i className="search icon" id="iconSearchParticipants"></i>
                     </div>
                     <div className="menu results"></div>
@@ -214,7 +212,7 @@ class ParticipantesBancolombia extends Component {
                       {...cargoUsuario}
                       type="text"
                       disabled='disabled'
-                      />
+                    />
                   </dt>
                 </Col>
                 <Col xs={12} md={6} lg={6} style={{ paddingTop: "5px" }}>
@@ -225,7 +223,7 @@ class ParticipantesBancolombia extends Component {
                       {...empresaUsuario}
                       type="text"
                       disabled='disabled'
-                      />
+                    />
                   </dt>
                 </Col>
               </Row>
@@ -256,14 +254,14 @@ class ParticipantesBancolombia extends Component {
           title="Error participante"
           text="Señor usuario, para agregar un participante debe seleccionar un usuario del banco"
           onConfirm={() => this.setState({ showEmptyParticipantBanco: false })}
-          />
+        />
         <SweetAlert
           type="error"
           show={this.state.showParticipantExistBanco}
           title="Participante existente"
           text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
           onConfirm={() => this.setState({ showParticipantExistBanco: false })}
-          />
+        />
       </div>
     );
   }
@@ -278,7 +276,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, participants, contactsByClient}) {
+function mapStateToProps({ selectsReducer, participants, contactsByClient }) {
   return {
     participants,
     selectsReducer,

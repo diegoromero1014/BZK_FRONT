@@ -14,7 +14,7 @@ import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../constantsGlobal';
 import {downloadFilePDF} from '../contact/actions'
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
-import {NUMBER_CONTACTS} from './constants';
+import {NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT} from './constants';
 import _ from 'lodash';
 import Tooltip from "../toolTip/toolTipComponent";
 
@@ -51,7 +51,7 @@ class ParticipantesCliente extends Component {
             if (particip === undefined) {
                 const uuid = _.uniqueId('participanClient_');
                 var clientParticipant = {
-                    tipoParticipante: 'client',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
                     idParticipante: idContacto.value,
                     nombreParticipante: nameContacto.value,
                     cargo: cargoContacto.value === null || cargoContacto.value === undefined || cargoContacto.value === '' ?
@@ -137,7 +137,7 @@ class ParticipantesCliente extends Component {
         var data = _.chain(participants.toArray()).map(participant => {
             return participant;
         })
-            .filter(participant => _.isEqual(participant.tipoParticipante, 'client'))
+            .filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_CLIENT))
             .value();
         if (data.length === 10) {
             disabledButtonCreate = 'disabled';

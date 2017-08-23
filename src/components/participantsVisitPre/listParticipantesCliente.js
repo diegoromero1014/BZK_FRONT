@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import GridComponent from '../grid/component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DELETE_PARTICIPANT_VIEW } from './constants';
+import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_CLIENT } from './constants';
 import { deleteParticipant } from './actions';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
@@ -35,7 +35,7 @@ class ListParticipantesCliente extends Component {
       showConfirmDeleteParticiClient: false,
       idParticipantSelect: null
     });
-    deleteParticipant(indexDelete, 'client');
+    deleteParticipant(indexDelete, KEY_PARTICIPANT_CLIENT);
    
   }
 
@@ -98,7 +98,7 @@ function orderListParticipant(participants, disabled) {
         });
       }
     })
-      .filter(participant => _.isEqual(participant.tipo, 'client'))
+      .filter(participant => _.isEqual(participant.tipo, KEY_PARTICIPANT_CLIENT))
       .orderBy('order', 'asc')
       .value();
     if (data != null) {

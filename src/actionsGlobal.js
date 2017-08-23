@@ -271,7 +271,15 @@ export function stringValidate(value) {
 }
 
 export function validateValueExist(value) {
-    return _.isUndefined(value) || _.isNull(value) ? false : true;
+    return _.isUndefined(value) || _.isNull(value) || _.isEmpty(value) ? false : true;
+}
+
+export function validateValue(value) {
+    return !_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) ? true : false;
+}
+
+export function validateIsNullOrUndefined(value) {
+    return _.isUndefined(value) || _.isNull(value)  ? true : false;
 }
 
 // converts HTML to text using Javascript
