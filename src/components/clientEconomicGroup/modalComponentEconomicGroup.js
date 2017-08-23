@@ -140,7 +140,7 @@ class ModalComponentEconomicGroup extends Component {
               });
               getClientsEconomicGroup(infoClient.economicGroup);
             } else {
-              swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, el cliente no puede pertenecer el grupo económico porque es nit principal de otras relaciones.');
+              swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, el cliente no puede pertenecer al grupo económico porque es NIT principal de otras relaciones.');
             }
           } else {
             swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, ocurrió un error tratando de agregar el cliente al grupo económico.');
