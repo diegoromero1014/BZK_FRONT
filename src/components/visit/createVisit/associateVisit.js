@@ -11,7 +11,9 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { NUMBER_RECORDS } from '../constants';
 import Modal from 'react-modal';
 import SweetAlert from 'sweetalert-react';
+import { Checkbox } from 'semantic-ui-react'
 import moment from 'moment';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -24,30 +26,29 @@ class ButtonAssociateComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
     this._renderRow = this._renderRow.bind(this);
     this._associtate = this._associtate.bind(this);
-    this._idPrevisit = this._idPrevisit.bind(this);
     this._cancel = this._cancel.bind(this);
+    this._changeCheckbox = this._changeCheckbox.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.state = {
       show: false,
-      idPrevisit: 0,
       showEx: false,
-      modalIsOpen: false
+      modalIsOpen: false,
+      idPrevisitSeleted: null
     };
   }
 
   openModal() {
     this.setState({ modalIsOpen: true });
-    const { previsitByClientFindServer, clearPrevisit, previsitReducer } = this.props;
+    const { visitReducer, previsitByClientFindServer, clearPrevisit, previsitReducer } = this.props;
     clearPrevisit();
     previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true);
   }
 
   _cancel() {
     this.setState({ show: false });
-    $('.prueba.checkbox').checkbox('set unchecked');
   }
 
 
@@ -65,48 +66,34 @@ class ButtonAssociateComponent extends Component {
       .map((value, index) => {
         var dateVisitFormat = moment(value.datePrevisit).locale('es');
         return (
-          <ToolTipComponent key={index} text={this.buildElementMessage(value.objetive)} position="bottom right" action="hover" size="tiny"
-            children={
-              <a className="item">
-                <div className="ui prueba slider checkbox"
-                  ref={checkbox => {
-                    $(checkbox).checkbox({
-                      onChecked: () => this._idPrevisit(value.id)
-                    });
-                  }}
-                >
-                  <input type="radio" name="frequency" />
-                  <label>{dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY") + ", " + dateVisitFormat.format("hh:mm a")}</label>
-                </div>
-              </a>
-            }
-          />
+          <ToolTipComponent key={index} text={this.buildElementMessage(value.objetive)} position="bottom right" size="tiny" >
+            <a className="item">
+              <Checkbox slider
+                onChange={() => this._changeCheckbox(value.id)}
+                checked={_.isEqual(visitReducer.get('idPrevisit'), value.id)}
+                label={dateVisitFormat.format("DD") + " " + dateVisitFormat.format("MMM") + " " + dateVisitFormat.format("YYYY") + ", " + dateVisitFormat.format("hh:mm a")} />
+            </a>
+          </ToolTipComponent>
         );
 
       });
   }
 
-  _idPrevisit(id) {
-    var self = this;
-    setTimeout(function () {
-      self.setState({ idPrevisit: id, show: true });
-    }, 500);
+  _changeCheckbox(id) {
+    this.setState({ show: true, idPrevisitSeleted: id });
   }
 
-
   _associtate() {
-    const { changeIdPrevisit, visitReducer, fnExecute } = this.props;
-    changeIdPrevisit(this.state.idPrevisit);
-    this.setState({ showEx: true });
+    const { changeIdPrevisit, visitReducer, fnExecute, swtShowMessage } = this.props;
+    changeIdPrevisit(this.state.idPrevisitSeleted);
     if (!_.isUndefined(fnExecute) && !_.isNull(fnExecute)) {
       fnExecute();
     }
+    swtShowMessage("success", "Previsita asociada", "Señor usuario, la previsita fue asociada correctamente");
+    this.setState({ show: false, modalIsOpen: false });
   }
 
-
   closeModal() {
-    this.setState({ show: false });
-    this.setState({ showEx: false });
     this.setState({ modalIsOpen: false });
   }
 
@@ -153,12 +140,6 @@ class ButtonAssociateComponent extends Component {
                   showCancelButton={true}
                   onCancel={() => this._cancel()}
                   onConfirm={() => this._associtate()} />
-                <SweetAlert
-                  type="success"
-                  show={this.state.showEx}
-                  title="Asociada"
-                  onConfirm={() => this.closeModal()}
-                />
               </form>
             </div>
           </div>
@@ -172,7 +153,10 @@ class ButtonAssociateComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit, changeIdPrevisit
+    previsitByClientFindServer,
+    clearPrevisit,
+    changeIdPrevisit,
+    swtShowMessage
   }, dispatch);
 }
 
