@@ -1,14 +1,27 @@
-import React, { Component, PropTypes } from 'react';
-import MenuListComponent from './newMenu/menuListComponent';
-import SwtAlertMessage from '../sweetAlertMessages/swtMessageComponent';
-import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from '../alerts/constants';
-import { MODULE_MANAGERIAL_VIEW, MODULE_CLIENTS, MODULE_ALERTS, MODULE_CONTACTS, MODULE_AEC, MODULE_VISOR } from '../../constantsGlobal';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { consultModulesAccess } from '../navBar/actions'
-import { showLoading } from '../loading/actions';
-import { initalMenuPermissions } from '../menu/actions';
-
+import React, {Component, PropTypes} from "react";
+import MenuListComponent from "./menuListComponent";
+import SwtAlertMessage from "../sweetAlertMessages/swtMessageComponent";
+import {
+    CODE_ALERT_PENDING_UPDATE_CLIENT,
+    CODE_ALERT_PORTFOLIO_EXPIRATION,
+    CODE_BLACK_LIST_ALERT,
+    CODE_COVENANT_ALERT
+} from "../alerts/constants";
+import {
+    MODULE_AEC,
+    MODULE_ALERTS,
+    MODULE_CLIENTS,
+    MODULE_CONTACTS,
+    MODULE_MANAGERIAL_VIEW,
+    MODULE_VISOR
+} from "../../constantsGlobal";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {consultModulesAccess} from "../navBar/actions";
+import {showLoading} from "../loading/actions";
+import {initialMenuPermissions} from "../menu/actions";
+import {Header, Image} from "semantic-ui-react";
+import {redirectUrl} from '../../actionsGlobal';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -22,25 +35,17 @@ const itemClients = {
     link: "/dashboard/clients",
 };
 const itemContacts = {
-    text: "Mis contactos",
+    text: "Contactos",
     icon: "users",
     link: "/dashboard/contacts",
+    labelTextFather: 'Mis contactos'
 };
 const itemMyPendings = {
     text: "Mis pendientes",
     icon: "tasks",
     children: []
 };
-const itemMyPendings2 = {
-    text: "Mis pendientes",
-    icon: "tasks",
-    children: []
-};
-const itemMyPendings3 = {
-    text: "Mis pendientes",
-    icon: "tasks",
-    children: []
-};
+
 const itemVisor = {
     text: "Transaccional",
     icon: "area chart",
@@ -58,22 +63,21 @@ const itemAlerts = {
     text: "Alertas",
     icon: "alarm",
     link: "/dashboard/alerts",
+    labelTextFather: 'Mis alertas',
     children: []
 };
 const childrenAlertPendingUpdate = { text: "Pendiente por actualizar", link: "/dashboard/alertClientPendingUpdate" };
 const childrenAlertPortExpiration = { text: "Vencimiento de cartera", link: "/dashboard/alertClientsPortfolioExpiration" };
 const childrenAlertCovenants = { text: "Covenants", link: "/dashboard/alertCovenants" };
 const childrenAlertBlackList = { text: "Listas de control", link: "/dashboard/alertBlackList" };
-var menuItems = [];
 
 class MenuComponent extends Component {
     constructor(props) {
         super(props);
     }
 
-
     getMenuListPermission(permissions) {
-        const { alerts, initalMenuPermissions } = this.props;
+        const { initialMenuPermissions } = this.props;
         let menuItems = [];
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
@@ -114,7 +118,7 @@ class MenuComponent extends Component {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
         menuItems.push(itemMyPendings);
-        initalMenuPermissions(menuItems);
+        initialMenuPermissions(menuItems);
     }
 
 
@@ -122,12 +126,11 @@ class MenuComponent extends Component {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         } else {
-            const { loadObservablesLeftTimer, consultModulesAccess, showLoading, initalMenuPermissions } = this.props;
-            showLoading(true, 'cargando......');
+            const {consultModulesAccess, showLoading } = this.props;
+            showLoading(true, 'Cargando...');
             consultModulesAccess().then((data) => {
                 showLoading(false, '');
                 const permissions = _.get(data, 'payload.data.data');
-                console.log("permissions", permissions);
                 this.getMenuListPermission(permissions);
             });
         }
@@ -135,7 +138,10 @@ class MenuComponent extends Component {
 
     render() {
         return (
-            <div className="main" style={{ width: "100%", height: "100%" }}>
+            <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
+                <Header style={{ backgroundColor: '#00448c !important'}} textAlign='center'>
+                    <Image src='../../img/svg/logo_bancolombia_blanco_biztrack.svg' size='small'/>
+                </Header>
                 <MenuListComponent />
                 <SwtAlertMessage />
             </div>
@@ -147,12 +153,12 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         consultModulesAccess,
         showLoading,
-        initalMenuPermissions
+        initialMenuPermissions
     }, dispatch);
 }
 
-function mapStateToProps({ menu, alerts }, ownerProps) {
-    return { menu, alerts };
+function mapStateToProps({ menu }, ownerProps) {
+    return { menu };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuComponent);

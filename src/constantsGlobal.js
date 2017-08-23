@@ -1,4 +1,4 @@
-import moment from 'moment';
+export const VERSION_DATE = "23/08/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -15,9 +15,9 @@ export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando 
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
 export const SESSION_EXPIRED = "-2";
-export const MESSAGE_SAVE_DATA = "Guardando";
-export const MESSAGE_DOWNLOAD_DATA = "Descargando";
-export const MESSAGE_LOAD_DATA = "Cargando";
+export const MESSAGE_SAVE_DATA = "Guardando...";
+export const MESSAGE_DOWNLOAD_DATA = "Descargando...";
+export const MESSAGE_LOAD_DATA = "Cargando...";
 export const CONSUMING_SERVICE = "Consumiento servicio";
 export const NON_VALIDATE_ENTER = "NON_VALIDATE_ENTER";
 export const AEC_NO_APLIED = "AEC: No aplica";
@@ -69,7 +69,6 @@ export const ALLOWS_NEGATIVE_INTEGER = 2;
 export const MESSAGE_ERROR = "error";
 export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
-export const VERSION_DATE = moment().format(DATE_FORMAT);
 
 export const OTHER = "Otro";
 

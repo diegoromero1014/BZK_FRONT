@@ -40,6 +40,13 @@ export function saveSessionToken(sessionToken) {
     }
 }
 
+export function saveSessionUserName(userName){
+    window.sessionStorage.setItem('userName',userName);
+}
+
+export function clearSessionUserName(){
+    window.sessionStorage.clear();
+}
 export function clearStateLogin() {
     return {
         type: CLEAR_STATE,
