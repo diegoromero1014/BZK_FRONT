@@ -29,7 +29,7 @@ export function createVisti(jsonVisit){
 }
 
 export function pdfDescarga(idclient, idVisit){
-  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es");
+  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es"+ "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
 
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,participatingOrder,statusDocumentId){
