@@ -13,12 +13,18 @@ import Textarea from '../../../../../ui/textarea/textareaComponent';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
 import { CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
-  from '../../selectsComponent/../../constants';
-import { PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR } from '../../../../../constantsGlobal';
+  from '../../../../selectsComponent/constants';
+import {
+  PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR,
+  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+} from '../../../../../constantsGlobal';
 import { changeStateSaveData } from '../../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../../../../actionsGlobal';
 import _ from 'lodash';
 import { redirectUrl } from '../../../../globalComponents/actions';
+import { showLoading } from '../../../../loading/actions';
+import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
+import AuditFiles from '../../../../globalComponents/auditFiles';
 
 const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "firstLastName", "firstName",
   "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
@@ -207,14 +213,18 @@ class ComponentShareHolderDetail extends Component {
   }
 
   componentWillMount() {
-    const { shareHolderId, getDetailShareHolder, getMasterDataFields, consultDataSelect, nonValidateEnter } = this.props;
+    const { shareHolderId, getDetailShareHolder, getMasterDataFields, consultDataSelect,
+      nonValidateEnter, showLoading, swtShowMessage } = this.props;
+    showLoading(true, MESSAGE_LOAD_DATA);
     nonValidateEnter(true);
     this.props.resetForm();
-    if (shareHolderId !== undefined && shareHolderId !== null && shareHolderId !== '') {
-      getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
-      consultDataSelect(SHAREHOLDER_TYPE);
-
-      getDetailShareHolder(shareHolderId).then((data) => {
+    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
+    consultDataSelect(SHAREHOLDER_TYPE);
+    getDetailShareHolder(shareHolderId).then((data) => {
+      showLoading(false, "");
+      if (!validateResponse(data)) {
+        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+      } else {
         const { editShareholderReducer, consultListWithParameterUbication } = this.props;
         const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
         if (shareHolderEdit.countryId !== null && shareHolderEdit.countryId !== '' && shareHolderEdit.countryId !== undefined) {
@@ -223,10 +233,11 @@ class ComponentShareHolderDetail extends Component {
             consultListWithParameterUbication(FILTER_CITY, shareHolderEdit.provinceId);
           }
         }
-      }, (reason) => {
-        this.setState({ showEx: true });
-      });
-    }
+      }
+    }, (reason) => {
+      showLoading(false, "");
+      swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+    });
   }
 
   render() {
@@ -466,6 +477,14 @@ class ComponentShareHolderDetail extends Component {
               </Col>
             </Row>
           </div>
+          {shareHolderEdit !== null &&
+            <AuditFiles
+              visible={true}
+              createdBy={shareHolderEdit.createdBy}
+              createdTimestamp={shareHolderEdit.createdTimestamp}
+              updatedBy={shareHolderEdit.updatedBy}
+              updatedTimestamp={shareHolderEdit.updatedTimestamp} />
+          }
         </div>
         <div className="modalBt4-footer modal-footer">
           <button
@@ -502,7 +521,9 @@ function mapDispatchToProps(dispatch) {
     shareholdersByClientFindServer,
     createShareholder,
     changeStateSaveData,
-    nonValidateEnter
+    nonValidateEnter,
+    showLoading,
+    swtShowMessage
   }, dispatch);
 }
 

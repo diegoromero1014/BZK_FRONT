@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { deleteServer } from './actions';
 import { contactsByClientFindServer, clearContactCreate, clearContactOrder } from '../contact/actions';
-import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../shareholder/actions';
+import {
+    shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder
+} from '../clients/partners/shareholder/actions';
 import { visitByClientFindServer, clearVisitOrder, clearVisitPaginator } from '../visit/actions';
 import { pipelineByClientFindServer, clearPipelineOrder, clearPipelinePaginator } from '../pipeline/actions';
 import { clearPrevisitOrder, clearPrevisitPaginator, previsitByClientFindServer } from '../previsita/actions';
@@ -93,7 +95,7 @@ class ButtonDeleteComponent extends Component {
                         return item.uuid === actionsDelete.id;
                     });
                     deleteTask(indexDelete);
-                }else if (actionsDelete.typeDelete === DELETE_NEED_VIEW) {
+                } else if (actionsDelete.typeDelete === DELETE_NEED_VIEW) {
                     this.setState({ show: false });
                     const { deleteNeed } = this.props;
                     indexDelete = needs.findIndex(function (item) {

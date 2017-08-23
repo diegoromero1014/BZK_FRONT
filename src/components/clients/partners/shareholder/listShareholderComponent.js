@@ -139,7 +139,7 @@ class ListShareholderComponent extends Component {
   }
 
   render() {
-    const modalTitle = 'Accionista Detalle';
+    const modalTitle = 'Detalle del accionista';
     const { shareholdersReducer } = this.props;
     const data = shareholdersReducer.get('shareholders');
     return (

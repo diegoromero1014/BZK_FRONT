@@ -201,7 +201,7 @@ class modalComponentMemberRiskGroup extends Component {
                 showCancelButton={true}
                 cancelButtonText="Cancelar"
                 title="Búsqueda de cliente"
-                text="Señor usuario, el cliente no fue encontrado, desea crearlo?"
+                text="Señor usuario, el cliente no fue encontrado, ¿desea crearlo?"
                 onConfirm={() => this.setState({
                   showConfirmCreateUser: false,
                   disabledPrimaryFields: true,
