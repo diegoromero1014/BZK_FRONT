@@ -3,7 +3,6 @@ import MenuComponent from '../menu/component';
 import {changeStateSaveData} from './actions';
 import NavBarComponent from '../navBar/navBarComponent';
 import {redirectUrl} from '../globalComponents/actions';
-import {Row, Grid, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
@@ -24,10 +23,10 @@ class Dashboard extends Component {
     }
 
     render() {
-        const {navBar, dashboardReducer} = this.props;
+        const { dashboardReducer} = this.props;
         return (
             <div style={{width: "100%", height: "100%", position: "absolute", overflow: "hidden"}}>
-                <div style={{float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s'}} >
+                <div style={{ backgroundColor: '#00448c', float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s'}} >
                     <MenuComponent />
                 </div>
                 <div className="header" style={{paddingLeft: '190px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s'}}>
@@ -56,10 +55,9 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({login, navBar, dashboardReducer},ownerProps) {
+function mapStateToProps({login, dashboardReducer},ownerProps) {
   return {
     login,
-    navBar,
     dashboardReducer
   };
 }

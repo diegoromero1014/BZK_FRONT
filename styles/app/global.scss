@@ -237,3 +237,7 @@ p {
   margin: 0em 0em 1em;
   line-height: 1.42 !important;
 }
+
+.ui.link.inverted.menu .item:hover, .ui.inverted.menu .dropdown.item:hover, .ui.inverted.menu .link.item:hover, .ui.inverted.menu a.item:hover{
+  background-color: #3498db !important;
+}

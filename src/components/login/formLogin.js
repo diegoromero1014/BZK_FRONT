@@ -1,11 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {stopObservablesLeftTimer, validateLogin, saveSessionToken, clearStateLogin} from './actions';
+import {
+    stopObservablesLeftTimer,
+    validateLogin,
+    saveSessionToken,
+    clearStateLogin,
+    saveSessionUserName,
+    clearSessionUserName
+} from './actions';
 import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';
-import {LOADING_LOGIN} from './constants';
+import {LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT} from './constants';
 import {showLoading} from '../loading/actions';
+import {changeActiveItemMenu} from '../menu/actions';
 
 
 class FormLogin extends Component {
@@ -35,7 +43,7 @@ class FormLogin extends Component {
     _handleValidateLogin(e) {
         e.preventDefault();
         const {usuario, password} = this.state;
-        const {validateLogin, showLoading} = this.props;
+        const {validateLogin, showLoading, changeActiveItemMenu} = this.props;
         showLoading(true, LOADING_LOGIN);
         validateLogin(usuario, password)
             .then(response => {
@@ -55,6 +63,8 @@ class FormLogin extends Component {
                     } else {
                         const {saveSessionToken, redirectUrl} = this.props;
                         saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
+                        saveSessionUserName(usuario);
+                        changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
                         redirectUrl("/dashboard/clients");
                     }
                 } else {
@@ -83,6 +93,7 @@ class FormLogin extends Component {
         this.state.messageUsuarioIncorrecto = false;
         this.state.messageWithoutPermissions = false;
         const {clearStateLogin} = this.props;
+        clearSessionUserName();
         clearStateLogin();
     }
 
@@ -101,7 +112,7 @@ class FormLogin extends Component {
                         padding: "0px 0px 0px 0px !important"
                     }}
                            placeholder="Usuario" className="input-edit"
-                           required value={this.state.id} onChange={this._handleChangeId.bind(this)}/>
+                           required value={this.state.id} onChange={this._handleChangeId.bind(this)}></input>
                 </div>
                 <div className="form-item" style={{marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px'}}>
                     <input type="password" id="welcome-login-password" style={{
@@ -113,7 +124,7 @@ class FormLogin extends Component {
                     }}
                            placeholder="Contraseña" className="input-edit"
                            required value={this.state.password}
-                           onChange={this._handleChangePassword.bind(this)}/>
+                           onChange={this._handleChangePassword.bind(this)}></input>
                 </div>
                 {this.state.messageErrorServidor &&
                 <div style={{marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px"}}>
@@ -152,7 +163,8 @@ function mapDispatchToProps(dispatch) {
         saveSessionToken,
         clearStateLogin,
         redirectUrl,
-        showLoading
+        showLoading,
+        changeActiveItemMenu
     }, dispatch);
 }
 
