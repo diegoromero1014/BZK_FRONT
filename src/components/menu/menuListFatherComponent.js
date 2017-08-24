@@ -49,7 +49,6 @@ class MenuListFatherComponent extends Component {
                             {labelTextFather}
                         </Dropdown.Item>
                     }
-                    {!_.isUndefined(linkUrlFather) && <Dropdown.Divider />}
                     {children.map(this._mapMenuItemsChildren.bind(this))}
                 </Dropdown.Menu>
             </Dropdown>
