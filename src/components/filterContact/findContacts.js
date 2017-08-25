@@ -53,6 +53,10 @@ class SearchContacts extends Component {
 
     _handleChangeSearchAllIntoContacts(e) {
         this.props.changeSearchAllIntoContacts();
+        const keyword = this.props.filterContactsReducer.get('keyword');
+        if (!_.isEmpty(keyword) && !_.isUndefined(keyword) && !_.isNull(keyword) && keyword.length > 3) {
+            this._handleContactsFind(e);
+        }
     }
 
     _handleContactsFind(e) {
