@@ -25,7 +25,7 @@ import {
     TITLE_CONCLUSIONS_VISIT,
     TITLE_OTHERS_PARTICIPANTS
 } from "../../../constantsGlobal";
-import {createVisti, detailVisit, pdfDescarga, clearIdPrevisit} from "../actions";
+import {createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit} from "../actions";
 import {addParticipant, filterUsersBanco, addListParticipant} from "../../participantsVisitPre/actions";
 import {
     KEY_PARTICIPANT_CLIENT,
@@ -339,7 +339,7 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, addTask, showLoading} = this.props;
+        const {nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, changeIdPrevisit, addTask, showLoading} = this.props;
         nonValidateEnter(true);
         idPrevisitSeleted = null;
         this.setState({idVisit: id});
@@ -351,6 +351,7 @@ class FormEdit extends Component {
             let listParticipants = [];
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
             idPrevisitSeleted = part.preVisitId;
+            changeIdPrevisit(part.preVisitId);
             this.setState({
                 typeVisit: part.visitType,
                 dateVisit: new Date(moment(part.visitTime, "x")),
@@ -641,7 +642,7 @@ class FormEdit extends Component {
                         }
                     </Col>
                     {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), EDITAR), false) && this.state.isEditable &&
-                    <ButtonAssociateComponent fnExecute={this._executeFunctionFromAssociatePrevisit}/>
+                    <ButtonAssociateComponent fnExecute={this._executeFunctionFromAssociatePrevisit} edit={true}/>
                     }
                 </Row>
                 <Row style={{padding: "10px 10px 10px 20px"}}>
@@ -925,7 +926,8 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         addListParticipant,
         clearIdPrevisit,
-        detailPrevisit
+        detailPrevisit,
+        changeIdPrevisit
     }, dispatch);
 }
 
