@@ -1,19 +1,21 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {previsitByClientFindServer, clearPrevisit} from '../../previsita/actions';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { previsitByClientFindServer, clearPrevisit } from '../../previsita/actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
-import {changeIdPrevisit, clearIdPrevisit} from '../actions';
-import {htmlToText, shorterStringValue} from '../../../actionsGlobal';
+import { changeIdPrevisit, clearIdPrevisit } from '../actions';
+import { htmlToText, shorterStringValue, validateResponse } from '../../../actionsGlobal';
+import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import PaginationAssociateVisit from './paginationAssociateVisit';
-import {Col} from 'react-flexbox-grid';
-import {NUMBER_RECORDS} from '../constants';
+import { Col } from 'react-flexbox-grid';
+import { NUMBER_RECORDS } from '../constants';
 import Modal from 'react-modal';
 import SweetAlert from 'sweetalert-react';
-import {Button, Icon} from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 import moment from 'moment';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from "../../dashboard/actions";
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -40,44 +42,49 @@ class ButtonAssociateComponent extends Component {
     }
 
     openModal() {
-        this.setState({modalIsOpen: true});
-        const {visitReducer, previsitByClientFindServer, clearPrevisit, previsitReducer} = this.props;
+        this.setState({ modalIsOpen: true });
+        const { visitReducer, previsitByClientFindServer, clearPrevisit, previsitReducer, changeStateSaveData } = this.props;
         clearPrevisit();
-        previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true);
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+        previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
+            if (validateResponse(data)) {
+                changeStateSaveData(false, "");
+            }
+        });
     }
 
     componentWillMount() {
-        const {clearIdPrevisit} = this.props;
+        const { clearIdPrevisit } = this.props;
         clearIdPrevisit();
     }
 
     _cancel() {
-        this.setState({show: false});
+        this.setState({ show: false });
     }
 
 
     buildElementMessage(objective) {
-        return <div style={{textAlign: 'justify'}}>
+        return <div style={{ textAlign: 'justify' }}>
             <span>{shorterStringValue(htmlToText(objective), 330)}</span>
         </div>
     }
 
     _renderRow() {
-        const {previsitReducer, visitReducer, changeIdPrevisit} = this.props;
+        const { previsitReducer, visitReducer, changeIdPrevisit } = this.props;
         const data = previsitReducer.get('previsitList');
         const pageAssociateVisit = visitReducer.get('pageAssociateVisit') - 1;
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
             .map((value, index) => {
                 var dateVisitFormat = moment(value.datePrevisit).locale('es');
-                const label = `${dateVisitFormat.format("DD")}  ${dateVisitFormat.format("MMM")}  ${dateVisitFormat.format("YYYY")} ${dateVisitFormat.format("hh:mm a")} ${( _.isEqual(visitReducer.get('idPrevisit'), value.id) ? "- (Asociada)" : "")}`;
+                const label = `${dateVisitFormat.format("DD")}  ${dateVisitFormat.format("MMM")}  ${dateVisitFormat.format("YYYY")} ${dateVisitFormat.format("hh:mm a")} ${(_.isEqual(visitReducer.get('idPrevisit'), value.id) ? "- (Asociada)" : "")}`;
                 return (
                     <ToolTipComponent key={index} text={this.buildElementMessage(value.objetive)}
-                                      position="bottom right" size="tiny">
+                        position="bottom right" size="tiny">
                         <a className="item">
-                            <Button icon onClick={this._openModalAssociate.bind(this,value.id)}>
+                            <Button icon onClick={this._openModalAssociate.bind(this, value.id)}>
                                 <Icon name='linkify' />
                             </Button>
-                            <span style={{marginLeft: '5pt'}}>{label}</span>
+                            <span style={{ marginLeft: '5pt' }}>{label}</span>
                         </a>
                     </ToolTipComponent>
                 );
@@ -85,29 +92,29 @@ class ButtonAssociateComponent extends Component {
     }
 
     _openModalAssociate(id) {
-        this.setState({show: true, idPrevisitSeleted: id});
+        this.setState({ show: true, idPrevisitSeleted: id });
     }
 
     _associtate() {
-        const {changeIdPrevisit, visitReducer, fnExecute, swtShowMessage} = this.props;
+        const { changeIdPrevisit, visitReducer, fnExecute, swtShowMessage } = this.props;
         changeIdPrevisit(this.state.idPrevisitSeleted);
         if (!_.isUndefined(fnExecute) && !_.isNull(fnExecute)) {
             fnExecute();
         }
         swtShowMessage("success", "Previsita asociada", "Señor usuario, la previsita fue asociada correctamente");
-        this.setState({show: false, modalIsOpen: false});
+        this.setState({ show: false, modalIsOpen: false });
     }
 
     closeModal() {
-        this.setState({modalIsOpen: false});
+        this.setState({ modalIsOpen: false });
     }
 
     render() {
-        const {changeIdPrevisit, visitReducer, previsitReducer} = this.props;
+        const { changeIdPrevisit, visitReducer, previsitReducer } = this.props;
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}
-                        style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>Asociar previsita
+                    style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Asociar previsita
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
@@ -116,10 +123,10 @@ class ButtonAssociateComponent extends Component {
                     <div className="modalBt4-dialog">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
                                     id="myModalLabel">Asociar previsita</h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
-                                        role="close">
+                                    role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i
                                         className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
@@ -127,21 +134,21 @@ class ButtonAssociateComponent extends Component {
                             </div>
                             <div>
                                 {previsitReducer.get('rowCount') > 0 ?
-                                    <div style={{margin: '20px 20px 20px 20px'}}>
+                                    <div style={{ margin: '20px 20px 20px 20px' }}>
                                         <span style={{
                                             fontWeight: 'normal',
                                             color: '#4C5360',
                                             textAlign: 'justify'
                                         }}>{labelPrevistVist}</span>
                                         <div className="ui divided selection list"
-                                             style={{marginTop: '20px', border: '1px solid', borderColor: '#DDDDDD'}}>
+                                            style={{ marginTop: '20px', border: '1px solid', borderColor: '#DDDDDD' }}>
                                             {this._renderRow()}
                                         </div>
                                         <PaginationAssociateVisit />
                                     </div>
                                     :
-                                    <div style={{margin: '20px 20px 20px 20px'}}>
-                                        <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado previsitas a asociar</span>
+                                    <div style={{ margin: '20px 20px 20px 20px' }}>
+                                        <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado previsitas a asociar</span>
                                     </div>
                                 }
                                 <SweetAlert
@@ -154,7 +161,7 @@ class ButtonAssociateComponent extends Component {
                                     text="Señor usuario ¿Está seguro que desea asociar la previsita seleccionada?"
                                     showCancelButton={true}
                                     onCancel={() => this._cancel()}
-                                    onConfirm={() => this._associtate()}/>
+                                    onConfirm={() => this._associtate()} />
                             </div>
                         </div>
                     </div>
@@ -171,11 +178,12 @@ function mapDispatchToProps(dispatch) {
         clearPrevisit,
         clearIdPrevisit,
         changeIdPrevisit,
-        swtShowMessage
+        swtShowMessage,
+        changeStateSaveData
     }, dispatch);
 }
 
-function mapStateToProps({previsitReducer, visitReducer}, ownerProps) {
+function mapStateToProps({ previsitReducer, visitReducer }, ownerProps) {
     return {
         previsitReducer, visitReducer
     };
