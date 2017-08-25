@@ -1,41 +1,37 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import MainMenuComponent from './components/menu/component';
-import LoginComponent from './components/login/component';
-import DashboardComponent from './components/dashboard/dashboardComponent';
-import ClientsFind from './components/clients/clientsFind';
-import ContactComponent from './components/contact/component';
-import modalComponent from './components/modal/modalComponent';
-import ShareholderComponent from './components/clients/partners/shareholder/component';
-import ComponentClientInformation from './components/clientInformation/componentClientInformation';
-import CreatePropspect from './components/propspect/createPropspect';
-import ClientEdit from './components/clientEdit/clientEdit';
-import Previsita from './components/previsita/createPrevisita/createPrevisita';
-import EditPrevisita from './components/previsita/editPrevisit/editPrevisit';
-import Visit from './components/visit/createVisit/createVisit';
-import VisitEdit from './components/visit/editVisit/editVisit';
-import uiTester from './ui/uiTester';
-import ViewManagement from './components/viewManagement/viewManagement';
-import BusinessPlan from './components/businessPlan/createBusinessPlan/createBusinessPlan';
-import EditBusinessPlan from './components/businessPlan/editBusinessPlan/editBusinessPlan';
-import AdminAlertClientsPendingUpdate from './components/alertPendingUpdateClient/pendingUpdateClientComponent';
-import AdminAlertClientsPortfolioExpiration from './components/alertPortfolioExpirtation/portfolioExpirationAlertComponent';
-import ModalComponentPending from './components/myPendings/myTasks/modalComponentPending';
-import ModalDraftDocuments from './components/myPendings/draftDocuments/modalDraftDocuments';
-import ViewAlerts from './components/alerts/alertsComponent';
-import AlertCovenants from './components/alertCovenants/alertCovenantComponent';
-import AlertBlackList from './components/alertBlackList/alertBlackListComponent';
-import createFormPipeline from './components/pipeline/createPipeline/formPipeline';
-import editFormPipeline from './components/pipeline/editPipeline/formEditPipeline';
-import FindContacts from './components/filterContact/findContacts';
-import ClientsContactsDetails from './components/filterContact/detailsClientsContact/clientsContactsDetails';
-import ContactByFunctionOrTypeComponent from './components/contactByFunctionOrType/ContactByFunctionOrTypeComponent';
-import AEC from './components/myPendings/AEC/componentAEC';
-import FavoritesGroup from './components/contact/favoritesGroup/favoritesGroupComponent';
-import Assigned from './components/myPendings/assigned/componentAssigned';
-import StudyCredit from './components/clients/creditStudy/componentCreditStudy';
-import Visor from './components/visor/visor';
+import React, {Component} from "react";
+import {Redirect, Route} from "react-router";
+import {Grid} from "react-flexbox-grid";
+import LoginComponent from "./components/login/component";
+import DashboardComponent from "./components/dashboard/dashboardComponent";
+import ClientsFind from "./components/clients/clientsFind";
+import ShareholderComponent from "./components/clients/partners/shareholder/component";
+import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
+import CreatePropspect from "./components/propspect/createPropspect";
+import ClientEdit from "./components/clientEdit/clientEdit";
+import Previsita from "./components/previsita/createPrevisita/createPrevisita";
+import EditPrevisita from "./components/previsita/editPrevisit/editPrevisit";
+import Visit from "./components/visit/createVisit/createVisit";
+import VisitEdit from "./components/visit/editVisit/editVisit";
+import ViewManagement from "./components/viewManagement/viewManagement";
+import BusinessPlan from "./components/businessPlan/createBusinessPlan/createBusinessPlan";
+import EditBusinessPlan from "./components/businessPlan/editBusinessPlan/editBusinessPlan";
+import AdminAlertClientsPendingUpdate from "./components/alertPendingUpdateClient/pendingUpdateClientComponent";
+import AdminAlertClientsPortfolioExpiration from "./components/alertPortfolioExpirtation/portfolioExpirationAlertComponent";
+import ModalComponentPending from "./components/myPendings/myTasks/modalComponentPending";
+import ModalDraftDocuments from "./components/myPendings/draftDocuments/modalDraftDocuments";
+import ViewAlerts from "./components/alerts/alertsComponent";
+import AlertCovenants from "./components/alertCovenants/alertCovenantComponent";
+import AlertBlackList from "./components/alertBlackList/alertBlackListComponent";
+import createFormPipeline from "./components/pipeline/createPipeline/formPipeline";
+import editFormPipeline from "./components/pipeline/editPipeline/formEditPipeline";
+import FindContacts from "./components/filterContact/findContacts";
+import ClientsContactsDetails from "./components/filterContact/detailsClientsContact/clientsContactsDetails";
+import ContactByFunctionOrTypeComponent from "./components/contactByFunctionOrType/ContactByFunctionOrTypeComponent";
+import AEC from "./components/myPendings/AEC/componentAEC";
+import FavoritesGroup from "./components/contact/favoritesGroup/favoritesGroupComponent";
+import Assigned from "./components/myPendings/assigned/componentAssigned";
+import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
+import Visor from "./components/visor/visor";
 
 class App extends Component {
     render() {
@@ -85,7 +81,6 @@ export default (
                 <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
                 <Route path="visor" component={Visor}></Route>
             </Route>
-            <Route path="ui" component={uiTester}></Route>
         </Route>
     </Grid>
 );

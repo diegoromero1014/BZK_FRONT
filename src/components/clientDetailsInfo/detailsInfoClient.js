@@ -264,7 +264,7 @@ class DetailsInfoClient extends Component {
                         componentView={<DocumentInformationServices infoClient={infoClient} />} />
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('foreignProducts')}
-                        codSection={accordion.foreignProducts} title="Productos" icon="product hunt"
+                        codSection={accordion.foreignProducts} title="Descripción de los productos financieros en moneda extranjera" icon="product hunt"
                         componentView={foreignProducts.map(this._mapProductItems)} />
 
                 </div>
