@@ -180,7 +180,8 @@ function mapDispatchToProps(dispatch) {
         clearIdPrevisit,
         changeIdPrevisit,
         swtShowMessage,
-        changeStateSaveData
+        changeStateSaveData,
+        changePageAssociateVisit
     }, dispatch);
 }
 
