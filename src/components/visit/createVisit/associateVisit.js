@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { previsitByClientFindServer, clearPrevisit } from '../../previsita/actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
-import { changeIdPrevisit, clearIdPrevisit } from '../actions';
+import { changeIdPrevisit, clearIdPrevisit, changePageAssociateVisit } from '../actions';
 import { htmlToText, shorterStringValue, validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import PaginationAssociateVisit from './paginationAssociateVisit';
@@ -43,8 +43,9 @@ class ButtonAssociateComponent extends Component {
 
     openModal() {
         this.setState({ modalIsOpen: true });
-        const { visitReducer, previsitByClientFindServer, clearPrevisit, previsitReducer, changeStateSaveData } = this.props;
+        const { visitReducer, previsitByClientFindServer, clearPrevisit, changePageAssociateVisit, previsitReducer, changeStateSaveData } = this.props;
         clearPrevisit();
+        changePageAssociateVisit(1);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
             if (validateResponse(data)) {
@@ -110,11 +111,11 @@ class ButtonAssociateComponent extends Component {
     }
 
     render() {
-        const { changeIdPrevisit, visitReducer, previsitReducer } = this.props;
+        const { changeIdPrevisit, visitReducer, previsitReducer, printMarginRigth } = this.props;
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}
-                    style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Asociar previsita
+                    style={ !_.isUndefined(printMarginRigth) &&  !_.isNull(printMarginRigth) && printMarginRigth ? { marginRight: '15px', float: 'right', marginTop: '-15px' } : { float: 'right', marginTop: '-15px' }}>Asociar previsita
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
