@@ -156,7 +156,7 @@ class ModalCreateTask extends Component {
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
       var messageBody = {
         "id": id.value,
-        "clientId": idClient === undefined || idClient === null ? window.localStorage.getItem('idClientSelected') : idClient,
+        "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.localStorage.getItem('idClientSelected') : idClient,
         "task": tarea.value,
         "advance": advance.value,
         "status": idEstado.value,

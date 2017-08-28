@@ -4,6 +4,7 @@ import {REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
 import get from 'lodash/get';
 import flow from 'lodash/flow';
 import {mapDateValueFromTask} from '../../../actionsGlobal';
+import { VIEW_TASK_ADMIN } from '../../modal/constants';
 
 export function getColor(date){
   const expirationDate = moment(date, 'DD MMM YYYY', 'es');
@@ -30,7 +31,7 @@ export const mapDataGrid = (data = [], permissionsEdit) => {
       id: item.id,
       idClient: item.idClient,
       urlServer: "./component",
-      component : "VIEW_TASK_ADMIN"
+      component : VIEW_TASK_ADMIN
     },
     idTypeClient: item.idTypeClient,
     idNumberClient  : item.idNumberClient,

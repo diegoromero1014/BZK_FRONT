@@ -55,8 +55,10 @@ class ButtonAssociateComponent extends Component {
     }
 
     componentWillMount() {
-        const { clearIdPrevisit } = this.props;
-        clearIdPrevisit();
+        const { clearIdPrevisit, edit } = this.props;
+        if( _.isUndefined(edit) || _.isNull(edit) || !edit ){
+            clearIdPrevisit();
+        }
     }
 
     _cancel() {
