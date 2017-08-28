@@ -52,10 +52,22 @@ class SearchContacts extends Component {
     }
 
     _handleChangeSearchAllIntoContacts(e) {
-        this.props.changeSearchAllIntoContacts();
-        const keyword = this.props.filterContactsReducer.get('keyword');
+        const {changeSearchAllIntoContacts, filterContactsReducer, contactsFindServer, changeStateSaveData, swtShowMessage, changePage} = this.props;
+        const searchIntoAllContacts = filterContactsReducer.get('searchIntoAllContacts');
+        changeSearchAllIntoContacts();
+        const keyword = filterContactsReducer.get('keyword');
         if (!_.isEmpty(keyword) && !_.isUndefined(keyword) && !_.isNull(keyword) && keyword.length > 2) {
-            this._handleContactsFind(e);
+            changeStateSaveData(true, MESSAGE_LOAD_DATA);
+            contactsFindServer(keyword, !searchIntoAllContacts, 0, NUMBER_RECORDS).then((data) => {
+                changeStateSaveData(false, "");
+                if (validateResponse(data)) {
+                    if (_.isNull(_.get(data, 'payload.data.data', null))) {
+                        swtShowMessage('error', 'Búsqueda de contactos', 'Señor usuario, ocurrió un error consultando el contacto.');
+                    } else {
+                        changePage(1);
+                    }
+                }
+            });
         }
     }
 
@@ -72,7 +84,7 @@ class SearchContacts extends Component {
                 changeStateSaveData(false, "");
                 if (validateResponse(data)) {
                     if (_.isNull(_.get(data, 'payload.data.data', null))) {
-                        swtShowMessage('error', 'Búsqueda de contatacos', 'Señor usuario, ocurrió un error consultando el contacto.');
+                        swtShowMessage('error', 'Búsqueda de contactos', 'Señor usuario, ocurrió un error consultando el contacto.');
                     } else {
                         changePage(1);
                     }
@@ -139,7 +151,7 @@ class SearchContacts extends Component {
                     <Col xs={12} sm={12} md={3} lg={3}>
                         <Tooltip text="Consultar en todo el universo de contactos de Biztrack">
                             <Checkbox
-                                onChange={this._handleChangeSearchAllIntoContacts}
+                                onClick={this._handleChangeSearchAllIntoContacts}
                                 checked={searchIntoAllContacts} style={{marginTop: '5pt'}}
                                 label={<label>Consultar en todo Biztrack</label>} toggle/>
                         </Tooltip>
