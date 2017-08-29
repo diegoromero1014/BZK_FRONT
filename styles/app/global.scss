@@ -241,3 +241,13 @@ p {
 .ui.link.inverted.menu .item:hover, .ui.inverted.menu .dropdown.item:hover, .ui.inverted.menu .link.item:hover, .ui.inverted.menu a.item:hover{
   background-color: #3498db !important;
 }
+
+//Botón cancelar
+.btnDefaultAyax{
+  background-color: #D1D2D4 !important;
+  color: #FFF !important;
+}
+
+.btnDefaultAyax:hover{
+  background-color: #A7A9AB !important;
+}

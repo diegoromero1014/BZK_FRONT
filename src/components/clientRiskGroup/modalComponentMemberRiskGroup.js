@@ -229,9 +229,9 @@ class modalComponentMemberRiskGroup extends Component {
           {this.state.showForm &&
             <button className="btn btn-prymary" type="submit"
               form={"submitMemberForm"} style={{ cursor: 'pointer', marginLeft: "20px" }}>
-               Agregar </button>
+              Agregar </button>
           }
-          <button className="btn btn-default active" type="button"
+          <button className="btn btn-default btnDefaultAyax " type="button"
             style={{ cursor: 'pointer', marginLeft: "20px" }} onClick={() => { isOpen() }}>
             Cancelar </button>
         </div>

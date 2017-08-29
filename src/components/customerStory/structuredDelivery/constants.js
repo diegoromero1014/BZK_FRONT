@@ -5,4 +5,4 @@ export const CORPORATE_GOVERNANCE_HELP = "Describa brevemente cómo está confor
 export const BUSINESS_WITH_AFFILIATES_HELP = "Describa aquellos productos que tiene el cliente en las filiales del Grupo Bancolombia con particularidades especiales.";
 export const MERGERS_HELP = "Fusiones de los últimos 10 años. Descríbalas.";
 export const IMPORTANT_DATES_RELATIONSHIP = "Aniversarios de la compañía, inauguración de expansiones o nuevas unidades de negocio, etc.";
-export const RECIPROCITY_HELP = "¿Qué convenios tiene firmados con el cliente? ¿Cuáles son los términos y condiciones de dicho convenio? si no existen términos, ¿hay algún pacto que no este escrito? ¿en qué consiste?";
+export const RECIPROCITY_HELP = "¿Qué convenios tiene firmados con el cliente? ¿Cuáles son los términos y condiciones de dicho convenio? si no existen términos, ¿Hay algún pacto que no esté escrito? ¿en qué consiste?";

@@ -55,31 +55,44 @@ const validate = (values) => {
 };
 
 function GetBtnAllowEditOrBtnSearchExists(props) {
-    if (_.isUndefined(props.boardMember)) {
-        return <Col xs>
+    if (!props.thisSelf.state.allowsEditingOFDocument) {
+        return <div />/*<Col xs>
             <dl style={{ width: '100%' }}>
                 <button type="button" className="btn btn-primary"
                     style={{ marginTop: '35px' }}
-                    onClick={props.thisSelf._validateExistBoardMember}>
+                    onClick={props.thisSelf._onClickClear}>
                     <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                        className="search icon"></i>
+                        className="erase icon" ></i>
                 </button>
             </dl>
-        </Col>
+        </Col>*/
     } else {
-        if (_.get(props.reducerGlobal.get('permissionsBoardMembers'), _.indexOf(props.reducerGlobal.get('permissionsBoardMembers'), EDITAR), false)) {
+        if (_.isUndefined(props.boardMember)) {
             return <Col xs>
                 <dl style={{ width: '100%' }}>
-                    <button type="button" onClick={props.thisSelf._editBoardMember}
-                        className={'btn btn-primary modal-button-edit'}
-                        style={{ marginTop: '35px' }}>
-                        Editar
-            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
+                    <button type="button" className="btn btn-primary"
+                        style={{ marginTop: '35px' }}
+                        onClick={props.thisSelf._validateExistBoardMember}>
+                        <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
+                            className="search icon"></i>
                     </button>
                 </dl>
             </Col>
         } else {
-            return <div />
+            if (_.get(props.reducerGlobal.get('permissionsBoardMembers'), _.indexOf(props.reducerGlobal.get('permissionsBoardMembers'), EDITAR), false)) {
+                return <Col xs>
+                    <dl style={{ width: '100%' }}>
+                        <button type="button" onClick={props.thisSelf._editBoardMember}
+                            className={'btn btn-primary modal-button-edit'}
+                            style={{ marginTop: '35px' }}>
+                            Editar
+            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
+                        </button>
+                    </dl>
+                </Col>
+            } else {
+                return <div />
+            }
         }
     }
 }
@@ -92,13 +105,29 @@ class ModalCreateBoardMembers extends Component {
         this._validateExistBoardMember = this._validateExistBoardMember.bind(this);
         this._editBoardMember = this._editBoardMember.bind(this);
         this._sendAuditInformation = this._sendAuditInformation.bind(this);
+        this._onClickClear = this._onClickClear.bind(this);
         this.state = {
             //controla si se muestra el formulario completo, valores (hidden, visible)
             showCompleteForm: 'hidden',
             //controla si se puede editar la información del miembro de junta, valores (true, false)
-            isEditable: false
+            isEditable: false,
+            //controla si puede editar los campos de tipo de documento y número de documento
+            allowsEditingOFDocument: true
         }
         momentLocalizer(moment);
+    }
+
+    /**
+     * Reinicia el formulario para realizar de nuevo la búsqueda de un miembro de junta
+     */
+    _onClickClear() {
+        const { fields: { typeOfDocument } } = this.props;
+        console.log('this', this);
+        this.setState({
+            showCompleteForm: 'hidden',
+            allowsEditingOFDocument: true
+        });
+        this.props.resetForm();
     }
 
     /**
@@ -213,7 +242,8 @@ class ModalCreateBoardMembers extends Component {
                     }
                     if (allowShowCompleteForm) {
                         this.setState({
-                            showCompleteForm: 'visible'
+                            showCompleteForm: 'visible',
+                            allowsEditingOFDocument: false
                         });
                     } else {
                         this.setState({
@@ -276,7 +306,9 @@ class ModalCreateBoardMembers extends Component {
 
     render() {
         const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
-            middleName, firstLastName, secondLastName }, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
+            middleName, firstLastName, secondLastName }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
+        console.log('typeOfDocument 3', typeOfDocument);
+        console.log('numberDocument', numberDocument);
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -296,8 +328,7 @@ class ModalCreateBoardMembers extends Component {
                                         labelInput="Seleccione..."
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        parentId="dashboardComponentScroll"
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                        disabled={this.state.isEditable && this.state.allowsEditingOFDocument ? '' : 'disabled'}
                                         data={selectsReducer.get(CONTACT_ID_TYPE) || []}
                                     />
                                 </dt>
@@ -307,9 +338,9 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="numberDocument"
                                     type="text"
-                                    max="250"
+                                    max="20"
                                     {...numberDocument}
-                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                    disabled={this.state.isEditable && this.state.allowsEditingOFDocument ? '' : 'disabled'}
                                 />
                             </Col>
                             <GetBtnAllowEditOrBtnSearchExists thisSelf={this} boardMember={boardMember}
@@ -406,6 +437,10 @@ class ModalCreateBoardMembers extends Component {
                         style={{ visibility: this.state.showCompleteForm }}
                         disabled={this.state.isEditable ? '' : 'disabled'}>
                         <span>Guardar</span>
+                    </button>
+                    <button className="modal-button-edit btn btn-default btnDefaultAyax"
+                        onClick={() => { isOpen() }}>
+                        <span>Cancelar</span>
                     </button>
                 </div>
             </form >

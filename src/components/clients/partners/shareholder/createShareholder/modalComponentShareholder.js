@@ -107,7 +107,6 @@ class ModalComponentShareholder extends Component {
 
   _closeCreate(){
     if( typeMessage === "success" ){
-
       const{clearSearchShareholder,clearShareholderOrder,clearShareholderCreate,isOpen} = this.props;
       clearSearchShareholder();
       this.props.resetForm();

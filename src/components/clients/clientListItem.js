@@ -13,7 +13,8 @@ import Tooltip from '../toolTip/toolTipComponent';
 import { deleteRecentClient, getRecentClients } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { validateResponse } from '../../actionsGlobal';
+import { validateResponse, shorterStringValue } from '../../actionsGlobal';
+import { MAX_LENGTH_NAME_CLIENT, MAX_LENGTH_DOCUMENT, MAX_LENGTH_ECONOMIC_GROUP } from './constants';
 
 class ClientListItem extends Component {
   constructor(props) {
@@ -73,9 +74,9 @@ class ClientListItem extends Component {
         <div className="client-card" style={{ float: "left" }}>
           <div className="celula-card-top" onClick={this._handleClickClientItem}>
             <div className="celula-card-top-left">
-              <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
-              <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
-              <div className="celula-title">{dataEconomicGroup.length > 30 ? dataEconomicGroup.substring(0, 30) + "..." : dataEconomicGroup}</div>
+              <div className="celula-title">{shorterStringValue(dataName, MAX_LENGTH_NAME_CLIENT)}</div>
+              <div className="celula-name">{dataDocumentType}: {shorterStringValue(dataDocument, MAX_LENGTH_DOCUMENT)}</div>
+              <div className="celula-title">{shorterStringValue(dataEconomicGroup, MAX_LENGTH_ECONOMIC_GROUP)}</div>
               <div className="celula-name" style={{ marginTop: "5px", fontStyle: "italic" }}>{dataAccountManager}</div>
             </div>
           </div>
