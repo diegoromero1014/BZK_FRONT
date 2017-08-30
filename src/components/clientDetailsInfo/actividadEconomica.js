@@ -49,13 +49,25 @@ class ActividadEconomica extends Component {
                     </tbody>
                 </table>
                 <Row style={{ marginTop: '15px' }}>
-                    <Col xs={12} md={3} lg={3}>
-                        <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></dt>
-                        {infoClient.taxNatureKey}
-                    </Col>
-                    <Col xs={12} md={3} lg={3}>
-                        <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipología del cliente</span></dt>
-                        {infoClient.valueCustomerTypology}
+                    <Col xs={12} md={12} lg={12}>
+                        <table style={{ width: "100%" }}>
+                            <thead>
+                            <tr>
+                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></th>
+                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipología del cliente</span></th>
+                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Gerencias de estrategia sectorial</span></th>
+                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}></span></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.taxNatureKey}</td>
+                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.valueCustomerTypology}</td>
+                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.srtManagementsOfSectorStrategy}</td>
+                                <td style={{ width: "20%", verticalAlign: "initial" }}></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </Col>
                 </Row>
                 <Row>
