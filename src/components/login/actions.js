@@ -25,7 +25,7 @@ export function validateLogin(username, password) {
             "timeZone": momentTimeZone.tz.guess()
         }
     };
-    const request = axios.post(APP_URL + "/userAuthentication2", json);
+    const request = axios.post(APP_URL + "/userAuthentication", json);
     return {
         type: VALIDATE_LOGIN,
         payload: request
