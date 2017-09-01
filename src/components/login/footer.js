@@ -6,7 +6,10 @@ import ModalComponentAgent from '../agent/modalComponent';
 import {VERSION_DATE} from '../../constantsGlobal';
 
 const style = {
-    width: "50px"
+    width: "50px",
+    float: 'left',
+    marginTop: '5px',
+    marginRight: '10px'
 };
 class Footer extends Component {
 
