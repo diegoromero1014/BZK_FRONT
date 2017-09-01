@@ -11,6 +11,7 @@ export const CONSULT_VALUE_LOGS = 'CONSULT_VALUE_LOGS';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 export const REQUEST_ERROR = 500;
+export const REQUEST_SUCCESS = 200;
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
@@ -67,6 +68,7 @@ export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
 export const ONLY_POSITIVE_INTEGER = 1;
 export const ALLOWS_NEGATIVE_INTEGER = 2;
 export const MESSAGE_ERROR = "error";
+export const MESSAGE_SERVER_ERROR = "Ocurrio un error en el servidor"
 export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
 
