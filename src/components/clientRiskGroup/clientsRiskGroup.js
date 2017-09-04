@@ -37,16 +37,25 @@ class clientsRiskGroup extends Component {
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup,isPending } = this.props;
+    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup, isPending } = this.props;
     return (
-      <div key={key} className="client-card" style={{ width: "100%", marginBottom: "15px", cursor: 'auto', height: "auto" }}>
-        <div className="celula-card-top" style={{ height: "auto", minHeight: "93px" }}>
+      <div key={key} className="client-card" style={{
+        width: "100%",
+        marginBottom: "15px",
+        cursor: 'auto',
+        height: "auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between"
+      }}>
+        <div className="celula-card-top" style={{ height: "auto", minHeight: "93px", width: "100%", flexGrow: 1 }}>
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
           </div>
         </div>
-        <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6") }}>
+        <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6"), width: "100%" }}>
           {!client.isPending && !isPending &&
             <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={this.openModalRemoveClient}
