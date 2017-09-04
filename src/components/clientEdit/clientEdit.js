@@ -974,12 +974,10 @@ class clientEdit extends Component {
                         if (validateResponse(response)) {
                             if (_.get(data, 'payload.data.responseCreateProspect', false)) {
                                 if (typeSave === BUTTON_EDIT) {
-                                    changeStateSaveData(false, "");
                                     messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
                                     this.setState({ showEx: true });
                                 } else {
                                     updateClient(UPDATE).then((data) => {
-                                        changeStateSaveData(false, "");
                                         if (!_.get(data, 'payload.data.validateLogin')) {
                                             redirectUrl("/login");
                                         } else {
@@ -994,11 +992,12 @@ class clientEdit extends Component {
                         } else {
                             this.setState({ showEr: true });
                         }
+                        changeStateSaveData(false, "");
                     });
                 } else {
+                    changeStateSaveData(false, "");
                     this.setState({ showEr: true });
                 }
-                changeStateSaveData(false, "");
             }, (reason) => {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
@@ -1137,7 +1136,7 @@ class clientEdit extends Component {
         }
     };
 
-    componentDidMount(){
+    componentDidMount() {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
 
