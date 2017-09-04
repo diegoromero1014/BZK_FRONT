@@ -374,7 +374,7 @@ class ComponentListIntOperations extends Component {
                                         <dt><span>País (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
                                             name="idCountry"
-                                            labelInput="Páis"
+                                            labelInput="País"
                                             {...idCountry}
                                             value={idCountry.value}
                                             onBlur={idCountry.onBlur}
