@@ -106,11 +106,12 @@ class ComponentSurvey extends Component {
                     changeStateSaveData(false);
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
-                    swtShowMessage('success', 'Guardar encuesta', 'Señor usuario, la encuesta de variables cualitativas se guardó exitosamente');
                     getSurveyQualitativeVarible().then((data) => {
                         changeStateSaveData(false);
                         if (!validateResponse(data)) {
                             swtShowMessage('error', 'Error consultando encuesta', 'Señor usuario, Ocurrió un error tratando de consultar la encuesta de variables cualitativas');
+                        } else {
+                            swtShowMessage('success', 'Guardar encuesta', 'Señor usuario, la encuesta de variables cualitativas se guardó exitosamente');
                         }
                     });
                 }
