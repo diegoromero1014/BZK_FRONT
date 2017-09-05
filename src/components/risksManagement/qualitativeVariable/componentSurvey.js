@@ -79,7 +79,7 @@ class ComponentSurvey extends Component {
     _clickSaveSurvey() {
         const {
             reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage,
-            changeFieldsEditables, changeStateSaveData
+            changeFieldsEditables, changeStateSaveData, getSurveyQualitativeVarible
         } = this.props;
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
@@ -102,12 +102,17 @@ class ComponentSurvey extends Component {
                 "listQuestions": filterQuestions
             };
             saveResponseQualitativeSurvey(jsonSave).then((data) => {
-                changeStateSaveData(false);
                 if (!validateResponse(data)) {
+                    changeStateSaveData(false);
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
                     swtShowMessage('success', 'Guardar encuesta', 'Señor usuario, la encuesta de variables cualitativas se guardó exitosamente');
-                    changeFieldsEditables(false);
+                    getSurveyQualitativeVarible().then((data) => {
+                        changeStateSaveData(false);
+                        if (!validateResponse(data)) {
+                            swtShowMessage('error', 'Error consultando encuesta', 'Señor usuario, Ocurrió un error tratando de consultar la encuesta de variables cualitativas');
+                        }
+                    });
                 }
             });
         }
