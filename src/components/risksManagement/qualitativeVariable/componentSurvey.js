@@ -101,6 +101,7 @@ class ComponentSurvey extends Component {
                 "analyst": isEqual(analyst, ANALYST) ? true : false,
                 "listQuestions": filterQuestions
             };
+            changeFieldsEditables(false);
             saveResponseQualitativeSurvey(jsonSave).then((data) => {
                 if (!validateResponse(data)) {
                     changeStateSaveData(false);
