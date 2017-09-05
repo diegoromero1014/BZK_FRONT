@@ -154,7 +154,7 @@ class DetailsInfoClient extends Component {
         const allowCreditStudy = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ESTUDIO_DE_CREDITO), false);
 
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
-        const showFooterButtons = allowAccessAndEdit || allowLinked;
+        const showFooterButtons = allowAccessAndEdit || allowLinked || allowCreditStudy;
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
