@@ -6,7 +6,7 @@ import { reduxForm } from 'redux-form';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS } from '../../constantsGlobal';
-import { stringValidate, validateValueExist, validateResponse } from '../../actionsGlobal';
+import { stringValidate, validateIsNullOrUndefined, validateResponse } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
 import ClientsEconomicGroup from './clientsEconomicGroup';
@@ -123,9 +123,9 @@ class ModalComponentEconomicGroup extends Component {
     const { swtShowMessage, clientEconomicGroupReducer, updateEconomicGroupClient, getClientsEconomicGroup, clientInformacion } = this.props;
     const idClient = this.state.idClient;
 
-    if (validateValueExist(idClient)) {
+    if (!validateIsNullOrUndefined(idClient)) {
       //Valido si estoy agregando un cliente que ya se encuentra en la relación
-      if (validateValueExist(_.find(_.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []), ['id', idClient]))) {
+      if (!validateIsNullOrUndefined(_.find(_.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []), ['id', idClient]))) {
         swtShowMessage('error', 'Error agregando cliente', 'Señor usuario, el cliente que quiere agregar ya se encuentra en el grupo económico.');
       } else {
         const infoClient = clientInformacion.get('responseClientInfo');

@@ -1,6 +1,6 @@
 import {APP_URL} from '../../../constantsGlobal';
 import {FIND_PENDING_TASKS, LIMITE_INF, CHANGE_PAGE, CLEAR_PENDING_TASK, CLEAR_MY_PENDINGS_ORDER,
-CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK} from './constants';
+CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK, CLEAR_LIST_MY_PENDINGS} from './constants';
 import axios from 'axios';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
@@ -127,5 +127,11 @@ export function orderColumnMyPending(orderMyPending,columnMyPending){
         type: ORDER_COLUMN_MY_PENDING,
         orderMyPending: orderMyPending,
         columnMyPending: columnMyPending
+    };
+}
+
+export function clearOnlyListPendingTask(){
+    return {
+        type: CLEAR_LIST_MY_PENDINGS
     };
 }

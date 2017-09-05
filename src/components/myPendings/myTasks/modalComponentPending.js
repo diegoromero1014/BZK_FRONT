@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../../globalComponents/actions';
 import { updateTitleNavBar } from '../../navBar/actions';
-import { tasksByUser, clearMyPendingsOrder, clearMyPendingPaginator, clearPendingTask } from './actions';
+import { tasksByUser, clearMyPendingsOrder, clearMyPendingPaginator, clearPendingTask, clearOnlyListPendingTask } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import ListPendingTaskComponent from './listMyPendingComponent';
 import PaginationPendingTask from './paginationPendingTask';
@@ -42,7 +42,8 @@ class ModalComponentPending extends Component {
   }
 
   consultInfoMyPendingTask() {
-    const {tasksByUser, clearMyPendingPaginator} = this.props;
+    const {tasksByUser, clearMyPendingPaginator, clearOnlyListPendingTask} = this.props;
+    clearOnlyListPendingTask();
     clearMyPendingPaginator();
     tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending).then((data) => {
       if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -60,7 +61,8 @@ class ModalComponentPending extends Component {
 
   _cleanSearch() {
     this.setState({ keywordMyPending: ""});
-    const {tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder} = this.props;
+    const {tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder, clearOnlyListPendingTask} = this.props;
+    clearOnlyListPendingTask();
     clearMyPendingPaginator();
     clearMyPendingsOrder();
     tasksByUser(0, NUMBER_RECORDS, "", null, "");
@@ -138,6 +140,7 @@ class ModalComponentPending extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    clearOnlyListPendingTask,
     redirectUrl,
     clearPendingTask,
     tasksByUser,
