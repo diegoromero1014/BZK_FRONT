@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {NUMBER_RECORDS} from './constants';
-import {tasksByUser, limitiInf, changePage, clearPendingTask, clearMyPendingsOrder} from './actions';
+import {tasksByUser, limitiInf, changePage, clearPendingTask, clearMyPendingsOrder, clearOnlyListPendingTask} from './actions';
 
 let keyWord = "";
 class PaginationPendingTask extends Component{
@@ -35,7 +35,8 @@ class PaginationPendingTask extends Component{
   }
 
   _handlePaginar(page){
-    const {changePage, limitiInf} = this.props;
+    const {changePage, limitiInf, clearOnlyListPendingTask} = this.props;
+    clearOnlyListPendingTask();
     var limInf = (page - 1);
     limitiInf(limInf);
     changePage(page);
@@ -94,6 +95,7 @@ class PaginationPendingTask extends Component{
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
+    clearOnlyListPendingTask,
     tasksByUser,
     limitiInf,
     changePage,

@@ -7,7 +7,6 @@ import SweetAlert from 'sweetalert-react';
 import { getClientsEconomicGroup, deleteRelationEconomicGroup } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse } from '../../actionsGlobal';
-import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
 import { changeEconomicGroup } from '../clientInformation/actions';
 
 class clientsEconomicGroup extends Component {

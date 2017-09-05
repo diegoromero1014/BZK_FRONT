@@ -63,6 +63,8 @@ export default (state = initialState, action = {}) => {
                   map
                   .set('orderMyPending', action.orderMyPending)
                   .set('columnMyPending', action.columnMyPending)});
+        case constants.CLEAR_LIST_MY_PENDINGS:
+            return state.set('pendingTaskListByUser', []);
         default:
             return state;
     }

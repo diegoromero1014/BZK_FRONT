@@ -6,6 +6,8 @@ import {TASK_STATUS} from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import {updateStatusTask, tasksByUser} from '../myPendings/myTasks/actions';
 import {NUMBER_RECORDS} from '../myPendings/myTasks/constants';
+import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
+import {changeStateSaveData} from '../dashboard/actions';
 
 let key = 1;
 class SelectTaskComponent extends Component {
@@ -28,8 +30,10 @@ class SelectTaskComponent extends Component {
   }
 
   onChangeValue(idValueStatus){
-    const {updateStatusTask, tasksByUser} = this.props;
+    const {updateStatusTask, tasksByUser, changeStateSaveData} = this.props;
+    changeStateSaveData(true, MESSAGE_SAVE_DATA);
     updateStatusTask(this.state.idTask, idValueStatus).then( (data) => {
+      changeStateSaveData(false, "");
       if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
       } else {
@@ -59,6 +63,7 @@ class SelectTaskComponent extends Component {
 function mapDispatchToProps(dispatch){
   return bindActionCreators({
     updateStatusTask,
+    changeStateSaveData,
     tasksByUser
   }, dispatch);
 }
