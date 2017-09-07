@@ -1245,7 +1245,7 @@ class clientEdit extends Component {
                 typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
                 note: ''
             } ]);
-            swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
+            swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
