@@ -153,7 +153,7 @@ class ModalCreateBoardMembers extends Component {
             idClient: window.localStorage.getItem('idClientSelected'),
             idBoardMember: idBoardMember.value,
             idTypeOfDocument: typeOfDocument.value,
-            numberDocument: numberDocument.value,
+            numberDocument: (numberDocument.value).trim(),
             firstName: firstName.value,
             middleName: middleName.value,
             firstLastName: firstLastName.value,
@@ -198,7 +198,7 @@ class ModalCreateBoardMembers extends Component {
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
             var jsonBoardMember = {
                 idTypeDocument: typeOfDocument.value,
-                numberDocument: numberDocument.value,
+                numberDocument: (numberDocument.value).trim(),
                 idClient: window.localStorage.getItem('idClientSelected')
             };
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
@@ -307,8 +307,6 @@ class ModalCreateBoardMembers extends Component {
     render() {
         const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
             middleName, firstLastName, secondLastName }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
-        console.log('typeOfDocument 3', typeOfDocument);
-        console.log('numberDocument', numberDocument);
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
