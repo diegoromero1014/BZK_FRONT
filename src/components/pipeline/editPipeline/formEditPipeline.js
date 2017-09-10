@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import {bindActionCreators} from "redux";
-import {redirectUrl} from "../../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import { redirectUrl } from "../../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {getClientNeeds, getMasterDataFields, getPipelineCurrencies} from "../../selectsComponent/actions";
+import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
 import {
     BUSINESS_CATEGORY,
     FILTER_COUNTRY,
@@ -43,7 +43,7 @@ import {
     PROPUEST_OF_BUSINESS,
     REAL
 } from "../constants";
-import {createEditPipeline, getPipelineById, pdfDescarga} from "../actions";
+import { createEditPipeline, getPipelineById, pdfDescarga } from "../actions";
 import {
     consultParameterServer,
     formValidateKeyEnter,
@@ -52,23 +52,23 @@ import {
 } from "../../../actionsGlobal";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
-import {changeStateSaveData} from "../../dashboard/actions";
-import {MENU_CLOSED} from "../../navBar/constants";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { MENU_CLOSED } from "../../navBar/constants";
 import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
 import HeaderPipeline from "../headerPipeline";
-import {addBusiness, clearBusiness, editBusiness} from "../business/ducks";
+import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
 import Business from "../business/business";
 import RichText from '../../richText/richTextComponent';
-import {showLoading} from '../../loading/actions';
+import { showLoading } from '../../loading/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "business", "product",
     "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
-    "positionUpdatedBy", "probability", "pendingDisburAmount", "amountDisbursed", "estimatedDisburDate", "entity", "contract"];
+    "positionUpdatedBy", "probability", "pendingDisburAmount", "amountDisbursed", "estimatedDisburDate", "entity", "contract", "opportunityName"];
 
 var thisForm;
 let typeButtonClick = null;
@@ -132,6 +132,14 @@ const validate = values => {
             errors.startDate = null;
         }
     }
+
+    if (!values.opportunityName) {
+        errors.opportunityName = OPTION_REQUIRED;
+    } else {
+        errors.opportunityName = null;
+    }
+
+
     return errors;
 };
 
@@ -380,7 +388,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
                     businessWeek, businessCategory, currency, indexing, endDate, need, observations, business, product,
                     priority, registeredCountry, startDate, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
-                    estimatedDisburDate, entity, contract }, createEditPipeline, changeStateSaveData, pipelineBusinessReducer } = this.props;
+                    estimatedDisburDate, entity, contract, opportunityName }, createEditPipeline, changeStateSaveData, pipelineBusinessReducer } = this.props;
                 const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
 
                 if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
@@ -416,7 +424,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "entity": entity.value,
                             "businessCategory": businessCategory.value,
                             "contract": contract.value,
-                            "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
+                            "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x')),
+                            "opportunityName": opportunityName.value
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -539,7 +548,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
                 updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
                 reviewedDate, business, probability, entity, pendingDisburAmount, amountDisbursed,
-                estimatedDisburDate, contract, businessCategory } } = this.props;
+                estimatedDisburDate, contract, businessCategory, opportunityName } } = this.props;
             businessStatus.onChange(data.businessStatus);
             businessWeek.onChange(data.businessWeek);
             commission.onChange(fomatInitialStateNumber(data.commission));
@@ -575,6 +584,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             amountDisbursed.onChange(fomatInitialStateNumber(data.amountDisbursed));
             estimatedDisburDate.onChange(data.estimatedDisburDate !== null ? moment(data.estimatedDisburDate).format(DATE_FORMAT) : "");
             contract.onChange(data.contract);
+            opportunityName.onChange(data.opportunityName);
             if (data.pipelineBusiness.length > 0) {
                 business.onChange(data.pipelineBusiness[0]);
             }
@@ -585,7 +595,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
                     termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
-                    business, product, priority, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness,showLoading } = this.props;
+                    business, product, priority, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness, showLoading } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -615,10 +625,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     addBusiness(pipeline);
                                 });
                                 this._consultInfoPipeline(data);
-                                showLoading(false,null);
+                                showLoading(false, null);
                             });
-                        }else{
-                            showLoading(false,null);
+                        } else {
+                            showLoading(false, null);
                         }
                     });
             }
@@ -649,7 +659,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     businessWeek, businessCategory, currency, indexing, endDate, need, observations, business, product,
                     priority, registeredCountry, startDate, client, documentStatus,
                     updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, entity, pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract
+                    positionUpdatedBy, probability, entity, pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract, opportunityName
             },
                 clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar
             } = this.props;
@@ -699,6 +709,33 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
+
+
+                            <Row style={{ padding: "10px 10px 20px 20px" }}>
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                        <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                        <i className="browser icon" style={{ fontSize: "20px" }} />
+                                        <span style={{ fontSize: "20px" }}> Oportunidad</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                <Col md={12}>
+                                    <dt>
+                                        <span>Nombre de la oportunidad</span>
+                                    </dt>
+                                    <Input
+                                        name="txtOpportunityName"
+                                        type="text"
+                                        {...opportunityName}
+                                        max="100"
+                                        parentId="dashboardComponentScroll"
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                    />
+                                </Col>
+                            </Row>
+
                             <Row style={{ padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{
