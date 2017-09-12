@@ -170,8 +170,8 @@ class ComponentListMainCompetitor extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
-                    <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
+                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px'}}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
                             <button className="btn" disabled={showFormMainCompetitor} type="button" title="Agregar competidor principal"
                                 onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
@@ -216,16 +216,16 @@ class ComponentListMainCompetitor extends Component {
                             <Col xs={4} md={3} lg={3}>
                                 <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                    Agregar
                                 </button>
                                 <button className="btn btn-primary" type="button"  title="Cancelar" onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                    <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                    Cancelar
                                 </button>
                             </Col>
                         }
                         {showFormMainCompetitor &&
-                            <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
+                            <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '15px' }}>
                                 <div>
                                     <dt><span>Observaciones</span></dt>
                                     <Textarea
@@ -243,7 +243,7 @@ class ComponentListMainCompetitor extends Component {
                         }
                         {
                             _.size(listMainCompetitor) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
                                     <table className="ui striped table">
                                         <thead>
                                             <tr>

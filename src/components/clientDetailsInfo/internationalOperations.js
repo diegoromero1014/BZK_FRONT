@@ -31,16 +31,14 @@ class InternationalOperations extends Component {
 
   mapOperations(operations, idx) {
     const title = _.isEqual(operations.typeOperation, IMPORT) ? "Importación" : "Exportación";
-    return <Row style={{marginTop: '20px'}}>
+    return <Row style={{ marginTop: '20px', border: "1px solid #ECECEC", borderRadius: "5px", paddingTop: '5px' }}>
       <Col xs={12} md={6} lg={3}><span style={{ fontWeight: "bold", color: "#4C5360" }}>{title}:</span> {operations.participation}%</Col>
-      <Col xs={12} md={6} lg={3}><span style={{ fontWeight: "bold", color: "#4C5360" }}>¿El cliente tiene coberturas?</span> {_.isEqual(operations.customerCoverage, true) ? "Si" : "No"}</Col>
-      <Col xs={12} md={12} lg={12}><span style={{ fontWeight: "bold", color: "#4C5360" }}>Descripción de la cobertura: </span>{operations.descriptionCoverage}</Col>
+      <Col xs={12} md={6} lg={3}><span style={{ fontWeight: "bold", color: "#4C5360" }}>¿El cliente tiene coberturas?: </span> {_.isEqual(operations.customerCoverage, true) ? "Si" : "No"}</Col>
+      <Col xs={12} md={12} lg={12}><span style={{ fontWeight: "bold", color: "#4C5360", marginTop: '5px' }}>Descripción de la cobertura: </span>{operations.descriptionCoverage}</Col>
       {_.size(operations.listCountryOperations) > 0 &&
         <table className='table table-striped' style={{ width: '100%', marginTop: '10px' }}>
           {this.mapHeadersInternationalOperations()}
-          <tbody>
-            {operations.listCountryOperations.map(this.mapValuesInternationalOperations)}
-          </tbody>
+          {operations.listCountryOperations.map(this.mapValuesInternationalOperations)}
         </table>
       }
     </Row>
@@ -90,7 +88,7 @@ class InternationalOperations extends Component {
         </Row>
         {_.isEqual(infoClient.operationsForeignCurrency, YES) &&
           <Row style={{ marginTop: '20px', marginLeft: '2px' }}>
-            <h3 style={{ width: '100%', marginBottom: '0px'}}>Operaciones internacionales</h3>
+            <h3 style={{ width: '100%', marginBottom: '0px' }}>Operaciones internacionales</h3>
             {validateValueExist(contextClient) && contextClient.noAppliedIntOperations ?
               <span>No aplica</span>
               :
@@ -100,7 +98,7 @@ class InternationalOperations extends Component {
                     listImports.map(this.mapOperations)
                   }
                 </Col>
-                <Col xs={12} md={12} lg={12} style={{marginTop: '20px'}}>
+                <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
                   {validateValueExist(contextClient) && _.size(listExports) > 0 &&
                     listExports.map(this.mapOperations)
                   }
