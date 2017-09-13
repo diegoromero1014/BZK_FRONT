@@ -43,7 +43,9 @@ import {
     ORIGIN_PIPELIN_BUSINESS,
     POSITIVE_INTEGER,
     PROPUEST_OF_BUSINESS,
-    REAL
+    REAL,
+    COMPROMETIDO,
+    COTIZACION_EN_FIRME
 } from "../constants";
 import { createEditPipeline, getPipelineById, pdfDescarga } from "../actions";
 import {
@@ -67,7 +69,7 @@ import RichText from '../../richText/richTextComponent';
 import { showLoading } from '../../loading/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "product",
+    "businessCategory", "currency", "indexing", "endDate", "need", "observations", "product",
     "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
     "positionUpdatedBy", "probability", "pendingDisburAmount",
@@ -163,7 +165,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let nameNeed = _.uniqueId('need_');
     let nameBusinessStatus = _.uniqueId('businessStatus_');
     let nameRegisteredCountry = _.uniqueId('registeredCountry_');
-    let nameBusinessWeek = _.uniqueId('businessWeek_');
     var nameBusinessCategory = _.uniqueId('businessCategory_');
     let nameProbability = _.uniqueId('probability_');
     let nameEntity = _.uniqueId('entity_');
@@ -192,7 +193,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 pendingUpdate: false,
                 updateValues: {},
                 firstTimeCharging: false,
-                errorValidate: false
+                errorValidate: false,
+                probabilityEnabled: false
             };
 
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
@@ -212,6 +214,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
             this._changeEntity = this._changeEntity.bind(this);
             this._consultInfoPipeline = this._consultInfoPipeline.bind(this);
+            this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
+
         }
 
         _closeMessageEditPipeline() {
@@ -383,6 +387,23 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
+
+        _changeBusinessStatus(currencyValue) {
+            const { selectsReducer } = this.props;
+
+            let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
+
+            this.setState({
+                probabilityEnabled: _pipeline_status.filter(pStatus => {
+                    return (
+                        pStatus.id == currencyValue &&
+                        (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+                    )
+                }).length > 0
+            });
+
+        }
+
         _closeConfirmChangeCurrency() {
             this.setState({
                 showConfirmChangeCurrency: false
@@ -398,7 +419,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _submitEditPipeline() {
             if (errorBusinessCategory === null) {
                 const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-                    businessWeek, businessCategory, currency, indexing, endDate, need, observations, product,
+                    businessCategory, currency, indexing, endDate, need, observations, product,
                     registeredCountry, startDate, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
                     estimatedDisburDate, entity, contract, opportunityName, productFamily, mellowingPeriod }, createEditPipeline, changeStateSaveData, pipelineBusinessReducer } = this.props;
                 const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
@@ -419,7 +440,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "currency": currency.value,
                             "indexing": indexing.value,
                             "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-                            "businessWeek": businessWeek.value,
                             "need": need.value,
                             "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
                             "registeredCountry": registeredCountry.value,
@@ -555,7 +575,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _consultInfoPipeline(data) {
-            const { fields: { businessStatus, businessWeek, commission, currency, idUsuario, nameUsuario,
+            const { fields: { businessStatus, commission, currency, idUsuario, nameUsuario,
                 endDate, indexing, need, observations, product, roe, registeredCountry, startDate,
                 termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
                 updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
@@ -565,7 +585,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             productFamily.onChange(data.productFamily);
 
             businessStatus.onChange(data.businessStatus);
-            businessWeek.onChange(data.businessWeek);
             commission.onChange(fomatInitialStateNumber(data.commission));
             currency.onChange(data.currency);
             idUsuario.onChange(data.employeeResponsible);
@@ -608,7 +627,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
-                    termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
+                    termInMonths, businessStatus, currency, indexing, endDate, need, observations,
                     business, product, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness, showLoading } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
@@ -670,7 +689,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 initialValues, fields: {
                 nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-                    businessWeek, businessCategory, currency, indexing, endDate, need, observations, business, product,
+                    businessCategory, currency, indexing, endDate, need, observations, business, product,
                     registeredCountry, startDate, client, documentStatus,
                     updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, entity, pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract,
@@ -840,6 +859,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PIPELINE_STATUS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+                                            onChange={val => this._changeBusinessStatus(val)}
                                         />
                                     </div>
                                 </Col>
@@ -875,7 +895,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </div>
                                 </Col>
 
-                                
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -914,23 +934,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Negocio destacado</span>
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessWeek}
-                                            name={nameBusinessWeek}
-                                            parentId="dashboardComponentScroll"
-                                            data={[{ id: true, value: 'Si' }, { id: false, value: 'No' }]}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -966,7 +970,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name={nameProbability}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PROBABILITY) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                            disabled={(this.state.probabilityEnabled && this.state.isEditable) ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>

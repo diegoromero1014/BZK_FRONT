@@ -27,7 +27,9 @@ import {
   CURRENCY_LABEL_COP,
   CURRENCY_LABEL_OTHER_OPTION,
   LINE_OF_BUSINESS_LEASING,
-  ORIGIN_PIPELIN_BUSINESS
+  ORIGIN_PIPELIN_BUSINESS,
+  COMPROMETIDO,
+  COTIZACION_EN_FIRME
 } from "../constants";
 import { changeModalIsOpen, createEditPipeline } from "../actions";
 import {
@@ -63,7 +65,7 @@ import RichText from '../../richText/richTextComponent';
 import { showLoading } from '../../loading/actions';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-  "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "product", "reviewedDate"
+  "businessCategory", "currency", "indexing", "endDate", "need", "observations", "product", "reviewedDate"
   , "registeredCountry", "startDate", "client", "documentStatus", "probability", "pendingDisburAmount", "amountDisbursed",
   "estimatedDisburDate", "entity", "contract", "opportunityName", "productFamily", "mellowingPeriod"];
 
@@ -163,7 +165,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   var nameIndexing = _.uniqueId('indexing_');
   var nameNeed = _.uniqueId('need_');
   var nameRegisteredCountry = _.uniqueId('registeredCountry_');
-  var nameBusinessWeek = _.uniqueId('businessWeek_');
   var nameBusinessCategory = _.uniqueId('businessCategory_');
   var nameProbability = _.uniqueId('probability_');
   var nameEntity = _.uniqueId('entity_');
@@ -185,7 +186,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         visibleContract: false,
         errorValidate: false,
         pendingUpdate: false,
-        updateValues: {}
+        updateValues: {},
+        probabilityEnabled: false
       };
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
@@ -202,6 +204,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
       this._cleanForm = this._cleanForm.bind(this);
       this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
+      this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
     }
 
     // TODO: Revisar la asignación del state
@@ -224,7 +227,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     _cleanForm() {
       const { initialValues, fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-        businessWeek, businessCategory, currency, indexing, endDate, need, observations, product, reviewedDate,
+        businessCategory, currency, indexing, endDate, need, observations, product, reviewedDate,
         registeredCountry, startDate, client, documentStatus, probability, pendingDisburAmount, amountDisbursed,
         estimatedDisburDate, entity, contract, opportunityName, productFamily, mellowingPeriod } } = this.props;
       nameUsuario.onChange('');
@@ -234,7 +237,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       roe.onChange('');
       termInMonths.onChange('');
       businessStatus.onChange('');
-      businessWeek.onChange('');
       businessCategory.onChange('');
       currency.onChange('');
       indexing.onChange('');
@@ -364,6 +366,23 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
     }
 
+    _changeBusinessStatus(currencyValue) {
+      const { selectsReducer } = this.props;
+
+      let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
+
+      this.setState({
+        probabilityEnabled: _pipeline_status.filter(pStatus => {
+          return (
+            pStatus.id == currencyValue &&
+            (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+          )
+        }).length > 0
+      });
+
+    }
+
+
     _handleFocusValueNumber(valuReduxForm, val) {
       //Elimino los caracteres no validos
       for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
@@ -422,7 +441,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _submitCreatePipeline() {
       if (errorBusinessCategory === null) {
         const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-          businessWeek, businessCategory, currency, indexing, endDate, need, observations, product,
+          businessCategory, currency, indexing, endDate, need, observations, product,
           registeredCountry, startDate, client, documentStatus, probability, nameUsuario,
           pendingDisburAmount, amountDisbursed, estimatedDisburDate, entity, contract, opportunityName, productFamily, mellowingPeriod }, createEditPipeline,
           changeStateSaveData, pipelineBusinessReducer } = this.props;
@@ -443,7 +462,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "currency": currency.value,
               "indexing": indexing.value,
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-              "businessWeek": businessWeek.value,
               "need": need.value,
               "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
               "registeredCountry": registeredCountry.value,
@@ -611,7 +629,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-        businessWeek, businessCategory, currency, indexing, endDate, need, observations, product,
+        businessCategory, currency, indexing, endDate, need, observations, product,
         registeredCountry, startDate, client, documentStatus, probability, entity,
         pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract, opportunityName, productFamily, mellowingPeriod },
         clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar } = this.props;
@@ -720,6 +738,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameBusinessStatus}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(PIPELINE_STATUS) || []}
+                      onChange={val => this._changeBusinessStatus(val)}
                     />
                   </div>
                 </Col>
@@ -795,22 +814,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Negocio destacado</span>
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...businessWeek}
-                      name={nameBusinessWeek}
-                      parentId="dashboardComponentScroll"
-                      data={[{ id: true, value: 'Si' }, { id: false, value: 'No' }]}
-                    />
-                  </div>
-                </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
                       <span>Categoría del negocio (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <ComboBox
@@ -838,6 +841,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameProbability}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(PROBABILITY) || []}
+                      disabled={this.state.probabilityEnabled ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
