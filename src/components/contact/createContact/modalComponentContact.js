@@ -262,8 +262,9 @@ class ModalComponentContact extends Component {
             }, handleSubmit, error
         } = this.props;
         const {searchContact, clearSearchContact} = this.props;
+        numeroDocumento.onChange(numeroDocumento.value.trim());
         if (tipoDocumento.value && numeroDocumento.value) {
-            searchContact(tipoDocumento.value, numeroDocumento.value, window.localStorage.getItem('idClientSelected')).then((data) => {
+            searchContact(tipoDocumento.value, numeroDocumento.value.trim(), window.localStorage.getItem('idClientSelected')).then((data) => {
                 if ((_.get(data, 'payload.data.isClientContact'))) {
                     clearSearchContact();
                     this.props.resetForm();
@@ -299,10 +300,10 @@ class ModalComponentContact extends Component {
             "gender": tipoGenero.value,
             "contactType": tipoDocumento.value,
             "contactIdentityNumber": numeroDocumento.value,
-            "firstName": primerNombre.value,
-            "middleName": segundoNombre.value,
-            "firstLastName": primerApellido.value,
-            "secondLastName": segundoApellido.value,
+            "firstName": primerNombre.value.trim(),
+            "middleName": segundoNombre.value.trim(),
+            "firstLastName": primerApellido.value.trim(),
+            "secondLastName": segundoApellido.value.trim(),
             "contactPosition": tipoCargo.value,
             "unit": tipoDependencia.value,
             "function": JSON.parse('[' + ((tipoFuncion.value) ? tipoFuncion.value : "") + ']'),
@@ -316,7 +317,7 @@ class ModalComponentContact extends Component {
             "telephoneNumber": telefono.value,
             "extension": extension.value,
             "mobileNumber": celular.value,
-            "emailAddress": correo.value,
+            "emailAddress": correo.value.trim(),
             "hobbies": JSON.parse('[' + ((tipoHobbie.value) ? tipoHobbie.value : "") + ']'),
             "sports": JSON.parse('[' + ((tipoDeporte.value) ? tipoDeporte.value : "") + ']'),
             "typeOfContact": tipoContacto.value,
