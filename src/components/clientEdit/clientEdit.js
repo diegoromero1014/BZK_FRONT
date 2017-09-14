@@ -24,7 +24,9 @@ import * as constants from "../selectsComponent/constants";
 import {
     GOVERNMENT,
     KEY_DESMONTE,
+    KEY_EXCEPCION,
     KEY_EXCEPCION_NO_GERENCIADO,
+    KEY_EXCEPCION_NO_NECESITA_LME,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
     KEY_OPTION_OTHER_ORIGIN_GOODS,
     KEY_OPTION_OTHER_ORIGIN_RESOURCE,
@@ -119,8 +121,12 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
 var isProspect = false;
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
 var oldJustifyGeren = '';
+//Guarda el anterior valor de la justificación no necesita LME para saber cuándo cambia de excepción a otro
+var oldJustifyNoNeedLME = '';
 //Controla si es la primer vez que se setea información en el campo justificationForNoRM
 var infoJustificationForNoRM = true;
+//Controla si es la primer vez que se setea información en el campo justification need LME
+var infoJustificationNeedLME = true;
 //Controla si es la primer vez que se setea información en el campo marcGeren
 var infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
@@ -457,7 +463,6 @@ class clientEdit extends Component {
             showEx: false,
             showExitoSaveNotUpdate: false,
             showEr: false,
-            showErNotes: false,
             sumErrorsForm: false,
             showErrorClientExists: false,
             messageError: '',
@@ -487,6 +492,7 @@ class clientEdit extends Component {
         this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
         this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
         this._onChangeJustifyNoGeren = this._onChangeJustifyNoGeren.bind(this);
+        this._onChangeValueJustifyNoNeedLME = this._onChangeValueJustifyNoNeedLME.bind(this);
         this._onChangeValueNeedLME = this._onChangeValueNeedLME.bind(this);
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
@@ -516,7 +522,9 @@ class clientEdit extends Component {
         isProspect = false;
         updateErrorsNotes(false);
         oldJustifyGeren = '';
+        oldJustifyNoNeedLME = '';
         infoJustificationForNoRM = true;
+        infoJustificationNeedLME = true;
         clickButttonSave = false;
         otherOperationsForeignEnable = 'disabled';
         otherOriginGoodsEnable = 'disabled';
@@ -543,7 +551,7 @@ class clientEdit extends Component {
     }
 
     _closeError() {
-        this.setState({show: false, showEx: false, showEr: false, showErNotes: false, showErrorClientExists: false});
+        this.setState({show: false, showEx: false, showEr: false, showErrorClientExists: false});
     }
 
     _closeSuccess() {
@@ -556,7 +564,9 @@ class clientEdit extends Component {
         isProspect = false;
         updateErrorsNotes(false);
         oldJustifyGeren = '';
+        oldJustifyNoNeedLME = '';
         infoJustificationForNoRM = true;
+        infoJustificationNeedLME = true;
         clickButttonSave = false;
         otherOperationsForeignEnable = 'disabled';
         otherOriginGoodsEnable = 'disabled';
@@ -641,13 +651,21 @@ class clientEdit extends Component {
             const {selectsReducer, deleteNote, notes, updateErrorsNotes} = this.props;
             dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
             idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
-            var notas = notes.toArray();
-            notas.forEach(function (note) {
+            const notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
                 if (idExcepcionNoGerenciado === parseInt(note.combo)) {
                     deleteNote(note.uid);
+                    return false;
+                } else {
+                    return true
                 }
             });
-            updateErrorsNotes(false);
+            let isValidNotesDescription = true;
+            _.forEach(notesWithoutNoGeren, (note) => {
+                isValidNotesDescription = !_.isEmpty(note.body)
+            });
+            if (isValidNotesDescription) {
+                updateErrorsNotes(false);
+            }
         } else {
             infoMarcaGeren = false;
         }
@@ -660,8 +678,29 @@ class clientEdit extends Component {
     }
 
     _onChangeValueNeedLME(val) {
-        const {fields: {necesitaLME, justifyNoLME}} = this.props;
+        const {
+            fields: {necesitaLME, justifyNoLME}, clientInformacion,
+            selectsReducer, deleteNote, notes, updateErrorsNotes
+        } = this.props;
         if (val === 'true' || val && initValueJustifyNonLME) {
+            justifyNoLME.onChange('');
+            const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+            const idNotNeedExceptionLME = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_NECESITA_LME]), '[0].id');
+            var notesWithoutNoNeedLME = _.remove(notes.toArray(), (note) => {
+                if (idNotNeedExceptionLME === parseInt(note.combo)) {
+                    deleteNote(note.uid);
+                    return false;
+                } else {
+                    return true
+                }
+            });
+            let isValidNotesDescription = true;
+            _.forEach(notesWithoutNoNeedLME, (note) => {
+                isValidNotesDescription = !_.isEmpty(note.body)
+            });
+            if (isValidNotesDescription) {
+                updateErrorsNotes(false);
+            }
             justifyNoLME.onChange('');
         } else {
             initValueJustifyNonLME = true;
@@ -670,19 +709,19 @@ class clientEdit extends Component {
     }
 
     _onChangeJustifyNoGeren(val) {
-        const {selectsReducer, clientInformacion, notes,updateErrorsNotes,setNotes,deleteNote} = this.props;
+        const {selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if (!infoJustificationForNoRM || infoClient.justificationForNoRM !== val) {
             let dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
             let keyJustify = _.get(_.filter(dataJustifyNoGeren, ['id', parseInt(val)]), '[0].key');
-            let  dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
-            let idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');;
+            let dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+            let idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
             if (keyJustify === KEY_DESMONTE) {
                 oldJustifyGeren = KEY_DESMONTE;
                 if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
                     let hasNotesNoGeren = false;
-                    _.forEach(notes.toArray(), (note)=>{
-                        if(idExcepcionNoGerenciado === parseInt(note.combo)){
+                    _.forEach(notes.toArray(), (note) => {
+                        if (idExcepcionNoGerenciado === parseInt(note.combo)) {
                             hasNotesNoGeren = true;
                         }
                     });
@@ -700,8 +739,8 @@ class clientEdit extends Component {
             }
             if (oldJustifyGeren === KEY_DESMONTE && keyJustify !== KEY_DESMONTE) {
                 oldJustifyGeren = val;
-                var notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
-                    if(idExcepcionNoGerenciado === parseInt(note.combo)){
+                const notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
+                    if (idExcepcionNoGerenciado === parseInt(note.combo)) {
                         deleteNote(note.uid);
                         return false;
                     } else {
@@ -709,7 +748,9 @@ class clientEdit extends Component {
                     }
                 });
                 let isValidNotesDescription = true;
-                _.forEach(notesWithoutNoGeren, (note) => {isValidNotesDescription = !_.isEmpty(note.body)});
+                _.forEach(notesWithoutNoGeren, (note) => {
+                    isValidNotesDescription = !_.isEmpty(note.body)
+                });
                 if (isValidNotesDescription) {
                     updateErrorsNotes(false);
                 }
@@ -717,6 +758,58 @@ class clientEdit extends Component {
         } else {
             infoJustificationForNoRM = false;
             oldJustifyGeren = KEY_DESMONTE;
+        }
+    }
+
+    _onChangeValueJustifyNoNeedLME(val) {
+        const {selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote} = this.props;
+        var infoClient = clientInformacion.get('responseClientInfo');
+        if (!infoJustificationNeedLME || infoClient.justificationForCreditNeed !== val) {
+            let dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
+            let keyJustify = _.get(_.filter(dataJustifyNoNeedLME, ['id', parseInt(val)]), '[0].key');
+            let dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+            let idExeptionNoNeedLME = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_NECESITA_LME]), '[0].id');
+            if (keyJustify === KEY_EXCEPCION) {
+                oldJustifyNoNeedLME = KEY_EXCEPCION;
+                if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
+                    let hasNotesNoGeren = false;
+                    _.forEach(notes.toArray(), (note) => {
+                        if (idExeptionNoNeedLME === parseInt(note.combo)) {
+                            hasNotesNoGeren = true;
+                        }
+                    });
+                    if (notes.size === 0 || !hasNotesNoGeren) {
+                        const noteObligatory = [];
+                        noteObligatory.push({
+                            typeOfNote: idExeptionNoNeedLME,
+                            typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
+                            note: ''
+                        });
+                        setNotes(noteObligatory);
+                    }
+                }
+            }
+            if (oldJustifyNoNeedLME === KEY_EXCEPCION && keyJustify !== KEY_EXCEPCION) {
+                oldJustifyNoNeedLME = val;
+                const notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
+                    if (idExeptionNoNeedLME === parseInt(note.combo)) {
+                        deleteNote(note.uid);
+                        return false;
+                    } else {
+                        return true
+                    }
+                });
+                let isValidNotesDescription = true;
+                _.forEach(notesWithoutNoGeren, (note) => {
+                    isValidNotesDescription = !_.isEmpty(note.body)
+                });
+                if (isValidNotesDescription) {
+                    updateErrorsNotes(false);
+                }
+            }
+        } else {
+            infoJustificationNeedLME = false;
+            oldJustifyNoNeedLME = KEY_EXCEPCION;
         }
     }
 
@@ -1116,14 +1209,19 @@ class clientEdit extends Component {
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-        const {fields: {justifyNoGeren, marcGeren}, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage} = this.props;
+        const {fields: {justifyNoGeren, marcGeren, necesitaLME, justifyNoLME}, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage} = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
         const idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
+        const idExcepcionNoNeedLME = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_NECESITA_LME]), '[0].id'));
         let existNoteExceptionNoGeren = false;
+        let existNoteExceptionNoNeedLME = false;
         notes.map(map => {
             if (map.combo === idExcepcionNoGerenciado) {
                 existNoteExceptionNoGeren = true;
+            }
+            if (map.combo === idExcepcionNoNeedLME) {
+                existNoteExceptionNoNeedLME = true;
             }
             const noteItem = {
                 "typeOfNote": map.combo,
@@ -1133,13 +1231,35 @@ class clientEdit extends Component {
         });
         const dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
-        if (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren) {
+        const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
+        const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
+        const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
+        const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
+        if (addNoteNoGeren && addNoteNoNeedLME) {
+            setNotes([{
+                typeOfNote: idExcepcionNoGerenciado,
+                typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
+                note: ''
+            }, {
+                typeOfNote: idExcepcionNoNeedLME,
+                typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
+                note: ''
+            } ]);
+            swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
+        } else if (addNoteNoGeren) {
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
                 note: ''
             }]);
-            this.setState({showErNotes: true});
+            swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
+        } else if (addNoteNoNeedLME) {
+            setNotes([{
+                typeOfNote: idExcepcionNoNeedLME,
+                typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
+                note: ''
+            }]);
+            swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
@@ -1183,6 +1303,7 @@ class clientEdit extends Component {
 
     componentWillMount() {
         infoJustificationForNoRM = true;
+        infoJustificationNeedLME = true;
         infoMarcaGeren = true;
         const {
             fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns}, updateTitleNavBar,
@@ -2001,7 +2122,7 @@ class clientEdit extends Component {
                         justify={justifyNoLME}
                         obligatory={true}
                         data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
-                        onChange={justifyNoLME.onChange}
+                        onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
                         touched={true}
                     />
                     <SelectsJustificacion
@@ -2324,13 +2445,6 @@ class clientEdit extends Component {
                     show={this.state.showEr}
                     title="Error editando cliente"
                     text="Señor usuario, ocurrió un error editando el cliente."
-                    onConfirm={() => this._closeError()}
-                />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showErNotes}
-                    title="Error editando cliente"
-                    text='Señor usuario, debe crear al menos una nota de tipo "Excepción no gerenciado".'
                     onConfirm={() => this._closeError()}
                 />
                 <SweetAlert
