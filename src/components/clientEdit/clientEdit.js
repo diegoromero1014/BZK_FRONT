@@ -1269,7 +1269,7 @@ class clientEdit extends Component {
             }
             if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
-                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperatrions) {
+                    this.state.showFormAddMainSupplier || this.state.showFormAddMainCompetitor || this.state.showFormAddIntOperatrions) {
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
                     if (idButton === BUTTON_UPDATE) {

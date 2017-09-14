@@ -10,7 +10,7 @@ const epicMiddleware = createEpicMiddleware(epics);
 
 const finalCreateStore = compose(
   applyMiddleware(ReduxPromise, epicMiddleware),
-  DevTools.instrument()
+  DevTools.instrument({maxAge: 10})
 )(createStore);
 
 export default function configureStore(state) {

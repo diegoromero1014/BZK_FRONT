@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from "react";
+import React, { Component, PropTypes } from "react";
 import ActividadEconomica from "./actividadEconomica";
 import InventoryPolicy from "./inventoryPolicy";
 import MainCustomer from "./mainCustomer";
@@ -10,21 +10,21 @@ import DataComercial from "./dataComercial";
 import DeclarationOfOrigin from "./DeclarationOfOrigin";
 import InternationalOperations from "./internationalOperations";
 import DocumentInformationServices from "./managementDocumentary/documentInformationServices";
-import {Col, Row} from "react-flexbox-grid";
-import {changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder} from "./actions";
-import {BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB} from "./constants";
+import { Col, Row } from "react-flexbox-grid";
+import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder } from "./actions";
+import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
 import Notas from "./notas";
-import {bindActionCreators} from "redux";
+import { bindActionCreators } from "redux";
 import Products from "./product";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import moment from "moment";
-import {EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR} from "../../constantsGlobal";
-import {validatePermissionsByModule} from "../../actionsGlobal";
-import {redirectUrl} from "../globalComponents/actions";
-import {MENU_CLOSED} from "../navBar/constants";
+import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR } from "../../constantsGlobal";
+import { validatePermissionsByModule } from "../../actionsGlobal";
+import { redirectUrl } from "../globalComponents/actions";
+import { MENU_CLOSED } from "../navBar/constants";
 import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
 import ComponentAccordion from "../accordion/componentAccordion";
-import {showModalRiskGroup} from "../clientRiskGroup/actions";
+import { showModalRiskGroup } from "../clientRiskGroup/actions";
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -57,19 +57,6 @@ class DetailsInfoClient extends Component {
         return <Notas
             typeOfNoteKey={item.typeOfNoteKey}
             note={item.note}
-            key={idx + 1}
-        />
-    }
-
-    _mapProductItems(item, idx) {
-        return <Products
-            name={item.name}
-            type={item.typeKey}
-            num={item.number}
-            averageMontlyAmount={item.averageMontlyAmount}
-            coin={item.coin}
-            country={item.countryKey}
-            city={item.city}
             key={idx + 1}
         />
     }
@@ -182,7 +169,7 @@ class DetailsInfoClient extends Component {
                                     </dl>
                                 </td>
                                 <td style={{ width: "25%", verticalAlign: "initial" }}>
-                                    <a  onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{infoClient.riskGroup}</a>
+                                    <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{infoClient.riskGroup}</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -265,7 +252,7 @@ class DetailsInfoClient extends Component {
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('foreignProducts')}
                         codSection={accordion.foreignProducts} title="Descripción de los productos financieros en moneda extranjera" icon="product hunt"
-                        componentView={foreignProducts.map(this._mapProductItems)} />
+                        componentView={<Products foreignProducts={foreignProducts} />} />
 
                 </div>
                 {showFooterButtons &&
