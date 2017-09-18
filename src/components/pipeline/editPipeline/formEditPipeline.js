@@ -210,7 +210,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._closeMessageEditPipeline = this._closeMessageEditPipeline.bind(this);
             this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
             this._updateValue = this._updateValue.bind(this);
-            this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
             this._onCloseButton = this._onCloseButton.bind(this);
             this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
             this._changeCurrency = this._changeCurrency.bind(this);
@@ -291,7 +290,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             input.focus();
         }
 
-        _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
+        _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, numDecimals) {
             //Elimino los caracteres no validos
             for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
                 if (validos.indexOf(val.toString().charAt(i)) !== -1) {
@@ -309,7 +308,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 if (allowsDecimal) {
                     val = vectorVal[0] + '.';
                     if (vectorVal.length > 1) {
-                        decimal = vectorVal[1].substring(0, 4);
+
+                        var numDec = (numDecimals != undefined && numDecimals != null) ? numDecimals : 4;
+
+                        decimal = vectorVal[1].substring(0, numDec);
                     }
                 } else {
                     val = vectorVal[0];
@@ -914,7 +916,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Periodo de maduración</span>
-                                            <ToolTip text={ HELP_PROBABILITY }>
+                                            <ToolTip text={HELP_PROBABILITY}>
                                                 <i className="help circle icon blue"
                                                     style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
                                             </ToolTip>
@@ -1116,6 +1118,18 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             flexDirection: "row",
                                             justifyContent: "space-between"
                                         }}>
+                                            <div style={{ width: "30%" }}>
+                                                <Input
+                                                    name="termInMonths"
+                                                    type="text"
+                                                    {...termInMonths}
+                                                    max="4"
+                                                    parentId="dashboardComponentScroll"
+                                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                                    onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                                                />
+                                            </div>
+                                            
                                             <div style={{ width: "65%" }}>
                                                 <ComboBox
                                                     labelInput="Seleccione..."
@@ -1128,17 +1142,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                                 />
                                             </div>
-                                            <div style={{ width: "30%" }}>
-                                                <Input
-                                                    name="termInMonths"
-                                                    type="text"
-                                                    {...termInMonths}
-                                                    max="4"
-                                                    parentId="dashboardComponentScroll"
-                                                    disabled={this.state.isEditable ? '' : 'disabled'}
-                                                    onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
-                                                />
-                                            </div>
+
                                         </div>
 
 
@@ -1173,7 +1177,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true)}
+                                            onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
                                             onFocus={val => this._handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                                             disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
                                         />
@@ -1197,8 +1201,76 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Monto pendiente por desembolsar</span>
+                                        </dt>
+                                        <Input
+                                            name="txtPendingDisburAmount"
+                                            type="text"
+                                            {...pendingDisburAmount}
+                                            max="28"
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                                            onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Monto pendiente por desembolsar</span>
+                                        </dt>
+                                        <Input
+                                            name="txtPendingDisburAmount"
+                                            type="text"
+                                            {...pendingDisburAmount}
+                                            max="28"
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                                            onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Monto pendiente por desembolsar</span>
+                                        </dt>
+                                        <Input
+                                            name="txtPendingDisburAmount"
+                                            type="text"
+                                            {...pendingDisburAmount}
+                                            max="28"
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                                            onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Monto pendiente por desembolsar</span>
+                                        </dt>
+                                        <Input
+                                            name="txtPendingDisburAmount"
+                                            type="text"
+                                            {...pendingDisburAmount}
+                                            max="28"
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
+                                            onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1230,6 +1302,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+
                             </Row>
                             <Business origin={origin} disabled={this.state.isEditable} />
                             <Row

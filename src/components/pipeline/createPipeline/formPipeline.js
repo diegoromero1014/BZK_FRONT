@@ -313,7 +313,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
 
-    _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
+    _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, numDecimals) {
       //Elimino los caracteres no validos
       for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
         if (validos.indexOf(val.toString().charAt(i)) !== -1) {
@@ -331,7 +331,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         if (allowsDecimal) {
           val = vectorVal[0] + '.';
           if (vectorVal.length > 1) {
-            decimal = vectorVal[1].substring(0, 4);
+
+            var numDec = (numDecimals != undefined && numDecimals != null) ? numDecimals : 4;
+            decimal = vectorVal[1].substring(0, numDec);
+
           }
         } else {
           val = vectorVal[0];
@@ -797,7 +800,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Periodo de maduración</span>
-                      <ToolTip text={ HELP_PROBABILITY }>
+                      <ToolTip text={HELP_PROBABILITY}>
                         <i className="help circle icon blue"
                           style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
                       </ToolTip>
@@ -973,6 +976,16 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       flexDirection: "row",
                       justifyContent: "space-between"
                     }}>
+                      <div style={{ width: "30%" }}>
+                        <Input
+                          name="termInMonths"
+                          type="text"
+                          {...termInMonths}
+                          max="3"
+                          parentId="dashboardComponentScroll"
+                          onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                        />
+                      </div>
                       <div style={{ width: "65%" }}>
                         <ComboBox
                           labelInput="Seleccione..."
@@ -982,16 +995,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           name={nameTermInMonthsValues}
                           parentId="dashboardComponentScroll"
                           data={selectsReducer.get(TERM_IN_MONTHS_VALUES) || []}
-                        />
-                      </div>
-                      <div style={{ width: "30%" }}>
-                        <Input
-                          name="termInMonths"
-                          type="text"
-                          {...termInMonths}
-                          max="3"
-                          parentId="dashboardComponentScroll"
-                          onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
                         />
                       </div>
                     </div>
@@ -1032,9 +1035,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true)}
+                      onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
                       onFocus={val => this._handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                       disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
+                      disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
