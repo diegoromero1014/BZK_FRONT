@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 import * as actions from './constants';
 import { get, differenceBy } from 'lodash';
-import { stringValidate } from '../../../actionsGlobal';
+import { stringValidate, joinName } from '../../../actionsGlobal';
 import { FIRST_PAGE } from './constants';
 
 const initialState = Immutable.Map({
@@ -100,7 +100,6 @@ export default (state = initialState, action = {}) => {
                 listContact: state.get('group').get('listContact')
             });
             return state.set('group', newGroupSearch);
-            return state;
         case actions.SEARCH_CONTACT_FOR_GROUP:
             let response7 = get(action.payload, 'data.contactDetail', []);
             response7 = JSON.parse(response7);
@@ -116,8 +115,15 @@ export default (state = initialState, action = {}) => {
             return state.set('contact', contactSearch);
         case actions.ADD_CONTACT_LIST:
             let addContactSearch = state.get('contact');
+            console.log('addContactSearch', addContactSearch);
+            const contactAdd = {
+                id: addContactSearch.id,
+                document: addContactSearch.contactIdentityNumber,
+                completeName: joinName(addContactSearch.firstName, addContactSearch.middleName, addContactSearch.firstLastName, addContactSearch.secondLastName),
+                email: addContactSearch.emailAddress
+            };
             let list = state.get('group').get('listContact');
-            list.push(addContactSearch);
+            list.push(contactAdd);
             return state;
         case actions.CLEAR_CONTACT_NAME:
             let clearContactName = {
@@ -172,6 +178,7 @@ export default (state = initialState, action = {}) => {
                 } else {
                     item.checked = true;
                 }
+                item.show = true;
             });
             return state
                 .set('totalContactsByFunctionOrType', get(action.payload, 'data.data.rowCount', []))
@@ -205,8 +212,8 @@ export default (state = initialState, action = {}) => {
             return state.set('functionContactsByFunctionOrTpe', action.functionContact);
         case actions.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.set('typeContactsByFunctionOrType', action.type);
-        case actions.CLEAR_CONTACTS_BY_FUNCTION_OR_TYPE:
-            return state.set('contactByFunctionOrTypeSelected', []);
+        case actions.SET_CONTACTS_BY_FUNCTION_OR_TYPE:
+            return state.set('contactByFunctionOrTypeSelected', action.listContacts);
         default:
             return state;
     }

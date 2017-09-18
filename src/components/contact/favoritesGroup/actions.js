@@ -345,8 +345,9 @@ export function setTypeContactsByFunctionOrType(type) {
     }
 }
 
-export function clearContactsByFunctionOrType() {
+export function setContactsByFunctionOrType(listContacts) {
     return {
-        type: constant.CLEAR_CONTACTS_BY_FUNCTION_OR_TYPE
+        type: constant.SET_CONTACTS_BY_FUNCTION_OR_TYPE,
+        listContacts
     }
 }
