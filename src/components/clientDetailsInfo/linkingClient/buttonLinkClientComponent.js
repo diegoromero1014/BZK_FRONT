@@ -61,7 +61,6 @@ class ButtonLinkClientComponent extends Component {
             showLoading(false,'');
             if(!isEqual(get(data,'payload.data.status'),200)){
                 updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
-                console.log("Error ",get(data,'payload.data.data'));
                 swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
             }
         },(reason) => {
