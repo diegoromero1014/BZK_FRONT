@@ -23,6 +23,7 @@ import {
 import * as constants from "../selectsComponent/constants";
 import {
     GOVERNMENT,
+    CONSTRUCT_PYME,
     KEY_DESMONTE,
     KEY_EXCEPCION_NO_GERENCIADO,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
@@ -127,6 +128,9 @@ var infoMarcaGeren = true;
 var clickButttonSave = false;
 //Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
 var disabledOperationsForeigns = true;
+
+//Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
+var isSegmentPymeConstruct = false;
 
 var otherOperationsForeignEnable = 'disabled';
 var otherOriginGoodsEnable = 'disabled';
@@ -407,7 +411,8 @@ const validate = values => {
     } else {
         errors.segment = null;
     }
-    if (!values.subSegment) {
+
+    if (!values.subSegment && isSegmentPymeConstruct) {
         errors.subSegment = OPTION_REQUIRED;
     } else {
         errors.subSegment = null;
@@ -670,19 +675,20 @@ class clientEdit extends Component {
     }
 
     _onChangeJustifyNoGeren(val) {
-        const {selectsReducer, clientInformacion, notes,updateErrorsNotes,setNotes,deleteNote} = this.props;
+        const {selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote} = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if (!infoJustificationForNoRM || infoClient.justificationForNoRM !== val) {
             let dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
             let keyJustify = _.get(_.filter(dataJustifyNoGeren, ['id', parseInt(val)]), '[0].key');
-            let  dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
-            let idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');;
+            let dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
+            let idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
+            ;
             if (keyJustify === KEY_DESMONTE) {
                 oldJustifyGeren = KEY_DESMONTE;
                 if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
                     let hasNotesNoGeren = false;
-                    _.forEach(notes.toArray(), (note)=>{
-                        if(idExcepcionNoGerenciado === parseInt(note.combo)){
+                    _.forEach(notes.toArray(), (note) => {
+                        if (idExcepcionNoGerenciado === parseInt(note.combo)) {
                             hasNotesNoGeren = true;
                         }
                     });
@@ -701,7 +707,7 @@ class clientEdit extends Component {
             if (oldJustifyGeren === KEY_DESMONTE && keyJustify !== KEY_DESMONTE) {
                 oldJustifyGeren = val;
                 var notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
-                    if(idExcepcionNoGerenciado === parseInt(note.combo)){
+                    if (idExcepcionNoGerenciado === parseInt(note.combo)) {
                         deleteNote(note.uid);
                         return false;
                     } else {
@@ -709,7 +715,9 @@ class clientEdit extends Component {
                     }
                 });
                 let isValidNotesDescription = true;
-                _.forEach(notesWithoutNoGeren, (note) => {isValidNotesDescription = !_.isEmpty(note.body)});
+                _.forEach(notesWithoutNoGeren, (note) => {
+                    isValidNotesDescription = !_.isEmpty(note.body)
+                });
                 if (isValidNotesDescription) {
                     updateErrorsNotes(false);
                 }
@@ -1213,8 +1221,7 @@ class clientEdit extends Component {
                 const {economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                     constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.SUBSEGMENTS,
-                    constants.CLIENT_ID_TYPE])
+                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1251,17 +1258,22 @@ class clientEdit extends Component {
     }
 
     _changeSegment(idSegment, firstConsult) {
-        const {fields: {segment, customerTypology}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
+        const {fields: {segment, customerTypology, subSegment}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
         if (!_.isUndefined(value)) {
-            if (_.isEqual(GOVERNMENT, value)) {
+          if (_.isEqual(GOVERNMENT, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
+            if (_.isEqual(CONSTRUCT_PYME, value)) {
+                consultListWithParameterUbication(constants.SUBSEGMENTS,idSegment);
+            }
+            isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
             if (!firstConsult) {
                 customerTypology.onChange('');
+                subSegment.onChange('');
             }
         }
     }
@@ -1393,23 +1405,25 @@ class clientEdit extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{marginTop: "10px"}}>
-                            <dt><span>Subsegmento (</span><span style={{color: "red"}}>*</span>)</dt>
-                            <ComboBox
-                                name="subSegment"
-                                labelInput="Sebsegmento"
-                                {...subSegment}
-                                value={subSegment.value}
-                                onBlur={subSegment.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SUBSEGMENTS)}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
+                    {
+                        isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
+                            <div style={{marginTop: "10px"}}>
+                                <dt><span>Subsegmento (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <ComboBox
+                                    name="subSegment"
+                                    labelInput="Sebsegmento"
+                                    {...subSegment}
+                                    value={subSegment.value}
+                                    onBlur={subSegment.onBlur}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    parentId="dashboardComponentScroll"
+                                    data={selectsReducer.get(constants.SUBSEGMENTS)}
+                                    touched={true}
+                                />
+                            </div>
+                        </Col>
+                    }
                     <ClientTypology customerTypology={customerTypology}
                                     data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)}/>
 

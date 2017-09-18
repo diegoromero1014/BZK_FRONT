@@ -40,6 +40,7 @@ const initialState = Immutable.Map({
     validCovenant: [],
     fullfillmentCovenant: [],
     segment: [],
+    subSegment: [],
     reasonConformation: []
 });
 
@@ -138,6 +139,8 @@ export default (state = initialState, action) => {
             return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SEGMENTS:
             return state.set('segment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.SUBSEGMENTS:
+            return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.REASON_CONFORMATION:
             return state.set('reasonConformation', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
