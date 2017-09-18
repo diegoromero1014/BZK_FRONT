@@ -144,7 +144,6 @@ class ModalNeed extends Component {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
-        console.log('needEdit',needEdit);
         if ((needResponsable.value !== '' && needResponsable.value !== undefined && needResponsable.value !== null) && (idEmployee.value === null || idEmployee.value === '' || idEmployee.value === undefined)) {
             this.setState({
                 employeeResponsible: true
