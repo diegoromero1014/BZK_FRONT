@@ -1,24 +1,29 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import {bindActionCreators} from "redux";
-import {redirectUrl} from "../../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import { redirectUrl } from "../../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {getClientNeeds, getMasterDataFields, getPipelineCurrencies} from "../../selectsComponent/actions";
+import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
 import {
     BUSINESS_CATEGORY,
     FILTER_COUNTRY,
     LINE_OF_BUSINESS,
     PIPELINE_BUSINESS,
+    PRODUCT_FAMILY,
+    MELLOWING_PERIOD,
     PIPELINE_INDEXING,
     PIPELINE_PRIORITY,
     PIPELINE_PRODUCTS,
     PIPELINE_STATUS,
     PROBABILITY,
-    PRODUCTS
+    PRODUCTS,
+    FILTER_MONEY_DISTRIBITION_MARKET,
+    FILTER_AREA_ASSETS,
+    TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import {
     DATE_FORMAT,
@@ -41,9 +46,12 @@ import {
     ORIGIN_PIPELIN_BUSINESS,
     POSITIVE_INTEGER,
     PROPUEST_OF_BUSINESS,
-    REAL
+    REAL,
+    COMPROMETIDO,
+    COTIZACION_EN_FIRME,
+    PRODUCT_FAMILY_LEASING
 } from "../constants";
-import {createEditPipeline, getPipelineById, pdfDescarga} from "../actions";
+import { createEditPipeline, getPipelineById, pdfDescarga } from "../actions";
 import {
     consultParameterServer,
     formValidateKeyEnter,
@@ -52,23 +60,25 @@ import {
 } from "../../../actionsGlobal";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
-import {changeStateSaveData} from "../../dashboard/actions";
-import {MENU_CLOSED} from "../../navBar/constants";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { MENU_CLOSED } from "../../navBar/constants";
 import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
 import HeaderPipeline from "../headerPipeline";
-import {addBusiness, clearBusiness, editBusiness} from "../business/ducks";
+import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
 import Business from "../business/business";
 import RichText from '../../richText/richTextComponent';
-import {showLoading} from '../../loading/actions';
+import { showLoading } from '../../loading/actions';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessWeek", "businessCategory", "currency", "indexing", "endDate", "need", "observations", "business", "product",
-    "priority", "registeredCountry", "startDate", "client", "documentStatus", "reviewedDate",
+    "businessCategory", "currency", "indexing", "need", "observations", "product",
+    "client", "documentStatus", "reviewedDate",
     "createdBy", "updatedBy", "createdTimestamp", "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy",
-    "positionUpdatedBy", "probability", "pendingDisburAmount", "amountDisbursed", "estimatedDisburDate", "entity", "contract"];
+    "positionUpdatedBy", "probability", "pendingDisburAmount",
+    "amountDisbursed", "estimatedDisburDate", "opportunityName", "productFamily", "mellowingPeriod",
+    "moneyDistribitionMarket", "areaAssets", "areaAssetsValue", "termInMonthsValues"];
 
 var thisForm;
 let typeButtonClick = null;
@@ -76,11 +86,7 @@ let errorBusinessCategory = false;
 
 const validate = values => {
     const errors = {};
-    if (!values.business) {
-        errors.business = OPTION_REQUIRED;
-    } else {
-        errors.business = null;
-    }
+
     if (!values.businessStatus) {
         errors.businessStatus = OPTION_REQUIRED;
     } else {
@@ -101,16 +107,8 @@ const validate = values => {
     } else {
         errors.need = null;
     }
-    if (!values.startDate) {
-        errors.startDate = VALUE_REQUIERED;
-    } else {
-        errors.startDate = null;
-    }
-    if (!values.endDate) {
-        errors.endDate = VALUE_REQUIERED;
-    } else {
-        errors.endDate = null;
-    }
+
+
     if (typeButtonClick === SAVE_PUBLISHED) {
         if (!values.businessCategory) {
             errorBusinessCategory = OPTION_REQUIRED;
@@ -123,30 +121,55 @@ const validate = values => {
         errorBusinessCategory = null;
         errors.businessCategory = null;
     }
-    if (values.endDate && values.startDate) {
-        var startDate = parseInt(moment(values.startDate, DATE_FORMAT).format('x'));
-        var endDate = parseInt(moment(values.endDate, DATE_FORMAT).format('x'));
-        if (startDate > endDate) {
-            errors.startDate = DATE_START_AFTER;
-        } else {
-            errors.startDate = null;
-        }
+
+
+    if (!values.opportunityName) {
+        errors.opportunityName = OPTION_REQUIRED;
+    } else {
+        errors.opportunityName = null;
     }
+
+    if (!values.productFamily) {
+        errors.productFamily = VALUE_REQUIERED;
+    } else {
+        errors.productFamily = null;
+    }
+
+    if (!values.nameUsuario) {
+        errors.nameUsuario = VALUE_REQUIERED;
+    } else {
+        errors.nameUsuario = null;
+    }
+
+    if (!values.termInMonths) {
+        errors.termInMonths = VALUE_REQUIERED;
+    } else {
+        errors.termInMonths = null;
+    }
+
+    if (!values.termInMonthsValues) {
+        errors.termInMonthsValues = VALUE_REQUIERED;
+    } else {
+        errors.termInMonthsValues = null;
+    }
+
+
     return errors;
 };
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
-    let nameBusiness = _.uniqueId('business_');
+
+    var nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
+    var nameProductFamily = _.uniqueId('productFamily_');
     let nameProduct = _.uniqueId('product_');
     let nameIndexing = _.uniqueId('indexing_');
     let nameNeed = _.uniqueId('need_');
-    let namePriority = _.uniqueId('priority_');
     let nameBusinessStatus = _.uniqueId('businessStatus_');
-    let nameRegisteredCountry = _.uniqueId('registeredCountry_');
-    let nameBusinessWeek = _.uniqueId('businessWeek_');
+    let nameMoneyDistribitionMarket = _.uniqueId('moneyDistribitionMarket_');
+    let nameAreaAssets = _.uniqueId('areaAssets_');
+    let nameTermInMonthsValues = _.uniqueId('termInMonthsValues_');
     var nameBusinessCategory = _.uniqueId('businessCategory_');
     let nameProbability = _.uniqueId('probability_');
-    let nameEntity = _.uniqueId('entity_');
     let nameCurrency = _.uniqueId('currency_');
     let participantBanc = _.uniqueId('participantBanc_');
     let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
@@ -168,11 +191,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 employeeResponsible: false,
                 showConfirmChangeCurrency: false,
                 labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
-                visibleContract: false,
                 pendingUpdate: false,
                 updateValues: {},
                 firstTimeCharging: false,
-                errorValidate: false
+                errorValidate: false,
+                probabilityEnabled: false,
+                areaAssetsEnabled: false
             };
 
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
@@ -190,8 +214,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._handleTermInMonths = this._handleTermInMonths.bind(this);
             this._closeConfirmChangeCurrency = this._closeConfirmChangeCurrency.bind(this);
             this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
-            this._changeEntity = this._changeEntity.bind(this);
             this._consultInfoPipeline = this._consultInfoPipeline.bind(this);
+            this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
+            this._changeProductFamily = this._changeProductFamily.bind(this);
         }
 
         _closeMessageEditPipeline() {
@@ -258,23 +283,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             var input = lugarSelector.find("input");
             input.focus();
         }
-
-        _changeEntity(val) {
-            const { fields: { contract }, selectsReducer } = this.props;
-            var linesOfBusiness = selectsReducer.get(LINE_OF_BUSINESS)
-            var lineOfBusinessSelected = _.get(_.filter(linesOfBusiness, ['id', parseInt(val)]), '[0].key');
-            if (lineOfBusinessSelected === LINE_OF_BUSINESS_LEASING) {
-                this.setState({
-                    visibleContract: true
-                });
-            } else {
-                this.setState({
-                    visibleContract: false
-                });
-                contract.onChange("");
-            }
-        }
-
 
         _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal) {
             //Elimino los caracteres no validos
@@ -363,6 +371,38 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
+
+        _changeBusinessStatus(currencyValue) {
+            const { selectsReducer } = this.props;
+
+            let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
+
+            this.setState({
+                probabilityEnabled: _pipeline_status.filter(pStatus => {
+                    return (
+                        pStatus.id == currencyValue &&
+                        (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+                    )
+                }).length > 0
+            });
+
+        }
+
+        _changeProductFamily(currencyValue) {
+            const { selectsReducer } = this.props;
+
+            let _product_family = selectsReducer.get(PRODUCT_FAMILY)
+
+            this.setState({
+                areaAssetsEnabled: _product_family.filter(pFamily => {
+                    return (
+                        pFamily.id == currencyValue && pFamily.key == PRODUCT_FAMILY_LEASING
+                    )
+                }).length > 0
+            });
+
+        }
+
         _closeConfirmChangeCurrency() {
             this.setState({
                 showConfirmChangeCurrency: false
@@ -378,9 +418,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _submitEditPipeline() {
             if (errorBusinessCategory === null) {
                 const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-                    businessWeek, businessCategory, currency, indexing, endDate, need, observations, business, product,
-                    priority, registeredCountry, startDate, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
-                    estimatedDisburDate, entity, contract }, createEditPipeline, changeStateSaveData, pipelineBusinessReducer } = this.props;
+                    businessCategory, currency, indexing, need, observations, product,
+                    moneyDistribitionMarket, client, documentStatus, nameUsuario, probability, pendingDisburAmount, amountDisbursed,
+                    estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues }, createEditPipeline, changeStateSaveData, pipelineBusinessReducer } = this.props;
                 const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
 
                 if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
@@ -388,7 +428,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         employeeResponsible: true
                     });
                 } else {
-                    if ((business.value !== "" && business.value !== null && business.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
+                    if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
                         let pipelineJson = {
                             "id": idPipeline,
                             "client": window.localStorage.getItem('idClientSelected'),
@@ -399,24 +439,24 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "currency": currency.value,
                             "indexing": indexing.value,
                             "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-                            "businessWeek": businessWeek.value,
                             "need": need.value,
-                            "priority": priority.value,
                             "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-                            "registeredCountry": registeredCountry.value,
+                            "moneyDistribitionMarket": moneyDistribitionMarket.value,
                             "observations": observations.value,
-                            "pipelineBusiness": JSON.parse('[' + ((business.value) ? business.value : "") + ']'),
                             "termInMonths": termInMonths.value,
+                            "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
                             "value": value.value === undefined ? null : (value.value).replace(/,/g, ""),
-                            "startDate": parseInt(moment(startDate.value, DATE_FORMAT).format('x')),
-                            "endDate": parseInt(moment(endDate.value, DATE_FORMAT).format('x')),
                             "probability": probability.value,
                             "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? null : (pendingDisburAmount.value).replace(/,/g, ""),
                             "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? null : (amountDisbursed.value).replace(/,/g, ""),
-                            "entity": entity.value,
                             "businessCategory": businessCategory.value,
-                            "contract": contract.value,
-                            "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x'))
+                            "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x')),
+                            "opportunityName": opportunityName.value,
+                            "productFamily": productFamily.value ? productFamily.value : "",
+                            "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
+                            "areaAssets": areaAssets.value ? areaAssets.value : "",
+                            "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.0000'),
+
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -534,28 +574,28 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _consultInfoPipeline(data) {
-            const { fields: { businessStatus, businessWeek, commission, currency, idUsuario, nameUsuario,
-                endDate, indexing, need, observations, product, priority, roe, registeredCountry, startDate,
+            const { fields: { businessStatus, commission, currency, idUsuario, nameUsuario,
+                indexing, need, observations, product, roe, moneyDistribitionMarket,
                 termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
                 updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
-                reviewedDate, business, probability, entity, pendingDisburAmount, amountDisbursed,
-                estimatedDisburDate, contract, businessCategory } } = this.props;
+                reviewedDate, probability, pendingDisburAmount, amountDisbursed,
+                estimatedDisburDate, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
+
+            productFamily.onChange(data.productFamily);
+
             businessStatus.onChange(data.businessStatus);
-            businessWeek.onChange(data.businessWeek);
             commission.onChange(fomatInitialStateNumber(data.commission));
             currency.onChange(data.currency);
             idUsuario.onChange(data.employeeResponsible);
             nameUsuario.onChange(data.employeeResponsibleName);
-            endDate.onChange(moment(data.endDate).format(DATE_FORMAT));
             indexing.onChange(data.indexing);
             need.onChange(data.need);
             observations.onChange(data.observations === null ? '' : data.observations);
             product.onChange(data.product);
-            priority.onChange(data.priority);
             roe.onChange(fomatInitialStateNumber(data.roe));
-            registeredCountry.onChange(data.registeredCountry);
-            startDate.onChange(moment(data.startDate).format(DATE_FORMAT));
+            moneyDistribitionMarket.onChange(data.moneyDistribitionMarket);
             termInMonths.onChange(data.termInMonths);
+            termInMonthsValues.onChange(data.termInMonthsValues);
             value.onChange(fomatInitialStateNumber(data.value));
             client.onChange(data.client);
             documentStatus.onChange(data.documentStatus);
@@ -569,23 +609,24 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             positionUpdatedBy.onChange(data.positionUpdatedBy);
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT));
             probability.onChange(data.probability);
-            entity.onChange(data.entity);
             businessCategory.onChange(data.businessCategory);
             pendingDisburAmount.onChange(fomatInitialStateNumber(data.pendingDisburAmount));
             amountDisbursed.onChange(fomatInitialStateNumber(data.amountDisbursed));
             estimatedDisburDate.onChange(data.estimatedDisburDate !== null ? moment(data.estimatedDisburDate).format(DATE_FORMAT) : "");
-            contract.onChange(data.contract);
-            if (data.pipelineBusiness.length > 0) {
-                business.onChange(data.pipelineBusiness[0]);
-            }
+            opportunityName.onChange(data.opportunityName);
+            mellowingPeriod.onChange(data.mellowingPeriod);
+            areaAssets.onChange(data.areaAssets);
+            areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue));
+
+
         }
 
         componentWillMount() {
 
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
-                    termInMonths, businessStatus, businessWeek, currency, indexing, endDate, need, observations,
-                    business, product, priority, registeredCountry, startDate, client, documentStatus }, addBusiness, clearBusiness,showLoading } = this.props;
+                    termInMonths, businessStatus, currency, indexing, need, observations,
+                    business, product, moneyDistribitionMarket, client, documentStatus, areaAssets, areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness, showLoading } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -604,7 +645,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 showLoading(true, 'Cargando...');
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
-                    PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY]).then((result) => {
+                    PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_AREA_ASSETS, TERM_IN_MONTHS_VALUES]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
@@ -615,10 +657,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     addBusiness(pipeline);
                                 });
                                 this._consultInfoPipeline(data);
-                                showLoading(false,null);
+                                showLoading(false, null);
                             });
-                        }else{
-                            showLoading(false,null);
+                        } else {
+                            showLoading(false, null);
                         }
                     });
             }
@@ -646,10 +688,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 initialValues, fields: {
                 nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-                    businessWeek, businessCategory, currency, indexing, endDate, need, observations, business, product,
-                    priority, registeredCountry, startDate, client, documentStatus,
+                    businessCategory, currency, indexing, need, observations, business, product,
+                    moneyDistribitionMarket, client, documentStatus,
                     updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, entity, pendingDisburAmount, amountDisbursed, estimatedDisburDate, contract
+                    positionUpdatedBy, probability, pendingDisburAmount, amountDisbursed, estimatedDisburDate,
+                    opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
             },
                 clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar
             } = this.props;
@@ -699,6 +742,33 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
+
+
+                            <Row style={{ padding: "10px 10px 20px 20px" }}>
+                                <Col xs={12} md={12} lg={12}>
+                                    <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                        <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                        <i className="browser icon" style={{ fontSize: "20px" }} />
+                                        <span style={{ fontSize: "20px" }}> Oportunidad</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                <Col md={12}>
+                                    <dt>
+                                        <span>Nombre de la oportunidad</span>
+                                    </dt>
+                                    <Input
+                                        name="txtOpportunityName"
+                                        type="text"
+                                        {...opportunityName}
+                                        max="100"
+                                        parentId="dashboardComponentScroll"
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                    />
+                                </Col>
+                            </Row>
+
                             <Row style={{ padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{
@@ -718,23 +788,44 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
+
                                 <Col xs={12} md={6} lg={6}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Negocio (</span><span style={{ color: "red" }}>*</span>)
+                                            <span>Familia de productos (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
+                                            {...productFamily}
+                                            name={nameProductFamily}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PIPELINE_BUSINESS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
-                                            {...business}
-                                            name={nameBusiness}
+                                            data={selectsReducer.get(PRODUCT_FAMILY) || []}
+                                            onChange={val => this._changeProductFamily(val)}
                                         />
                                     </div>
                                 </Col>
+
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'need'}
+                                            {...need}
+                                            name={nameNeed}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get('pipelineClientNeeds') || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -752,6 +843,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -766,16 +859,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PIPELINE_STATUS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+                                            onChange={val => this._changeBusinessStatus(val)}
                                         />
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Empleado responsable</span>
+                                            <span>Empleado responsable(</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <div className={`ui search ${participantBanc} fluid`}>
                                             <ComboBoxFilter
@@ -803,76 +894,50 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         }
                                     </div>
                                 </Col>
+
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'need'}
-                                            {...need}
-                                            name={nameNeed}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get('pipelineClientNeeds') || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Prioridad</span>
+                                            <span>Periodo de maduración</span>
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
-                                            {...priority}
-                                            name={namePriority}
+                                            {...mellowingPeriod}
+                                            name={nameMellowingPeriod}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PIPELINE_PRIORITY) || []}
+                                            data={selectsReducer.get(MELLOWING_PERIOD) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
+
+
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>País libro</span>
+                                            <span>Libros</span>
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
-                                            {...registeredCountry}
-                                            name={nameRegisteredCountry}
+                                            {...moneyDistribitionMarket}
+                                            name={nameMoneyDistribitionMarket}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(FILTER_COUNTRY) || []}
+                                            data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
+
+
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Negocio destacado</span>
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessWeek}
-                                            name={nameBusinessWeek}
-                                            parentId="dashboardComponentScroll"
-                                            data={[{ id: true, value: 'Si' }, { id: false, value: 'No' }]}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -908,39 +973,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name={nameProbability}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(PROBABILITY) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                            disabled={(this.state.probabilityEnabled && this.state.isEditable) ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
-                                <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-                                    <dt>
-                                        <span>Entidad</span>
-                                    </dt>
-                                    <ComboBox
-                                        labelInput="Seleccione..."
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        {...entity}
-                                        name={nameEntity}
-                                        parentId="dashboardComponentScroll"
-                                        data={selectsReducer.get(LINE_OF_BUSINESS) || []}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                        onChange={val => this._changeEntity(val)}
-                                    />
-                                </Col>
-                                <Col xs={6} md={3} lg={3} style={this.state.visibleContract ? { display: "block", paddingTop: '20px', paddingRight: "20px" } : { display: "none" }}>
-                                    <dt>
-                                        <span>Contrato</span>
-                                    </dt>
-                                    <Input
-                                        name="txtContract"
-                                        type="text"
-                                        {...contract}
-                                        max="50"
-                                        parentId="dashboardComponentScroll"
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </Col>
+
                             </Row>
                             <Row style={{ padding: "20px 23px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
@@ -1012,8 +1049,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1032,6 +1067,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1053,46 +1090,77 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Plazo en meses</span>
+                                            <span>Plazo de la operación (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                        <Input
-                                            name="termInMonths"
-                                            type="text"
-                                            {...termInMonths}
-                                            max="4"
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "space-between"
+                                        }}>
+                                            <div style={{ width: "45%" }}>
+                                                <ComboBox
+                                                    labelInput="Seleccione..."
+                                                    valueProp={'id'}
+                                                    textProp={'value'}
+                                                    {...termInMonthsValues}
+                                                    name={nameTermInMonthsValues}
+                                                    parentId="dashboardComponentScroll"
+                                                    data={selectsReducer.get(TERM_IN_MONTHS_VALUES) || []}
+                                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                                />
+                                            </div>
+                                            <div style={{ width: "45%" }}>
+                                                <Input
+                                                    name="termInMonths"
+                                                    type="text"
+                                                    {...termInMonths}
+                                                    max="4"
+                                                    parentId="dashboardComponentScroll"
+                                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                                    onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                                                />
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Activos</span>
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...areaAssets}
+                                            name={nameAreaAssets}
                                             parentId="dashboardComponentScroll"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                                            data={selectsReducer.get(FILTER_AREA_ASSETS) || []}
+                                            disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-                                    <dt>
-                                        <span>Fecha de inicio - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-                                    </dt>
-                                    <DateTimePickerUi
-                                        culture='es'
-                                        format={DATE_FORMAT}
-                                        time={false}
-                                        {...startDate}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
+
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Valor del activo/Proyecto</span>
+                                        </dt>
+                                        <Input
+                                            name="areaAssetsValue"
+                                            type="text"
+                                            {...areaAssetsValue}
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true)}
+                                            onFocus={val => this._handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
+                                            disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
+                                        />
+                                    </div>
                                 </Col>
-                                <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
-                                    <dt>
-                                        <span>Fecha de finalización - DD/MM/YYYY (</span><span
-                                            style={{ color: "red" }}>*</span>)
-                                    </dt>
-                                    <DateTimePickerUi
-                                        {...endDate}
-                                        culture='es'
-                                        format={DATE_FORMAT}
-                                        time={false}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </Col>
+
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1110,6 +1178,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1127,9 +1197,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
+                                <Col xs={6} md={4} lg={4}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
