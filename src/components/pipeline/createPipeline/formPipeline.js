@@ -33,7 +33,8 @@ import {
   ORIGIN_PIPELIN_BUSINESS,
   COMPROMETIDO,
   COTIZACION_EN_FIRME,
-  PRODUCT_FAMILY_LEASING
+  PRODUCT_FAMILY_LEASING,
+  HELP_PROBABILITY
 } from "../constants";
 import { changeModalIsOpen, createEditPipeline } from "../actions";
 import {
@@ -67,6 +68,7 @@ import HeaderPipeline from "../headerPipeline";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import { showLoading } from '../../loading/actions';
+import ToolTip from '../../toolTip/toolTipComponent';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
   "businessCategory", "currency", "indexing", "need", "observations", "product", "reviewedDate"
@@ -83,6 +85,8 @@ let idCurrencyAux = null;
 let contollerErrorChangeType = false;
 let errorBusinessCategory = false;
 var thisForm;
+
+var isChildren = false;
 
 const validate = values => {
   const errors = {};
@@ -122,7 +126,7 @@ const validate = values => {
     errors.businessCategory = null;
   }
 
-  if (!values.opportunityName) {
+  if (!values.opportunityName && !isChildren) {
     errors.opportunityName = VALUE_REQUIERED;
   } else {
     errors.opportunityName = null;
@@ -190,6 +194,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probabilityEnabled: false,
         areaAssetsEnabled: false
       };
+
+      isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
       this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
@@ -353,9 +359,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeBusinessStatus(currencyValue) {
-      const { selectsReducer } = this.props;
+      const { selectsReducer, fields: { probability } } = this.props;
 
       let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
+
+      probability.onChange('');
 
       this.setState({
         probabilityEnabled: _pipeline_status.filter(pStatus => {
@@ -368,10 +376,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     }
 
+
     _changeProductFamily(currencyValue) {
-      const { selectsReducer } = this.props;
+      const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
 
       let _product_family = selectsReducer.get(PRODUCT_FAMILY)
+
+      areaAssets.onChange('');
+      areaAssetsValue.onChange('');
 
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
@@ -504,6 +516,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               );
               pipelineJson.listPipelines = resultPipelineBusines;
               changeStateSaveData(true, MESSAGE_SAVE_DATA);
+              console.log(MESSAGE_SAVE_DATA);
               createEditPipeline(pipelineJson).then((data) => {
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -646,7 +659,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""} style={origin === ORIGIN_PIPELIN_BUSINESS ? { overflowX: "hidden", paddingBottom: "0px", marginTop: "10px" } : {}}>
               <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
 
-              <Row style={{ padding: "10px 10px 20px 20px" }}>
+              <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                     <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
@@ -655,10 +668,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
-              <Row style={{ padding: "0px 10px 20px 20px" }}>
+              <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 10px 20px 20px" }}>
                 <Col md={12}>
                   <dt>
-                    <span>Nombre de la oportunidad(</span><span style={{ color: "red" }}>*</span>)
+                    <span>Nombre de la oportunidad (</span><span style={{ color: "red" }}>*</span>)
                   </dt>
                   <Input
                     name="txtOpportunityName"
@@ -669,6 +682,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   />
                 </Col>
               </Row>
+
               <Row style={{ padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -783,6 +797,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Periodo de maduración</span>
+                      <ToolTip text={ HELP_PROBABILITY }>
+                        <i className="help circle icon blue"
+                          style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                      </ToolTip>
                     </dt>
                     <ComboBox
                       labelInput="Seleccione..."
@@ -948,14 +966,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Plazo de la operación(</span><span style={{ color: "red" }}>*</span>)
+                      <span>Plazo de la operación (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <div style={{
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "space-between"
                     }}>
-                      <div style={{ width: "45%" }}>
+                      <div style={{ width: "65%" }}>
                         <ComboBox
                           labelInput="Seleccione..."
                           valueProp={'id'}
@@ -966,7 +984,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           data={selectsReducer.get(TERM_IN_MONTHS_VALUES) || []}
                         />
                       </div>
-                      <div style={{ width: "45%" }}>
+                      <div style={{ width: "30%" }}>
                         <Input
                           name="termInMonths"
                           type="text"
@@ -989,7 +1007,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Activos</span>
+                      <span>Activo</span>
                     </dt>
                     <ComboBox
                       labelInput="Seleccione..."
@@ -1016,6 +1034,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       parentId="dashboardComponentScroll"
                       onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true)}
                       onFocus={val => this._handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
+                       disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
