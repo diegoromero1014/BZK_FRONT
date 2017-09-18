@@ -1128,7 +1128,6 @@ class clientEdit extends Component {
                 } else {
                     this.setState({showEr: true});
                 }
-                changeStateSaveData(false, "");
             }, (reason) => {
                 changeStateSaveData(false, "");
                 this.setState({showEr: true});
