@@ -18,7 +18,7 @@ import Tooltip from '../../../toolTip/toolTipComponent';
 import {
     getContactsByTypeOrFunction, associateContactsByFunctionOrType, setFunctionContactsByFunctionOrType,
     setTypeContactsByFunctionOrType, setKeywordContactsByFunctionOrType, pageNumContactsByFunctionOrType,
-    clearContactsByFunctionOrType
+    setContactsByFunctionOrType
 } from '../actions';
 import { FIRST_PAGE, NUMBER_RECORDS, MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
 import { changeStateSaveData } from '../../../dashboard/actions';
@@ -38,17 +38,17 @@ class ModalAddByFunctionOrType extends Component {
     }
 
     componentWillMount() {
-        const { getMasterDataFields, clearContactsByFunctionOrType, setFunctionContactsByFunctionOrType,
+        const { getMasterDataFields, setContactsByFunctionOrType, setFunctionContactsByFunctionOrType,
             setKeywordContactsByFunctionOrType, setTypeContactsByFunctionOrType } = this.props;
         getMasterDataFields([FILTER_TYPE_CONTACT_ID, FILTER_FUNCTION_ID]);
-        clearContactsByFunctionOrType();
+        setContactsByFunctionOrType([]);
         setFunctionContactsByFunctionOrType(null);
         setKeywordContactsByFunctionOrType("");
         setTypeContactsByFunctionOrType(null);
     }
 
     _handleChangeKeyword(e) {
-        const { fields: { keyword, setKeywordContactsByFunctionOrType } } = this.props;
+        const { fields: { keyword }, setKeywordContactsByFunctionOrType } = this.props;
         setKeywordContactsByFunctionOrType(e.target.value);
         keyword.onChange(e.target.value);
         if (e.keyCode === 13 || e.which === 13) {
@@ -57,10 +57,10 @@ class ModalAddByFunctionOrType extends Component {
     }
 
     _onClickCleanForm() {
-        const { fields: { functionOfContact, typeOfContact }, clearContactsByFunctionOrType } = this.props;
+        const { fields: { functionOfContact, typeOfContact }, setContactsByFunctionOrType } = this.props;
         functionOfContact.onChange(null);
         typeOfContact.onChange(null);
-        clearContactsByFunctionOrType();
+        setContactsByFunctionOrType([]);
     }
 
     _associateContacts() {
@@ -72,7 +72,7 @@ class ModalAddByFunctionOrType extends Component {
             var contactsByFunctionOrTypeChecked = []
             list.map(item => {
                 if (item.checked) {
-                    contactsByFunctionOrTypeChecked.push(_.omit(item, "checked"));
+                    contactsByFunctionOrTypeChecked.push(_.omit(_.omit(item, "checked"), 'show'));
                 }
             });
             associateContactsByFunctionOrType(contactsByFunctionOrTypeChecked);
@@ -82,15 +82,26 @@ class ModalAddByFunctionOrType extends Component {
     }
 
     _handleSearchContacts() {
-        const { fields: { functionOfContact, typeOfContact, keyword }, swtShowMessage } = this.props;
+        const { fields: { functionOfContact, typeOfContact, keyword }, swtShowMessage,
+            groupsFavoriteContacts, setContactsByFunctionOrType } = this.props;
         if (!stringValidate(typeOfContact.value) && !stringValidate(functionOfContact.value)) {
             swtShowMessage(MESSAGE_ERROR, 'Búsqueda de contactos', 'Señor usuario, debe seleccionar un tipo de contacto o una función.');
         } else {
-            if (!stringValidate(keyword.value)) {
-                swtShowMessage(MESSAGE_ERROR, 'Búsqueda de contactos', 'Señor usuario, debe ingresar un nombre de contacto.');
-            } else {
-                this._getContactsByTypeOrFunction();
-            }
+            var list = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
+            var newList = _.filter(list, function (item) {
+                return item['completeName'].includes(keyword.value);
+            });
+            var filteredList = [];
+            var listContacts = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
+            listContacts.map(contact => {
+                if (_.isEmpty(_.filter(newList, ['id', parseInt(contact.id)]))) {
+                    contact.show = false;
+                } else {
+                    contact.show = true;
+                }
+                filteredList.push(contact);
+            });
+            setContactsByFunctionOrType(filteredList);
         }
     }
 
@@ -173,7 +184,7 @@ class ModalAddByFunctionOrType extends Component {
                             </Tooltip>
                         </Col>
                     </Row>
-                    <Row style={{ display: 'none' }}>
+                    <Row>
                         <Col xs={12} sm={12} md={12} lg={12}>
                             <hr />
                         </Col>
@@ -189,7 +200,7 @@ class ModalAddByFunctionOrType extends Component {
                                     className="input-lg input InputAddOn-field" />
                                 <Tooltip text='Buscar contacto'>
                                     <button id="searchClients" className="btn" type="button"
-                                        onClick={this._handleSearchContacts} style={{ backgroundColor: "#E0E2E2" }}>
+                                        onClick={this._handleSearchContacts} style={{ backgroundColor: "#E0E2E2", borderRadius: "0px 3px 3px 0px" }}>
                                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                                     </button>
                                 </Tooltip>
@@ -228,7 +239,7 @@ function mapDispatchToProps(dispatch) {
         setTypeContactsByFunctionOrType,
         setKeywordContactsByFunctionOrType,
         pageNumContactsByFunctionOrType,
-        clearContactsByFunctionOrType
+        setContactsByFunctionOrType
     }, dispatch);
 }
 

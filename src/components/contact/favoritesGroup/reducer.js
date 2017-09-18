@@ -172,6 +172,7 @@ export default (state = initialState, action = {}) => {
                 } else {
                     item.checked = true;
                 }
+                item.show = true;
             });
             return state
                 .set('totalContactsByFunctionOrType', get(action.payload, 'data.data.rowCount', []))
@@ -205,8 +206,8 @@ export default (state = initialState, action = {}) => {
             return state.set('functionContactsByFunctionOrTpe', action.functionContact);
         case actions.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.set('typeContactsByFunctionOrType', action.type);
-        case actions.CLEAR_CONTACTS_BY_FUNCTION_OR_TYPE:
-            return state.set('contactByFunctionOrTypeSelected', []);
+        case actions.SET_CONTACTS_BY_FUNCTION_OR_TYPE:
+            return state.set('contactByFunctionOrTypeSelected', action.listContacts);
         default:
             return state;
     }
