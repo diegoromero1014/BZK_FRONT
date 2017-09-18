@@ -23,6 +23,7 @@ import {
 import * as constants from "../selectsComponent/constants";
 import {
     GOVERNMENT,
+    CONSTRUCT_PYME,
     KEY_DESMONTE,
     KEY_EXCEPCION,
     KEY_EXCEPCION_NO_GERENCIADO,
@@ -133,6 +134,9 @@ var infoMarcaGeren = true;
 var clickButttonSave = false;
 //Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
 var disabledOperationsForeigns = true;
+
+//Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
+var isSegmentPymeConstruct = false;
 
 var otherOperationsForeignEnable = 'disabled';
 var otherOriginGoodsEnable = 'disabled';
@@ -413,7 +417,8 @@ const validate = values => {
     } else {
         errors.segment = null;
     }
-    if (!values.subSegment) {
+
+    if (!values.subSegment && isSegmentPymeConstruct) {
         errors.subSegment = OPTION_REQUIRED;
     } else {
         errors.subSegment = null;
@@ -1334,8 +1339,7 @@ class clientEdit extends Component {
                 const {economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                     constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.SUBSEGMENTS,
-                    constants.CLIENT_ID_TYPE])
+                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1372,17 +1376,22 @@ class clientEdit extends Component {
     }
 
     _changeSegment(idSegment, firstConsult) {
-        const {fields: {segment, customerTypology}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
+        const {fields: {segment, customerTypology, subSegment}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
         if (!_.isUndefined(value)) {
-            if (_.isEqual(GOVERNMENT, value)) {
+          if (_.isEqual(GOVERNMENT, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
+            if (_.isEqual(CONSTRUCT_PYME, value)) {
+                consultListWithParameterUbication(constants.SUBSEGMENTS,idSegment);
+            }
+            isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
             if (!firstConsult) {
                 customerTypology.onChange('');
+                subSegment.onChange('');
             }
         }
     }
@@ -1514,23 +1523,25 @@ class clientEdit extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{marginTop: "10px"}}>
-                            <dt><span>Subsegmento (</span><span style={{color: "red"}}>*</span>)</dt>
-                            <ComboBox
-                                name="subSegment"
-                                labelInput="Sebsegmento"
-                                {...subSegment}
-                                value={subSegment.value}
-                                onBlur={subSegment.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SUBSEGMENTS)}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
+                    {
+                        isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
+                            <div style={{marginTop: "10px"}}>
+                                <dt><span>Subsegmento (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <ComboBox
+                                    name="subSegment"
+                                    labelInput="Sebsegmento"
+                                    {...subSegment}
+                                    value={subSegment.value}
+                                    onBlur={subSegment.onBlur}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    parentId="dashboardComponentScroll"
+                                    data={selectsReducer.get(constants.SUBSEGMENTS)}
+                                    touched={true}
+                                />
+                            </div>
+                        </Col>
+                    }
                     <ClientTypology customerTypology={customerTypology}
                                     data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)}/>
 
