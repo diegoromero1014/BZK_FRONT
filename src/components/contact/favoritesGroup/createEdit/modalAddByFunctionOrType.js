@@ -197,7 +197,7 @@ class ModalAddByFunctionOrType extends Component {
                         </Col>
                     </Row>
                     <Row style={{ display: visibleTable, width: "100%", height: "300px" }}>
-                        <Col xs>
+                        <Col xs style={{padding: '10px 0px 0 15px'}}>
                             <ListResultFuntionOrType />
                         </Col>
                     </Row>
