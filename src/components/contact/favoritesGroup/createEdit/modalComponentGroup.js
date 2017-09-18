@@ -67,7 +67,6 @@ class ModalComponentGroup extends Component {
             getListContactGroupForId(groupId).then((data) => {
                 if (!_.isEqual(_.get(data, 'payload.data.status'), 200)) {
                     swtShowMessage('error', 'Error servidor', 'Lo sentimos, ocurrió un error en el servidor');
-                    console.log(_.get(data, 'payload.data'));
                 }
                 showLoading(false, '');
             });
