@@ -1348,7 +1348,7 @@ class clientEdit extends Component {
                         var dataOriginGoods = JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]');
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
-                        this._changeSegment(infoClient.segment, true);
+                        this._changeSegment(infoClient.segment, true, infoClient.subSegment);
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
@@ -1375,18 +1375,22 @@ class clientEdit extends Component {
         </div>
     }
 
-    _changeSegment(idSegment, firstConsult) {
+    _changeSegment(idSegment, firstConsult, subSegmentId) {
         const {fields: {segment, customerTypology, subSegment}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
         if (!_.isUndefined(value)) {
-          if (_.isEqual(GOVERNMENT, value)) {
+            if (_.isEqual(GOVERNMENT, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
             if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS,idSegment);
+                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data)=>{
+                    if (!_.isNull(subSegmentId) && firstConsult) {
+                        subSegment.onChange(subSegmentId);
+                    }
+                });
             }
             isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
             if (!firstConsult) {
@@ -1518,7 +1522,7 @@ class clientEdit extends Component {
                                 style={{marginBottom: '0px !important'}}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.SEGMENTS)}
-                                onChange={(val) => this._changeSegment(val, false)}
+                                onChange={(val) => this._changeSegment(val, false, null)}
                                 touched={true}
                             />
                         </div>
