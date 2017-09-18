@@ -1,13 +1,13 @@
 /**
  * Created by ahurtado on 11/28/2016.
  */
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {groupFindServer} from './actions';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { groupFindServer } from './actions';
 import GridComponent from '../../grid/component';
-import {mapDataGrid} from './groupsFavoriteContactsUtilities';
-import {NUMBER_RECORDS,MODAL_TITLE_EMAILS} from './constants';
+import { mapDataGrid } from './createEdit/groupsFavoriteContactsUtilities';
+import { NUMBER_RECORDS, MODAL_TITLE_EMAILS } from './constants';
 
 class ListGroups extends Component {
 
@@ -25,7 +25,7 @@ class ListGroups extends Component {
                 key: "actions"
             },
             {
-                title: "Nombre grupo",
+                title: "Nombre del grupo",
                 key: "modalNameLink",
                 showLink: true
             },
@@ -47,11 +47,11 @@ class ListGroups extends Component {
     }
 
     render() {
-        const {groupsFavoriteContacts} = this.props;
+        const { groupsFavoriteContacts } = this.props;
         const data = groupsFavoriteContacts.get('responseGroup');
         return (
-            <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={MODAL_TITLE_EMAILS}/>
+            <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll', background: '#fff' }}>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={MODAL_TITLE_EMAILS} />
             </div>
         );
     }
@@ -63,7 +63,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({groupsFavoriteContacts}, ownerProps) {
+function mapStateToProps({ groupsFavoriteContacts }, ownerProps) {
     return {
         groupsFavoriteContacts
     };

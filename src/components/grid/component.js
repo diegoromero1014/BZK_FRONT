@@ -12,6 +12,8 @@ import PdfLinkComponent from './pdfLinkComponent';
 import LinkComponent from './linkComponent';
 import LinkModalComponent from './linkModalComponent';
 import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
+import { ACTION_CHECK } from './constants';
+import CheckComponent from './checkComponent';
 
 class GridComponent extends Component {
 
@@ -29,7 +31,10 @@ class GridComponent extends Component {
   _renderCell(row, headers, modalTitle) {
     return headers.map((value, idx) => {
       var cell;
-      if (value.key === 'actions') {
+      if (value.key === ACTION_CHECK) {
+        const info = _.get(row, ACTION_CHECK, {});
+        cell = <CheckComponent key={idx} fn={info.fn} args={info.argsFn} isChecked={info.isChecked} />
+      } else if (value.key === 'actions') {
         cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
@@ -112,6 +117,5 @@ GridComponent.propTypes = {
   data: PropTypes.array.isRequired,
   modalTitle: PropTypes.string,
 };
-
 
 export default GridComponent;
