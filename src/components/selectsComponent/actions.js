@@ -23,7 +23,7 @@ export function consultDataSelect(field){
         "field": field
       }
     };
-  var request = axios.post(APP_URL + "/masterDataByField", json);
+  const request = axios.post(APP_URL + "/masterDataByField", json);
   return {
     type: field,
     payload: request
@@ -47,7 +47,7 @@ export function consultList(field){
       messageBody: {
       }
     }
-  var request = axios.post(APP_URL + "/" + field, json);
+  const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
     payload: request
@@ -71,8 +71,8 @@ export function consultListWithParameter(field, parentId){
       messageBody: {
         "parentId": parentId
       }
-    }
-  var request = axios.post(APP_URL + "/" + field, json);
+    };
+  const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
     payload: request
@@ -96,8 +96,8 @@ export function consultListWithParameterUbication(field, parentId){
       messageBody: {
         "parentId": parentId
       }
-    }
-  var request = axios.post(APP_URL + "/masterDataByParentId", json);
+    };
+  const request = axios.post(APP_URL + "/masterDataByParentId", json);
   return {
     type: field,
     payload: request
@@ -127,7 +127,7 @@ export function getMasterDataFields(fields, onlyWithoutParents) {
     }
   }
 
-  var request = axios.post(APP_URL + "/masterDataByFields", json);
+  const request = axios.post(APP_URL + "/masterDataByFields", json);
 
   return {
     type: FILTER_MULTISELECT_FIELDS,
@@ -165,7 +165,7 @@ export function economicGroupsByKeyword(keyword){
       "keyword": keyword
     }
   }
-  var request = axios.post(APP_URL + "/economicGroupsByKeyword", json);
+  const request = axios.post(APP_URL + "/economicGroupsByKeyword", json);
   return {
     type: ECONOMIC_GROUPS,
     payload: request
@@ -260,7 +260,7 @@ export function consultTeamsByRegionByEmployee(idRegion){
             "idRegion": idRegion
         }
     };
-    var request = axios.post(APP_URL + "/getCellsByRegionByUser", json);
+    const request = axios.post(APP_URL + "/getCellsByRegionByUser", json);
     return {
         type: TEAM_FOR_REGION_EMPLOYEE,
         payload: request

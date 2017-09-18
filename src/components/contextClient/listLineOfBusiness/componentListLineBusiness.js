@@ -87,7 +87,7 @@ class ComponentListLineBusiness extends Component {
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
-        experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "" );
+        experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "");
         this.setState({ entitySeleted: entity });
     }
 
@@ -130,10 +130,10 @@ class ComponentListLineBusiness extends Component {
             clientInformacion, changeValueListClient, registrationRequired, origin } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
-            <div style={{ width: '100%' }}>
+            <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
+                        <dl style={{ fontSize: "20px", color: "#505050", marginBottom: "5px" }}>
                             <span className="section-title">Líneas de negocio y participación en ventas </span>
                             {origin === ORIGIN_CREDIT_STUDY &&
                                 <div style={{ display: "inline" }}>
@@ -157,7 +157,7 @@ class ComponentListLineBusiness extends Component {
                 </Row>
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "35px", textAlign: "right" }}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
                             <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
                                 onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
@@ -219,17 +219,17 @@ class ComponentListLineBusiness extends Component {
                             <Col xs={4} md={3} lg={3}>
                                 <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                    Agregar
                                 </button>
                                 <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                    <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                    Cancelar
                                 </button>
                             </Col>
                         }
                         {
                             _.size(listParticipation) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
                                     <table className="ui striped table">
                                         <thead>
                                             <tr>

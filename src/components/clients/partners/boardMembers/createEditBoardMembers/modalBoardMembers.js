@@ -122,7 +122,6 @@ class ModalCreateBoardMembers extends Component {
      */
     _onClickClear() {
         const { fields: { typeOfDocument } } = this.props;
-        console.log('this', this);
         this.setState({
             showCompleteForm: 'hidden',
             allowsEditingOFDocument: true
