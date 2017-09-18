@@ -152,7 +152,7 @@ const UPDATE_STYLE = {
     height: '110px'
 };
 
-const validate = values => {
+const validate = (values, props) => {
     const errors = {}
     var errorScrollTop = false;
     if (!values.razonSocial) {
@@ -409,14 +409,22 @@ const validate = values => {
     if (!values.segment) {
         errors.segment = OPTION_REQUIRED;
     } else {
+        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
+        if(_.isEqual(CONSTRUCT_PYME, value)){
+            if (!values.subSegment) {
+                errors.subSegment = OPTION_REQUIRED;
+            } else {
+                errors.subSegment = null;
+            }
+        }
         errors.segment = null;
     }
 
-    if (!values.subSegment && isSegmentPymeConstruct) {
-        errors.subSegment = OPTION_REQUIRED;
-    } else {
-        errors.subSegment = null;
-    }
+    // if (!values.subSegment && isSegmentPymeConstruct) {
+    //     errors.subSegment = OPTION_REQUIRED;
+    // } else {
+    //     errors.subSegment = null;
+    // }
 
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
