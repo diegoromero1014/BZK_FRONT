@@ -91,6 +91,7 @@ class ListResultFunctionOrType extends Component {
     render() {
         const { groupsFavoriteContacts } = this.props;
         var listContactsByFunctionOrType = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
+        listContactsByFunctionOrType = _.filter(listContactsByFunctionOrType, ['show', true]);
         return (
             <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll', overflowX: 'hidden' }}>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(listContactsByFunctionOrType)} />
