@@ -45,7 +45,6 @@ class ListPipelineComponent extends Component {
       v2 =nextProps.value2;
       const {clearPipelineOrder} = this.props;
       clearPipelineOrder();
-      this._orderColumn(1,"pe.startDate");
     }
   }
 
@@ -73,15 +72,6 @@ class ListPipelineComponent extends Component {
       {
         title: "Necesidad",
         key:"need"
-      },
-      {
-        title: "Fecha de inicio",
-        key:"datePipelineStartFormat",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"pe.startDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"pe.startDate")}></i></span>
-      },
-      {
-        title: "Fecha de finalización",
-        key:"datePipelineEndFormat"
       },
       {
         title: "Estado del documento",
@@ -126,10 +116,7 @@ class ListPipelineComponent extends Component {
               urlRedirect: "/dashboard/pipelineEdit",
               component: "VIEW_PIPELINE"
             });
-            var datePipelineStartFormat = moment(value.startDate).locale('es');
-            _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));
-             var datePipelineEndFormat = moment(value.endDate).locale('es');
-            _.set(value, 'datePipelineEndFormat',datePipelineEndFormat.format("DD") + " " + datePipelineEndFormat.format("MMM") + " " + datePipelineEndFormat.format("YYYY")+ ", " + datePipelineEndFormat.format("hh:mm a"));
+        
             if( _.get(permissionsPipeline, _.indexOf(permissionsPipeline, ELIMINAR), false) ){
               if(value.idStatusDocument === 0){
                 _.set(value, 'delete',  {

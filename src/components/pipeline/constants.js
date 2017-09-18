@@ -21,4 +21,5 @@ export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 
 export const COMPROMETIDO = "Comprometido";
 export const COTIZACION_EN_FIRME = "Cotización en Firme";
+export const PRODUCT_FAMILY_LEASING = "Leasing";
 
