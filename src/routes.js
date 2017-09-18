@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {Redirect, Route} from "react-router";
-import {Grid} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { Redirect, Route } from "react-router";
+import { Grid } from "react-flexbox-grid";
 import LoginComponent from "./components/login/component";
 import DashboardComponent from "./components/dashboard/dashboardComponent";
 import ClientsFind from "./components/clients/clientsFind";
@@ -28,7 +28,7 @@ import FindContacts from "./components/filterContact/findContacts";
 import ClientsContactsDetails from "./components/filterContact/detailsClientsContact/clientsContactsDetails";
 import ContactByFunctionOrTypeComponent from "./components/contactByFunctionOrType/ContactByFunctionOrTypeComponent";
 import AEC from "./components/myPendings/AEC/componentAEC";
-import FavoritesGroup from "./components/contact/favoritesGroup/favoritesGroupComponent";
+import FavoritesGroup from "./components/contact/favoritesGroup/createEdit/favoritesGroupComponent";
 import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
 import Visor from "./components/visor/visor";

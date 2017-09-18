@@ -3,9 +3,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import ModalComponentPendingTask from './modalComponentPendingTask';
+import ModalAddByFunctionOrType from './modalAddByFunctionOrType';
+import Tooltip from '../../../toolTip/toolTipComponent';
 
-class ButtonCreatePendingTaskComponent extends Component {
+class BtnAddByFunctionOrType extends Component {
 
   constructor(props) {
     super(props);
@@ -26,10 +27,13 @@ class ButtonCreatePendingTaskComponent extends Component {
 
   render() {
     return (
-      <Col xs={2} sm={2} md={1} lg={1}>
-        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '21px' }} onClick={this.openModal}>
-          <i className="tasks  icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
-        </button>
+      <Col xs={1} sm={1} md={1} lg={1}>
+        <Tooltip text='Agregar por función o tipo'>
+          <button className="btn btn-primary" type="button" onClick={this.openModal}
+            disabled={this.state.disabled} style={{ cursor: 'pointer', marginTop: '20px', marginLeft: '10px' }}>
+            <i className="linkify icon"></i>
+          </button>
+        </Tooltip>
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -37,13 +41,13 @@ class ButtonCreatePendingTaskComponent extends Component {
           <div className="modalBt4-dialog modalBt4-lg">
             <div className="modalBt4-content modal-content">
               <div className="modalBt4-header modal-header">
-                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Tarea</h4>
+                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Asociar contactos</h4>
                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                   <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                   <span className="sr-only">Close</span>
                 </button>
               </div>
-              <ModalComponentPendingTask isOpen={this.closeModal} />
+              <ModalAddByFunctionOrType isOpen={this.closeModal} />
             </div>
           </div>
         </Modal>
@@ -52,4 +56,4 @@ class ButtonCreatePendingTaskComponent extends Component {
   }
 }
 
-export default (ButtonCreatePendingTaskComponent);
+export default (BtnAddByFunctionOrType);

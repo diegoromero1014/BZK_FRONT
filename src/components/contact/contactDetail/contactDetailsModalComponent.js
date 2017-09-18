@@ -429,10 +429,8 @@ class ContactDetailsModalComponent extends Component {
                     swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
                     contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
-
                         resetPage();
                     }
-
                 } else {
                     swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
                 }
