@@ -57,9 +57,10 @@ class ModalAddByFunctionOrType extends Component {
     }
 
     _onClickCleanForm() {
-        const { fields: { functionOfContact, typeOfContact }, setContactsByFunctionOrType } = this.props;
+        const { fields: { functionOfContact, typeOfContact, keyword }, setContactsByFunctionOrType } = this.props;
         functionOfContact.onChange(null);
         typeOfContact.onChange(null);
+        keyword.onChange('');
         setContactsByFunctionOrType([]);
     }
 
@@ -89,7 +90,7 @@ class ModalAddByFunctionOrType extends Component {
         } else {
             var list = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
             var newList = _.filter(list, function (item) {
-                return item['completeName'].includes(keyword.value);
+                return (item['completeName']).toUpperCase().includes((keyword.value).toUpperCase());
             });
             var filteredList = [];
             var listContacts = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
@@ -208,7 +209,7 @@ class ModalAddByFunctionOrType extends Component {
                         </Col>
                     </Row>
                     <Row style={{ display: visibleTable, width: "100%", height: "350px" }}>
-                        <Col xs style={{padding: '10px 0px 0 15px'}}>
+                        <Col xs style={{ padding: '10px 0px 0 15px' }}>
                             <ListResultFuntionOrType />
                         </Col>
                     </Row>
