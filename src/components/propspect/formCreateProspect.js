@@ -221,6 +221,7 @@ class FormCreateProspect extends Component {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect)
                 .then((data) => {
+                    isSegmentPymeConstruct = false;
                     changeStateSaveData(false, "");
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                         redirectUrl("/login");
@@ -260,6 +261,7 @@ class FormCreateProspect extends Component {
         consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
+        isSegmentPymeConstruct = false;
     }
 
     _onChangeCIIU(val) {
