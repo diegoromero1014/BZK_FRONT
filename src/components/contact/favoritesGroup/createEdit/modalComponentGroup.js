@@ -363,7 +363,7 @@ class ModalComponentGroup extends Component {
                                     <i className="plus icon"></i> Agregar
                                 </button>
                             </Col>
-                            <BtnAddByFunctionOrType />
+                            <BtnAddByFunctionOrType disabled={this.state.disabled} />
                         </Row>
                         <Row>
                             <div

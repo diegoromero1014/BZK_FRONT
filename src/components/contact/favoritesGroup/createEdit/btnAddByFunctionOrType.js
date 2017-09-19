@@ -26,11 +26,12 @@ class BtnAddByFunctionOrType extends Component {
   }
 
   render() {
+    const { disabled } = this.props;
     return (
       <Col xs={1} sm={1} md={1} lg={1}>
         <Tooltip text='Agregar por función o tipo'>
           <button className="btn btn-primary" type="button" onClick={this.openModal}
-            disabled={this.state.disabled} style={{ cursor: 'pointer', marginTop: '20px', marginLeft: '10px' }}>
+            disabled={disabled} style={{ cursor: 'pointer', marginTop: '20px', marginLeft: '10px' }}>
             <i className="linkify icon"></i>
           </button>
         </Tooltip>
