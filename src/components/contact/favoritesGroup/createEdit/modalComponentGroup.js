@@ -307,7 +307,10 @@ class ModalComponentGroup extends Component {
             visibleTable = 'none';
             visibleMessage = 'block';
         }
-
+        var typeCursor = "pointer";
+        if (this.state.disabled === "") {
+            typeCursor = "noDrop";
+        }
         return (
             <div>
                 <div className="modalBt4-body modal-body"
@@ -359,7 +362,7 @@ class ModalComponentGroup extends Component {
                             </Col>
                             <Col xs={12} md={2} lg={2}>
                                 <button className="btn btn-primary" type="button" onClick={this._searchContactForGroup}
-                                    disabled={this.state.disabled} style={{ cursor: 'pointer', marginTop: '20px' }}>
+                                    disabled={this.state.disabled} style={{ cursor: typeCursor, marginTop: '20px' }}>
                                     <i className="plus icon"></i> Agregar
                                 </button>
                             </Col>
@@ -401,7 +404,8 @@ class ModalComponentGroup extends Component {
 
                 </div>
                 <div className="modalBt4-footer modal-footer">
-                    <button type="button" onClick={this._handleValidateExistGroup} disabled={this.state.disabled}
+                    <button type="button" onClick={this._handleValidateExistGroup}
+                        disabled={this.state.disabled} style={{ cursor: typeCursor }}
                         className="btn btn-primary modal-button-edit">Guardar
                     </button>
                 </div>
