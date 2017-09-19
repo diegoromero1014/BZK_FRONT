@@ -67,7 +67,7 @@ class ModalAddByFunctionOrType extends Component {
     _associateContacts() {
         const { groupsFavoriteContacts, associateContactsByFunctionOrType, isOpen, swtShowMessage } = this.props;
         var list = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
-        if (list.size + groupsFavoriteContacts.get('group').get('listContact').size > MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP) {
+        if (_.size(list) + _.size(groupsFavoriteContacts.get('group').get('listContact')) > MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP) {
             swtShowMessage(MESSAGE_ERROR, 'Asociar contactos', 'Señor usuario, el número de contactos no puede superar los ' + MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP + '.');
         } else {
             var contactsByFunctionOrTypeChecked = []
