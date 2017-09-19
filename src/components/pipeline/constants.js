@@ -22,5 +22,5 @@ export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 export const COMPROMETIDO = "Comprometido";
 export const COTIZACION_EN_FIRME = "Cotización en Firme";
 export const PRODUCT_FAMILY_LEASING = "Leasing";
-export const HELP_PROBABILITY = "Periodo en que se espera cerrar el negocio.";
+export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
 

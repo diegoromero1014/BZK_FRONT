@@ -201,7 +201,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 firstTimeCharging: false,
                 errorValidate: false,
                 probabilityEnabled: false,
-                areaAssetsEnabled: false
+                areaAssetsEnabled: false,
+                flagInitLoadAssests: false
             };
 
             isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -402,12 +403,15 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _changeProductFamily(currencyValue) {
             const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
 
+            if (!this.state.flagInitLoadAssests) {
+                areaAssets.onChange('');
+                areaAssetsValue.onChange('');
+            }
+
             let _product_family = selectsReducer.get(PRODUCT_FAMILY)
 
-            areaAssets.onChange('');
-            areaAssetsValue.onChange('');
-
             this.setState({
+                flagInitLoadAssests: false,
                 areaAssetsEnabled: _product_family.filter(pFamily => {
                     return (
                         pFamily.id == currencyValue && pFamily.key == PRODUCT_FAMILY_LEASING
@@ -595,8 +599,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 reviewedDate, probability, pendingDisburAmount, amountDisbursed,
                 estimatedDisburDate, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
 
-            productFamily.onChange(data.productFamily);
+            this.setState({ flagInitLoadAssests: true });
 
+            productFamily.onChange(data.productFamily);
+            opportunityName.onChange(data.opportunityName);
             businessStatus.onChange(data.businessStatus);
             commission.onChange(fomatInitialStateNumber(data.commission));
             currency.onChange(data.currency);
@@ -627,12 +633,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             pendingDisburAmount.onChange(fomatInitialStateNumber(data.pendingDisburAmount));
             amountDisbursed.onChange(fomatInitialStateNumber(data.amountDisbursed));
             estimatedDisburDate.onChange(data.estimatedDisburDate !== null ? moment(data.estimatedDisburDate).format(DATE_FORMAT) : "");
-            opportunityName.onChange(data.opportunityName);
             mellowingPeriod.onChange(data.mellowingPeriod);
             areaAssets.onChange(data.areaAssets);
-            areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue));
-
-
+            areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue, 2));
         }
 
         componentWillMount() {
@@ -915,7 +918,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Periodo de maduración</span>
+                                            <span>Período de maduración</span>
                                             <ToolTip text={HELP_PROBABILITY}>
                                                 <i className="help circle icon blue"
                                                     style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
@@ -1183,7 +1186,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                                
+
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
@@ -1458,7 +1461,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         };
     }
 
-    function fomatInitialStateNumber(val) {
+    function fomatInitialStateNumber(val, numDecimals) {
         var decimal = '';
         if (val !== undefined && val !== null && val !== '') {
             val = val.toString();
@@ -1466,7 +1469,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 var vectorVal = val.split(".");
                 val = vectorVal[0] + '.';
                 if (vectorVal.length > 1) {
-                    decimal = vectorVal[1].substring(0, 4);
+                    var numDec = (numDecimals == undefined || numDecimals == null) ? 4 : numDecimals;
+                    decimal = vectorVal[1].substring(0, numDec);
                 }
             }
             var pattern = /(-?\d+)(\d{3})/;
