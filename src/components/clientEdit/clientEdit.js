@@ -119,28 +119,28 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
-var isProspect = false;
+let isProspect = false;
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
-var oldJustifyGeren = '';
+let oldJustifyGeren = '';
 //Guarda el anterior valor de la justificación no necesita LME para saber cuándo cambia de excepción a otro
-var oldJustifyNoNeedLME = '';
+let oldJustifyNoNeedLME = '';
 //Controla si es la primer vez que se setea información en el campo justificationForNoRM
-var infoJustificationForNoRM = true;
+let infoJustificationForNoRM = true;
 //Controla si es la primer vez que se setea información en el campo justification need LME
-var infoJustificationNeedLME = true;
+let infoJustificationNeedLME = true;
 //Controla si es la primer vez que se setea información en el campo marcGeren
-var infoMarcaGeren = true;
+let infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
-var clickButttonSave = false;
+let clickButttonSave = false;
 //Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
-var disabledOperationsForeigns = true;
+let disabledOperationsForeigns = true;
 
-//Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
-var isSegmentPymeConstruct = false;
+//Controla si el campo Segmento esta seleccionado constructor pyme.
+let isSegmentPymeConstruct = false;
 
-var otherOperationsForeignEnable = 'disabled';
-var otherOriginGoodsEnable = 'disabled';
-var otherOriginResourceEnable = 'disabled';
+let otherOperationsForeignEnable = 'disabled';
+let otherOriginGoodsEnable = 'disabled';
+let otherOriginResourceEnable = 'disabled';
 
 const EDIT_STYLE = {
     border: '1px solid #e5e9ec',
@@ -160,7 +160,7 @@ const UPDATE_STYLE = {
 
 const validate = (values, props) => {
     const errors = {}
-    var errorScrollTop = false;
+    let errorScrollTop = false;
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
@@ -639,7 +639,7 @@ class clientEdit extends Component {
 
     _updateValue(value) {
         const {fields: {nitPrincipal, groupEconomic, economicGroupName}, economicGroupsByKeyword} = this.props;
-        var userSelected;
+        let userSelected;
         _.map(contactClient, contact => {
             if (contact.id.toString() === value) {
                 userSelected = contact;
