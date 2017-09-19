@@ -496,7 +496,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
               "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
               "areaAssets": areaAssets.value ? areaAssets.value : "",
-              "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.0000')
+              "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00')
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -519,7 +519,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               );
               pipelineJson.listPipelines = resultPipelineBusines;
               changeStateSaveData(true, MESSAGE_SAVE_DATA);
-              console.log(MESSAGE_SAVE_DATA);
               createEditPipeline(pipelineJson).then((data) => {
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -799,7 +798,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Periodo de maduración</span>
+                      <span>Período de maduración</span>
                       <ToolTip text={HELP_PROBABILITY}>
                         <i className="help circle icon blue"
                           style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
