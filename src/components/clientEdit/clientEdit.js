@@ -426,12 +426,6 @@ const validate = (values, props) => {
         errors.segment = null;
     }
 
-    // if (!values.subSegment && isSegmentPymeConstruct) {
-    //     errors.subSegment = OPTION_REQUIRED;
-    // } else {
-    //     errors.subSegment = null;
-    // }
-
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
