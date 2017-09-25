@@ -13,7 +13,7 @@ import {
     MODULE_CLIENTS,
     MODULE_CONTACTS,
     MODULE_MANAGERIAL_VIEW,
-    MODULE_VISOR
+    MODULE_TRANSACTIONAL
 } from "../../constantsGlobal";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -23,6 +23,7 @@ import {initialMenuPermissions} from "../menu/actions";
 import {Header, Image} from "semantic-ui-react";
 import {redirectUrl} from '../../actionsGlobal';
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
+import {MODULE_WALLET_SHARE_TITLE, MODULE_ANALYTICS_TOOLS} from '../analyticsTools/constants';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -47,12 +48,21 @@ const itemMyPendings = {
     children: []
 };
 
-const itemVisor = {
+//@ahurtado - 25/09/2017
+//Se comenta por que esto es una solución temporal, mientras terminan transaccional.
+// const itemTransactional = {
+//     text: "Transaccional",
+//     icon: "area chart",
+//     link: "/dashboard/transactional"
+// };
+
+const childrenWalletShare = { text: MODULE_WALLET_SHARE_TITLE, link: "/dashboard/walletShare" };
+const childrenAnalyticsTools = { text: MODULE_ANALYTICS_TOOLS, link: "/dashboard/analyticsTools" };
+const itemTransactional = {
     text: "Transaccional",
     icon: "area chart",
-    link: "/dashboard/visor"
+    children: [childrenWalletShare, childrenAnalyticsTools]
 };
-
 
 const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
@@ -112,9 +122,11 @@ class MenuComponent extends Component {
         if (_.get(permissions, MODULE_CONTACTS)) {
             menuItems.push(itemContacts);
         }
-        if (_.get(permissions, MODULE_VISOR)) {
-            menuItems.push(itemVisor);
-        }
+        //@ahurtado - 25/09/2017
+        //Se comenta por que esto es una solución temporal, mientras terminan transaccional.
+        // if (_.get(permissions, MODULE_TRANSACTIONAL)) {
+            menuItems.push(itemTransactional);
+        // }
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }

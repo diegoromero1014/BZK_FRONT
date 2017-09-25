@@ -22,7 +22,7 @@ export function consultParameterServer(tagConsult) {
         "messageBody": {
             "name": tagConsult
         }
-    }
+    };
 
     var request = axios.post(constants.APP_URL + "/getParameterByName", json);
     return {

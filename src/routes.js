@@ -31,7 +31,9 @@ import AEC from "./components/myPendings/AEC/componentAEC";
 import FavoritesGroup from "./components/contact/favoritesGroup/createEdit/favoritesGroupComponent";
 import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
-import Visor from "./components/visor/visor";
+import Transactional from "./components/transactional/transactionalComponent";
+import WalletShare from "./components/analyticsTools/walletShareComponent";
+import AnalyticsTools from "./components/analyticsTools/analyticsToolsComponent";
 
 class App extends Component {
     render() {
@@ -79,7 +81,9 @@ export default (
                 <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
                 <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
-                <Route path="visor" component={Visor}></Route>
+                <Route path="transactional" component={Transactional}></Route>
+                <Route path="walletShare" component={WalletShare}></Route>
+                <Route path="analyticsTools" component={AnalyticsTools}></Route>
             </Route>
         </Route>
     </Grid>
