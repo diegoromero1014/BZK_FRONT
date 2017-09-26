@@ -3,7 +3,7 @@ import * as actions from './constants';
 
 const initialState = Immutable.Map({
   "WALLET_SHARE_URL": "",
-  "FLUJOS_DE_FONDOS_URL": "",
+  "FLUJO_DE_FONDOS_URL": "",
   "COMEX_URL": ""
 });
 
