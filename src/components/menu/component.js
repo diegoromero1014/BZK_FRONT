@@ -23,7 +23,6 @@ import {initialMenuPermissions} from "../menu/actions";
 import {Header, Image} from "semantic-ui-react";
 import {redirectUrl} from '../../actionsGlobal';
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
-import {MODULE_WALLET_SHARE_TITLE, MODULE_ANALYTICS_TOOLS} from '../analyticsTools/constants';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -49,12 +48,9 @@ const itemMyPendings = {
 };
 
 const itemTransactional = {
-    text: "Transaccional",
+    text: MODULE_TRANSACTIONAL,
     icon: "area chart",
-    link: "/dashboard/analyticsTools"
-// @ahurtado - 25/09/2017
-// Se comenta por que esto es una solución temporal, mientras terminan transaccional.
-// link: "/dashboard/transactional"
+    link: "/dashboard/transactional"
 };
 
 

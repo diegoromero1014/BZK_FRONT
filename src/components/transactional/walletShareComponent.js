@@ -28,8 +28,8 @@ class WalletShare extends Component {
     }
 
     render() {
-        const { analyticsTools } = this.props;
-        return (<iframe style={{ "width": "100%", "height": "100%", "overflow": "scroll" }} src={analyticsTools.get(PARAMETER_WALLET_SHARE_URL)}></iframe>)
+        const { transactional } = this.props;
+        return (<iframe style={{ "width": "100%", "height": "100%", "overflow": "scroll" }} src={transactional.get(PARAMETER_WALLET_SHARE_URL)}></iframe>)
     }
 }
 
@@ -41,8 +41,8 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ analyticsTools }) {
-    return { analyticsTools };
+function mapStateToProps({ transactional }) {
+    return { transactional };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletShare);

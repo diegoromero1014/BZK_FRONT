@@ -32,8 +32,7 @@ import FavoritesGroup from "./components/contact/favoritesGroup/createEdit/favor
 import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
 import Transactional from "./components/transactional/transactionalComponent";
-import WalletShare from "./components/analyticsTools/walletShareComponent";
-import AnalyticsTools from "./components/analyticsTools/analyticsToolsComponent";
+import WalletShare from "./components/transactional/walletShareComponent";
 
 class App extends Component {
     render() {
@@ -83,7 +82,6 @@ export default (
                 <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
                 <Route path="transactional" component={Transactional}></Route>
                 <Route path="walletShare" component={WalletShare}></Route>
-                <Route path="analyticsTools" component={AnalyticsTools}></Route>
             </Route>
         </Route>
     </Grid>

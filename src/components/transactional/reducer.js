@@ -2,21 +2,15 @@ import Immutable from 'immutable';
 import * as actions from './constants';
 
 const initialState = Immutable.Map({
-  "content_visor_url": ""
+  "WALLET_SHARE_URL": "",
+  "FLUJO_DE_FONDOS_URL": "",
+  "COMEX_URL": ""
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case actions.CONTENT_VISOR_URL:
-      const response = action.payload.data;
-      let routeVisor = "";
-
-      if (response.parameter) {
-        let _response = JSON.parse(response.parameter);
-        routeVisor = _response.value ? _response.value : "";
-      }
-
-      return state.set("content_visor_url", routeVisor);
+    case actions.SET_URL_PARAMETER:
+      return state.set(action.parameter, action.url);
     default:
       return state;
   }
