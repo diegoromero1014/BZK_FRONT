@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {DateTimePicker} from 'react-widgets';
+import React, { Component } from 'react';
+import { DateTimePicker } from 'react-widgets';
 import moment from 'moment';
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 import _ from 'lodash';
@@ -7,30 +7,30 @@ import _ from 'lodash';
 momentLocalizer(moment);
 
 class dateTimePickerComponent extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this._onChange = this._onChange.bind(this);
   }
-  _onChange(date, strDate){
-    const {onChange, format} = this.props;
+  _onChange(date, strDate) {
+    const { onChange, format } = this.props;
     onChange(strDate);
   }
 
-  render(){
-    const {touched, error, value, time} = this.props;
+  render() {
+    const { touched, error, value, time, format } = this.props;
     return (
       <div>
-        { time ?
+        {time ?
           <DateTimePicker {...this.props} />
           :
-          <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null: moment(value, "DD/MM/YYYY").toDate()}/>
+          <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null : moment(value, _.isNill(format) ? 'DD/MM/YYYY' : format).toDate()} />
         }
         {
           touched && error &&
           <div>
-              <div className="ui pointing red basic label">
-                  {error}
-              </div>
+            <div className="ui pointing red basic label">
+              {error}
+            </div>
           </div>
         }
       </div>
