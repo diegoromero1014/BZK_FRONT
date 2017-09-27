@@ -131,9 +131,7 @@ let infoJustificationNeedLME = true;
 //Controla si es la primer vez que se setea información en el campo marcGeren
 let infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
-let clickButttonSave = false;
-//Controla si el campo ¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? debe de estar activo o no
-let disabledOperationsForeigns = true;
+var clickButttonSave = false;
 
 //Controla si el campo Segmento esta seleccionado constructor pyme.
 let isSegmentPymeConstruct = false;
@@ -397,7 +395,6 @@ const validate = (values, props) => {
             //En caso de que si realice operaciones, obligo a que me indique cuales
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
-                disabledOperationsForeigns = false;
                 if (values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') {
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
@@ -405,7 +402,6 @@ const validate = (values, props) => {
                     errors.operationsForeigns = null;
                 }
             } else {
-                disabledOperationsForeigns = true;
                 values.operationsForeigns = null;
                 errors.operationsForeigns = null;
             }
@@ -2334,7 +2330,7 @@ class clientEdit extends Component {
                                 onChange={val => this._onChangeOperationsForeigns(val)}
                                 onBlur={operationsForeigns.onBlur}
                                 data={selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY)}
-                                disabled={disabledOperationsForeigns ? 'disabled' : ''}
+                                disabled={_.isEqual(operationsForeignCurrency.value, false) || _.isEqual(operationsForeignCurrency.value, 'false') || _.isNil(operationsForeignCurrency.value) ? 'disabled' : ''}
                                 touched={true}
                                 maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
                             />
