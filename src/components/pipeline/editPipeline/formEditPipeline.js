@@ -73,7 +73,7 @@ import Business from "../business/business";
 import RichText from '../../richText/richTextComponent';
 import { showLoading } from '../../loading/actions';
 import ToolTip from '../../toolTip/toolTipComponent';
-
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessCategory", "currency", "indexing", "need", "observations", "product",
@@ -113,7 +113,6 @@ const validate = values => {
         errors.need = null;
     }
 
-
     if (typeButtonClick === SAVE_PUBLISHED) {
         if (!values.businessCategory) {
             errorBusinessCategory = OPTION_REQUIRED;
@@ -126,7 +125,6 @@ const validate = values => {
         errorBusinessCategory = null;
         errors.businessCategory = null;
     }
-
 
     if (!values.opportunityName && !isChildren) {
         errors.opportunityName = OPTION_REQUIRED;
@@ -157,7 +155,6 @@ const validate = values => {
     } else {
         errors.termInMonthsValues = null;
     }
-
 
     return errors;
 };
@@ -206,7 +203,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             };
 
             isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
             this._closeMessageEditPipeline = this._closeMessageEditPipeline.bind(this);
             this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -381,14 +377,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-
         _changeBusinessStatus(currencyValue) {
             const { selectsReducer, fields: { probability } } = this.props;
-
             let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
-
             probability.onChange('');
-
             this.setState({
                 probabilityEnabled: _pipeline_status.filter(pStatus => {
                     return (
@@ -397,19 +389,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     )
                 }).length > 0
             });
-
         }
 
         _changeProductFamily(currencyValue) {
             const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
-
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
                 areaAssetsValue.onChange('');
             }
 
             let _product_family = selectsReducer.get(PRODUCT_FAMILY)
-
             this.setState({
                 flagInitLoadAssests: false,
                 areaAssetsEnabled: _product_family.filter(pFamily => {
@@ -639,7 +628,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentWillMount() {
-
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
                     termInMonths, businessStatus, currency, indexing, need, observations,
@@ -710,8 +698,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, pendingDisburAmount, amountDisbursed, estimatedDisburDate,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-            },
-                clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar
+            }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer, reducerGlobal, navBar
             } = this.props;
             const ownerDraft = pipelineReducer.get('ownerDraft');
             let fechaModString = '';
@@ -743,7 +730,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 paddingBottom: "0px",
                                 marginTop: "10px"
                             } : {}}
-
                             ref={divArea => this.modalScrollArea = divArea}>
                             <Row style={{ padding: "5px 10px 0px 20px" }}>
                                 <Col xs={10} sm={10} md={10} lg={10}>
@@ -759,9 +745,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
-
-
-
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -786,8 +769,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     />
                                 </Col>
                             </Row>
-
-
                             <Row style={{ padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{
@@ -807,7 +788,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-
                                 <Col xs={12} md={6} lg={6}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -826,7 +806,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -844,7 +823,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -885,7 +863,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Empleado responsable(</span><span style={{ color: "red" }}>*</span>)
+                                            <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <div className={`ui search ${participantBanc} fluid`}>
                                             <ComboBoxFilter
@@ -913,8 +891,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         }
                                     </div>
                                 </Col>
-
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -936,9 +912,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
-
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -956,11 +929,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
-
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -987,7 +957,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Probabilidad</span>
-
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
@@ -1001,7 +970,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                             </Row>
                             <Row style={{ padding: "20px 23px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
@@ -1096,8 +1064,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>{this.state.labelCurrency} (</span><span
-                                                style={{ color: "red" }}>*</span>)
+                                            <span>{this.state.labelCurrency} (</span>
+                                            <span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <Input
                                             {...value}
@@ -1145,11 +1113,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                                 />
                                             </div>
-
                                         </div>
-
-
-
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
@@ -1169,11 +1133,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Valor del activo/Proyecto</span>
+                                            <span>Valor del activo / Proyecto</span>
                                         </dt>
                                         <Input
                                             name="areaAssetsValue"
@@ -1186,7 +1149,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
@@ -1237,8 +1199,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-
                             </Row>
+                            <ComponentDisbursementPlan disabled={this.state.isEditable} listDisbursement={null}/>
                             <Business origin={origin} disabled={this.state.isEditable} />
                             <Row
                                 style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "20px 23px 20px 20px" }}>
@@ -1293,15 +1255,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null ?
+                                    {updatedBy.value !== null &&
                                         <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                                        : ''}
+                                    }
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null ?
-                                        <span
-                                            style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                                        : ''}
+                                    {updatedBy.value !== null &&
+                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                                    }
                                 </Col>
                             </Row>
                             <Row
@@ -1313,14 +1274,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null ?
+                                    {updatedBy.value !== null &&
                                         <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedByName.value}</span>
-                                        : ''}
+                                    }
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null ?
+                                    {updatedBy.value !== null &&
                                         <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
-                                        : ''}
+                                    }
                                 </Col>
                             </Row>
                             <Row

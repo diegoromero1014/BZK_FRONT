@@ -766,7 +766,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Empleado responsable(</span><span style={{ color: "red" }}>*</span>)
+                      <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <div className={`ui search ${participantBanc} fluid`}>
                       <ComboBoxFilter
@@ -793,8 +793,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     }
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -815,8 +813,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -834,7 +830,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
-
               <Row style={{ padding: "0px 10px 20px 20px" }}>
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
@@ -948,7 +943,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               <Row style={{ padding: "0px 10px 20px 20px" }}>
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -997,15 +991,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         />
                       </div>
                     </div>
-
-
-
-
-
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1023,11 +1010,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Valor del activo/Proyecto</span>
+                      <span>Valor del activo / Proyecto</span>
                     </dt>
                     <Input
                       name="areaAssetsValue"
