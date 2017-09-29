@@ -6,7 +6,7 @@ import {NUMERAL_MONTH} from '../constants';
 import SweetAlert from 'sweetalert-react';
 import {Combobox} from 'react-widgets';
 import {consultInformationVisit, changeLoadChart} from '../actions';
-import BarSeries from '../chartPipeline/barSeries';
+import BarSeries from '../barSeries';
 import {redirectUrl} from '../../globalComponents/actions';
 import numeral from 'numeral';
 import moment from 'moment';

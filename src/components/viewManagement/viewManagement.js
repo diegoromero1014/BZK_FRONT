@@ -6,7 +6,6 @@ import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import ItemChart from './ItemChart';
 import { changeTabSeletedChartView, changeErrorYearSeleted } from './actions';
-import ViewChartPipeline from './chartPipeline/viewChartPipeline';
 import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import ViewChartVisit from './chartVisit/viewChartVisit';
 import ViewChartBusinessPlan from './chartBusinessPlan/viewChartBusinessPlan';
@@ -100,7 +99,7 @@ class ViewManagement extends Component {
             {itemsChart.map(this._mapChartItems)}
           </Row>
         </div>
-        {tabSeletedReducer === TAB_PIPELINE && <ViewChartPipeline />}
+        {tabSeletedReducer === TAB_PIPELINE && <div />}
         {tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit />}
         {tabSeletedReducer === TAB_VISIT && <ViewChartVisit />}
         {tabSeletedReducer === TAB_BUSINESS && <ViewChartBusinessPlan />}

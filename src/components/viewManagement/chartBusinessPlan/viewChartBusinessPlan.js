@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {NUMERAL_MONTH} from '../constants';
 import SweetAlert from 'sweetalert-react';
 import {consultInformationBusinessPlans, changeLoadChart} from '../actions';
-import BarSeries from '../chartPipeline/barSeries';
+import BarSeries from '../barSeries';
 import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
 import {redirectUrl} from '../../globalComponents/actions';
 import {Combobox} from 'react-widgets';
