@@ -12,8 +12,10 @@ class ComponentDisbursementPlan extends Component {
     }
 
     render() {
+        const { disbursementAmount, estimatedDisburDate, fnShowForm, showFormDisbursementPlan,
+            registrationRequired, nominalValue, isEditable } = this.props;
         return (
-            <div style={{ marginBottom: "30px" }}>
+            <div>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{
@@ -32,7 +34,11 @@ class ComponentDisbursementPlan extends Component {
                         </div>
                     </Col>
                 </Row>
-                <ListDisbursementPlans />
+                <ListDisbursementPlans disbursementAmount={disbursementAmount}
+                    showFormDisbursementPlan={showFormDisbursementPlan} isEditable={isEditable}
+                    estimatedDisburDate={estimatedDisburDate} fnShowForm={fnShowForm}
+                    registrationRequired={registrationRequired} nominalValue={nominalValue}
+                />
             </div>
         );
     }

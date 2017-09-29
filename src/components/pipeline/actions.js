@@ -158,3 +158,10 @@ export function changeOwnerDraftPipeline(ownerDraft) {
     ownerDraft: ownerDraft
   };
 }
+
+export function updateDisbursementPlans(listDisbursementPlans) {
+  return {
+    type: constants.UPDATE_DISBURSEMENT_PLANS,
+    listDisbursementPlans: listDisbursementPlans
+  };
+}
