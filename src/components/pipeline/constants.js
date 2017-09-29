@@ -6,7 +6,7 @@ export const CLEAR_PIPELINE_PAGINATOR = 'CLEAR_PIPELINE_PAGINATOR';
 export const CLEAR_PIPELINE_ORDER = 'CLEAR_PIPELINE_ORDER';
 export const ORDER_COLUMN_PIPELINE = 'ORDER_COLUMN_PIPELINE';
 export const CLEAR_PIPELINE = 'CLEAR_PIPELINE';
-export const DELETE_TYPE_PIPELINE= 'DELETE_TYPE_PIPELINE';
+export const DELETE_TYPE_PIPELINE = 'DELETE_TYPE_PIPELINE';
 export const FILTER_STATUS_PIPELINE_ID = 'FILTER_STATUS_PIPELINE_ID';
 export const GET_CSV_PIPELINE_BY_CLIENT = 'GET_CSV_PIPELINE_BY_CLIENT';
 export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
@@ -23,4 +23,6 @@ export const COMPROMETIDO = "Comprometido";
 export const COTIZACION_EN_FIRME = "Cotización en Firme";
 export const PRODUCT_FAMILY_LEASING = "Leasing";
 export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
+//manejo de los planes de desembolso
+export const UPDATE_DISBURSEMENT_PLANS = "UPDATE_DISBURSEMENT_PLANS";
 

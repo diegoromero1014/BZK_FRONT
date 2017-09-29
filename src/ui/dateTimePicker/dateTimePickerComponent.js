@@ -23,7 +23,7 @@ class dateTimePickerComponent extends Component {
         {time ?
           <DateTimePicker {...this.props} />
           :
-          <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null : moment(value, _.isNill(format) ? 'DD/MM/YYYY' : format).toDate()} />
+          <DateTimePicker {...this.props} onChange={this._onChange} value={!_.identity(value) ? null : moment(value, _.isNil(format) ? 'DD/MM/YYYY' : format).toDate()} />
         }
         {
           touched && error &&

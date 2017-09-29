@@ -189,6 +189,16 @@ export function getStrDateByDateFormat(date, format) {
     return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);
 }
 
+export function handleFocusValueNumber(valuReduxForm, val) {
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+        if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+            output += val.toString().charAt(i)
+        }
+    }
+    valuReduxForm.onChange(output);
+}
+
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
@@ -279,7 +289,7 @@ export function validateValue(value) {
 }
 
 export function validateIsNullOrUndefined(value) {
-    return _.isUndefined(value) || _.isNull(value)  ? true : false;
+    return _.isUndefined(value) || _.isNull(value) ? true : false;
 }
 
 // converts HTML to text using Javascript
