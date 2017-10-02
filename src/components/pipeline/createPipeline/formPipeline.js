@@ -983,7 +983,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
                 fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
                 showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                isEditable={true} />
+                origin={origin} isEditable={true} />
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>

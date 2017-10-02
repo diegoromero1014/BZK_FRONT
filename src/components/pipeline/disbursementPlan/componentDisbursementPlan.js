@@ -13,7 +13,7 @@ class ComponentDisbursementPlan extends Component {
 
     render() {
         const { disbursementAmount, estimatedDisburDate, fnShowForm, showFormDisbursementPlan,
-            registrationRequired, nominalValue, isEditable } = this.props;
+            registrationRequired, nominalValue, isEditable, origin } = this.props;
         return (
             <div>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
@@ -38,6 +38,7 @@ class ComponentDisbursementPlan extends Component {
                     showFormDisbursementPlan={showFormDisbursementPlan} isEditable={isEditable}
                     estimatedDisburDate={estimatedDisburDate} fnShowForm={fnShowForm}
                     registrationRequired={registrationRequired} nominalValue={nominalValue}
+                    origin={origin}
                 />
             </div>
         );

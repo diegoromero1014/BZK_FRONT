@@ -12,6 +12,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { updateDisbursementPlans } from '../actions';
 import ToolTip from '../../toolTip/toolTipComponent';
 import SweetAlert from 'sweetalert-react';
+import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
 
 class ListDisbursementPlans extends Component {
 
@@ -148,7 +149,7 @@ class ListDisbursementPlans extends Component {
 
     render() {
         const { disbursementAmount, estimatedDisburDate, showFormDisbursementPlan,
-            fnShowForm, registrationRequired, pipelineReducer, nominalValue, isEditable } = this.props;
+            fnShowForm, registrationRequired, pipelineReducer, nominalValue, isEditable, origin } = this.props;
         var listDisbursementPlans = pipelineReducer.get('disbursementPlans');
         const sizeListDisbursementPlans = _.size(listDisbursementPlans);
         const allowsAddDisbursementPlans = (nominalValue.value > 0 ? false : true) || showFormDisbursementPlan || _.isNil(nominalValue.value);
@@ -198,11 +199,19 @@ class ListDisbursementPlans extends Component {
                         </Col>
                         <Col xs={6} md={4} lg={4}>
                             <button className="btn btn-secondary" type="button" onClick={this._validateInfo} title="Agregar"
-                                style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
+                                style={origin === ORIGIN_PIPELIN_BUSINESS ?
+                                    { cursor: 'pointer', marginTop: '37px', marginRight: '15px', marginLeft: '15px' }
+                                    :
+                                    { cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }
+                                }>
                                 Agregar
                                 </button>
                             <button className="btn btn-primary" type="button" title="Cancelar" onClick={this._clearValues}
-                                style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
+                                style={origin === ORIGIN_PIPELIN_BUSINESS ?
+                                    { cursor: 'pointer', marginTop: '37px', backgroundColor: "#C1C1C1" }
+                                    :
+                                    { cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }
+                                }>
                                 Cancelar
                                 </button>
                         </Col>
