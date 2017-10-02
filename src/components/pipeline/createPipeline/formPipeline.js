@@ -405,7 +405,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           businessCategory, currency, indexing, need, observations, product,
           client, documentStatus, probability, nameUsuario, opportunityName,
           productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues }, createEditPipeline,
-          changeStateSaveData, pipelineBusinessReducer } = this.props;
+          changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
         if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
           this.setState({
@@ -413,7 +413,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           });
         } else {
           if (this.state.showFormAddDisbursementPlan) {
-            swtShowMessage(MESSAGE_ERROR, 'Edición de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
+            swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
           } else {
             const listDisburmentPlans = pipelineReducer.get('disbursementPlans');
             _.map(listDisburmentPlans, (item) => {
