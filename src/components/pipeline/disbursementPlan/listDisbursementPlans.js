@@ -182,7 +182,7 @@ class ListDisbursementPlans extends Component {
                                 />
                             </div>
                         </Col>
-                        <Col xs={12} md={4} lg={3}>
+                        <Col xs={12} md={5} lg={4}>
                             <div>
                                 <dt><span>Fecha estimada de desembolso (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <DateTimePickerUi
@@ -196,7 +196,7 @@ class ListDisbursementPlans extends Component {
                                 />
                             </div>
                         </Col>
-                        <Col xs={6} md={5} lg={5}>
+                        <Col xs={6} md={4} lg={4}>
                             <button className="btn btn-secondary" type="button" onClick={this._validateInfo} title="Agregar"
                                 style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                 Agregar
