@@ -196,8 +196,8 @@ class ListDisbursementPlans extends Component {
                                 />
                             </div>
                         </Col>
-                        <Col xs={4} md={3} lg={3}>
-                            <button className="btn btn-secondary" type="button" onClick={this._validateInfo} title="Guardar"
+                        <Col xs={6} md={5} lg={5}>
+                            <button className="btn btn-secondary" type="button" onClick={this._validateInfo} title="Agregar"
                                 style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                 Agregar
                                 </button>

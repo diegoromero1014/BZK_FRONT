@@ -340,7 +340,7 @@ class ComponentListIntOperations extends Component {
                                     </div>
                                 </Col>
                                 <Col xs={5} md={5} lg={4}>
-                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                         Agregar
                                     </button>

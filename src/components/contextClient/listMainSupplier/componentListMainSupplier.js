@@ -252,7 +252,7 @@ class ComponentListMainSupplier extends Component {
                         }
                         {showFormMainSupplier &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
