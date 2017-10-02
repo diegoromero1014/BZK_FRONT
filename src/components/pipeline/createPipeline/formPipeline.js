@@ -21,7 +21,7 @@ import {
   PROBABILITY,
   PRODUCTS,
   FILTER_MONEY_DISTRIBITION_MARKET,
-  FILTER_AREA_ASSETS,
+  FILTER_ACTIVE,
   TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
@@ -580,7 +580,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_AREA_ASSETS, TERM_IN_MONTHS_VALUES]);
+          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
             data.payload.data.parameter !== undefined) {
@@ -952,7 +952,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(FILTER_AREA_ASSETS) || []}
+                      data={selectsReducer.get(FILTER_ACTIVE) || []}
                       disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
                     />
                   </div>
