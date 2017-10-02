@@ -146,10 +146,10 @@ class ListDisbursementPlans extends Component {
                         disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
-                        updateDisbursementPlans(listDisbursementPlans);
-                        this._clearValues();
-                        this.setState({ entitySeleted: null });
                     }
+                    updateDisbursementPlans(listDisbursementPlans);
+                    this._clearValues();
+                    this.setState({ entitySeleted: null });
                 }
             }
         }
