@@ -27,8 +27,6 @@ import {
 import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
-  CURRENCY_LABEL_COP,
-  CURRENCY_LABEL_OTHER_OPTION,
   LINE_OF_BUSINESS_LEASING,
   ORIGIN_PIPELIN_BUSINESS,
   COMPROMETIDO,
@@ -179,7 +177,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showConfirm: false,
         employeeResponsible: false,
         showConfirmChangeCurrency: false,
-        labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
         errorValidate: false,
         pendingUpdate: false,
         updateValues: {},
@@ -269,18 +266,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeCurrency(currencyValue) {
-      const { fields: { value }, selectsReducer } = this.props;
-      var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
-      var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
-      if (codeCurrency === CURRENCY_COP) {
-        this.setState({
-          labelCurrency: CURRENCY_LABEL_COP
-        });
-      } else {
-        this.setState({
-          labelCurrency: CURRENCY_LABEL_OTHER_OPTION
-        });
-      }
+      const { fields: { value } } = this.props;
       if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
       }
@@ -841,7 +827,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Interés / Spread</span>
+                      <span>Interés/Spread</span>
                     </dt>
                     <Input
                       name={_.uniqueId('commission_')}
@@ -892,13 +878,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>{this.state.labelCurrency} (</span><span style={{ color: "red" }}>*</span>)
+                      <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <Input
                       {...value}
                       name="valueMillions"
                       type="text"
-                      max="28"
+                      max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, value, value.value, false)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -949,6 +935,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
+                      max="15"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
@@ -960,7 +947,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Valor del activo / Proyecto</span>
+                      <span>Valor del activo/Proyecto</span>
                     </dt>
                     <Input
                       name="areaAssetsValue"

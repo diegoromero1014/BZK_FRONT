@@ -20,7 +20,7 @@ import {
     VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR
 } from "../../../constantsGlobal";
 import {
-    CURRENCY_COP, CURRENCY_LABEL_COP, CURRENCY_LABEL_OTHER_OPTION, INTEGER,
+    CURRENCY_COP, INTEGER,
     LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
     REAL, COMPROMETIDO, COTIZACION_EN_FIRME, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
 } from "../constants";
@@ -163,7 +163,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showConfirm: false,
                 employeeResponsible: false,
                 showConfirmChangeCurrency: false,
-                labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
                 pendingUpdate: false,
                 updateValues: {},
                 firstTimeCharging: false,
@@ -228,18 +227,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeCurrency(currencyValue) {
-            const { fields: { value }, selectsReducer } = this.props;
-            var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
-            var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
-            if (codeCurrency === CURRENCY_COP) {
-                this.setState({
-                    labelCurrency: CURRENCY_LABEL_COP
-                });
-            } else {
-                this.setState({
-                    labelCurrency: CURRENCY_LABEL_OTHER_OPTION
-                });
-            }
+            const { fields: { value } } = this.props;
             if (idCurrencyAux == null) {
                 idCurrencyAux = parseInt(currencyValue);
             }
@@ -938,7 +926,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Interés / Spread</span>
+                                            <span>Interés/Spread</span>
                                         </dt>
                                         <Input
                                             name="commission"
@@ -992,14 +980,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>{this.state.labelCurrency} (</span>
+                                            <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <Input
                                             {...value}
                                             name="valueMillions"
                                             type="text"
-                                            max="28"
+                                            max="15"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, false)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -1063,11 +1051,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Valor del activo / Proyecto</span>
+                                            <span>Valor del activo/Proyecto</span>
                                         </dt>
                                         <Input
                                             name="areaAssetsValue"
                                             type="text"
+                                            max="15"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}

@@ -182,7 +182,7 @@ class ListDisbursementPlans extends Component {
                                 <Input
                                     name="disbursementAmount"
                                     type="text"
-                                    max="28"
+                                    max="15"
                                     {...disbursementAmount}
                                     onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, disbursementAmount, disbursementAmount.value, true, 2)}
                                     onFocus={val => handleFocusValueNumber(disbursementAmount, disbursementAmount.value)}
