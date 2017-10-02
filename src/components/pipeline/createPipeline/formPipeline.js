@@ -38,14 +38,8 @@ import {
 } from "../constants";
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
-  DATE_FORMAT,
-  DATE_START_AFTER,
-  MESSAGE_SAVE_DATA,
-  ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED,
-  SAVE_DRAFT,
-  SAVE_PUBLISHED,
-  VALUE_REQUIERED
+  DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
+  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, VALUE_REQUIERED, MESSAGE_ERROR
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
 import {
@@ -404,7 +398,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
           businessCategory, currency, indexing, need, observations, product,
           client, documentStatus, probability, nameUsuario, opportunityName,
-          productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues }, createEditPipeline,
+          productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
+          termInMonthsValues }, createEditPipeline, swtShowMessage,
           changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
         if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
@@ -1088,7 +1083,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       addBusiness,
       changeModalIsOpen,
       clearBusiness,
-      updateDisbursementPlans
+      updateDisbursementPlans,
+      swtShowMessage
     }, dispatch);
   }
 

@@ -41,7 +41,7 @@ class ListDisbursementPlans extends Component {
                 </ToolTip>
             </td>
             }
-            <td>{entity.disbursementAmount}</td>
+            <td>{handleBlurValueNumber(ONLY_POSITIVE_INTEGER, null, (entity.disbursementAmount).toString(), true, 2)}</td>
             <td>{entity.estimatedDisburDate}</td>
             {isEditable && <td className="collapsing">
                 <ToolTip text={'Eliminar plan de desembolso'}>
@@ -73,15 +73,16 @@ class ListDisbursementPlans extends Component {
             nominalValue } = this.props;
         const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
         var disbursementAmountItem = 0;
+        const nominalValueNum = parseFloat(((nominalValue.value).toString()).replace(/,/g, ""));
         const newListPart = _.remove(listDisbursementPlans, (item) => {
             if (_.isEqual(item.id, this.state.entityDelete.id)) {
-                disbursementAmountItem = item.disbursementAmount;
+                disbursementAmountItem = parseFloat((item.disbursementAmount.toString()).replace(/,/g, ""));
                 return false;
             } else {
                 return true;
             }
         });
-        nominalValue.onChange(_.sum([parseFloat(nominalValue.value), parseFloat(disbursementAmountItem)]));
+        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]), true, 2);
         updateDisbursementPlans(newListPart);
         this.setState({
             entityDelete: null,
@@ -105,25 +106,27 @@ class ListDisbursementPlans extends Component {
         } else {
             var listDisbursementPlans = pipelineReducer.get('disbursementPlans');
             var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
-            totalDisbursementAmount = _.sum([totalDisbursementAmount, parseFloat(nominalValue.value)]);
-            if ((disbursementAmount.value > nominalValue.value && this.state.entitySeleted == null) ||
-                (this.state.entitySeleted != null && disbursementAmount.value > totalDisbursementAmount)) {
+            const disbursementAmountNum = parseFloat((disbursementAmount.value.toString()).replace(/,/g, ""));
+            const nominalValueNum = parseFloat((nominalValue.value.toString()).replace(/,/g, ""));
+            totalDisbursementAmount = _.sum([totalDisbursementAmount, nominalValueNum]);
+            if ((disbursementAmountNum > nominalValueNum && this.state.entitySeleted == null) ||
+                (this.state.entitySeleted != null && disbursementAmountNum > totalDisbursementAmount)) {
                 swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor nominal.');
             } else {
                 var disbursementAmountItem;
                 if (_.isNull(this.state.entitySeleted)) {
                     const newDisbursementPlan = {
                         id: _.uniqueId('disburPlan_'),
-                        disbursementAmount: parseFloat(disbursementAmount.value),
+                        disbursementAmount: parseFloat(disbursementAmountNum),
                         estimatedDisburDate: estimatedDisburDate.value
                     };
                     listDisbursementPlans.push(newDisbursementPlan);
-                    disbursementAmountItem = _.subtract(nominalValue.value, newDisbursementPlan.disbursementAmount);
-                    nominalValue.onChange((disbursementAmountItem).toString());
+                    disbursementAmountItem = _.subtract(nominalValueNum, newDisbursementPlan.disbursementAmount);
+                    handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                 } else {
                     const updateValue = {
                         id: this.state.entitySeleted.id,
-                        disbursementAmount: disbursementAmount.value,
+                        disbursementAmount: disbursementAmountNum,
                         estimatedDisburDate: estimatedDisburDate.value
                     };
                     disbursementAmountItem = 0;
@@ -135,9 +138,9 @@ class ListDisbursementPlans extends Component {
                             return true;
                         }
                     });
-                    disbursementAmountItem = _.sum([nominalValue.value, disbursementAmountItem]);
+                    disbursementAmountItem = _.sum([nominalValueNum, disbursementAmountItem]);
                     disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount);
-                    nominalValue.onChange((disbursementAmountItem).toString());
+                    handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                     listDisbursementPlans.push(updateValue);
                 }
                 updateDisbursementPlans(listDisbursementPlans);
@@ -152,7 +155,7 @@ class ListDisbursementPlans extends Component {
             fnShowForm, registrationRequired, pipelineReducer, nominalValue, isEditable, origin } = this.props;
         var listDisbursementPlans = pipelineReducer.get('disbursementPlans');
         const sizeListDisbursementPlans = _.size(listDisbursementPlans);
-        const allowsAddDisbursementPlans = (nominalValue.value > 0 ? false : true) || showFormDisbursementPlan || _.isNil(nominalValue.value);
+        const allowsAddDisbursementPlans = ((nominalValue.value.toString()).replace(/,/g, "") > 0 ? false : true) || showFormDisbursementPlan || _.isNil(nominalValue.value);
         return (
             <div>
                 {isEditable &&

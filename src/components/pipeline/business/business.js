@@ -16,7 +16,7 @@ class BusinessBusiness extends Component {
   render() {
     const { businesss, disabled, origin } = this.props;
     return (
-      <div style={{ padding: "10px 10px 0px 20px" }}>
+      <div style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 0px 20px" }}>
         <Col xs={12} md={12} lg={12}>
           <div style={{
             fontSize: "25px",
