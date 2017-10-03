@@ -305,10 +305,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
+            const { selectsReducer, fields: { areaAssets } } = this.props;
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-                areaAssetsValue.onChange('');
             }
 
             let _product_family = selectsReducer.get(PRODUCT_FAMILY)
@@ -1061,7 +1060,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}
                                             onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                                            disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
+                                            disabled={ this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>

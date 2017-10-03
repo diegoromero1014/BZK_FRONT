@@ -317,12 +317,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
 
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
+      const { selectsReducer, fields: { areaAssets } } = this.props;
 
       let _product_family = selectsReducer.get(PRODUCT_FAMILY)
 
       areaAssets.onChange('');
-      areaAssetsValue.onChange('');
 
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
@@ -956,7 +955,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
                       onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                      disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
