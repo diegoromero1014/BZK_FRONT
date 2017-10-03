@@ -9,21 +9,10 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
 import {
-    BUSINESS_CATEGORY,
-    FILTER_COUNTRY,
-    LINE_OF_BUSINESS,
-    PIPELINE_BUSINESS,
-    PRODUCT_FAMILY,
-    MELLOWING_PERIOD,
-    PIPELINE_INDEXING,
-    PIPELINE_PRIORITY,
-    PIPELINE_PRODUCTS,
-    PIPELINE_STATUS,
-    PROBABILITY,
-    PRODUCTS,
-    FILTER_MONEY_DISTRIBITION_MARKET,
-    FILTER_AREA_ASSETS,
-    TERM_IN_MONTHS_VALUES
+    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS,
+    PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET,
+    FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import {
     DATE_FORMAT, DATE_START_AFTER, EDITAR, MESSAGE_SAVE_DATA,
@@ -31,19 +20,9 @@ import {
     VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR
 } from "../../../constantsGlobal";
 import {
-    CURRENCY_COP,
-    CURRENCY_LABEL_COP,
-    CURRENCY_LABEL_OTHER_OPTION,
-    INTEGER,
-    LINE_OF_BUSINESS_LEASING,
-    ORIGIN_PIPELIN_BUSINESS,
-    POSITIVE_INTEGER,
-    PROPUEST_OF_BUSINESS,
-    REAL,
-    COMPROMETIDO,
-    COTIZACION_EN_FIRME,
-    PRODUCT_FAMILY_LEASING,
-    HELP_PROBABILITY
+    CURRENCY_COP, INTEGER,
+    LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
+    REAL, COMPROMETIDO, COTIZACION_EN_FIRME, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
 } from "../constants";
 import { createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans } from "../actions";
 import {
@@ -184,7 +163,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showConfirm: false,
                 employeeResponsible: false,
                 showConfirmChangeCurrency: false,
-                labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
                 pendingUpdate: false,
                 updateValues: {},
                 firstTimeCharging: false,
@@ -249,18 +227,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeCurrency(currencyValue) {
-            const { fields: { value }, selectsReducer } = this.props;
-            var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
-            var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
-            if (codeCurrency === CURRENCY_COP) {
-                this.setState({
-                    labelCurrency: CURRENCY_LABEL_COP
-                });
-            } else {
-                this.setState({
-                    labelCurrency: CURRENCY_LABEL_OTHER_OPTION
-                });
-            }
+            const { fields: { value } } = this.props;
             if (idCurrencyAux == null) {
                 idCurrencyAux = parseInt(currencyValue);
             }
@@ -338,10 +305,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
+            const { selectsReducer, fields: { areaAssets } } = this.props;
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-                areaAssetsValue.onChange('');
             }
 
             let _product_family = selectsReducer.get(PRODUCT_FAMILY)
@@ -599,7 +565,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showLoading(true, 'Cargando...');
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_AREA_ASSETS, TERM_IN_MONTHS_VALUES]).then((result) => {
+                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
@@ -959,7 +925,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Interés / Spread</span>
+                                            <span>Interés/Spread</span>
                                         </dt>
                                         <Input
                                             name="commission"
@@ -1013,14 +979,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>{this.state.labelCurrency} (</span>
+                                            <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <Input
                                             {...value}
                                             name="valueMillions"
                                             type="text"
-                                            max="28"
+                                            max="15"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, false)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -1076,7 +1042,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...areaAssets}
                                             name={nameAreaAssets}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(FILTER_AREA_ASSETS) || []}
+                                            data={selectsReducer.get(FILTER_ACTIVE) || []}
                                             disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
                                         />
                                     </div>
@@ -1084,16 +1050,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Valor del activo / Proyecto</span>
+                                            <span>Valor del activo/Proyecto</span>
                                         </dt>
                                         <Input
                                             name="areaAssetsValue"
                                             type="text"
+                                            max="15"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}
                                             onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                                            disabled={(this.state.areaAssetsEnabled && this.state.isEditable) ? '' : 'disabled'}
+                                            disabled={ this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>

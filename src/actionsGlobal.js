@@ -229,17 +229,29 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
         while (pattern.test(val)) {
             val = val.replace(pattern, "$1,$2");
         }
-        valuReduxForm.onChange(val + decimal);
+        if (_.isNil(valuReduxForm)) {
+            return (val + decimal);
+        } else {
+            valuReduxForm.onChange(val + decimal);
+        }
     } else { //Valido si el valor es negativo o positivo
-        var value = numeral(valuReduxForm.value).format('0');
+        var value = _.isNil(valuReduxForm) ? numeral(val).format('0') : numeral(valuReduxForm.value).format('0');
         if (value >= 0) {
             pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {
                 val = val.replace(pattern, "$1,$2");
             }
-            valuReduxForm.onChange(val + decimal);
+            if (_.isNil(valuReduxForm)) {
+                return (val + decimal);
+            } else {
+                valuReduxForm.onChange(val + decimal);
+            }
         } else {
-            valuReduxForm.onChange("");
+            if (_.isNil(valuReduxForm)) {
+                return "";
+            } else {
+                valuReduxForm.onChange("");
+            }
         }
     }
 }
