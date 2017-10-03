@@ -202,7 +202,6 @@ class ModalCreateTask extends Component {
                   <DateTimePickerUi
                     {...fecha}
                     culture='es'
-                    format={"MM/YYYY"}
                     time={false}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                   />
