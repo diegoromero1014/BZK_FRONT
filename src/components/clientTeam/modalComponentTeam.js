@@ -23,7 +23,7 @@ class ModalComponentTeam extends Component {
             teamManagers: [],
             teamOthers: [],
             teamAssistants: [],
-            tabActive: OPTION_ASSISTANTS
+            tabActive: OPTION_MANAGER
         };
     }
 
