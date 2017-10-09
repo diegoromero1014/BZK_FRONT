@@ -54,7 +54,7 @@ class ListClientsPortfolioExpiration extends Component {
         const page = alertPortfolioExpiration.get('pageNum');
         showLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
-            if (has(data, 'payload.data.data')) {
+            if (has(data, 'payload.data.data.pagination')) {
                 showLoading(false, null);
             }
         });

@@ -23,6 +23,9 @@ import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import { formatDateFromDDMMYYY} from '../../actionsGlobal';
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -31,6 +34,7 @@ const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 class ClientsPendingUpdate extends Component {
     constructor(props) {
         super(props);
+        momentLocalizer(moment);
         this._onChangeTeam = this._onChangeTeam.bind(this);
         this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
         this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
@@ -48,7 +52,7 @@ class ClientsPendingUpdate extends Component {
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
             clearFilter().then((data) => {
-                if (_.has(data, 'payload.data.data')) {
+                if (_.has(data, 'payload.data.data.pagination')) {
                     showLoading(false, null);
                 }
             });
@@ -110,7 +114,7 @@ class ClientsPendingUpdate extends Component {
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
-            if (_.has(data, 'payload.data.data')) {
+            if (_.has(data, 'payload.data.data.pagination')) {
                 showLoading(false, null);
                 changePage(1);
             }
@@ -186,7 +190,8 @@ class ClientsPendingUpdate extends Component {
                 </form>
                 <Row>
                     <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
-                        Total: {numberTotalClientFiltered}
+                        Total: {numberTotalClientFiltered},
+                        Fecha ultima carga: {formatDateFromDDMMYYY(alertPortfolioExpiration.get("lastUploadDate"))}
                     </div>
                 </Row>
                 <Row>
