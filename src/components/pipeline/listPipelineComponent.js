@@ -66,17 +66,17 @@ class ListPipelineComponent extends Component {
         key:"actionsRedirect"
       },
       {
+        title: "Nombre de la oportunidad",
+        key:"opportunityName"
+      },
+      {
         title: "Estado del negocio",
         key:"businessStatus"
       },
       {
         title: "Necesidad",
         key:"need"
-      },
-      {
-        title: "Estado del documento",
-        key:"statusDocument"
-      },
+      },      
       {
         title: "",
         key:"delete"
