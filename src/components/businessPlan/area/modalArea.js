@@ -1,51 +1,51 @@
 import moment from "moment";
-import {reduxForm} from "redux-form";
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
+import { reduxForm } from "redux-form";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
 import SweetAlert from "sweetalert-react";
-import {Col, Row} from "react-flexbox-grid";
+import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import Input from "../../../ui/input/inputComponent";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {getMasterDataFields} from "../../selectsComponent/actions";
-import {STATUS_AREAS} from "./constants";
-import {addArea, editArea} from "./actions";
+import { getMasterDataFields } from "../../selectsComponent/actions";
+import { STATUS_AREAS } from "./constants";
+import { addArea, editArea } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import {htmlToText} from "../../../actionsGlobal";
+import { htmlToText } from "../../../actionsGlobal";
 
-const fields = ["idEmployee","areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
+const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
 const validate = (values) => {
-  if(!values.areaDes){
+  if (!values.areaDes) {
     errors.areaDes = "Debe ingresar un valor";
-  }else{
+  } else {
     errors.areaDes = null;
   }
-  if(!values.actionArea || _.isEmpty(htmlToText(values.actionArea))){
+  if (!values.actionArea || _.isEmpty(htmlToText(values.actionArea))) {
     errors.actionArea = "Debe ingresar un valor";
-  }else{
+  } else {
     errors.actionArea = null;
   }
-  if(!values.areaResponsable){
+  if (!values.areaResponsable) {
     errors.areaResponsable = "Debe ingresar un valor";
-  }else{
+  } else {
     errors.areaResponsable = null;
   }
-  if(!values.statusArea){
+  if (!values.statusArea) {
     errors.statusArea = "Debe seleccionar una opción";
-  }else{
+  } else {
     errors.statusArea = null;
   }
-  if(!values.areaDate){
+  if (!values.areaDate) {
     errors.areaDate = "Debe seleccionar una fecha";
-  }else{
+  } else {
     errors.areaDate = null;
   }
   return errors;
@@ -60,19 +60,19 @@ class ModalArea extends Component {
     this._closeCreate = this._closeCreate.bind(this);
     this._onClickDate = this._onClickDate.bind(this);
     this.state = {
-      showSuccessAdd:false,
-      showSuccessEdit:false,
-      showEr:false,
-      prueba:[],
+      showSuccessAdd: false,
+      showSuccessEdit: false,
+      showEr: false,
+      prueba: [],
       showErrorYa: false,
       openDatePicker: false
     }
     momentLocalizer(moment);
   }
 
-  componentDidMount(){
-    const {fields:{idEmployee,areaDes, actionArea, areaResponsable, areaDate,statusArea}, areaEdit} = this.props;
-    if(areaEdit !== undefined){
+  componentDidMount() {
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, areaEdit } = this.props;
+    if (areaEdit !== undefined) {
       areaDes.onChange(areaEdit.areaDes);
       actionArea.onChange(areaEdit.actionArea);
       areaResponsable.onChange(areaEdit.areaResponsable);
@@ -82,19 +82,19 @@ class ModalArea extends Component {
     }
   }
 
-  _onClickDate(){
-    setTimeout(function(){
+  _onClickDate() {
+    setTimeout(function () {
       document.getElementById('modalComponentScrollArea').scrollTop = 1000;
     }, 100);
   }
 
-  _closeCreate(){
-    const {isOpen, areaEdit} = this.props;
-    if(areaEdit !== undefined){
+  _closeCreate() {
+    const { isOpen, areaEdit } = this.props;
+    if (areaEdit !== undefined) {
       this.setState({
         showSuccessEdit: false
       });
-    }else{
+    } else {
       this.setState({
         showSuccessAdd: false
       });
@@ -103,190 +103,195 @@ class ModalArea extends Component {
     this.props.resetForm();
   }
 
-  _handleCreateArea(){
-    const {fields:{idEmployee,areaDes, actionArea, areaResponsable, areaDate,statusArea}, handleSubmit, error, addArea, editArea, areaEdit,selectsReducer} = this.props;
-    let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id',  parseInt(statusArea.value)]), '[0].value');
-    if(areaResponsable.value !== nameUsuario){
+  _handleCreateArea() {
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer } = this.props;
+    let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
+    if (areaResponsable.value !== nameUsuario) {
       nameUsuario = areaResponsable.value;
       idUsuario = idEmployee.value;
     }
-     if(areaEdit !== undefined){
-       areaEdit.actionArea = actionArea.value;
-       areaEdit.areaDes = areaDes.value;
-       areaEdit.statusIdArea = statusArea.value;
-       areaEdit.areaDate = areaDate.value;
-       areaEdit.areaFormat = areaDate.value;
-       areaEdit.statusArea = status;
-       areaEdit.areaIdResponsable = idUsuario;
-       areaEdit.areaResponsable = nameUsuario;
-       editArea(areaEdit);
-        this.setState({
-          showSuccessEdit: true
-        });
-      }else{
-        const uuid = _.uniqueId('area_');
-        let area = {
-          uuid,
-          areaDes: areaDes.value,
-          actionArea :actionArea.value,
-          areaIdResponsable: idUsuario,
-          areaResponsable: nameUsuario,
-          areaDate: areaDate.value,
-          areaFormat : areaDate.value,
-          statusIdArea:statusArea.value,
-          statusArea:status
-        }
-        addArea(area);
-        this.setState({
-          showSuccessAdd: true
-        });
+    if (areaEdit !== undefined) {
+      areaEdit.actionArea = actionArea.value;
+      areaEdit.areaDes = areaDes.value;
+      areaEdit.statusIdArea = statusArea.value;
+      areaEdit.areaDate = areaDate.value;
+      areaEdit.areaFormat = areaDate.value;
+      areaEdit.statusArea = status;
+      areaEdit.areaIdResponsable = idUsuario;
+      areaEdit.areaResponsable = nameUsuario;
+      editArea(areaEdit);
+      this.setState({
+        showSuccessEdit: true
+      });
+    } else {
+      const uuid = _.uniqueId('area_');
+      let area = {
+        uuid,
+        areaDes: areaDes.value,
+        actionArea: actionArea.value,
+        areaIdResponsable: idUsuario,
+        areaResponsable: nameUsuario,
+        areaDate: areaDate.value,
+        areaFormat: areaDate.value,
+        statusIdArea: statusArea.value,
+        statusArea: status
       }
+      addArea(area);
+      this.setState({
+        showSuccessAdd: true
+      });
+    }
   }
 
-  updateKeyValueUsersBanco(e){
-    const {fields: {areaResponsable,idEmployee}, filterUsersBanco} = this.props;
-    const selector =  $('.ui.search.areaResponsable');
-    if(e.keyCode === 13 || e.which === 13){
+  updateKeyValueUsersBanco(e) {
+    const { fields: { areaResponsable, idEmployee }, filterUsersBanco } = this.props;
+    const selector = $('.ui.search.areaResponsable');
+    if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
-      if(areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined){
+      if (areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined) {
         selector.toggleClass('loading');
         filterUsersBanco(areaResponsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
           selector.search({
-              cache: false,
-              source: usersBanco,
-              maxResults : 1500,
-              searchFields: [
-                'title',
-                'description'
-              ],
-              onSelect : function(event) {
-                  areaResponsable.onChange(event.title);
-                  idEmployee.onChange(event.idUsuario);
-                  return 'default';
-              }
-            });
-            selector.toggleClass('loading');
-            selector.search('search local', areaResponsable.value);
-            setTimeout(function () {
-              $('#inputParticipantBanc').focus();
-            }, 150);
+            cache: false,
+            source: usersBanco,
+            maxResults: 1500,
+            searchFields: [
+              'title',
+              'description'
+            ],
+            onSelect: function (event) {
+              areaResponsable.onChange(event.title);
+              idEmployee.onChange(event.idUsuario);
+              return 'default';
+            }
           });
+          selector.toggleClass('loading');
+          selector.search('search local', areaResponsable.value);
+          setTimeout(function () {
+            $('#inputParticipantBanc').focus();
+          }, 150);
+        });
       }
     }
   }
 
-  _updateValue(value){
-    const{fields: {areaResponsable}} = this.props;
+  _updateValue(value) {
+    const { fields: { areaResponsable } } = this.props;
     areaResponsable.onChange(value);
   }
 
   componentWillMount() {
-    const {getMasterDataFields} = this.props;
+    const { getMasterDataFields } = this.props;
     getMasterDataFields([STATUS_AREAS]);
   }
 
-    render() {
-      const {selectsReducer} = this.props;
-        const {initialValues, fields:{areaDes, actionArea, areaResponsable, areaDate,statusArea}, handleSubmit, error}= this.props;
-        return (
-          <form onSubmit={handleSubmit(this._handleCreateArea)}>
-            <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollArea">
-              <dt className="business-title"><span style={{paddingLeft: '20px'}}>Adicionar área al plan de negocio</span></dt>
-              <div style={{paddingLeft:'20px',paddingRight:'20px', paddingBottom: '30px'}}>
-                <p style={{paddingTop: "10px", marginBottom: "0px"}} >Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</p>
-                <Row>
-                  <Col xs>
-                    <dt><span>Área (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
-                      <Input
-                      type="text"
-                      name="areaDes"
-                      {...areaDes}
-                      max="200"/>
-                    </dt>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={12} md={12} lg={12}>
-                    <dt><span>Acciones necesarias (<span style={{color: "red"}}>*</span>)</span></dt>
-                      <RichText
-                        name="actionArea"
-                        style={{width: '100%', height: '180px'}}
-                        {...actionArea}
-                        />
-                  </Col>
-                </Row>
-                <Row style={{paddingTop: '20px'}}>
-                  <Col xs={12} md={12} lg={12}>
-                    <dt><span>Responsable  (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
-                    <ComboBoxFilter
-                      name="areaResponsable"
-                      {...areaResponsable}
-                      onChange={areaResponsable.onChange}
-                      value={areaResponsable.value}
-                      labelInput="Ingrese un criterio de búsqueda..."
-                      parentId="dashboardComponentScroll"
-                      onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                      onSelect={val => this._updateValue(val)}
-                      max="50"
-                    />
-                    </dt>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs>
-                    <dt><span>Estado  (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
-                    <ComboBox
-                      name="statusArea"
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...statusArea}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(STATUS_AREAS) || []}
-                    />
-                    </dt>
-                  </Col>
-                  <Col xs>
-                    <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span></dt>
-                    <dt style={{paddingTop:"0px"}}>
-                    <DateTimePickerUi
-                      culture='es'
-                      format={"DD/MM/YYYY"}
-                      time={false}
-                      {...areaDate}
-                      onClick={this._onClickDate}
-                    />
-                    </dt>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-            <div className="modalBt4-footer modal-footer">
-              <button type="submit" className="btn btn-primary modal-button-edit">
-                <span>Guardar</span>
-              </button>
-            </div>
-            <SweetAlert
-             type="success"
-             show={this.state.showSuccessAdd}
-             title="Área agregada"
-             text="Señor usuario, el área fue agregada exitosamente."
-             onConfirm={() => this._closeCreate()}
-           />
-           <SweetAlert
-            type="success"
-            show={this.state.showSuccessEdit}
-            title="Área editada"
-            text="Señor usuario, el área fue editada exitosamente."
-            onConfirm={() => this._closeCreate()}
-          />
-          </form>
-        );
-    }
+  render() {
+    const { selectsReducer, disabled, initialValues, fields: { areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error } = this.props;
+    return (
+      <form onSubmit={handleSubmit(this._handleCreateArea)}>
+        <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollArea">
+          <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Adicionar área al plan de negocio</span></dt>
+          <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>
+            <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
+            <Row>
+              <Col xs>
+                <dt><span>Área (<span style={{ color: "red" }}>*</span>)</span></dt>
+                <dt style={{ paddingTop: "0px" }}>
+                  <Input
+                    type="text"
+                    name="areaDes"
+                    {...areaDes}
+                    disabled={disabled}
+                    max="200" />
+                </dt>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} md={12} lg={12}>
+                <dt><span>Acciones necesarias (<span style={{ color: "red" }}>*</span>)</span></dt>
+                <RichText
+                  name="actionArea"
+                  style={{ width: '100%', height: '180px' }}
+                  {...actionArea}
+                  disabled={disabled}
+                  readOnly={_.isEqual(disabled, 'disabled')}
+                />
+              </Col>
+            </Row>
+            <Row style={{ paddingTop: '20px' }}>
+              <Col xs={12} md={12} lg={12}>
+                <dt><span>Responsable  (<span style={{ color: "red" }}>*</span>)</span></dt>
+                <dt style={{ paddingTop: "0px" }}>
+                  <ComboBoxFilter
+                    name="areaResponsable"
+                    {...areaResponsable}
+                    onChange={areaResponsable.onChange}
+                    value={areaResponsable.value}
+                    labelInput="Ingrese un criterio de búsqueda..."
+                    parentId="dashboardComponentScroll"
+                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                    onSelect={val => this._updateValue(val)}
+                    max="50"
+                    disabled={disabled}
+                  />
+                </dt>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs>
+                <dt><span>Estado  (<span style={{ color: "red" }}>*</span>)</span></dt>
+                <dt style={{ paddingTop: "0px" }}>
+                  <ComboBox
+                    name="statusArea"
+                    labelInput="Seleccione..."
+                    valueProp={'id'}
+                    textProp={'value'}
+                    {...statusArea}
+                    parentId="dashboardComponentScroll"
+                    data={selectsReducer.get(STATUS_AREAS) || []}
+                    disabled={disabled}
+                  />
+                </dt>
+              </Col>
+              <Col xs>
+                <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span></dt>
+                <dt style={{ paddingTop: "0px" }}>
+                  <DateTimePickerUi
+                    culture='es'
+                    format={"DD/MM/YYYY"}
+                    time={false}
+                    {...areaDate}
+                    onClick={this._onClickDate}
+                    disabled={disabled}
+                  />
+                </dt>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <div className="modalBt4-footer modal-footer">
+          <button type="submit" className="btn btn-primary modal-button-edit" disabled={disabled} style={_.isEqual(disabled, "disabled") ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}>
+            <span>Guardar</span>
+          </button>
+        </div>
+        <SweetAlert
+          type="success"
+          show={this.state.showSuccessAdd}
+          title="Área agregada"
+          text="Señor usuario, el área fue agregada exitosamente."
+          onConfirm={() => this._closeCreate()}
+        />
+        <SweetAlert
+          type="success"
+          show={this.state.showSuccessEdit}
+          title="Área editada"
+          text="Señor usuario, el área fue editada exitosamente."
+          onConfirm={() => this._closeCreate()}
+        />
+      </form>
+    );
+  }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -298,30 +303,30 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({areas, selectsReducer}, {areaEdit}) {
-  if(areaEdit !== undefined){
+function mapStateToProps({ areas, selectsReducer }, { areaEdit }) {
+  if (areaEdit !== undefined) {
     return {
       areas,
       selectsReducer,
       initialValues: {
         areaDes: areaEdit.needIdType,
-        actionArea:areaEdit.actionArea,
-        areaResponsable:areaEdit.areaResponsable,
+        actionArea: areaEdit.actionArea,
+        areaResponsable: areaEdit.areaResponsable,
         idEmployee: areaEdit.areaIdResponsable,
-        statusArea:areaEdit.statusIdArea,
-        areaDate:areaEdit.areaFormat
+        statusArea: areaEdit.statusIdArea,
+        areaDate: areaEdit.areaFormat
       }
 
     }
-  }else{
+  } else {
     return {
       areas,
       selectsReducer,
       initialValues: {
         areaDes: '',
-        actionArea:'',
-        areaResponsable:'',
-        statusArea:'',
+        actionArea: '',
+        areaResponsable: '',
+        statusArea: '',
         areaDate: ''
       }
     };
@@ -329,4 +334,11 @@ function mapStateToProps({areas, selectsReducer}, {areaEdit}) {
 }
 
 
-export default reduxForm({form : 'submitModalArea', fields,validate}, mapStateToProps, mapDispatchToProps)(ModalArea);
+export default reduxForm({ 
+  form: 'submitModalArea', 
+  fields, 
+  validate,
+  onSubmitFail: errors => {
+        document.getElementById('modalComponentScrollArea').scrollTop = 0;
+  } 
+}, mapStateToProps, mapDispatchToProps)(ModalArea);

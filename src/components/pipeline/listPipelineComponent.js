@@ -10,6 +10,7 @@ import {NUMBER_RECORDS,DELETE_TYPE_PIPELINE} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
+import { MODULE_PIPELINE } from '../grid/constants';
 
 let v1 = "";
 let v2= "";
@@ -111,7 +112,7 @@ class ListPipelineComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              typeClickDetail: "pipeline",
+              typeClickDetail: MODULE_PIPELINE,
               ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/pipelineEdit",
               component: "VIEW_PIPELINE"
