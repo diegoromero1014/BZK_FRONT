@@ -22,6 +22,8 @@ const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaD
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
+let thisForm;
+
 const validate = (values) => {
   if (!values.areaDes) {
     errors.areaDes = "Debe ingresar un valor";
@@ -65,9 +67,11 @@ class ModalArea extends Component {
       showEr: false,
       prueba: [],
       showErrorYa: false,
-      openDatePicker: false
+      openDatePicker: false,
+      showErrorForm: false
     }
     momentLocalizer(moment);
+    thisForm = this;
   }
 
   componentDidMount() {
@@ -289,6 +293,13 @@ class ModalArea extends Component {
           text="Señor usuario, el área fue editada exitosamente."
           onConfirm={() => this._closeCreate()}
         />
+        <SweetAlert
+          type="error"
+          show={this.state.showErrorForm}
+          title="Campos obligatorios"
+          text="Señor usuario, para agregar una área debe ingresar los campos obligatorios."
+          onConfirm={() => this.setState({ showErrorForm: false })}
+        />
       </form>
     );
   }
@@ -334,11 +345,12 @@ function mapStateToProps({ areas, selectsReducer }, { areaEdit }) {
 }
 
 
-export default reduxForm({ 
-  form: 'submitModalArea', 
-  fields, 
+export default reduxForm({
+  form: 'submitModalArea',
+  fields,
   validate,
   onSubmitFail: errors => {
-        document.getElementById('modalComponentScrollArea').scrollTop = 0;
-  } 
+    document.getElementById('modalComponentScrollArea').scrollTop = 0;
+    thisForm.setState({ showErrorForm: true });
+  }
 }, mapStateToProps, mapDispatchToProps)(ModalArea);

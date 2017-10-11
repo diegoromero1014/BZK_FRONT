@@ -81,7 +81,7 @@ class FormBusinessPlan extends Component {
 
 
     _submitCreateBusiness() {
-        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, changeStateSaveData } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
         var errorInForm = false;
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
             errorInForm = true;
@@ -168,31 +168,8 @@ class FormBusinessPlan extends Component {
                 "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB
             }
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            createBusiness(businessJson).then((data) => {
-                changeStateSaveData(false, "");
-                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                    redirectUrl("/login");
-                } else {
-                    if ((_.get(data, 'payload.data.status') === 200)) {
-                        typeMessage = "success";
-                        titleMessage = "Creación plan de negocio";
-                        message = "Señor usuario, el plan de negocio se creó de forma exitosa.";
-                        this.setState({ showMessageCreateBusiness: true });
-                    } else {
-                        typeMessage = "error";
-                        titleMessage = "Creación plan de negocio";
-                        message = "Señor usuario, ocurrió un error creando el plan de negocio.";
-                        this.setState({ showMessageCreateBusiness: true });
-                    }
-                }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                typeMessage = "error";
-                titleMessage = "Creación plan de negocio";
-                message = "Señor usuario, ocurrió un error creando el plan de negocio.";
-                this.setState({ showMessageCreateBusiness: true });
-            });
+            //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
+            this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
         }
 
     }
@@ -255,8 +232,10 @@ class FormBusinessPlan extends Component {
         }
     }
 
-    _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate) {
-        const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates } = this.props;
+    //Método que valida las fechas ingresadas, que la inicial no sea mayor que la final y que el rango no se encuentre registrado ya
+    //Además realiza la acción de guardado si el parámetro makeSaveBusiness llega en true
+    _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
+        const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates, changeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -265,14 +244,42 @@ class FormBusinessPlan extends Component {
                 finalDateError: false,
             });
             if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
-                fieldDate.onChange(null);
+                if (!_.isNil(fieldDate)) {
+                    fieldDate.onChange(null);
+                }
                 swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
             } else {
-                validateRangeDates(moment(initialDate, DATE_FORMAT).format('x'), moment(finalDate, DATE_FORMAT).format('x'), null).then( (data) => {
+                validateRangeDates(moment(initialDate, DATE_FORMAT).format('x'), moment(finalDate, DATE_FORMAT).format('x'), null).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
-                        if( !response ){
+                        if (!response) {
                             swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya se encuentra resgistrado un plan de negocio que se solapa con el rango de fechas seleccionado.');
+                        } else if (makeSaveBusiness) {
+                            changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                            createBusiness(businessJson).then((data) => {
+                                changeStateSaveData(false, "");
+                                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
+                                    redirectUrl("/login");
+                                } else {
+                                    if ((_.get(data, 'payload.data.status') === 200)) {
+                                        typeMessage = "success";
+                                        titleMessage = "Creación plan de negocio";
+                                        message = "Señor usuario, el plan de negocio se creó de forma exitosa.";
+                                        this.setState({ showMessageCreateBusiness: true });
+                                    } else {
+                                        typeMessage = "error";
+                                        titleMessage = "Creación plan de negocio";
+                                        message = "Señor usuario, ocurrió un error creando el plan de negocio.";
+                                        this.setState({ showMessageCreateBusiness: true });
+                                    }
+                                }
+                            }, (reason) => {
+                                changeStateSaveData(false, "");
+                                typeMessage = "error";
+                                titleMessage = "Creación plan de negocio";
+                                message = "Señor usuario, ocurrió un error creando el plan de negocio.";
+                                this.setState({ showMessageCreateBusiness: true });
+                            });
                         }
                     }
                 });
@@ -323,7 +330,7 @@ class FormBusinessPlan extends Component {
                                 time={false}
                                 touched={true}
                                 {...initialValidityDate}
-                                onSelect={(val) => this._onSelectFieldDate(moment(val).format(DATE_FORMAT), finalValidityDate.value, finalValidityDate)}
+                                onSelect={(val) => this._onSelectFieldDate(moment(val).format(DATE_FORMAT), finalValidityDate.value, finalValidityDate, false)}
                                 error={this.state.initialDateError}
                             />
                             <div style={{ marginLeft: '20px' }}>
@@ -335,7 +342,7 @@ class FormBusinessPlan extends Component {
                                     time={false}
                                     touched={true}
                                     {...finalValidityDate}
-                                    onSelect={(val) => this._onSelectFieldDate(initialValidityDate.value, moment(val).format(DATE_FORMAT), initialValidityDate)}
+                                    onSelect={(val) => this._onSelectFieldDate(initialValidityDate.value, moment(val).format(DATE_FORMAT), initialValidityDate, false)}
                                     error={this.state.finalDateError}
                                 />
                             </div>

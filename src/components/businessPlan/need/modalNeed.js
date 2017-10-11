@@ -21,6 +21,8 @@ const fields = ["idEmployee", "needType", "descriptionNeed", "needProduct", "nee
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
+let thisForm;
+
 const validate = (values) => {
     if (!values.needType) {
         errors.needType = "Debe seleccionar una opción";
@@ -86,9 +88,11 @@ class ModalNeed extends Component {
             showEr: false,
             employeeResponsible: false,
             prueba: [],
-            showErrorYa: false
+            showErrorYa: false,
+            showErrorForm: false
         }
         momentLocalizer(moment);
+        thisForm = this;
     }
 
     _scroll() {
@@ -428,6 +432,13 @@ class ModalNeed extends Component {
                     text="Señor usuario, la necesidad fue editada exitosamente"
                     onConfirm={() => this._closeCreate()}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorForm}
+                    title="Campos obligatorios"
+                    text="Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios."
+                    onConfirm={() => this.setState({showErrorForm: false})}
+                />
             </form>
         );
     }
@@ -485,5 +496,6 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalComponentScrollNeed').scrollTop = 0;
+        thisForm.setState({showErrorForm: true});
     }
 }, mapStateToProps, mapDispatchToProps)(ModalNeed);
