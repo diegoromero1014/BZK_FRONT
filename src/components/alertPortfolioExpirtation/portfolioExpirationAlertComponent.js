@@ -25,7 +25,8 @@ import { SESSION_EXPIRED } from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
+import { formatLongDateToDateWithNameMonth, validateResponse } from '../../actionsGlobal';
+import { swtShowMessage } from "../sweetAlertMessages/actions";
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -47,13 +48,14 @@ class ClientsPendingUpdate extends Component {
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
-            const { clearFilter, consultList, consultDataSelect, updateTitleNavBar } = this.props;
+            const { clearFilter, consultList, consultDataSelect, updateTitleNavBar, swtShowMessage } = this.props;
             showLoading(true, 'Cargando..');
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
             clearFilter().then((data) => {
-                if (_.has(data, 'payload.data.data.pagination')) {
-                    showLoading(false, null);
+                showLoading(false, null);
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
             updateTitleNavBar(titleModule);
@@ -65,13 +67,14 @@ class ClientsPendingUpdate extends Component {
     }
 
     _cleanSearch() {
-        const { resetForm, showLoading, clearFilter, consultList } = this.props;
+        const { resetForm, showLoading, clearFilter, consultList, swtShowMessage } = this.props;
         showLoading(true, 'Cargando..');
         resetForm();
         clearFilter();
         consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
-            if (_.has(data, 'payload.data.teamValueObjects')) {
-                showLoading(false, null);
+            showLoading(false, null);
+            if (!_.has(data, 'payload.data')) {
+                swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
         });
     }
@@ -108,15 +111,15 @@ class ClientsPendingUpdate extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { team, region, zone }, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading } = this.props;
+        const { fields: { team, region, zone }, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage } = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
-            if (_.has(data, 'payload.data.data.pagination')) {
-                showLoading(false, null);
-                changePage(1);
+            showLoading(false, null);
+            if (!validateResponse(data)) {
+                swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
         });
     }
@@ -244,6 +247,7 @@ function mapDispatchToProps(dispatch) {
         consultDataSelect,
         showLoading,
         changeTeam,
+        swtShowMessage,
         changeRegion,
         changeZone,
         consultTeamsByRegionByEmployee
