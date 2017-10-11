@@ -22,7 +22,7 @@ export function consultParameterServer(tagConsult) {
         "messageBody": {
             "name": tagConsult
         }
-    }
+    };
 
     var request = axios.post(constants.APP_URL + "/getParameterByName", json);
     return {
@@ -189,6 +189,16 @@ export function getStrDateByDateFormat(date, format) {
     return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);
 }
 
+export function handleFocusValueNumber(valuReduxForm, val) {
+    //Elimino los caracteres no validos
+    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+        if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+            output += val.toString().charAt(i)
+        }
+    }
+    valuReduxForm.onChange(output);
+}
+
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
@@ -219,17 +229,29 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
         while (pattern.test(val)) {
             val = val.replace(pattern, "$1,$2");
         }
-        valuReduxForm.onChange(val + decimal);
+        if (_.isNil(valuReduxForm)) {
+            return (val + decimal);
+        } else {
+            valuReduxForm.onChange(val + decimal);
+        }
     } else { //Valido si el valor es negativo o positivo
-        var value = numeral(valuReduxForm.value).format('0');
+        var value = _.isNil(valuReduxForm) ? numeral(val).format('0') : numeral(valuReduxForm.value).format('0');
         if (value >= 0) {
             pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {
                 val = val.replace(pattern, "$1,$2");
             }
-            valuReduxForm.onChange(val + decimal);
+            if (_.isNil(valuReduxForm)) {
+                return (val + decimal);
+            } else {
+                valuReduxForm.onChange(val + decimal);
+            }
         } else {
-            valuReduxForm.onChange("");
+            if (_.isNil(valuReduxForm)) {
+                return "";
+            } else {
+                valuReduxForm.onChange("");
+            }
         }
     }
 }
@@ -279,7 +301,7 @@ export function validateValue(value) {
 }
 
 export function validateIsNullOrUndefined(value) {
-    return _.isUndefined(value) || _.isNull(value)  ? true : false;
+    return _.isUndefined(value) || _.isNull(value) ? true : false;
 }
 
 // converts HTML to text using Javascript

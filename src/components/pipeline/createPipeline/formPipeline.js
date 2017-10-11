@@ -21,14 +21,12 @@ import {
   PROBABILITY,
   PRODUCTS,
   FILTER_MONEY_DISTRIBITION_MARKET,
-  FILTER_AREA_ASSETS,
+  FILTER_ACTIVE,
   TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
-  CURRENCY_LABEL_COP,
-  CURRENCY_LABEL_OTHER_OPTION,
   LINE_OF_BUSINESS_LEASING,
   ORIGIN_PIPELIN_BUSINESS,
   COMPROMETIDO,
@@ -36,23 +34,15 @@ import {
   PRODUCT_FAMILY_LEASING,
   HELP_PROBABILITY
 } from "../constants";
-import { changeModalIsOpen, createEditPipeline } from "../actions";
+import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
-  DATE_FORMAT,
-  DATE_START_AFTER,
-  MESSAGE_SAVE_DATA,
-  ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED,
-  SAVE_DRAFT,
-  SAVE_PUBLISHED,
-  VALUE_REQUIERED
+  DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
+  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, VALUE_REQUIERED, MESSAGE_ERROR
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
 import {
-  consultParameterServer,
-  formValidateKeyEnter,
-  handleBlurValueNumber,
-  nonValidateEnter
+  consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
+  handleFocusValueNumber
 } from "../../../actionsGlobal";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
@@ -69,11 +59,13 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import { showLoading } from '../../loading/actions';
 import ToolTip from '../../toolTip/toolTipComponent';
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-  "businessCategory", "currency", "indexing", "need", "observations", "product", "reviewedDate"
-  , "client", "documentStatus", "probability", "pendingDisburAmount", "amountDisbursed",
-  "estimatedDisburDate", "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
+const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths",
+  "businessStatus", "businessCategory", "currency", "indexing", "need", "observations", "product",
+  "reviewedDate", "client", "documentStatus", "probability", "amountDisbursed", "estimatedDisburDate",
+  "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
   "areaAssets", "areaAssetsValue", "termInMonthsValues"];
 
 let typeMessage = "success";
@@ -111,7 +103,6 @@ const validate = values => {
   } else {
     errors.need = null;
   }
-
 
   if (typeButtonClick === SAVE_PUBLISHED) {
     if (!values.businessCategory) {
@@ -156,7 +147,6 @@ const validate = values => {
     errors.termInMonthsValues = null;
   }
 
-
   return errors;
 };
 
@@ -187,12 +177,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showConfirm: false,
         employeeResponsible: false,
         showConfirmChangeCurrency: false,
-        labelCurrency: CURRENCY_LABEL_OTHER_OPTION,
         errorValidate: false,
         pendingUpdate: false,
         updateValues: {},
         probabilityEnabled: false,
-        areaAssetsEnabled: false
+        areaAssetsEnabled: false,
+        //Se utilizan para controlar el componente de planes de desembolso 
+        showFormAddDisbursementPlan: false,
+        disbursementPlanRequired: false
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -201,8 +193,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
       this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
       this._updateValue = this._updateValue.bind(this);
-      this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
-      this._handleFocusValueNumber = this._handleFocusValueNumber.bind(this);
       this._onCloseButton = this._onCloseButton.bind(this);
       this._closeConfirmClosePipeline = this._closeConfirmClosePipeline.bind(this);
       this._changeCurrency = this._changeCurrency.bind(this);
@@ -212,7 +202,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
       this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
       this._changeProductFamily = this._changeProductFamily.bind(this);
+      this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
+    }
 
+    showFormDisbursementPlan(isOpen) {
+      const { pipelineReducer } = this.props;
+      const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+      const detailPipeline = pipelineReducer.get('detailPipeline');
+      this.setState({
+        showFormAddDisbursementPlan: isOpen,
+        disbursementPlanRequired: false
+      });
     }
 
     // TODO: Revisar la asignación del state
@@ -236,8 +236,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _cleanForm() {
       const { initialValues, fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, reviewedDate,
-        client, documentStatus, probability, pendingDisburAmount, amountDisbursed,
-        estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
+        client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
       nameUsuario.onChange('');
       idUsuario.onChange('');
       value.onChange('');
@@ -258,9 +257,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       contollerErrorChangeType = false;
       idCurrencyAux = null;
       probability.onChange('');
-      pendingDisburAmount.onChange('');
-      amountDisbursed.onChange('');
-      estimatedDisburDate.onChange('');
       opportunityName.onChange('');
       productFamily.onChange('');
       mellowingPeriod.onChange('');
@@ -270,18 +266,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeCurrency(currencyValue) {
-      const { fields: { value }, selectsReducer } = this.props;
-      var pipelineCurrencies = selectsReducer.get('pipelineCurrencies');
-      var codeCurrency = _.get(_.filter(pipelineCurrencies, ['id', parseInt(currencyValue)]), '[0].code');
-      if (codeCurrency === CURRENCY_COP) {
-        this.setState({
-          labelCurrency: CURRENCY_LABEL_COP
-        });
-      } else {
-        this.setState({
-          labelCurrency: CURRENCY_LABEL_OTHER_OPTION
-        });
-      }
+      const { fields: { value } } = this.props;
       if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
       }
@@ -312,55 +297,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       input.focus();
     }
 
-
-    _handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, numDecimals) {
-      //Elimino los caracteres no validos
-      for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
-        if (validos.indexOf(val.toString().charAt(i)) !== -1) {
-          output += val.toString().charAt(i)
-        }
-      }
-      val = output;
-
-      /* Si typeValidation = 2 es por que el valor puede ser negativo
-         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
-      */
-      var decimal = '';
-      if (val.includes(".")) {
-        var vectorVal = val.split(".");
-        if (allowsDecimal) {
-          val = vectorVal[0] + '.';
-          if (vectorVal.length > 1) {
-
-            var numDec = (numDecimals != undefined && numDecimals != null) ? numDecimals : 4;
-            decimal = vectorVal[1].substring(0, numDec);
-
-          }
-        } else {
-          val = vectorVal[0];
-        }
-      }
-
-      if (typeValidation === 2) { //Realizo simplemente el formateo
-        var pattern = /(-?\d+)(\d{3})/;
-        while (pattern.test(val)) {
-          val = val.replace(pattern, "$1,$2");
-        }
-        valuReduxForm.onChange(val + decimal);
-      } else { //Valido si el valor es negativo o positivo
-        var value = numeral(valuReduxForm.value).format('0');
-        if (value >= 0) {
-          pattern = /(-?\d+)(\d{3})/;
-          while (pattern.test(val)) {
-            val = val.replace(pattern, "$1,$2");
-          }
-          valuReduxForm.onChange(val + decimal);
-        } else {
-          valuReduxForm.onChange("");
-        }
-      }
-    }
-
     _changeBusinessStatus(currencyValue) {
       const { selectsReducer, fields: { probability } } = this.props;
 
@@ -381,12 +317,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
 
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets, areaAssetsValue } } = this.props;
+      const { selectsReducer, fields: { areaAssets } } = this.props;
 
       let _product_family = selectsReducer.get(PRODUCT_FAMILY)
 
       areaAssets.onChange('');
-      areaAssetsValue.onChange('');
 
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
@@ -396,17 +331,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         }).length > 0
       });
 
-    }
-
-
-    _handleFocusValueNumber(valuReduxForm, val) {
-      //Elimino los caracteres no validos
-      for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
-        if (validos.indexOf(val.toString().charAt(i)) !== -1) {
-          output += val.toString().charAt(i)
-        }
-      }
-      valuReduxForm.onChange(output);
     }
 
     _handleTermInMonths(valuReduxForm, val) {
@@ -458,91 +382,97 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (errorBusinessCategory === null) {
         const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
           businessCategory, currency, indexing, need, observations, product,
-          client, documentStatus, probability, nameUsuario,
-          pendingDisburAmount, amountDisbursed, estimatedDisburDate, opportunityName,
-          productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues }, createEditPipeline,
-          changeStateSaveData, pipelineBusinessReducer } = this.props;
+          client, documentStatus, probability, nameUsuario, opportunityName,
+          productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
+          termInMonthsValues }, createEditPipeline, swtShowMessage,
+          changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
         if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
           this.setState({
             employeeResponsible: true
           });
         } else {
-          if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
-            let pipelineJson = {
-              "id": null,
-              "client": window.localStorage.getItem('idClientSelected'),
-              "documentStatus": typeButtonClick,
-              "product": product.value,
-              "businessStatus": businessStatus.value,
-              "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
-              "currency": currency.value,
-              "indexing": indexing.value,
-              "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-              "need": need.value,
-              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-              "observations": observations.value,
-              "termInMonths": termInMonths.value,
-              "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
-              "value": value.value === undefined ? null : numeral(value.value).format('0'),
+          if (this.state.showFormAddDisbursementPlan) {
+            swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
+          } else {
+            const listDisburmentPlans = pipelineReducer.get('disbursementPlans');
+            _.map(listDisburmentPlans, (item) => {
+              item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+              return item;
+            });
+            if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
+              let pipelineJson = {
+                "id": null,
+                "client": window.localStorage.getItem('idClientSelected'),
+                "documentStatus": typeButtonClick,
+                "product": product.value,
+                "businessStatus": businessStatus.value,
+                "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+                "currency": currency.value,
+                "indexing": indexing.value,
+                "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+                "need": need.value,
+                "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+                "observations": observations.value,
+                "termInMonths": termInMonths.value,
+                "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
+                "value": value.value === undefined ? null : numeral(value.value).format('0'),
+                "probability": probability.value,
+                "businessCategory": businessCategory.value,
+                "opportunityName": opportunityName.value,
+                "productFamily": productFamily.value ? productFamily.value : "",
+                "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
+                "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
+                "areaAssets": areaAssets.value ? areaAssets.value : "",
+                "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
+                "disbursementPlans": listDisburmentPlans
+              };
 
-              "probability": probability.value,
-              "pendingDisburAmount": pendingDisburAmount.value === undefined || pendingDisburAmount.value === null || pendingDisburAmount.value === '' ? null : (pendingDisburAmount.value).replace(/,/g, ""),
-              "amountDisbursed": amountDisbursed.value === undefined || amountDisbursed.value === null || amountDisbursed.value === '' ? null : (amountDisbursed.value).replace(/,/g, ""),
-              "businessCategory": businessCategory.value,
-              "estimatedDisburDate": parseInt(moment(estimatedDisburDate.value, DATE_FORMAT).format('x')),
-              "opportunityName": opportunityName.value,
-              "productFamily": productFamily.value ? productFamily.value : "",
-              "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
-              "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
-              "areaAssets": areaAssets.value ? areaAssets.value : "",
-              "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00')
-            };
-
-            if (origin === ORIGIN_PIPELIN_BUSINESS) {
-              const uuid = _.uniqueId('pipelineBusiness_');
-              pipelineJson.uuid = uuid;
-              typeMessage = "success";
-              titleMessage = "Creación negocio";
-              message = "Señor usuario, el negocio se adicionó exitosamente.";
-              this.setState({
-                showMessageCreatePipeline: true,
-                pendingUpdate: true,
-                updateValues: pipelineJson
-              });
-            } else {
-              var resultPipelineBusines = [];
-              _.map(pipelineBusinessReducer.toArray(),
-                function (pipelineBusiness) {
-                  resultPipelineBusines.push(_.omit(pipelineBusiness, ['uuid']));
-                }
-              );
-              pipelineJson.listPipelines = resultPipelineBusines;
-              changeStateSaveData(true, MESSAGE_SAVE_DATA);
-              createEditPipeline(pipelineJson).then((data) => {
-                changeStateSaveData(false, "");
-                if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                  redirectUrl("/login");
-                } else {
-                  if ((_.get(data, 'payload.data.status') === 200)) {
-                    typeMessage = "success";
-                    titleMessage = "Creación pipeline";
-                    message = "Señor usuario, el pipeline se creó exitosamente.";
-                    this.setState({ showMessageCreatePipeline: true });
-                  } else {
-                    typeMessage = "error";
-                    titleMessage = "Creación pipeline";
-                    message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
-                    this.setState({ showMessageCreatePipeline: true });
+              if (origin === ORIGIN_PIPELIN_BUSINESS) {
+                const uuid = _.uniqueId('pipelineBusiness_');
+                pipelineJson.uuid = uuid;
+                typeMessage = "success";
+                titleMessage = "Creación negocio";
+                message = "Señor usuario, el negocio se adicionó exitosamente.";
+                this.setState({
+                  showMessageCreatePipeline: true,
+                  pendingUpdate: true,
+                  updateValues: pipelineJson
+                });
+              } else {
+                var resultPipelineBusines = [];
+                _.map(pipelineBusinessReducer.toArray(),
+                  function (pipelineBusiness) {
+                    resultPipelineBusines.push(_.omit(pipelineBusiness, ['uuid']));
                   }
-                }
-              }, (reason) => {
-                changeStateSaveData(false, "");
-                typeMessage = "error";
-                titleMessage = "Creación pipeline";
-                message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
-                this.setState({ showMessageCreatePipeline: true });
-              });
+                );
+                pipelineJson.listPipelines = resultPipelineBusines;
+                changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                createEditPipeline(pipelineJson).then((data) => {
+                  changeStateSaveData(false, "");
+                  if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                    redirectUrl("/login");
+                  } else {
+                    if ((_.get(data, 'payload.data.status') === 200)) {
+                      typeMessage = "success";
+                      titleMessage = "Creación pipeline";
+                      message = "Señor usuario, el pipeline se creó exitosamente.";
+                      this.setState({ showMessageCreatePipeline: true });
+                    } else {
+                      typeMessage = "error";
+                      titleMessage = "Creación pipeline";
+                      message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
+                      this.setState({ showMessageCreatePipeline: true });
+                    }
+                  }
+                }, (reason) => {
+                  changeStateSaveData(false, "");
+                  typeMessage = "error";
+                  titleMessage = "Creación pipeline";
+                  message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
+                  this.setState({ showMessageCreatePipeline: true });
+                });
+              }
             }
           }
         }
@@ -620,8 +550,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans } = this.props;
       nonValidateEnter(true);
+      updateDisbursementPlans([]);
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
       }
@@ -634,7 +565,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_AREA_ASSETS, TERM_IN_MONTHS_VALUES]);
+          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
             data.payload.data.parameter !== undefined) {
@@ -648,10 +579,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product,
-        client, documentStatus, probability,
-        pendingDisburAmount, amountDisbursed, estimatedDisburDate, opportunityName,
+        client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
-        clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar } = this.props;
+        clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
+      const isEditableValue = _.size(pipelineReducer.get('disbursementPlans')) > 0 ? false : true;
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
@@ -766,7 +697,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Empleado responsable(</span><span style={{ color: "red" }}>*</span>)
+                      <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <div className={`ui search ${participantBanc} fluid`}>
                       <ComboBoxFilter
@@ -793,8 +724,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     }
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -815,8 +744,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -834,7 +761,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
-
               <Row style={{ padding: "0px 10px 20px 20px" }}>
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
@@ -900,7 +826,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Interés / Spread</span>
+                      <span>Interés/Spread</span>
                     </dt>
                     <Input
                       name={_.uniqueId('commission_')}
@@ -908,8 +834,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...commission}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => this._handleBlurValueNumber(2, commission, commission.value, true)}
-                      onFocus={val => this._handleFocusValueNumber(commission, commission.value)}
+                      onBlur={val => handleBlurValueNumber(2, commission, commission.value, true)}
+                      onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
                 </Col>
@@ -924,8 +850,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...roe}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => this._handleBlurValueNumber(1, roe, roe.value, true)}
-                      onFocus={val => this._handleFocusValueNumber(roe, roe.value)}
+                      onBlur={val => handleBlurValueNumber(1, roe, roe.value, true)}
+                      onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
                 </Col>
@@ -948,20 +874,20 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               <Row style={{ padding: "0px 10px 20px 20px" }}>
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>{this.state.labelCurrency} (</span><span style={{ color: "red" }}>*</span>)
+                      <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <Input
                       {...value}
                       name="valueMillions"
                       type="text"
-                      max="28"
+                      max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => this._handleBlurValueNumber(1, value, value.value, false)}
-                      onFocus={val => this._handleFocusValueNumber(value, value.value)}
+                      onBlur={val => handleBlurValueNumber(1, value, value.value, false)}
+                      onFocus={val => handleFocusValueNumber(value, value.value)}
+                      disabled={isEditableValue ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
@@ -997,15 +923,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         />
                       </div>
                     </div>
-
-
-
-
-
                   </div>
                 </Col>
-
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1015,15 +934,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
+                      max="15"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(FILTER_AREA_ASSETS) || []}
+                      data={selectsReducer.get(FILTER_ACTIVE) || []}
                       disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
                     />
                   </div>
                 </Col>
-
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1034,62 +953,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => this._handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
-                      onFocus={val => this._handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                      disabled={this.state.areaAssetsEnabled ? '' : 'disabled'}
-                    />
-                  </div>
-                </Col>
-
-
-              </Row>
-              <Row style={{ padding: "0px 10px 20px 20px" }}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Monto pendiente por desembolsar</span>
-                    </dt>
-                    <Input
-                      name="txtPendingDisburAmount"
-                      type="text"
-                      {...pendingDisburAmount}
-                      max="28"
-                      parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisburAmount, pendingDisburAmount.value, true, 2)}
-                      onFocus={val => this._handleFocusValueNumber(pendingDisburAmount, pendingDisburAmount.value)}
-                    />
-                  </div>
-                </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Monto desembolsado</span>
-                    </dt>
-                    <Input
-                      name="txtAmountDisbursed"
-                      type="text"
-                      {...amountDisbursed}
-                      max="28"
-                      parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, amountDisbursed, amountDisbursed.value, true, 2)}
-                      onFocus={val => this._handleFocusValueNumber(amountDisbursed, amountDisbursed.value)}
-                    />
-                  </div>
-                </Col>
-                <Col xs={6} md={4} lg={4}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Fecha estimada de desembolso - DD/MM/YYYY</span>
-                    </dt>
-                    <DateTimePickerUi
-                      {...estimatedDisburDate}
-                      culture='es'
-                      format={DATE_FORMAT}
-                      time={false}
+                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                      onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>
                 </Col>
               </Row>
+              <ComponentDisbursementPlan
+                disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
+                fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
+                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
+                origin={origin} isEditable={true} />
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -1193,7 +1067,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       nonValidateEnter,
       addBusiness,
       changeModalIsOpen,
-      clearBusiness
+      clearBusiness,
+      updateDisbursementPlans,
+      swtShowMessage
     }, dispatch);
   }
 

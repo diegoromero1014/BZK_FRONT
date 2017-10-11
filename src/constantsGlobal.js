@@ -1,4 +1,4 @@
-export const VERSION_DATE = "06/10/2017";
+export const VERSION_DATE = "11/10/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -110,7 +110,7 @@ export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
 export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
-export const MODULE_VISOR = "Transaccional";
+export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 
 export const TAB_INFO = 1;
