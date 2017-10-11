@@ -16,6 +16,9 @@ import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
+import {MESSAGE_ERROR} from '../../../constantsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
 
 const fields = ["idEmployee", "needType", "descriptionNeed", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};
@@ -88,8 +91,7 @@ class ModalNeed extends Component {
             showEr: false,
             employeeResponsible: false,
             prueba: [],
-            showErrorYa: false,
-            showErrorForm: false
+            showErrorYa: false
         }
         momentLocalizer(moment);
         thisForm = this;
@@ -432,13 +434,6 @@ class ModalNeed extends Component {
                     text="Señor usuario, la necesidad fue editada exitosamente"
                     onConfirm={() => this._closeCreate()}
                 />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showErrorForm}
-                    title="Campos obligatorios"
-                    text="Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios."
-                    onConfirm={() => this.setState({showErrorForm: false})}
-                />
             </form>
         );
     }
@@ -446,8 +441,12 @@ class ModalNeed extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getClientNeeds, getMasterDataFields, filterUsersBanco, addNeed,
+        getClientNeeds, 
+        getMasterDataFields, 
+        filterUsersBanco, 
+        addNeed,
         editNeed,
+        swtShowMessage
     }, dispatch);
 }
 
@@ -496,6 +495,7 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalComponentScrollNeed').scrollTop = 0;
-        thisForm.setState({showErrorForm: true});
+        const {swtShowMessage} = thisForm.props;
+        swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
     }
 }, mapStateToProps, mapDispatchToProps)(ModalNeed);

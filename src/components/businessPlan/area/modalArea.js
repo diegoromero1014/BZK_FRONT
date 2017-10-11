@@ -17,6 +17,8 @@ import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText } from "../../../actionsGlobal";
+import { MESSAGE_ERROR } from '../../../constantsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
 const errors = {};
@@ -67,8 +69,7 @@ class ModalArea extends Component {
       showEr: false,
       prueba: [],
       showErrorYa: false,
-      openDatePicker: false,
-      showErrorForm: false
+      openDatePicker: false
     }
     momentLocalizer(moment);
     thisForm = this;
@@ -293,13 +294,6 @@ class ModalArea extends Component {
           text="Señor usuario, el área fue editada exitosamente."
           onConfirm={() => this._closeCreate()}
         />
-        <SweetAlert
-          type="error"
-          show={this.state.showErrorForm}
-          title="Campos obligatorios"
-          text="Señor usuario, para agregar una área debe ingresar los campos obligatorios."
-          onConfirm={() => this.setState({ showErrorForm: false })}
-        />
       </form>
     );
   }
@@ -310,7 +304,8 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     filterUsersBanco,
     addArea,
-    editArea
+    editArea,
+    swtShowMessage
   }, dispatch);
 }
 
@@ -351,6 +346,7 @@ export default reduxForm({
   validate,
   onSubmitFail: errors => {
     document.getElementById('modalComponentScrollArea').scrollTop = 0;
-    thisForm.setState({ showErrorForm: true });
+    const { swtShowMessage } = thisForm.props;
+    swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una área debe ingresar los campos obligatorios.");
   }
 }, mapStateToProps, mapDispatchToProps)(ModalArea);
