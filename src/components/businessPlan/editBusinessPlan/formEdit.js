@@ -394,7 +394,7 @@ class FormEdit extends Component {
                 <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha de vigencia - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+                            <span>Vigencia - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <div style={{ display: "flex" }}>
                             <DateTimePickerUi

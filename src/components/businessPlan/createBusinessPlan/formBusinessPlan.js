@@ -253,7 +253,7 @@ class FormBusinessPlan extends Component {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya se encuentra resgistrado un plan de negocio que se solapa con el rango de fechas seleccionado.');
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe un plan de negocio registrado en este rango de fechas, por favor complemente el informe ya creado o modifique las fechas.');
                         } else if (makeSaveBusiness) {
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createBusiness(businessJson).then((data) => {
@@ -319,7 +319,7 @@ class FormBusinessPlan extends Component {
                 <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha de vigencia - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+                            <span>Vigencia - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <div style={{ display: "flex" }}>
                             <DateTimePickerUi
