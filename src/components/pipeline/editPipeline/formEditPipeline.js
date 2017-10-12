@@ -7,7 +7,9 @@ import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
+import {
+    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication
+} from "../../selectsComponent/actions";
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS,
@@ -305,7 +307,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { selectsReducer, fields: { areaAssets } } = this.props;
+            const { selectsReducer, fields: { areaAssets, productFamily,product }, consultListWithParameterUbication, pipelineReducer } = this.props;
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
             }
@@ -319,6 +321,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     )
                 }).length > 0
             });
+            consultListWithParameterUbication(PRODUCTS, currencyValue);
+            if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
+                product.onChange('');
+            }
         }
 
         _closeConfirmChangeCurrency() {
@@ -564,7 +570,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 showLoading(true, 'Cargando...');
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
-                    PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+                    PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
                     FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
@@ -1060,7 +1066,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}
                                             onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                                            disabled={ this.state.isEditable ? '' : 'disabled'}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
@@ -1275,7 +1281,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             clearBusiness,
             showLoading,
             swtShowMessage,
-            updateDisbursementPlans
+            updateDisbursementPlans,
+            consultListWithParameterUbication
         }, dispatch);
     }
 

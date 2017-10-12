@@ -83,7 +83,7 @@ class ListDisbursementPlans extends Component {
                 return true;
             }
         });
-        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]), true, 2);
+        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]).toFixed(2), true, 2);
         updateDisbursementPlans(newListPart);
         this.setState({
             entityDelete: null,
@@ -143,7 +143,7 @@ class ListDisbursementPlans extends Component {
                             }
                         });
                         disbursementAmountItem = _.sum([nominalValueNum, disbursementAmountItem]);
-                        disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount);
+                        disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount).toFixed(2);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
                     }

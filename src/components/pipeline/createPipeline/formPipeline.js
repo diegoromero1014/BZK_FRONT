@@ -8,23 +8,13 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {
-  BUSINESS_CATEGORY,
-  FILTER_COUNTRY,
-  LINE_OF_BUSINESS,
-  PIPELINE_BUSINESS,
-  PRODUCT_FAMILY,
-  MELLOWING_PERIOD,
-  PIPELINE_INDEXING,
-  PIPELINE_PRIORITY,
-  PIPELINE_PRODUCTS,
-  PIPELINE_STATUS,
-  PROBABILITY,
-  PRODUCTS,
-  FILTER_MONEY_DISTRIBITION_MARKET,
-  FILTER_ACTIVE,
-  TERM_IN_MONTHS_VALUES
+  BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
+  PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
-import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
+import {
+  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication
+} from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
   LINE_OF_BUSINESS_LEASING,
@@ -315,14 +305,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     }
 
-
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets } } = this.props;
-
+      const { selectsReducer, fields: { areaAssets, product }, consultListWithParameterUbication } = this.props;
       let _product_family = selectsReducer.get(PRODUCT_FAMILY)
-
       areaAssets.onChange('');
-
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
           return (
@@ -330,7 +316,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-
+      consultListWithParameterUbication(PRODUCTS, currencyValue);
+      product.onChange('');
     }
 
     _handleTermInMonths(valuReduxForm, val) {
@@ -564,7 +551,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         redirectUrl("/dashboard/clientInformation");
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
-          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -1069,7 +1056,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       changeModalIsOpen,
       clearBusiness,
       updateDisbursementPlans,
-      swtShowMessage
+      swtShowMessage,
+      consultListWithParameterUbication
     }, dispatch);
   }
 
