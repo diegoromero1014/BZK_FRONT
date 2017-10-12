@@ -13,7 +13,8 @@ import {
   PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import {
-  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication
+  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+  clearLists
 } from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
@@ -537,9 +538,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists } = this.props;
       nonValidateEnter(true);
       updateDisbursementPlans([]);
+      clearLists([PRODUCTS]);
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
       }
@@ -1057,7 +1059,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       clearBusiness,
       updateDisbursementPlans,
       swtShowMessage,
-      consultListWithParameterUbication
+      consultListWithParameterUbication,
+      clearLists
     }, dispatch);
   }
 
