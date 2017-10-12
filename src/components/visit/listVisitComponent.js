@@ -10,6 +10,7 @@ import {NUMBER_RECORDS,DELETE_TYPE_VISIT} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
+import { MODULE_VISIT } from '../grid/constants';
 
 
 let v1 = "";
@@ -117,7 +118,7 @@ class ListVisitComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              typeClickDetail: "visita",
+              typeClickDetail: MODULE_VISIT,
               ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/visitaEditar",
               component : "VIEW_VISIT"

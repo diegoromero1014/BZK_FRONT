@@ -101,7 +101,7 @@ class ListArea extends Component {
               <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                 onClick={this._viewDetailsArea.bind(this, areaData)}
-                style={disabled === 'disabled' ? {display:'none'} : {cursor: "pointer"}} />
+                style={{cursor: "pointer"}} />
               </td>
               <td>{areaData.areaD}</td>
               <td>{areaData.areaResponsable}</td>
@@ -172,7 +172,7 @@ class ListArea extends Component {
               </button>
               <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
             </div>
-            <ModalArea areaEdit={this.state.actions.area} isOpen={this.closeModal}/>
+            <ModalArea areaEdit={this.state.actions.area} isOpen={this.closeModal} disabled={disabled}/>
           </div>
         </div>
       </Modal>

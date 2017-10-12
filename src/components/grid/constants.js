@@ -20,3 +20,7 @@ export const ACTION_CHECK = "check";
 //determinar si se coloca un botón o solo un icono para eliminar
 export const ACTION_ICON = "icon";
 export const ACTION_BUTTON = "button";
+export const MODULE_VISIT = "visita";
+export const MODULE_PREVISIT = "previsita";
+export const MODULE_PIPELINE = "pipeline";
+export const MODULE_BUSINESS_PLAN = "businessPlan";

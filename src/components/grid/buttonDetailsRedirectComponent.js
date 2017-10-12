@@ -1,18 +1,19 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../globalComponents/actions';
-import {changeOwnerDraft} from '../visit/actions';
-import {changeOwnerDraftPrevisit} from '../previsita/actions';
-import {changeOwnerDraftPipeline} from '../pipeline/actions';
-import {seletedButton, validateContactShareholder} from '../clientDetailsInfo/actions';
-import {updateTitleNavBar} from '../navBar/actions';
-import {consultInfoClient} from '../clientInformation/actions';
-import {showLoading} from '../loading/actions';
-import {isUndefined, has} from 'lodash';
-import {updateStatusModal} from '../myPendings/draftDocuments/actions';
-import {toggleMenu} from '../navBar/actions';
-import {MENU_OPENED} from '../navBar/constants';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { redirectUrl } from '../globalComponents/actions';
+import { changeOwnerDraft } from '../visit/actions';
+import { changeOwnerDraftPrevisit } from '../previsita/actions';
+import { changeOwnerDraftPipeline } from '../pipeline/actions';
+import { seletedButton, validateContactShareholder } from '../clientDetailsInfo/actions';
+import { updateTitleNavBar } from '../navBar/actions';
+import { consultInfoClient } from '../clientInformation/actions';
+import { showLoading } from '../loading/actions';
+import { isUndefined, has } from 'lodash';
+import { updateStatusModal } from '../myPendings/draftDocuments/actions';
+import { toggleMenu } from '../navBar/actions';
+import { MENU_OPENED } from '../navBar/constants';
+import { MODULE_VISIT, MODULE_PREVISIT, MODULE_PIPELINE, MODULE_BUSINESS_PLAN } from './constants';
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -28,7 +29,7 @@ class ButtonDetailsRedirectComponent extends Component {
             updateStatusModal, toggleMenu, navBar
         } = this.props;
         showLoading(true, 'Cargando cliente...');
-        if (actionsRedirect.typeClickDetail === "visita") {
+        if (actionsRedirect.typeClickDetail === MODULE_VISIT) {
             updateTitleNavBar("Informe de visita/reunión");
             changeOwnerDraft(actionsRedirect.ownerDraft);
             if (!isUndefined(actionsRedirect.idClient)) {
@@ -37,7 +38,7 @@ class ButtonDetailsRedirectComponent extends Component {
                 showLoading(false, null);
                 redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
             }
-        } else if (actionsRedirect.typeClickDetail === "previsita") {
+        } else if (actionsRedirect.typeClickDetail === MODULE_PREVISIT) {
             updateTitleNavBar("Informe de previsita");
             changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
             if (!isUndefined(actionsRedirect.idClient)) {
@@ -46,7 +47,7 @@ class ButtonDetailsRedirectComponent extends Component {
                 showLoading(false, null);
                 redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
             }
-        } else if (actionsRedirect.typeClickDetail === "pipeline") {
+        } else if (actionsRedirect.typeClickDetail === MODULE_PIPELINE) {
             updateTitleNavBar("Informe de pipeline");
             changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
             if (!isUndefined(actionsRedirect.idClient)) {
@@ -55,7 +56,7 @@ class ButtonDetailsRedirectComponent extends Component {
                 showLoading(false, null);
                 redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
             }
-        } else if (actionsRedirect.typeClickDetail === "businessPlan") {
+        } else if (actionsRedirect.typeClickDetail === MODULE_BUSINESS_PLAN) {
             updateTitleNavBar("Informe de plan de negocio");
             changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
             if (!isUndefined(actionsRedirect.idClient)) {
@@ -73,7 +74,7 @@ class ButtonDetailsRedirectComponent extends Component {
 
     _handleRedirect(urlRedirect, idClient) {
         window.localStorage.setItem('idClientSelected', idClient);
-        const {consultInfoClient, showLoading} = this.props;
+        const { consultInfoClient, showLoading } = this.props;
         consultInfoClient().then((data) => {
             showLoading(false, null);
             redirectUrl(urlRedirect);
@@ -86,7 +87,7 @@ class ButtonDetailsRedirectComponent extends Component {
         return (
             <td>
                 <button className="btn btn-primary btn-sm" onClick={this._detailVisit}>
-                    <i className={iconButton} style={{margin: '0em', fontSize: '1.2em'}}/>
+                    <i className={iconButton} style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>
             </td>
         );
@@ -114,7 +115,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({navBar, visitReducer}, ownerProps) {
+function mapStateToProps({ navBar, visitReducer }, ownerProps) {
     return {
         navBar,
         visitReducer
