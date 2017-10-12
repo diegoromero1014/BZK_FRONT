@@ -117,7 +117,7 @@ class ListNeed extends Component {
             <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                    onClick={this._viewDetailsNeed.bind(this, needData)}
-                   style={disabled === 'disabled' ? {display: 'none'} : {cursor: "pointer"}}/>
+                   style={{cursor: "pointer"}}/>
             </td>
             <td>{needData.needType}</td>
             <td>{needData.descripcionNecesidad}</td>
@@ -196,7 +196,7 @@ class ListNeed extends Component {
                                 </button>
                                 <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
                             </div>
-                            <ModalNeed needEdit={this.state.actions.need} isOpen={this.closeModal}/>
+                            <ModalNeed needEdit={this.state.actions.need} isOpen={this.closeModal} disabled={disabled}/>
                         </div>
                     </div>
                 </Modal>

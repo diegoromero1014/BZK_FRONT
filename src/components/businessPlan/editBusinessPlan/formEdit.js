@@ -1,34 +1,29 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import {bindActionCreators} from "redux";
-import {redirectUrl} from "../../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import { redirectUrl } from "../../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {getMasterDataFields} from "../../selectsComponent/actions";
+import { getMasterDataFields } from "../../selectsComponent/actions";
 import NeedBusiness from "../need/needBusiness";
 import AreaBusiness from "../area/areaBusiness";
-import {
-    EDITAR,
-    MESSAGE_SAVE_DATA,
-    SAVE_DRAFT,
-    SAVE_PUBLISHED,
-    TITLE_OPPORTUNITY_BUSINESS
-} from "../../../constantsGlobal";
+import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR } from "../../../constantsGlobal";
 import SweetAlert from "sweetalert-react";
-import {OBJECTIVE_BUSINESS} from "../constants";
-import {consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter} from "../../../actionsGlobal";
-import {changeStateSaveData} from "../../dashboard/actions";
-import {createBusiness, detailBusiness, pdfDescarga} from "../actions";
-import {addNeed} from "../need/actions";
-import {addArea} from "../area/actions";
+import { OBJECTIVE_BUSINESS } from "../constants";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
+import { addNeed } from "../need/actions";
+import { addArea } from "../area/actions";
 import moment from "moment";
 import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
-import {showLoading} from '../../loading/actions';
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-const fields = ["dateBusiness", "objectiveBusiness", "opportunities"];
+const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
 let showMessageCreateBusiness = false;
 let typeMessage = "success";
@@ -43,8 +38,6 @@ class FormEdit extends Component {
 
     constructor(props) {
         super(props);
-        this._changeDateBusiness = this._changeDateBusiness.bind(this);
-        this._changeDateBusinessOnBlur = this._changeDateBusinessOnBlur.bind(this);
         this._changeObjective = this._changeObjective.bind(this);
         this._closeConfirmClose = this._closeConfirmClose.bind(this);
         this._onCloseButton = this._onCloseButton.bind(this);
@@ -52,16 +45,17 @@ class FormEdit extends Component {
         this._submitCreateBusiness = this._submitCreateBusiness.bind(this);
         this._closeMessageCreateBusiness = this._closeMessageCreateBusiness.bind(this);
         this._onClickPDF = this._onClickPDF.bind(this);
+        this._onSelectFieldDate = this._onSelectFieldDate.bind(this);
         this.state = {
             showErrorSaveBusiness: null,
             showConfirm: false,
-            dateBusiness: new Date(),
-            dateBusinessError: null,
             objectiveBusiness: "",
             objectiveBusinessError: null,
             opportunities: "",
             opportunitiesError: null,
-            isEditable: false
+            isEditable: false,
+            initialDateError: null,
+            finalDateError: null
         }
     }
 
@@ -75,8 +69,7 @@ class FormEdit extends Component {
     _closeMessageCreateBusiness() {
         if (typeMessage === "success") {
             this.setState({
-                showMessageCreateBusiness: false,
-                dateBusiness: ""
+                showMessageCreateBusiness: false
             });
             redirectUrl("/dashboard/clientInformation");
         } else {
@@ -87,20 +80,13 @@ class FormEdit extends Component {
     }
 
     _onClickPDF() {
-        const {pdfDescarga, id} = this.props;
+        const { pdfDescarga, id } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
     }
 
     _closeConfirmClose() {
-        this.setState({showConfirm: false});
+        this.setState({ showConfirm: false });
         redirectUrl("/dashboard/clientInformation");
-    }
-
-    _changeDateBusiness(value) {
-        this.setState({
-            dateBusiness: value,
-            dateBusinessError: null
-        });
     }
 
     _changeObjective(value) {
@@ -108,15 +94,6 @@ class FormEdit extends Component {
             objectiveBusiness: value,
             objectiveBusinessError: null
         });
-    }
-
-    _changeDateBusinessOnBlur(value) {
-        let date = value.target.value;
-        if (date === '' || date === undefined || date === null) {
-            this.setState({
-                dateBusinessError: "Debe seleccionar una fecha"
-            });
-        }
     }
 
     _changeOpportunities(value) {
@@ -129,28 +106,29 @@ class FormEdit extends Component {
     _onCloseButton() {
         message = "¿Está seguro que desea salir de la pantalla de edición de plan de negocio?";
         titleMessage = "Confirmación salida";
-        this.setState({showConfirm: true});
+        this.setState({ showConfirm: true });
     }
 
     _submitCreateBusiness() {
-        const {needs, areas, createBusiness, businessPlanReducer, changeStateSaveData} = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, businessPlanReducer, changeStateSaveData,
+            validateRangeDates, swtShowMessage } = this.props;
         let errorInForm = false;
         const detailBusiness = businessPlanReducer.get('detailBusiness');
-        if (typeButtonClick === SAVE_DRAFT) {
-            if (this.state.dateBusiness === null || this.state.dateBusiness === undefined || this.state.dateBusiness === "") {
-                errorInForm = true;
-                this.setState({
-                    dateBusinessError: "Debe seleccionar una fecha"
-                });
-            }
-        } else if (typeButtonClick === SAVE_PUBLISHED) {
+
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
+            errorInForm = true;
+            this.setState({
+                initialDateError: "Debe seleccionar una fecha"
+            });
+        }
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
+            errorInForm = true;
+            this.setState({
+                finalDateError: "Debe seleccionar una fecha"
+            });
+        }
+        if (typeButtonClick === SAVE_PUBLISHED) {
             let needsBusiness = [];
-            if (this.state.dateBusiness === null || this.state.dateBusiness === undefined || this.state.dateBusiness === "") {
-                errorInForm = true;
-                this.setState({
-                    dateBusinessError: "Debe seleccionar una fecha"
-                });
-            }
             if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
                 errorInForm = true;
                 this.setState({
@@ -166,7 +144,7 @@ class FormEdit extends Component {
             needsBusiness = needs.toArray();
             if (needsBusiness.length === 0) {
                 errorInForm = true;
-                this.setState({showErrorSaveBusiness: true});
+                this.setState({ showErrorSaveBusiness: true });
             }
         }
 
@@ -208,43 +186,22 @@ class FormEdit extends Component {
             let businessJson = {
                 "id": detailBusiness.data.id,
                 "client": window.localStorage.getItem('idClientSelected'),
-                "businessDate": moment(this.state.dateBusiness).format('x'),
+                "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
+                "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,
                 "objective": this.state.objectiveBusiness,
                 "documentStatus": typeButtonClick,
                 "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                 "relatedInternalParties": areasB.length === 0 ? null : areasB
             }
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            createBusiness(businessJson).then((data) => {
-                changeStateSaveData(false, "");
-                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                    redirectUrl("/login");
-                } else {
-                    if ((_.get(data, 'payload.data.status') === 200)) {
-                        typeMessage = "success";
-                        titleMessage = "Edición plan de negocio";
-                        message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
-                        this.setState({showMessageCreateBusiness: true});
-                    } else {
-                        typeMessage = "error";
-                        titleMessage = "Edición plan de negocio";
-                        message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                        this.setState({showMessageCreateBusiness: true});
-                    }
-                }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                typeMessage = "error";
-                titleMessage = "Edición plan de negocio";
-                message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                this.setState({showMessageCreateBusiness: true});
-            });
+            //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
+            this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
+
         }
     }
 
     componentWillMount() {
-        const {nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, businessPlanReducer, detailBusiness, id, addNeed, addArea, showLoading} = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, businessPlanReducer, detailBusiness, id, addNeed, addArea, showLoading } = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
@@ -256,15 +213,23 @@ class FormEdit extends Component {
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
-                    dateBusiness: new Date(moment(part.businessDate, "x")),
                     opportunities: part.opportunitiesAndThreats
                 });
+
+                if (!_.isNil(part.initialValidityDate)) {
+                    initialValidityDate.onChange(moment(part.initialValidityDate, "x").format(DATE_FORMAT));
+                }
+
+                if (!_.isNil(part.finalValidityDate)) {
+                    finalValidityDate.onChange(moment(part.finalValidityDate, "x").format(DATE_FORMAT));
+                }
 
                 _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
                     const uuid = _.uniqueId('need_');
                     let need = {
                         uuid,
                         needIdType: value.clientNeed,
+                        id: value.id,
                         needType: value.clientNeedName,
                         descriptionNeed: value.clientNeedDescription,
                         descriptionNeedText: htmlToText(value.clientNeedDescription),
@@ -304,6 +269,72 @@ class FormEdit extends Component {
         }
     }
 
+    //Método que valida las fechas ingresadas, que la inicial no sea mayor que la final y que el rango no se encuentre registrado ya
+    //Además realiza la acción de guardado si el parámetro makeSaveBusiness llega en true
+    _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
+        const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
+        const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
+        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
+        if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
+            this.setState({
+                initialDateError: false,
+                finalDateError: false,
+            });
+            if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
+                if (!_.isNil(fieldDate)) {
+                    fieldDate.onChange(null);
+                }
+                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
+            } else {
+                const detailBusiness = businessPlanReducer.get('detailBusiness');
+                validateRangeDates(moment(initialDate, DATE_FORMAT).format('x'), moment(finalDate, DATE_FORMAT).format('x'), detailBusiness.data.id).then((data) => {
+                    if (validateResponse(data)) {
+                        const response = _.get(data, 'payload.data.data', false);
+                        if (!response) {
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe un plan de negocio registrado en este rango de fechas, por favor complemente el informe ya creado o modifique las fechas.');
+                        } else if (makeSaveBusiness) {
+                            changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                            createBusiness(businessJson).then((data) => {
+                                changeStateSaveData(false, "");
+                                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
+                                    redirectUrl("/login");
+                                } else {
+                                    if ((_.get(data, 'payload.data.status') === 200)) {
+                                        typeMessage = "success";
+                                        titleMessage = "Edición plan de negocio";
+                                        message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
+                                        this.setState({ showMessageCreateBusiness: true });
+                                    } else {
+                                        typeMessage = "error";
+                                        titleMessage = "Edición plan de negocio";
+                                        message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                                        this.setState({ showMessageCreateBusiness: true });
+                                    }
+                                }
+                            }, (reason) => {
+                                changeStateSaveData(false, "");
+                                typeMessage = "error";
+                                titleMessage = "Edición plan de negocio";
+                                message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                                this.setState({ showMessageCreateBusiness: true });
+                            });
+                        }
+                    }
+                });
+            }
+        } else {
+            if (!_.isNull(initialDate)) {
+                this.setState({
+                    initialDateError: false
+                });
+            } else {
+                this.setState({
+                    finalDateError: false
+                });
+            }
+        }
+    }
+
     render() {
         let fechaModString = '';
         let fechaCreateString = '';
@@ -311,7 +342,7 @@ class FormEdit extends Component {
         let updatedBy = '';
         let positionCreatedBy = '';
         let positionUpdatedBy = '';
-        const {fields: {dateBusiness, objectiveBusiness, opportunities}, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, navBar} = this.props;
+        const { fields: { initialValidityDate, finalValidityDate, objectiveBusiness, opportunities }, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, navBar } = this.props;
         const ownerDraft = businessPlanReducer.get('ownerDraft');
         const detailBusiness = businessPlanReducer.get('detailBusiness');
         if (detailBusiness !== undefined && detailBusiness !== null && detailBusiness !== '' && !_.isEmpty(detailBusiness)) {
@@ -334,54 +365,69 @@ class FormEdit extends Component {
         }
         return (
             <form onSubmit={handleSubmit(this._submitCreateBusiness)}
-                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                  className="my-custom-tab"
-                  style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+                className="my-custom-tab"
+                style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={10} sm={10} md={10} lg={10}>
-                        <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+                        <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        { _.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), EDITAR), false) &&
-                        <button type="button" onClick={this._editBusiness}
+                        {_.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), EDITAR), false) &&
+                            <button type="button" onClick={this._editBusiness}
                                 className={'btn btn-primary modal-button-edit'}
-                                style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>Editar <i
-                            className={'icon edit'}></i></button>
+                                style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
+                                    className={'icon edit'}></i></button>
                         }
                     </Col>
                 </Row>
-                <Row style={{padding: "10px 10px 10px 20px"}}>
+                <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="browser icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Datos del plan de negocio</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="browser icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Datos del plan de negocio</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
+                    <Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                            <span>Vigencia - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
-                        <dt>
+                        <div style={{ display: "flex" }}>
                             <DateTimePickerUi
                                 culture='es'
-                                format={"DD/MM/YYYY hh:mm a"}
-                                time={true}
+                                format={DATE_FORMAT}
+                                style={{ width: '200px' }}
+                                placeholder="Fecha inicial"
+                                time={false}
                                 touched={true}
-                                onChange={val => this._changeDateBusiness(val)}
-                                onBlur={val => this._changeDateBusinessOnBlur(val)}
-                                value={this.state.dateBusiness}
-                                error={this.state.dateBusinessError}
+                                {...initialValidityDate}
+                                onSelect={(val) => this._onSelectFieldDate(moment(val).format(DATE_FORMAT), finalValidityDate.value, finalValidityDate, false)}
+                                error={this.state.initialDateError}
                                 disabled={this.state.isEditable ? '' : 'disabled'}
                             />
-                        </dt>
+                            <div style={{ marginLeft: '20px' }}>
+                                <DateTimePickerUi
+                                    culture='es'
+                                    style={{ width: '200px' }}
+                                    format={DATE_FORMAT}
+                                    placeholder="Fecha final"
+                                    time={false}
+                                    touched={true}
+                                    {...finalValidityDate}
+                                    onSelect={(val) => this._onSelectFieldDate(initialValidityDate.value, moment(val).format(DATE_FORMAT), initialValidityDate, false)}
+                                    error={this.state.finalDateError}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                />
+                            </div>
+                        </div>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Objetivo del plan de negocios (</span><span style={{color: "red"}}>*</span>)
+                            <span>Objetivo del plan de negocios (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <ComboBox
@@ -401,27 +447,27 @@ class FormEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Oportunidades y amenazas externas de la compañía (<span
-                                style={{color: "red"}}>*</span>)</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Oportunidades y amenazas externas de la compañía (<span
+                                style={{ color: "red" }}>*</span>)</span>
                             <Tooltip text={TITLE_OPPORTUNITY_BUSINESS}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </Tooltip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="opportunities"
                             placeholder="Ingrese oportunidades y amenazas externas de la compañía"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                             value={this.state.opportunities}
                             touched={true}
                             error={this.state.opportunitiesError}
@@ -431,46 +477,46 @@ class FormEdit extends Component {
                         />
                     </Col>
                 </Row>
-                <NeedBusiness disabled={this.state.isEditable ? '' : 'disabled'}/>
-                <AreaBusiness disabled={this.state.isEditable ? '' : 'disabled'}/>
-                <Row style={{padding: "10px 10px 0px 20px"}}>
+                <NeedBusiness disabled={this.state.isEditable ? '' : 'disabled'} />
+                <AreaBusiness disabled={this.state.isEditable ? '' : 'disabled'} />
+                <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
-                            : '' }
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
                         {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
-                            : '' }
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                            : ''}
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null ?
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                            : ''}
                     </Col>
                 </Row>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy}</span>
                     </Col>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy}</span>
                     </Col>
                 </Row>
                 <Row>
@@ -482,8 +528,8 @@ class FormEdit extends Component {
                             marginLeft: "20px",
                             color: "#818282"
                         }}>
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato plan de negocio:  </span><span
-                            style={{marginLeft: "0px", color: "#818282"}}>{dateBusinessLastReview}</span>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato plan de negocio:  </span><span
+                                style={{ marginLeft: "0px", color: "#818282" }}>{dateBusinessLastReview}</span>
                         </div>
                     </Col>
                 </Row>
@@ -497,23 +543,23 @@ class FormEdit extends Component {
                     height: "50px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                                style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px -120px",
-                                    position: "fixed",
-                                    backgroundColor: "#00B5AD"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar como borrador</span>
+                            style={this.state.isEditable === true && ownerDraft === 0 ? {
+                                float: "right",
+                                margin: "8px 0px 0px -120px",
+                                position: "fixed",
+                                backgroundColor: "#00B5AD"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                                style={this.state.isEditable === true ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px 107px",
-                                    position: "fixed"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar definitivo</span>
+                            style={this.state.isEditable === true ? {
+                                float: "right",
+                                margin: "8px 0px 0px 107px",
+                                position: "fixed"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onClickPDF} style={{
                             float: "right",
@@ -521,7 +567,7 @@ class FormEdit extends Component {
                             position: "fixed",
                             backgroundColor: "#eb984e"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Descargar pdf</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={{
                             float: "right",
@@ -529,7 +575,7 @@ class FormEdit extends Component {
                             position: "fixed",
                             backgroundColor: "rgb(193, 193, 193)"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
@@ -538,7 +584,7 @@ class FormEdit extends Component {
                     show={this.state.showErrorSaveBusiness}
                     title="Error necesidades"
                     text="Señor usuario, para guardar un plan de negocio como definitivo debe agregar como mínimo una necesidad."
-                    onConfirm={() => this.setState({showErrorSaveBusiness: false})}
+                    onConfirm={() => this.setState({ showErrorSaveBusiness: false })}
                 />
                 <SweetAlert
                     type={typeMessage}
@@ -556,8 +602,8 @@ class FormEdit extends Component {
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
-                    onCancel={() => this.setState({showConfirm: false})}
-                    onConfirm={this._closeConfirmClose}/>
+                    onCancel={() => this.setState({ showConfirm: false })}
+                    onConfirm={this._closeConfirmClose} />
             </form>
         );
     }
@@ -573,11 +619,13 @@ function mapDispatchToProps(dispatch) {
         pdfDescarga,
         changeStateSaveData,
         nonValidateEnter,
-        showLoading
+        showLoading,
+        validateRangeDates,
+        swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas, navBar}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas, navBar }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,

@@ -1,4 +1,4 @@
-export const VERSION_DATE = "29/09/2017";
+export const VERSION_DATE = "11/10/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -12,6 +12,7 @@ export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 export const REQUEST_ERROR = 500;
 export const REQUEST_SUCCESS = 200;
+export const ERROR_MESSAGE_REQUEST_TITLE = 'Error cargando información';
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";

@@ -15,25 +15,31 @@ const initialState = Immutable.Map({
     order: 0,
     columnOrder: '',
     responseClients: [],
-    totalClientsByFiltered: 0
+    totalClientsByFiltered: 0,
+    lastUploadDate: null
 });
 
 export default (state = initialState, action = {}) => {
     switch (action.type) {
         case actions.FIND_CLIENTS_PORTFOLIO_EXPIRATION:
-            const response = get(action.payload,'data.data',[]);
+            const uploadDate = get(action.payload,'data.data');
+            const response = get(action.payload,'data.data.pagination',[]);
             return state.withMutations(map => {
                 map
                     .set('status', 'processed')
                     .set('totalClientsByFiltered', get(response, 'rowCount',0))
-                    .set('responseClients', get(response, 'rows',[]));
-            });
+                    .set('responseClients', get(response, 'rows',[]))
+                    .set('lastUploadDate', get(uploadDate, 'lastUploadDate'));
+                    
+            }            
+        );
         case actions.CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION:
             return state.set('pageNum', action.currentPage);
         case actions.CHANGE_KEYWORD_NAME_NIT_PE:
             return state.set('keywordNameNit', action.keywordNameNit);
         case actions.CLEAR_FILTER_CLIENTS_PE:
-            const response2 = get(action.payload,'data.data',[]);
+            const uploadDate2 = get(action.payload,'data.data');
+            const response2 = get(action.payload,'data.data.pagination',[]);
             return state.withMutations(map => {
                 map
                     .set('status', 'processed')
@@ -44,7 +50,8 @@ export default (state = initialState, action = {}) => {
                     .set('pageNum', 1)
                     .set('columnOrder', '')
                     .set('totalClientsByFiltered', get(response2, 'rowCount',0))
-                    .set('responseClients', get(response2, 'rows',[]));
+                    .set('responseClients', get(response2, 'rows',[]))
+                    .set('lastUploadDate', get(uploadDate2, 'lastUploadDate'));;
             });
         case actions.CHANGE_TEAM_PE:
             return state.withMutations(map => {

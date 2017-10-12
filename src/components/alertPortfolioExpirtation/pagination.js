@@ -22,7 +22,7 @@ class Pagination extends Component{
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
-            if (has(data, 'payload.data.data')) {
+            if (has(data, 'payload.data.data.pagination')) {
                 showLoading(false, null);
             }
         });

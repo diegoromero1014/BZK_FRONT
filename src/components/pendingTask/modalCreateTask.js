@@ -24,9 +24,10 @@ import moment from 'moment';
 import { formatLongDateToDateWithNameMonth, htmlToText} from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateVisit"];
+const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
+let nameEntity;
 
 const validate = values => {
   const errors = {};
@@ -108,7 +109,7 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit }, taskEdit, getMasterDataFields, getInfoTaskUser } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser } = this.props;
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
@@ -123,8 +124,9 @@ class ModalCreateTask extends Component {
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
-      if (task.dateVisit !== null && task.dateVisit !== '') {
-        dateVisit.onChange(formatLongDateToDateWithNameMonth(task.dateVisit));
+      if (task.dateEntity !== null && task.dateEntity !== '') {
+        nameEntity = task.nameEntity;
+        dateEntity.onChange(formatLongDateToDateWithNameMonth(task.dateEntity));
       }
       tarea.onChange(task.task);
     });
@@ -186,7 +188,7 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateEntity },
       selectsReducer, reducerGlobal, handleSubmit } = this.props;
     const styleRow = {};
     return (
@@ -288,10 +290,10 @@ class ModalCreateTask extends Component {
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          {dateVisit.value !== null && dateVisit.value !== '' ?
+          {dateEntity.value !== null && dateEntity.value !== '' ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
-                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de la visita: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateVisit.value}</span>
+                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de {nameEntity}: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateEntity.value}</span>
               </Col>
               <Col xs={6} md={2} lg={2}>
                 <button
