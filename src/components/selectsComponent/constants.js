@@ -71,3 +71,4 @@ export const AEC_LEVEL = "aecLevel";
 export const REASON_TRANFER = "reasonTransfer";
 export const CUSTOMER_TYPOLOGY = "customerTypology";
 export const REASON_CONFORMATION = "reasonConformation";
+export const CLEAR_LISTS = "clearLists";

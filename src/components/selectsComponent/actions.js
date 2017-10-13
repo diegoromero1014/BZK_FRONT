@@ -1,28 +1,30 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
-import {FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
-    TEAM_FOR_REGION_EMPLOYEE,CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
-    PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS } from './constants';
-import {isUndefined, isNull} from 'lodash';
+import {
+  FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
+  TEAM_FOR_REGION_EMPLOYEE, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
+  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS
+} from './constants';
+import { isUndefined, isNull } from 'lodash';
 
-export function consultDataSelect(field){
+export function consultDataSelect(field) {
   const json = {
-      messageHeader: {
-        "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-      messageBody: {
-        "field": field
-      }
-    };
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "field": field
+    }
+  };
   const request = axios.post(APP_URL + "/masterDataByField", json);
   return {
     type: field,
@@ -30,23 +32,23 @@ export function consultDataSelect(field){
   }
 }
 
-export function consultList(field){
+export function consultList(field) {
   const json = {
-      messageHeader: {
-        "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-      messageBody: {
-      }
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
     }
+  }
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
@@ -54,24 +56,24 @@ export function consultList(field){
   }
 }
 
-export function consultListWithParameter(field, parentId){
+export function consultListWithParameter(field, parentId) {
   const json = {
-      messageHeader: {
-        "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-      messageBody: {
-        "parentId": parentId
-      }
-    };
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "parentId": parentId
+    }
+  };
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
@@ -79,24 +81,24 @@ export function consultListWithParameter(field, parentId){
   }
 }
 
-export function consultListWithParameterUbication(field, parentId){
+export function consultListWithParameterUbication(field, parentId) {
   const json = {
-      messageHeader: {
-        "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-      messageBody: {
-        "parentId": parentId
-      }
-    };
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "parentId": parentId
+    }
+  };
   const request = axios.post(APP_URL + "/masterDataByParentId", json);
   return {
     type: field,
@@ -135,19 +137,19 @@ export function getMasterDataFields(fields, onlyWithoutParents) {
   }
 }
 
-export function clearValuesAdressess(){
+export function clearValuesAdressess() {
   return {
     type: CLEAR_VALUES_COUNTRY
   }
 }
 
-export function clearValuesAdressessKeys(){
+export function clearValuesAdressessKeys() {
   return {
     type: CLEAR_VALUES_COUNTRY_KEY
   }
 }
 
-export function economicGroupsByKeyword(keyword){
+export function economicGroupsByKeyword(keyword) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -241,28 +243,34 @@ export function getClientNeeds() {
   };
 }
 
-
-export function consultTeamsByRegionByEmployee(idRegion){
-    const json = {
-        messageHeader: {
-            "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        messageBody: {
-            "idRegion": idRegion
-        }
-    };
-    const request = axios.post(APP_URL + "/getCellsByRegionByUser", json);
-    return {
-        type: TEAM_FOR_REGION_EMPLOYEE,
-        payload: request
+export function consultTeamsByRegionByEmployee(idRegion) {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "idRegion": idRegion
     }
+  };
+  const request = axios.post(APP_URL + "/getCellsByRegionByUser", json);
+  return {
+    type: TEAM_FOR_REGION_EMPLOYEE,
+    payload: request
+  }
+}
+
+export function clearLists(lists) {
+  return {
+    type: CLEAR_LISTS,
+    lists
+  }
 }
