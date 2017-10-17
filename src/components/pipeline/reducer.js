@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
                     .set('pipelineList', [])
                     .set('rowCount', 0)
                     .set('orderPipeline', 1)
-                    .set('columnPipeline', 'pe.startDate');
+                    .set('columnPipeline', 'pe.need');
             });
         case CLEAR_PIPELINE_PAGINATOR:
             return state.withMutations(map => {
@@ -55,7 +55,7 @@ export default (state = initialState, action) => {
         case CLEAR_PIPELINE_ORDER:
             return state.withMutations(map => {
                 map.set('orderPipeline', 1)
-                    .set('columnPipeline', 'pe.startDate');
+                    .set('columnPipeline', 'pe.need');
             });
         case GET_PIPELINE:
             return state.set('detailPipeline', action.payload.data.data);
