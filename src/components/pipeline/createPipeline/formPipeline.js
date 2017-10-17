@@ -20,8 +20,8 @@ import {
   CURRENCY_COP,
   LINE_OF_BUSINESS_LEASING,
   ORIGIN_PIPELIN_BUSINESS,
-  COMPROMETIDO,
-  COTIZACION_EN_FIRME,
+  BUSINESS_STATUS_COMPROMETIDO,
+  BUSINESS_STATUS_COTIZACION,
   PRODUCT_FAMILY_LEASING,
   HELP_PROBABILITY
 } from "../constants";
@@ -299,7 +299,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probabilityEnabled: _pipeline_status.filter(pStatus => {
           return (
             pStatus.id == currencyValue &&
-            (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+            (pStatus.key == BUSINESS_STATUS_COMPROMETIDO || pStatus.key == BUSINESS_STATUS_COTIZACION)
           )
         }).length > 0
       });

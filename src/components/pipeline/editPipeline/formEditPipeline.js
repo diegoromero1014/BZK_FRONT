@@ -24,7 +24,7 @@ import {
 import {
     CURRENCY_COP, INTEGER,
     LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
-    REAL, COMPROMETIDO, COTIZACION_EN_FIRME, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
+    REAL, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
 } from "../constants";
 import { createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans } from "../actions";
 import {
@@ -300,7 +300,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 probabilityEnabled: _pipeline_status.filter(pStatus => {
                     return (
                         pStatus.id == currencyValue &&
-                        (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+                        (pStatus.key == BUSINESS_STATUS_COMPROMETIDO || pStatus.key == BUSINESS_STATUS_COTIZACION)
                     )
                 }).length > 0
             });
