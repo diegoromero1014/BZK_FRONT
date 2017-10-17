@@ -192,10 +192,22 @@ class ClientsPendingUpdate extends Component {
                     </Row>
                 </form>
                 <Row>
-                    <div style={{ padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%' }}>
-                        Total: {numberTotalClientFiltered}
-
-                    </div>
+                    <Col xs={6} sm={6} md={6} lg={6} style={{width: '40%'}}>
+                        <div style={{
+                            textAlign: "left",
+                            marginTop: "20px",
+                            marginBottom: "5px",
+                            marginLeft: "15px"
+                        }}>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última carga: </span><span
+                                style={{ marginLeft: "0px", color: "#818282" }}>{formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}</span>
+                        </div>
+                    </Col>
+                    <Col xs={6} sm={6} md={6} lg={6} style={{width: '60%'}}>
+                        <div style={{ padding: "15px", marginLeft: '-15px', fontSize: '25px' }}>
+                            Total: {numberTotalClientFiltered}
+                        </div>
+                    </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
@@ -204,19 +216,6 @@ class ClientsPendingUpdate extends Component {
                                 <Col xs>
                                     <ListClientsAlertPortfolioExp />
                                     <Pagination />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        textAlign: "left",
-                                        marginTop: "10px",
-                                        marginBottom: "20px",
-                                        marginLeft: "0px"
-                                    }}>
-                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última carga: </span><span
-                                            style={{ marginLeft: "0px", color: "#818282" }}>{formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}</span>
-                                    </div>
                                 </Col>
                             </Row>
                         </Grid>
