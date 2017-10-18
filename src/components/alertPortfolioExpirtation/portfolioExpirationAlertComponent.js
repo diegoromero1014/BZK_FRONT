@@ -1,15 +1,23 @@
 /**
  * Created by ahurtado on 12/06/2016.
  */
-import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { bindActionCreators } from 'redux';
-import { clientsPortfolioExpirationFindServer, clearFilter, changePage, changeKeyword, changeTeam, changeRegion, changeZone } from './actions';
-import { showLoading } from '../loading/actions';
+import React, {Component} from 'react';
+import {Grid, Row, Col} from 'react-flexbox-grid';
+import {bindActionCreators} from 'redux';
+import {
+    clientsPortfolioExpirationFindServer,
+    clearFilter,
+    changePage,
+    changeKeyword,
+    changeTeam,
+    changeRegion,
+    changeZone
+} from './actions';
+import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
-import { NUMBER_RECORDS, FORM_FILTER_ALERT_PE } from './constants';
+import {NUMBER_RECORDS, FORM_FILTER_ALERT_PE} from './constants';
 import Pagination from './pagination';
-import { redirectUrl } from '../globalComponents/actions';
+import {redirectUrl} from '../globalComponents/actions';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import {
     consultList,
@@ -19,14 +27,14 @@ import {
     consultTeamsByRegionByEmployee
 } from '../selectsComponent/actions';
 import * as constants from '../selectsComponent/constants';
-import { reduxForm } from 'redux-form';
-import { updateTitleNavBar } from '../navBar/actions';
-import { SESSION_EXPIRED } from '../../constantsGlobal';
+import {reduxForm} from 'redux-form';
+import {updateTitleNavBar} from '../navBar/actions';
+import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { formatLongDateToDateWithNameMonth, validateResponse } from '../../actionsGlobal';
-import { swtShowMessage } from "../sweetAlertMessages/actions";
+import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -44,11 +52,11 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const { showLoading } = this.props;
+        const {showLoading} = this.props;
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
-            const { clearFilter, consultList, consultDataSelect, updateTitleNavBar, swtShowMessage } = this.props;
+            const {clearFilter, consultList, consultDataSelect, updateTitleNavBar, swtShowMessage} = this.props;
             showLoading(true, 'Cargando..');
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
@@ -67,7 +75,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     _cleanSearch() {
-        const { resetForm, showLoading, clearFilter, consultList, swtShowMessage } = this.props;
+        const {resetForm, showLoading, clearFilter, consultList, swtShowMessage} = this.props;
         showLoading(true, 'Cargando..');
         resetForm();
         clearFilter();
@@ -80,7 +88,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     _onChangeTeam(val) {
-        const { fields: { team }, changeTeam } = this.props;
+        const {fields: {team}, changeTeam} = this.props;
         team.onChange(val);
         changeTeam(val);
         if (val) {
@@ -90,7 +98,7 @@ class ClientsPendingUpdate extends Component {
 
     _onChangeRegionStatus(val) {
         if (!_.isEqual(val, "")) {
-            const { fields: { team, region, zone }, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee } = this.props;
+            const {fields: {team, region, zone}, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee} = this.props;
             region.onChange(val);
             zone.onChange(null);
             team.onChange(null);
@@ -102,7 +110,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     _onChangeZoneStatus(val) {
-        const { fields: { zone }, changeZone } = this.props;
+        const {fields: {zone}, changeZone} = this.props;
         zone.onChange(val);
         changeZone(val);
         if (val) {
@@ -111,7 +119,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { team, region, zone }, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage } = this.props;
+        const {fields: {team, region, zone}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
@@ -127,7 +135,7 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const { fields: { team, region, zone }, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer } = this.props;
+        const {fields: {team, region, zone}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
         if (_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -136,11 +144,11 @@ class ClientsPendingUpdate extends Component {
         return (
             <div>
                 <form>
-                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px" }}>
-                        <Col xs={12} sm={12} md={4} lg={4} style={{ width: '60%' }}>
-                            <SearchBarClient valueTeam={team.value} valueRegion={region.value} valueZone={zone.value} />
+                    <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
+                        <Col xs={12} sm={12} md={4} lg={4} style={{width: '60%'}}>
+                            <SearchBarClient valueTeam={team.value} valueRegion={region.value} valueZone={zone.value}/>
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="celula"
                                 labelInput="Célula"
@@ -154,7 +162,7 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get('teamValueObjects')}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="region"
                                 labelInput="Región"
@@ -168,7 +176,7 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LIST_REGIONS) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="zona"
                                 labelInput="Zona"
@@ -182,48 +190,45 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LIST_ZONES) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                                    title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
                                 <i className="erase icon"
-                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
                             </button>
                         </Col>
                     </Row>
                 </form>
                 <Row>
-                    <div style={{ padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%' }}>
+                    <div style={{
+                        marginTop: "18px",
+                        marginLeft: "18px",
+                        float: 'left',
+                        position: 'absolute'
+                    }}>
+                        <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última carga: </span>
+                        <span style={{marginLeft: "0px", color: "#818282"}}>
+                            {formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}
+                        </span>
+                    </div>
+                    <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
                         Total: {numberTotalClientFiltered}
-
                     </div>
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <Grid style={{ display: visibleTable, width: "98%" }}>
+                        <Grid style={{display: visibleTable, width: "98%"}}>
                             <Row>
                                 <Col xs>
                                     <ListClientsAlertPortfolioExp />
                                     <Pagination />
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        textAlign: "left",
-                                        marginTop: "10px",
-                                        marginBottom: "20px",
-                                        marginLeft: "0px"
-                                    }}>
-                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última carga: </span><span
-                                            style={{ marginLeft: "0px", color: "#818282" }}>{formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}</span>
-                                    </div>
-                                </Col>
-                            </Row>
                         </Grid>
-                        <Grid style={{ display: visibleMessage, width: "100%" }}>
+                        <Grid style={{display: visibleMessage, width: "100%"}}>
                             <Row center="xs">
                                 <Col xs={12} sm={8} md={12} lg={12}>
-                                    <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
+                                    <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span>
                                 </Col>
                             </Row>
                         </Grid>
@@ -254,7 +259,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ alertPortfolioExpiration, selectsReducer, navBar, reducerGlobal }, { fields }) {
+function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar, reducerGlobal}, {fields}) {
     return {
         alertPortfolioExpiration,
         selectsReducer,
@@ -263,5 +268,8 @@ function mapStateToProps({ alertPortfolioExpiration, selectsReducer, navBar, red
     };
 }
 
-export default reduxForm({ form: FORM_FILTER_ALERT_PE, fields }, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({
+    form: FORM_FILTER_ALERT_PE,
+    fields
+}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 
