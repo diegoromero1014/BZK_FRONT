@@ -1,4 +1,4 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
 
@@ -18,13 +18,13 @@ export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrd
     },
     "messageBody": {
       "clientId": clientId,
-      "groupId":"",
+      "groupId": "",
       "pageNum": pageNum,
-      "maxRows" : maxRows,
+      "maxRows": maxRows,
       "columnOrder": columnOrder,
       "order": order,
-      "statusDocumentId":statusDocumentId,
-      "pipelineStatus":pipelineStatus
+      "statusDocumentId": statusDocumentId,
+      "pipelineStatus": pipelineStatus
     }
   };
 
@@ -97,10 +97,10 @@ export function getCsvPipelineByClient(clientId) {
   return {
     type: constants.GET_CSV_PIPELINE_BY_CLIENT,
     payload: request
-}
+  }
 }
 
-export function createEditPipeline(jsonPipeline){
+export function createEditPipeline(jsonPipeline) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -117,7 +117,7 @@ export function createEditPipeline(jsonPipeline){
     "messageBody": jsonPipeline
   }
   var request = axios.post(APP_URL + "/savePipeline", json);
-  return{
+  return {
     type: constants.CREATE_EDIT_PIPELINE,
     payload: request
   }
@@ -159,9 +159,10 @@ export function changeOwnerDraftPipeline(ownerDraft) {
   };
 }
 
-export function updateDisbursementPlans(listDisbursementPlans) {
+export function updateDisbursementPlans(id, listDisbursementPlans, origin) {
   return {
     type: constants.UPDATE_DISBURSEMENT_PLANS,
-    listDisbursementPlans: listDisbursementPlans
+    listDisbursementPlans: listDisbursementPlans,
+    origin
   };
 }
