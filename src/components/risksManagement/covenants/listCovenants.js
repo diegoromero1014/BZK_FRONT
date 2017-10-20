@@ -8,7 +8,7 @@ import { mapDataGrid } from './covenantsUtilities';
 import { get, indexOf, has } from 'lodash';
 import { showLoading } from '../../loading/actions';
 import { clientCovenants } from './actions';
-import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR } from '../../../constantsGlobal';
+import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR,MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 
 class ListCovenantsComponent extends Component {
 
@@ -18,16 +18,18 @@ class ListCovenantsComponent extends Component {
     }
 
     componentWillMount() {
-        const { clientCovenants } = this.props;
+        const { clientCovenants,showLoading } = this.props;
+        showLoading(true, MESSAGE_LOAD_DATA);
         clientCovenants().then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+            showLoading(false, "");
+            if (!get(data, 'payload.data.validateLogin') || get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             }
         });
     }
 
     _renderHeaders() {
-        const headersTable = [
+        return [
             {
                 title: "",
                 key: "actions"
@@ -45,8 +47,8 @@ class ListCovenantsComponent extends Component {
                 key: "managerAccount"
             },
             {
-                title: "Descripción covenant",
-                key: "descriptionRecord"
+                title: "Covenant",
+                key: "covenant"
             },
             {
                 title: "Acta o contrato",
@@ -61,8 +63,6 @@ class ListCovenantsComponent extends Component {
                 key: "lastUpdateDate"
             }
         ];
-
-        return headersTable;
     }
 
     _renderCellView(data) {
@@ -77,20 +77,20 @@ class ListCovenantsComponent extends Component {
             <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
                 <Row xs={12} md={12} lg={12} style={{ marginBottom: '20px' }}>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: RED_COLOR }}></div>
-                        <span style={{ marginLeft: '5px' }}>Covenants con seguimiento pendiente</span>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: RED_COLOR }}/>
+                        <span style={{ marginLeft: '5px', marginRight: '10px' }}>Covenants con seguimiento pendiente</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}></div>
-                        <span style={{ marginLeft: '5px' }}>Covenants con seguimiento próximo mes</span>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: ORANGE_COLOR }}/>
+                        <span style={{ marginLeft: '5px', marginRight: '10px' }}>Covenants con seguimiento próximo mes</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}></div>
-                        <span style={{ marginLeft: '5px' }}>Covenants con revisión posterior</span>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GREEN_COLOR }}/>
+                        <span style={{ marginLeft: '5px', marginRight: '10px' }}>Covenants con revisión posterior</span>
                     </Col>
                     <Col xs={12} md={4} lg={3} style={{ marginTop: "5px", display: '-webkit-inline-box' }}>
-                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GRAY_COLOR }}></div>
-                        <span style={{ marginLeft: '5px' }}>Covenants inactivos</span>
+                        <div className="traffickLigth-item-covenants" style={{ backgroundColor: GRAY_COLOR }}/>
+                        <span style={{ marginLeft: '5px', marginRight: '10px' }}>Covenants inactivos</span>
                     </Col>
                 </Row>
                 {data.length > 0 ?

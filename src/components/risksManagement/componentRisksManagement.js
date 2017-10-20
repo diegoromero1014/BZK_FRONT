@@ -7,7 +7,7 @@ import {
     MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES, MESSAGE_LOAD_DATA,
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from '../../constantsGlobal';
-import { validateResponse } from '../../actionsGlobal';
+import { validateResponse,validatePermissionsByModule } from '../../actionsGlobal';
 import { consultModulesAccess } from '../navBar/actions';
 import ListCovenant from './covenants/listCovenants';
 import ListAEC from './AEC/listAEC';
@@ -29,7 +29,7 @@ class RisksManagementComponent extends Component {
     }
 
     componentWillMount() {
-        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage } = this.props;
+        const { consultModulesAccess,validatePermissionsByModule, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         getAllowSurveyQualitativeVarible(infoClient.id);
         showLoading(true, MESSAGE_LOAD_DATA);
@@ -37,11 +37,22 @@ class RisksManagementComponent extends Component {
             showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            }else{
+                validatePermissionsByModule(MODULE_COVENANTS).then((data) => {
+                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                        redirectUrl("/login");
+                    } else {
+                        if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
+                            redirectUrl("/dashboard");
+                        }
+                    }
+                });
             }
         }, (reason) => {
             showLoading(false, "");
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
+
     }
 
     componentWillUnmount() {
@@ -108,11 +119,12 @@ function mapDispatchToProps(dispatch) {
         updateTabSeletedRisksManagment,
         getAllowSurveyQualitativeVarible,
         showLoading,
-        swtShowMessage
+        swtShowMessage,
+        validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion,reducerGlobal }, ownerProps) {
     return {
         navBar,
         tabRisksManagment,
