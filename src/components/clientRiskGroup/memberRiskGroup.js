@@ -183,10 +183,10 @@ class memberRiskGroup extends Component {
                     <Col xs={12} md={6} lg={6}>
                         <dt><span>Segmento</span></dt>
                         <Input
-                            name="semento"
+                            name="Segmento"
                             type="text"
                             max="100"
-                            placeholder="Semento"
+                            placeholder="Segmento"
                             onChange={val => this._onchangeValue("segmentClient", val)}
                             disabled={'disabled'}
                             {...segmentClient}

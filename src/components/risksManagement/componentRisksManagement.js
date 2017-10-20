@@ -29,7 +29,7 @@ class RisksManagementComponent extends Component {
     }
 
     componentWillMount() {
-        const { consultModulesAccess,validatePermissionsByModule, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage } = this.props;
+        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         getAllowSurveyQualitativeVarible(infoClient.id);
         showLoading(true, MESSAGE_LOAD_DATA);
@@ -37,16 +37,6 @@ class RisksManagementComponent extends Component {
             showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }else{
-                validatePermissionsByModule(MODULE_COVENANTS).then((data) => {
-                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                        redirectUrl("/login");
-                    } else {
-                        if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
-                            redirectUrl("/dashboard");
-                        }
-                    }
-                });
             }
         }, (reason) => {
             showLoading(false, "");
@@ -119,8 +109,7 @@ function mapDispatchToProps(dispatch) {
         updateTabSeletedRisksManagment,
         getAllowSurveyQualitativeVarible,
         showLoading,
-        swtShowMessage,
-        validatePermissionsByModule
+        swtShowMessage
     }, dispatch);
 }
 
