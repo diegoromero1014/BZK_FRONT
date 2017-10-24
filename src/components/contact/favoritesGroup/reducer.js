@@ -115,7 +115,6 @@ export default (state = initialState, action = {}) => {
             return state.set('contact', contactSearch);
         case actions.ADD_CONTACT_LIST:
             let addContactSearch = state.get('contact');
-            console.log('addContactSearch', addContactSearch);
             const contactAdd = {
                 id: addContactSearch.id,
                 document: addContactSearch.contactIdentityNumber,

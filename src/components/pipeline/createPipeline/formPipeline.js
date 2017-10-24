@@ -70,6 +70,7 @@ let errorBusinessCategory = false;
 var thisForm;
 
 var isChildren = false;
+var nameDisbursementPlansInReducer = "disbursementPlans";
 
 const validate = values => {
   const errors = {};
@@ -179,6 +180,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
+      if (origin === ORIGIN_PIPELIN_BUSINESS) {
+        nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+      } else {
+        nameDisbursementPlansInReducer = "disbursementPlans";
+      }
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
       this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
@@ -198,7 +204,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     showFormDisbursementPlan(isOpen) {
       const { pipelineReducer } = this.props;
-      const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+      const listDisbursementPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
       const detailPipeline = pipelineReducer.get('detailPipeline');
       this.setState({
         showFormAddDisbursementPlan: isOpen,
@@ -383,11 +389,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           if (this.state.showFormAddDisbursementPlan) {
             swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
           } else {
-            const listDisburmentPlans = pipelineReducer.get('disbursementPlans');
-            _.map(listDisburmentPlans, (item) => {
-              item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
-              return item;
-            });
+            if (origin === ORIGIN_PIPELIN_BUSINESS) {
+              nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+            } else {
+              nameDisbursementPlansInReducer = "disbursementPlans";
+            }
+            const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
             if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
               let pipelineJson = {
                 "id": null,
@@ -396,6 +403,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 "product": product.value,
                 "businessStatus": businessStatus.value,
                 "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+                "employeeResponsibleName": nameUsuario.value,
                 "currency": currency.value,
                 "indexing": indexing.value,
                 "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
@@ -428,13 +436,18 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   updateValues: pipelineJson
                 });
               } else {
-                var resultPipelineBusines = [];
-                _.map(pipelineBusinessReducer.toArray(),
-                  function (pipelineBusiness) {
-                    resultPipelineBusines.push(_.omit(pipelineBusiness, ['uuid']));
-                  }
+                pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
+                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                  return item;
+                });
+                pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
+                  pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
+                    item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
+                    return item;
+                  });
+                  return _.omit(pipelineBusiness, ['uuid']);
+                }
                 );
-                pipelineJson.listPipelines = resultPipelineBusines;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                 createEditPipeline(pipelineJson).then((data) => {
                   changeStateSaveData(false, "");
@@ -540,7 +553,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
         consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists } = this.props;
       nonValidateEnter(true);
-      updateDisbursementPlans([]);
+      updateDisbursementPlans(1, [], origin);
       clearLists([PRODUCTS]);
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
@@ -571,7 +584,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
         clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
-      const isEditableValue = _.size(pipelineReducer.get('disbursementPlans')) > 0 ? false : true;
+      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 ? false : true;
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
