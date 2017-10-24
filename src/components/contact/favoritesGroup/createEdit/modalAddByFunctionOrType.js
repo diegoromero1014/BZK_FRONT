@@ -67,18 +67,22 @@ class ModalAddByFunctionOrType extends Component {
     _associateContacts() {
         const { groupsFavoriteContacts, associateContactsByFunctionOrType, isOpen, swtShowMessage } = this.props;
         var list = groupsFavoriteContacts.get('contactByFunctionOrTypeSelected');
-        if (_.size(list) + _.size(groupsFavoriteContacts.get('group').get('listContact')) > MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP) {
-            swtShowMessage(MESSAGE_ERROR, 'Asociar contactos', 'Señor usuario, el número de contactos no puede superar los ' + MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP + '.');
+        if (_.size(_.filter(list, 'checked')) === 0) {
+            swtShowMessage(MESSAGE_ERROR, 'Asociar contactos', 'Señor usuario, debe seleccionar al menos un contacto.');
         } else {
-            var contactsByFunctionOrTypeChecked = []
-            list.map(item => {
-                if (item.checked) {
-                    contactsByFunctionOrTypeChecked.push(_.omit(_.omit(item, "checked"), 'show'));
-                }
-            });
-            associateContactsByFunctionOrType(contactsByFunctionOrTypeChecked);
-            swtShowMessage(MESSAGE_SUCCESS, 'Contactos asociados', 'Señor usuario, los contactos se han asociado exitosamente.');
-            isOpen();
+            if (_.size(_.filter(list, 'checked')) + _.size(groupsFavoriteContacts.get('group').get('listContact')) > MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP) {
+                swtShowMessage(MESSAGE_ERROR, 'Asociar contactos', 'Señor usuario, el número de contactos no puede superar los ' + MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP + '.');
+            } else {
+                var contactsByFunctionOrTypeChecked = []
+                list.map(item => {
+                    if (item.checked) {
+                        contactsByFunctionOrTypeChecked.push(_.omit(_.omit(item, "checked"), 'show'));
+                    }
+                });
+                associateContactsByFunctionOrType(contactsByFunctionOrTypeChecked);
+                swtShowMessage(MESSAGE_SUCCESS, 'Contactos asociados', 'Señor usuario, los contactos se han asociado exitosamente.');
+                isOpen();
+            }
         }
     }
 
