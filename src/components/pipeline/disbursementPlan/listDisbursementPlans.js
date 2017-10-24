@@ -85,7 +85,6 @@ class ListDisbursementPlans extends Component {
             }
         });
         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]).toFixed(2), true, 2);
-        console.log('newListPart', newListPart);
         updateDisbursementPlans(2, newListPart, origin);
         this.setState({
             entityDelete: null,
@@ -120,14 +119,12 @@ class ListDisbursementPlans extends Component {
                     swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor nominal.');
                 } else {
                     var disbursementAmountItem;
-                    console.log('(this.state.entitySeleted', this.state.entitySeleted);
                     if (_.isNull(this.state.entitySeleted)) {
                         const newDisbursementPlan = {
                             id: _.uniqueId('disburPlan_'),
                             disbursementAmount: parseFloat(disbursementAmountNum),
                             estimatedDisburDate: estimatedDisburDate.value
                         };
-                        console.log('newDisbursementPlan', newDisbursementPlan);
                         listDisbursementPlans.push(newDisbursementPlan);
                         disbursementAmountItem = _.subtract(nominalValueNum, newDisbursementPlan.disbursementAmount);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
@@ -151,7 +148,6 @@ class ListDisbursementPlans extends Component {
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
                     }
-                    console.log('listDisbursementPlans', listDisbursementPlans);
                     updateDisbursementPlans(3, listDisbursementPlans, origin);
                     this._clearValues();
                     this.setState({ entitySeleted: null });
