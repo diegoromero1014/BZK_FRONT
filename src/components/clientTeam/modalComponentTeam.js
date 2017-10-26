@@ -1,196 +1,151 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Row, Grid, Col} from 'react-flexbox-grid';
-import {reduxForm} from 'redux-form';
-import SweetAlert from 'sweetalert-react';
-import numeral from 'numeral';
 import _ from 'lodash';
 import {bindActionCreators} from 'redux';
-import {REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS} from '../../constantsGlobal';
+import {
+    REQUEST_ERROR,
+    ERROR_MESSAGE_REQUEST,
+    ERROR_MESSAGE_REQUEST_TITLE,
+    MESSAGE_LOAD_DATA
+} from '../../constantsGlobal';
 import {OPTION_MANAGER, OPTION_OTHERS, OPTION_ASSISTANTS, MANAGER, OTHER, ASSISTANT} from './constants';
 import {getClientTeam} from './actions';
-import TeamManager from './teamManager';
-import TeamOthers from './teamOthers';
-import TeamAssistants from './teamAssistants';
-
-var classTabActive = 'active';
+import UserTeamCard from './userTeamCard';
+import {showLoading} from '../loading/actions';
+import {swtShowMessage} from '../sweetAlertMessages/actions';
+import {Menu, Segment} from 'semantic-ui-react'
 
 class ModalComponentTeam extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTabManager: classTabActive,
-      activeTabOthers: '',
-      activeTabAssistants: '',
-      teamManagers: [],
-      teamOthers: [],
-      teamAssistants: [],
-      showError: false,
-      messageError: ''
+    constructor(props) {
+        super(props);
+        this.state = {
+            teamManagers: [],
+            teamOthers: [],
+            teamAssistants: [],
+            tabActive: OPTION_MANAGER
+        };
     }
-    this._closeError = this._closeError.bind(this);
-  }
 
-  _closeError(){
-    this.setState({showError:false, messageError:''});
-  }
-
-  _clickSeletedTab(tab){
-    if(tab === OPTION_MANAGER){
-      this.setState({
-        activeTabManager: classTabActive,
-        activeTabOthers: '',
-        activeTabAssistants: ''
-      });
-    } else if(tab === OPTION_OTHERS){
-      this.setState({
-        activeTabManager: '',
-        activeTabOthers: classTabActive,
-        activeTabAssistants: ''
-      });
-    } else {
-      this.setState({
-        activeTabManager: '',
-        activeTabOthers: '',
-        activeTabAssistants: classTabActive
-      });
+    _mapTeam(item, idx) {
+        return <UserTeamCard
+            key={idx}
+            name={item.name}
+            position={item.position}
+            email={item.email}
+            company={item.company}
+            assistant={item.assistant}
+        />
     }
-  }
 
-  _mapTeamManagers(item, idx) {
-    return <TeamManager
-      key={idx}
-      name={item.name}
-      position={item.position}
-      email={item.email}
-      company={item.company}
-      assistant={item.assistant}
-    />
-  }
+    handleItemClick = (e, {name}) => this.setState({tabActive: name});
 
-  _mapTeamOthers(item, idx) {
-    return <TeamOthers
-      key={idx}
-      name={item.name}
-      position={item.position}
-      email={item.email}
-      company={item.company}
-      assistant={item.assistant}
-    />
-  }
-
-  _mapTeamAssistants(item, idx) {
-    return <TeamAssistants
-      key={idx}
-      name={item.name}
-      position={item.position}
-      email={item.email}
-      company={item.company}
-    />
-  }
-
-  componentWillMount(){
-    const {getClientTeam} = this.props;
-    this.setState({
-      teamManagers: [],
-      teamOthers: [],
-      teamAssistants: []
-    });
-    getClientTeam(window.localStorage.getItem('idClientSelected')).then((data) => {
-      var status = data.payload.data.status;
-      var validateLogin = data.payload.data.validateLogin;
-      if(status === REQUEST_ERROR){
+    componentWillMount() {
+        const {getClientTeam, showLoading, swtShowMessage} = this.props;
         this.setState({
-          showError: true,
-          messageError: ERROR_MESSAGE_REQUEST
+            teamManagers: [],
+            teamOthers: [],
+            teamAssistants: []
         });
-      } else {
-        if(validateLogin === false){
-          this.setState({
-            showError: true,
-            messageError: MESSAGE_USER_WITHOUT_PERMISSIONS
-          });
-        }else{
-          var team = data.payload.data.data;
-          this.setState({
-            teamManagers: _.filter(team, ['employeeType', MANAGER]),
-            teamOthers: _.filter(team, ['employeeType', OTHER]),
-            teamAssistants: _.filter(team, ['employeeType', ASSISTANT])
-          });
-        }
-      }
-    }, (reason) => {
-      this.setState({
-        showError: true,
-        messageError: ERROR_MESSAGE_REQUEST
-      });
-    });
-  }
+        showLoading(true, MESSAGE_LOAD_DATA);
+        getClientTeam(window.localStorage.getItem('idClientSelected')).then((data) => {
+            const status = data.payload.data.status;
+            const validateLogin = data.payload.data.validateLogin;
+            showLoading(false, '');
+            if (status === REQUEST_ERROR) {
+                swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+            } else {
+                if (validateLogin === false) {
+                    swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+                } else {
+                    const team = data.payload.data.data;
+                    const teamManagersArray = _.orderBy(_.filter(team, ['employeeType', MANAGER]), ['positionOrder', 'name'], ['asc', 'asc']);
+                    const teamOthersArray = _.orderBy(_.filter(team, ['employeeType', OTHER]), ['positionOrder', 'name'], ['asc', 'asc']);
+                    const teamAssistantsArray = _.orderBy(_.filter(team, ['employeeType', ASSISTANT]), ['positionOrder', 'name'], ['asc', 'asc']);
+                    this.setState({
+                        teamManagers: teamManagersArray,
+                        teamOthers: teamOthersArray,
+                        teamAssistants: teamAssistantsArray
+                    });
+                }
+            }
+        }, (reason) => {
+            swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+        });
+    }
 
-  render(){
-    return (
-          <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{overflow:"hidden"}}>
-            <Row style={{padding: "20px 20px 20px 20px"}}>
-              <Col xs>
-                <div className="ui top attached tabular menu" style={{width:"100%"}}>
-                  <a className={`${this.state.activeTabManager} item`} style={{width:"33%"}}
-                    data-tab="first" onClick={this._clickSeletedTab.bind(this, OPTION_MANAGER)}>Gerentes
-                  </a>
-                  <a className={`${this.state.activeTabOthers} item`} style={{width:"33%"}}
-                    data-tab="second" onClick={this._clickSeletedTab.bind(this, OPTION_OTHERS)}>Otros
-                  </a>
-                  <a className={`${this.state.activeTabAssistants} item`} style={{width:"34.1%"}}
-                    data-tab="third" onClick={this._clickSeletedTab.bind(this, OPTION_ASSISTANTS)}>Asistentes
-                  </a>
-                </div>
-                <div className={`ui bottom attached ${this.state.activeTabManager} tab segment`} data-tab="first" style={{height:"360px", overflowY:"auto"}}>
-                  <div className="news-page content">
-                    <div className="team-modal">
-                      {this.state.teamManagers.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron gerentes.</h4> </div>:
-                        this.state.teamManagers.map(this._mapTeamManagers)}
-                    </div>
-                  </div>
-                </div>
-                <div className={`ui bottom attached ${this.state.activeTabOthers} tab segment`} data-tab="second" style={{height:"360px", overflowY:"auto"}}>
-                  <div className="news-page content">
-                    <div className="team-modal">
-                      {this.state.teamOthers.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron otros participantes.</h4> </div>:
-                        this.state.teamOthers.map(this._mapTeamOthers)}
-                    </div>
-                  </div>
-                </div>
-                <div className={`ui bottom attached ${this.state.activeTabAssistants} tab segment`} data-tab="third" style={{height:"360px", overflowY:"auto"}}>
-                  <div className="news-page content">
-                    <div className="team-modal">
-                      {this.state.teamAssistants.length === 0 ? <div style={{textAlign:"center", marginTop:"15px"}}> <h4 className="form-item">Señor usuario, no se encontraron asistentes.</h4> </div>:
-                        this.state.teamAssistants.map(this._mapTeamAssistants)}
-                    </div>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <SweetAlert
-             type= "error"
-             show={this.state.showError}
-             title="Error cargando información"
-             text={this.state.messageError}
-             onConfirm={() => this._closeError()}
-             />
-          </div>
-    );
-  }
+    render() {
+        const {tabActive} = this.state;
+        return (
+            <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                 style={{overflow: "hidden"}}>
+                <Row style={{padding: "15px"}}>
+                    <Col xs>
+                        <Menu attached='top' tabular>
+                            <Menu.Item name={OPTION_MANAGER} active={tabActive === OPTION_MANAGER} onClick={this.handleItemClick}/>
+                            <Menu.Item name={OPTION_ASSISTANTS} active={tabActive === OPTION_ASSISTANTS} onClick={this.handleItemClick}/>
+                            <Menu.Item name={OPTION_OTHERS} active={tabActive === OPTION_OTHERS} onClick={this.handleItemClick}/>
+                        </Menu>
+                        <Segment attached='bottom' style={{height: "370px", overflowY: "auto"}}>
+                            {tabActive === OPTION_MANAGER &&
+                            <div className="horizontal-scroll-wrapper" style={{overflow: 'hidden', background: '#fff'}}>
+                                <div className="news-page content">
+                                    <div className="team-modal">
+                                        {this.state.teamManagers.length === 0 ?
+                                            <div style={{textAlign: "center", marginTop: "15px"}}>
+                                                <h4 className="form-item">Señor usuario, no se encontraron gerentes.</h4>
+                                            </div> :
+                                            this.state.teamManagers.map(this._mapTeam)}
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            {tabActive === OPTION_ASSISTANTS &&
+                            <div className="horizontal-scroll-wrapper" style={{overflow: 'hidden', background: '#fff'}}>
+                                <div className="news-page content">
+                                    <div className="team-modal">
+                                        {this.state.teamAssistants.length === 0 ?
+                                            <div style={{textAlign: "center", marginTop: "15px"}}>
+                                                <h4 className="form-item">Señor usuario, no se encontraron asistentes.</h4>
+                                            </div> :
+                                            this.state.teamAssistants.map(this._mapTeam)}
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            {tabActive === OPTION_OTHERS &&
+                            <div className="horizontal-scroll-wrapper" style={{overflow: 'hidden', background: '#fff'}}>
+                                <div className="news-page content">
+                                    <div className="team-modal">
+                                        {this.state.teamOthers.length === 0 ?
+                                            <div style={{textAlign: "center", marginTop: "15px"}}><h4
+                                                className="form-item">
+                                                Señor usuario, no se encontraron otros participantes.</h4></div> :
+                                            this.state.teamOthers.map(this._mapTeam)}
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </Segment>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    getClientTeam
-  }, dispatch);
+    return bindActionCreators({
+        getClientTeam,
+        showLoading,
+        swtShowMessage
+    }, dispatch);
 }
 
 function mapStateToProps({teamParticipantsReducer}, ownerProps) {
-  return {
-    teamParticipantsReducer
-  };
+    return {
+        teamParticipantsReducer
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalComponentTeam);

@@ -8,29 +8,20 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {
-  BUSINESS_CATEGORY,
-  FILTER_COUNTRY,
-  LINE_OF_BUSINESS,
-  PIPELINE_BUSINESS,
-  PRODUCT_FAMILY,
-  MELLOWING_PERIOD,
-  PIPELINE_INDEXING,
-  PIPELINE_PRIORITY,
-  PIPELINE_PRODUCTS,
-  PIPELINE_STATUS,
-  PROBABILITY,
-  PRODUCTS,
-  FILTER_MONEY_DISTRIBITION_MARKET,
-  FILTER_ACTIVE,
-  TERM_IN_MONTHS_VALUES
+  BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
+  PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
-import { getClientNeeds, getMasterDataFields, getPipelineCurrencies } from "../../selectsComponent/actions";
+import {
+  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+  clearLists
+} from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
   LINE_OF_BUSINESS_LEASING,
   ORIGIN_PIPELIN_BUSINESS,
-  COMPROMETIDO,
-  COTIZACION_EN_FIRME,
+  BUSINESS_STATUS_COMPROMETIDO,
+  BUSINESS_STATUS_COTIZACION,
   PRODUCT_FAMILY_LEASING,
   HELP_PROBABILITY
 } from "../constants";
@@ -79,6 +70,7 @@ let errorBusinessCategory = false;
 var thisForm;
 
 var isChildren = false;
+var nameDisbursementPlansInReducer = "disbursementPlans";
 
 const validate = values => {
   const errors = {};
@@ -188,6 +180,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
+      if (origin === ORIGIN_PIPELIN_BUSINESS) {
+        nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+      } else {
+        nameDisbursementPlansInReducer = "disbursementPlans";
+      }
 
       this._submitCreatePipeline = this._submitCreatePipeline.bind(this);
       this._closeMessageCreatePipeline = this._closeMessageCreatePipeline.bind(this);
@@ -207,7 +204,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     showFormDisbursementPlan(isOpen) {
       const { pipelineReducer } = this.props;
-      const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+      const listDisbursementPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
       const detailPipeline = pipelineReducer.get('detailPipeline');
       this.setState({
         showFormAddDisbursementPlan: isOpen,
@@ -308,21 +305,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probabilityEnabled: _pipeline_status.filter(pStatus => {
           return (
             pStatus.id == currencyValue &&
-            (pStatus.key == COMPROMETIDO || pStatus.key == COTIZACION_EN_FIRME)
+            (pStatus.key == BUSINESS_STATUS_COMPROMETIDO || pStatus.key == BUSINESS_STATUS_COTIZACION)
           )
         }).length > 0
       });
 
     }
 
-
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets } } = this.props;
-
+      const { selectsReducer, fields: { areaAssets, product }, consultListWithParameterUbication } = this.props;
       let _product_family = selectsReducer.get(PRODUCT_FAMILY)
-
       areaAssets.onChange('');
-
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
           return (
@@ -330,7 +323,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-
+      consultListWithParameterUbication(PRODUCTS, currencyValue);
+      product.onChange('');
     }
 
     _handleTermInMonths(valuReduxForm, val) {
@@ -395,11 +389,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           if (this.state.showFormAddDisbursementPlan) {
             swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
           } else {
-            const listDisburmentPlans = pipelineReducer.get('disbursementPlans');
-            _.map(listDisburmentPlans, (item) => {
-              item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
-              return item;
-            });
+            if (origin === ORIGIN_PIPELIN_BUSINESS) {
+              nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+            } else {
+              nameDisbursementPlansInReducer = "disbursementPlans";
+            }
+            const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
             if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
               let pipelineJson = {
                 "id": null,
@@ -408,6 +403,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 "product": product.value,
                 "businessStatus": businessStatus.value,
                 "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+                "employeeResponsibleName": nameUsuario.value,
                 "currency": currency.value,
                 "indexing": indexing.value,
                 "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
@@ -440,13 +436,18 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   updateValues: pipelineJson
                 });
               } else {
-                var resultPipelineBusines = [];
-                _.map(pipelineBusinessReducer.toArray(),
-                  function (pipelineBusiness) {
-                    resultPipelineBusines.push(_.omit(pipelineBusiness, ['uuid']));
-                  }
+                pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
+                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                  return item;
+                });
+                pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
+                  pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
+                    item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
+                    return item;
+                  });
+                  return _.omit(pipelineBusiness, ['uuid']);
+                }
                 );
-                pipelineJson.listPipelines = resultPipelineBusines;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                 createEditPipeline(pipelineJson).then((data) => {
                   changeStateSaveData(false, "");
@@ -550,9 +551,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists } = this.props;
       nonValidateEnter(true);
-      updateDisbursementPlans([]);
+      updateDisbursementPlans(1, [], origin);
+      clearLists([PRODUCTS]);
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
       }
@@ -564,7 +566,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         redirectUrl("/dashboard/clientInformation");
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
-          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, PRODUCTS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
@@ -582,7 +584,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
         clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
-      const isEditableValue = _.size(pipelineReducer.get('disbursementPlans')) > 0 ? false : true;
+      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 ? false : true;
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
@@ -1069,7 +1071,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       changeModalIsOpen,
       clearBusiness,
       updateDisbursementPlans,
-      swtShowMessage
+      swtShowMessage,
+      consultListWithParameterUbication,
+      clearLists
     }, dispatch);
   }
 

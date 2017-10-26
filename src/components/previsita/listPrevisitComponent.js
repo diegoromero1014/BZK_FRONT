@@ -7,6 +7,7 @@ import {NUMBER_RECORDS, DELETE_TYPE_PREVISIT} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
+import { MODULE_PREVISIT } from '../grid/constants';
 
 let v1 = '';
 
@@ -101,7 +102,7 @@ class ListPrevisitComponent extends Component {
 			_.set(value, 'actionsRedirect', {
 				actionView: true,
 				id: value.id,
-				typeClickDetail: "previsita",
+				typeClickDetail: MODULE_PREVISIT,
 				ownerDraft: value.idStatusDocument,
 				urlRedirect: '/dashboard/previsitaEditar',
 				component: 'VIEW_PREVISIT'

@@ -31,6 +31,7 @@ class ListDisbursementPlans extends Component {
         this._viewInformationDisbursementPlan = this._viewInformationDisbursementPlan.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteDisbursementPlan = this._deleteDisbursementPlan.bind(this);
+        this._getNameDisbursementPlansInReducer = this._getNameDisbursementPlansInReducer.bind(this);
     }
 
     _mapValuesDisbursementPlans(entity, isEditable, idx) {
@@ -71,8 +72,8 @@ class ListDisbursementPlans extends Component {
 
     _deleteDisbursementPlan() {
         const { updateDisbursementPlans, pipelineReducer, showFormDisbursementPlan,
-            nominalValue } = this.props;
-        const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+            nominalValue, origin } = this.props;
+        var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
         var disbursementAmountItem = 0;
         const nominalValueNum = parseFloat(((nominalValue.value).toString()).replace(/,/g, ""));
         const newListPart = _.remove(listDisbursementPlans, (item) => {
@@ -83,8 +84,8 @@ class ListDisbursementPlans extends Component {
                 return true;
             }
         });
-        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]), true, 2);
-        updateDisbursementPlans(newListPart);
+        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, _.sum([nominalValueNum, disbursementAmountItem]).toFixed(2), true, 2);
+        updateDisbursementPlans(2, newListPart, origin);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
@@ -100,7 +101,7 @@ class ListDisbursementPlans extends Component {
 
     _validateInfo() {
         const { disbursementAmount, estimatedDisburDate, swtShowMessage, nominalValue,
-            updateDisbursementPlans, pipelineReducer } = this.props;
+            updateDisbursementPlans, pipelineReducer, origin } = this.props;
         if (!stringValidate(disbursementAmount.value) || !stringValidate(estimatedDisburDate.value)) {
             this.setState({ errorForm: true });
             swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, debe ingresar todos los campos.');
@@ -108,7 +109,7 @@ class ListDisbursementPlans extends Component {
             if (!moment(estimatedDisburDate.value, 'MM/YYYY').isValid()) {
                 swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, debe seleccionar un valor válido para la fecha de desembolso.');
             } else {
-                var listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+                var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
                 var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
                 const disbursementAmountNum = parseFloat((disbursementAmount.value.toString()).replace(/,/g, ""));
                 const nominalValueNum = parseFloat((nominalValue.value.toString()).replace(/,/g, ""));
@@ -143,11 +144,11 @@ class ListDisbursementPlans extends Component {
                             }
                         });
                         disbursementAmountItem = _.sum([nominalValueNum, disbursementAmountItem]);
-                        disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount);
+                        disbursementAmountItem = _.subtract(disbursementAmountItem, updateValue.disbursementAmount).toFixed(2);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
                     }
-                    updateDisbursementPlans(listDisbursementPlans);
+                    updateDisbursementPlans(3, listDisbursementPlans, origin);
                     this._clearValues();
                     this.setState({ entitySeleted: null });
                 }
@@ -155,10 +156,19 @@ class ListDisbursementPlans extends Component {
         }
     }
 
+    _getNameDisbursementPlansInReducer() {
+        const { origin } = this.props;
+        if (origin === ORIGIN_PIPELIN_BUSINESS) {
+            return "childBusinessDisbursementPlans";
+        } else {
+            return "disbursementPlans";
+        }
+    }
+
     render() {
         const { disbursementAmount, estimatedDisburDate, showFormDisbursementPlan,
             fnShowForm, registrationRequired, pipelineReducer, nominalValue, isEditable, origin } = this.props;
-        var listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+        var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
         const sizeListDisbursementPlans = _.size(listDisbursementPlans);
         const allowsAddDisbursementPlans = ((nominalValue.value.toString()).replace(/,/g, "") > 0 ? false : true) || showFormDisbursementPlan || _.isNil(nominalValue.value);
         return (

@@ -67,7 +67,7 @@ class SearchBarClient extends Component{
             const columnOrder = alertPortfolioExpiration.get('columnOrder');
             showLoading(true, 'Cargando..');
             clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
-                if (_.has(data, 'payload.data.data')) {
+                if (_.has(data, 'payload.data.data.pagination')) {
                     showLoading(false, null);
                     changePage(1);
                 }

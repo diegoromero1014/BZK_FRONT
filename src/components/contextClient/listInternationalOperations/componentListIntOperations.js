@@ -277,7 +277,7 @@ class ComponentListIntOperations extends Component {
                     </Col>
                     <Col xs={12} md={12} lg={12}>
                         {showCheckValidateSection &&
-                            <div>
+                            <div style={{marginLeft: '20px'}}>
                                 <input type="checkbox" id="checkSectionIntOperations"
                                     checked={valueCheckSectionIntOperations}
                                     onClick={functionChangeIntOperations} />

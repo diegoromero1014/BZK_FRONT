@@ -17,8 +17,8 @@ export const CURRENCY_COP = "COP";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 
-export const COMPROMETIDO = "Comprometido";
-export const COTIZACION_EN_FIRME = "Cotización en Firme";
+export const BUSINESS_STATUS_COMPROMETIDO = "Comprometido";
+export const BUSINESS_STATUS_COTIZACION = "Cotización";
 export const PRODUCT_FAMILY_LEASING = "Leasing";
 export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
 //manejo de los planes de desembolso

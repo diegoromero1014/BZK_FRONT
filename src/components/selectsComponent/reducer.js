@@ -41,9 +41,9 @@ const initialState = Immutable.Map({
     fullfillmentCovenant: [],
     segment: [],
     subSegment: [],
-    reasonConformation: []
+    reasonConformation: [],
+    products: []
 });
-
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -143,6 +143,15 @@ export default (state = initialState, action) => {
             return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.REASON_CONFORMATION:
             return state.set('reasonConformation', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.PRODUCTS:
+            return state.set('products', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.CLEAR_LISTS:
+            const clearLists = action.lists;
+            return state.withMutations(map => {
+                _.map(clearLists, (item) => {
+                    map.set(item, []);
+                });
+            });
         default:
             return state;
     }
