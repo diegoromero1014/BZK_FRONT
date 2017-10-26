@@ -2,7 +2,7 @@ import axios from 'axios';
 import { APP_URL } from '../../../constantsGlobal';
 import {
     GET_ASSIGNED, CLEAR_LIST_OF_ASSIGNED, CHANGE_PAGE, LIMITE_INF, CHANGE_SORT_ORDER,
-    CHANGE_CLIENT_NUMBER_OR_NAME, CHANGE_HOMEWORK_TIME, CHANGE_STATE
+    CHANGE_CLIENT_NUMBER_OR_NAME, CHANGE_HOMEWORK_TIME, CHANGE_STATE, DOWNLOAD_TASK_ASSIGNED
 } from './constants';
 
 export function getAssigned(pagination) {
@@ -85,4 +85,29 @@ export function clearListOfAssigned() {
     return {
         type: CLEAR_LIST_OF_ASSIGNED
     };
+}
+
+export function getExcelTaskAssigned(clientId) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "clientId": clientId
+    }
+  }
+  let request = axios.post(APP_URL + "/getExcelTaskAssigned", json);
+  return {
+    type: DOWNLOAD_TASK_ASSIGNED,
+    payload: request
+}
 }
