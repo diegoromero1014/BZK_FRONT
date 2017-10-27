@@ -165,11 +165,11 @@ class ListDisbursementPlans extends Component {
     }
 
     render() {
-        const { disbursementAmount, estimatedDisburDate, showFormDisbursementPlan,
+        const { disbursementAmount, estimatedDisburDate, showFormDisbursementPlan, pendingDisbursementAmount,
             fnShowForm, registrationRequired, pipelineReducer, nominalValue, isEditable, origin } = this.props;
         var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
         const sizeListDisbursementPlans = _.size(listDisbursementPlans);
-        const allowsAddDisbursementPlans = ((nominalValue.value.toString()).replace(/,/g, "") > 0 ? false : true) || showFormDisbursementPlan || _.isNil(nominalValue.value);
+        const allowsAddDisbursementPlans = ((pendingDisbursementAmount.value.toString()).replace(/,/g, "") > 0 ? false : true) || showFormDisbursementPlan || _.isNil(pendingDisbursementAmount.value);
         return (
             <div>
                 {isEditable &&

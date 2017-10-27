@@ -352,6 +352,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: { pendingDisbursementAmount, value } } = this.props;
             handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (val).toString(), true, 2);
             value.onChange(val);
+            if (_.isNil(val) || val === '') {
+                this.showFormDisbursementPlan(false);
+            }
         }
 
         _submitEditPipeline() {
@@ -654,7 +657,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 reducerGlobal, navBar } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
-            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 ? false : true;
+            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
             if (updatedTimestamp.value !== null) {
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');

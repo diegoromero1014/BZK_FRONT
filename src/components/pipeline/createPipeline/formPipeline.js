@@ -312,6 +312,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _changeValue(val) {
       const { fields: { pendingDisbursementAmount, value } } = this.props;
       handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (val).toString(), true, 2);
+      if (_.isNil(val) || val === '') {
+        this.showFormDisbursementPlan(false);
+      }
       value.onChange(val);
     }
 
@@ -588,7 +591,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
         clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
-      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 ? false : true;
+      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
