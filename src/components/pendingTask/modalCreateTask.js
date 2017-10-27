@@ -21,7 +21,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPend
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { formatLongDateToDateWithNameMonth, htmlToText, validateValue } from '../../actionsGlobal';
+import { htmlToText, validateValue, validateValueExist } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
@@ -55,15 +55,15 @@ const validate = values => {
 };
 
 function Boton(props) {
-  if (props) {
-    const myPendingsReducer = props.pendingsReducer
-    var permisionEditTask = myPendingsReducer.get('userName');
-    var visibleEdit = permisionEditTask.toLowerCase() === sessionStorage.getItem('userName').toLowerCase();
 
-    const reducerGlobal = props.redcers;
-    var permision = _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)
+  const myPendingsReducer = props.pendingsReducer
+  var permisionEditTask = myPendingsReducer.get('userName');
+  var visibleEdit = permisionEditTask.toLowerCase() === sessionStorage.getItem('userName').toLowerCase();
+  const reducerGlobal = props.redcers;
+  var permision = _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)
 
-    if (visibleEdit !== undefined && visibleEdit !== null && visibleEdit === true) {
+  if (visibleEdit !== undefined && visibleEdit !== null && visibleEdit === true) {
+    if (permisionEditTask !== null) {
       return <Col xs={12} md={3} ld={3}>
         {
           permision &&
@@ -218,7 +218,7 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer } = this.props;
     const styleRow = {};
     return (
@@ -253,15 +253,15 @@ class ModalCreateTask extends Component {
                 </dt>
               </Col>
               <Boton
-                pendingsReducer={myPendingsReducer}
-                redcers={reducerGlobal}
-                type={'button'}
-                onClick={this._editTask}
-                className={'btn btn-primary modal-button-edit'}
-                style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}
-                name={'Editar'}
-                iconEdit={'icon edit'}
-              />
+              pendingsReducer={myPendingsReducer}
+              redcers={reducerGlobal}
+              type={'button'}
+              onClick={this._editTask}
+              className={'btn btn-primary modal-button-edit'}
+              style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}
+              name={'Editar'}
+              iconEdit={'icon edit'}
+            />
             </Row>
             <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
