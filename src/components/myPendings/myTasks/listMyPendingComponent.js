@@ -87,9 +87,14 @@ _orderColumn(orderMyPending,columnMyPending){
         width: '380px'
       },
       {
-        title: "Asignada Por",
+        title: "Asignada por",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"FOE.D06_NAME")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"FOE.D06_NAME")}></i></span>,
         key:"assignedBy",
+        width: '150px'
+      },
+      {
+        title: "Responsable",
+        key:"responsible",
         width: '150px'
       },
       {

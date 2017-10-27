@@ -21,7 +21,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPend
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { formatLongDateToDateWithNameMonth, htmlToText} from '../../actionsGlobal';
+import { formatLongDateToDateWithNameMonth, htmlToText, validateValue } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
@@ -53,6 +53,36 @@ const validate = values => {
   }
   return errors;
 };
+
+function Boton(props) {
+  if (props) {
+    const myPendingsReducer = props.pendingsReducer
+    var permisionEditTask = myPendingsReducer.get('userName');
+    var visibleEdit = permisionEditTask.toLowerCase() === sessionStorage.getItem('userName').toLowerCase();
+
+    const reducerGlobal = props.redcers;
+    var permision = _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)
+
+    if (visibleEdit !== undefined && visibleEdit !== null && visibleEdit === true) {
+      return <Col xs={12} md={3} ld={3}>
+        {
+          permision &&
+          <button
+            type={props.type}
+            onClick={props.onClick}
+            className={props.className}
+            style={props.style}>
+            {props.name}
+            <i className={props.iconEdit}></i>
+          </button>}
+      </Col>;
+    } else {
+      return <div></div>
+    }
+  } else {
+    return <div></div>
+  }
+}
 
 class ModalCreateTask extends Component {
   constructor(props) {
@@ -136,7 +166,7 @@ class ModalCreateTask extends Component {
     const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal } = this.props;
     this.setState({ isEditable: false, taskEdited: false, showErrtask: false });
     isOpen();
-    if (!_.isUndefined(functCloseModal) &&  !_.isNull(functCloseModal)) {
+    if (!_.isUndefined(functCloseModal) && !_.isNull(functCloseModal)) {
       functCloseModal();
     } else {
       tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
@@ -188,8 +218,8 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateEntity },
-      selectsReducer, reducerGlobal, handleSubmit } = this.props;
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
+      selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer } = this.props;
     const styleRow = {};
     return (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
@@ -222,69 +252,71 @@ class ModalCreateTask extends Component {
                   />
                 </dt>
               </Col>
-              <Col xs={12} md={3} ld={3}>
-                {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
-                  <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
-                    style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}>
-                    Editar <i className={'icon edit'}></i>
-                  </button>
-                }
-              </Col>
+              <Boton
+                pendingsReducer={myPendingsReducer}
+                redcers={reducerGlobal}
+                type={'button'}
+                onClick={this._editTask}
+                className={'btn btn-primary modal-button-edit'}
+                style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}
+                name={'Editar'}
+                iconEdit={'icon edit'}
+              />
             </Row>
-            <Row style={{padding: "0px 14px 0px 2px"}}>
+            <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <ComboBoxFilter
-                    name="inputParticipantBanc"
-                    labelInput="Ingrese un criterio de búsqueda..."
-                    {...responsable}
-                    parentId="dashboardComponentScroll"
-                    onChange={responsable.onChange}
-                    value={responsable.value}
-                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                    onSelect={val => this._updateValue(val)}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                    max="255"
-                  />
+                <ComboBoxFilter
+                  name="inputParticipantBanc"
+                  labelInput="Ingrese un criterio de búsqueda..."
+                  {...responsable}
+                  parentId="dashboardComponentScroll"
+                  onChange={responsable.onChange}
+                  value={responsable.value}
+                  onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                  onSelect={val => this._updateValue(val)}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                  max="255"
+                />
               </Col>
             </Row>
-            <Row style={{padding: "0px 14px 0px 2px"}}>
+            <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <RichText
-                    {...tarea}
-                    name="createTask"
-                    placeholder="Ingrese una tarea"
-                    style={{ width: '100%', height: '120px' }}
-                    readOnly={!this.state.isEditable}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
+                <RichText
+                  {...tarea}
+                  name="createTask"
+                  placeholder="Ingrese una tarea"
+                  style={{ width: '100%', height: '120px' }}
+                  readOnly={!this.state.isEditable}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                />
               </Col>
             </Row>
-            <Row style={{padding: "20px 14px 0px 2px"}}>
+            <Row style={{ padding: "20px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Observaciones</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <Textarea
-                    {...advance}
-                    name="advanceTask"
-                    type="text"
-                    max="1000"
-                    title="La longitud máxima de caracteres es de 1000"
-                    style={{ width: '100%', height: '120px' }}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
+                <Textarea
+                  {...advance}
+                  name="advanceTask"
+                  type="text"
+                  max="1000"
+                  title="La longitud máxima de caracteres es de 1000"
+                  style={{ width: '100%', height: '120px' }}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                />
               </Col>
             </Row>
           </div>
@@ -340,16 +372,18 @@ function mapDispatchToProps(dispatch) {
     clearMyPendingPaginator,
     changeStateSaveData,
     getInfoTaskUser,
-    tasksByUser
+    tasksByUser,
+    validateValue
   }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal }, { taskEdit }) {
+function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, myPendingsReducer }, { taskEdit }) {
   return {
     tasksByClient,
     selectsReducer,
     participants,
-    reducerGlobal
+    reducerGlobal,
+    myPendingsReducer
   }
 }
 
