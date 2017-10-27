@@ -17,8 +17,8 @@ export function createTrackingCovenant(jsonTracking) {
             "isSuccessful": true
         },
         "messageBody": jsonTracking
-    }
-    var request = axios.post(APP_URL + "/saveTrackingCovenant", json);
+    };
+    const request = axios.post(APP_URL + "/saveTrackingCovenant", json);
     return {
         type: CREATE_TRACKING_COVENANT,
         payload: request

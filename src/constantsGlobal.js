@@ -1,4 +1,4 @@
-export const VERSION_DATE = "13/10/2017";
+export const VERSION_DATE = "20/10/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -90,6 +90,7 @@ export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
 export const ANALYST = "Analista";
+export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -175,3 +176,4 @@ export const STYLE_BUTTON_BOTTOM = {
 }
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;
+export const STR_YES = "Si";

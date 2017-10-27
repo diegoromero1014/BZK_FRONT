@@ -7,7 +7,7 @@ import {
     MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES, MESSAGE_LOAD_DATA,
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from '../../constantsGlobal';
-import { validateResponse } from '../../actionsGlobal';
+import { validateResponse,validatePermissionsByModule } from '../../actionsGlobal';
 import { consultModulesAccess } from '../navBar/actions';
 import ListCovenant from './covenants/listCovenants';
 import ListAEC from './AEC/listAEC';
@@ -42,6 +42,7 @@ class RisksManagementComponent extends Component {
             showLoading(false, "");
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
+
     }
 
     componentWillUnmount() {
@@ -112,7 +113,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion,reducerGlobal }, ownerProps) {
     return {
         navBar,
         tabRisksManagment,
