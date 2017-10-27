@@ -11,8 +11,7 @@ import {
     RED_COLOR, MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
 import {
-    getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState,
-    changeSortOrder
+    getAssigned, clearListOfAssigned, changeClientNumberOrName, changeHomeworkTime, changeState, changeSortOrder, getExcelTaskAssigned
 } from './actions';
 import ListAssigned from './listAssigned';
 import PaginationAssigned from './paginationAssigned';
@@ -22,8 +21,9 @@ import { reduxForm } from 'redux-form';
 import { Dropdown } from 'semantic-ui-react'
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { TASK_STATUS } from '../../selectsComponent/constants';
-import { MODULE_TASKS } from '../../../constantsGlobal';
+import { APP_URL, MODULE_TASKS, DESCARGAR, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
+import Tooltip from "../../toolTip/toolTipComponent";
 
 const fields = ['stateTask', 'trafficLight', 'keywordClient'];
 const optionsColorExpiration = [
@@ -61,6 +61,7 @@ class ComponentAssigned extends Component {
         this._onChangeTrafficLight = this._onChangeTrafficLight.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
         this._findForKeyword = this._findForKeyword.bind(this);
+        this._downloadTaskAssigned = this._downloadTaskAssigned.bind(this);
     }
 
     _handleChangeKeyword(e) {
@@ -131,6 +132,19 @@ class ComponentAssigned extends Component {
         }
     }
 
+    _downloadTaskAssigned() {
+        const { getExcelTaskAssigned, changeStateSaveData, swtShowMessage } = this.props;
+        changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+        getExcelTaskAssigned(window.localStorage.getItem('idClientSelected')).then((data) => {
+            changeStateSaveData(false, "");
+            if (validateResponse(data)) {
+                window.open(APP_URL + '/getExcelReport?filename=' + _.get(data, 'payload.data.data.filename', null) + '&id=' + _.get(data, 'payload.data.data.sessionToken', null), '_blank');
+            } else {
+                swtShowMessage('error', 'Erro descargando tareas', 'Señor usuario, ocurrió un error al tratar de descargar las tareas asignadas.');
+            }
+        });
+    }
+
     componentWillMount() {
         const { fields: { trafficLight }, updateTitleNavBar, getMasterDataFields, validatePermissionsByModule } = this.props;
         getMasterDataFields([TASK_STATUS]);
@@ -144,7 +158,7 @@ class ComponentAssigned extends Component {
     }
 
     render() {
-        const { fields: { stateTask, keywordClient, trafficLight }, assignedReducer, selectsReducer } = this.props;
+        const { fields: { stateTask, keywordClient, trafficLight }, assignedReducer, selectsReducer, reducerGlobal } = this.props;
         const listAssigned = assignedReducer.get('assigned');
         var visibleTable = 'none';
         var visibleMessage = 'block';
@@ -154,53 +168,61 @@ class ComponentAssigned extends Component {
         }
         return (
             <div className="tab-pane quickZoomIn animated" style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
-                <div style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial', marginLeft: '10px', marginRight: '10px' }}>
-                    <Grid style={{ width: "100%" }}>
-                        <Row>
-                            <Col xs={12} sm={12} md={5} lg={5}>
-                                <div className="InputAddOn">
-                                    <input type="text" style={{ padding: '0px 11px !important' }}
-                                        id="searchExpression" onKeyPress={this._handleChangeKeyword}
-                                        placeholder="Búsqueda por número o nombre del cliente" value={keywordClient.value}
-                                        onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
-                                    />
-                                    <button id="searchClients" className="btn" title="Buscar" type="button"
-                                        onClick={this._findForKeyword} style={{ backgroundColor: "#E0E2E2" }}
-                                    >
-                                        <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
-                                    </button>
-                                </div>
-                            </Col>
-                            <Col xs={12} sm={12} md={3} lg={3}>
-                                <ComboBox
-                                    name="stateTask"
-                                    labelInput="Estado de la tarea"
-                                    {...stateTask}
-                                    onChange={val => this._onChangeTypeStatus(val)}
-                                    value={stateTask.value}
-                                    onBlur={stateTask.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    data={selectsReducer.get(TASK_STATUS) || []}
+                <div style={{ padding: '10px', overflow: 'initial' }}>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF" }}>
+                        <Col xs={12} sm={12} md={5} lg={5}>
+                            <div className="InputAddOn">
+                                <input type="text" style={{ padding: '0px 11px !important' }}
+                                    id="searchExpression" onKeyPress={this._handleChangeKeyword}
+                                    placeholder="Búsqueda por número o nombre del cliente" value={keywordClient.value}
+                                    onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field"
                                 />
-                            </Col>
-                            <Col xs={12} sm={12} md={3} lg={3}>
-                                <Dropdown value={trafficLight.value}
-                                    {...trafficLight}
-                                    onChange={(e, val) => { this._onChangeTrafficLight(val.value) }}
-                                    placeholder='Por favor, seleccione un estado' fluid search selection
-                                    options={optionsColorExpiration}
-                                />
-                            </Col>
-                            <Col xs={12} sm={12} md={1} lg={1} style={{ width: '100%' }}>
-                                <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                    title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
-                                    <i className="erase icon"
-                                        style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                <button id="searchClients" className="btn" title="Buscar" type="button"
+                                    onClick={this._findForKeyword} style={{ backgroundColor: "#E0E2E2" }}
+                                >
+                                    <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                                 </button>
+                            </div>
+                        </Col>
+                        <Col xs={12} sm={12} md={3} lg={2}>
+                            <ComboBox
+                                name="stateTask"
+                                labelInput="Estado de la tarea"
+                                {...stateTask}
+                                onChange={val => this._onChangeTypeStatus(val)}
+                                value={stateTask.value}
+                                onBlur={stateTask.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                data={selectsReducer.get(TASK_STATUS) || []}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={3} lg={3}>
+                            <Dropdown value={trafficLight.value}
+                                {...trafficLight}
+                                onChange={(e, val) => { this._onChangeTrafficLight(val.value) }}
+                                placeholder='Por favor, seleccione un estado' fluid search selection
+                                options={optionsColorExpiration}
+                            />
+                        </Col>
+                        <Col xs={5} sm={6} md={3} lg={1} style={{ width: '100%' }}>
+                            <Tooltip text="Descargar tareas asignadas">
+                                <button className="btn btn-primary" type="button" onClick={this._cleanSearch} style={{ marginLeft: "17px" }}>
+                                    <i className="erase icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                </button>
+                            </Tooltip>
+                        </Col>
+                        {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
+
+                            <Col xs={5} sm={6} md={3} lg={1} style={{ width: '100%' }}>
+                                <Tooltip text="Descargar tareas asignadas">
+                                    <button className="btn btn-primary" type="button" onClick={this._downloadTaskAssigned} style={{ marginLeft: '-15px' }}>
+                                        <i className="file excel outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                    </button>
+                                </Tooltip>
                             </Col>
-                        </Row>
-                    </Grid>
+                        }
+                    </Row>
                 </div>
                 <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px', marginTop: '20px' }}>
                     <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
@@ -237,14 +259,16 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         changeSortOrder,
         validatePermissionsByModule,
-        changeStateSaveData
+        changeStateSaveData,
+        getExcelTaskAssigned
     }, dispatch);
 }
 
-function mapStateToProps({ assignedReducer, selectsReducer }, ownerProps) {
+function mapStateToProps({ assignedReducer, selectsReducer, reducerGlobal }, ownerProps) {
     return {
         assignedReducer,
-        selectsReducer
+        selectsReducer,
+        reducerGlobal
     };
 }
 
