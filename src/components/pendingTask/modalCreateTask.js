@@ -21,7 +21,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPend
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { htmlToText, validateValue, validateValueExist } from '../../actionsGlobal';
+import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
@@ -253,15 +253,15 @@ class ModalCreateTask extends Component {
                 </dt>
               </Col>
               <Boton
-              pendingsReducer={myPendingsReducer}
-              redcers={reducerGlobal}
-              type={'button'}
-              onClick={this._editTask}
-              className={'btn btn-primary modal-button-edit'}
-              style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}
-              name={'Editar'}
-              iconEdit={'icon edit'}
-            />
+                pendingsReducer={myPendingsReducer}
+                redcers={reducerGlobal}
+                type={'button'}
+                onClick={this._editTask}
+                className={'btn btn-primary modal-button-edit'}
+                style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}
+                name={'Editar'}
+                iconEdit={'icon edit'}
+              />
             </Row>
             <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
