@@ -55,15 +55,15 @@ const validate = values => {
 };
 
 function Boton(props) {
-
   const myPendingsReducer = props.pendingsReducer
-  var permisionEditTask = myPendingsReducer.get('userName');
-  var visibleEdit = permisionEditTask.toLowerCase() === sessionStorage.getItem('userName').toLowerCase();
-  const reducerGlobal = props.redcers;
+  console.log('myPendingsReducer', myPendingsReducer);
+  var visibleEdit = _.isUndefined(myPendingsReducer.get('userName')) ? true : _.isEqual(myPendingsReducer.get('userName').toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+  const reducerGlobal = props.reducers;
   var permision = _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)
 
-  if (visibleEdit !== undefined && visibleEdit !== null && visibleEdit === true) {
-    if (permisionEditTask !== null) {
+
+  if (myPendingsReducer !== null) {
+    if (visibleEdit !== undefined && visibleEdit !== null && visibleEdit === true) {
       return <Col xs={12} md={3} ld={3}>
         {
           permision &&
@@ -254,7 +254,7 @@ class ModalCreateTask extends Component {
               </Col>
               <Boton
                 pendingsReducer={myPendingsReducer}
-                redcers={reducerGlobal}
+                reducers={reducerGlobal}
                 type={'button'}
                 onClick={this._editTask}
                 className={'btn btn-primary modal-button-edit'}
