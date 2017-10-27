@@ -116,7 +116,7 @@ class ModalComponentPending extends Component {
             {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
 
               <Col xs={12} sm={12} md={2} lg={1} style={{ width: '100%' }}>
-                <Tooltip text="Descargar tareas Pendientes">
+                <Tooltip text="Descarga de tareas pendientes">
                   <button className="btn btn-primary" type="button" onClick={this._downloadPendingTask} style={{ marginLeft: '-15px' }}>
                     <i className="file excel outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                   </button>
