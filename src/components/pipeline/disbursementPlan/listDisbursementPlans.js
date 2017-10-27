@@ -23,7 +23,7 @@ class ListDisbursementPlans extends Component {
             showConfirmDelete: false,
             errorForm: false,
             entityDelete: null,
-            entitySeleted: null,
+            entitySeleted: null
         }
         this._clearValues = this._clearValues.bind(this);
         this._validateInfo = this._validateInfo.bind(this);
@@ -72,7 +72,7 @@ class ListDisbursementPlans extends Component {
 
     _deleteDisbursementPlan() {
         const { updateDisbursementPlans, pipelineReducer, showFormDisbursementPlan,
-            pendingDisbursementAmount } = this.props;
+            pendingDisbursementAmount, origin } = this.props;
         const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
         var disbursementAmountItem = 0;
         const pendingDisbursementAmountNum = parseFloat(((pendingDisbursementAmount.value).toString()).replace(/,/g, ""));
@@ -85,7 +85,7 @@ class ListDisbursementPlans extends Component {
             }
         });
         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, _.sum([pendingDisbursementAmountNum, disbursementAmountItem]).toFixed(2), true, 2);
-        updateDisbursementPlans(newListPart);
+        updateDisbursementPlans(newListPart, origin);
         this.setState({
             entityDelete: null,
             showConfirmDelete: false
@@ -100,7 +100,7 @@ class ListDisbursementPlans extends Component {
     }
 
     _validateInfo() {
-        const { disbursementAmount, estimatedDisburDate, swtShowMessage, nominalValue,
+        const { disbursementAmount, estimatedDisburDate, swtShowMessage, nominalValue, origin,
             updateDisbursementPlans, pipelineReducer, pendingDisbursementAmount } = this.props;
         if (!stringValidate(disbursementAmount.value) || !stringValidate(estimatedDisburDate.value)) {
             this.setState({ errorForm: true });
@@ -147,7 +147,7 @@ class ListDisbursementPlans extends Component {
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
                     }
-                    updateDisbursementPlans(3, listDisbursementPlans, origin);
+                    updateDisbursementPlans(listDisbursementPlans, origin);
                     this._clearValues();
                     this.setState({ entitySeleted: null });
                 }

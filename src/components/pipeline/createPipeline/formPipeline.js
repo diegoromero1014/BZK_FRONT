@@ -557,7 +557,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
         consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists } = this.props;
       nonValidateEnter(true);
-      updateDisbursementPlans(1, [], origin);
+      updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
