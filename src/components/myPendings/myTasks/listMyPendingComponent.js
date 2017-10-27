@@ -102,7 +102,7 @@ _orderColumn(orderMyPending,columnMyPending){
         key:"trafficLight"
       },
       {
-        title: "Fecha vencimiento",
+        title: "Fecha cierre",
         orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"UT.D62_CLOSING_DATE")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"UT.D62_CLOSING_DATE")}></i></span>,
         key:"closeDate",
         width: '170px'
