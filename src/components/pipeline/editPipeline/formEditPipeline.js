@@ -19,17 +19,20 @@ import {
 import {
     DATE_FORMAT, DATE_START_AFTER, EDITAR, MESSAGE_SAVE_DATA,
     ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, REVIEWED_DATE_FORMAT, SAVE_DRAFT, SAVE_PUBLISHED,
-    VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR
+    VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
+    TITLE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
 import {
     CURRENCY_COP, INTEGER,
     LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
     REAL, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
 } from "../constants";
-import { createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans } from "../actions";
+import {
+    createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans
+} from "../actions";
 import {
     consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber,
-    nonValidateEnter
+    nonValidateEnter, validateResponse
 } from "../../../actionsGlobal";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
@@ -52,7 +55,7 @@ const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", 
     "businessCategory", "currency", "indexing", "need", "observations", "product",
     "client", "documentStatus", "reviewedDate", "createdBy", "updatedBy", "createdTimestamp",
     "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy", "positionUpdatedBy",
-    "probability", "amountDisbursed", "estimatedDisburDate",
+    "probability", "amountDisbursed", "estimatedDisburDate", "pendingDisbursementAmount",
     "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
     "areaAssets", "areaAssetsValue", "termInMonthsValues"];
 
@@ -199,6 +202,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
             this._changeProductFamily = this._changeProductFamily.bind(this);
             this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
+            this._changeValue = this._changeValue.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -344,14 +348,21 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             idCurrencyAux = parseInt(currency.value);
         }
 
+        _changeValue(val) {
+            const { fields: { pendingDisbursementAmount, value } } = this.props;
+            handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (val).toString(), true, 2);
+            value.onChange(val);
+        }
+
         _submitEditPipeline() {
             if (errorBusinessCategory === null) {
                 const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
                     businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, client, documentStatus, nameUsuario, probability,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues }, createEditPipeline, changeStateSaveData, swtShowMessage,
-                    pipelineBusinessReducer, pipelineReducer } = this.props;
+                    termInMonthsValues, pendingDisbursementAmount }, createEditPipeline,
+                    changeStateSaveData, swtShowMessage, pipelineBusinessReducer,
+                    pipelineReducer } = this.props;
                 const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
                 if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                     this.setState({
@@ -386,6 +397,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 "termInMonths": termInMonths.value,
                                 "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
                                 "value": value.value === undefined ? null : (value.value.toString()).replace(/,/g, ""),
+                                "pendingDisbursementAmount": pendingDisbursementAmount.value === undefined ? null : numeral(pendingDisbursementAmount.value).format('0'),
                                 "probability": probability.value,
                                 "businessCategory": businessCategory.value,
                                 "opportunityName": opportunityName.value,
@@ -522,9 +534,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
                 updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
                 reviewedDate, probability, businessCategory, opportunityName, productFamily,
-                mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues },
-                updateDisbursementPlans } = this.props;
-            updateDisbursementPlans(4, data.disbursementPlans, origin);
+                mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues,
+                pendingDisbursementAmount }, updateDisbursementPlans } = this.props;
+            updateDisbursementPlans(data.disbursementPlans);
             this.setState({ flagInitLoadAssests: true });
             productFamily.onChange(data.productFamily);
             opportunityName.onChange(data.opportunityName);
@@ -542,6 +554,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             termInMonths.onChange(data.termInMonths);
             termInMonthsValues.onChange(data.termInMonthsValues);
             value.onChange(fomatInitialStateNumber(data.value));
+            pendingDisbursementAmount.onChange(fomatInitialStateNumber(data.pendingDisbursementAmount));
             client.onChange(data.client);
             documentStatus.onChange(data.documentStatus);
             createdBy.onChange(data.createdBy);
@@ -564,7 +577,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
                     termInMonths, businessStatus, currency, indexing, need, observations,
-                    business, product, moneyDistribitionMarket, client, documentStatus, areaAssets, areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness, showLoading } = this.props;
+                    business, product, moneyDistribitionMarket, client, documentStatus, areaAssets,
+                    areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness,
+                showLoading, swtShowMessage } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -588,14 +603,18 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
-                                var data = result.payload.data.data;
-                                _.forIn(data.listPipelines, function (pipeline, key) {
-                                    const uuid = _.uniqueId('pipelineBusiness_');
-                                    pipeline.uuid = uuid;
-                                    addBusiness(pipeline);
-                                });
-                                this._consultInfoPipeline(data);
                                 showLoading(false, null);
+                                if (!validateResponse(result)) {
+                                    swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                                } else {
+                                    var data = result.payload.data.data;
+                                    _.forIn(data.listPipelines, function (pipeline, key) {
+                                        const uuid = _.uniqueId('pipelineBusiness_');
+                                        pipeline.uuid = uuid;
+                                        addBusiness(pipeline);
+                                    });
+                                    this._consultInfoPipeline(data);
+                                }
                             });
                         } else {
                             showLoading(false, null);
@@ -624,11 +643,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         render() {
             const {
-                initialValues, fields: {
-                nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-                    businessCategory, currency, indexing, need, observations, business, product,
-                    moneyDistribitionMarket, client, documentStatus,
-                    updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
+                initialValues, fields: { nameUsuario, idUsuario, value,
+                    commission, roe, termInMonths, businessStatus, businessCategory, currency,
+                    indexing, need, observations, business, product, moneyDistribitionMarket, client,
+                    documentStatus, pendingDisbursementAmount, updatedBy, createdTimestamp,
+                    updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
             }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
@@ -1011,6 +1030,24 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, false)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
                                             disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                            onChange={val => this._changeValue(val)}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Pendiente por desembolsar </span>
+                                        </dt>
+                                        <Input
+                                            {...pendingDisbursementAmount}
+                                            name="pendingDisbursementAmount"
+                                            type="text"
+                                            max="15"
+                                            parentId="dashboardComponentScroll"
+                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                                            onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
+                                            disabled={'disabled'}
                                         />
                                     </div>
                                 </Col>
@@ -1067,6 +1104,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1089,7 +1128,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
                                 fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
                                 showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                                isEditable={this.state.isEditable} origin={origin} />
+                                isEditable={this.state.isEditable} pendingDisbursementAmount={pendingDisbursementAmount} />
                             <Business origin={origin} disabled={this.state.isEditable} />
                             <Row
                                 style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "20px 23px 20px 20px" }}>

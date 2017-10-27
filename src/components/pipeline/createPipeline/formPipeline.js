@@ -57,7 +57,7 @@ const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termI
   "businessStatus", "businessCategory", "currency", "indexing", "need", "observations", "product",
   "reviewedDate", "client", "documentStatus", "probability", "amountDisbursed", "estimatedDisburDate",
   "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
-  "areaAssets", "areaAssetsValue", "termInMonthsValues"];
+  "areaAssets", "areaAssetsValue", "termInMonthsValues", "pendingDisbursementAmount"];
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -200,6 +200,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
       this._changeProductFamily = this._changeProductFamily.bind(this);
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
+      this._changeValue = this._changeValue.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -296,11 +297,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     _changeBusinessStatus(currencyValue) {
       const { selectsReducer, fields: { probability } } = this.props;
-
       let _pipeline_status = selectsReducer.get(PIPELINE_STATUS)
-
       probability.onChange('');
-
       this.setState({
         probabilityEnabled: _pipeline_status.filter(pStatus => {
           return (
@@ -309,7 +307,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
+    }
 
+    _changeValue(val) {
+      const { fields: { pendingDisbursementAmount, value } } = this.props;
+      handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (val).toString(), true, 2);
+      value.onChange(val);
     }
 
     _changeProductFamily(currencyValue) {
@@ -378,7 +381,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           businessCategory, currency, indexing, need, observations, product,
           client, documentStatus, probability, nameUsuario, opportunityName,
           productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
-          termInMonthsValues }, createEditPipeline, swtShowMessage,
+          termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
           changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
         if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
@@ -413,6 +416,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 "termInMonths": termInMonths.value,
                 "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
                 "value": value.value === undefined ? null : numeral(value.value).format('0'),
+                "pendingDisbursementAmount": pendingDisbursementAmount.value === undefined ? null : numeral(pendingDisbursementAmount.value).format('0'),
                 "probability": probability.value,
                 "businessCategory": businessCategory.value,
                 "opportunityName": opportunityName.value,
@@ -580,7 +584,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
-        businessCategory, currency, indexing, need, observations, product,
+        businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
         clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
@@ -617,7 +621,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   />
                 </Col>
               </Row>
-
               <Row style={{ padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -890,6 +893,24 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       onBlur={val => handleBlurValueNumber(1, value, value.value, false)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
+                      onChange={val => this._changeValue(val)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Pendiente por desembolsar </span>
+                    </dt>
+                    <Input
+                      {...pendingDisbursementAmount}
+                      name="pendingDisbursementAmount"
+                      type="text"
+                      max="15"
+                      parentId="dashboardComponentScroll"
+                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                      onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
+                      disabled={'disabled'}
                     />
                   </div>
                 </Col>
@@ -945,6 +966,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+              </Row>
+              <Row style={{ padding: "0px 10px 20px 20px" }}>
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -965,7 +988,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
                 fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
                 showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                origin={origin} isEditable={true} />
+                pendingDisbursementAmount={pendingDisbursementAmount} origin={origin} isEditable={true} />
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
