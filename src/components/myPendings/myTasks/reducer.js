@@ -56,7 +56,6 @@ export default (state = initialState, action = {}) => {
                     .set('pendingTaskListByUser', []);
             });
         case constants.UPDATE_STATUS_TASK:
-            console.log('userName', response.userName);
             return state.withMutations(map => {
                 map
                     .set('page', 1)
