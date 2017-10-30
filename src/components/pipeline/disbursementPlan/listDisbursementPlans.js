@@ -73,7 +73,7 @@ class ListDisbursementPlans extends Component {
     _deleteDisbursementPlan() {
         const { updateDisbursementPlans, pipelineReducer, showFormDisbursementPlan,
             pendingDisbursementAmount, origin } = this.props;
-        const listDisbursementPlans = pipelineReducer.get('disbursementPlans');
+        const listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
         var disbursementAmountItem = 0;
         const pendingDisbursementAmountNum = parseFloat(((pendingDisbursementAmount.value).toString()).replace(/,/g, ""));
         const newListPart = _.remove(listDisbursementPlans, (item) => {
