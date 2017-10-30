@@ -92,8 +92,8 @@ class AlertBlackList extends Component {
     }
 
     render() {
-        var visibleTable = 'none';
-        var visibleMessage = 'block';
+        let visibleTable = 'none';
+        let visibleMessage = 'block';
         const {alertBlackList} = this.props;
         if(_.size(alertBlackList.get('responseBlackList')) !== 0) {
             visibleTable = 'block';

@@ -30,7 +30,7 @@ export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyP
   };
 
 
-  var request = axios.post(APP_URL + "/pendingTaskListByUser", json);
+  const request = axios.post(APP_URL + "/pendingTaskListByUser", json);
   return {
     type: FIND_PENDING_TASKS,
     payload: request
@@ -56,7 +56,7 @@ export function getInfoTaskUser(idTask) {
   };
 
 
-  var request = axios.post(APP_URL + "/getPendingTaskById", json);
+  const request = axios.post(APP_URL + "/getPendingTaskById", json);
   return {
     type: GET_INFO_USERTASK,
     payload: request
@@ -85,7 +85,7 @@ export function updateStatusTask(idTask, idStatus) {
   };
 
 
-  var request = axios.post(APP_URL + "/updateStatusTask", json);
+  const request = axios.post(APP_URL + "/updateStatusTask", json);
   return {
     type: UPDATE_STATUS_TASK,
     payload: request

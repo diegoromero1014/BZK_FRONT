@@ -15,9 +15,10 @@ import {redirectUrl} from '../globalComponents/actions'
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './alertBlackListUtilities';
-import {get,indexOf,has} from 'lodash';
+import {has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {NUMBER_RECORDS} from './constants';
+import {MESSAGE_LOAD_DATA} from '../../constantsGlobal';
 
 class ListAlertBlackLists extends Component {
 
@@ -50,7 +51,7 @@ class ListAlertBlackLists extends Component {
         const keywordNameNitClient = alertBlackList.get('keywordNameNitClient');
         const typeEntity = alertBlackList.get('typeEntity');
         const page = alertBlackList.get('pageNum');
-        showLoading(true, 'Cargando..');
+        showLoading(true, MESSAGE_LOAD_DATA);
         blackListFindServer(keyWordNameNit, keywordNameNitClient, typeEntity, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);

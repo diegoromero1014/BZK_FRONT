@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
-import { Row, Grid, Col } from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
@@ -30,7 +29,7 @@ class GridComponent extends Component {
 
   _renderCell(row, headers, modalTitle) {
     return headers.map((value, idx) => {
-      var cell;
+      let cell;
       if (value.key === ACTION_CHECK) {
         const info = _.get(row, ACTION_CHECK, {});
         cell = <CheckComponent key={idx} fn={info.fn} args={info.argsFn} isChecked={info.isChecked} />
@@ -71,7 +70,7 @@ class GridComponent extends Component {
       } else if (value.key === 'deleteLocal') {
         cell = _.get(row, 'deleteLocal.component');
       } else {
-        cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
+        cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
       }
       return (
         cell
