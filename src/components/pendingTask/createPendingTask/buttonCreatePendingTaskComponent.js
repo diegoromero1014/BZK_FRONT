@@ -25,6 +25,7 @@ class ButtonCreatePendingTaskComponent extends Component {
   }
 
   render() {
+    const { actionEdit } = this.props;
     return (
       <Col xs={2} sm={2} md={1} lg={1}>
         <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '21px' }} onClick={this.openModal}>
@@ -43,7 +44,7 @@ class ButtonCreatePendingTaskComponent extends Component {
                   <span className="sr-only">Close</span>
                 </button>
               </div>
-              <ModalComponentPendingTask isOpen={this.closeModal} />
+              <ModalComponentPendingTask isOpen={this.closeModal} actionEdit={actionEdit} />
             </div>
           </div>
         </Modal>
