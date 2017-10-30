@@ -47,7 +47,6 @@ class UserTaskComponent extends Component {
 
   render() {
     const { tasksByClient, reducerGlobal, actionEdit } = this.props;
-    console.log('actionEditC',actionEdit);
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if (tasksByClient.get('rowCount') !== 0) {
