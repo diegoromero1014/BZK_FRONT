@@ -352,6 +352,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: { pendingDisbursementAmount, value } } = this.props;
             handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (val).toString(), true, 2);
             value.onChange(val);
+            if (_.isNil(val) || val === '') {
+                this.showFormDisbursementPlan(false);
+            }
         }
 
         _submitEditPipeline() {
@@ -536,7 +539,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 reviewedDate, probability, businessCategory, opportunityName, productFamily,
                 mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues,
                 pendingDisbursementAmount }, updateDisbursementPlans } = this.props;
-            updateDisbursementPlans(data.disbursementPlans);
+            updateDisbursementPlans(data.disbursementPlans, origin);
             this.setState({ flagInitLoadAssests: true });
             productFamily.onChange(data.productFamily);
             opportunityName.onChange(data.opportunityName);
@@ -654,7 +657,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 reducerGlobal, navBar } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
-            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 ? false : true;
+            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
             if (updatedTimestamp.value !== null) {
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
@@ -1128,7 +1131,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
                                 fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
                                 showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                                isEditable={this.state.isEditable} pendingDisbursementAmount={pendingDisbursementAmount} />
+                                isEditable={this.state.isEditable} pendingDisbursementAmount={pendingDisbursementAmount}
+                                origin={origin} />
                             <Business origin={origin} disabled={this.state.isEditable} />
                             <Row
                                 style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "20px 23px 20px 20px" }}>
