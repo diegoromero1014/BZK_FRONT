@@ -56,7 +56,7 @@ class ModalComponentPending extends Component {
     const { clearPendingTask, updateTitleNavBar } = this.props;
     clearPendingTask();
     this.consultInfoMyPendingTask();
-    updateTitleNavBar("Mis pendientes");
+    updateTitleNavBar("Mis tareas");
   }
 
   consultInfoMyPendingTask() {
