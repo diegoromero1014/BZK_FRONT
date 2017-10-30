@@ -191,7 +191,6 @@ class ModalCreateTask extends Component {
     const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
-    console.log("actionEdit", actionEdit);
     if (actionEdit === true) {
       var visibleEdit = _.isNull(myPendingsReducer.get('userName')) || _.isUndefined(myPendingsReducer.get('userName')) ? true : _.isEqual(myPendingsReducer.get('userName').toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
     }else{
