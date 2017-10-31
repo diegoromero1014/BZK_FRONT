@@ -112,11 +112,15 @@ class ListDisbursementPlans extends Component {
                 var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
                 var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
                 const disbursementAmountNum = parseFloat((disbursementAmount.value.toString()).replace(/,/g, ""));
-                const pendingDisbursementAmountNum = parseFloat((pendingDisbursementAmount.value.toString()).replace(/,/g, ""));
-                totalDisbursementAmount = _.sum([totalDisbursementAmount, pendingDisbursementAmountNum]);
+                var pendingDisbursementAmountNum = parseFloat((pendingDisbursementAmount.value.toString()).replace(/,/g, ""));
+                if (this.state.entitySeleted != null) {
+                    var disbursementAmountEntitySelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].disbursementAmount');
+                    totalDisbursementAmount = _.subtract(totalDisbursementAmount, disbursementAmountEntitySelected);
+                    pendingDisbursementAmountNum = _.sum([pendingDisbursementAmountNum, disbursementAmountEntitySelected]);
+                }
                 if ((disbursementAmountNum > pendingDisbursementAmountNum && this.state.entitySeleted == null) ||
-                    (this.state.entitySeleted != null && disbursementAmountNum > totalDisbursementAmount)) {
-                    swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor nominal.');
+                    (this.state.entitySeleted != null && disbursementAmountNum > pendingDisbursementAmountNum)) {
+                    swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor pendiente por desembolsar.');
                 } else {
                     var disbursementAmountItem;
                     if (_.isNull(this.state.entitySeleted)) {
@@ -134,16 +138,11 @@ class ListDisbursementPlans extends Component {
                             disbursementAmount: disbursementAmountNum,
                             estimatedDisburDate: estimatedDisburDate.value
                         };
-                        disbursementAmountItem = 0;
                         listDisbursementPlans = _.remove(listDisbursementPlans, (item) => {
-                            if (_.isEqual(item.id, this.state.entitySeleted.id)) {
-                                disbursementAmountItem = item.disbursementAmount;
-                                return false;
-                            } else {
-                                return true;
-                            }
+                            return !_.isEqual(item.id, this.state.entitySeleted.id);
                         });
-                        disbursementAmountItem = _.subtract(nominalValue, totalDisbursementAmount).toFixed(2);
+                        console.log('disbursementAmountNum', disbursementAmountNum);
+                        disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, disbursementAmountNum).toFixed(2);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);
                     }
