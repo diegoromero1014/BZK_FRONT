@@ -7,7 +7,7 @@ import {
 } from './constants';
 import { isUndefined, isNull } from 'lodash';
 
-export function consultDataSelect(field) {
+export function consultDataSelect(field, mask) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -27,7 +27,7 @@ export function consultDataSelect(field) {
   };
   const request = axios.post(APP_URL + "/masterDataByField", json);
   return {
-    type: field,
+    type: mask ? mask : field,
     payload: request
   }
 }

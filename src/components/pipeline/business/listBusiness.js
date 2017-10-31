@@ -7,7 +7,7 @@ import { deleteBusiness } from './ducks';
 import BtnCreateBusiness from '../btnCreateBusiness';
 import SweetAlert from 'sweetalert-react';
 import _ from 'lodash';
-import { PRODUCTS, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
+import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
 import { shorterStringValue } from '../../../actionsGlobal';
 import BtnEditBusiness from '../btnEditBusiness';
 
@@ -45,11 +45,14 @@ class ListBusiness extends Component {
 
     _mapValuesBusiness = (businessData, idx) => {
         const { selectsReducer, disabled } = this.props;
-        const products = selectsReducer.get(PRODUCTS);
+        const products = selectsReducer.get(PRODUCTS_MASK);
         const business = selectsReducer.get(PIPELINE_BUSINESS);
         const states = selectsReducer.get(PIPELINE_STATUS);
         const { uuid, product, businessStatus } = businessData;
         let nameProduct, nameBusiness, nameState;
+
+        
+
         if (product !== null && product !== '' && product !== undefined) {
             nameProduct = _.get(_.filter(products, ['id', parseInt(product)]), '[0].value');
         }

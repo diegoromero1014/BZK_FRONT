@@ -8,13 +8,13 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {
-    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication
+    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication, consultDataSelect
 } from "../../selectsComponent/actions";
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS,
     PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET,
-    FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
+    FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
 } from "../../selectsComponent/constants";
 import {
     DATE_FORMAT, DATE_START_AFTER, EDITAR, MESSAGE_SAVE_DATA,
@@ -582,7 +582,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonths, businessStatus, currency, indexing, need, observations,
                     business, product, moneyDistribitionMarket, client, documentStatus, areaAssets,
                     areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness,
-                showLoading, swtShowMessage } = this.props;
+                showLoading, swtShowMessage, consultDataSelect } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -600,6 +600,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 redirectUrl("/dashboard/clientInformation");
             } else {
                 showLoading(true, 'Cargando...');
+
+                consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
                     FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]).then((result) => {
@@ -1339,7 +1342,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             showLoading,
             swtShowMessage,
             updateDisbursementPlans,
-            consultListWithParameterUbication
+            consultListWithParameterUbication,
+            consultDataSelect
         }, dispatch);
     }
 
