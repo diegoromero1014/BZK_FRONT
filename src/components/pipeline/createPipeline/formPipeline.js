@@ -10,11 +10,12 @@ import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent
 import {
   BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
   MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
-  PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES
+  PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
+  PRODUCTS, PRODUCTS_MASK
 } from "../../selectsComponent/constants";
 import {
   getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
-  clearLists
+  clearLists, consultDataSelect
 } from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
@@ -558,7 +559,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect } = this.props;
       nonValidateEnter(true);
       updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
@@ -575,6 +576,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
+
+        consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
             data.payload.data.parameter !== undefined) {
@@ -1099,7 +1103,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
-      clearLists
+      clearLists,
+      consultDataSelect
     }, dispatch);
   }
 
