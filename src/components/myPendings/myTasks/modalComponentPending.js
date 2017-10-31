@@ -139,7 +139,7 @@ class ModalComponentPending extends Component {
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                     title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
                                 <i className="erase icon"
-                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
+                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}/>
                             </button>
                         </Col>
                         {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
@@ -149,7 +149,7 @@ class ModalComponentPending extends Component {
                                 <button className="btn btn-primary" type="button" onClick={this._downloadPendingTask}
                                         style={{marginLeft: '-15px'}}>
                                     <i className="file excel outline icon"
-                                       style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
+                                       style={{color: "white", margin: '0em', fontSize: '1.2em'}}/>
                                 </button>
                             </Tooltip>
                         </Col>
@@ -162,7 +162,7 @@ class ModalComponentPending extends Component {
                                         width: '20px',
                                         height: '20px',
                                         backgroundColor: RED_COLOR
-                                    }}></div>
+                                    }}/>
                                     <span style={{marginLeft: '10px'}}> Tarea vencida</span>
                                 </Row>
                                 <Row style={{marginTop: "5px"}}>
@@ -171,7 +171,7 @@ class ModalComponentPending extends Component {
                                         width: '20px',
                                         height: '20px',
                                         backgroundColor: ORANGE_COLOR
-                                    }}></div>
+                                    }}/>
                                     <span style={{marginLeft: '10px'}}> Tarea próxima a vencerse</span>
                                 </Row>
                                 <Row style={{marginTop: "5px"}}>
@@ -180,7 +180,7 @@ class ModalComponentPending extends Component {
                                         width: '20px',
                                         height: '20px',
                                         backgroundColor: GREEN_COLOR
-                                    }}></div>
+                                    }}/>
                                     <span style={{marginLeft: '10px'}}> Tarea con tiempo</span>
                                 </Row>
                             </div>
