@@ -897,7 +897,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, value, value.value, false)}
+                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
                       onChange={val => this._changeValue(val)}
