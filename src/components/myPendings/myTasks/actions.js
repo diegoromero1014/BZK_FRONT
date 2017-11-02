@@ -153,7 +153,7 @@ export function getDownloadPendingTask(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-      "clientId": clientId
+      
     }
   };
 

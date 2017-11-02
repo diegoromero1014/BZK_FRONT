@@ -58,7 +58,7 @@ class ModalComponentPending extends Component {
     _downloadPendingTask() {
         const {getDownloadPendingTask, changeStateSaveData, swtShowMessage} = this.props;
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-        getDownloadPendingTask(window.localStorage.getItem('idClientSelected')).then((data) => {
+        getDownloadPendingTask().then((data) => {
             changeStateSaveData(false, "");
             if (validateResponse(data)) {
                 window.open(APP_URL + '/getExcelReport?filename=' + _.get(data, 'payload.data.data.filename', null) + '&id=' + _.get(data, 'payload.data.data.sessionToken', null), '_blank');
