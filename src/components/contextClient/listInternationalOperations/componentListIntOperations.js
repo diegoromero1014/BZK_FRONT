@@ -260,12 +260,10 @@ class ComponentListIntOperations extends Component {
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
                             <div style={{ fontSize: "25px", marginTop: "5px", marginBottom: "5px" }}>
                                 {this._getTitleSection()}
-                                <ToolTipComponent text={MESSAGE_INT_OPERATIONS}
-                                    children={
-                                        <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                            className="help circle icon blue" />
-                                    }
-                                />
+                                <ToolTipComponent text={MESSAGE_INT_OPERATIONS}>
+                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                        className="help circle icon blue" />
+                                </ToolTipComponent>
                                 <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                     onClick={() => {
                                         changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'));
@@ -277,7 +275,7 @@ class ComponentListIntOperations extends Component {
                     </Col>
                     <Col xs={12} md={12} lg={12}>
                         {showCheckValidateSection &&
-                            <div style={{marginLeft: '20px'}}>
+                            <div style={{ marginLeft: '20px' }}>
                                 <input type="checkbox" id="checkSectionIntOperations"
                                     checked={valueCheckSectionIntOperations}
                                     onClick={functionChangeIntOperations} />
@@ -289,9 +287,11 @@ class ComponentListIntOperations extends Component {
                 {!clientInformacion.get('noAppliedIntOperations') &&
                     <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
                         <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormIntOperations} type="button" title="Agregar operación internacional"
+                            <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                <ToolTipComponent text={"Agregar operación internacional"}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </ToolTipComponent>
                             </button>
                         </Col>
                         {showFormIntOperations &&
@@ -340,11 +340,11 @@ class ComponentListIntOperations extends Component {
                                     </div>
                                 </Col>
                                 <Col xs={5} md={5} lg={4}>
-                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                         Agregar
                                     </button>
-                                    <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                    <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                         style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                         Cancelar
                                     </button>
@@ -404,7 +404,7 @@ class ComponentListIntOperations extends Component {
                                     </div>
                                 </Col>
                                 <Col xs={4} md={3} lg={2}>
-                                    <button className="btn btn-secondary" type="button" onClick={this._addConstryParticipation} title="Adicionar país"
+                                    <button className="btn btn-secondary" type="button" onClick={this._addConstryParticipation}
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                         Agregar país
                                     </button>

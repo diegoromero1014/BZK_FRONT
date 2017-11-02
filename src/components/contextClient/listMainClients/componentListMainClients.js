@@ -166,12 +166,10 @@ class ComponentListMainClients extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_MAIN_CLIENTS}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_MAIN_CLIENTS}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied))
@@ -192,12 +190,14 @@ class ComponentListMainClients extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
-                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px'}}>
+                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainClients} type="button" title="Agregar cliente principal"
-                                onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                            </button>
+                            <ToolTipComponent text="Agregar cliente principal">
+                                <button className="btn" disabled={showFormMainClients} type="button"
+                                    onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </ToolTipComponent>
                         </Col>
                         {showFormMainClients &&
                             <Col xs={12} md={4} lg={3}>
@@ -255,11 +255,11 @@ class ComponentListMainClients extends Component {
                         }
                         {showFormMainClients &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>
@@ -269,12 +269,10 @@ class ComponentListMainClients extends Component {
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '15px' }}>
                                 <div>
                                     <dt><span>Información relevante de los principales clientes</span>
-                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_CLIENTS}
-                                            children={
-                                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                                    className="help circle icon blue" />
-                                            }
-                                        />
+                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_CLIENTS}>
+                                            <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                                className="help circle icon blue" />
+                                        </ToolTipComponent>
                                     </dt>
                                     <Textarea
                                         name="relevantInformation"

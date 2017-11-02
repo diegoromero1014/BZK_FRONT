@@ -134,12 +134,10 @@ class ComponentListDistributionChannel extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_DISTRIBUTION_CHANNEL}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_DISTRIBUTION_CHANNEL}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient('noAppliedDistributionChannel', !clientInformacion.get('noAppliedDistributionChannel'))
@@ -152,10 +150,12 @@ class ComponentListDistributionChannel extends Component {
                 {!clientInformacion.get('noAppliedDistributionChannel') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormDistribution} type="button" title="Agregar canal de distribución"
-                                onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                            </button>
+                            <ToolTipComponent text={"Agregar canal de distribución"}>
+                                <button className="btn btn-secondary" disabled={showFormDistribution} type="button"
+                                    onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </ToolTipComponent>
                         </Col>
                         {showFormDistribution &&
                             <Col xs={12} md={4} lg={3}>
@@ -194,11 +194,11 @@ class ComponentListDistributionChannel extends Component {
                         }
                         {showFormDistribution &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>

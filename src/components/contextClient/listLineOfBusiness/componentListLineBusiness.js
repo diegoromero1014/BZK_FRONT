@@ -140,12 +140,10 @@ class ComponentListLineBusiness extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient('noAppliedLineOfBusiness', !clientInformacion.get('noAppliedLineOfBusiness'))
@@ -158,10 +156,12 @@ class ComponentListLineBusiness extends Component {
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
-                                onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                            </button>
+                            <ToolTipComponent text={"Agregar línea de negocio"}>
+                                <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
+                                    onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </ToolTipComponent>
                         </Col>
                         {showFormLinebusiness &&
                             <Col xs={12} md={4} lg={3}>
@@ -217,40 +217,39 @@ class ComponentListLineBusiness extends Component {
                         }
                         {showFormLinebusiness &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>
                             </Col>
                         }
-                        {
-                            _.size(listParticipation) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
-                                    <table className="ui striped table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Línea de negocio</th>
-                                                <th>Participación</th>
-                                                <th>Experiencia (años)</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listParticipation.map(this._mapValuesParitipation)}
-                                        </tbody>
-                                    </table>
-                                </Col>
-                                :
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado líneas de negocio</span>
-                                    </div>
-                                </Col>
+                        {_.size(listParticipation) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Línea de negocio</th>
+                                            <th>Participación</th>
+                                            <th>Experiencia (años)</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listParticipation.map(this._mapValuesParitipation)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado líneas de negocio</span>
+                                </div>
+                            </Col>
                         }
                         <SweetAlert
                             type="warning"

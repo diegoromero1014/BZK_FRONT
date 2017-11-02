@@ -106,7 +106,7 @@ class ComponentListMainSupplier extends Component {
         nameSupplier.onChange(entity.nameSupplier);
         participation.onChange(entity.participation.toString());
         term.onChange(entity.term.toString());
-        relevantInformation.onChange( validateValueExist(entity.relevantInformation) ? entity.relevantInformation.toString() : "" );
+        relevantInformation.onChange(validateValueExist(entity.relevantInformation) ? entity.relevantInformation.toString() : "");
         this.setState({ entitySeleted: entity });
     }
 
@@ -164,12 +164,10 @@ class ComponentListMainSupplier extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_MAIN_SUPPLIER}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_MAIN_SUPPLIER}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied))
@@ -189,12 +187,14 @@ class ComponentListMainSupplier extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
-                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px'}}>
+                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainSupplier} type="button" title="Agregar proveedor principal"
-                                onClick={() => fnShowForm(MAIN_SUPPLIER, true)} style={showFormMainSupplier ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                            </button>
+                            <ToolTipComponent text="Agregar proveedor principal">
+                                <button className="btn" disabled={showFormMainSupplier} type="button"
+                                    onClick={() => fnShowForm(MAIN_SUPPLIER, true)} style={showFormMainSupplier ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </button>
+                            </ToolTipComponent>
                         </Col>
                         {showFormMainSupplier &&
                             <Col xs={12} md={4} lg={3}>
@@ -252,11 +252,11 @@ class ComponentListMainSupplier extends Component {
                         }
                         {showFormMainSupplier &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button" title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>
@@ -266,12 +266,10 @@ class ComponentListMainSupplier extends Component {
                             <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '15px' }}>
                                 <div>
                                     <dt><span>Información relevante de los principales proveedores</span>
-                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_SUPPLIERS}
-                                            children={
-                                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                                    className="help circle icon blue" />
-                                            }
-                                        />
+                                        <ToolTipComponent text={MESSAGE_RELEVANT_MAIN_SUPPLIERS}>
+                                            <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                                className="help circle icon blue" />
+                                        </ToolTipComponent>
                                     </dt>
                                     <Textarea
                                         name="relevantInformation"
@@ -286,31 +284,30 @@ class ComponentListMainSupplier extends Component {
                                 </div>
                             </Col>
                         }
-                        {
-                            _.size(listMainSupplier) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
-                                    <table className="ui striped table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Nombre del proveedor</th>
-                                                <th>Plazo (días)</th>
-                                                <th>Participación</th>
-                                                <th>Información relevante</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listMainSupplier.map(this._mapValuesMainSupplier)}
-                                        </tbody>
-                                    </table>
-                                </Col>
-                                :
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado principales proveedores</span>
-                                    </div>
-                                </Col>
+                        {_.size(listMainSupplier) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre del proveedor</th>
+                                            <th>Plazo (días)</th>
+                                            <th>Participación</th>
+                                            <th>Información relevante</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listMainSupplier.map(this._mapValuesMainSupplier)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado principales proveedores</span>
+                                </div>
+                            </Col>
                         }
                         <SweetAlert
                             type="warning"
