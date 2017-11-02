@@ -191,11 +191,14 @@ class ModalCreateTask extends Component {
     const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
-    if (actionEdit === true) {
-      var visibleEdit = _.isNull(myPendingsReducer.get('userName')) || _.isUndefined(myPendingsReducer.get('userName')) ? true : _.isEqual(myPendingsReducer.get('userName').toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+    var visibleEdit;
+    var editAction;
+    if (actionEdit) {
+      visibleEdit = _.isNull(myPendingsReducer.get('userName')) || _.isUndefined(myPendingsReducer.get('userName')) ? true : _.isEqual(myPendingsReducer.get('userName').toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
     }else{
-      var editAction = true;
+      editAction = true;
     }
+
     return (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -228,8 +231,8 @@ class ModalCreateTask extends Component {
                 </dt>
               </Col>
               <Col xs={12} md={3} ld={3}>
-                {(_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
-                  visibleEdit || editAction) &&
+                {( !!(_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)) &&
+                  (visibleEdit || editAction) ) &&
                   <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
                     style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}>
                     Editar <i className={'icon edit'}></i>

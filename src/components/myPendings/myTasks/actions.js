@@ -138,7 +138,7 @@ export function clearOnlyListPendingTask() {
   };
 }
 
-export function getDownloadPendingTask(clientId) {
+export function getDownloadPendingTask() {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -153,7 +153,7 @@ export function getDownloadPendingTask(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-      "clientId": clientId
+      
     }
   };
 
