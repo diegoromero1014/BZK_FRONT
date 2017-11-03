@@ -17,7 +17,7 @@ import { MESSAGE_SAVE_DATA, EDITAR } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
-import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPendings/myTasks/actions';
+import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTask } from '../myPendings/myTasks/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
@@ -109,7 +109,8 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
+    updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
@@ -133,9 +134,10 @@ class ModalCreateTask extends Component {
   }
 
   _closeViewOrEditTask() {
-    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal } = this.props;
+    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal, updateUserNameTask } = this.props;
     this.setState({ isEditable: false, taskEdited: false, showErrtask: false });
     isOpen();
+    updateUserNameTask('');
     if (!_.isUndefined(functCloseModal) && !_.isNull(functCloseModal)) {
       functCloseModal();
     } else {
@@ -191,11 +193,11 @@ class ModalCreateTask extends Component {
     const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
-    var visibleEdit;
-    var editAction;
+    var visibleEdit, editAction;
+    var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
-      visibleEdit = _.isNull(myPendingsReducer.get('userName')) || _.isUndefined(myPendingsReducer.get('userName')) ? true : _.isEqual(myPendingsReducer.get('userName').toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
-    }else{
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+    } else {
       editAction = true;
     }
 
@@ -231,8 +233,8 @@ class ModalCreateTask extends Component {
                 </dt>
               </Col>
               <Col xs={12} md={3} ld={3}>
-                {( !!(_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false)) &&
-                  (visibleEdit || editAction) ) &&
+                {(_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
+                  (visibleEdit || editAction)) &&
                   <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
                     style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}>
                     Editar <i className={'icon edit'}></i>
@@ -345,12 +347,13 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     createPendingTaskNew,
     clearUserTask,
+    updateUserNameTask,
     tasksByClientFindServer,
     clearMyPendingPaginator,
     changeStateSaveData,
     getInfoTaskUser,
     tasksByUser,
-    validateValue
+    validateValue,
   }, dispatch);
 }
 

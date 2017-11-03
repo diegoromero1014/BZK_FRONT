@@ -53,7 +53,7 @@ export default (state = initialState, action) => {
                 map
                     .set('orderTask', action.orderTask)
                     .set('columnTask', action.columnTask)
-            });
+            }); 
         default:
             return state;
     }

@@ -10,7 +10,8 @@ const initialState = Immutable.Map({
     limInf: 0,
     rowCount: 0,
     orderMyPending: 0,
-    columnMyPending: ""
+    columnMyPending: "",
+    userName: null
 });
 
 export default (state = initialState, action = {}) => {
@@ -71,6 +72,8 @@ export default (state = initialState, action = {}) => {
             });
         case constants.CLEAR_LIST_MY_PENDINGS:
             return state.set('pendingTaskListByUser', []);
+        case constants.UPDATE_USERNAME_TASK:
+            return state.set('userName', action.username);
         default:
             return state;
     }
