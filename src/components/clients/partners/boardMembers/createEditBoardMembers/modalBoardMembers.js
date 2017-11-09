@@ -10,7 +10,7 @@ import InputComponent from '../../../../../ui/input/inputComponent';
 import ComboBoxFilter from "../../../../../ui/comboBoxFilter/comboBoxFilter";
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
-import { SAVE, FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from "../constants";
+import { SAVE, FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT, TITLE_TOOLTIP_BOARD_MEMBERS, TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS } from "../constants";
 import {
     validateExistsBoardMember, saveBoardMember, getBoardMembers, clearFilters,
     changeKeyword
@@ -24,8 +24,10 @@ import {
 } from '../../../../../constantsGlobal';
 import { validateResponse, stringValidate } from '../../../../../actionsGlobal';
 import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
+import Textarea from '../../../../../ui/textarea/textareaComponent';
+import ToolTip from "../../../../toolTip/toolTipComponent";
 
-const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName"];
+const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};
 let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
 let showAuditFields = false;
@@ -56,16 +58,7 @@ const validate = (values) => {
 
 function GetBtnAllowEditOrBtnSearchExists(props) {
     if (!props.thisSelf.state.allowsEditingOFDocument) {
-        return <div />/*<Col xs>
-            <dl style={{ width: '100%' }}>
-                <button type="button" className="btn btn-primary"
-                    style={{ marginTop: '35px' }}
-                    onClick={props.thisSelf._onClickClear}>
-                    <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                        className="erase icon" ></i>
-                </button>
-            </dl>
-        </Col>*/
+        return <div />
     } else {
         if (_.isUndefined(props.boardMember)) {
             return <Col xs>
@@ -144,7 +137,7 @@ class ModalCreateBoardMembers extends Component {
      */
     _handleBoardMember() {
         const { fields: { idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName }, saveBoardMember, validateExistsBoardMember,
+            firstLastName, secondLastName, observations }, saveBoardMember, validateExistsBoardMember,
             swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
             getBoardMembers, boardMembersReducer } = this.props;
         var boardMember = {
@@ -156,7 +149,8 @@ class ModalCreateBoardMembers extends Component {
             firstName: firstName.value,
             middleName: middleName.value,
             firstLastName: firstLastName.value,
-            secondLastName: secondLastName.value
+            secondLastName: secondLastName.value,
+            observations: observations.value
         };
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         saveBoardMember(boardMember).then((data) => {
@@ -192,7 +186,7 @@ class ModalCreateBoardMembers extends Component {
      */
     _validateExistBoardMember() {
         const { fields: { idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName }, validateExistsBoardMember, swtShowMessage,
+            firstLastName, secondLastName, observations }, validateExistsBoardMember, swtShowMessage,
             changeStateSaveData } = this.props;
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
             var jsonBoardMember = {
@@ -222,6 +216,7 @@ class ModalCreateBoardMembers extends Component {
                             middleName.onChange(detailBoardMember.middleName);
                             firstLastName.onChange(detailBoardMember.firstLastName);
                             secondLastName.onChange(detailBoardMember.secondLastName);
+                            observations.onChange(detailBoardMember.observations);
                             allowShowCompleteForm = true;
                             showAuditFields = true;
                             this._sendAuditInformation(false, detailBoardMember.userNameCreate, detailBoardMember.userNameUpdate, detailBoardMember.dateUpdate, detailBoardMember.dateCreate);
@@ -238,6 +233,7 @@ class ModalCreateBoardMembers extends Component {
                         middleName.onChange('');
                         firstLastName.onChange('');
                         secondLastName.onChange('');
+                        observations.onChange('');
                     }
                     if (allowShowCompleteForm) {
                         this.setState({
@@ -305,7 +301,7 @@ class ModalCreateBoardMembers extends Component {
 
     render() {
         const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
-            middleName, firstLastName, secondLastName }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
+            middleName, firstLastName, secondLastName, observations }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -385,6 +381,31 @@ class ModalCreateBoardMembers extends Component {
                                     {...secondLastName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <dt style={{ visibility: this.state.showCompleteForm }}>
+                                <div style={{ width: "100%", float: "left" }}>
+                                    <span>Observaciones</span>
+                                <ToolTip text={TITLE_TOOLTIP_BOARD_MEMBERS}>
+                                    <i className="help circle icon blue"
+                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                </ToolTip>
+                                </div>
+                            </dt>
+                        </Row>
+                        <Row>
+                            <Col xs style={{ visibility: this.state.showCompleteForm }}>
+                            <ToolTip text={TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS}>
+                                <Textarea
+                                    name="observations"
+                                    type="text"
+                                    max="1000"
+                                    style={{ width: '100%', height: '100%' }}
+                                    {...observations}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                />
+                            </ToolTip>
                             </Col>
                         </Row>
                         {showAuditFields &&
@@ -472,7 +493,8 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
                 firstName: boardMember.firstName,
                 middleName: boardMember.middleName,
                 firstLastName: boardMember.firstLastName,
-                secondLastName: boardMember.secondLastName
+                secondLastName: boardMember.secondLastName,
+                observations: boardMember.observations
             }
         }
     } else {
@@ -487,7 +509,8 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
                 firstName: null,
                 middleName: null,
                 firstLastName: null,
-                secondLastName: null
+                secondLastName: null,
+                observations: null
             }
         };
     }

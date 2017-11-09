@@ -95,7 +95,7 @@ class ModalEditRelationship extends Component {
 
     render() {
         const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness },
-            handleSubmit, filterContactsReducer, selectsReducer, functionClose } = this.props;
+            handleSubmit, filterContactsReducer, selectsReducer, functionClose, reducerGlobal } = this.props;
         return (
             <div className="modalBt4-dialog modalBt4-lg">
                 <div className="modalBt4-content modal-content">
