@@ -33,7 +33,7 @@ class ComponentListLineBusiness extends Component {
     validateInfo(e) {
         e.preventDefault();
         const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, swtShowMessage } = this.props;
+            clientInformacion, swtShowMessage, contribution } = this.props;
         var countErrors = 0;
         if (_.isUndefined(contextLineBusiness.value) || _.isNull(contextLineBusiness.value) || _.isEmpty(contextLineBusiness.value)) {
             countErrors++;
@@ -49,7 +49,8 @@ class ComponentListLineBusiness extends Component {
                     "id": _.uniqueId('line_'),
                     "lineOfBusiness": contextLineBusiness.value,
                     "participation": participation.value.replace(/,/g, ""),
-                    "experience": experience.value
+                    "experience": experience.value,
+                    "contribution": contribution.value
                 };
                 listParticipation.push(newValue);
             } else {
@@ -59,7 +60,8 @@ class ComponentListLineBusiness extends Component {
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
                     "participation": participation.value.replace(/,/g, ""),
-                    "experience": experience.value
+                    "experience": experience.value,
+                    "contribution": contribution.value
                 };
                 listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listParticipation.push(updateValue);
@@ -118,6 +120,7 @@ class ComponentListLineBusiness extends Component {
             <td>{entity.lineOfBusiness}</td>
             <td>{entity.participation} %</td>
             <td>{entity.experience}</td>
+            <td>{entity.contribution}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -126,8 +129,9 @@ class ComponentListLineBusiness extends Component {
     }
 
     render() {
-        const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm,
-            clientInformacion, changeValueListClient, registrationRequired, origin } = this.props;
+        const { contextLineBusiness, participation, experience, showFormLinebusiness,
+            fnShowForm, contribution, clientInformacion, changeValueListClient,
+            registrationRequired, origin } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
@@ -156,15 +160,15 @@ class ComponentListLineBusiness extends Component {
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <ToolTipComponent text={"Agregar línea de negocio"}>
-                                <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
-                                    onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
+                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
+                                onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
+                                <ToolTipComponent text="Agregar línea de negocio">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                                </button>
-                            </ToolTipComponent>
+                                </ToolTipComponent>
+                            </button>
                         </Col>
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>Línea de negocio (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
@@ -180,7 +184,7 @@ class ComponentListLineBusiness extends Component {
                             </Col>
                         }
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
@@ -199,7 +203,7 @@ class ComponentListLineBusiness extends Component {
                             </Col>
                         }
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>Experiencia (años)</span></dt>
                                     <Input
@@ -211,6 +215,24 @@ class ComponentListLineBusiness extends Component {
                                         {...experience}
                                         value={experience.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormLinebusiness &&
+                            <Col xs={12} md={2} lg={2}>
+                                <div>
+                                    <dt><span>Contribución </span></dt>
+                                    <Input
+                                        name="contribution"
+                                        type="text"
+                                        min={0}
+                                        max="3"
+                                        placeholder="Contribución"
+                                        {...contribution}
+                                        value={contribution.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
+                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>
@@ -236,6 +258,7 @@ class ComponentListLineBusiness extends Component {
                                             <th>Línea de negocio</th>
                                             <th>Participación</th>
                                             <th>Experiencia (años)</th>
+                                            <th>Contribución</th>
                                             <th></th>
                                         </tr>
                                     </thead>

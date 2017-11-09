@@ -192,12 +192,12 @@ class ComponentListMainClients extends Component {
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <ToolTipComponent text="Agregar cliente principal">
-                                <button className="btn" disabled={showFormMainClients} type="button"
-                                    onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                            <button className="btn" disabled={showFormMainClients} type="button"
+                                onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                <ToolTipComponent text="Agregar cliente principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                                </button>
-                            </ToolTipComponent>
+                                </ToolTipComponent>
+                            </button>
                         </Col>
                         {showFormMainClients &&
                             <Col xs={12} md={4} lg={3}>
@@ -287,31 +287,30 @@ class ComponentListMainClients extends Component {
                                 </div>
                             </Col>
                         }
-                        {
-                            _.size(listMainCustomer) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
-                                    <table className="ui striped table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Nombre del cliente</th>
-                                                <th>Plazo (días)</th>
-                                                <th>Participación</th>
-                                                <th>Información relevante</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listMainCustomer.map(this._mapValuesMainClients)}
-                                        </tbody>
-                                    </table>
-                                </Col>
-                                :
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado principales clientes</span>
-                                    </div>
-                                </Col>
+                        {_.size(listMainCustomer) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre del cliente</th>
+                                            <th>Plazo (días)</th>
+                                            <th>Participación</th>
+                                            <th>Información relevante</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listMainCustomer.map(this._mapValuesMainClients)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado principales clientes</span>
+                                </div>
+                            </Col>
                         }
                         <SweetAlert
                             type="warning"
@@ -344,8 +343,6 @@ ComponentListMainClients.PropTypes = {
     nameList: PropTypes.string,
     nameNoApplied: PropTypes.string
 }
-
-
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({

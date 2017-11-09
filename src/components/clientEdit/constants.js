@@ -8,4 +8,5 @@ export const KEY_OPTION_OTHER_OPERATIONS_FOREIGNS = "Otro";
 export const KEY_OPTION_OTHER_ORIGIN_GOODS = "Otro";
 export const KEY_OPTION_OTHER_ORIGIN_RESOURCE = "Otro";
 export const GOVERNMENT = "Gobierno";
+export const FINANCIAL_INSTITUTIONS = "Instituciones financieras";
 export const CONSTRUCT_PYME = "Constructor Pyme";

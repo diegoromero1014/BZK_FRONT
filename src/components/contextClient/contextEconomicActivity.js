@@ -6,6 +6,7 @@ import ToolTipComponent from '../toolTip/toolTipComponent';
 import { VALUE_REQUIERED } from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
+import { MESSAGE_CONTEXT } from './constants';
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
@@ -37,6 +38,10 @@ class ContextEconomicActivity extends Component {
                                 (<span style={{ color: "red" }}>*</span>)
                             </div>
                         }
+                        <ToolTipComponent text={MESSAGE_CONTEXT}>
+                            <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                className="help circle icon blue" />
+                        </ToolTipComponent>
                     </dt>
                     <ToolTipComponent text={this.elementMessageContext()} position="right center" action="focus" size="tiny"
                         children={

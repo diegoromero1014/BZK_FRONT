@@ -170,12 +170,12 @@ class ComponentListMainCompetitor extends Component {
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
                     <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <ToolTipComponent text="Agregar competidor principal">
-                                <button className="btn" disabled={showFormMainCompetitor} type="button"
-                                    onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                            <button className="btn" disabled={showFormMainCompetitor} type="button"
+                                onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
+                                <ToolTipComponent text="Agregar competidor principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                                </button>
-                            </ToolTipComponent>
+                                </ToolTipComponent>
+                            </button>
                         </Col>
                         {showFormMainCompetitor &&
                             <Col xs={12} md={4} lg={3}>

@@ -29,7 +29,7 @@ import {
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
-import { GOVERNMENT } from '../../clientEdit/constants';
+import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import moment from 'moment';
 import {
     A_SHAREHOLDER_WITH_OBSERVATION, ALL_SHAREHOLDERS_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
@@ -42,7 +42,8 @@ const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "pa
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
     "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "termMainClient", "typeOperationIntOpera", "participationIntOpe",
     "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "nameMainSupplier",
-    "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact"];
+    "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact", "contributionDC",
+    "contributionLB", "controlLinkedPayments"];
 
 var errorMessageForShareholders = 'La información de los accionistas es válida, ';
 var messageContact = 'La información de los contactos es válida, ';
@@ -91,7 +92,8 @@ class ComponentStudyCredit extends Component {
             valueCheckSectionIntOperations: false,
             valueCheckNotApplyCreditContact: false,
             fieldContextRequired: false,
-            customerTypology: false
+            customerTypology: false,
+            controlLinkedPaymentsRequired: false
         }
     }
 
@@ -202,7 +204,8 @@ class ComponentStudyCredit extends Component {
     }
 
     _createJsonSaveContextClient() {
-        const { fields: { contextClientField, inventoryPolicy, customerTypology }, clientInformacion } = this.props;
+        const { fields: { contextClientField, inventoryPolicy, customerTypology,
+            controlLinkedPayments }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -245,6 +248,7 @@ class ComponentStudyCredit extends Component {
         const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
         const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
         const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+        const noAppliedControlLinkedPayments = clientInformacion.get('noAppliedControlLinkedPayments');
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'customerTypology': customerTypology.value,
@@ -252,6 +256,7 @@ class ComponentStudyCredit extends Component {
                 'idClient': infoClient.id,
                 'context': contextClientField.value,
                 'inventoryPolicy': inventoryPolicy.value,
+                'controlLinkedPayments': noAppliedControlLinkedPayments ? null : controlLinkedPayments.value,
                 'listParticipation': listLineOfBusiness,
                 'listDistribution': listDistribution,
                 'listMainCustomer': listMainCustomer,
@@ -263,9 +268,11 @@ class ComponentStudyCredit extends Component {
                 noAppliedMainClients,
                 noAppliedMainSuppliers,
                 noAppliedMainCompetitors,
-                noAppliedIntOperations
+                noAppliedIntOperations,
+                noAppliedControlLinkedPayments
             };
         } else {
+            contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
             contextClient.customerTypology = customerTypology.value;
             contextClient.context = contextClientField.value;
             contextClient.inventoryPolicy = inventoryPolicy.value;
@@ -281,12 +288,13 @@ class ComponentStudyCredit extends Component {
             contextClient.noAppliedMainSuppliers = noAppliedMainSuppliers;
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
+            contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
             return contextClient;
         }
     }
 
     _validateInformationToSave() {
-        const { fields: { contextClientField, customerTypology }, clientInformacion,
+        const { fields: { contextClientField, customerTypology, controlLinkedPayments }, clientInformacion,
             swtShowMessage, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
@@ -320,6 +328,7 @@ class ComponentStudyCredit extends Component {
                     const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
                     const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
                     const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+                    const noAppliedControlLinkedPayments = clientInformacion.get('noAppliedControlLinkedPayments');
                     if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
                         this.setState({
                             showFormAddLineOfBusiness: true,
@@ -379,6 +388,12 @@ class ComponentStudyCredit extends Component {
                             customerTypology: true
                         });
                     }
+                    if (!stringValidate(controlLinkedPayments.value) && !noAppliedControlLinkedPayments) {
+                        allowSave = false;
+                        this.setState({
+                            controlLinkedPaymentsRequired: true
+                        });
+                    }
                     if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
                         !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
                         !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
@@ -434,7 +449,7 @@ class ComponentStudyCredit extends Component {
     }
 
     componentWillMount() {
-        const { fields: { customerTypology, contextClientField, inventoryPolicy }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
+        const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
             getMasterDataFields, validateInfoCreditStudy } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -445,7 +460,7 @@ class ComponentStudyCredit extends Component {
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
-                    if (_.isEqual(GOVERNMENT, value)) {
+                    if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                         consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then((data) => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
                         });;
@@ -468,6 +483,7 @@ class ComponentStudyCredit extends Component {
                     var contextClientInfo = data.payload.data.data;
                     contextClientField.onChange(contextClientInfo.context);
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
+                    controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
             }, (reason) => {
                 changeStateSaveData(false, "");
@@ -489,7 +505,8 @@ class ComponentStudyCredit extends Component {
             contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
             inventoryPolicy, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
             idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
-            participationMS, termMainSupplier, relevantInformationMainSupplier, valueCheckCreditContact, notApplyCreditContact },
+            participationMS, termMainSupplier, relevantInformationMainSupplier, valueCheckCreditContact, notApplyCreditContact,
+            contributionDC, contributionLB, controlLinkedPayments },
             studyCreditReducer, handleSubmit, getContextClient, clientInformacion } = this.props;
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
@@ -594,15 +611,17 @@ class ComponentStudyCredit extends Component {
                     origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
                     participation={participationLB} experience={experience}
-                    registrationRequired={this.state.lineofBusinessRequired}
+                    registrationRequired={this.state.lineofBusinessRequired} contribution={contributionLB}
                     showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                     fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
                     showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
-                    registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY} />
+                    registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY}
+                    contribution={contributionDC} />
                 <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
-                    functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy} />
+                    functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
+                    controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                     term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}

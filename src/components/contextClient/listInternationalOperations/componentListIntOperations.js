@@ -289,7 +289,7 @@ class ComponentListIntOperations extends Component {
                         <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
                             <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <ToolTipComponent text={"Agregar operación internacional"}>
+                                <ToolTipComponent text="Agregar operación internacional">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
