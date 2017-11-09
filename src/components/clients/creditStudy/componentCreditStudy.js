@@ -32,11 +32,14 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import moment from 'moment';
 import {
-    A_SHAREHOLDER_WITH_OBSERVATION, ALL_SHAREHOLDERS_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
-    ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION
+    A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
+    ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION,
+    ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION,
+    SUCCESS_MESSAGE_FOR_SHAREHOLDER,SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
 } from './constants';
 import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
 import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
+import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
 
 const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
@@ -45,10 +48,11 @@ const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "pa
     "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact", "contributionDC",
     "contributionLB", "controlLinkedPayments"];
 
-var errorMessageForShareholders = 'La información de los accionistas es válida, ';
+var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
+var errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
 var messageContact = 'La información de los contactos es válida, ';
-var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection;
-var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact;
+var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection, numberOfBoardMembers;
+var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
 
 class ComponentStudyCredit extends Component {
@@ -306,100 +310,99 @@ class ComponentStudyCredit extends Component {
             document.getElementById('dashboardComponentScroll').scrollTop = 0;
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los accionistas para poder guardar.');
         } else {
-            if (errorContact) {
+            if (!infoValidate.numberOfValidBoardMembers) {
                 allowSave = false;
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
-                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
+                swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los miembros de junta para poder guardar.');
             } else {
-                if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
-                    this.state.showFormAddMainSupplier || this.state.showFormAddIntOperations || this.state.showFormAddMainCompetitor) {
+                if (errorContact) {
                     allowSave = false;
-                    swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+                    document.getElementById('dashboardComponentScroll').scrollTop = 0;
+                    swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, debe cumplir con los requisitos de los contactos.');
                 } else {
-                    const listLineOfBusiness = clientInformacion.get('listParticipation');
-                    const listDistribution = clientInformacion.get('listDistribution');
-                    const listMainCustomer = clientInformacion.get('listMainCustomer');
-                    const listMainSupplier = clientInformacion.get('listMainSupplier');
-                    const listMainCompetitor = clientInformacion.get('listMainCompetitor');
-                    const listOperations = clientInformacion.get('listOperations');
-                    const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
-                    const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
-                    const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
-                    const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
-                    const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
-                    const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
-                    const noAppliedControlLinkedPayments = clientInformacion.get('noAppliedControlLinkedPayments');
-                    if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
-                        this.setState({
-                            showFormAddLineOfBusiness: true,
-                            lineofBusinessRequired: true
-                        });
+                    if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
+                        this.state.showFormAddMainSupplier || this.state.showFormAddIntOperations || this.state.showFormAddMainCompetitor) {
                         allowSave = false;
-                    }
-                    if (listDistribution.length === 0 &&
-                        (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
-                        this.setState({
-                            showFormAddDistribution: true,
-                            distributionRequired: true
-                        });
-                        allowSave = false;
-                    }
-                    if (listMainCustomer.length === 0 &&
-                        (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
-                        this.setState({
-                            showFormAddMainClient: true,
-                            mainClientRequired: true
-                        });
-                        allowSave = false;
-                    }
-                    if (listMainSupplier.length === 0 &&
-                        (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
-                        this.setState({
-                            showFormAddMainSupplier: true,
-                            mainSupplierRequired: true
-                        });
-                        allowSave = false;
-                    }
-                    if (listMainCompetitor.length === 0 &&
-                        (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
-                        this.setState({
-                            showFormAddMainCompetitor: true,
-                            mainCompetitorRequired: true
-                        });
-                        allowSave = false;
-                    }
-                    if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
-                        (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
-                        this.setState({
-                            showFormAddIntOperations: true,
-                            intOperationsRequired: true
-                        });
-                        allowSave = false;
-                    }
-                    if (!stringValidate(contextClientField.value)) {
-                        allowSave = false;
-                        this.setState({
-                            fieldContextRequired: true
-                        });
-                    }
-                    if (!stringValidate(customerTypology.value)) {
-                        allowSave = false;
-                        this.setState({
-                            customerTypology: true
-                        });
-                    }
-                    if (!stringValidate(controlLinkedPayments.value) && !noAppliedControlLinkedPayments) {
-                        allowSave = false;
-                        this.setState({
-                            controlLinkedPaymentsRequired: true
-                        });
-                    }
-                    if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
-                        !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
-                        !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
-                        (_.isEqual(infoClient.operationsForeignCurrency, YES) && !this.state.valueCheckSectionIntOperations))) {
-                        allowSave = false;
-                        swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+                        swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+                    } else {
+                        const listLineOfBusiness = clientInformacion.get('listParticipation');
+                        const listDistribution = clientInformacion.get('listDistribution');
+                        const listMainCustomer = clientInformacion.get('listMainCustomer');
+                        const listMainSupplier = clientInformacion.get('listMainSupplier');
+                        const listMainCompetitor = clientInformacion.get('listMainCompetitor');
+                        const listOperations = clientInformacion.get('listOperations');
+                        const noAppliedLineOfBusiness = clientInformacion.get('noAppliedLineOfBusiness');
+                        const noAppliedDistributionChannel = clientInformacion.get('noAppliedDistributionChannel');
+                        const noAppliedMainClients = clientInformacion.get('noAppliedMainClients');
+                        const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
+                        const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
+                        const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+                        if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
+                            this.setState({
+                                showFormAddLineOfBusiness: true,
+                                lineofBusinessRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (listDistribution.length === 0 &&
+                            (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
+                            this.setState({
+                                showFormAddDistribution: true,
+                                distributionRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (listMainCustomer.length === 0 &&
+                            (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
+                            this.setState({
+                                showFormAddMainClient: true,
+                                mainClientRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (listMainSupplier.length === 0 &&
+                            (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
+                            this.setState({
+                                showFormAddMainSupplier: true,
+                                mainSupplierRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (listMainCompetitor.length === 0 &&
+                            (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
+                            this.setState({
+                                showFormAddMainCompetitor: true,
+                                mainCompetitorRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
+                            (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
+                            this.setState({
+                                showFormAddIntOperations: true,
+                                intOperationsRequired: true
+                            });
+                            allowSave = false;
+                        }
+                        if (!stringValidate(contextClientField.value)) {
+                            allowSave = false;
+                            this.setState({
+                                fieldContextRequired: true
+                            });
+                        }
+                        if (!stringValidate(customerTypology.value)) {
+                            allowSave = false;
+                            this.setState({
+                                customerTypology: true
+                            });
+                        }
+                        if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
+                            !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
+                            !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
+                            (_.isEqual(infoClient.operationsForeignCurrency, YES) && !this.state.valueCheckSectionIntOperations))) {
+                            allowSave = false;
+                            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, como la fecha de actualización se encuentra vencida, debe validar que cada una de las secciones se encuentra actualizada.');
+                        }
                     }
                 }
             }
@@ -515,21 +518,40 @@ class ComponentStudyCredit extends Component {
         infoClient = clientInformacion.get('responseClientInfo');
         fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString = '';
         errorShareholder = false;
+        errorBoardMembers = false;
         if (contextClientInfo !== null) {
             overdueCreditStudy = contextClientInfo.overdueCreditStudy;
             if (infoValidate !== null) {
                 if (!infoValidate.numberOfValidShareholders) {
                     numberOfShareholders = infoValidate.numberOfShareholdersWithComment;
-                    if (numberOfShareholders.toUpperCase() === A_SHAREHOLDER_WITH_OBSERVATION.toUpperCase()) {
+                    if (numberOfShareholders.toUpperCase() === A_WITH_OBSERVATION.toUpperCase()) {
                         errorShareholder = true;
                         errorMessageForShareholders = ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION + ' ';
                     } else {
-                        if (numberOfShareholders.toUpperCase() === ALL_SHAREHOLDERS_WITH_COMMENTS.toUpperCase()) {
+                        if (numberOfShareholders.toUpperCase() === ALL_WITH_COMMENTS.toUpperCase()) {
                             errorShareholder = true;
                             errorMessageForShareholders = ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION + ' ';
                         }
                     }
+                }else{
+                    errorMessageForShareholders  = SUCCESS_MESSAGE_FOR_SHAREHOLDER; 
                 }
+
+                if (!infoValidate.numberOfValidBoardMembers) {
+                    numberOfBoardMembers = infoValidate.numberOfBoardMembersWithComent;
+                    if (numberOfBoardMembers.toUpperCase() === A_WITH_OBSERVATION.toUpperCase()) {
+                        errorBoardMembers = true;
+                        errorMessageForBoardMembers = ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION + ' ';
+                    } else {
+                        if (numberOfBoardMembers.toUpperCase() === ALL_WITH_COMMENTS.toUpperCase()) {
+                            errorBoardMembers = true;
+                            errorMessageForBoardMembers = ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION + ' ';
+                        }
+                    }
+                }else{
+                    errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
+                }
+
                 if (infoValidate.validContacts === true) {
                     errorContact = false;
                     messageContact = "La información de los contactos es válida, ";
@@ -559,7 +581,7 @@ class ComponentStudyCredit extends Component {
                 <div>
                     <Row xs={12} md={12} lg={12} style={{
                         border: '1px solid #e5e9ec', backgroundColor: '#F8F8F8',
-                        borderRadius: '2px', margin: '10px 28px 0 20px', height: '80px'
+                        borderRadius: '2px', margin: '10px 28px 0 20px', height: '90px'
                     }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
                             <div>
@@ -568,6 +590,9 @@ class ComponentStudyCredit extends Component {
                                 />
                                 <ButtonShareholderAdmin errorShareholder={errorShareholder}
                                     message={errorMessageForShareholders} functionToExecute={this._validateInfoStudyCredit}
+                                />
+                                <ButtonBoardMembersAdmin errorBoardMembers={errorBoardMembers}
+                                    message={errorMessageForBoardMembers} functionToExecute={this._validateInfoStudyCredit}
                                 />
                             </div>
                         </Col>

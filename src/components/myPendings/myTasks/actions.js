@@ -1,7 +1,7 @@
 import { APP_URL } from '../../../constantsGlobal';
 import {
   FIND_PENDING_TASKS, LIMITE_INF, CHANGE_PAGE, CLEAR_PENDING_TASK, CLEAR_MY_PENDINGS_ORDER,
-  CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK, CLEAR_LIST_MY_PENDINGS, GET_DOWNLOAD_PENDINGS_TASKS
+  CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK, CLEAR_LIST_MY_PENDINGS, GET_DOWNLOAD_PENDINGS_TASKS, UPDATE_USERNAME_TASK
 } from './constants';
 import axios from 'axios';
 
@@ -138,7 +138,7 @@ export function clearOnlyListPendingTask() {
   };
 }
 
-export function getDownloadPendingTask(clientId) {
+export function getDownloadPendingTask() {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -153,7 +153,7 @@ export function getDownloadPendingTask(clientId) {
       "isSuccessful": true
     },
     "messageBody": {
-      "clientId": clientId
+
     }
   };
 
@@ -161,5 +161,12 @@ export function getDownloadPendingTask(clientId) {
   return {
     type: GET_DOWNLOAD_PENDINGS_TASKS,
     payload: request
+  }
+}
+
+export function updateUserNameTask(username) {
+  return {
+    type: UPDATE_USERNAME_TASK,
+    username
   }
 }
