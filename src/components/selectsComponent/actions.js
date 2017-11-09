@@ -48,7 +48,7 @@ export function consultList(field) {
     },
     messageBody: {
     }
-  }
+  };
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
@@ -127,7 +127,7 @@ export function getMasterDataFields(fields, onlyWithoutParents) {
       "fields": fields,
       "onlyWithoutParents": isUndefined(onlyWithoutParents) || isNull(onlyWithoutParents) ? false : onlyWithoutParents
     }
-  }
+  };
 
   const request = axios.post(APP_URL + "/masterDataByFields", json);
 
@@ -166,7 +166,7 @@ export function economicGroupsByKeyword(keyword) {
     messageBody: {
       "keyword": keyword
     }
-  }
+  };
   const request = axios.post(APP_URL + "/economicGroupsByKeyword", json);
   return {
     type: ECONOMIC_GROUPS,
