@@ -386,7 +386,7 @@ class ModalCreateBoardMembers extends Component {
                         <Row>
                             <dt style={{ visibility: this.state.showCompleteForm }}>
                                 <div style={{ width: "100%", float: "left" }}>
-                                    <span>Observaciones</span>
+                                    <span style={{marginLeft: "6px"}}>Observaciones</span>
                                 <ToolTip text={TITLE_TOOLTIP_BOARD_MEMBERS}>
                                     <i className="help circle icon blue"
                                        style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
@@ -401,7 +401,7 @@ class ModalCreateBoardMembers extends Component {
                                     name="observations"
                                     type="text"
                                     max="1000"
-                                    style={{ width: '100%', height: '100%' }}
+                                    style={{ width: '100%', height: '130px' }}
                                     {...observations}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
