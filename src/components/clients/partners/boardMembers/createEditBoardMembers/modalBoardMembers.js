@@ -386,26 +386,25 @@ class ModalCreateBoardMembers extends Component {
                         <Row>
                             <dt style={{ visibility: this.state.showCompleteForm }}>
                                 <div style={{ width: "100%", float: "left" }}>
-                                    <span style={{marginLeft: "6px"}}>Observaciones</span>
-                                <ToolTip text={TITLE_TOOLTIP_BOARD_MEMBERS}>
-                                    <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
-                                </ToolTip>
+                                    <span style={{ marginLeft: "6px" }}>Observaciones</span>
+                                    <ToolTip text={TITLE_TOOLTIP_BOARD_MEMBERS}>
+                                        <i className="help circle icon blue"
+                                            style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
+                                    </ToolTip>
                                 </div>
                             </dt>
                         </Row>
                         <Row>
                             <Col xs style={{ visibility: this.state.showCompleteForm }}>
-                            <ToolTip text={TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS}>
                                 <Textarea
                                     name="observations"
                                     type="text"
                                     max="1000"
+                                    title={TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS}
                                     style={{ width: '100%', height: '130px' }}
                                     {...observations}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
-                            </ToolTip>
                             </Col>
                         </Row>
                         {showAuditFields &&
