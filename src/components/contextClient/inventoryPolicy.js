@@ -22,7 +22,7 @@ class InventorPolicy extends Component {
     render() {
         const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
             showCheckValidateSection, functionChangeInventoryPolicy, changeValueListClient,
-            controlLinkedPayments, noAppliedControlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
+            controlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>

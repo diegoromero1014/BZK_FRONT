@@ -97,7 +97,7 @@ class ComponentStudyCredit extends Component {
             valueCheckNotApplyCreditContact: false,
             fieldContextRequired: false,
             customerTypology: false,
-            controlLinkedPaymentsRequired: false
+            controlLinkedPaymentsRequired: true
         }
     }
 

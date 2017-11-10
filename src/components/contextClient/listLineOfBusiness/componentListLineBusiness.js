@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, validateValueExist } from '../../../actionsGlobal';
+import { handleBlurValueNumber, validateValueExist, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
 import SweetAlert from 'sweetalert-react';
@@ -123,7 +123,7 @@ class ComponentListLineBusiness extends Component {
             <td>{entity.lineOfBusiness}</td>
             <td>{entity.participation} %</td>
             <td>{entity.experience}</td>
-            <td>{entity.contribution}</td>
+            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />

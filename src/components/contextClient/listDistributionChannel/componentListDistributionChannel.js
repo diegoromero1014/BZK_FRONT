@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { handleBlurValueNumber } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import { stringValidate } from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -118,7 +119,7 @@ class ComponentListDistributionChannel extends Component {
             </td>
             <td>{entity.distributionChannel}</td>
             <td>{entity.participation} %</td>
-            <td>{entity.contribution}</td>
+            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar canal de distribución" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />

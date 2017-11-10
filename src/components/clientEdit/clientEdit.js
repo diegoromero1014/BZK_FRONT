@@ -306,7 +306,7 @@ const validate = (values, props) => {
         }
     }
 
-    //Valido los campos que sopn cenesarios para actualizar un cliente
+    //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
         if (values.taxNature === null || values.taxNature === undefined || values.taxNature === '') {
             errors.taxNature = OPTION_REQUIRED;
@@ -399,6 +399,13 @@ const validate = (values, props) => {
         errors.segment = null;
     }
 
+    if (!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) {
+        errors.controlLinkedPayments = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.controlLinkedPayments = null;
+    }
+
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
@@ -454,7 +461,8 @@ class clientEdit extends Component {
             showFormAddMainClient: false,
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
-            showFormAddIntOperatrions: false
+            showFormAddIntOperatrions: false,
+            controlLinkedPaymentsRequired: true
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -1485,6 +1493,7 @@ class clientEdit extends Component {
                                 max="20"
                                 placeholder="Número de documento del cliente"
                                 {...idNumber}
+                                touched={true}
                             />
                         </dt>
                     </Col>
@@ -1639,7 +1648,8 @@ class clientEdit extends Component {
                         showFormDistribution={this.state.showFormAddDistribution}
                         fnShowForm={this.showFormOut} />
                 </Row>
-                <InventorPolicy inventoryPolicy={inventoryPolicy} controlLinkedPayments={controlLinkedPayments} />
+                <InventorPolicy inventoryPolicy={inventoryPolicy} controlLinkedPayments={controlLinkedPayments}
+                    controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
