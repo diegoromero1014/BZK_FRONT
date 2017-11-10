@@ -74,18 +74,21 @@ class ComponentListDistributionChannel extends Component {
     }
 
     clearValues() {
-        const { distributionChannel, participation, fnShowForm } = this.props;
+        const { distributionChannel, participation, contribution, fnShowForm } = this.props;
         distributionChannel.onChange('');
         participation.onChange('');
+        contribution.onChange('');
         fnShowForm(DISTRIBUTION_CHANNEL, false);
         this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationDistribution(entity) {
-        const { distributionChannel, participation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { distributionChannel, participation, fnShowForm, changeValueListClient, clientInformacion,
+            contribution } = this.props;
         fnShowForm(DISTRIBUTION_CHANNEL, true);
         distributionChannel.onChange(entity.distributionChannel);
         participation.onChange(entity.participation.toString());
+        contribution.onChange(entity.contribution);
         this.setState({ entitySeleted: entity });
     }
 
@@ -200,7 +203,7 @@ class ComponentListDistributionChannel extends Component {
                         {showFormDistribution &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>
-                                    <dt><span>Contribución </span></dt>
+                                    <dt><span>% Contribución</span></dt>
                                     <Input
                                         name="contribution"
                                         type="text"

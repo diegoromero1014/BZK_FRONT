@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case CONSULT_INFO_CLIENT:
             const { status, validateLogin, data } = action.payload.data;
-            const dataClient = isEmpty(data) ? [] : JSON.parse(data);
+            const dataClient = isEmpty(data) ? [] : data;
             const contextClient = _.isUndefined(dataClient) || _.isNull(dataClient) ? null : dataClient.contextClient;
             const listParticipation = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listParticipation) ? [] : contextClient.listParticipation;
             const listDistribution = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listDistribution) ? [] : contextClient.listDistribution;

@@ -76,20 +76,23 @@ class ComponentListLineBusiness extends Component {
     }
 
     clearValues() {
-        const { contextLineBusiness, participation, experience, fnShowForm } = this.props;
+        const { contextLineBusiness, participation, experience, contribution, fnShowForm } = this.props;
         contextLineBusiness.onChange('');
         participation.onChange('');
         experience.onChange('');
+        contribution.onChange('');
         fnShowForm(LINE_OF_BUSINESS, false);
         this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationLineBusiness(entity) {
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
+            clientInformacion, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
         experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "");
+        contribution.onChange(entity.contribution);
         this.setState({ entitySeleted: entity });
     }
 
@@ -222,7 +225,7 @@ class ComponentListLineBusiness extends Component {
                         {showFormLinebusiness &&
                             <Col xs={12} md={2} lg={2}>
                                 <div>
-                                    <dt><span>Contribución </span></dt>
+                                    <dt><span>% Contribución</span></dt>
                                     <Input
                                         name="contribution"
                                         type="text"
