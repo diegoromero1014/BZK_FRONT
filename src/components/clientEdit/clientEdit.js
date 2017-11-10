@@ -61,7 +61,7 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse } from "../../actionsGlobal";
+import { validateResponse, stringValidate } from "../../actionsGlobal";
 
 let idButton;
 let errorContact;
@@ -1284,7 +1284,13 @@ class clientEdit extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods }, errors } = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion } = nextProps;
+        let { errors } = this.props;
+        if (clientInformacion.get('noAppliedControlLinkedPayments') || stringValidate(controlLinkedPayments.value)) {
+            errors = [];
+        } else {
+            errors.controlLinkedPayments = OPTION_REQUIRED;
+        }
         const errorsArray = _.toArray(errors);
         this.setState({
             sumErrorsForm: errorsArray.length

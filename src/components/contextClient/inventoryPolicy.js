@@ -17,6 +17,13 @@ class InventorPolicy extends Component {
         this.state = {
             fieldReducerNoApplied: 'noAppliedControlLinkedPayments'
         }
+        this._onChangeControlLinkedPayments = this._onChangeControlLinkedPayments.bind(this);
+    }
+
+    _onChangeControlLinkedPayments() {
+        const { changeValueListClient, controlLinkedPayments, clientInformacion } = this.props;
+        changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied));
+        controlLinkedPayments.onChange(controlLinkedPayments.value);
     }
 
     render() {
@@ -75,9 +82,7 @@ class InventorPolicy extends Component {
                                 </ToolTipComponent>
                             </dt>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={() => {
-                                    changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied))
-                                }}
+                                onClick={this._onChangeControlLinkedPayments}
                                 checked={clientInformacion.get(this.state.fieldReducerNoApplied)} />
                             <span style={{ fontSize: '11pt', color: 'black', marginLeft: "5px" }}>No aplica</span>
                         </div>

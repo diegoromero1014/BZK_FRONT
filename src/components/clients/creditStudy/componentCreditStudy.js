@@ -35,7 +35,7 @@ import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
     ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION,
     ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION,
-    SUCCESS_MESSAGE_FOR_SHAREHOLDER,SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
+    SUCCESS_MESSAGE_FOR_SHAREHOLDER, SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
 } from './constants';
 import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
 import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
@@ -337,6 +337,7 @@ class ComponentStudyCredit extends Component {
                         const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
                         const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
                         const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+                        const noAppliedControlLinkedPayments = clientInformacion.get('noAppliedControlLinkedPayments')
                         if (listLineOfBusiness.length === 0 && noAppliedLineOfBusiness === false) {
                             this.setState({
                                 showFormAddLineOfBusiness: true,
@@ -395,6 +396,9 @@ class ComponentStudyCredit extends Component {
                             this.setState({
                                 customerTypology: true
                             });
+                        }
+                        if (!noAppliedControlLinkedPayments && !stringValidate(controlLinkedPayments.value)) {
+                            allowSave = false;
                         }
                         if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
                             !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
@@ -533,8 +537,8 @@ class ComponentStudyCredit extends Component {
                             errorMessageForShareholders = ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION + ' ';
                         }
                     }
-                }else{
-                    errorMessageForShareholders  = SUCCESS_MESSAGE_FOR_SHAREHOLDER; 
+                } else {
+                    errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
                 }
 
                 if (!infoValidate.numberOfValidBoardMembers) {
@@ -548,7 +552,7 @@ class ComponentStudyCredit extends Component {
                             errorMessageForBoardMembers = ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION + ' ';
                         }
                     }
-                }else{
+                } else {
                     errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
                 }
 
