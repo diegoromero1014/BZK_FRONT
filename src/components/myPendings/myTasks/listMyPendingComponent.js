@@ -16,7 +16,6 @@ import {validatePermissionsByModule} from '../../../actionsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './pendingTaskUtilities';
-import {getMasterDataFields} from '../../selectsComponent/actions';
 import {TASK_STATUS} from '../../selectsComponent/constants';
 import {has, get, indexOf} from 'lodash';
 import {showLoading} from '../../loading/actions';
@@ -39,8 +38,7 @@ class ListMyPendingComponent extends Component {
     }
 
     componentWillMount() {
-        const {validatePermissionsByModule, getMasterDataFields} = this.props;
-        getMasterDataFields([TASK_STATUS]);
+        const {validatePermissionsByModule} = this.props;
         validatePermissionsByModule(MODULE_TASKS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
@@ -159,7 +157,7 @@ class ListMyPendingComponent extends Component {
         const modalTitle = 'Tarea';
         const data = myPendingsReducer.get('pendingTaskListByUser');
         return (
-            <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', overflowX: 'hidden'}}>
+            <div className="horizontal-scroll-wrapper" style={{overflow: 'auto', overflowX: 'hidden'}}>
                 <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
             </div>
         );
@@ -175,7 +173,6 @@ function mapDispatchToProps(dispatch) {
         clearMyPendingsOrder,
         validatePermissionsByModule,
         redirectUrl,
-        getMasterDataFields,
         showLoading
     }, dispatch);
 }
