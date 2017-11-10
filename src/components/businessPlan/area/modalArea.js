@@ -277,21 +277,21 @@ class ModalArea extends Component {
         </div>
         <div className="modalBt4-footer modal-footer">
           <button type="submit" className="btn btn-primary modal-button-edit" disabled={disabled} style={_.isEqual(disabled, "disabled") ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}>
-            <span>Guardar</span>
+            <span>Area</span>
           </button>
         </div>
         <SweetAlert
           type="success"
           show={this.state.showSuccessAdd}
-          title="Área agregada"
-          text="Señor usuario, el área fue agregada exitosamente."
+          title="Área agregada exitosamente"
+          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán."
           onConfirm={() => this._closeCreate()}
         />
         <SweetAlert
           type="success"
           show={this.state.showSuccessEdit}
-          title="Área editada"
-          text="Señor usuario, el área fue editada exitosamente."
+          title="Área editada exitosamente"
+          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán."
           onConfirm={() => this._closeCreate()}
         />
       </form>
