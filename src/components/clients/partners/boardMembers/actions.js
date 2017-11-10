@@ -27,7 +27,7 @@ export function getBoardMembers(idClient, pageNum, maxRows, searchTerm) {
     }
   }
 
-  var request = axios.post(APP_URL + "/getBoardMembersByClient", json);
+  const request = axios.post(APP_URL + "/getBoardMembersByClient", json);
   return {
     type: GET_BOARD_MEMBERS,
     payload: request
@@ -64,8 +64,8 @@ export function saveBoardMember(boardMember) {
       "isSuccessful": true
     },
     "messageBody": boardMember
-  }
-  var request = axios.post(APP_URL + "/saveBoardMember", json);
+  };
+  const request = axios.post(APP_URL + "/saveBoardMember", json);
   return {
     type: SAVE,
     payload: request
@@ -89,7 +89,7 @@ export function validateExistsBoardMember(boardMember) {
     },
     "messageBody": boardMember
   }
-  var request = axios.post(APP_URL + "/validateBoardExist", json);
+  const request = axios.post(APP_URL + "/validateBoardExist", json);
   return {
     type: SAVE,
     payload: request
@@ -113,7 +113,7 @@ export function deleteBoardMemberByClient(idClientBoardMember) {
     },
     "messageBody": idClientBoardMember
   }
-  var request = axios.post(APP_URL + "/deleteBoardMemberByClient", json);
+  const request = axios.post(APP_URL + "/deleteBoardMemberByClient", json);
   return {
     type: SAVE,
     payload: request

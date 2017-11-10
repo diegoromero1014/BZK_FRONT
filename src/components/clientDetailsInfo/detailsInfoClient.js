@@ -19,12 +19,13 @@ import Products from "./product";
 import { connect } from "react-redux";
 import moment from "moment";
 import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR } from "../../constantsGlobal";
-import { validatePermissionsByModule } from "../../actionsGlobal";
+import { validatePermissionsByModule, shorterStringValue } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { MENU_CLOSED } from "../navBar/constants";
 import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
 import ComponentAccordion from "../accordion/componentAccordion";
 import { showModalRiskGroup } from "../clientRiskGroup/actions";
+import _ from 'lodash';
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -90,8 +91,8 @@ class DetailsInfoClient extends Component {
 
     _changeValueAccordion(tabSeleted) {
         const { changeAccordionValue, tabReducer } = this.props;
-        var accordion = tabReducer.get('accordion');
-        var newAccordion = _.mapValues(accordion, (value, key) => {
+        const accordion = tabReducer.get('accordion');
+        const newAccordion = _.mapValues(accordion, (value, key) => {
             if (_.isEqual(key, tabSeleted)) {
                 return _.isEqual(value, OPEN_TAB) ? CLOSE_TAB : OPEN_TAB;
             } else {
@@ -169,7 +170,7 @@ class DetailsInfoClient extends Component {
                                     </dl>
                                 </td>
                                 <td style={{ width: "25%", verticalAlign: "initial" }}>
-                                    <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{infoClient.riskGroup}</a>
+                                    <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
                                 </td>
                             </tr>
                         </tbody>
