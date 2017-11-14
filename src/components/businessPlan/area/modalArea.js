@@ -277,7 +277,7 @@ class ModalArea extends Component {
         </div>
         <div className="modalBt4-footer modal-footer">
           <button type="submit" className="btn btn-primary modal-button-edit" disabled={disabled} style={_.isEqual(disabled, "disabled") ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}>
-            <span>Area</span>
+            <span>Agregar</span>
           </button>
         </div>
         <SweetAlert
