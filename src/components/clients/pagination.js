@@ -9,9 +9,9 @@ class Pagination extends Component {
     _handlePaginar(page) {
         const {clientsFindServer} = this.props;
         const {changePage} = this.props;
-        const {clientR, valueCertification, valueTeam} = this.props;
+        const {clientR, valueCertification, valueTeam, bussinesRolValue, managementValue, decisionCenterValue, levelAECValue} = this.props;
         var limInf = (page - 1) * NUMBER_RECORDS;
-        clientsFindServer(clientR.get('keyword'), limInf, NUMBER_RECORDS, valueCertification, valueTeam);
+        clientsFindServer(clientR.get('keyword'), limInf, NUMBER_RECORDS, valueCertification, valueTeam, bussinesRolValue, managementValue, decisionCenterValue, levelAECValue);
         changePage(page);
     }
 
