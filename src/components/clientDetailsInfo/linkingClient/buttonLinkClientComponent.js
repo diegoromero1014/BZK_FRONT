@@ -7,7 +7,7 @@ import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
 import LinkEntities from './linkEntitiesComponent/linkEntities';
 import Modal from 'react-modal';
-import {isEmpty, isEqual, get, find} from 'lodash';
+import {isEmpty, isEqual, get, isNil} from 'lodash';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {setEntities, clearEntities, saveLinkClient} from './linkEntitiesComponent/actions';
 import {updateErrorsLinkEntities} from '../../clientDetailsInfo/actions';
@@ -43,8 +43,7 @@ class ButtonLinkClientComponent extends Component {
         this.setState({modalIsOpen: true});
         const {
             consultStateBlackListClient, infoClient,
-            showLoading, swtShowMessage, setEntities,
-            getMasterDataFields, selectsReducer,
+            showLoading, swtShowMessage,
             updateValuesBlackList,consultInfoClient
         } = this.props;
         const jsonClientInfo = {
@@ -123,6 +122,7 @@ class ButtonLinkClientComponent extends Component {
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
+                "idLinkRequest": infoClient.linkingRequestId,
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray(),
                 "levelBlackList": level,
@@ -149,7 +149,11 @@ class ButtonLinkClientComponent extends Component {
         const {infoClient, clearEntities,setEntities} = this.props;
         const listLinkEntitiesClient = get(infoClient, 'linkEntity', []);
         clearEntities();
-        setEntities(listLinkEntitiesClient);
+        if(isNil(listLinkEntitiesClient)){
+            setEntities([]);
+        }else{
+            setEntities(listLinkEntitiesClient);
+        }
     }
 
     componentWillMount() {
