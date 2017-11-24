@@ -177,3 +177,8 @@ export const STYLE_BUTTON_BOTTOM = {
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;
 export const STR_YES = "Si";
+
+export const valuesYesNo = [
+    { 'id': true, 'value': "Si" },
+    { 'id': false, 'value': "No" }
+];
