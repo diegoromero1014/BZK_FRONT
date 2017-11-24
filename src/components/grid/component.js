@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
-import { Row, Grid, Col } from 'react-flexbox-grid';
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
@@ -12,6 +11,8 @@ import PdfLinkComponent from './pdfLinkComponent';
 import LinkComponent from './linkComponent';
 import LinkModalComponent from './linkModalComponent';
 import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
+import { ACTION_CHECK } from './constants';
+import CheckComponent from './checkComponent';
 
 class GridComponent extends Component {
 
@@ -28,8 +29,11 @@ class GridComponent extends Component {
 
   _renderCell(row, headers, modalTitle) {
     return headers.map((value, idx) => {
-      var cell;
-      if (value.key === 'actions') {
+      let cell;
+      if (value.key === ACTION_CHECK) {
+        const info = _.get(row, ACTION_CHECK, {});
+        cell = <CheckComponent key={idx} fn={info.fn} args={info.argsFn} isChecked={info.isChecked} />
+      } else if (value.key === 'actions') {
         cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
@@ -58,11 +62,7 @@ class GridComponent extends Component {
       } else if (value.key === 'actionsPdf' && _.get(row, value.key)) {
         cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)} />
       } else if (value.key === 'changeStateTask' && _.get(row, value.key)) {
-        if (_.get(_.get(row, value.key), 'permissionEdit')) {
-          cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)} />
-        } else {
-          cell = <TdComponent key={idx} columnRow={_.get(_.get(row, value.key), 'statusPending')} title={_.get(_.get(row, value.key), 'statusPending')} />
-        }
+        cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)} isEditable={_.get(_.get(row, value.key), 'permissionEdit')} />
       } else if (value.key === 'clientNameLink') {
         cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value, 'showLink')} idClient={_.get(row, 'clientNameLink.id')} />
       } else if (value.key === 'modalNameLink') {
@@ -70,7 +70,7 @@ class GridComponent extends Component {
       } else if (value.key === 'deleteLocal') {
         cell = _.get(row, 'deleteLocal.component');
       } else {
-        cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} title={_.get(row, 'title')} styles={value.style} />
+        cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
       }
       return (
         cell
@@ -112,6 +112,5 @@ GridComponent.propTypes = {
   data: PropTypes.array.isRequired,
   modalTitle: PropTypes.string,
 };
-
 
 export default GridComponent;

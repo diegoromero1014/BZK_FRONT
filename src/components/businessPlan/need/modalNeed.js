@@ -1,26 +1,31 @@
 import moment from "moment";
-import {reduxForm} from "redux-form";
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
+import { reduxForm } from "redux-form";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
 import SweetAlert from "sweetalert-react";
-import {Col, Row} from "react-flexbox-grid";
+import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {getClientNeeds, getMasterDataFields} from "../../selectsComponent/actions";
-import {IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED} from "./constants";
-import {addNeed, editNeed} from "./actions";
+import { getClientNeeds, getMasterDataFields } from "../../selectsComponent/actions";
+import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED } from "./constants";
+import { addNeed, editNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import {htmlToText,shorterStringValue} from "../../../actionsGlobal";
+import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
+import {MESSAGE_ERROR} from '../../../constantsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
 
 const fields = ["idEmployee", "needType", "descriptionNeed", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
+let thisForm;
+
 const validate = (values) => {
     if (!values.needType) {
         errors.needType = "Debe seleccionar una opción";
@@ -89,6 +94,7 @@ class ModalNeed extends Component {
             showErrorYa: false
         }
         momentLocalizer(moment);
+        thisForm = this;
     }
 
     _scroll() {
@@ -104,7 +110,7 @@ class ModalNeed extends Component {
     }
 
     componentDidMount() {
-        const {fields: {idEmployee, needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed}, needEdit} = this.props;
+        const { fields: { idEmployee, needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
         if (needEdit !== undefined) {
             needType.onChange(needEdit.needIdType);
             descriptionNeed.onChange(needEdit.descriptionNeed);
@@ -120,7 +126,7 @@ class ModalNeed extends Component {
     }
 
     _closeCreate() {
-        const {isOpen, needEdit} = this.props;
+        const { isOpen, needEdit } = this.props;
         if (needEdit !== undefined) {
             this.setState({
                 showSuccessEdit: false
@@ -135,7 +141,7 @@ class ModalNeed extends Component {
     }
 
     _handleCreateNeed() {
-        const {fields: {needType, idEmployee, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed}, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit} = this.props;
+        const { fields: { needType, idEmployee, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit } = this.props;
         let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
@@ -144,7 +150,6 @@ class ModalNeed extends Component {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
-        console.log('needEdit',needEdit);
         if ((needResponsable.value !== '' && needResponsable.value !== undefined && needResponsable.value !== null) && (idEmployee.value === null || idEmployee.value === '' || idEmployee.value === undefined)) {
             this.setState({
                 employeeResponsible: true
@@ -201,7 +206,7 @@ class ModalNeed extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const {fields: {needResponsable, idEmployee}, filterUsersBanco} = this.props;
+        const { fields: { needResponsable, idEmployee }, filterUsersBanco } = this.props;
         let self = this;
         idEmployee.onChange(null);
         const selector = $('.ui.search.needResponsable');
@@ -239,32 +244,32 @@ class ModalNeed extends Component {
     }
 
     _updateValue(value) {
-        const {fields: {needResponsable}} = this.props;
+        const { fields: { needResponsable } } = this.props;
         needResponsable.onChange(value);
     }
 
     componentWillMount() {
-        const {getClientNeeds, getMasterDataFields, selectsReducer} = this.props;
+        const { getClientNeeds, getMasterDataFields, selectsReducer } = this.props;
         getClientNeeds();
         getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCTS]);
     }
 
     render() {
-        const {selectsReducer} = this.props;
-        const {initialValues, fields: {needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed}, handleSubmit, error} = this.props;
+        const { initialValues, selectsReducer, disabled, handleSubmit, error,
+            fields: { needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed } } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateNeed)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     id="modalComponentScrollNeed">
-                    <dt className="business-title"><span style={{paddingLeft: '20px'}}>Adicionar necesidad al plan de negocio</span>
+                    id="modalComponentScrollNeed">
+                    <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Adicionar necesidad al plan de negocio</span>
                     </dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px'}}>
-                        <p style={{paddingTop: "10px", marginBottom: "0px"}}>Los campos marcados con asterisco (<span
-                            style={{color: "red"}}>*</span>) son obligatorios.</p>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>
+                        <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
+                            style={{ color: "red" }}>*</span>) son obligatorios.</p>
                         <Row>
                             <Col xs>
-                                <dt><span>Necesidad (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Necesidad (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
                                         name="needType"
                                         {...needType}
@@ -273,26 +278,29 @@ class ModalNeed extends Component {
                                         textProp={'need'}
                                         parentId="dashboardComponentScroll"
                                         data={selectsReducer.get('pipelineClientNeeds') || []}
+                                        disabled={disabled}
                                     />
                                 </dt>
                             </Col>
                         </Row>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <dt><span>Descripción de la necesidad (<span style={{color: "red"}}>*</span>)</span>
+                                <dt><span>Descripción de la necesidad (<span style={{ color: "red" }}>*</span>)</span>
                                 </dt>
-                                    <RichText
-                                        name="descriptionNeed"
-                                        style={{width: '100%', height: '180px'}}
-                                        {...descriptionNeed}
-                                    />
+                                <RichText
+                                    name="descriptionNeed"
+                                    style={{ width: '100%', height: '180px' }}
+                                    {...descriptionNeed}
+                                    disabled={disabled}
+                                    readOnly={_.isEqual(disabled, 'disabled')}
+                                />
                             </Col>
                         </Row>
-                        <Row style={{paddingTop: '20px'}}>
+                        <Row style={{ paddingTop: '20px' }}>
                             <Col xs>
                                 <dt><span>Producto(s) que satisface(n) la necesidad  (<span
-                                    style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
                                         name="needProduct"
                                         labelInput="Seleccione..."
@@ -301,12 +309,13 @@ class ModalNeed extends Component {
                                         {...needProduct}
                                         parentId="dashboardComponentScroll"
                                         data={selectsReducer.get(PRODUCTS) || []}
+                                        disabled={disabled}
                                     />
                                 </dt>
                             </Col>
                             <Col xs>
-                                <dt><span>Implementación  (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Implementación  (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
                                         name="needImplementation"
                                         labelInput="Seleccione..."
@@ -315,6 +324,7 @@ class ModalNeed extends Component {
                                         {...needImplementation}
                                         parentId="dashboardComponentScroll"
                                         data={selectsReducer.get(IMPLEMENTATION_TIMELINE) || []}
+                                        disabled={disabled}
                                     />
                                 </dt>
                             </Col>
@@ -322,29 +332,33 @@ class ModalNeed extends Component {
                         <Row>
                             <Col xs={12} md={12} lg={12}>
                                 <dt><span>Plan de Acción / Cómo le voy a llevar el producto y/o servicio (<span
-                                    style={{color: "red"}}>*</span>)</span></dt>
-                                    <RichText
-                                        name="needTask"
-                                        style={{width: '100%', height: '180px'}}
-                                        {...needTask}
-                                    />
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <RichText
+                                    name="needTask"
+                                    style={{ width: '100%', height: '180px' }}
+                                    {...needTask}
+                                    disabled={disabled}
+                                    readOnly={_.isEqual(disabled, 'disabled')}
+                                />
                             </Col>
                         </Row>
-                        <Row style={{paddingTop: '20px'}}>
+                        <Row style={{ paddingTop: '20px' }}>
                             <Col xs={12} md={12} lg={12}>
                                 <dt><span>Resultados y/o Beneficios esperados  (<span
-                                    style={{color: "red"}}>*</span>)</span></dt>
-                                    <RichText
-                                        name="needBenefits"
-                                        style={{width: '100%', height: '180px'}}
-                                        {...needBenefits}
-                                    />
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <RichText
+                                    name="needBenefits"
+                                    style={{ width: '100%', height: '180px' }}
+                                    {...needBenefits}
+                                    disabled={disabled}
+                                    readOnly={_.isEqual(disabled, 'disabled')}
+                                />
                             </Col>
                         </Row>
-                        <Row style={{paddingTop: '20px'}}>
+                        <Row style={{ paddingTop: '20px' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <dt><span>Responsable  (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Responsable  (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBoxFilter
                                         name="needResponsable"
                                         {...needResponsable}
@@ -354,6 +368,7 @@ class ModalNeed extends Component {
                                         parentId="dashboardComponentScroll"
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
+                                        disabled={disabled}
                                     />
                                     {
                                         this.state.employeeResponsible &&
@@ -368,8 +383,8 @@ class ModalNeed extends Component {
                         </Row>
                         <Row>
                             <Col xs>
-                                <dt><span>Estado  (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}} onClick={this._scroll}>
+                                <dt><span>Estado  (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }} onClick={this._scroll}>
                                     <ComboBox
                                         name="statusNeed"
                                         labelInput="Seleccione..."
@@ -378,13 +393,14 @@ class ModalNeed extends Component {
                                         {...statusNeed}
                                         parentId="dashboardComponentScroll"
                                         data={selectsReducer.get(STATUS_NEED) || []}
+                                        disabled={disabled}
                                     />
                                 </dt>
                             </Col>
                             <Col xs>
-                                <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span>
+                                <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span>
                                 </dt>
-                                <dt style={{paddingTop: "0px"}} onClick={this._scroll}>
+                                <dt style={{ paddingTop: "0px" }} onClick={this._scroll}>
                                     <DateTimePickerUi
                                         id='fecha'
                                         culture='es'
@@ -392,6 +408,7 @@ class ModalNeed extends Component {
                                         time={false}
                                         {...needDate}
                                         onClick={this._onClickDate}
+                                        disabled={disabled}
                                     />
                                 </dt>
                             </Col>
@@ -399,7 +416,7 @@ class ModalNeed extends Component {
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
-                    <button type="submit" className="btn btn-primary modal-button-edit">
+                    <button type="submit" className="btn btn-primary modal-button-edit" disabled={disabled} style={_.isEqual(disabled, "disabled") ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}>
                         <span>Guardar</span>
                     </button>
                 </div>
@@ -424,12 +441,16 @@ class ModalNeed extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getClientNeeds, getMasterDataFields, filterUsersBanco, addNeed,
+        getClientNeeds, 
+        getMasterDataFields, 
+        filterUsersBanco, 
+        addNeed,
         editNeed,
+        swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({needs, selectsReducer}, {needEdit}) {
+function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
     if (needEdit !== undefined) {
         return {
             needs,
@@ -471,5 +492,10 @@ function mapStateToProps({needs, selectsReducer}, {needEdit}) {
 export default reduxForm({
     form: 'submitValidationNeed',
     fields,
-    validate
+    validate,
+    onSubmitFail: errors => {
+        document.getElementById('modalComponentScrollNeed').scrollTop = 0;
+        const {swtShowMessage} = thisForm.props;
+        swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
+    }
 }, mapStateToProps, mapDispatchToProps)(ModalNeed);

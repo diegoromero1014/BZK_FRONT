@@ -40,11 +40,14 @@ const initialState = Immutable.Map({
     validCovenant: [],
     fullfillmentCovenant: [],
     segment: [],
-    reasonConformation: []
+    subSegment: [],
+    reasonConformation: [],
+    products: [],
+    allProducts: []
 });
 
-
 export default (state = initialState, action) => {
+
     switch (action.type) {
         case constants.CLIENT_ID_TYPE:
             return state.set("dataTypeDocument", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
@@ -138,8 +141,21 @@ export default (state = initialState, action) => {
             return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SEGMENTS:
             return state.set('segment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.SUBSEGMENTS:
+            return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.REASON_CONFORMATION:
             return state.set('reasonConformation', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.PRODUCTS:
+            return state.set('products', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.PRODUCTS_MASK:
+            return state.set('allProducts', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.CLEAR_LISTS:
+            const clearLists = action.lists;
+            return state.withMutations(map => {
+                _.map(clearLists, (item) => {
+                    map.set(item, []);
+                });
+            });
         default:
             return state;
     }

@@ -29,7 +29,7 @@ export const STYLE_FORM_COUNTRYS = {
     marginTop: "10px",
     marginBottom: "15px",
     border: "1px solid #ECECEC",
-    marginRight: "33px",
+    marginRight: "15px",
     borderRadius: "5px",
     padding: "10px",
 }
@@ -254,9 +254,9 @@ class ComponentListIntOperations extends Component {
             showCheckValidateSection, functionChangeIntOperations, registrationRequired } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
-            <div style={{ width: '100%' }}>
-                <Row style={{ padding: "10px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
+            <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}>
+                <Row style={{ padding: "10px 10px 10px 0px" }}>
+                    <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { padding: "20px 10px 10px 20px" } : {}}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
                             <div style={{ fontSize: "25px", marginTop: "5px", marginBottom: "5px" }}>
                                 {this._getTitleSection()}
@@ -277,7 +277,7 @@ class ComponentListIntOperations extends Component {
                     </Col>
                     <Col xs={12} md={12} lg={12}>
                         {showCheckValidateSection &&
-                            <div>
+                            <div style={{marginLeft: '20px'}}>
                                 <input type="checkbox" id="checkSectionIntOperations"
                                     checked={valueCheckSectionIntOperations}
                                     onClick={functionChangeIntOperations} />
@@ -287,8 +287,8 @@ class ComponentListIntOperations extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedIntOperations') &&
-                    <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
+                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
+                        <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
                             <button className="btn" disabled={showFormIntOperations} type="button" title="Agregar operación internacional"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
@@ -296,7 +296,7 @@ class ComponentListIntOperations extends Component {
                         </Col>
                         {showFormIntOperations &&
                             <Row style={{ width: '100%', marginLeft: '0px' }}>
-                                <Col xs={12} md={3} lg={2}>
+                                <Col xs={12} md={3} lg={3}>
                                     <div>
                                         <dt><span>Tipo de operación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
@@ -339,17 +339,17 @@ class ComponentListIntOperations extends Component {
                                 </label>
                                     </div>
                                 </Col>
-                                <Col xs={4} md={3} lg={2}>
-                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Guardar"
+                                <Col xs={5} md={5} lg={4}>
+                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                        <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                        Agregar
                                     </button>
                                     <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
                                         style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
-                                        <i className="remove white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                        Cancelar
                                     </button>
                                 </Col>
-                                <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '35px' }}>
+                                <Col xs={12} md={12} lg={12} style={{ marginTop: '15px', paddingRight: '15px' }}>
                                     <div>
                                         <dt><span>Descripción de la cobertura</span></dt>
                                         <Textarea
@@ -386,7 +386,7 @@ class ComponentListIntOperations extends Component {
                                         />
                                     </div>
                                 </Col>
-                                <Col xs={12} md={5} lg={3}>
+                                <Col xs={12} md={5} lg={2}>
                                     <div>
                                         <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
@@ -403,14 +403,14 @@ class ComponentListIntOperations extends Component {
                                         />
                                     </div>
                                 </Col>
-                                <Col xs={4} md={3} lg={1}>
+                                <Col xs={4} md={3} lg={2}>
                                     <button className="btn btn-secondary" type="button" onClick={this._addConstryParticipation} title="Adicionar país"
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
-                                        <i className="add circle white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                        Agregar país
                                     </button>
                                 </Col>
                                 {_.size(this.state.listCountrys) > 0 ?
-                                    <Col xs={12} md={2} lg={5} style={{ marginTop: '5px' }}>
+                                    <Col xs={12} md={5} lg={5} style={{ marginTop: '5px' }}>
                                         <table className="ui striped table" style={{ width: '100%' }}>
                                             <thead>
                                                 <tr>
@@ -436,7 +436,7 @@ class ComponentListIntOperations extends Component {
 
                         {
                             _.size(listOperations) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '34px', marginTop: '15px' }}>
+                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px', marginBottom: '15px' }}>
                                     <table className="ui striped table">
                                         <thead>
                                             <tr>

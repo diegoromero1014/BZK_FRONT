@@ -35,7 +35,7 @@ export const mapDataGrid = (data = []) => {
         idCovenant: covenant.idCovenant,
         lineOfBusiness: covenant.lineOfBusiness,
         managerAccount: covenant.managerAccount,
-        descriptionRecord: shorterStringValue(covenant.descriptionRecord),
+        covenant: shorterStringValue(covenant.covenant),
         agreement: covenant.agreement,
         trafficLight: {
             color: getColorCovenant(covenant.nextExpirationTimestamp, covenant.capitalBalance),

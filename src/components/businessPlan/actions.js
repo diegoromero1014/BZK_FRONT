@@ -186,3 +186,32 @@ export function changeOwnerDraft(ownerDraft){
 export function pdfDescarga(clientId, businessPlanId) {
   window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
 }
+
+export function validateRangeDates(startDate, endDate, idBusinessPlan){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "idClient": window.localStorage.getItem('idClientSelected'),
+      "idBusinessPlan": idBusinessPlan,
+      "initialDate": startDate,
+      "finalDate": endDate
+    }
+  }
+
+  var request = axios.post(APP_URL + "/validateDatesInBusinessPlan", json);
+  return{
+    type: constants.CREATE_BUSINESS,
+    payload: request
+  }
+}

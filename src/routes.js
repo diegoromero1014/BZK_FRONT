@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {Redirect, Route} from "react-router";
-import {Grid} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { Redirect, Route } from "react-router";
+import { Grid } from "react-flexbox-grid";
 import LoginComponent from "./components/login/component";
 import DashboardComponent from "./components/dashboard/dashboardComponent";
 import ClientsFind from "./components/clients/clientsFind";
@@ -28,10 +28,11 @@ import FindContacts from "./components/filterContact/findContacts";
 import ClientsContactsDetails from "./components/filterContact/detailsClientsContact/clientsContactsDetails";
 import ContactByFunctionOrTypeComponent from "./components/contactByFunctionOrType/ContactByFunctionOrTypeComponent";
 import AEC from "./components/myPendings/AEC/componentAEC";
-import FavoritesGroup from "./components/contact/favoritesGroup/favoritesGroupComponent";
+import FavoritesGroup from "./components/contact/favoritesGroup/createEdit/favoritesGroupComponent";
 import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
-import Visor from "./components/visor/visor";
+import Transactional from "./components/transactional/transactionalComponent";
+import WalletShare from "./components/transactional/walletShareComponent";
 
 class App extends Component {
     render() {
@@ -79,7 +80,8 @@ export default (
                 <Route path="clientsContacts" component={ClientsContactsDetails}></Route>
                 <Route path="searchContactsByFunctionOrType" component={ContactByFunctionOrTypeComponent}></Route>
                 <Route path="contact/favoriteGroup" component={FavoritesGroup}></Route>
-                <Route path="visor" component={Visor}></Route>
+                <Route path="transactional" component={Transactional}></Route>
+                <Route path="walletShare" component={WalletShare}></Route>
             </Route>
         </Route>
     </Grid>

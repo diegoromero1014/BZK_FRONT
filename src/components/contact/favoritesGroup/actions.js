@@ -1,7 +1,7 @@
 /**
  * Created by ahurtado on 11/23/2016.
  */
-import {APP_URL} from '../../../constantsGlobal';
+import { APP_URL } from '../../../constantsGlobal';
 import * as constant from './constants';
 import axios from 'axios';
 
@@ -73,8 +73,8 @@ export function clearFilterGroup() {
             "keyWordName": '',
             "pageNum": 1,
             "maxRows": constant.NUMBER_RECORDS,
-            "order" : 0,
-            "columnOrder" : null
+            "order": 0,
+            "columnOrder": null
         }
     };
     const request = axios.post(APP_URL + "/getGroupsFavoriteContact", json);
@@ -84,10 +84,7 @@ export function clearFilterGroup() {
     }
 }
 
-
-
-
-export function getGroupForId(id){
+export function getGroupForId(id) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -111,7 +108,7 @@ export function getGroupForId(id){
     }
 }
 
-export function getListContactGroupForId(id){
+export function getListContactGroupForId(id) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -125,9 +122,7 @@ export function getListContactGroupForId(id){
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": {
-            "groupId": id
-        }
+        "messageBody": id
     };
 
     const request = axios.post(APP_URL + "/getListContactGroupForId", json);
@@ -139,7 +134,7 @@ export function getListContactGroupForId(id){
 
 
 
-export function getValidateExistGroup(name){
+export function getValidateExistGroup(name) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -163,13 +158,12 @@ export function getValidateExistGroup(name){
     }
 }
 
-
-export function searchContactForGroup(typeDocument,numberDocument,clientId){
+export function searchContactForGroup(typeDocument, numberDocument, clientId) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
             "sessionToken": window.localStorage.getItem('sessionToken'),
-            "username":"lmejias",
+            "username": "lmejias",
             "service": "",
             "status": "0",
             "language": "es",
@@ -181,7 +175,7 @@ export function searchContactForGroup(typeDocument,numberDocument,clientId){
         },
         "messageBody": {
             "typeDocument": typeDocument,
-            "numberDocument":numberDocument,
+            "numberDocument": numberDocument,
             "clientId": clientId
         }
     }
@@ -192,34 +186,31 @@ export function searchContactForGroup(typeDocument,numberDocument,clientId){
     }
 }
 
-
-export function addContactList(){
+export function addContactList() {
     return {
         type: constant.ADD_CONTACT_LIST
     }
 }
 
-export function clearContactName(){
+export function clearContactName() {
     return {
         type: constant.CLEAR_CONTACT_NAME
     }
 }
 
-export function deleteContactList(idContact){
+export function deleteContactList(idContact) {
     return {
         type: constant.DELETE_CONTACT_LIST,
         idContact
     }
 }
 
-
-
-export function saveGroupFavoriteContacts(group){
+export function saveGroupFavoriteContacts(group) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
             "sessionToken": window.localStorage.getItem('sessionToken'),
-            "username":"lmejias",
+            "username": "lmejias",
             "service": "",
             "status": "0",
             "language": "es",
@@ -238,36 +229,31 @@ export function saveGroupFavoriteContacts(group){
     }
 }
 
-
-export function resetModal(){
+export function resetModal() {
     return {
         type: constant.RESET_MODAL
     }
 }
 
-
-export function saveNameGroup(name){
+export function saveNameGroup(name) {
     return {
         type: constant.SAVE_NAME_GROUP,
-        name:name
+        name: name
     }
 }
 
-
-export function clearEmails(){
+export function clearEmails() {
     return {
-        type: constant.CLEAR_EMAILS,
-        name:name
+        type: constant.CLEAR_EMAILS
     }
 }
 
-
-export function getEmailsForGroup(group){
+export function getEmailsForGroup(group) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
             "sessionToken": window.localStorage.getItem('sessionToken'),
-            "username":"lmejias",
+            "username": "lmejias",
             "service": "",
             "status": "0",
             "language": "es",
@@ -283,5 +269,85 @@ export function getEmailsForGroup(group){
     return {
         type: constant.VIEW_EMAIL_CONTACTS,
         payload: request
+    }
+}
+
+export function getContactsByTypeOrFunction(obj) {
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username": "lmejias",
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": obj
+    }
+    var request = axios.post(APP_URL + "/getContactsByTypeOrFunction", json);
+    return {
+        type: constant.GET_CONCTACTS_BY_FUNCTIONS_OR_TYPE,
+        payload: request
+    }
+}
+
+export function changeStateContactByFunctionOrType(idContact) {
+    return {
+        type: constant.CHANGE_STATE_CONTACT_BY_FUNCTION_OR_TYPE,
+        idContact
+    }
+}
+
+export function associateContactsByFunctionOrType(listContactsByFunctionOrType) {
+    return {
+        type: constant.ASSOCIATE_CONTACTS_BY_FUNCTION_OR_TYPE,
+        listContactsByFunctionOrType
+    }
+}
+
+export function pageNumContactsByFunctionOrType(pageNum) {
+    return {
+        type: constant.CHANGE_PAGE_CONTACTS_BY_FUNCTION_OR_TYPE,
+        pageNum
+    }
+}
+
+export function lowerLimitContactsByFunctionOrType(lowerLimit) {
+    return {
+        type: constant.LOWER_LIMIT_CONTACTS_BY_FUNCTION_OR_TYPE,
+        lowerLimit
+    }
+}
+
+export function setKeywordContactsByFunctionOrType(keyword) {
+    return {
+        type: constant.SET_KEYWORD_CONTACTS_BY_FUNCTION_OR_TYPE,
+        keyword
+    }
+}
+
+export function setFunctionContactsByFunctionOrType(functionContact) {
+    return {
+        type: constant.SET_FUNCTION_CONTACTS_BY_FUNCTION_OR_TYPE,
+        functionContact
+    }
+}
+
+export function setTypeContactsByFunctionOrType(type) {
+    return {
+        type: constant.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE,
+        type
+    }
+}
+
+export function setContactsByFunctionOrType(listContacts) {
+    return {
+        type: constant.SET_CONTACTS_BY_FUNCTION_OR_TYPE,
+        listContacts
     }
 }

@@ -23,9 +23,6 @@ class SearchGroup extends Component {
     componentWillMount() {
         const { login } = this.props;
         const self = this;
-        if (window.localStorage.getItem('sessionToken') === "") {
-            //redirectUrl("/login");
-        }
     }
 
     _handleChangeKeyword(e) {

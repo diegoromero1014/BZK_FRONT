@@ -10,6 +10,7 @@ import {NUMBER_RECORDS,DELETE_TYPE_PIPELINE} from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
+import { MODULE_PIPELINE } from '../grid/constants';
 
 let v1 = "";
 let v2= "";
@@ -45,7 +46,6 @@ class ListPipelineComponent extends Component {
       v2 =nextProps.value2;
       const {clearPipelineOrder} = this.props;
       clearPipelineOrder();
-      this._orderColumn(1,"pe.startDate");
     }
   }
 
@@ -67,26 +67,17 @@ class ListPipelineComponent extends Component {
         key:"actionsRedirect"
       },
       {
+        title: "Nombre de la oportunidad",
+        key:"opportunityName"
+      },
+      {
         title: "Estado del negocio",
         key:"businessStatus"
       },
       {
         title: "Necesidad",
         key:"need"
-      },
-      {
-        title: "Fecha de inicio",
-        key:"datePipelineStartFormat",
-        orderColumn:<span><i className="caret down icon" style={{cursor: 'pointer',display:this.state.orderD}} onClick={() => this._orderColumn(0,"pe.startDate")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"pe.startDate")}></i></span>
-      },
-      {
-        title: "Fecha de finalización",
-        key:"datePipelineEndFormat"
-      },
-      {
-        title: "Estado del documento",
-        key:"statusDocument"
-      },
+      },      
       {
         title: "",
         key:"delete"
@@ -121,15 +112,12 @@ class ListPipelineComponent extends Component {
             _.set(value, 'actionsRedirect',  {
               actionView: true,
               id: value.id,
-              typeClickDetail: "pipeline",
+              typeClickDetail: MODULE_PIPELINE,
               ownerDraft: value.idStatusDocument,
               urlRedirect: "/dashboard/pipelineEdit",
               component: "VIEW_PIPELINE"
             });
-            var datePipelineStartFormat = moment(value.startDate).locale('es');
-            _.set(value, 'datePipelineStartFormat',datePipelineStartFormat.format("DD") + " " + datePipelineStartFormat.format("MMM") + " " + datePipelineStartFormat.format("YYYY")+ ", " + datePipelineStartFormat.format("hh:mm a"));
-             var datePipelineEndFormat = moment(value.endDate).locale('es');
-            _.set(value, 'datePipelineEndFormat',datePipelineEndFormat.format("DD") + " " + datePipelineEndFormat.format("MMM") + " " + datePipelineEndFormat.format("YYYY")+ ", " + datePipelineEndFormat.format("hh:mm a"));
+        
             if( _.get(permissionsPipeline, _.indexOf(permissionsPipeline, ELIMINAR), false) ){
               if(value.idStatusDocument === 0){
                 _.set(value, 'delete',  {

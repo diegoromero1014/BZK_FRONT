@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
                 map
                     .set('status', response.status)
                     .set('rowCount', response.rowCount)
-                    .set('userTasksByClient', JSON.parse(response.pendingTaskList));
+                    .set('userTasksByClient', JSON.parse(response.pendingTaskList))
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
@@ -53,7 +53,7 @@ export default (state = initialState, action) => {
                 map
                     .set('orderTask', action.orderTask)
                     .set('columnTask', action.columnTask)
-            });
+            }); 
         default:
             return state;
     }

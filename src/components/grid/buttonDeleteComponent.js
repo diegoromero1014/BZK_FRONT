@@ -156,14 +156,14 @@ class ButtonDeleteComponent extends Component {
             } else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE) {
                 clearPipelineOrder();
                 clearPipelinePaginator();
-                pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.startDate", 1, "", "");
+                pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.need", 1, "", "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
             } else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN) {
                 clearBusinessPlanOrder();
                 clearBusinessPlanPaginator();
-                businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.businessDate", 1, "", "");
+                businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.initialValidityDate", 1, "", "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");

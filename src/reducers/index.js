@@ -60,11 +60,11 @@ import structuredDelivery from '../components/customerStory/structuredDelivery/r
 import assignedReducer from '../components/myPendings/assigned/reducer'
 import studyCreditReducer from '../components/clients/creditStudy/reducer';
 import qualitativeVariableReducer from '../components/risksManagement/qualitativeVariable/reducer';
-import visorReducer from '../components/visor/reducer';
 import boardMembersReducer from '../components/clients/partners/boardMembers/reducer';
 import riskGroupReducer from '../components/clientRiskGroup/reducer';
 import partnersReducer from '../components/clients/partners/reducer';
 import menuReducer from '../components/menu/reducer';
+import transactionalReducer from '../components/transactional/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -128,9 +128,9 @@ export default combineReducers({
     assignedReducer,
     studyCreditReducer,
     qualitativeVariableReducer,
-    visorReducer,
     boardMembersReducer,
     riskGroupReducer,
     tabPartners: partnersReducer,
-    menu: menuReducer
+    menu: menuReducer,
+    transactional : transactionalReducer
 });

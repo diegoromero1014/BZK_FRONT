@@ -4,7 +4,15 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
-import {clientsPortfolioExpirationFindServer, clearFilter, changePage, changeKeyword, changeTeam,changeRegion,changeZone} from './actions';
+import {
+    clientsPortfolioExpirationFindServer,
+    clearFilter,
+    changePage,
+    changeKeyword,
+    changeTeam,
+    changeRegion,
+    changeZone
+} from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
 import {NUMBER_RECORDS, FORM_FILTER_ALERT_PE} from './constants';
@@ -23,6 +31,10 @@ import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
 
 const fields = ["team", "region", "zone"];
@@ -31,6 +43,7 @@ const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 class ClientsPendingUpdate extends Component {
     constructor(props) {
         super(props);
+        momentLocalizer(moment);
         this._onChangeTeam = this._onChangeTeam.bind(this);
         this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
         this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
@@ -43,31 +56,33 @@ class ClientsPendingUpdate extends Component {
         if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
             redirectUrl("/login");
         } else {
-            const {clearFilter, consultList, consultDataSelect, updateTitleNavBar} = this.props;
+            const {clearFilter, consultList, consultDataSelect, updateTitleNavBar, swtShowMessage} = this.props;
             showLoading(true, 'Cargando..');
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
             clearFilter().then((data) => {
-                if (_.has(data, 'payload.data.data')) {
-                    showLoading(false, null);
+                showLoading(false, null);
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
             updateTitleNavBar(titleModule);
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.updateTitleNavBar('');
     }
 
     _cleanSearch() {
-        const {resetForm,showLoading, clearFilter,consultList} = this.props;
+        const {resetForm, showLoading, clearFilter, consultList, swtShowMessage} = this.props;
         showLoading(true, 'Cargando..');
         resetForm();
         clearFilter();
         consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
-            if (_.has(data, 'payload.data.teamValueObjects')) {
-                showLoading(false, null);
+            showLoading(false, null);
+            if (!_.has(data, 'payload.data')) {
+                swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
         });
     }
@@ -95,7 +110,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     _onChangeZoneStatus(val) {
-        const {fields: {zone},changeZone} = this.props;
+        const {fields: {zone}, changeZone} = this.props;
         zone.onChange(val);
         changeZone(val);
         if (val) {
@@ -104,15 +119,15 @@ class ClientsPendingUpdate extends Component {
     }
 
     _handleClientsFind() {
-        const {fields: {team, region, zone}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading} = this.props;
+        const {fields: {team, region, zone}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
-            if (_.has(data, 'payload.data.data')) {
-                showLoading(false, null);
-                changePage(1);
+            showLoading(false, null);
+            if (!validateResponse(data)) {
+                swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
         });
     }
@@ -120,8 +135,8 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields:{team, region, zone}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
-        if(_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
+        const {fields: {team, region, zone}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
+        if (_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
         }
@@ -152,7 +167,7 @@ class ClientsPendingUpdate extends Component {
                                 name="region"
                                 labelInput="Región"
                                 {...region}
-                                onChange={val =>this._onChangeRegionStatus(val)}
+                                onChange={val => this._onChangeRegionStatus(val)}
                                 value={region.value}
                                 onBlur={region.onBlur}
                                 valueProp={'id'}
@@ -185,6 +200,17 @@ class ClientsPendingUpdate extends Component {
                     </Row>
                 </form>
                 <Row>
+                    <div style={{
+                        marginTop: "18px",
+                        marginLeft: "18px",
+                        float: 'left',
+                        position: 'absolute'
+                    }}>
+                        <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última carga: </span>
+                        <span style={{marginLeft: "0px", color: "#818282"}}>
+                            {formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}
+                        </span>
+                    </div>
                     <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
                         Total: {numberTotalClientFiltered}
                     </div>
@@ -195,7 +221,7 @@ class ClientsPendingUpdate extends Component {
                             <Row>
                                 <Col xs>
                                     <ListClientsAlertPortfolioExp />
-                                    <Pagination/>
+                                    <Pagination />
                                 </Col>
                             </Row>
                         </Grid>
@@ -226,6 +252,7 @@ function mapDispatchToProps(dispatch) {
         consultDataSelect,
         showLoading,
         changeTeam,
+        swtShowMessage,
         changeRegion,
         changeZone,
         consultTeamsByRegionByEmployee
@@ -241,5 +268,8 @@ function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar, redu
     };
 }
 
-export default reduxForm({form: FORM_FILTER_ALERT_PE, fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({
+    form: FORM_FILTER_ALERT_PE,
+    fields
+}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
 

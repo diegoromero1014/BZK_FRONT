@@ -33,7 +33,7 @@ class PipelineComponent extends Component {
     }else{
       const {pipelineByClientFindServer, clearPipeline, validatePermissionsByModule, clientInformacion} = this.props;
       clearPipeline();
-      pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"pe.startDate",1,"","");
+      pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"",1,"","");
       validatePermissionsByModule(MODULE_PIPELINE).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
           redirectUrl("/login");

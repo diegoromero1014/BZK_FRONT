@@ -13,7 +13,7 @@ import {
     MODULE_CLIENTS,
     MODULE_CONTACTS,
     MODULE_MANAGERIAL_VIEW,
-    MODULE_VISOR
+    MODULE_TRANSACTIONAL
 } from "../../constantsGlobal";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -47,18 +47,21 @@ const itemMyPendings = {
     children: []
 };
 
-const itemVisor = {
-    text: "Transaccional",
+const itemTransactional = {
+    text: MODULE_TRANSACTIONAL,
     icon: "area chart",
-    link: "/dashboard/visor"
+    link: "/dashboard/transactional"
 };
 
 
-const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
-const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
-const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
-const childrenMyPendingsMyDraftDocuments = { text: "Documentos en borrador", link: "/dashboard/myPendings/draftDocuments" };
-const childrenMyPendingsAssigned = { text: "Asignadas", link: "/dashboard/myPendings/assigned" };
+const childrenContactsGroupFavorito = {text: "Favoritos", link: "/dashboard/contact/favoriteGroup"};
+const childrenMyPendingsAEC = {text: "AEC", link: "/dashboard/myPendings/AEC"};
+const childrenMyPendingsMyTaks = {text: "Mis tareas", link: "/dashboard/myPendings/myTasks"};
+const childrenMyPendingsMyDraftDocuments = {
+    text: "Documentos en borrador",
+    link: "/dashboard/myPendings/draftDocuments"
+};
+const childrenMyPendingsAssigned = {text: "Asignadas", link: "/dashboard/myPendings/assigned"};
 
 const itemAlerts = {
     text: "Alertas",
@@ -67,10 +70,13 @@ const itemAlerts = {
     labelTextFather: 'Mis alertas',
     children: []
 };
-const childrenAlertPendingUpdate = { text: "Pendiente por actualizar", link: "/dashboard/alertClientPendingUpdate" };
-const childrenAlertPortExpiration = { text: "Vencimiento de cartera", link: "/dashboard/alertClientsPortfolioExpiration" };
-const childrenAlertCovenants = { text: "Covenants", link: "/dashboard/alertCovenants" };
-const childrenAlertBlackList = { text: "Listas de control", link: "/dashboard/alertBlackList" };
+const childrenAlertPendingUpdate = {text: "Pendiente por actualizar", link: "/dashboard/alertClientPendingUpdate"};
+const childrenAlertPortExpiration = {
+    text: "Vencimiento de cartera",
+    link: "/dashboard/alertClientsPortfolioExpiration"
+};
+const childrenAlertCovenants = {text: "Covenants", link: "/dashboard/alertCovenants"};
+const childrenAlertBlackList = {text: "Listas de control", link: "/dashboard/alertBlackList"};
 
 class MenuComponent extends Component {
     constructor(props) {
@@ -78,7 +84,7 @@ class MenuComponent extends Component {
     }
 
     getMenuListPermission(permissions) {
-        const { initialMenuPermissions } = this.props;
+        const {initialMenuPermissions} = this.props;
         let menuItems = [];
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
@@ -112,9 +118,11 @@ class MenuComponent extends Component {
         if (_.get(permissions, MODULE_CONTACTS)) {
             menuItems.push(itemContacts);
         }
-        if (_.get(permissions, MODULE_VISOR)) {
-            menuItems.push(itemVisor);
-        }
+        //@ahurtado - 25/09/2017
+        //Se comenta por que esto es una solución temporal, mientras terminan transaccional.
+        // if (_.get(permissions, MODULE_TRANSACTIONAL)) {
+        menuItems.push(itemTransactional);
+        // }
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
@@ -127,7 +135,7 @@ class MenuComponent extends Component {
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
         } else {
-            const {consultModulesAccess, showLoading } = this.props;
+            const {consultModulesAccess, showLoading} = this.props;
             showLoading(true, 'Cargando...');
             consultModulesAccess().then((data) => {
                 showLoading(false, '');
@@ -139,8 +147,8 @@ class MenuComponent extends Component {
 
     render() {
         return (
-            <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
-                <Header style={{ backgroundColor: '#00448c !important'}} textAlign='center'>
+            <div style={{backgroundColor: '#00448c !important', width: "100%", height: "100%"}}>
+                <Header style={{backgroundColor: '#00448c !important'}} textAlign='center'>
                     <Image src={ImageBrand} size='small'/>
                 </Header>
                 <MenuListComponent />
@@ -158,8 +166,8 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ menu }, ownerProps) {
-    return { menu };
+function mapStateToProps({menu}, ownerProps) {
+    return {menu};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuComponent);

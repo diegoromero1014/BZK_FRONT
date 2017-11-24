@@ -6,7 +6,6 @@ import { reduxForm } from 'redux-form';
 import SweetAlert from 'sweetalert-react';
 import { } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { validateResponse } from '../../actionsGlobal';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
 import ModalComponentRemoveMember from './modalComponentRemoveMember';
 

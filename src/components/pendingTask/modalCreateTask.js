@@ -17,16 +17,17 @@ import { MESSAGE_SAVE_DATA, EDITAR } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
-import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator } from '../myPendings/myTasks/actions';
+import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTask } from '../myPendings/myTasks/actions';
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { formatLongDateToDateWithNameMonth, htmlToText} from '../../actionsGlobal';
+import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateVisit"];
+const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
+let nameEntity;
 
 const validate = values => {
   const errors = {};
@@ -108,7 +109,8 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateVisit }, taskEdit, getMasterDataFields, getInfoTaskUser } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
+    updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
@@ -123,18 +125,20 @@ class ModalCreateTask extends Component {
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
-      if (task.dateVisit !== null && task.dateVisit !== '') {
-        dateVisit.onChange(formatLongDateToDateWithNameMonth(task.dateVisit));
+      if (task.dateEntity !== null && task.dateEntity !== '') {
+        nameEntity = task.nameEntity;
+        dateEntity.onChange(formatLongDateToDateWithNameMonth(task.dateEntity));
       }
       tarea.onChange(task.task);
     });
   }
 
   _closeViewOrEditTask() {
-    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal } = this.props;
+    const { isOpen, tasksByClientFindServer, tasksByUser, clearMyPendingPaginator, functCloseModal, updateUserNameTask } = this.props;
     this.setState({ isEditable: false, taskEdited: false, showErrtask: false });
     isOpen();
-    if (!_.isUndefined(functCloseModal) &&  !_.isNull(functCloseModal)) {
+    updateUserNameTask('');
+    if (!_.isUndefined(functCloseModal) && !_.isNull(functCloseModal)) {
       functCloseModal();
     } else {
       tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
@@ -186,9 +190,17 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit },
-      selectsReducer, reducerGlobal, handleSubmit } = this.props;
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
+      selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
+    var visibleEdit, editAction;
+    var userName = myPendingsReducer.get('userName');
+    if (actionEdit) {
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+    } else {
+      editAction = true;
+    }
+
     return (
       <form onSubmit={handleSubmit(this._handleEditTask)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
@@ -202,7 +214,6 @@ class ModalCreateTask extends Component {
                   <DateTimePickerUi
                     {...fecha}
                     culture='es'
-                    format={"DD/MM/YYYY"}
                     time={false}
                     disabled={this.state.isEditable ? '' : 'disabled'}
                   />
@@ -222,7 +233,8 @@ class ModalCreateTask extends Component {
                 </dt>
               </Col>
               <Col xs={12} md={3} ld={3}>
-                {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
+                {(_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) &&
+                  (visibleEdit || editAction)) &&
                   <button type="button" onClick={this._editTask} className={'btn btn-primary modal-button-edit'}
                     style={{ marginRight: '15px', float: 'right', marginTop: '35px' }}>
                     Editar <i className={'icon edit'}></i>
@@ -230,69 +242,69 @@ class ModalCreateTask extends Component {
                 }
               </Col>
             </Row>
-            <Row style={{padding: "0px 14px 0px 2px"}}>
+            <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <ComboBoxFilter
-                    name="inputParticipantBanc"
-                    labelInput="Ingrese un criterio de búsqueda..."
-                    {...responsable}
-                    parentId="dashboardComponentScroll"
-                    onChange={responsable.onChange}
-                    value={responsable.value}
-                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                    onSelect={val => this._updateValue(val)}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                    max="255"
-                  />
+                <ComboBoxFilter
+                  name="inputParticipantBanc"
+                  labelInput="Ingrese un criterio de búsqueda..."
+                  {...responsable}
+                  parentId="dashboardComponentScroll"
+                  onChange={responsable.onChange}
+                  value={responsable.value}
+                  onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                  onSelect={val => this._updateValue(val)}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                  max="255"
+                />
               </Col>
             </Row>
-            <Row style={{padding: "0px 14px 0px 2px"}}>
+            <Row style={{ padding: "0px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <RichText
-                    {...tarea}
-                    name="createTask"
-                    placeholder="Ingrese una tarea"
-                    style={{ width: '100%', height: '120px' }}
-                    readOnly={!this.state.isEditable}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
+                <RichText
+                  {...tarea}
+                  name="createTask"
+                  placeholder="Ingrese una tarea"
+                  style={{ width: '100%', height: '120px' }}
+                  readOnly={!this.state.isEditable}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                />
               </Col>
             </Row>
-            <Row style={{padding: "20px 14px 0px 2px"}}>
+            <Row style={{ padding: "20px 14px 0px 2px" }}>
               <Col xs={12} md={12} lg={12}>
                 <dt><span>Observaciones</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={12} lg={12}>
-                  <Textarea
-                    {...advance}
-                    name="advanceTask"
-                    type="text"
-                    max="1000"
-                    title="La longitud máxima de caracteres es de 1000"
-                    style={{ width: '100%', height: '120px' }}
-                    disabled={this.state.isEditable ? '' : 'disabled'}
-                  />
+                <Textarea
+                  {...advance}
+                  name="advanceTask"
+                  type="text"
+                  max="1000"
+                  title="La longitud máxima de caracteres es de 1000"
+                  style={{ width: '100%', height: '120px' }}
+                  disabled={this.state.isEditable ? '' : 'disabled'}
+                />
               </Col>
             </Row>
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          {dateVisit.value !== null && dateVisit.value !== '' ?
+          {dateEntity.value !== null && dateEntity.value !== '' ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
-                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de la visita: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateVisit.value}</span>
+                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de {nameEntity}: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateEntity.value}</span>
               </Col>
               <Col xs={6} md={2} lg={2}>
                 <button
@@ -335,20 +347,23 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     createPendingTaskNew,
     clearUserTask,
+    updateUserNameTask,
     tasksByClientFindServer,
     clearMyPendingPaginator,
     changeStateSaveData,
     getInfoTaskUser,
-    tasksByUser
+    tasksByUser,
+    validateValue,
   }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal }, { taskEdit }) {
+function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, myPendingsReducer }, { taskEdit }) {
   return {
     tasksByClient,
     selectsReducer,
     participants,
-    reducerGlobal
+    reducerGlobal,
+    myPendingsReducer
   }
 }
 

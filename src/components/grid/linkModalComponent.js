@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import {get} from 'lodash';
 import {contactsByFunctionOrTypeFindServer} from '../contactByFunctionOrType/actions';
 import {VIEW_CONTACT,NUMBER_RECORDS,VIEW_LINK_GROUP} from './constants';
-import ModalComponentGroup from '../contact/favoritesGroup/modalComponentGroup';
+import ModalComponentGroup from '../contact/favoritesGroup/createEdit/modalComponentGroup';
 
 
 class LinkModalComponent extends Component {

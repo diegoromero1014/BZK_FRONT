@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {toggleModalGroup} from './actions';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import ModalComponentGroup from './modalComponentGroup';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { toggleModalGroup } from './actions';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import ModalComponentGroup from './createEdit/modalComponentGroup';
 import Modal from 'react-modal';
-import {TITTLE_MODAL_GROUP} from './constants';
+import { TITTLE_MODAL_GROUP } from './constants';
 
 class ButtonCreateGroup extends Component {
 
@@ -19,20 +19,20 @@ class ButtonCreateGroup extends Component {
     }
 
     openModal() {
-        this.setState({modalIsOpen: true});
+        this.setState({ modalIsOpen: true });
     }
 
     closeModal() {
-        this.setState({modalIsOpen: false});
+        this.setState({ modalIsOpen: false });
     }
 
     render() {
-        const {groupId} = this.props;
+        const { groupId } = this.props;
         return (
             <Col xs={2} sm={2} md={1} lg={1}>
-                <button className="btn btn-primary" type="button" title="Crear grupo de favoritos" style={{float: "right"}}
-                        onClick={this.openModal}>
-                    <i className="add user icon" style={{color: "white",margin:'0em', fontSize : '1.2em'}}></i>
+                <button className="btn btn-primary" type="button" title="Crear grupo de favoritos" style={{ float: "right" }}
+                    onClick={this.openModal}>
+                    <i className="add user icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
@@ -41,16 +41,16 @@ class ButtonCreateGroup extends Component {
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
                                     id="myModalLabel">{TITTLE_MODAL_GROUP}</h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
-                                        role="close">
+                                    role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i
                                         className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <ModalComponentGroup groupId={groupId}/>
+                            <ModalComponentGroup groupId={groupId} />
 
                         </div>
                     </div>
@@ -66,7 +66,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({createContactReducer}, ownerProps) {
+function mapStateToProps({ createContactReducer }, ownerProps) {
     return {
         createContactReducer
     };

@@ -109,7 +109,7 @@ class ListPendingTaskComponent extends Component {
         key: "responsable"
       },
       {
-        title: "Asignado Por",
+        title: "Asignado por",
         key: "assignedBy"
       },
       {

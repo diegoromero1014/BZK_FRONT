@@ -1,4 +1,4 @@
-export const VERSION_DATE = "13/10/2017";
+export const VERSION_DATE = "17/11/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -12,6 +12,7 @@ export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 export const REQUEST_ERROR = 500;
 export const REQUEST_SUCCESS = 200;
+export const ERROR_MESSAGE_REQUEST_TITLE = 'Error cargando información';
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
 export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
@@ -89,6 +90,7 @@ export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
 export const ANALYST = "Analista";
+export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -109,7 +111,7 @@ export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
 export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
-export const MODULE_VISOR = "Transaccional";
+export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 
 export const TAB_INFO = 1;
@@ -174,3 +176,4 @@ export const STYLE_BUTTON_BOTTOM = {
 }
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;
+export const STR_YES = "Si";

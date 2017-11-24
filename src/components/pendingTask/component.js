@@ -46,7 +46,7 @@ class UserTaskComponent extends Component {
   }
 
   render() {
-    const { tasksByClient, reducerGlobal } = this.props;
+    const { tasksByClient, reducerGlobal, actionEdit } = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if (tasksByClient.get('rowCount') !== 0) {
@@ -66,7 +66,7 @@ class UserTaskComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                  <ButtonCreatePendingTaskComponent />
+                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit}/>
                 }
               </Col>
             </Row>
