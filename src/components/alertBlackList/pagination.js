@@ -16,11 +16,11 @@ class Pagination extends Component{
         changePage(page);
         const keyWordNameNit = alertBlackList.get('keywordNameNit');
         const keywordNameNitClient = alertBlackList.get('keywordNameNitClient');
+        const typeEntity = alertBlackList.get('typeEntity');
         const order = alertBlackList.get('order');
-        const statusCovenant = alertBlackList.get('statusCovenant');
         const columnOrder = alertBlackList.get('columnOrder');
         showLoading(true, 'Cargando..');
-        blackListFindServer(keyWordNameNit, keywordNameNitClient,statusCovenant, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        blackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);
             }
