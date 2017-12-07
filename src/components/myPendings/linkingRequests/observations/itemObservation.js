@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
 import { formatLongDateToDateWithNameMonthAndHour } from '../../../../actionsGlobal';
 
-class ModalObservation extends Component {
+class ItemObservation extends Component {
 
     constructor(props) {
         super(props);
@@ -31,4 +31,4 @@ class ModalObservation extends Component {
     }
 }
 
-export default ModalObservation;
+export default ItemObservation;
