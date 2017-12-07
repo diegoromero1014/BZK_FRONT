@@ -165,7 +165,6 @@ class ButtonLinkClientComponent extends Component {
 
     componentWillUnmount() {
         this.props.clearEntities();
-        this.resetForm('submitModalLinkClient');
     }
 
     render() {

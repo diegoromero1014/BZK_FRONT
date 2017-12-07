@@ -130,6 +130,7 @@ class ModalObservation extends Component {
                                 onChange={(e) => this.setState({ observation: e.target.value })}
                                 title="Ingrese las observaciones"
                                 style={{ width: '100%', height: '108px' }}
+                                max={500}
                             />
                         </Col>
                     </Row>
