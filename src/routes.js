@@ -33,6 +33,7 @@ import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
 import Transactional from "./components/transactional/transactionalComponent";
 import WalletShare from "./components/transactional/walletShareComponent";
+import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
 
 class App extends Component {
     render() {
@@ -73,6 +74,7 @@ export default (
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                     <Route path="AEC" component={AEC}></Route>
                     <Route path="assigned" component={Assigned}></Route>
+                    <Route path="linkingRequests" component={LinkingRequests}></Route>
                 </Route>
                 <Route path="alerts" component={ViewAlerts}></Route>
                 <Route path="alertBlackList" component={AlertBlackList}></Route>
