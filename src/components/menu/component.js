@@ -13,7 +13,8 @@ import {
     MODULE_CLIENTS,
     MODULE_CONTACTS,
     MODULE_MANAGERIAL_VIEW,
-    MODULE_TRANSACTIONAL
+    MODULE_TRANSACTIONAL,
+    MODULE_SHEDULER
 } from "../../constantsGlobal";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -34,6 +35,11 @@ const itemClients = {
     text: "Mis clientes",
     icon: "building",
     link: "/dashboard/clients",
+};
+const itemScheduler = {
+    text: "Scheduler",
+    icon: "building",
+    link: "/dashboard/sheduler",
 };
 const itemContacts = {
     text: "Contactos",
@@ -122,6 +128,7 @@ class MenuComponent extends Component {
         //Se comenta por que esto es una solución temporal, mientras terminan transaccional.
         // if (_.get(permissions, MODULE_TRANSACTIONAL)) {
         menuItems.push(itemTransactional);
+        menuItems.push(itemScheduler);
         // }
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
