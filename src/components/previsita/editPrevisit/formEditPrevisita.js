@@ -887,7 +887,6 @@ class FormEditPrevisita extends Component {
                     </Row>
                 </div>
                 }
-
                 <Row style={{padding: "20px 23px 20px 20px"}}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>

@@ -1,32 +1,21 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { NUMBER_RECORDS } from './constants';
-import { getAssigned, limitInf, changePage } from './actions';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
+import {
+  TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA
+} from '../../../constantsGlobal';
 import { validateResponse } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
 
-class paginationAssigned extends Component {
+class PaginationLinkingRequests extends Component {
 
   constructor(props) {
     super(props)
-    this._handleFindAssigned = this._handleFindAssigned.bind(this);
+    this._handleFind = this._handleFind.bind(this);
   }
 
-  _handleFindAssigned(limInf) {
-    const { getAssigned, assignedReducer, changeStateSaveData, swtShowMessage } = this.props;
-    var paginationAssigned = {
-      statusOfTask: assignedReducer.get('statusOfTask'),
-      clientNumberOrName: assignedReducer.get('clientNumberOrName'),
-      sortOrder: assignedReducer.get('sortOrder'),
-      homeworkTime: assignedReducer.get('homeworkTime'),
-      pageNum: limInf,
-      maxRows: NUMBER_RECORDS
-    };
+  _handleFind(limInf) {
+    const { getLinkRequests, changeStateSaveData, swtShowMessage } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
-    getAssigned(paginationAssigned).then((data) => {
+    getLinkRequests(limInf, NUMBER_RECORDS).then((data) => {
       changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -42,17 +31,17 @@ class paginationAssigned extends Component {
     var limInf = (page - 1);
     limitInf(limInf);
     changePage(page);
-    this._handleFindAssigned(limInf);
+    this._handleFind(limInf);
   }
 
   render() {
-    const { assignedReducer, config } = this.props;
-    var page = assignedReducer.get('page');
+    const { linkRequestsReducer } = this.props;
+    var page = linkRequestsReducer.get('page');
     var firstPage = 1;
     if (page > 4) {
       firstPage = page - 3;
     }
-    var rowCount = assignedReducer.get('rowCount');
+    var rowCount = linkRequestsReducer.get('rowCount');
     var lastPage = Math.ceil(rowCount / NUMBER_RECORDS);
     return (
       <div>
@@ -95,20 +84,4 @@ class paginationAssigned extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    getAssigned,
-    limitInf,
-    changePage,
-    changeStateSaveData,
-    swtShowMessage
-  }, dispatch);
-}
-
-function mapStateToProps({ assignedReducer }, ownerProps) {
-  return {
-    assignedReducer
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(paginationAssigned);
+export default PaginationLinkingRequests;

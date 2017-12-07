@@ -1,4 +1,4 @@
-export const VERSION_DATE = "27/11/2017";
+export const VERSION_DATE = "07/12/2017";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -113,6 +113,7 @@ export const MODULE_CUSTOMER_STORY = "Historial cliente";
 export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
+export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
