@@ -11,6 +11,8 @@ import ListLinkingRequests from './listLinkingRequests';
 import { getLinkRequests, limitInf, changePage } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import PaginationLinkingRequests from './paginationLinkingRequests';
+import { validatePermissionsByModule } from '../../../actionsGlobal';
+import { MODULE_CLIENTS } from '../../../constantsGlobal';
 
 class ComponentAssigned extends Component {
 
@@ -19,8 +21,9 @@ class ComponentAssigned extends Component {
     }
 
     componentWillMount() {
-        const { updateTitleNavBar } = this.props;
+        const { updateTitleNavBar, validatePermissionsByModule } = this.props;
         updateTitleNavBar("Solicitudes de vinculación");
+        validatePermissionsByModule(MODULE_CLIENTS);
     }
 
     render() {
@@ -72,7 +75,8 @@ function mapDispatchToProps(dispatch) {
         updateTitleNavBar,
         limitInf,
         changePage,
-        changeStateSaveData
+        changeStateSaveData,
+        validatePermissionsByModule
     }, dispatch);
 }
 
