@@ -13,10 +13,13 @@ BigCalendar.momentLocalizer(moment);
 class Sheduler extends Component {
     constructor(props) {
         super(props)
-        this.eventStyleGetter = this.eventStyleGetter.bind(this);
-        this.state = {
-            event: this.props.events
+        this.state={
+            modalIsOpen: false
         }
+        this.eventStyleGetter = this.eventStyleGetter.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+
     }
 
 
@@ -27,7 +30,7 @@ class Sheduler extends Component {
     eventStyleGetter() {
         const { events, start, end, isSelected } = this.props;
         console.log(events);
-        var backgroundColor = '#' + '00448C';
+        var backgroundColor = '#' + '000000';
         var color = '#' + 'fff'
         var style = {
             backgroundColor: backgroundColor,
@@ -39,6 +42,14 @@ class Sheduler extends Component {
         return {
             style: style
         };
+    }
+
+    openModal() {
+        this.setState({ modalIsOpen: true });
+    }
+
+    closeModal() {
+        this.setState({ modalIsOpen: false });
     }
 
     render() {
@@ -62,11 +73,28 @@ class Sheduler extends Component {
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
                         defaultDate={new Date(2017, 11, 4)}
-                        onSelectEvent={this._onExit}
-                        eventPropGetter={(this.eventStyleGetter)}
+                        onSelectEvent={this.openModal}
+                        eventPropGetter={events => ({className: events.isGrant? 'cls-blue': 'cls-red' })}
                     />
                 </div>
-                <Modal />
+                <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+                    <div className="modalBt4-dialog modalBt4-lg">
+                        <div className="modalBt4-content modal-content">
+                            <div className="modalBt4-header modal-header">
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Célula</h4>
+                                <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
+                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                                    <span className="sr-only">Close</span>
+                                </button>
+                            </div>
+/**
+ * lugar donde va el cuepo del modal
+ */
+
+
+                        </div>
+                    </div>
+                </Modal>
             </div>
         )
 
