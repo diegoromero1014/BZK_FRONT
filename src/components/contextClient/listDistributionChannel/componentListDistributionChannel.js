@@ -214,7 +214,6 @@ class ComponentListDistributionChannel extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>

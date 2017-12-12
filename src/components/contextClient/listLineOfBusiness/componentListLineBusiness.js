@@ -235,7 +235,6 @@ class ComponentListLineBusiness extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : null}
                                     />
                                 </div>
                             </Col>
@@ -318,4 +317,4 @@ function mapStateToProps({ clientInformacion }, ownerProps) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentListLineBusiness);
+    export default connect(mapStateToProps, mapDispatchToProps)(ComponentListLineBusiness);
