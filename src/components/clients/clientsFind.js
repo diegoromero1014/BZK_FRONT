@@ -29,7 +29,8 @@ import {
     SESSION_EXPIRED,
     TAB_RISKS_MANAGEMENT,
     TITLE_ERROR_SWEET_ALERT,
-    VISUALIZAR
+    VISUALIZAR,
+    valuesYesNo
 } from "../../constantsGlobal";
 import {validatePermissionsByModule, validateResponse} from "../../actionsGlobal";
 import {updateTabSeleted} from "../clientDetailsInfo/actions";
@@ -40,14 +41,16 @@ import Tooltip from "../toolTip/toolTipComponent";
 import SweetAlert from "sweetalert-react";
 import {showLoading} from '../loading/actions';
 
-const fields = ["team", "certificationStatus", "linkedStatus", "levelAEC"];
+const fields = ["team", "certificationStatus", "bussinesRol", "management", "decisionCenter", "levelAEC"];
 var levelsAEC;
 
 class ClientsFind extends Component {
     constructor(props) {
         super(props);
         this._onChangeTeam = this._onChangeTeam.bind(this);
-        this._onChangeLinkedStatus = this._onChangeLinkedStatus.bind(this);
+        this._onChangeBussinesRol = this._onChangeBussinesRol.bind(this);
+        this._onChangeManagement = this._onChangeManagement.bind(this);
+        this._onChangeDecisionCenter = this._onChangeDecisionCenter.bind(this);
         this._onChangeCertificationStatus = this._onChangeCertificationStatus.bind(this);
         this._onChangeLevelAEC = this._onChangeLevelAEC.bind(this);
         this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
@@ -72,7 +75,7 @@ class ClientsFind extends Component {
             clearClients();
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
-            getMasterDataFields([constants.CERTIFICATION_STATUS, constants.LINKED_STATUS, constants.AEC_LEVEL]).then((data) => {
+            getMasterDataFields([constants.CERTIFICATION_STATUS, constants.BUSINESS_ROL, constants.AEC_LEVEL]).then((data) => {
                 const lists = _.groupBy(data.payload.data.messageBody.masterDataDetailEntries, 'field');
                 const aecLevel = lists.aecLevel;
                 aecLevel.push({
@@ -140,9 +143,25 @@ class ClientsFind extends Component {
         }
     }
 
-    _onChangeLinkedStatus(val) {
-        const { fields: { linkedStatus } } = this.props;
-        linkedStatus.onChange(val);
+    _onChangeBussinesRol(val) {
+        const { fields: { bussinesRol } } = this.props;
+        bussinesRol.onChange(val);
+        if (val) {
+            this._handleClientsFind();
+        }
+    }
+
+    _onChangeManagement(val) {
+        const { fields: { management } } = this.props;
+        management.onChange(val);
+        if (val) {
+            this._handleClientsFind();
+        }
+    }
+
+    _onChangeDecisionCenter(val) {
+        const { fields: { decisionCenter } } = this.props;
+        decisionCenter.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
@@ -170,11 +189,12 @@ class ClientsFind extends Component {
     }
 
     _handleClientsFind() {
-        const { fields: { certificationStatus, team, linkedStatus, levelAEC }, showLoading,
+        const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
 
-        clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, linkedStatus.value, levelAEC.value).then((data) => {
+        clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, bussinesRol.value, management.value, 
+            decisionCenter.value, levelAEC.value).then((data) => {
             showLoading(false, "");
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -223,7 +243,7 @@ class ClientsFind extends Component {
     }
 
     render() {
-        const { fields: { team, certificationStatus, linkedStatus, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
+        const { fields: { team, certificationStatus, bussinesRol, management, decisionCenter, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
         const { clientR, selectsReducer } = this.props;
         var countClients = clientR.get('countClients');
         var status = clientR.get('status');
@@ -231,11 +251,26 @@ class ClientsFind extends Component {
         return (
             <div>
                 <form>
-                    <Row style={{ marginTop: "15px" }}>
-                        <Col xs={12} sm={12} md={6} lg={8} style={{ width: '100%' }}>
-                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} linkingStatusus={linkedStatus.value} levelAEC={levelAEC.value} />
+                    <Row style={{ marginTop: "15px", marginLeft: '10px'}}>
+                        <Col xs={12} sm={12} md={6} lg={6}>
+                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRol={bussinesRol.value} 
+                                management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} />
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                        <Col xs={7} sm={7} md={4} lg={4}>
+                            <ComboBox
+                                name="celula"
+                                labelInput="Célula"
+                                {...team}
+                                onChange={val => this._onChangeTeam(val)}
+                                value={team.value}
+                                onBlur={team.onBlur}
+                                valueProp={'id'}
+                                textProp={'description'}
+                                searchClient={'client'}
+                                data={selectsReducer.get('teamValueObjects')}
+                            />
+                        </Col>
+                        <Col xs={4} sm={12} md={2} lg={2}>
                             <Tooltip text="Limpiar búsqueda">
                                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                     style={{ marginLeft: "17px" }}>
@@ -254,35 +289,47 @@ class ClientsFind extends Component {
                             }
                         </Col>
                     </Row>
-                    <Row style={{ borderBottom: "2px solid #D9DEDF", paddingBottom: "17px", paddingLeft: "17px", paddingRight: "17px" }}>
-                        <Col xs={12} sm={12} md={3} lg={3} style={{ width: '100%' }}>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF", paddingBottom: "20px", marginLeft: '10px' }}>
+                        <Col xs={4} sm={4} md={2} lg={2}>
                             <ComboBox
-                                name="celula"
-                                labelInput="Célula"
-                                {...team}
-                                onChange={val => this._onChangeTeam(val)}
-                                value={team.value}
-                                onBlur={team.onBlur}
-                                valueProp={'id'}
-                                textProp={'description'}
-                                searchClient={'client'}
-                                data={selectsReducer.get('teamValueObjects')}
-                            />
-                        </Col>
-                        <Col xs={12} sm={12} md={3} lg={3} style={{ width: '100%' }}>
-                            <ComboBox
-                                labelInput="Estado de la vinculación"
-                                {...linkedStatus}
-                                onChange={val => this._onChangeLinkedStatus(val)}
-                                value={linkedStatus.value}
-                                onBlur={linkedStatus.onBlur}
+                                labelInput="Rol de negocio"
+                                {...bussinesRol}
+                                onChange={val => this._onChangeBussinesRol(val)}
+                                value={bussinesRol.value}
+                                onBlur={bussinesRol.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 searchClient={'client'}
-                                data={selectsReducer.get(constants.LINKED_STATUS) || []}
+                                data={selectsReducer.get(constants.BUSINESS_ROL) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={3} style={{ width: '100%' }}>
+                        <Col xs={4} sm={4} md={2} lg={2}>
+                            <ComboBox
+                                labelInput="Gerenciamiento"
+                                {...management}
+                                onChange={val => this._onChangeManagement(val)}
+                                value={management.value}
+                                onBlur={management.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                searchClient={'client'}
+                                data={valuesYesNo}
+                            />
+                        </Col>
+                        <Col xs={4} sm={4} md={2} lg={2}>
+                            <ComboBox
+                                labelInput="Centro de decisión"
+                                {...decisionCenter}
+                                onChange={val => this._onChangeDecisionCenter(val)}
+                                value={decisionCenter.value}
+                                onBlur={decisionCenter.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                searchClient={'client'}
+                                data={valuesYesNo}
+                            />
+                        </Col>
+                        <Col xs={4} sm={4} md={2} lg={2}>
                             <ComboBox
                                 name="certificationStatus"
                                 labelInput="Estado certificación"
@@ -296,7 +343,7 @@ class ClientsFind extends Component {
                                 data={selectsReducer.get(constants.CERTIFICATION_STATUS) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={3} style={{ width: '100%' }}>
+                        <Col xs={4} sm={4} md={2} lg={2}>
                             <ComboBox
                                 name="levelAEC"
                                 labelInput="Nivel AEC"
@@ -347,7 +394,8 @@ class ClientsFind extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
-                        <Pagination valueTeam={team.value} valueCertification={certificationStatus.value} />
+                        <Pagination valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRolValue={bussinesRol.value}
+                            managementValue={management.value} decisionCenterValue={decisionCenter.value} levelAECValue={levelAEC.value}/>
                     </Col>
                 </Row>
                 <SweetAlert

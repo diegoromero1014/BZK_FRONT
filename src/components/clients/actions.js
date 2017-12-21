@@ -5,7 +5,7 @@ import {
 } from './constants';
 import axios from 'axios';
 
-export function clientsFindServer(keyword, limInf, limSup, certificationStatus, teamId, linkingStatus, levelAEC) {
+export function clientsFindServer(keyword, limInf, limSup, certificationStatus, teamId, bussinesRol, management, decisionCenter, levelAEC) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -25,7 +25,9 @@ export function clientsFindServer(keyword, limInf, limSup, certificationStatus, 
             "limSup": limSup,
             "certificationStatus": certificationStatus,
             "teamId": teamId,
-            "linkingStatusus": linkingStatus,
+            "bussinesRol": bussinesRol,
+            "management": management,
+            "decisionCenter": decisionCenter,
             "levelAEC": levelAEC
         }
     };

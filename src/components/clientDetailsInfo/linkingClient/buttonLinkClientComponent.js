@@ -7,13 +7,11 @@ import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
 import LinkEntities from './linkEntitiesComponent/linkEntities';
 import Modal from 'react-modal';
-import {isEmpty, isEqual, get, find} from 'lodash';
+import {isEmpty, isEqual, get, isNil} from 'lodash';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import {setEntities, clearEntities, saveLinkClient} from './linkEntitiesComponent/actions';
 import {updateErrorsLinkEntities} from '../../clientDetailsInfo/actions';
 import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS} from './linkEntitiesComponent/constants';
-const fields = ["observationTrader"];
-const errors = {};
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
 import {FILTER_TYPE_LBO_ID} from '../../selectsComponent/constants';
 import {getMasterDataFields} from '../../selectsComponent/actions';
@@ -21,6 +19,9 @@ import {updateFieldInfoClient} from '../../clientInformation/actions';
 import {consultStateBlackListClient, updateValuesBlackList} from './actions';
 import {showLoading} from '../../loading/actions';
 import {consultInfoClient} from '../../clientInformation/actions';
+
+const fields = ["observationTrader"];
+const errors = {};
 
 const validate = (values) => {
     return errors;
@@ -43,9 +44,8 @@ class ButtonLinkClientComponent extends Component {
         this.setState({modalIsOpen: true});
         const {
             consultStateBlackListClient, infoClient,
-            showLoading, swtShowMessage, setEntities,
-            getMasterDataFields, selectsReducer,
-            updateValuesBlackList,consultInfoClient
+            showLoading, swtShowMessage,
+            updateValuesBlackList, consultInfoClient
         } = this.props;
         const jsonClientInfo = {
             customerId: get(infoClient, 'clientIdNumber'),
@@ -55,18 +55,18 @@ class ButtonLinkClientComponent extends Component {
         this._getListEntities();
         updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
         /** Se realiza el llamado de listas de control uno a uno para la vinculación **/
-        showLoading(true,'Cargando...');
+        showLoading(true, 'Cargando...');
         consultInfoClient();
-        consultStateBlackListClient(jsonClientInfo).then((data)=>{
-            showLoading(false,'');
-            if(!isEqual(get(data,'payload.data.status'),200)){
+        consultStateBlackListClient(jsonClientInfo).then((data) => {
+            showLoading(false, '');
+            if (!isEqual(get(data, 'payload.data.status'), 200)) {
                 updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
                 swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
             }
-        },(reason) => {
+        }, (reason) => {
             updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
-            console.log("reason consultState BlackListClient ",reason);
-            showLoading(false,'');
+            console.log("reason consultState BlackListClient ", reason);
+            showLoading(false, '');
             swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
         });
     }
@@ -78,10 +78,10 @@ class ButtonLinkClientComponent extends Component {
 
     _handleSaveLinkingClient() {
         const {
-            fields:{observationTrader}, infoClient,
+            fields: {observationTrader}, infoClient,
             linkEntitiesClient, updateErrorsLinkEntities,
             swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
-            message, level,consultInfoClient
+            message, level, consultInfoClient
         } = this.props;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
@@ -123,6 +123,7 @@ class ButtonLinkClientComponent extends Component {
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
+                "idLinkRequest": infoClient.linkingRequestId,
                 "observationTrader": observationTrader.value,
                 "linkEntity": newListEntities.toArray(),
                 "levelBlackList": level,
@@ -146,10 +147,14 @@ class ButtonLinkClientComponent extends Component {
     }
 
     _getListEntities() {
-        const {infoClient, clearEntities,setEntities} = this.props;
+        const {infoClient, clearEntities, setEntities} = this.props;
         const listLinkEntitiesClient = get(infoClient, 'linkEntity', []);
         clearEntities();
-        setEntities(listLinkEntitiesClient);
+        if (isNil(listLinkEntitiesClient)) {
+            setEntities([]);
+        } else {
+            setEntities(listLinkEntitiesClient);
+        }
     }
 
     componentWillMount() {
@@ -160,15 +165,16 @@ class ButtonLinkClientComponent extends Component {
 
     componentWillUnmount() {
         this.props.clearEntities();
+        this.resetForm('submitModalLinkClient');
     }
 
     render() {
-        const {infoClient, fields:{observationTrader}, handleSubmit, message, level} = this.props;
+        const {infoClient, fields: {observationTrader}, handleSubmit, message, level} = this.props;
         const paddingButtons = {paddingRight: '7px', paddingLeft: '7px'};
         return (
             <Col style={paddingButtons}>
                 <button className="btn" onClick={this.openModal}>
-                    <span >Vincular</span></button>
+                    <span>Vincular</span></button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onRequestClose={this.closeModal}
@@ -253,7 +259,7 @@ class ButtonLinkClientComponent extends Component {
                                         </div>
                                     </Col>
                                 </Row>
-                                <LinkEntities />
+                                <LinkEntities/>
                                 <Row style={{padding: "20px 10px 10px 0px"}}>
                                     <Col xs={12} md={12} lg={12}>
                                         <div style={{
@@ -358,31 +364,17 @@ function mapStateToProps({linkEntitiesClient, tabReducer, selectsReducer, blackL
     const isValidLinkEntities = !tabReducer.get('errorEditLinkEntitiesClient');
     const message = _.isEmpty(blackListClient.get('message')) ? '' : blackListClient.get('message');
     const level = _.isEmpty(blackListClient.get('level')) ? '' : blackListClient.get('level');
-    if (isEmpty(get(infoClient, 'observationTrader', null))) {
-        return {
-            message,
-            level,
-            selectsReducer,
-            linkEntitiesClient,
-            isValidLinkEntities,
-            infoClient,
-            initialValues: {
-                observationTrader: ''
-            }
-        };
-    } else {
-        return {
-            message,
-            level,
-            selectsReducer,
-            linkEntitiesClient,
-            isValidLinkEntities,
-            infoClient,
-            initialValues: {
-                observationTrader: get(infoClient, 'observationTrader', null)
-            }
-        };
-    }
+    return {
+        message,
+        level,
+        selectsReducer,
+        linkEntitiesClient,
+        isValidLinkEntities,
+        infoClient,
+        initialValues: {
+            observationTrader: ''
+        }
+    };
 
 }
 
