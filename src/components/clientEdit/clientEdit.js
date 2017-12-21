@@ -371,6 +371,23 @@ const validate = (values, props) => {
         }
     }
 
+    //Valido que el cliente tenga ciudad de origen de los recursos
+    if (values.originCityResource) {
+        if (REGEX_SIMPLE_XSS.test(values.originCityResource)) {
+            errors.originCityResource = VALUE_XSS_INVALID;
+            errorScrollTop = true;
+        } else {
+            errors.originCityResource = null;
+        }
+    }
+
+    if (values.detailNonOperatingIncome) {
+        if (REGEX_SIMPLE_XSS.test(values.detailNonOperatingIncome)) {
+            errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
+            errorScrollTop = true;
+        }
+    }
+
     //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
         if (values.taxNature === null || values.taxNature === undefined || values.taxNature === '') {
@@ -390,6 +407,9 @@ const validate = (values, props) => {
             if (numeral(values.nonOperatingIncome).format('0') > 0) {
                 if (values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') {
                     errors.detailNonOperatingIncome = OPTION_REQUIRED;
+                    errorScrollTop = true;
+                } else if (REGEX_SIMPLE_XSS.test(values.detailNonOperatingIncome)) {
+                    errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
                     errorScrollTop = true;
                 } else {
                     errors.detailNonOperatingIncome = null;
