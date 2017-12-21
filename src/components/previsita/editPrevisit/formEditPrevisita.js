@@ -18,12 +18,13 @@ import {
     SAVE_PUBLISHED,
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
-    TITLE_OTHERS_PARTICIPANTS
+    TITLE_OTHERS_PARTICIPANTS,
+    MESSAGE_ERROR
 } from "../../../constantsGlobal";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import { createPrevisit, detailPrevisit, pdfDescarga } from "../actions";
+import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
@@ -34,6 +35,7 @@ import RichText from "../../richText/richTextComponent";
 import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
 import { showLoading } from "../../loading/actions";
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -352,7 +354,7 @@ class FormEditPrevisita extends Component {
     }
 
     _submitCreatePrevisita() {
-        const { participants, createPrevisit, changeStateSaveData, id } = this.props;
+        const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
@@ -520,7 +522,7 @@ class FormEditPrevisita extends Component {
                     "endTime": this.state.durationPreVisit
                 };
 
-                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x'))).then((data) => {
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x'), this.state.durationPreVisit)).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response.allowClientPreVisit) {
@@ -1106,11 +1108,13 @@ function mapDispatchToProps(dispatch) {
         detailPrevisit,
         addParticipant,
         createPrevisit,
+        validateDatePreVisit,
         consultParameterServer,
         changeStateSaveData,
         nonValidateEnter,
         showLoading,
-        addListParticipant
+        addListParticipant,
+        swtShowMessage
     }, dispatch);
 }
 
