@@ -184,6 +184,15 @@ export function formatLongDateToDateWithNameMonth(date) {
     }
 }
 
+export function formatLongDateToDateWithNameMonthAndHour(date) {
+    if (date !== null && date !== '' && date !== undefined) {
+        let dateTimestamp = moment(date, "x").locale('es');
+        return dateTimestamp.format("DD") + " " + dateTimestamp.format("MMM") + " " + dateTimestamp.format("YYYY") + ", " + dateTimestamp.format("hh:mm a");
+    } else {
+        return '';
+    }
+}
+
 export function getStrDateByDateFormat(date, format) {
     const formatDefault = _.isEmpty(format) ? constants.DATE_FORMAT : format;
     return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);

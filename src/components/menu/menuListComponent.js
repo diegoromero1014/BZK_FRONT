@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
-import {Menu} from "semantic-ui-react";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { Menu } from "semantic-ui-react";
 import MenuListFatherComponent from "./menuListFatherComponent";
 import MenuItem from "./menuItem";
-import {connect} from "react-redux";
-import {getAlertsByUser} from "../alerts/actions";
+import { connect } from "react-redux";
+import { getAlertsByUser } from "../alerts/actions";
 import _ from "lodash";
-import {initialMenuPermissions} from "./actions";
+import { initialMenuPermissions } from "./actions";
 
 
 const menuItemLogOut = [
@@ -34,7 +34,7 @@ class MenuListComponent extends Component {
 
         } else {
             return <MenuListFatherComponent
-                key={_.uniqueId("MenuItem_")+idx}
+                key={_.uniqueId("MenuItem_") + idx}
                 iconClassName={item.icon}
                 labelText={item.text}
                 labelTextFather={item.labelTextFather}
@@ -46,7 +46,7 @@ class MenuListComponent extends Component {
     }
 
     render() {
-        const {menu } = this.props;
+        const { menu } = this.props;
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
         const btnLogoutStyle = { position: 'absolute', bottom: '0px', width: '100%', backgroundColor: "black" };
         const userNameLogged = _.toLower(window.sessionStorage.getItem('userName'));

@@ -16,8 +16,8 @@ class Pagination extends Component{
         changePage(page);
         const keyWordNameNit = alertBlackList.get('keywordNameNit');
         const keywordNameNitClient = alertBlackList.get('keywordNameNitClient');
-        const typeEntity = alertBlackList.get('typeEntity');
         const order = alertBlackList.get('order');
+        const typeEntity = alertBlackList.get('typeEntity');
         const columnOrder = alertBlackList.get('columnOrder');
         showLoading(true, 'Cargando..');
         blackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
