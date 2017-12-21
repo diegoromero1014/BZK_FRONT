@@ -21,7 +21,7 @@ import {
     TITLE_OTHERS_PARTICIPANTS,
     MESSAGE_ERROR
 } from "../../../constantsGlobal";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit } from "../actions";
