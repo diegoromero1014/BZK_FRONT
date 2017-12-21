@@ -1,35 +1,36 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../../globalComponents/actions';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { reduxForm } from 'redux-form';
+import { bindActionCreators } from 'redux';
+import { redirectUrl } from '../../globalComponents/actions';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {PREVISIT_TYPE} from '../../selectsComponent/constants';
-import {consultDataSelect, consultList, getMasterDataFields} from '../../selectsComponent/actions';
+import { PREVISIT_TYPE } from '../../selectsComponent/constants';
+import { consultDataSelect, consultList, getMasterDataFields } from '../../selectsComponent/actions';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA
+    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR
 } from '../../../constantsGlobal';
-import {LAST_PREVISIT_REVIEW} from '../../../constantsParameters';
-import {consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText} from '../../../actionsGlobal';
-import {PROPUEST_OF_BUSINESS} from '../constants';
-import {createPrevisit} from '../actions';
+import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse } from '../../../actionsGlobal';
+import { PROPUEST_OF_BUSINESS } from '../constants';
+import { createPrevisit, validateDatePreVisit } from '../actions';
 import Challenger from '../../methodologyChallenger/component';
-import {changeStateSaveData} from '../../dashboard/actions';
-import {MENU_CLOSED} from '../../navBar/constants';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { MENU_CLOSED } from '../../navBar/constants';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import $ from 'jquery';
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -76,6 +77,8 @@ class FormPrevisita extends Component {
             typePreVisitError: null,
             datePreVisit: new Date(),
             datePreVisitError: null,
+            durationPreVisit: "",
+            durationPreVisitError: false,
             lugarPrevisit: "",
             lugarPrevisitError: false,
             showConfirm: false,
@@ -122,6 +125,7 @@ class FormPrevisita extends Component {
         this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
         this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
+        this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -159,12 +163,12 @@ class FormPrevisita extends Component {
 
     _closeCancelConfirmChanType() {
         contollerErrorChangeType = false;
-        this.setState({showConfirmChangeTypeVisit: false});
+        this.setState({ showConfirmChangeTypeVisit: false });
     }
 
     _closeConfirmChangeType() {
         contollerErrorChangeType = false;
-        const {selectsReducer} = this.props;
+        const { selectsReducer } = this.props;
         idTypeVisitAuxTwo = idTypeVisitAux;
         const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
@@ -215,6 +219,13 @@ class FormPrevisita extends Component {
         this.setState({
             lugarPrevisit: value,
             lugarPrevisitError: null
+        });
+    }
+
+    _changeDurationPreVisit(value) {
+        this.setState({
+            durationPreVisit: value,
+            durationPreVisitError: null
         });
     }
 
@@ -304,16 +315,16 @@ class FormPrevisita extends Component {
     _onCloseButton() {
         message = "¿Está seguro que desea salir de la pantalla de creación de previsita?";
         titleMessage = "Confirmación salida";
-        this.setState({showConfirm: true});
+        this.setState({ showConfirm: true });
     }
 
     _closeConfirmCloseVisit() {
-        this.setState({showConfirm: false});
+        this.setState({ showConfirm: false });
         redirectUrl("/dashboard/clientInformation");
     }
 
     _submitCreatePrevisita() {
-        const {participants, createPrevisit, changeStateSaveData} = this.props;
+        const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
         var errorInForm = false;
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
@@ -332,6 +343,14 @@ class FormPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
+        }
+        if (typeButtonClick === SAVE_PUBLISHED) {
+            if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+                errorInForm = true;
+                this.setState({
+                    durationPreVisitError: "Debe ingresar un valor"
+                });
+            }
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -468,41 +487,55 @@ class FormPrevisita extends Component {
                     "emotionalImpact": this.state.impacto,
                     "newWay": this.state.nuevoModo,
                     "ourSolution": this.state.nuestraSolucion,
-                    "documentStatus": typeButtonClick
+                    "documentStatus": typeButtonClick,
+                    "endTime": this.state.durationPreVisit
                 }
-                changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                createPrevisit(previsitJson).then((data) => {
-                    changeStateSaveData(false, "");
-                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                        redirectUrl("/login");
-                    } else {
-                        if ((_.get(data, 'payload.data.status') === 200)) {
-                            typeMessage = "success";
-                            titleMessage = "Creación previsita";
-                            message = "Señor usuario, la previsita se creó de forma exitosa.";
-                            this.setState({showMessageCreatePreVisit: true});
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
+                    if (validateResponse(data)) {
+                        const response = _.get(data, 'payload.data.data', false);
+                        if (!response.allowClientPreVisit) {
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo cliente, por favor complemente el informe ya creado o modifique la fecha.');
                         } else {
-                            typeMessage = "error";
-                            titleMessage = "Creación previsita";
-                            message = "Señor usuario, ocurrió un error creando la previsita.";
-                            this.setState({showMessageCreatePreVisit: true});
+                            if (!response.allowUserPreVisit) {
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo usuario, por favor complemente el informe ya creado o modifique la fecha.');
+                            } else {
+                                changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                                createPrevisit(previsitJson).then((data) => {
+                                    changeStateSaveData(false, "");
+                                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                                        redirectUrl("/login");
+                                    } else {
+                                        if ((_.get(data, 'payload.data.status') === 200)) {
+                                            typeMessage = "success";
+                                            titleMessage = "Creación previsita";
+                                            message = "Señor usuario, la previsita se creó de forma exitosa.";
+                                            this.setState({ showMessageCreatePreVisit: true });
+                                        } else {
+                                            typeMessage = "error";
+                                            titleMessage = "Creación previsita";
+                                            message = "Señor usuario, ocurrió un error creando la previsita.";
+                                            this.setState({ showMessageCreatePreVisit: true });
+                                        }
+                                    }
+                                }, (reason) => {
+                                    changeStateSaveData(false, "");
+                                    typeMessage = "error";
+                                    titleMessage = "Creación previsita";
+                                    message = "Señor usuario, ocurrió un error creando la previsita.";
+                                    this.setState({ showMessageCreateVisit: true });
+                                });
+                            }
                         }
                     }
-                }, (reason) => {
-                    changeStateSaveData(false, "");
-                    typeMessage = "error";
-                    titleMessage = "Creación previsita";
-                    message = "Señor usuario, ocurrió un error creando la previsita.";
-                    this.setState({showMessageCreateVisit: true});
                 });
             } else {
-                this.setState({showErrorSavePreVisit: true});
+                this.setState({ showErrorSavePreVisit: true });
             }
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
             message = "Señor usuario, debe ingresar todos los campos obligatorios.";
-            this.setState({showMessageCreatePreVisit: true});
+            this.setState({ showMessageCreatePreVisit: true });
         }
     }
 
@@ -511,7 +544,7 @@ class FormPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const {nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer} = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer } = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         valueTypePrevisit = null;
@@ -531,35 +564,35 @@ class FormPrevisita extends Component {
 
     render() {
         const {
-            fields: {acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
+            fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
             clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar
         } = this.props;
 
         return (
             <form onSubmit={handleSubmit(this._submitCreatePrevisita)}
-                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                  className="my-custom-tab"
-                  style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
-                <span style={{marginLeft: "20px"}}>Los campos marcados con asterisco (<span
-                    style={{color: "red"}}>*</span>) son obligatorios.</span>
-                <Row style={{padding: "10px 10px 20px 20px"}}>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+                className="my-custom-tab"
+                style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+                <span style={{ marginLeft: "20px" }}>Los campos marcados con asterisco (<span
+                    style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="browser icon" style={{fontSize: "20px"}}/>
-                            <span style={{fontSize: "20px"}}> Datos de visita</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="browser icon" style={{ fontSize: "20px" }} />
+                            <span style={{ fontSize: "20px" }}> Datos de visita</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <div style={{paddingRight: "15px"}}>
+                        <div style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
+                                <span>Tipo de visita (</span><span style={{ color: "red" }}>*</span>)
                                 <ToolTip text={titleMessageTypePrevisit}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </dt>
                             <ComboBox
@@ -577,9 +610,9 @@ class FormPrevisita extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
+                    <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                            <span>Fecha - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <DateTimePickerUi
@@ -590,12 +623,27 @@ class FormPrevisita extends Component {
                                 touched={true}
                                 error={this.state.datePreVisitError}
                                 onChange={val => this._changeDatePreVisit(val)}
-                                onBlur={val => this._changeDatePreVisitOnBlur(val)}/>
+                                onBlur={val => this._changeDatePreVisitOnBlur(val)} />
+                        </dt>
+                    </Col>
+                    <Col xs={6} md={3} lg={3} >
+                        <dt>
+                            <span>Duración previsita (</span><span style={{ color: "red" }}>*</span>)
+                        </dt>
+                        <dt>
+                            <Input
+                                name="txtDuracion"
+                                value={this.state.durationPreVisit}
+                                touched={true}
+                                error={this.state.durationPreVisitError}
+                                type="number"
+                                onChange={val => this._changeDurationPreVisit(val)}
+                            />
                         </dt>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <dt><span>Lugar (</span><span style={{color: "red"}}>*</span>)</dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt><span>Lugar (</span><span style={{ color: "red" }}>*</span>)</dt>
+                        <dt style={{ marginRight: "17px" }}>
                             <Input
                                 value={this.state.lugarPrevisit}
                                 touched={true}
@@ -610,65 +658,65 @@ class FormPrevisita extends Component {
                     </Col>
                 </Row>
 
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs>
-                        <div className="ui top attached tabular menu" style={{width: "100%"}}>
-                            <a className={`${this.state.activeItemTabClient} item`} style={{width: "33%"}}
-                               data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
+                        <div className="ui top attached tabular menu" style={{ width: "100%" }}>
+                            <a className={`${this.state.activeItemTabClient} item`} style={{ width: "33%" }}
+                                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
                                 reunión por parte del cliente
                                 <ToolTip text={TITLE_CLIENT_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </a>
-                            <a className={`${this.state.activeItemTabBanc} item`} style={{width: "40%"}}
-                               data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
+                            <a className={`${this.state.activeItemTabBanc} item`} style={{ width: "40%" }}
+                                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
                                 reunión por parte del Grupo Bancolombia
                                 <ToolTip text={TITLE_BANC_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </a>
-                            <a className={`${this.state.activeItemTabOther} item`} style={{width: "26%"}}
-                               data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
+                            <a className={`${this.state.activeItemTabOther} item`} style={{ width: "26%" }}
+                                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
                                 reunión
                                 <ToolTip text={TITLE_OTHERS_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </ToolTip>
                             </a>
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`}
-                             data-tab="first">
+                            data-tab="first">
                             <ParticipantesCliente />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`}
-                             data-tab="second">
+                            data-tab="second">
                             <ParticipantesBancolombia />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`}
-                             data-tab="third">
+                            data-tab="third">
                             <ParticipantesOtros />
                         </div>
                     </Col>
                 </Row>
 
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span
-                                style={{color: "red"}}>*</span>)</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Objetivo de la reunión (<span
+                                style={{ color: "red" }}>*</span>)</span>
                             <ToolTip text={titleMessageTarget}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </ToolTip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="targetPrevisit"
@@ -677,74 +725,74 @@ class FormPrevisita extends Component {
                             onChange={val => this._changeTargetPrevisit(val)}
                             error={this.state.targetPrevisitError}
                             title="Ingrese el objetivo de la reunión"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                         />
                     </Col>
                 </Row>
 
                 {valueTypePrevisit === PROPUEST_OF_BUSINESS &&
-                <div>
-                    <Row style={{padding: "10px 10px 20px 20px"}}>
-                        <Col xs={12} md={12} lg={12}>
-                            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                                <div className="tab-content-row"
-                                     style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                                <i className="browser icon" style={{fontSize: "20px"}}/>
-                                <span style={{fontSize: "20px"}}> Metodología Challenger </span>
-                                <ToolTip text={titleMethodologyChallenger}>
-                                    <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
-                                </ToolTip>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row style={{padding: "0px 23px 20px 20px"}}>
-                        <Col xs={12} md={12} lg={12}>
-                            <Challenger
-                                acondicionamiento={this.state.acondicionamiento}
-                                acondicionamientoTouch={this.state.acondicionamientoTouch}
-                                acondicionamientoError={this.state.acondicionamientoError}
-                                onChangeAcondicionamiento={val => this._changeAcondicionamiento(val)}
-                                replanteamiento={this.state.replanteamiento}
-                                replanteamientoTouch={this.state.replanteamientoTouch}
-                                replanteamientoError={this.state.replanteamientoError}
-                                onChangeReplanteamiento={val => this._changeReplanteamiento(val)}
-                                ahogamiento={this.state.ahogamiento}
-                                ahogamientoTouch={this.state.ahogamientoTouch}
-                                ahogamientoError={this.state.ahogamientoError}
-                                onChangeAhogamiento={val => this._changeAhogamiento(val)}
-                                impacto={this.state.impacto}
-                                impactoTouch={this.state.impactoTouch}
-                                impactoError={this.state.impactoError}
-                                onChangeImpacto={val => this._changeImpacto(val)}
-                                nuevoModo={this.state.nuevoModo}
-                                nuevoModoTouch={this.state.nuevoModoTouch}
-                                nuevoModoError={this.state.nuevoModoError}
-                                onChangeNuevoModo={val => this._changeNuevoModo(val)}
-                                nuestraSolucion={this.state.nuestraSolucion}
-                                nuestraSolucionTouch={this.state.nuestraSolucionTouch}
-                                nuestraSolucionError={this.state.nuestraSolucionError}
-                                onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
-                            />
-                        </Col>
-                    </Row>
-                </div>
+                    <div>
+                        <Row style={{ padding: "10px 10px 20px 20px" }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                    <div className="tab-content-row"
+                                        style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                    <i className="browser icon" style={{ fontSize: "20px" }} />
+                                    <span style={{ fontSize: "20px" }}> Metodología Challenger </span>
+                                    <ToolTip text={titleMethodologyChallenger}>
+                                        <i className="help circle icon blue"
+                                            style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
+                                    </ToolTip>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row style={{ padding: "0px 23px 20px 20px" }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <Challenger
+                                    acondicionamiento={this.state.acondicionamiento}
+                                    acondicionamientoTouch={this.state.acondicionamientoTouch}
+                                    acondicionamientoError={this.state.acondicionamientoError}
+                                    onChangeAcondicionamiento={val => this._changeAcondicionamiento(val)}
+                                    replanteamiento={this.state.replanteamiento}
+                                    replanteamientoTouch={this.state.replanteamientoTouch}
+                                    replanteamientoError={this.state.replanteamientoError}
+                                    onChangeReplanteamiento={val => this._changeReplanteamiento(val)}
+                                    ahogamiento={this.state.ahogamiento}
+                                    ahogamientoTouch={this.state.ahogamientoTouch}
+                                    ahogamientoError={this.state.ahogamientoError}
+                                    onChangeAhogamiento={val => this._changeAhogamiento(val)}
+                                    impacto={this.state.impacto}
+                                    impactoTouch={this.state.impactoTouch}
+                                    impactoError={this.state.impactoError}
+                                    onChangeImpacto={val => this._changeImpacto(val)}
+                                    nuevoModo={this.state.nuevoModo}
+                                    nuevoModoTouch={this.state.nuevoModoTouch}
+                                    nuevoModoError={this.state.nuevoModoError}
+                                    onChangeNuevoModo={val => this._changeNuevoModo(val)}
+                                    nuestraSolucion={this.state.nuestraSolucion}
+                                    nuestraSolucionTouch={this.state.nuestraSolucionTouch}
+                                    nuestraSolucionError={this.state.nuestraSolucionError}
+                                    onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
+                                />
+                            </Col>
+                        </Row>
+                    </div>
                 }
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Pendientes, quejas y reclamos </span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Pendientes, quejas y reclamos </span>
                             <ToolTip text={titleMessagePendient}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </ToolTip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="pendingPrevisit"
@@ -752,16 +800,16 @@ class FormPrevisita extends Component {
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
                             title="Ingrese pendientes, quejas y reclamos"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                         />
                     </Col>
                 </Row>
 
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{textAlign: "left", marginTop: "20px", marginBottom: "20px", marginLeft: "20px"}}>
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span
-                            style={{marginLeft: "0px", color: "#818282"}}>{datePrevisitLastReview}</span>
+                        <div style={{ textAlign: "left", marginTop: "20px", marginBottom: "20px", marginLeft: "20px" }}>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato previsita: </span><span
+                                style={{ marginLeft: "0px", color: "#818282" }}>{datePrevisitLastReview}</span>
                         </div>
                     </Col>
                 </Row>
@@ -775,18 +823,18 @@ class FormPrevisita extends Component {
                     height: "50px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{
                             float: "right",
                             margin: "8px 0px 0px 8px",
                             position: "fixed",
                             backgroundColor: "#00B5AD"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar como borrador</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                                style={{float: "right", margin: "8px 0px 0px 250px", position: "fixed"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar definitivo</span>
+                            style={{ float: "right", margin: "8px 0px 0px 250px", position: "fixed" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={{
                             float: "right",
@@ -794,7 +842,7 @@ class FormPrevisita extends Component {
                             position: "fixed",
                             backgroundColor: "rgb(193, 193, 193)"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
@@ -803,7 +851,7 @@ class FormPrevisita extends Component {
                     show={this.state.showErrorSavePreVisit}
                     title="Error participantes"
                     text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({showErrorSavePreVisit: false})}
+                    onConfirm={() => this.setState({ showErrorSavePreVisit: false })}
                 />
                 <SweetAlert
                     type={typeMessage}
@@ -821,8 +869,8 @@ class FormPrevisita extends Component {
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
-                    onCancel={() => this.setState({showConfirm: false})}
-                    onConfirm={this._closeConfirmCloseVisit}/>
+                    onCancel={() => this.setState({ showConfirm: false })}
+                    onConfirm={this._closeConfirmCloseVisit} />
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmChangeTypeVisit}
@@ -833,7 +881,7 @@ class FormPrevisita extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={this._closeCancelConfirmChanType}
-                    onConfirm={this._closeConfirmChangeType}/>
+                    onConfirm={this._closeConfirmChangeType} />
             </form>
         );
     }
@@ -843,13 +891,15 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getMasterDataFields,
         createPrevisit,
+        validateDatePreVisit,
         consultParameterServer,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, participants, reducerGlobal, navBar}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
