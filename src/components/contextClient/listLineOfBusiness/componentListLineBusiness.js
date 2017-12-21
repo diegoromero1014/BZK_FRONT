@@ -5,7 +5,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber, validateValueExist, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
+
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -28,6 +32,30 @@ class ComponentListLineBusiness extends Component {
         this._viewInformationLineBusiness = this._viewInformationLineBusiness.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteLineOfBusiness = this._deleteLineOfBusiness.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
+    }
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && REGEX_SIMPLE_XSS.test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Líneas de negocios', message_error);
+        }
+        return _.isEmpty(message_error);
     }
 
     validateInfo(e) {
@@ -35,14 +63,15 @@ class ComponentListLineBusiness extends Component {
         const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage, contribution } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(contextLineBusiness.value) || _.isNull(contextLineBusiness.value) || _.isEmpty(contextLineBusiness.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
 
-        if (_.isEqual(countErrors, 0)) {
+        let validFields = this.fieldValidation([
+            { required: true, value: contextLineBusiness.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: experience.value, xss: true },
+            { required: false, value: contribution.value, xss: true }
+        ])
+
+        if (validFields) {
             var listParticipation = clientInformacion.get('listParticipation');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -69,10 +98,8 @@ class ComponentListLineBusiness extends Component {
             changeValueListClient('listParticipation', listParticipation);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.');
         }
+      
     }
 
     clearValues() {
@@ -180,7 +207,7 @@ class ComponentListLineBusiness extends Component {
                                         max="100"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
-                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contextLineBusiness.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -199,7 +226,7 @@ class ComponentListLineBusiness extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -217,6 +244,7 @@ class ComponentListLineBusiness extends Component {
                                         placeholder="Experiencia"
                                         {...experience}
                                         value={experience.value}
+                                        error={REGEX_SIMPLE_XSS.test(experience.value) ? VALUE_XSS_INVALID : null}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
                                     />
                                 </div>
@@ -225,7 +253,7 @@ class ComponentListLineBusiness extends Component {
                         {showFormLinebusiness &&
                             <Col xs={12} md={2} lg={2}>
                                 <div>
-                                    <dt><span>% Contribución</span></dt>
+                                    <dt><span>% Contribución </span></dt>
                                     <Input
                                         name="contribution"
                                         type="text"
@@ -235,7 +263,7 @@ class ComponentListLineBusiness extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contribution.value) ? VALUE_XSS_INVALID : null)}
                                     />
                                 </div>
                             </Col>

@@ -21,8 +21,10 @@ import {
 } from "./constants";
 import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED
-} from "../../constantsGlobal";
+    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
+
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
@@ -139,21 +141,30 @@ const validate = (values, props) => {
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.razonSocial)) {
+        errors.razonSocial = VALUE_XSS_INVALID;
+        errorScrollTop = true;
     } else {
         errors.razonSocial = null;
     }
+
     if (!values.idTypeClient) {
         errors.idTypeClient = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.idTypeClient = null;
     }
+
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.idNumber)) {
+        errors.idNumber = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.idNumber = null;
     }
+
     if (!values.idCIIU) {
         errors.idCIIU = OPTION_REQUIRED;
         errorScrollTop = true;
@@ -166,108 +177,153 @@ const validate = (values, props) => {
     } else {
         errors.idSubCIIU = null;
     }
+
     if (!values.addressClient) {
         errors.addressClient = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.addressClient)) {
+        errors.addressClient = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.addressClient = null;
     }
+
     if (!values.telephone) {
         errors.telephone = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.telephone)) {
+        errors.telephone = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.telephone = null;
     }
+
     if (!values.annualSales) {
         errors.annualSales = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.annualSales)) {
+        errors.annualSales = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.annualSales = null;
     }
+
     if (!values.country) {
         errors.country = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.country = null;
     }
+
     if (!values.province) {
         errors.province = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.province = null;
     }
+
     if (!values.city) {
         errors.city = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.city = null;
     }
+
     if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
         errors.dateSalesAnnuals = DATE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.dateSalesAnnuals)) {
+        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.dateSalesAnnuals = null;
     }
+
     if (!values.liabilities) {
         errors.liabilities = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.liabilities)) {
+        errors.liabilities = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.liabilities = null;
     }
+
     if (!values.assets) {
         errors.assets = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.assets)) {
+        errors.assets = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.assets = null;
     }
+
     if (!values.operatingIncome) {
         errors.operatingIncome = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.operatingIncome)) {
+        errors.operatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.operatingIncome = null;
     }
+
     if (!values.nonOperatingIncome) {
         errors.nonOperatingIncome = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.nonOperatingIncome)) {
+        errors.nonOperatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.nonOperatingIncome = null;
     }
+
     if (!values.expenses) {
         errors.expenses = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (REGEX_SIMPLE_XSS.test(values.expenses)) {
+        errors.expenses = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.expenses = null;
     }
+
     if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect) {
         errors.marcGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.marcGeren = null;
     }
+
     if (values.marcGeren === 'false' && !values.justifyNoGeren) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoGeren = null;
     }
+
     if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect) {
         errors.centroDecision = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.centroDecision = null;
     }
+
     if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect) {
         errors.necesitaLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.necesitaLME = null;
     }
+
     if (values.necesitaLME === 'false' && !values.justifyNoLME) {
         errors.justifyNoLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoLME = null;
     }
+
     if (values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') {
         errors.reportVirtual = OPTION_REQUIRED;
         errorScrollTop = true;
@@ -285,6 +341,9 @@ const validate = (values, props) => {
         if (values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') {
             errors.otherOriginGoods = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (REGEX_SIMPLE_XSS.test(values.otherOriginGoods)) {
+            errors.otherOriginGoods = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.otherOriginGoods = null;
         }
@@ -293,6 +352,9 @@ const validate = (values, props) => {
         if (values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') {
             errors.otherOriginResource = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (REGEX_SIMPLE_XSS.test(values.otherOriginResource)) {
+            errors.otherOriginResource = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.otherOriginResource = null;
         }
@@ -300,6 +362,9 @@ const validate = (values, props) => {
     if (otherOperationsForeignEnable !== 'disabled') {
         if (values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') {
             errors.otherOperationsForeign = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else if (REGEX_SIMPLE_XSS.test(values.otherOperationsForeign)) {
+            errors.otherOperationsForeign = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
             errors.otherOperationsForeign = null;
@@ -360,6 +425,9 @@ const validate = (values, props) => {
         if (values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') {
             errors.originCityResource = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (REGEX_SIMPLE_XSS.test(values.originCityResource)) {
+            errors.originCityResource = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.originCityResource = null;
         }
@@ -405,6 +473,40 @@ const validate = (values, props) => {
     } else {
         errors.controlLinkedPayments = null;
     }
+
+    if (REGEX_SIMPLE_XSS.test(values.description)) {
+        errors.description = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.description = null;
+    }
+
+    if (REGEX_SIMPLE_XSS.test(values.neighborhood)) {
+        errors.neighborhood = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.neighborhood = null;
+    }
+
+    if (REGEX_SIMPLE_XSS.test(values.contextClientField)) {
+        errors.contextClientField = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.contextClientField = null;
+    }
+
+    if (REGEX_SIMPLE_XSS.test(values.inventoryPolicy)) {
+        errors.inventoryPolicy = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.inventoryPolicy = null;
+    }
+    //ComponentListLineBusiness
+    //ComponentListDistributionChannel
+    //ComponentListMainClients
+    //ComponentListMainSupplier
+    //ComponentListMainCompetitor
+    //ComponentListIntOperations
 
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
