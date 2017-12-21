@@ -40,6 +40,7 @@ import {swtShowMessage} from "../sweetAlertMessages/actions";
 import Tooltip from "../toolTip/toolTipComponent";
 import SweetAlert from "sweetalert-react";
 import {showLoading} from '../loading/actions';
+import {isNil} from 'lodash';
 
 const fields = ["team", "certificationStatus", "bussinesRol", "management", "decisionCenter", "levelAEC"];
 var levelsAEC;
@@ -245,9 +246,9 @@ class ClientsFind extends Component {
     render() {
         const { fields: { team, certificationStatus, bussinesRol, management, decisionCenter, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
         const { clientR, selectsReducer } = this.props;
-        var countClients = clientR.get('countClients');
-        var status = clientR.get('status');
-        var clientItems = clientR.get('responseClients');
+        const countClients = isNil(clientR.get('countClients')) ? 0 : clientR.get('countClients');
+        const status = clientR.get('status');
+        const clientItems = isNil(clientR.get('responseClients')) ? [] : clientR.get('responseClients');
         return (
             <div>
                 <form>
