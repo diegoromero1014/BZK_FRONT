@@ -490,7 +490,7 @@ class FormPrevisita extends Component {
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit
                 }
-                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x'))).then((data) => {
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response.allowClientPreVisit) {

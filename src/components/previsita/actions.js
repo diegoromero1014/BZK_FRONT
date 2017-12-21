@@ -165,7 +165,7 @@ export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasP
   };
 }
 
-export function validateDatePreVisit(startDate){
+export function validateDatePreVisit(startDate,finalDate){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -183,6 +183,7 @@ export function validateDatePreVisit(startDate){
       "idClient": window.localStorage.getItem('idClientSelected'),
       "userName": window.sessionStorage.getItem('userName'),
       "initialDate": startDate,
+      "endTime": finalDate
     }
   };
   let request = axios.post(APP_URL + "/validateDatePrevisit", json);
