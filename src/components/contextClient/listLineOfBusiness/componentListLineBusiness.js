@@ -99,7 +99,7 @@ class ComponentListLineBusiness extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         }
-      
+
     }
 
     clearValues() {
@@ -263,7 +263,7 @@ class ComponentListLineBusiness extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contribution.value) ? VALUE_XSS_INVALID : null)}
+                                        error={REGEX_SIMPLE_XSS.test(contribution.value) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>
