@@ -15,7 +15,7 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR, 
+    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
     ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
     VALUE_REQUIERED
 } from '../../../constantsGlobal';
@@ -148,46 +148,32 @@ class FormPrevisita extends Component {
 
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
-    //Elimino los caracteres no validos
-    for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
-        if (validos.indexOf(val.toString().charAt(i)) !== -1) {
-            output += val.toString().charAt(i)
-        }
-    }
-    val = output;
-
-    /* Si typeValidation = 2 es por que el valor puede ser negativo
-     Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
-     */
-    var decimal = '';
-    if (val.includes(".")) {
-        var vectorVal = val.split(".");
-        if (allowsDecimal) {
-            val = vectorVal[0] + '.';
-            if (vectorVal.length > 1) {
-                decimal = vectorVal[1].substring(0, lengthDecimal);
+        //Elimino los caracteres no validos
+        for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+                output += val.toString().charAt(i)
             }
-        } else {
-            val = vectorVal[0];
         }
-    }
+        val = output;
 
-    if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-        var pattern = /(-?\d+)(\d{3})/;
-        while (pattern.test(val)) {
-            val = val.replace(pattern, "$1,$2");
-        }
-        if (_.isNil(this.state.durationPreVisit)) {
-                return (val + decimal);
+        /* Si typeValidation = 2 es por que el valor puede ser negativo
+         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+         */
+        var decimal = '';
+        if (val.includes(".")) {
+            var vectorVal = val.split(".");
+            if (allowsDecimal) {
+                val = vectorVal[0] + '.';
+                if (vectorVal.length > 1) {
+                    decimal = vectorVal[1].substring(0, lengthDecimal);
+                }
             } else {
-                this.setState({
-                durationPreVisit: val + decimal
-            });
+                val = vectorVal[0];
             }
-    } else { //Valido si el valor es negativo o positivo
-        var value = _.isNil(val) ? -1 : numeral(val).format('0');
-        if (value >= 0) {
-            pattern = /(-?\d+)(\d{3})/;
+        }
+
+        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
+            var pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {
                 val = val.replace(pattern, "$1,$2");
             }
@@ -195,20 +181,34 @@ class FormPrevisita extends Component {
                 return (val + decimal);
             } else {
                 this.setState({
-                durationPreVisit: val + decimal
-            });
+                    durationPreVisit: val + decimal
+                });
             }
-        } else {
-            if (_.isNil(this.state.durationPreVisit)) {
-                return "";
+        } else { //Valido si el valor es negativo o positivo
+            var value = _.isNil(val) ? -1 : numeral(val).format('0');
+            if (value >= 0) {
+                pattern = /(-?\d+)(\d{3})/;
+                while (pattern.test(val)) {
+                    val = val.replace(pattern, "$1,$2");
+                }
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return (val + decimal);
+                } else {
+                    this.setState({
+                        durationPreVisit: val + decimal
+                    });
+                }
             } else {
-                this.setState({
-                durationPreVisit: ""
-            });
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return "";
+                } else {
+                    this.setState({
+                        durationPreVisit: ""
+                    });
+                }
             }
         }
     }
-}
 
     _changeTypePreVisit(value) {
         if (value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType) {
@@ -412,13 +412,13 @@ class FormPrevisita extends Component {
                 lugarPrevisitError: "Debe ingresar un valor"
             });
         }
-        if (typeButtonClick === SAVE_PUBLISHED) {
-            if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: "Debe ingresar un valor"
-                });
-            } 
+
+        if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+            errorInForm = true;
+            this.setState({
+                durationPreVisitError: "Debe ingresar un valor"
+            });
+
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -704,8 +704,8 @@ class FormPrevisita extends Component {
                                 value={this.state.durationPreVisit}
                                 min={1}
                                 max="5"
+                                touched={true}
                                 placeholder="Duración previsita"
-                                error={_.isEmpty(this.state.durationPreVisitError) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(this.state.durationPreVisitError) ? VALUE_XSS_INVALID : null)}
                                 error={this.state.durationPreVisitError}
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}

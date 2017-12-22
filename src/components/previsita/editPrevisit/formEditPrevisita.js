@@ -864,6 +864,7 @@ class FormEditPrevisita extends Component {
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
                                 onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 1)}
+                                disabled={this.state.isEditable ? '' : 'disabled'}
                             />
                         </dt>
                     </Col>
