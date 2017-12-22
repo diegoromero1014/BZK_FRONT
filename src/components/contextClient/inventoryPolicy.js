@@ -7,7 +7,10 @@ import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import { MESSAGE_INVENTORY_POLICE, MESSAGE_CONTROL_LINKED_PAYMENTS } from './constants';
 import { changeValueListClient } from '../clientInformation/actions';
-import { VALUE_REQUIERED } from '../../constantsGlobal';
+import {
+    VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
 
 class InventorPolicy extends Component {
@@ -95,8 +98,8 @@ class InventorPolicy extends Component {
                                 max="1000"
                                 rows={7}
                                 placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
-                                error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : ''}
                                 {...controlLinkedPayments}
+                                error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
                                 touched={true}
                             />
                         }
