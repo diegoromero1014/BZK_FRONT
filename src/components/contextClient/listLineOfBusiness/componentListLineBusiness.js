@@ -45,7 +45,7 @@ class ComponentListLineBusiness extends Component {
             if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
                 message_error = 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.';
                 break;
-            } if (_field.xss && REGEX_SIMPLE_XSS.test(_field.value)) {
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
                 message_error = REGEX_SIMPLE_XSS_MESAGE;
                 break;
             }
@@ -207,7 +207,7 @@ class ComponentListLineBusiness extends Component {
                                         max="100"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
-                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contextLineBusiness.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(contextLineBusiness.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -226,7 +226,7 @@ class ComponentListLineBusiness extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -244,7 +244,7 @@ class ComponentListLineBusiness extends Component {
                                         placeholder="Experiencia"
                                         {...experience}
                                         value={experience.value}
-                                        error={REGEX_SIMPLE_XSS.test(experience.value) ? VALUE_XSS_INVALID : null}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(experience.value) ? VALUE_XSS_INVALID : null}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
                                     />
                                 </div>
@@ -263,7 +263,7 @@ class ComponentListLineBusiness extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={REGEX_SIMPLE_XSS.test(contribution.value) ? VALUE_XSS_INVALID : null}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(contribution.value) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>

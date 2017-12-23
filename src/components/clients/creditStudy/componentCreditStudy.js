@@ -60,14 +60,14 @@ const validate = (values, props) => {
     const errors = {}
     let errorScrollTop = false;
 
-    if (REGEX_SIMPLE_XSS.test(values.contextClientField)) {
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
         errors.contextClientField = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.contextClientField = null;
     }
 
-    if (REGEX_SIMPLE_XSS.test(values.inventoryPolicy)) {
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
         errors.inventoryPolicy = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -414,11 +414,11 @@ class ComponentStudyCredit extends Component {
                             this.setState({
                                 fieldContextRequired: true
                             });
-                        } else if (REGEX_SIMPLE_XSS.test(contextClientField.value)) {
+                        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value)) {
                             allowSave = false;
                         }
 
-                        if (REGEX_SIMPLE_XSS.test(inventoryPolicy.value)) {
+                        if (eval(REGEX_SIMPLE_XSS_STRING).test(inventoryPolicy.value)) {
                             allowSave = false;
                         }
 
