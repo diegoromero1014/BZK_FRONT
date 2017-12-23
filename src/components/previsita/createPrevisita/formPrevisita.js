@@ -15,7 +15,9 @@ import ParticipantesBancolombia from '../../participantsVisitPre/participantesBa
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
 import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR
+    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
+    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
+    VALUE_REQUIERED
 } from '../../../constantsGlobal';
 import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse } from '../../../actionsGlobal';
@@ -31,6 +33,7 @@ import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import numeral from 'numeral';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -126,6 +129,7 @@ class FormPrevisita extends Component {
         this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
+        this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -139,6 +143,70 @@ class FormPrevisita extends Component {
             this.setState({
                 showMessageCreatePreVisit: false
             });
+        }
+    }
+
+
+    _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
+        //Elimino los caracteres no validos
+        for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+                output += val.toString().charAt(i)
+            }
+        }
+        val = output;
+
+        /* Si typeValidation = 2 es por que el valor puede ser negativo
+         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+         */
+        var decimal = '';
+        if (val.includes(".")) {
+            var vectorVal = val.split(".");
+            if (allowsDecimal) {
+                val = vectorVal[0] + '.';
+                if (vectorVal.length > 1) {
+                    decimal = vectorVal[1].substring(0, lengthDecimal);
+                }
+            } else {
+                val = vectorVal[0];
+            }
+        }
+
+        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
+            var pattern = /(-?\d+)(\d{3})/;
+            while (pattern.test(val)) {
+                val = val.replace(pattern, "$1,$2");
+            }
+            if (_.isNil(this.state.durationPreVisit)) {
+                return (val + decimal);
+            } else {
+                this.setState({
+                    durationPreVisit: val + decimal
+                });
+            }
+        } else { //Valido si el valor es negativo o positivo
+            var value = _.isNil(val) ? -1 : numeral(val).format('0');
+            if (value >= 0) {
+                pattern = /(-?\d+)(\d{3})/;
+                while (pattern.test(val)) {
+                    val = val.replace(pattern, "$1,$2");
+                }
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return (val + decimal);
+                } else {
+                    this.setState({
+                        durationPreVisit: val + decimal
+                    });
+                }
+            } else {
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return "";
+                } else {
+                    this.setState({
+                        durationPreVisit: ""
+                    });
+                }
+            }
         }
     }
 
@@ -344,13 +412,13 @@ class FormPrevisita extends Component {
                 lugarPrevisitError: "Debe ingresar un valor"
             });
         }
-        if (typeButtonClick === SAVE_PUBLISHED) {
-            if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: "Debe ingresar un valor"
-                });
-            }
+
+        if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+            errorInForm = true;
+            this.setState({
+                durationPreVisitError: "Debe ingresar un valor"
+            });
+
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -494,10 +562,10 @@ class FormPrevisita extends Component {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response.allowClientPreVisit) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo cliente, por favor complemente el informe ya creado o modifique la fecha.');
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo cliente.');
                         } else {
                             if (!response.allowUserPreVisit) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo usuario, por favor complemente el informe ya creado o modifique la fecha.');
+                                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
                             } else {
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
@@ -628,16 +696,20 @@ class FormPrevisita extends Component {
                     </Col>
                     <Col xs={6} md={3} lg={3} >
                         <dt>
-                            <span>Duración previsita (</span><span style={{ color: "red" }}>*</span>)
+                            <span>Duración previsita - hora (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <Input
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
+                                min={1}
+                                max="5"
                                 touched={true}
+                                placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}
-                                type="number"
+                                type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
                             />
                         </dt>
                     </Col>

@@ -19,7 +19,9 @@ import {
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
     TITLE_OTHERS_PARTICIPANTS,
-    MESSAGE_ERROR
+    MESSAGE_ERROR,
+    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
+    VALUE_REQUIERED
 } from "../../../constantsGlobal";
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
@@ -36,6 +38,7 @@ import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import numeral from 'numeral';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -142,6 +145,7 @@ class FormEditPrevisita extends Component {
         this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
+        this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     }
 
     _editPreVisit() {
@@ -167,6 +171,69 @@ class FormEditPrevisita extends Component {
             this.setState({
                 showMessageCreatePreVisit: false
             });
+        }
+    }
+
+    _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
+        //Elimino los caracteres no validos
+        for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+                output += val.toString().charAt(i)
+            }
+        }
+        val = output;
+
+        /* Si typeValidation = 2 es por que el valor puede ser negativo
+         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+         */
+        var decimal = '';
+        if (val.includes(".")) {
+            var vectorVal = val.split(".");
+            if (allowsDecimal) {
+                val = vectorVal[0] + '.';
+                if (vectorVal.length > 1) {
+                    decimal = vectorVal[1].substring(0, lengthDecimal);
+                }
+            } else {
+                val = vectorVal[0];
+            }
+        }
+
+        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
+            var pattern = /(-?\d+)(\d{3})/;
+            while (pattern.test(val)) {
+                val = val.replace(pattern, "$1,$2");
+            }
+            if (_.isNil(this.state.durationPreVisit)) {
+                return (val + decimal);
+            } else {
+                this.setState({
+                    durationPreVisit: val + decimal
+                });
+            }
+        } else { //Valido si el valor es negativo o positivo
+            var value = _.isNil(val) ? -1 : numeral(val).format('0');
+            if (value >= 0) {
+                pattern = /(-?\d+)(\d{3})/;
+                while (pattern.test(val)) {
+                    val = val.replace(pattern, "$1,$2");
+                }
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return (val + decimal);
+                } else {
+                    this.setState({
+                        durationPreVisit: val + decimal
+                    });
+                }
+            } else {
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return "";
+                } else {
+                    this.setState({
+                        durationPreVisit: ""
+                    });
+                }
+            }
         }
     }
 
@@ -522,7 +589,7 @@ class FormEditPrevisita extends Component {
                     "endTime": this.state.durationPreVisit
                 };
 
-                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x'), this.state.durationPreVisit)).then((data) => {
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response.allowClientPreVisit) {
@@ -783,16 +850,20 @@ class FormEditPrevisita extends Component {
                     </Col>
                     <Col xs={6} md={3} lg={3} >
                         <dt>
-                            <span>Duración previsita (</span><span style={{ color: "red" }}>*</span>)
+                            <span>Duración previsita - horas (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <Input
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
-                                touched={true}
+                                min={1}
+                                max="5"
+                                placeholder="Duración previsita"
+                                error={_.isEmpty(this.state.durationPreVisitError) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(this.state.durationPreVisitError) ? VALUE_XSS_INVALID : null)}
                                 error={this.state.durationPreVisitError}
-                                type="number"
+                                type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
                                 disabled={this.state.isEditable ? '' : 'disabled'}
                             />
                         </dt>
