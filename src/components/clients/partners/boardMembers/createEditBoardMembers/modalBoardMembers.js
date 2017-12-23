@@ -1,21 +1,21 @@
 import moment from "moment";
-import {reduxForm} from "redux-form";
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
-import {Col, Row} from "react-flexbox-grid";
+import { reduxForm } from "redux-form";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import ComboBox from "../../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../../ui/input/inputComponent";
-import {getClientNeeds, getMasterDataFields} from "../../../../selectsComponent/actions";
-import {CONTACT_ID_TYPE} from "../../../../selectsComponent/constants";
+import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
+import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
 import {
     LOWER_INITIAL_LIMIT,
     NUMBER_RECORDS,
     TITLE_TOOLTIP_BOARD_MEMBERS,
     TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS
 } from "../constants";
-import {changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember} from "../actions";
-import {changeStateSaveData} from "../../../../dashboard/actions";
+import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
+import { changeStateSaveData } from "../../../../dashboard/actions";
 import _ from "lodash";
 import {
     EDITAR,
@@ -23,12 +23,17 @@ import {
     MESSAGE_LOAD_DATA,
     OPTION_REQUIRED,
     TITLE_ERROR_SWEET_ALERT,
-    VALUE_REQUIERED
+    VALUE_REQUIERED,
+    REGEX_SIMPLE_XSS,
+    REGEX_SIMPLE_XSS_STRING,
+    VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS_MESAGE
 } from "../../../../../constantsGlobal";
-import {stringValidate, validateResponse} from "../../../../../actionsGlobal";
-import {swtShowMessage} from "../../../../sweetAlertMessages/actions";
+import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
+import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
+import SweetAlert from 'sweetalert-react';
 
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};
@@ -36,6 +41,7 @@ let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
 let showAuditFields = false;
 
 const validate = (values) => {
+
     if (!values.typeOfDocument) {
         errors.typeOfDocument = OPTION_REQUIRED;
     } else {
@@ -43,19 +49,42 @@ const validate = (values) => {
     }
     if (!values.numberDocument) {
         errors.numberDocument = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numberDocument)) {
+        errors.numberDocument = VALUE_XSS_INVALID;
     } else {
         errors.numberDocument = null;
     }
     if (!values.firstName) {
         errors.firstName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstName)) {
+        errors.firstName = VALUE_XSS_INVALID;
     } else {
         errors.firstName = null;
     }
     if (!values.firstLastName) {
         errors.firstLastName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstLastName)) {
+        errors.firstLastName = VALUE_XSS_INVALID;
     } else {
         errors.firstLastName = null;
     }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
+        errors.middleName = VALUE_XSS_INVALID;
+    } else {
+        errors.middleName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
+        errors.secondLastName = VALUE_XSS_INVALID;
+    } else {
+        errors.secondLastName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observations)) {
+        errors.observations = VALUE_XSS_INVALID;
+    } else {
+        errors.observations = null;
+    }
+
     return errors;
 };
 
@@ -65,24 +94,24 @@ function GetBtnAllowEditOrBtnSearchExists(props) {
     } else {
         if (_.isUndefined(props.boardMember)) {
             return <Col xs>
-                <dl style={{width: '100%'}}>
+                <dl style={{ width: '100%' }}>
                     <button type="button" className="btn btn-primary"
-                            style={{marginTop: '35px'}}
-                            onClick={props.thisSelf._validateExistBoardMember}>
-                        <i style={{color: "white", margin: '0em', fontSize: '1.2em'}}
-                           className="search icon"/>
+                        style={{ marginTop: '35px' }}
+                        onClick={props.thisSelf._validateExistBoardMember}>
+                        <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
+                            className="search icon" />
                     </button>
                 </dl>
             </Col>
         } else {
             if (_.get(props.reducerGlobal.get('permissionsBoardMembers'), _.indexOf(props.reducerGlobal.get('permissionsBoardMembers'), EDITAR), false)) {
                 return <Col xs>
-                    <dl style={{width: '100%'}}>
+                    <dl style={{ width: '100%' }}>
                         <button type="button" onClick={props.thisSelf._editBoardMember}
-                                className={'btn btn-primary modal-button-edit'}
-                                style={{marginTop: '35px'}}>
+                            className={'btn btn-primary modal-button-edit'}
+                            style={{ marginTop: '35px' }}>
                             Editar
-                            <i className={'icon edit'} style={{marginLeft: '5px'}}></i>
+                            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
                         </button>
                     </dl>
                 </Col>
@@ -108,7 +137,8 @@ class ModalCreateBoardMembers extends Component {
             //controla si se puede editar la información del miembro de junta, valores (true, false)
             isEditable: false,
             //controla si puede editar los campos de tipo de documento y número de documento
-            allowsEditingOFDocument: true
+            allowsEditingOFDocument: true,
+            showErrorXss: false,
         }
         momentLocalizer(moment);
     }
@@ -117,7 +147,7 @@ class ModalCreateBoardMembers extends Component {
      * Reinicia el formulario para realizar de nuevo la búsqueda de un miembro de junta
      */
     _onClickClear() {
-        const {fields: {typeOfDocument}} = this.props;
+        const { fields: { typeOfDocument } } = this.props;
         this.setState({
             showCompleteForm: 'hidden',
             allowsEditingOFDocument: true
@@ -142,7 +172,7 @@ class ModalCreateBoardMembers extends Component {
         const {
             fields: {
                 idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-                firstLastName, secondLastName, observations
+            firstLastName, secondLastName, observations
             }, saveBoardMember, validateExistsBoardMember,
             swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
             getBoardMembers, boardMembersReducer
@@ -195,11 +225,19 @@ class ModalCreateBoardMembers extends Component {
         const {
             fields: {
                 idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-                firstLastName, secondLastName, observations
+            firstLastName, secondLastName, observations
             }, validateExistsBoardMember, swtShowMessage,
             changeStateSaveData
         } = this.props;
+
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
+
+
+            if (eval(REGEX_SIMPLE_XSS_STRING).test(numberDocument.value)) {
+                this.setState({ showErrorXss: true });
+                return;
+            }
+
             var jsonBoardMember = {
                 idTypeDocument: typeOfDocument.value,
                 numberDocument: (numberDocument.value).trim(),
@@ -295,7 +333,7 @@ class ModalCreateBoardMembers extends Component {
     }
 
     componentWillMount() {
-        const {boardMember} = this.props;
+        const { boardMember } = this.props;
         if (!_.isUndefined(boardMember)) {
             showAuditFields = true;
             this._sendAuditInformation(false, boardMember.userNameCreate, boardMember.userNameUpdate, boardMember.dateUpdate, boardMember.dateCreate);
@@ -320,15 +358,15 @@ class ModalCreateBoardMembers extends Component {
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     id="modalCreateBoardMembers">
-                    <div style={{paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px'}}>
-                        <p style={{paddingTop: "10px", marginBottom: "0px"}}>
-                            Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.
+                    id="modalCreateBoardMembers">
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>
+                        <p style={{ paddingTop: "10px", marginBottom: "0px" }}>
+                            Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
                         </p>
                         <Row>
                             <Col xs>
-                                <dt><span>Tipo de documento (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Tipo de documento (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
                                         name="typeOfDocument"
                                         {...typeOfDocument}
@@ -342,7 +380,7 @@ class ModalCreateBoardMembers extends Component {
                                 </dt>
                             </Col>
                             <Col xs>
-                                <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <InputComponent
                                     name="numberDocument"
                                     type="text"
@@ -352,11 +390,11 @@ class ModalCreateBoardMembers extends Component {
                                 />
                             </Col>
                             <GetBtnAllowEditOrBtnSearchExists thisSelf={this} boardMember={boardMember}
-                                                              reducerGlobal={reducerGlobal}/>
+                                reducerGlobal={reducerGlobal} />
                         </Row>
-                        <Row style={{visibility: this.state.showCompleteForm}}>
+                        <Row style={{ visibility: this.state.showCompleteForm }}>
                             <Col xs>
-                                <dt><span>Primer nombre (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <InputComponent
                                     name="firstName"
                                     type="text"
@@ -376,9 +414,9 @@ class ModalCreateBoardMembers extends Component {
                                 />
                             </Col>
                         </Row>
-                        <Row style={{visibility: this.state.showCompleteForm}}>
+                        <Row style={{ visibility: this.state.showCompleteForm }}>
                             <Col xs>
-                                <dt><span>Primer apellido (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <dt><span>Primer apellido (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <InputComponent
                                     name="firstLastName"
                                     type="text"
@@ -423,60 +461,67 @@ class ModalCreateBoardMembers extends Component {
                             </Col>
                         </Row>
                         {showAuditFields &&
-                        < Row style={{padding: "20px 10px 0px 0px", visibility: this.state.showCompleteForm}}>
-                            <Col xs={6} md={3} lg={3}>
-                                <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                {updatedBy !== null &&
-                                <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
-                                }
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                {updatedBy !== null &&
-                                <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
-                                }
-                            </Col>
-                        </Row>
+                            < Row style={{ padding: "20px 10px 0px 0px", visibility: this.state.showCompleteForm }}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null &&
+                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                                    }
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null &&
+                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                                    }
+                                </Col>
+                            </Row>
                         }
                         {showAuditFields &&
-                        <Row style={{padding: "5px 10px 0px    0px", visibility: this.state.showCompleteForm}}>
-                            <Col xs={6} md={3} lg={3}>
-                                <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                {updatedBy !== null &&
-                                <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
-                                }
-                            </Col>
-                            <Col xs={6} md={3} lg={3}>
-                                {updatedBy !== null &&
-                                <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
-                                }
-                            </Col>
-                        </Row>
+                            <Row style={{ padding: "5px 10px 0px    0px", visibility: this.state.showCompleteForm }}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null &&
+                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                                    }
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    {updatedBy !== null &&
+                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                                    }
+                                </Col>
+                            </Row>
                         }
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
                     <button type="submit" className="btn btn-primary modal-button-edit"
-                            style={{visibility: this.state.showCompleteForm}}
-                            disabled={this.state.isEditable ? '' : 'disabled'}>
+                        style={{ visibility: this.state.showCompleteForm }}
+                        disabled={this.state.isEditable ? '' : 'disabled'}>
                         <span>Guardar</span>
                     </button>
                     <button className="modal-button-edit btn btn-default btnDefaultAyax"
-                            onClick={() => {
-                                isOpen()
-                            }}>
+                        onClick={() => {
+                            isOpen()
+                        }}>
                         <span>Cancelar</span>
                     </button>
                 </div>
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorXss}
+                    title="Campos obligatorios"
+                    text={REGEX_SIMPLE_XSS_MESAGE}
+                    onConfirm={() => this.setState({ showErrorXss: false })}
+                />
             </form >
         );
     }
@@ -496,7 +541,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, reducerGlobal, boardMembersReducer}, {boardMember}) {
+function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer }, { boardMember }) {
     if (!_.isUndefined(boardMember)) {
         return {
             selectsReducer,

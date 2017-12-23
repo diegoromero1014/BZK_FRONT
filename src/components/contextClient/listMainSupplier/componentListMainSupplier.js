@@ -57,7 +57,7 @@ class ComponentListMainSupplier extends Component {
             if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
                 message_error = 'Señor usuario, para agregar un proveedor principal debe ingresar todos los valores.';
                 break;
-            } if (_field.xss && REGEX_SIMPLE_XSS.test(_field.value)) {
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
                 message_error = REGEX_SIMPLE_XSS_MESAGE;
                 break;
             }
@@ -235,7 +235,7 @@ class ComponentListMainSupplier extends Component {
                                         max="100"
                                         placeholder="Nombre del proveedor"
                                         {...nameSupplier}
-                                        error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(nameSupplier.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(nameSupplier.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -254,7 +254,7 @@ class ComponentListMainSupplier extends Component {
                                         {...term}
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
-                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(term.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(term.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -273,7 +273,7 @@ class ComponentListMainSupplier extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -309,7 +309,7 @@ class ComponentListMainSupplier extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
-                                        error={REGEX_SIMPLE_XSS.test(relevantInformation.value) ? VALUE_XSS_INVALID : null}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(relevantInformation.value) ? VALUE_XSS_INVALID : null}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>

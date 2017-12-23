@@ -57,7 +57,7 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contextClientField.value) ? VALUE_XSS_INVALID : '')}
+                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value) ? VALUE_XSS_INVALID : '')}
 
                                 touched={true}
                             />

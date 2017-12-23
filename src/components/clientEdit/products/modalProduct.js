@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import SweetAlert from 'sweetalert-react';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {reduxForm} from 'redux-form';
-import {OrderedMap} from 'immutable';
-import {getMasterDataFields} from '../../selectsComponent/actions';
-import {addProduct, updateProduct} from './actions';
-import {CLIENT_TYPE_PRODUCT, FILTER_COUNTRY} from '../../selectsComponent/constants';
+import { reduxForm } from 'redux-form';
+import { OrderedMap } from 'immutable';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { addProduct, updateProduct } from './actions';
+import { CLIENT_TYPE_PRODUCT, FILTER_COUNTRY } from '../../selectsComponent/constants';
 import * as constants from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
@@ -53,19 +53,19 @@ class ModalProduct extends Component {
     momentLocalizer(moment);
   }
 
-  _handleBlurValueNumber(typeValidation, val){
+  _handleBlurValueNumber(typeValidation, val) {
     var pattern;
     //Elimino los caracteres no validos
-    for (var i=0, output='', validos="-0123456789"; i< (val + "").length; i++){
-     if (validos.indexOf(val.toString().charAt(i)) !== -1){
+    for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
+      if (validos.indexOf(val.toString().charAt(i)) !== -1) {
         output += val.toString().charAt(i)
       }
     }
     val = output;
 
-    if( typeValidation === constants.ALLOWS_NEGATIVE_INTEGER ){
+    if (typeValidation === constants.ALLOWS_NEGATIVE_INTEGER) {
       pattern = /(-?\d+)(\d{3})/;
-      while (pattern.test(val)){
+      while (pattern.test(val)) {
         val = val.replace(pattern, "$1,$2");
       }
       this.setState({
@@ -75,9 +75,9 @@ class ModalProduct extends Component {
 
     } else {
       var value = numeral(val).format('0');
-      if( value >= 0 ){
+      if (value >= 0) {
         pattern = /(-?\d+)(\d{3})/;
-        while (pattern.test(val)){
+        while (pattern.test(val)) {
           val = val.replace(pattern, "$1,$2");
         }
         this.setState({
@@ -94,71 +94,71 @@ class ModalProduct extends Component {
   }
 
   _close() {
-    this.setState({showMessage: false});
+    this.setState({ showMessage: false });
   }
 
   _closeCreate() {
-    const {isOpen} = this.props;
-    this.setState({showMessage: false});
+    const { isOpen } = this.props;
+    this.setState({ showMessage: false });
     isOpen();
   }
 
-  _changeName(value){
+  _changeName(value) {
     this.setState({
       name: value,
       nameError: null
     });
   }
 
-  _changeType(value){
+  _changeType(value) {
     this.setState({
       type: value,
       typeError: null
     });
   }
 
-  _changeNumber(value){
+  _changeNumber(value) {
     this.setState({
       number: value,
       numberError: null
     });
   }
 
-  _changeAverageMontlyAmount(value){
+  _changeAverageMontlyAmount(value) {
     this.setState({
       averageMontlyAmount: value,
       averageMontlyAmountError: null
     });
   }
 
-  _changeCoin(value){
+  _changeCoin(value) {
     this.setState({
       coin: value,
       coinError: null
     });
   }
 
-  _changeCountry(value){
+  _changeCountry(value) {
     this.setState({
       countryProduct: value,
       countryError: null
     });
   }
 
-  _changeCity(value){
+  _changeCity(value) {
     this.setState({
       cityProduct: value,
       cityError: null
     });
   }
 
-  _handleProduct(e){
+  _handleProduct(e) {
     e.preventDefault();
-    const {clientProductReducer, addProduct, updateProduct, productDetail} = this.props;
+    const { clientProductReducer, addProduct, updateProduct, productDetail } = this.props;
     var uid, titleMessage, textMessage;
-    if(productDetail !== null){
+    if (productDetail !== null) {
       uid = productDetail.uid;
-    } else{
+    } else {
       uid = _.uniqueId('product_');
     }
     var errorInForm = false;
@@ -166,6 +166,11 @@ class ModalProduct extends Component {
       errorInForm = true;
       this.setState({
         nameError: constants.VALUE_REQUIERED
+      });
+    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.name)) {
+      errorInForm = true;
+      this.setState({
+        nameError: constants.VALUE_XSS_INVALID
       });
     }
 
@@ -181,6 +186,11 @@ class ModalProduct extends Component {
       this.setState({
         numberError: constants.VALUE_REQUIERED
       });
+    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.number)) {
+      errorInForm = true;
+      this.setState({
+        numberError: constants.VALUE_XSS_INVALID
+      });
     }
 
     if (this.state.averageMontlyAmount === null || this.state.averageMontlyAmount === undefined || this.state.averageMontlyAmount === "") {
@@ -188,12 +198,23 @@ class ModalProduct extends Component {
       this.setState({
         averageMontlyAmountError: constants.VALUE_REQUIERED
       });
+    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.averageMontlyAmount)) {
+      errorInForm = true;
+      this.setState({
+        averageMontlyAmountError: constants.VALUE_XSS_INVALID
+      });
     }
+
 
     if (this.state.coin === null || this.state.coin === undefined || this.state.coin === "") {
       errorInForm = true;
       this.setState({
         coinError: constants.VALUE_REQUIERED
+      });
+    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.coin)) {
+      errorInForm = true;
+      this.setState({
+        coinError: constants.VALUE_XSS_INVALID
       });
     }
 
@@ -209,9 +230,14 @@ class ModalProduct extends Component {
       this.setState({
         cityError: constants.VALUE_REQUIERED
       });
+    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.cityProduct)) {
+      errorInForm = true;
+      this.setState({
+        cityError: constants.VALUE_XSS_INVALID
+      });
     }
 
-    if(!errorInForm){
+    if (!errorInForm) {
       var product = {
         uid,
         name: this.state.name,
@@ -222,11 +248,11 @@ class ModalProduct extends Component {
         country: this.state.countryProduct,
         city: this.state.cityProduct
       };
-      if(productDetail !== null){
+      if (productDetail !== null) {
         updateProduct(product);
         titleMessage = "Producto actualizado";
         textMessage = "Señor usuario, el producto se actualizó correctamente.";
-      } else{
+      } else {
         addProduct(product);
         titleMessage = "Producto adicionado";
         textMessage = "Señor usuario, el producto se adicionó correctamente.";
@@ -242,10 +268,10 @@ class ModalProduct extends Component {
   }
 
   componentWillMount() {
-    const {getMasterDataFields, productDetail} = this.props;
+    const { getMasterDataFields, productDetail } = this.props;
     getMasterDataFields([CLIENT_TYPE_PRODUCT, FILTER_COUNTRY]);
 
-    if(productDetail !== null){
+    if (productDetail !== null) {
       this.setState({
         name: productDetail.name,
         nameError: null,
@@ -266,16 +292,16 @@ class ModalProduct extends Component {
   }
 
   render() {
-    const {modalStatus, selectsReducer, productDetail} = this.props;
+    const { modalStatus, selectsReducer, productDetail } = this.props;
 
     return (
       <form onSubmit={this._handleProduct.bind(this)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
-          <div style={{paddingLeft:'20px',paddingRight:'20px'}}>
+          <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>
-              <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+              <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                 <dt>
-                  <span>Nombre de la entidad (</span><span style={{color: "red"}}>*</span>)
+                  <span>Nombre de la entidad (</span><span style={{ color: "red" }}>*</span>)
                 </dt>
                 <Input
                   name="txtName"
@@ -288,7 +314,7 @@ class ModalProduct extends Component {
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
-                <dt><span>Tipo de producto (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Tipo de producto (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="type"
                   labelInput="Seleccione el tipo..."
@@ -301,13 +327,13 @@ class ModalProduct extends Component {
                   onChange={val => this._changeType(val)}
                   data={selectsReducer.get(CLIENT_TYPE_PRODUCT) || []}
                   onBlur={() => ''}
-                  />
+                />
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+              <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                 <dt>
-                  <span>Número de producto (</span><span style={{color: "red"}}>*</span>)
+                  <span>Número de producto (</span><span style={{ color: "red" }}>*</span>)
                 </dt>
                 <Input
                   name="txtNumber"
@@ -321,10 +347,10 @@ class ModalProduct extends Component {
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
-                <dt><span>Monto mensual (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>Monto mensual (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="txtMontly"
-                  style={{width: "100%", textAlign: "right"}}
+                  style={{ width: "100%", textAlign: "right" }}
                   type="text"
                   min={0}
                   max="16"
@@ -337,8 +363,8 @@ class ModalProduct extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
-                <dt><span>Moneda (</span><span style={{color: "red"}}>*</span>)</dt>
+              <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
+                <dt><span>Moneda (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="txtCoin"
                   type="text"
@@ -350,7 +376,7 @@ class ModalProduct extends Component {
                 />
               </Col>
               <Col xs={12} md={6} lg={6} >
-                <dt><span>País (</span><span style={{color: "red"}}>*</span>)</dt>
+                <dt><span>País (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="countryProduct"
                   labelInput="Seleccione el tipo..."
@@ -363,13 +389,13 @@ class ModalProduct extends Component {
                   onChange={val => this._changeCountry(val)}
                   data={selectsReducer.get(FILTER_COUNTRY) || []}
                   onBlur={() => ''}
-                  />
+                />
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+              <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                 <dt>
-                  <span>Ciudad (</span><span style={{color: "red"}}>*</span>)
+                  <span>Ciudad (</span><span style={{ color: "red" }}>*</span>)
                 </dt>
                 <Input
                   name="txtCityProduct"
@@ -390,38 +416,38 @@ class ModalProduct extends Component {
           </button>
         </div>
         <SweetAlert
-         type={this.state.typeMessage}
-         show={this.state.showMessage}
-         title={this.state.titleMessage}
-         text={this.state.textMessage}
-         onConfirm={() => this._closeCreate()}
-         />
+          type={this.state.typeMessage}
+          show={this.state.showMessage}
+          title={this.state.titleMessage}
+          text={this.state.textMessage}
+          onConfirm={() => this._closeCreate()}
+        />
       </form>
     );
   }
 }
 
-function fomatInitialStateNumber(val){
-    var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(val + "")){
-      val = val.toString().replace(pattern, "$1,$2");
-    }
-    return val;
+function fomatInitialStateNumber(val) {
+  var pattern = /(-?\d+)(\d{3})/;
+  while (pattern.test(val + "")) {
+    val = val.toString().replace(pattern, "$1,$2");
+  }
+  return val;
 }
 
-function mapStateToProps({selectsReducer, clientProductReducer}, {fields, productDetail}) {
-    return {
-      selectsReducer,
-      clientProductReducer
-    };
+function mapStateToProps({ selectsReducer, clientProductReducer }, { fields, productDetail }) {
+  return {
+    selectsReducer,
+    clientProductReducer
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-      getMasterDataFields,
-      addProduct,
-      updateProduct
-    }, dispatch);
+  return bindActionCreators({
+    getMasterDataFields,
+    addProduct,
+    updateProduct
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalProduct);

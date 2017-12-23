@@ -99,7 +99,7 @@ class InventorPolicy extends Component {
                                 rows={7}
                                 placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
                                 {...controlLinkedPayments}
-                                error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
+                                error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
                                 touched={true}
                             />
                         }
