@@ -589,14 +589,14 @@ class FormEditPrevisita extends Component {
                     "endTime": this.state.durationPreVisit
                 };
 
-                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
                         if (!response.allowClientPreVisit) {
                             swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo cliente, por favor complemente el informe ya creado o modifique la fecha.');
                         } else {
                             if (!response.allowUserPreVisit) {
-                                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha para el mismo usuario, por favor complemente el informe ya creado o modifique la fecha.');
+                                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya tiene una previsita registrada con otro cliente, en la fecha y hora ingresada.');
                             } else {
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
