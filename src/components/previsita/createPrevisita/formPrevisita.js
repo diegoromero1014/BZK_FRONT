@@ -696,7 +696,7 @@ class FormPrevisita extends Component {
                     </Col>
                     <Col xs={6} md={3} lg={3} >
                         <dt>
-                            <span>Duración previsita - hora (</span><span style={{ color: "red" }}>*</span>)
+                            <span>Duración previsita - horas (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <Input
