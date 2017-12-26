@@ -1216,13 +1216,16 @@ class clientEdit extends Component {
                                     });
                                 }
                             } else {
+                                changeStateSaveData(false, "");
                                 this.setState({ showErrorClientExists: true });
                             }
                         } else {
+                            changeStateSaveData(false, "");
                             this.setState({ showEr: true });
                         }
                     });
                 } else {
+                    changeStateSaveData(false, "");
                     this.setState({ showEr: true });
                 }
             }, (reason) => {
