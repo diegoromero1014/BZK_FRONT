@@ -7,7 +7,8 @@ import {
     PARAMETER_COMEX_URL,
     FUND_FLOWS_TITLE,
     COMEX_TITLE,
-    MODULE_WALLET_SHARE_TITLE
+    MODULE_WALLET_SHARE_TITLE,
+    CONTROL_DASHBOARD_TITLE
 } from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import {updateTitleNavBar} from '../navBar/actions';
@@ -20,6 +21,7 @@ class Transactional extends Component {
     constructor(props) {
         super(props);
         this.openWalletShare = this.openWalletShare.bind(this);
+        this.openControlDashboard = this.openControlDashboard.bind(this);
     }
 
     componentWillMount() {
@@ -49,6 +51,10 @@ class Transactional extends Component {
 
     openWalletShare(){
         redirectUrl("/dashboard/walletShare");
+    }
+
+    openControlDashboard(){
+        redirectUrl("/dashboard/controlDashboard");
     }
 
     render() {
@@ -119,6 +125,21 @@ class Transactional extends Component {
                                 <Button fluid
                                         onClick={this.downLoadFileUrl.bind(this, transactional.get(PARAMETER_FUND_FLOWS_URL))}>
                                     <Icon color="green" name='file excel outline'/>Descargar</Button>
+                            </Card.Content>
+                        </Card>
+                        <Card>
+                            <Card.Content>
+                                <Card.Header style={styleHeader}>
+                                    {CONTROL_DASHBOARD_TITLE}
+                                </Card.Header>
+                                <Card.Description>
+                                    Observación: El tablero de control muestra la información de ventas hechas con tarjetas débito.
+                                </Card.Description>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <Button fluid
+                                        onClick={this.openControlDashboard}>
+                                    <Icon color="blue" name='computer'/>Abrir</Button>
                             </Card.Content>
                         </Card>
                     </Card.Group>
