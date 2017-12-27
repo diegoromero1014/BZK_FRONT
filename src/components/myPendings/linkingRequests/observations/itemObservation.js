@@ -19,7 +19,7 @@ class ItemObservation extends Component {
             activeUser = true;
         }
         return (
-            <div style={{ background: color, margin: "15px", padding: "15px", borderRadius: '6px' }}>
+            <div style={{ background: color, margin: "15px", padding: "15px", borderRadius: '6px' , wordWrap: 'break-word'}}>
                 <p>{item.observation}</p>
                 <div style={activeUser ? { textAlign: 'right' } : {}}>
                     <span style={{ color: '#989EA0', fontStyle: 'italic', fontSize: '13px' }}>

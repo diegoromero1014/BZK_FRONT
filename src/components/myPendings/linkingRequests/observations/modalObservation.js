@@ -76,7 +76,7 @@ class ModalObservation extends Component {
         const listObservations = linkRequestsReducer.get('observationsByLinkingRequests');
         return (
             <div>
-                <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                <div style={{overflow: 'hidden'}} className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <Row style={{ margin: '15px 0px 0px 10px' }}>
                         <Col xs={6} md={3} lg={3}>
