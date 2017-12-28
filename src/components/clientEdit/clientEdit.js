@@ -2180,7 +2180,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>NIT principal</span>
+                            <span>NIT principal (</span><span style={{color: "red"}}>*</span>)
                         </dt>
                         <dt style={{marginTop: '8px'}}>
                             <span style={{fontWeight: 'normal'}}>{nitPrincipal.value}</span>
