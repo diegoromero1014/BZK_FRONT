@@ -6,7 +6,8 @@ import { consultList } from '../../selectsComponent/actions';
 import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM
+    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask } from '../../../actionsGlobal';
@@ -15,18 +16,56 @@ import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
-import { saveStructuredDelivery, structuredDeliveryDetail } from './actions';
+import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
 import _ from 'lodash';
 import {
     CORPORATE_GOVERNANCE_HELP, BUSINESS_WITH_AFFILIATES_HELP, MERGERS_HELP, RECIPROCITY_HELP
 } from './constants';
 import moment from 'moment';
-import { setEvents, clearEvents } from './events/actions';
+import { setEvents, clearEvents, } from './events/actions';
 import ToolTip from '../../toolTip/toolTipComponent';
 
 const fields = ["id", "corporateGobernance", "corporateGobernanceDate", "reciprocity", "reciprocityDate", "specialConsiderations",
     "specialConsiderationsDate", "businessWithAffiliates", "businessWithAffiliatesDate", "mergers", "mergersDate", "dificultSituations",
     "dificultSituationsDate"];
+const errors = {};
+
+const validate = (values) => {
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.corporateGobernance)) {
+        errors.corporateGobernance = VALUE_XSS_INVALID;
+    } else {
+        errors.corporateGobernance = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.reciprocity)) {
+        errors.reciprocity = VALUE_XSS_INVALID;
+    } else {
+        errors.reciprocity = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.specialConsiderations)) {
+        errors.specialConsiderations = VALUE_XSS_INVALID;
+    } else {
+        errors.specialConsiderations = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.businessWithAffiliates)) {
+        errors.businessWithAffiliates = VALUE_XSS_INVALID;
+    } else {
+        errors.businessWithAffiliates = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.mergers)) {
+        errors.mergers = VALUE_XSS_INVALID;
+    } else {
+        errors.mergers = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dificultSituations)) {
+        errors.dificultSituations = VALUE_XSS_INVALID;
+    } else {
+        errors.dificultSituations = null;
+    }
+
+
+    return errors;
+};
 
 class componentStructuredDelivery extends Component {
     constructor(props) {
@@ -45,14 +84,30 @@ class componentStructuredDelivery extends Component {
     _submitStructuredDelivery() {
         const {
             fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted, updateEventErrors
         } = this.props;
-        if (stringValidate(corporateGobernance.value) || stringValidate(reciprocity.value) || stringValidate(specialConsiderations.value)
-            || stringValidate(businessWithAffiliates.value) || stringValidate(mergers.value) || stringValidate(dificultSituations.value)
-            || structuredDeliveryEvents.size > 0) {
-            var listEvents = [], allowSave = true;
+
+        let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
+        let _arrValues = [corporateGobernance.value, reciprocity.value, specialConsiderations.value, businessWithAffiliates.value, mergers.value, dificultSituations.value]
+        console.log(stringValidate(_arrValues.join("")));
+
+        let succesValidateEmpty = stringValidate(_arrValues.join(""));
+
+        let succesValidateXss = _arrValues.filter((value) => eval(REGEX_SIMPLE_XSS_STRING).test(value)).length == 0;
+
+        invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
+
+        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) {
+            let listEvents = [];
+            let allowSave = true;
+
             structuredDeliveryEvents.map((event) => {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
+                    updateEventErrors(true, "Debe ingresar todos los campos")
+                    allowSave = false;
+                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(event.name)) {
+                    updateEventErrors(true, VALUE_XSS_INVALID);
+                    invalidMessage = REGEX_SIMPLE_XSS_MESAGE;
                     allowSave = false;
                 }
                 listEvents.push({
@@ -87,12 +142,13 @@ class componentStructuredDelivery extends Component {
                         });
                     }
                     changeStateSaveData(false, "");
+                    updateEventErrors(false);
                 }, (reason) => {
                     changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 });
             } else {
-                swtShowMessage('error', 'Información incompleta', 'Señor usuario, debe diligenciar todos los campos de los eventos.');
+                swtShowMessage('error', 'Historial', invalidMessage);
             }
         } else {
             swtShowMessage('error', 'Información incompleta', 'Señor usuario, para guardar debe diligenciar al menos un campo.');
@@ -199,12 +255,13 @@ class componentStructuredDelivery extends Component {
                                     </ToolTip>
                                 </dt>
                                 <Textarea
+                                    {...corporateGobernance}
                                     name="corporateGobernance"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...corporateGobernance}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -227,12 +284,13 @@ class componentStructuredDelivery extends Component {
                                     </ToolTip>
                                 </dt>
                                 <Textarea
+                                    {...reciprocity}
                                     name="reciprocity"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...reciprocity}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -251,12 +309,13 @@ class componentStructuredDelivery extends Component {
                                     }
                                 </dt>
                                 <Textarea
+                                    {...specialConsiderations}
                                     name="specialConsiderations"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...specialConsiderations}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -279,12 +338,13 @@ class componentStructuredDelivery extends Component {
                                     </ToolTip>
                                 </dt>
                                 <Textarea
+                                    {...businessWithAffiliates}
                                     name="businessWithAffiliates"
                                     type="text"
                                     max="2000"
                                     title="La longitud máxima de caracteres es de 2000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...businessWithAffiliates}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -308,12 +368,13 @@ class componentStructuredDelivery extends Component {
                                     </ToolTip>
                                 </dt>
                                 <Textarea
+                                    {...mergers}
                                     name="mergers"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...mergers}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -332,12 +393,13 @@ class componentStructuredDelivery extends Component {
                                     }
                                 </dt>
                                 <Textarea
+                                    {...dificultSituations}
                                     name="dificultSituations"
                                     type="text"
                                     max="1000"
                                     title="La longitud máxima de caracteres es de 1000"
                                     style={{ width: '100%', height: '100px' }}
-                                    {...dificultSituations}
+                                    touched={true}
                                 />
                             </div>
                         </Col>
@@ -380,7 +442,8 @@ function mapDispatchToProps(dispatch) {
         stringValidate,
         setEvents,
         clearEvents,
-        changeStateSaveData
+        changeStateSaveData,
+        updateEventErrors
     }, dispatch);
 }
 
@@ -397,5 +460,6 @@ function mapStateToProps({ navBar, customerStory, selectsReducer, reducerGlobal,
 
 export default reduxForm({
     form: 'formStructuredCustomer',
-    fields
+    fields,
+    validate
 }, mapStateToProps, mapDispatchToProps)(componentStructuredDelivery);

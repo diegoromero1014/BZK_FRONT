@@ -2,10 +2,13 @@ import { UPDATE_EVENT_ERRORS, SAVE_STRUCTURED_DELIVERY, STRUCTURED_DELIVERY_DETA
 import axios from 'axios';
 import { APP_URL } from '../../../constantsGlobal';
 
-export function updateEventErrors(eventErrors) {
+export function updateEventErrors(eventErrors, message = "") {
     return {
         type: UPDATE_EVENT_ERRORS,
-        payload: eventErrors
+        payload: {
+            isError: eventErrors,
+            message: message
+        }
     };
 }
 
