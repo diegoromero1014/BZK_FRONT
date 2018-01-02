@@ -5,7 +5,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -31,6 +34,7 @@ class ComponentListMainClients extends Component {
         this._viewInformationClient = this._viewInformationClient.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainClients = this._deleteMainClients.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
     }
 
     componentWillMount() {
@@ -43,22 +47,46 @@ class ComponentListMainClients extends Component {
         }
     }
 
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar un cliente principal debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Principales clientes', message_error);
+        }
+        return _.isEmpty(message_error);
+    }
+
     validateInfo(e) {
         e.preventDefault();
         const { nameClient, participation, term, relevantInformation, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(nameClient.value) || _.isNull(nameClient.value) || _.isEmpty(nameClient.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(term.value) || _.isNull(term.value) || _.isEmpty(term.value)) {
-            countErrors++;
-        }
 
-        if (_.isEqual(countErrors, 0)) {
+
+        // if (_.isEqual(countErrors, 0)) {
+        let validFields = this.fieldValidation([
+            { required: true, value: nameClient.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: true, value: term.value, xss: true },
+            { required: false, value: relevantInformation.value, xss: true }
+        ])
+
+        if (validFields) {
             var listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -85,10 +113,11 @@ class ComponentListMainClients extends Component {
             changeValueListClient(this.state.fieldReducerList, listMainCustomer);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Principales clientes', 'Señor usuario, para agregar un cliente principal debe ingresar todos los valores.');
         }
+        // else {
+        //     this.setState({ errorForm: true });
+        //     swtShowMessage('error', 'Principales clientes', 'Señor usuario, para agregar un cliente principal debe ingresar todos los valores.');
+        // }
     }
 
     clearValues() {
@@ -209,7 +238,7 @@ class ComponentListMainClients extends Component {
                                         max="100"
                                         placeholder="Nombre del cliente"
                                         {...nameClient}
-                                        error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(nameClient.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -228,7 +257,7 @@ class ComponentListMainClients extends Component {
                                         {...term}
                                         value={term.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
-                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(term.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -247,7 +276,7 @@ class ComponentListMainClients extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -283,6 +312,8 @@ class ComponentListMainClients extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(relevantInformation.value) ? VALUE_XSS_INVALID : null}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

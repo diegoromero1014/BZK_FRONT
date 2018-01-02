@@ -164,3 +164,32 @@ export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasP
     payload: request
   };
 }
+
+export function validateDatePreVisit(startDate,finalDate, id){
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "idClient": window.localStorage.getItem('idClientSelected'),
+      "userName": window.sessionStorage.getItem('userName'),
+      "initialDate": startDate,
+      "endTime": finalDate,
+      "idPreVisit": id
+    }
+  };
+  let request = axios.post(APP_URL + "/validateDatePrevisit", json);
+  return{
+    type: constants.CREATE_PREVISIT,
+    payload: request
+  };
+}

@@ -34,6 +34,16 @@ const optionsTypeEntity = [
         text: 'Accionista',
         value: 'Accionista',
         key: 'Accionista'
+    },
+    {
+        text: 'Miembro de junta',
+        value: 'Miembro de junta',
+        key: 'Miembro de junta'
+    },
+    {
+        text: 'Prospecto',
+        value: 'Prospecto',
+        key: 'Prospecto'
     }
 ];
 

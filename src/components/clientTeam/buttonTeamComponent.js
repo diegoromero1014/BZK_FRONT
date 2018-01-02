@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalComponentTeam from './modalComponentTeam';
 import {ORANGE_COLOR} from '../../constantsGlobal';
@@ -30,10 +29,10 @@ class buttonTeamComponent extends Component {
     return (
         <div>
           <button className="btn btn-primary" type="button" title="Ver célula" style={{backgroundColor: ORANGE_COLOR, borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
-            <i className="users outline icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
+            <i className="users outline icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}/>
           </button>
 
-          <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+          <Modal isOpen={this.state.modalIsOpen} contentLabel="Célula" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
               <div className="modalBt4-content modal-content">
                 <div className="modalBt4-header modal-header">

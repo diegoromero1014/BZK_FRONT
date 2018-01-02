@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import {bindActionCreators} from "redux";
-import {redirectUrl} from "../../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import React, { Component } from "react";
+import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import { redirectUrl } from "../../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {PREVISIT_TYPE} from "../../selectsComponent/constants";
-import {getMasterDataFields} from "../../selectsComponent/actions";
+import { PREVISIT_TYPE } from "../../selectsComponent/constants";
+import { getMasterDataFields } from "../../selectsComponent/actions";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
@@ -18,22 +18,27 @@ import {
     SAVE_PUBLISHED,
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
-    TITLE_OTHERS_PARTICIPANTS
+    TITLE_OTHERS_PARTICIPANTS,
+    MESSAGE_ERROR,
+    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
+    VALUE_REQUIERED
 } from "../../../constantsGlobal";
-import {consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter} from "../../../actionsGlobal";
-import {PROPUEST_OF_BUSINESS} from "../constants";
-import {addParticipant,addListParticipant} from "../../participantsVisitPre/actions";
-import {createPrevisit, detailPrevisit, pdfDescarga} from "../actions";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
+import { PROPUEST_OF_BUSINESS } from "../constants";
+import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
+import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
-import {changeStateSaveData} from "../../dashboard/actions";
-import {MENU_CLOSED} from "../../navBar/constants";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { MENU_CLOSED } from "../../navBar/constants";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
-import {showLoading} from "../../loading/actions";
+import { showLoading } from "../../loading/actions";
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import numeral from 'numeral';
 
 const fields = [];
 var datePrevisitLastReview;
@@ -89,6 +94,8 @@ class FormEditPrevisita extends Component {
             typePreVisitError: null,
             datePreVisit: new Date(),
             datePreVisitError: null,
+            durationPreVisit: "",
+            durationPreVisitError: false,
             lugarPrevisit: "",
             lugarPrevisitError: false,
             showConfirm: false,
@@ -137,6 +144,8 @@ class FormEditPrevisita extends Component {
         this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
         this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
+        this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
+        this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     }
 
     _editPreVisit() {
@@ -147,7 +156,7 @@ class FormEditPrevisita extends Component {
     }
 
     _onClickPDF() {
-        const {pdfDescarga, id} = this.props;
+        const { pdfDescarga, id } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
     }
 
@@ -162,6 +171,69 @@ class FormEditPrevisita extends Component {
             this.setState({
                 showMessageCreatePreVisit: false
             });
+        }
+    }
+
+    _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
+        //Elimino los caracteres no validos
+        for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
+            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+                output += val.toString().charAt(i)
+            }
+        }
+        val = output;
+
+        /* Si typeValidation = 2 es por que el valor puede ser negativo
+         Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
+         */
+        var decimal = '';
+        if (val.includes(".")) {
+            var vectorVal = val.split(".");
+            if (allowsDecimal) {
+                val = vectorVal[0] + '.';
+                if (vectorVal.length > 1) {
+                    decimal = vectorVal[1].substring(0, lengthDecimal);
+                }
+            } else {
+                val = vectorVal[0];
+            }
+        }
+
+        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
+            var pattern = /(-?\d+)(\d{3})/;
+            while (pattern.test(val)) {
+                val = val.replace(pattern, "$1,$2");
+            }
+            if (_.isNil(this.state.durationPreVisit)) {
+                return (val + decimal);
+            } else {
+                this.setState({
+                    durationPreVisit: val + decimal
+                });
+            }
+        } else { //Valido si el valor es negativo o positivo
+            var value = _.isNil(val) ? -1 : numeral(val).format('0');
+            if (value >= 0) {
+                pattern = /(-?\d+)(\d{3})/;
+                while (pattern.test(val)) {
+                    val = val.replace(pattern, "$1,$2");
+                }
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return (val + decimal);
+                } else {
+                    this.setState({
+                        durationPreVisit: val + decimal
+                    });
+                }
+            } else {
+                if (_.isNil(this.state.durationPreVisit)) {
+                    return "";
+                } else {
+                    this.setState({
+                        durationPreVisit: ""
+                    });
+                }
+            }
         }
     }
 
@@ -188,12 +260,12 @@ class FormEditPrevisita extends Component {
 
     _closeCancelConfirmChanType() {
         contollerErrorChangeType = false;
-        this.setState({showConfirmChangeTypeVisit: false});
+        this.setState({ showConfirmChangeTypeVisit: false });
     }
 
     _closeConfirmChangeType() {
         contollerErrorChangeType = false;
-        const {selectsReducer} = this.props;
+        const { selectsReducer } = this.props;
         idTypeVisitAuxTwo = idTypeVisitAux;
         const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
@@ -244,6 +316,13 @@ class FormEditPrevisita extends Component {
         this.setState({
             lugarPrevisit: value,
             lugarPrevisitError: null
+        });
+    }
+
+    _changeDurationPreVisit(value) {
+        this.setState({
+            durationPreVisit: value,
+            durationPreVisitError: null
         });
     }
 
@@ -333,16 +412,16 @@ class FormEditPrevisita extends Component {
     _onCloseButton() {
         message = "¿Está seguro que desea salir de la pantalla de edición de previsita?";
         titleMessage = "Confirmación salida";
-        this.setState({showConfirm: true});
+        this.setState({ showConfirm: true });
     }
 
     _closeConfirmCloseVisit() {
-        this.setState({showConfirm: false});
+        this.setState({ showConfirm: false });
         redirectUrl("/dashboard/clientInformation");
     }
 
     _submitCreatePrevisita() {
-        const {participants, createPrevisit, changeStateSaveData, id} = this.props;
+        const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
@@ -362,7 +441,14 @@ class FormEditPrevisita extends Component {
                 lugarPrevisitError: "Debe ingresar un valor"
             });
         }
-
+        if (typeButtonClick === SAVE_PUBLISHED) {
+            if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+                errorInForm = true;
+                this.setState({
+                    durationPreVisitError: "Debe ingresar un valor"
+                });
+            }
+        }
         if (typeButtonClick === SAVE_PUBLISHED) {
             if (_.isEmpty(htmlToText(this.state.targetPrevisit)) || this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") {
                 errorInForm = true;
@@ -499,42 +585,56 @@ class FormEditPrevisita extends Component {
                     "emotionalImpact": this.state.impacto,
                     "newWay": this.state.nuevoModo,
                     "ourSolution": this.state.nuestraSolucion,
-                    "documentStatus": typeButtonClick
+                    "documentStatus": typeButtonClick,
+                    "endTime": this.state.durationPreVisit
                 };
 
-                changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                createPrevisit(previsitJson).then((data) => {
-                    changeStateSaveData(false, "");
-                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                        redirectUrl("/login");
-                    } else {
-                        if ((_.get(data, 'payload.data.status') === 200)) {
-                            typeMessage = "success";
-                            titleMessage = "Edición previsita";
-                            message = "Señor usuario, la previsita se editó de forma exitosa.";
-                            this.setState({showMessageCreatePreVisit: true});
+                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
+                    if (validateResponse(data)) {
+                        const response = _.get(data, 'payload.data.data', false);
+                        if (!response.allowClientPreVisit) {
+                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo cliente.');
                         } else {
-                            typeMessage = "error";
-                            titleMessage = "Edición previsita";
-                            message = "Señor usuario, ocurrió un error editando la previsita.";
-                            this.setState({showMessageCreatePreVisit: true});
+                            if (!response.allowUserPreVisit) {
+                                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
+                            } else {
+                                changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                                createPrevisit(previsitJson).then((data) => {
+                                    changeStateSaveData(false, "");
+                                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                                        redirectUrl("/login");
+                                    } else {
+                                        if ((_.get(data, 'payload.data.status') === 200)) {
+                                            typeMessage = "success";
+                                            titleMessage = "Edición previsita";
+                                            message = "Señor usuario, la previsita se editó de forma exitosa.";
+                                            this.setState({ showMessageCreatePreVisit: true });
+                                        } else {
+                                            typeMessage = "error";
+                                            titleMessage = "Edición previsita";
+                                            message = "Señor usuario, ocurrió un error editando la previsita.";
+                                            this.setState({ showMessageCreatePreVisit: true });
+                                        }
+                                    }
+                                }, (reason) => {
+                                    changeStateSaveData(false, "");
+                                    typeMessage = "error";
+                                    titleMessage = "Edición previsita";
+                                    message = "Señor usuario, ocurrió un error editando la previsita.";
+                                    this.setState({ showMessageCreatePreVisit: true });
+                                });
+                            }
                         }
                     }
-                }, (reason) => {
-                    changeStateSaveData(false, "");
-                    typeMessage = "error";
-                    titleMessage = "Edición previsita";
-                    message = "Señor usuario, ocurrió un error editando la previsita.";
-                    this.setState({showMessageCreatePreVisit: true});
                 });
             } else {
-                this.setState({showErrorSavePreVisit: true});
+                this.setState({ showErrorSavePreVisit: true });
             }
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
             message = "Señor usuario, debe ingresar todos los campos obligatorios.";
-            this.setState({showMessageCreatePreVisit: true});
+            this.setState({ showMessageCreatePreVisit: true });
         }
     }
 
@@ -544,7 +644,7 @@ class FormEditPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const {nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer,showLoading} = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading } = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
@@ -553,9 +653,9 @@ class FormEditPrevisita extends Component {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const {fields: {participantesCliente},addListParticipant, addParticipant, visitReducer, contactsByClient} = this.props;
+                const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
                 let part = result.payload.data.data;
-                let listParticipants=[];
+                let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
                 this.setState({
@@ -564,12 +664,14 @@ class FormEditPrevisita extends Component {
                     targetPrevisit: part.principalObjective === null ? "" : part.principalObjective,
                     pendingPrevisit: part.observations === null ? "" : part.observations,
                     lugarPrevisit: part.visitLocation === null ? "" : part.visitLocation,
+
                     acondicionamiento: part.conditioning === null ? "" : part.conditioning,
                     replanteamiento: part.rethinking === null ? "" : part.rethinking,
                     ahogamiento: part.rationalDrowning === null ? "" : part.rationalDrowning,
                     impacto: part.emotionalImpact === null ? "" : part.emotionalImpact,
                     nuevoModo: part.newWay === null ? "" : part.newWay,
-                    nuestraSolucion: part.ourSolution === null ? "" : part.ourSolution
+                    nuestraSolucion: part.ourSolution === null ? "" : part.ourSolution,
+                    durationPreVisit: part.endTime === null ? "" : part.endTime
                 });
 
                 //Adicionar participantes por parte del cliente
@@ -588,7 +690,7 @@ class FormEditPrevisita extends Component {
                             : ' - ' + value.attitudeOverGroupName,
                         fecha: Date.now(),
                         uuid,
-                        order: _.isNull(value.order)? 0 : value.order
+                        order: _.isNull(value.order) ? 0 : value.order
                     }
                     listParticipants.push(clientParticipant);
                 });
@@ -608,7 +710,7 @@ class FormEditPrevisita extends Component {
                         actitudBanco: '',
                         fecha: Date.now(),
                         uuid,
-                        order: _.isNull(value.order)? 0 : value.order
+                        order: _.isNull(value.order) ? 0 : value.order
                     }
                     listParticipants.push(clientParticipant);
                 });
@@ -628,9 +730,9 @@ class FormEditPrevisita extends Component {
                         actitudBanco: '',
                         fecha: Date.now(),
                         uuid,
-                        order: _.isNull(value.order)? 0 : value.order
+                        order: _.isNull(value.order) ? 0 : value.order
                     }
-                    
+
                     listParticipants.push(otherParticipant);
                 });
                 addListParticipant(listParticipants);
@@ -646,14 +748,14 @@ class FormEditPrevisita extends Component {
                     }
                     addTask(task);
                 });
-                showLoading(false,null);
+                showLoading(false, null);
             });
         }
     }
 
     render() {
         const {
-            fields: {acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion},
+            fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
             clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar
         } = this.props;
         const ownerDraft = previsitReducer.get('ownerDraft');
@@ -676,40 +778,40 @@ class FormEditPrevisita extends Component {
 
         return (
             <form onSubmit={handleSubmit(this._submitCreatePrevisita)}
-                  onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
-                  className="my-custom-tab"
-                  style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+                className="my-custom-tab"
+                style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={10} sm={10} md={10} lg={10}>
-                        <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
+                        <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        { _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) &&
-                        <button type="button" onClick={this._editPreVisit}
+                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) &&
+                            <button type="button" onClick={this._editPreVisit}
                                 className={'btn btn-primary modal-button-edit'}
-                                style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>Editar <i
-                            className={'icon edit'}></i></button>
+                                style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
+                                    className={'icon edit'}></i></button>
                         }
                     </Col>
                 </Row>
-                <Row style={{padding: "10px 10px 20px 20px"}}>
+                <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="browser icon" style={{fontSize: "20px"}}/>
-                            <span style={{fontSize: "20px"}}> Datos de visita</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="browser icon" style={{ fontSize: "20px" }} />
+                            <span style={{ fontSize: "20px" }}> Datos de visita</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <div style={{paddingRight: "15px"}}>
+                        <div style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Tipo de visita (</span><span style={{color: "red"}}>*</span>)
+                                <span>Tipo de visita (</span><span style={{ color: "red" }}>*</span>)
                                 <Tooltip text={titleMessageTypePrevisit}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
                                 </Tooltip>
                             </dt>
                             <ComboBox
@@ -728,9 +830,9 @@ class FormEditPrevisita extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={6} md={3} lg={3} style={{paddingRight: "20px"}}>
+                    <Col xs={6} md={3} lg={3} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha - DD/MM/YYYY (</span><span style={{color: "red"}}>*</span>)
+                            <span>Fecha - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
                         </dt>
                         <dt>
                             <DateTimePickerUi
@@ -746,9 +848,29 @@ class FormEditPrevisita extends Component {
                             />
                         </dt>
                     </Col>
+                    <Col xs={6} md={3} lg={3} >
+                        <dt>
+                            <span>Duración previsita - horas (</span><span style={{ color: "red" }}>*</span>)
+                        </dt>
+                        <dt>
+                            <Input
+                                name="txtDuracion"
+                                value={this.state.durationPreVisit}
+                                min={1}
+                                max="5"
+                                placeholder="Duración previsita"
+                                error={_.isEmpty(this.state.durationPreVisitError) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(this.state.durationPreVisitError) ? VALUE_XSS_INVALID : null)}
+                                error={this.state.durationPreVisitError}
+                                type="text"
+                                onChange={val => this._changeDurationPreVisit(val)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
+                                disabled={this.state.isEditable ? '' : 'disabled'}
+                            />
+                        </dt>
+                    </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <dt><span>Lugar (</span><span style={{color: "red"}}>*</span>)</dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt><span>Lugar (</span><span style={{ color: "red" }}>*</span>)</dt>
+                        <dt style={{ marginRight: "17px" }}>
                             <Input
                                 value={this.state.lugarPrevisit}
                                 touched={true}
@@ -764,65 +886,65 @@ class FormEditPrevisita extends Component {
                     </Col>
                 </Row>
 
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs>
-                        <div className="ui top attached tabular menu" style={{width: "100%"}}>
-                            <a className={`${this.state.activeItemTabClient} item`} style={{width: "33%"}}
-                               data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
+                        <div className="ui top attached tabular menu" style={{ width: "100%" }}>
+                            <a className={`${this.state.activeItemTabClient} item`} style={{ width: "33%" }}
+                                data-tab="first" onClick={this._clickSeletedTab.bind(this, 1)}>Participantes en la
                                 reunión por parte del cliente
                                 <Tooltip text={TITLE_CLIENT_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </Tooltip>
                             </a>
-                            <a className={`${this.state.activeItemTabBanc} item`} style={{width: "40%"}}
-                               data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
+                            <a className={`${this.state.activeItemTabBanc} item`} style={{ width: "40%" }}
+                                data-tab="second" onClick={this._clickSeletedTab.bind(this, 2)}>Participantes en la
                                 reunión por parte del Grupo Bancolombia
                                 <Tooltip text={TITLE_BANC_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </Tooltip>
                             </a>
-                            <a className={`${this.state.activeItemTabOther} item`} style={{width: "26%"}}
-                               data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
+                            <a className={`${this.state.activeItemTabOther} item`} style={{ width: "26%" }}
+                                data-tab="third" onClick={this._clickSeletedTab.bind(this, 3)}>Otros participantes en la
                                 reunión
                                 <Tooltip text={TITLE_OTHERS_PARTICIPANTS}>
                                     <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "5px"}}/>
+                                        style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
                                 </Tooltip>
                             </a>
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabClient} tab segment`}
-                             data-tab="first">
-                            <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="first">
+                            <ParticipantesCliente disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabBanc} tab segment`}
-                             data-tab="second">
-                            <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="second">
+                            <ParticipantesBancolombia disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                         <div className={`ui bottom attached ${this.state.activeItemTabOther} tab segment`}
-                             data-tab="third">
-                            <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'}/>
+                            data-tab="third">
+                            <ParticipantesOtros disabled={this.state.isEditable ? '' : 'disabled'} />
                         </div>
                     </Col>
                 </Row>
 
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Objetivo de la reunión (<span
-                                style={{color: "red"}}>*</span>)</span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Objetivo de la reunión (<span
+                                style={{ color: "red" }}>*</span>)</span>
                             <Tooltip text={titleMessageTarget}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </Tooltip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="targetPrevisit"
@@ -831,7 +953,7 @@ class FormEditPrevisita extends Component {
                             onChange={val => this._changeTargetPrevisit(val)}
                             error={this.state.targetPrevisitError}
                             title="Ingrese el objetivo de la reunión"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                             readOnly={!this.state.isEditable}
                             disabled={this.state.isEditable ? '' : 'disabled'}
                         />
@@ -839,70 +961,69 @@ class FormEditPrevisita extends Component {
                 </Row>
 
                 {valueTypePrevisit === PROPUEST_OF_BUSINESS &&
-                <div>
-                    <Row style={{padding: "10px 10px 20px 20px"}}>
-                        <Col xs={12} md={12} lg={12}>
-                            <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
-                                <div className="tab-content-row"
-                                     style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                                <i className="browser icon" style={{fontSize: "20px"}}/>
-                                <span style={{fontSize: "20px"}}> Metodología Challenger </span>
-                                <Tooltip text={titleMethodologyChallenger}>
-                                    <i className="help circle icon blue"
-                                       style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
-                                </Tooltip>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row style={{padding: "0px 23px 20px 20px"}}>
-                        <Col xs={12} md={12} lg={12}>
-                            <Challenger
-                                acondicionamiento={this.state.acondicionamiento}
-                                acondicionamientoTouch={this.state.acondicionamientoTouch}
-                                acondicionamientoError={this.state.acondicionamientoError}
-                                onChangeAcondicionamiento={val => this._changeAcondicionamiento(val)}
-                                replanteamiento={this.state.replanteamiento}
-                                replanteamientoTouch={this.state.replanteamientoTouch}
-                                replanteamientoError={this.state.replanteamientoError}
-                                onChangeReplanteamiento={val => this._changeReplanteamiento(val)}
-                                ahogamiento={this.state.ahogamiento}
-                                ahogamientoTouch={this.state.ahogamientoTouch}
-                                ahogamientoError={this.state.ahogamientoError}
-                                onChangeAhogamiento={val => this._changeAhogamiento(val)}
-                                impacto={this.state.impacto}
-                                impactoTouch={this.state.impactoTouch}
-                                impactoError={this.state.impactoError}
-                                onChangeImpacto={val => this._changeImpacto(val)}
-                                nuevoModo={this.state.nuevoModo}
-                                nuevoModoTouch={this.state.nuevoModoTouch}
-                                nuevoModoError={this.state.nuevoModoError}
-                                onChangeNuevoModo={val => this._changeNuevoModo(val)}
-                                nuestraSolucion={this.state.nuestraSolucion}
-                                nuestraSolucionTouch={this.state.nuestraSolucionTouch}
-                                nuestraSolucionError={this.state.nuestraSolucionError}
-                                onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
-                                disabled={this.state.isEditable ? '' : 'disabled'}
-                            />
-                        </Col>
-                    </Row>
-                </div>
+                    <div>
+                        <Row style={{ padding: "10px 10px 20px 20px" }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                    <div className="tab-content-row"
+                                        style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                    <i className="browser icon" style={{ fontSize: "20px" }} />
+                                    <span style={{ fontSize: "20px" }}> Metodología Challenger </span>
+                                    <Tooltip text={titleMethodologyChallenger}>
+                                        <i className="help circle icon blue"
+                                            style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
+                                    </Tooltip>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row style={{ padding: "0px 23px 20px 20px" }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <Challenger
+                                    acondicionamiento={this.state.acondicionamiento}
+                                    acondicionamientoTouch={this.state.acondicionamientoTouch}
+                                    acondicionamientoError={this.state.acondicionamientoError}
+                                    onChangeAcondicionamiento={val => this._changeAcondicionamiento(val)}
+                                    replanteamiento={this.state.replanteamiento}
+                                    replanteamientoTouch={this.state.replanteamientoTouch}
+                                    replanteamientoError={this.state.replanteamientoError}
+                                    onChangeReplanteamiento={val => this._changeReplanteamiento(val)}
+                                    ahogamiento={this.state.ahogamiento}
+                                    ahogamientoTouch={this.state.ahogamientoTouch}
+                                    ahogamientoError={this.state.ahogamientoError}
+                                    onChangeAhogamiento={val => this._changeAhogamiento(val)}
+                                    impacto={this.state.impacto}
+                                    impactoTouch={this.state.impactoTouch}
+                                    impactoError={this.state.impactoError}
+                                    onChangeImpacto={val => this._changeImpacto(val)}
+                                    nuevoModo={this.state.nuevoModo}
+                                    nuevoModoTouch={this.state.nuevoModoTouch}
+                                    nuevoModoError={this.state.nuevoModoError}
+                                    onChangeNuevoModo={val => this._changeNuevoModo(val)}
+                                    nuestraSolucion={this.state.nuestraSolucion}
+                                    nuestraSolucionTouch={this.state.nuestraSolucionTouch}
+                                    nuestraSolucionError={this.state.nuestraSolucionError}
+                                    onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                />
+                            </Col>
+                        </Row>
+                    </div>
                 }
-
-                <Row style={{padding: "20px 23px 20px 20px"}}>
+                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "18px"}}/>
-                            <span style={{fontSize: "20px"}}> Pendientes, quejas y reclamos </span>
+                                style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            <span style={{ fontSize: "20px" }}> Pendientes, quejas y reclamos </span>
                             <Tooltip text={titleMessagePendient}>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "18px", cursor: "pointer", marginLeft: "0px"}}/>
+                                    style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
                             </Tooltip>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 23px 20px 20px"}}>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="pendingPrevisit"
@@ -910,7 +1031,7 @@ class FormEditPrevisita extends Component {
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
                             title="Ingrese pendientes, quejas y reclamos"
-                            style={{width: '100%', height: '178px'}}
+                            style={{ width: '100%', height: '178px' }}
                             readOnly={!this.state.isEditable}
                             disabled={this.state.isEditable ? '' : 'disabled'}
                         />
@@ -918,50 +1039,50 @@ class FormEditPrevisita extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{textAlign: "left", marginTop: "20px", marginBottom: "20px", marginLeft: "20px"}}>
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha última revisión formato previsita: </span><span
-                            style={{marginLeft: "0px", color: "#818282"}}>{datePrevisitLastReview}</span>
+                        <div style={{ textAlign: "left", marginTop: "20px", marginBottom: "20px", marginLeft: "20px" }}>
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato previsita: </span><span
+                                style={{ marginLeft: "0px", color: "#818282" }}>{datePrevisitLastReview}</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "10px 10px 0px 20px"}}>
+                <Row style={{ padding: "10px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Creado por</span>
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de creación</span>
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                        {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Modificado por</span>
-                            : '' }
+                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
                         {updatedBy !== null ?
-                            <span style={{fontWeight: "bold", color: "#818282"}}>Fecha de modificación</span>
-                            : '' }
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                            : ''}
+                    </Col>
+                    <Col xs={6} md={3} lg={3}>
+                        {updatedBy !== null ?
+                            <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                            : ''}
                     </Col>
                 </Row>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{createdBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaCreateString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{updatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
                     </Col>
                     <Col xs={6} md={3} lg={3}>
-                        <span style={{marginLeft: "0px", color: "#818282"}}>{fechaModString}</span>
+                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionCreatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy}</span>
                     </Col>
                     <Col xs={6} md={6} lg={6}>
-                        <span style={{marginLeft: "0px", color: "#A7ADAD"}}>{positionUpdatedBy}</span>
+                        <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy}</span>
                     </Col>
                 </Row>
                 <div className="" style={{
@@ -974,23 +1095,23 @@ class FormEditPrevisita extends Component {
                     height: "50px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{width: "580px", height: "100%", position: "fixed", right: "0px"}}>
+                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                                style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px -120px",
-                                    position: "fixed",
-                                    backgroundColor: "#00B5AD"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar como borrador</span>
+                            style={this.state.isEditable === true && ownerDraft === 0 ? {
+                                float: "right",
+                                margin: "8px 0px 0px -120px",
+                                position: "fixed",
+                                backgroundColor: "#00B5AD"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                                style={this.state.isEditable === true ? {
-                                    float: "right",
-                                    margin: "8px 0px 0px 107px",
-                                    position: "fixed"
-                                } : {display: "none"}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar definitivo</span>
+                            style={this.state.isEditable === true ? {
+                                float: "right",
+                                margin: "8px 0px 0px 107px",
+                                position: "fixed"
+                            } : { display: "none" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onClickPDF} style={{
                             float: "right",
@@ -998,7 +1119,7 @@ class FormEditPrevisita extends Component {
                             position: "fixed",
                             backgroundColor: "#eb984e"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Descargar pdf</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={{
                             float: "right",
@@ -1006,7 +1127,7 @@ class FormEditPrevisita extends Component {
                             position: "fixed",
                             backgroundColor: "rgb(193, 193, 193)"
                         }}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
@@ -1015,7 +1136,7 @@ class FormEditPrevisita extends Component {
                     show={this.state.showErrorSavePreVisit}
                     title="Error participantes"
                     text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({showErrorSavePreVisit: false})}
+                    onConfirm={() => this.setState({ showErrorSavePreVisit: false })}
                 />
                 <SweetAlert
                     type={typeMessage}
@@ -1033,8 +1154,8 @@ class FormEditPrevisita extends Component {
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
-                    onCancel={() => this.setState({showConfirm: false})}
-                    onConfirm={this._closeConfirmCloseVisit}/>
+                    onCancel={() => this.setState({ showConfirm: false })}
+                    onConfirm={this._closeConfirmCloseVisit} />
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmChangeTypeVisit}
@@ -1045,7 +1166,7 @@ class FormEditPrevisita extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={this._closeCancelConfirmChanType}
-                    onConfirm={this._closeConfirmChangeType}/>
+                    onConfirm={this._closeConfirmChangeType} />
             </form>
         );
     }
@@ -1058,15 +1179,17 @@ function mapDispatchToProps(dispatch) {
         detailPrevisit,
         addParticipant,
         createPrevisit,
+        validateDatePreVisit,
         consultParameterServer,
         changeStateSaveData,
         nonValidateEnter,
         showLoading,
-        addListParticipant
+        addListParticipant,
+        swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal, navBar}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,

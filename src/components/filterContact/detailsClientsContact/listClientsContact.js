@@ -190,14 +190,14 @@ class ListClientsContact extends Component {
                 <Modal
                     isOpen={filterContactsReducer.get('modalIsOpen')}
                     onRequestClose={this.closeModal}
-                    contentLabel=""
+                    contentLabel="ListClientsContact"
                     className="modalBt4-fade modal fade contact-detail-modal in">
                     <ModalEditRelationship functionClose={this.closeModal} />
                 </Modal>
                 <Modal
                     isOpen={filterContactsReducer.get('modalCreateIsOpen')}
                     onRequestClose={this.closeModal}
-                    contentLabel=""
+                    contentLabel="ModalCreateRelationship"
                     className="modalBt4-fade modal fade contact-detail-modal in">
                     <ModalCreateRelationship functionClose={this.closeModal} />
                 </Modal>

@@ -25,7 +25,8 @@ import {
 import { validateResponse, stringValidate } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, YES
+    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -54,6 +55,28 @@ var messageContact = 'La información de los contactos es válida, ';
 var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection, numberOfBoardMembers;
 var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
+
+const validate = (values, props) => {
+    const errors = {}
+    let errorScrollTop = false;
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
+        errors.contextClientField = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.contextClientField = null;
+    }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
+        errors.inventoryPolicy = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.inventoryPolicy = null;
+    }
+
+    return errors;
+
+}
 
 class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -298,7 +321,7 @@ class ComponentStudyCredit extends Component {
     }
 
     _validateInformationToSave() {
-        const { fields: { contextClientField, customerTypology, controlLinkedPayments }, clientInformacion,
+        const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
             swtShowMessage, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
@@ -385,12 +408,20 @@ class ComponentStudyCredit extends Component {
                             });
                             allowSave = false;
                         }
+
                         if (!stringValidate(contextClientField.value)) {
                             allowSave = false;
                             this.setState({
                                 fieldContextRequired: true
                             });
+                        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value)) {
+                            allowSave = false;
                         }
+
+                        if (eval(REGEX_SIMPLE_XSS_STRING).test(inventoryPolicy.value)) {
+                            allowSave = false;
+                        }
+
                         if (!stringValidate(customerTypology.value)) {
                             allowSave = false;
                             this.setState({
@@ -783,5 +814,6 @@ function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer
 
 export default reduxForm({
     form: 'formStudyCredit',
-    fields
+    fields,
+    validate
 }, mapStateToProps, mapDispatchToProps)(ComponentStudyCredit);

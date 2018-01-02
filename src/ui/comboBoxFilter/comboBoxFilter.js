@@ -12,8 +12,7 @@ class comboBoxFilter extends Component {
 
     componentDidMount() {
         const {onKeyPress} = this.props;
-        const self = this;
-        $("#iconSearchUserFilter").click(function () {
+        $("#iconSearchUserFilter").click(function (e) {
             onKeyPress(e);
         });
     }
@@ -27,7 +26,7 @@ class comboBoxFilter extends Component {
         return (
             <div className={disabled}>
                 <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${disabled}`}
-                     style={{border: "0px", zIndex: "1", padding: "0px"}}>
+                     style={{border: "0px", zIndex: "3", padding: "0px"}}>
                     <div className="ui icon input" style={{width: "100%"}}>
                         <input className={`prompt ${disabled}`} id={ id === undefined ? "inputParticipantBanc" : id}
                                style={{borderRadius: "3px"}}

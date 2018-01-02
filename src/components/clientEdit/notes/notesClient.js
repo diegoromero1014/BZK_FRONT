@@ -60,7 +60,7 @@ class NotesClient extends Component {
           {tabReducer.get('errorNotesEditClient') && notes.size != 0  &&
             <div>
               <div className="ui pointing below red basic label">
-                Debe ingresar todos los campos
+                {tabReducer.get('errorNotesEditClientMessage')}
                   </div>
             </div>
           }
