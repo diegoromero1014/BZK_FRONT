@@ -97,7 +97,6 @@ class EntityItem extends Component {
                                 onChange={(val) => {
                                     return this._updateValue('traderCode', val, this.state.entityName);
                                 }}
-                                onBlur={() => console.log}
                             />
                         </div>
                     </Col>

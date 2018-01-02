@@ -30,10 +30,13 @@ export function updateErrorsNotes(errorNotes, message = "") {
     };
 }
 
-export function updateErrorsLinkEntities(errorLinkEntities) {
+export function updateErrorsLinkEntities(errorLinkEntities, mensaje = "") {
     return {
         type: UPDATE_ERROR_LINK_ENTITIES,
-        payload: errorLinkEntities
+        payload: {
+            isError: errorLinkEntities,
+            message: mensaje
+        }
     }
 }
 
