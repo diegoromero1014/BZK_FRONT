@@ -5,7 +5,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 import { stringValidate } from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -29,6 +32,30 @@ class ComponentListDistributionChannel extends Component {
         this._viewInformationDistribution = this._viewInformationDistribution.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteDistribution = this._deleteDistribution.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
+    }
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && REGEX_SIMPLE_XSS.test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Canales de distribución', message_error);
+        }
+        return _.isEmpty(message_error);
     }
 
     validateInfo(e) {
@@ -43,7 +70,14 @@ class ComponentListDistributionChannel extends Component {
             countErrors++;
         }
 
-        if (_.isEqual(countErrors, 0)) {
+        // if (_.isEqual(countErrors, 0)) { 
+        let validFields = this.fieldValidation([
+            { required: true, value: distributionChannel.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: contribution.value, xss: true }
+        ])
+
+        if (validFields) {
             var listDistribution = clientInformacion.get('listDistribution');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -68,10 +102,11 @@ class ComponentListDistributionChannel extends Component {
             changeValueListClient('listDistribution', listDistribution);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Canales de distribución', 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.');
         }
+        //  else {
+        //     this.setState({ errorForm: true });
+        //     swtShowMessage('error', 'Canales de distribución', 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.');
+        // }
     }
 
     clearValues() {
@@ -176,7 +211,7 @@ class ComponentListDistributionChannel extends Component {
                                         max="100"
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
-                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(distributionChannel.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -195,7 +230,7 @@ class ComponentListDistributionChannel extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -214,7 +249,7 @@ class ComponentListDistributionChannel extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(contribution.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(contribution.value) ? VALUE_XSS_INVALID : null)}
                                     />
                                 </div>
                             </Col>

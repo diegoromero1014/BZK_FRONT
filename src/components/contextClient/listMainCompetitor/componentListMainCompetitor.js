@@ -5,7 +5,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -29,6 +32,30 @@ class ComponentListMainCompetitor extends Component {
         this._viewInformationCompetitor = this._viewInformationCompetitor.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainCompetitor = this._deleteMainCompetitor.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
+    }
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && REGEX_SIMPLE_XSS.test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Principales competidores', message_error);
+        }
+        return _.isEmpty(message_error);
     }
 
     validateInfo(e) {
@@ -36,14 +63,14 @@ class ComponentListMainCompetitor extends Component {
         const { nameCompetitor, participation, term, observations, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(nameCompetitor.value) || _.isNull(nameCompetitor.value) || _.isEmpty(nameCompetitor.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
+      
+        let validFields = this.fieldValidation([
+            { required: true, value: nameCompetitor.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: observations.value, xss: true }
+        ])
 
-        if (_.isEqual(countErrors, 0)) {
+        if (validFields) {
             var listMainCompetitor = clientInformacion.get('listMainCompetitor');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -68,10 +95,11 @@ class ComponentListMainCompetitor extends Component {
             changeValueListClient('listMainCompetitor', listMainCompetitor);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
-        }
+        } 
+        // else {
+        //     this.setState({ errorForm: true });
+        //     swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
+        // }
     }
 
     clearValues() {
@@ -187,7 +215,7 @@ class ComponentListMainCompetitor extends Component {
                                         max="100"
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
-                                        error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(nameCompetitor.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -206,7 +234,7 @@ class ComponentListMainCompetitor extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -237,6 +265,8 @@ class ComponentListMainCompetitor extends Component {
                                         rows={3}
                                         placeholder="Observaciones"
                                         {...observations}
+                                        error={REGEX_SIMPLE_XSS.test(observations.value) ? VALUE_XSS_INVALID : null}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

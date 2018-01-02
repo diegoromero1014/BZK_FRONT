@@ -281,7 +281,7 @@ export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
     } else {
-        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR)) {
+        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS) ) {
             return false;
         }
     }
