@@ -38,7 +38,8 @@ class clientsEconomicGroup extends Component {
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess } = this.props;
+    const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess, clientInformacion } = this.props;
+    const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
     return (
       <div className="client-card" style={{ width: "265px", float: "left", cursor: 'auto' }}>
         <div className="celula-card-top">
@@ -49,7 +50,7 @@ class clientsEconomicGroup extends Component {
           </div>
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: dataIsAccess ? "#B0E0E6" : "#DCDCDC" }}>
-          {dataIsAccess &&
+          {dataIsAccess && haveAccessEdit &&
             <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={() => this.setState({ showConfirmDelete: true })}
               title="Eliminar cliente del grupo económico" />
