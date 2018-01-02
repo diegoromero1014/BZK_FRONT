@@ -11,15 +11,19 @@ class comboBoxFilter extends Component {
     }
 
     componentDidMount() {
-        const {onKeyPress} = this.props;
-        $("#iconSearchUserFilter").click(function (e) {
-            onKeyPress(e);
-        });
+        const {onKeyPress, disabled} = this.props;
+        if (_.isEmpty(disabled)) {
+            $("#iconSearchUserFilter").click(function (e) {
+                onKeyPress(e);
+            });
+        }
     }
 
     render() {
-        const {nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, 
-            onChange, onBlur, onKeyPress, onSelect, value, id, idIcon} = this.props;
+        const {
+            nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId,
+            onChange, onBlur, onKeyPress, onSelect, value, id, idIcon
+        } = this.props;
         if (touched && invalid) {
             scrollTo(parentId);
         }
@@ -28,7 +32,7 @@ class comboBoxFilter extends Component {
                 <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${disabled}`}
                      style={{border: "0px", zIndex: "3", padding: "0px"}}>
                     <div className="ui icon input" style={{width: "100%"}}>
-                        <input className={`prompt ${disabled}`} id={ id === undefined ? "inputParticipantBanc" : id}
+                        <input className={`prompt ${disabled}`} id={id === undefined ? "inputParticipantBanc" : id}
                                style={{borderRadius: "3px"}}
                                autoComplete="off"
                                type="text"
@@ -41,7 +45,8 @@ class comboBoxFilter extends Component {
                                disabled={disabled}
                                maxLength={max}
                         />
-                        <i className="search icon" id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}></i>
+                        <i disabled={disabled} className={`search icon ${disabled}`}
+                           id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}></i>
                     </div>
                     <div className="menu results" id="resultstUserSearch"></div>
                 </div>
@@ -58,7 +63,8 @@ class comboBoxFilter extends Component {
     }
 }
 
-comboBoxFilter.PropTypes = {
+comboBoxFilter
+    .PropTypes = {
     nameInput: PropTypes.string,
     labelInput: PropTypes.string,
     data: PropTypes.array,
