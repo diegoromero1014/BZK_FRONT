@@ -471,6 +471,14 @@ const validate = (values, props) => {
                 errors.operationsForeigns = null;
             }
         }
+
+        if (!values.economicGroupName || !values.groupEconomic ||  !values.nitPrincipal) {
+            errors.economicGroupName = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else {
+            errors.economicGroupName = null;
+        }
+
     }
 
     if (!values.segment) {
@@ -521,12 +529,7 @@ const validate = (values, props) => {
     } else {
         errors.inventoryPolicy = null;
     }
-    if (!values.economicGroupName || !values.groupEconomic ||  !values.nitPrincipal) {
-        errors.economicGroupName = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.economicGroupName = null;
-    }
+
     //ComponentListLineBusiness
     //ComponentListDistributionChannel
     //ComponentListMainClients
@@ -1567,6 +1570,8 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
+
+        console.log("idButton>>>>",idButton);
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor: "#FFFFFF"}}>
                 <div>
@@ -2159,7 +2164,8 @@ class clientEdit extends Component {
                 <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>Grupo económico/relación (</span><span style={{color: "red"}}>*</span>)
+                            <span>Grupo económico/relación </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{color: "red"}}>*</span>)</span>}
                         </dt>
                         <dt>
                             <div className="ui search participantBanc fluid">
@@ -2180,7 +2186,8 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>NIT principal (</span><span style={{color: "red"}}>*</span>)
+                            <span>NIT principal </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{color: "red"}}>*</span>)</span>}
                         </dt>
                         <dt style={{marginTop: '8px'}}>
                             <span style={{fontWeight: 'normal'}}>{nitPrincipal.value}</span>
