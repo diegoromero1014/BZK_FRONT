@@ -19,11 +19,22 @@ import { updateFieldInfoClient } from '../../clientInformation/actions';
 import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
+import {
+    VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 
 const fields = ["observationTrader"];
 const errors = {};
 
 const validate = (values) => {
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observationTrader)) {
+        errors.observationTrader = VALUE_XSS_INVALID;
+    } else {
+        errors.observationTrader = null;
+    }
+
     return errors;
 };
 
@@ -85,18 +96,26 @@ class ButtonLinkClientComponent extends Component {
         } = this.props;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
+        let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
         const newListEntities = linkEntitiesClient.map(linkEntity => {
             if (isEqual(linkEntity.entity, "") || isEqual(linkEntity.entity, null)) {
-                updateErrorsLinkEntities(true);
+                updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                 isValidLinkEntities = false;
             }
+
+
             if (isValidLinkEntities) {
                 if (isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())
                     || isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())) {
                     if (isEmpty(linkEntity.traderCode)) {
-                        updateErrorsLinkEntities(true);
+                        updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
+                        isValidLinkEntities = false;
+                    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(linkEntity.traderCode)) {
+                        updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
+                        inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
                         isValidLinkEntities = false;
                     }
+
                     return {
                         id: linkEntity.idEntity,
                         entity: linkEntity.entity,
@@ -116,10 +135,18 @@ class ButtonLinkClientComponent extends Component {
                 }
             }
         });
+
+        if (eval(REGEX_SIMPLE_XSS_STRING).test(observationTrader.value)) {
+            inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+            isValidLinkEntities = false;
+        }
+
+
+
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
         } else if (!isValidLinkEntities) {
-            swtShowMessage('error', 'Vinculación', 'Señor usuario, por favor ingrese todos los campos obligatorios.');
+            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities);
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
@@ -320,12 +347,13 @@ class ButtonLinkClientComponent extends Component {
                                             <h4>Observación</h4>
                                             <div>
                                                 <Textarea
+                                                    {...observationTrader}
                                                     name="actionArea"
                                                     type="text"
                                                     style={{ width: '100%', height: '100%', textAlign: 'justify' }}
                                                     max="500"
                                                     rows={3}
-                                                    {...observationTrader}
+                                                    touched={true}
                                                 />
                                             </div>
                                         </Col>

@@ -41,14 +41,18 @@ export default (state = initialState, action) => {
         case CLICK_BUTTON_UPDATE_EDIT:
             return state.set("seletedButton", action.payload);
         case UPDATE_ERROR_LINK_ENTITIES:
-            return state.set("errorEditLinkEntitiesClient", action.payload);
+            // return state.set("errorEditLinkEntitiesClient", action.payload);
+            return state.withMutations(map => {
+                map.set('errorEditLinkEntitiesClient', action.payload.isError)
+                    .set('errorEditLinkEntitiesClientMessage', action.payload.message);
+            });
         case UPDATE_ERROR_NOTES:
-            return  state.withMutations(map => {
+            return state.withMutations(map => {
                 map.set('errorNotesEditClient', action.payload.status)
                     .set('errorNotesEditClientMessage', action.payload.message);
-            }); 
-            
-            // state.set("errorNotesEditClient", action.payload);
+            });
+
+        // state.set("errorNotesEditClient", action.payload);
         case CHANGE_VALUE_MODAL_ERRORS:
             return state.set("modalErrorsIsOpen", action.payload);
         case MESSAGE_ERRORS_UPDATE:
