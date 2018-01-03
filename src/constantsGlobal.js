@@ -1,4 +1,4 @@
-export const VERSION_DATE = "28/12/2017";
+export const VERSION_DATE = "03/01/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
