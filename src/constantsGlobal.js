@@ -190,7 +190,7 @@ export const valuesYesNo = [
  * INICIO REGEX XSS
  */
 export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<?[\s\S]iframe|<?[\s\S]link|<?[\s\S]script|cmd|scriptlet|error=|http-equiv|@import)/g;
-export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g;
+export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g; 
 export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
 // export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
 export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|cmd|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";

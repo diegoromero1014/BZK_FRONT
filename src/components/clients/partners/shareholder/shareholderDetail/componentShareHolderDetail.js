@@ -16,7 +16,11 @@ import { CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOL
   from '../../../../selectsComponent/constants';
 import {
   PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR,
-  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
+  REGEX_SIMPLE_XSS,
+  VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS_MESAGE,
+  REGEX_SIMPLE_XSS_STRING
 } from '../../../../../constantsGlobal';
 import { changeStateSaveData } from '../../../../dashboard/actions';
 import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../../../../actionsGlobal';
@@ -45,21 +49,29 @@ const validate = values => {
   }
   if (!values.firstName && valueTypeShareholder === PERSONA_NATURAL) {
     errors.firstName = "Debe ingresar un valor";
+  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstName)) {
+    errors.firstName = VALUE_XSS_INVALID;
   } else {
     errors.firstName = null;
   }
   if (!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL) {
     errors.firstLastName = "Debe ingresar un valor";
+  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstLastName)) {
+    errors.firstLastName = VALUE_XSS_INVALID;
   } else {
     errors.firstLastName = null;
   }
   if (!values.shareHolderName && valueTypeShareholder === PERSONA_JURIDICA) {
     errors.shareHolderName = "Debe ingresar un valor";
+  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.shareHolderName)) {
+    errors.shareHolderName = VALUE_XSS_INVALID;
   } else {
     errors.shareHolderName = null;
   }
   if (!values.sharePercentage) {
     errors.sharePercentage = "Debe ingresar un valor";
+  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.sharePercentage)) {
+    errors.sharePercentage = VALUE_XSS_INVALID;
   } else {
     if (values.sharePercentage <= 0 || values.sharePercentage > 100) {
       errors.sharePercentage = "Debe ingresar un valor mayor a 0 y menor o igual a 100";
@@ -67,6 +79,23 @@ const validate = values => {
       errors.sharePercentage = null;
     }
   }
+
+  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.address)) {
+    errors.address = VALUE_XSS_INVALID;
+  }
+  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.comment)) {
+    errors.comment = VALUE_XSS_INVALID;
+  }
+  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
+    errors.middleName = VALUE_XSS_INVALID;
+  }
+  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
+    errors.secondLastName = VALUE_XSS_INVALID;
+  }
+  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.tributaryNumber)) {
+    errors.tributaryNumber = VALUE_XSS_INVALID;
+  }
+
   return errors;
 };
 
