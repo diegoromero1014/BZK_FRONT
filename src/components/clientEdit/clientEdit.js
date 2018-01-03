@@ -703,11 +703,13 @@ class clientEdit extends Component {
         const {fields: {economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
         if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
             nitPrincipal.onChange("");
+            groupEconomic.onChange('');
         }
         if (e.keyCode === 13 || e.which === 13) {
             e.preventDefault();
             economicGroupsByKeyword(economicGroupName.value);
             economicGroupName.onChange('');
+            groupEconomic.onChange('');
         } else {
             economicGroupName.onChange(e.target.value);
         }
