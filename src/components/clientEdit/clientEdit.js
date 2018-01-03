@@ -1570,8 +1570,6 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
-
-        console.log("idButton>>>>",idButton);
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor: "#FFFFFF"}}>
                 <div>
