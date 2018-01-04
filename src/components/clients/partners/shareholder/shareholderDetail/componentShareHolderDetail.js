@@ -82,18 +82,28 @@ const validate = values => {
 
   if (eval(REGEX_SIMPLE_XSS_STRING).test(values.address)) {
     errors.address = VALUE_XSS_INVALID;
+  } else {
+    errors.address = null;
   }
   if (eval(REGEX_SIMPLE_XSS_STRING).test(values.comment)) {
     errors.comment = VALUE_XSS_INVALID;
+  } else {
+    errors.comment = null;
   }
   if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
     errors.middleName = VALUE_XSS_INVALID;
+  } else {
+    errors.middleName = null;
   }
   if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
     errors.secondLastName = VALUE_XSS_INVALID;
+  } else {
+    errors.secondLastName = null;
   }
   if (eval(REGEX_SIMPLE_XSS_STRING).test(values.tributaryNumber)) {
     errors.tributaryNumber = VALUE_XSS_INVALID;
+  } else {
+    errors.tributaryNumber = null;
   }
 
   return errors;

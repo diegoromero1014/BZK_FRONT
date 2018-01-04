@@ -385,6 +385,8 @@ const validate = (values, props) => {
         if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
+        }else{
+            errors.detailNonOperatingIncome = null;
         }
     }
 
