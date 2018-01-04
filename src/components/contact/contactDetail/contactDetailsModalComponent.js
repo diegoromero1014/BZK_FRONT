@@ -170,27 +170,43 @@ const validate = values => {
 
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactNeighborhood)) {
         errors.contactNeighborhood = VALUE_XSS_INVALID;
+    }else {
+        errors.contactNeighborhood = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactPostalCode)) {
         errors.contactPostalCode = VALUE_XSS_INVALID;
+    }else {
+        errors.contactPostalCode = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactExtension)) {
         errors.contactExtension = VALUE_XSS_INVALID;
+    }else {
+        errors.contactExtension = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMobileNumber)) {
         errors.contactMobileNumber = VALUE_XSS_INVALID;
+    }else {
+        errors.contactMobileNumber = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMiddleName)) {
         errors.contactMiddleName = VALUE_XSS_INVALID;
+    }else {
+        errors.contactMiddleName = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactSecondLastName)) {
         errors.contactSecondLastName = VALUE_XSS_INVALID;
+    }else {
+        errors.contactSecondLastName = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactDateOfBirth)) {
         errors.contactDateOfBirth = VALUE_XSS_INVALID;
+    }else {
+        errors.contactDateOfBirth = null;
     }
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactRelevantFeatures)) {
         errors.contactRelevantFeatures = VALUE_XSS_INVALID;
+    }else {
+        errors.contactRelevantFeatures = null;
     }
 
     return errors;
