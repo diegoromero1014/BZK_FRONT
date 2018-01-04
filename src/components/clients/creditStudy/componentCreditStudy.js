@@ -11,6 +11,7 @@ import ContextEconomicActivity from '../../contextClient/contextEconomicActivity
 import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/componentListLineBusiness';
 import ComponentListDistributionChannel from '../../contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '../../contextClient/inventoryPolicy';
+import ControlLinkedPayments from '../../contextClient/controlLinkedPayments';
 import ComponentListMainClients from '../../contextClient/listMainClients/componentListMainClients';
 import ComponentListMainSupplier from '../../contextClient/listMainSupplier/componentListMainSupplier';
 import ComponentListMainCompetitor from '../../contextClient/listMainCompetitor/componentListMainCompetitor';
@@ -682,6 +683,9 @@ class ComponentStudyCredit extends Component {
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
                     controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
+
+                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired}/>
+                
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                     term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}

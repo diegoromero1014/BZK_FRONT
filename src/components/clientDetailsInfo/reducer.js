@@ -20,6 +20,7 @@ const initialState = Immutable.Map({
     accordion: {
         economicActivity: OPEN_TAB,
         inventoryPolicy: OPEN_TAB,
+        controlLinkedPayments: OPEN_TAB,
         mainCustomer: OPEN_TAB,
         mainSupplier: OPEN_TAB,
         mainCompetition: OPEN_TAB,

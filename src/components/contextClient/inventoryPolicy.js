@@ -5,8 +5,7 @@ import { bindActionCreators } from 'redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
-import { MESSAGE_INVENTORY_POLICE, MESSAGE_CONTROL_LINKED_PAYMENTS } from './constants';
-import { changeValueListClient } from '../clientInformation/actions';
+import { MESSAGE_INVENTORY_POLICE } from './constants';
 import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
@@ -17,22 +16,11 @@ class InventorPolicy extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            fieldReducerNoApplied: 'noAppliedControlLinkedPayments'
-        }
-        this._onChangeControlLinkedPayments = this._onChangeControlLinkedPayments.bind(this);
-    }
-
-    _onChangeControlLinkedPayments() {
-        const { changeValueListClient, controlLinkedPayments, clientInformacion } = this.props;
-        changeValueListClient(this.state.fieldReducerNoApplied, !clientInformacion.get(this.state.fieldReducerNoApplied));
-        controlLinkedPayments.onChange(controlLinkedPayments.value);
     }
 
     render() {
         const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
-            showCheckValidateSection, functionChangeInventoryPolicy, changeValueListClient,
-            controlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
+            showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -71,40 +59,6 @@ class InventorPolicy extends Component {
                         />
                     </div>
                 </Col>
-                <Col xs={12} md={12} lg={12}>
-                    <div style={{ marginTop: "10px" }}>
-                        <div style={{ display: "-webkit-box" }}>
-                            <dt>
-                                <span>Control para pagos entre vinculadas y cambios de control </span>
-                                <div style={{ display: "inline" }}>
-                                    (<span style={{ color: "red" }}>*</span>)
-                                </div>
-                                <ToolTipComponent text={MESSAGE_CONTROL_LINKED_PAYMENTS}>
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                </ToolTipComponent>
-                            </dt>
-                            <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
-                                onClick={this._onChangeControlLinkedPayments}
-                                checked={clientInformacion.get(this.state.fieldReducerNoApplied)} />
-                            <span style={{ fontSize: '11pt', color: 'black', marginLeft: "5px" }}>No aplica</span>
-                        </div>
-                        {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
-                            <Textarea
-                                name="controlLinkedPayments"
-                                validateEnter={true}
-                                type="text"
-                                style={{ width: '100%' }}
-                                max="1000"
-                                rows={7}
-                                placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
-                                {...controlLinkedPayments}
-                                error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
-                                touched={true}
-                            />
-                        }
-                    </div>
-                </Col>
             </Row>
         );
     }
@@ -119,7 +73,6 @@ InventorPolicy.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        changeValueListClient
     }, dispatch);
 }
 
