@@ -705,11 +705,13 @@ class clientEdit extends Component {
         const {fields: {economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
         if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
             nitPrincipal.onChange("");
+            groupEconomic.onChange('');
         }
         if (e.keyCode === 13 || e.which === 13) {
             e.preventDefault();
             economicGroupsByKeyword(economicGroupName.value);
             economicGroupName.onChange('');
+            groupEconomic.onChange('');
         } else {
             economicGroupName.onChange(e.target.value);
         }
@@ -1432,7 +1434,7 @@ class clientEdit extends Component {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
             errors = _.omit(errors, 'controlLinkedPayments');
         } else {
-            if (stringValidate(controlLinkedPayments.value)) {
+            if (!stringValidate(controlLinkedPayments.value)) {
                 errors.controlLinkedPayments = OPTION_REQUIRED;
             }
         }
@@ -1572,8 +1574,6 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
-
-        console.log("idButton>>>>",idButton);
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor: "#FFFFFF"}}>
                 <div>
