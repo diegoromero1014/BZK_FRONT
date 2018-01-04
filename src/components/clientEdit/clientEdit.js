@@ -1432,7 +1432,7 @@ class clientEdit extends Component {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
             errors = _.omit(errors, 'controlLinkedPayments');
         } else {
-            if (stringValidate(controlLinkedPayments.value)) {
+            if (!stringValidate(controlLinkedPayments.value)) {
                 errors.controlLinkedPayments = OPTION_REQUIRED;
             }
         }
