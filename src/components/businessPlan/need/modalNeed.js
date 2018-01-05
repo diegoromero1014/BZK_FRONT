@@ -210,7 +210,7 @@ class ModalNeed extends Component {
         let self = this;
         idEmployee.onChange(null);
         const selector = $('.ui.search.needResponsable');
-        if (e.keyCode === 13 || e.which === 13) {
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined) {
                 selector.toggleClass('loading');

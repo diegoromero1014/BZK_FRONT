@@ -11,11 +11,14 @@ class comboBoxFilter extends Component {
     }
 
     componentDidMount() {
-        const {onKeyPress, disabled} = this.props;
+        const {onKeyPress, disabled,idIcon} = this.props;
+        const _idIcon = idIcon === undefined ? "iconSearchUserFilter" : idIcon;
         if (_.isEmpty(disabled)) {
-            $("#iconSearchUserFilter").click(function (e) {
-                onKeyPress(e);
-            });
+            if(!_.isEqual("disabled",disabled)) {
+                $(`#${_idIcon}`).click(function (e) {
+                    onKeyPress(e);
+                });
+            }
         }
     }
 
@@ -27,12 +30,13 @@ class comboBoxFilter extends Component {
         if (touched && invalid) {
             scrollTo(parentId);
         }
+        const _disabled = _.isEmpty(disabled) ? "" : disabled;
         return (
-            <div className={disabled}>
-                <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${disabled}`}
+            <div className={_disabled}>
+                <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${_disabled}`}
                      style={{border: "0px", zIndex: "3", padding: "0px"}}>
                     <div className="ui icon input" style={{width: "100%"}}>
-                        <input className={`prompt ${disabled}`} id={id === undefined ? "inputParticipantBanc" : id}
+                        <input className={`prompt ${_disabled}`} id={id === undefined ? "inputParticipantBanc" : id}
                                style={{borderRadius: "3px"}}
                                autoComplete="off"
                                type="text"
@@ -42,13 +46,13 @@ class comboBoxFilter extends Component {
                                placeholder="Ingrese un criterio de búsqueda..."
                                onKeyPress={onKeyPress}
                                onSelect={onSelect}
-                               disabled={disabled}
+                               disabled={_disabled}
                                maxLength={max}
                         />
-                        <i disabled={disabled} className={`search icon ${disabled}`}
-                           id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}></i>
+                        <i disabled={_disabled} className={`search icon ${_disabled}`}
+                           id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}/>
                     </div>
-                    <div className="menu results" id="resultstUserSearch"></div>
+                    <div className="menu results" id="resultstUserSearch"/>
                 </div>
                 {
                     touched && error &&

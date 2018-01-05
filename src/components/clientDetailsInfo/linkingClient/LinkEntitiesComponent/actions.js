@@ -37,7 +37,7 @@ export function setEntities(entitiesLinkedClient){
 
 export function clearEntities(){
     return {
-        type: constants.CLEAR_ENTITIES,
+        type: constants.CLEAR_ENTITIES
     };
 }
 

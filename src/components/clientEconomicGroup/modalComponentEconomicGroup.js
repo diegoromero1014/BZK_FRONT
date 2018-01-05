@@ -83,7 +83,7 @@ class ModalComponentEconomicGroup extends Component {
   updateKeyValueClient(e) {
     const { clientsFindServer, swtShowMessage } = this.props;
     const self = this;
-    if (e.keyCode === 13 || e.which === 13) {
+    if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       const nameClient = this.state.nameClientSearch;
       if (stringValidate(nameClient) && nameClient.length >= 3) {
