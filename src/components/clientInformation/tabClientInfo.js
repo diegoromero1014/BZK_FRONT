@@ -43,6 +43,13 @@ class TabClientInfo extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.setState({
+            tabActive: 1
+        })
+    }
+
+
     render() {
         const { infoClient, tabReducer, navBar } = this.props;
         var styleInfo = true;

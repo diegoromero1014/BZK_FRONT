@@ -2,7 +2,7 @@ import axios from 'axios';
 import { APP_URL } from '../../../constantsGlobal';
 import {
     GET_LINK_REQUESTS, LIMITE_INF, CHANGE_PAGE, GET_OBSERVATIONS_BY_LINKING_REQUESTS,
-    CLEAR_LIST_OBSERVATIONS, SAVE_OBSERVATION
+    CLEAR_LIST_OBSERVATIONS, SAVE_OBSERVATION, CLEAR_LINK_REQUEST_PAGINATOR
 } from './constants';
 
 export function getLinkRequests(pageNum, maxRows) {
@@ -107,4 +107,10 @@ export function clearListObservations() {
     return {
         type: CLEAR_LIST_OBSERVATIONS
     }
+}
+
+export function clearLinkRequestPaginator(){
+    return {
+        type: CLEAR_LINK_REQUEST_PAGINATOR
+    };
 }

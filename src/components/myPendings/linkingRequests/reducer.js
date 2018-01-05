@@ -29,6 +29,12 @@ export default (state = initialState, action = {}) => {
             return state.set('limInf', action.limInfe);
         case constants.CLEAR_LIST_OBSERVATIONS:
             return state.set('observationsByLinkingRequests', []);
+        case constants.CLEAR_LINK_REQUEST_PAGINATOR:
+            
+            return state.withMutations(map => {
+                map
+                    .set('page', 1);
+            });
         default:
             return state;
     }
