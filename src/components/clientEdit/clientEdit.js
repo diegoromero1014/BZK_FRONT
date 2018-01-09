@@ -704,7 +704,7 @@ class clientEdit extends Component {
     }
 
     _onChangeGroupEconomic(e) {
-        const { fields: { economicGroupName, nitPrincipal }, economicGroupsByKeyword } = this.props;
+        const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
         if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
             nitPrincipal.onChange("");
             groupEconomic.onChange('');

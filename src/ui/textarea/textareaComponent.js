@@ -10,16 +10,15 @@ import _ from 'lodash';
 class TextareaComponent extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
-            value: ''
+            value: '',
+            touched: false
         };
 
         this._onEnter = this._onEnter.bind(this);
         this._onBlur = this._onBlur.bind(this);
-        // this._onInvalid = this._onInvalid.bind(this);
-
-
+        this._onChange = this._onChange.bind(this);
     }
 
     _onEnter(e) {
@@ -38,17 +37,24 @@ class TextareaComponent extends Component {
 
     _onBlur(e, event) {
         const { nonValidateEnter } = this.props;
-        // console.log("REGEX_SIMPLE_XSS", REGEX_SIMPLE_XSS.test(e.target.value))
-        //  this.setState({
-        //     xssNotification: REGEX_SIMPLE_XSS.test(e.target.value)
-        // });
+        
+        this.setState({
+            touched: true
+        });
+
         nonValidateEnter(true);
     }
 
-    // _onInvalid(e, event) {
-    //     event.preventDefault();
-    //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
-    // }
+
+    _onChange(e, event) {
+        const { onChange, error, touched } = this.props;
+
+        this.setState({
+            value: e.target.value
+        });
+
+        onChange(e, event);
+    }
 
 
     render() {
@@ -66,13 +72,13 @@ class TextareaComponent extends Component {
                         value={value || ''}
                         {...this.props}
                         style={style}
-                        onChange={onChange}
+                        onChange={this._onChange}
                         onKeyPress={this._onEnter}
                         onBlur={this._onBlur}
                     />
                 </div>
                 {
-                    touched && error &&
+                    (touched || this.state.touched) && error &&
                     <div>
                         <div className="ui pointing red basic label">
                             {error}
