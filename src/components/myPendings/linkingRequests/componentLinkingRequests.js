@@ -8,7 +8,7 @@ import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../../dashboard/actions';
 import Tooltip from "../../toolTip/toolTipComponent";
 import ListLinkingRequests from './listLinkingRequests';
-import { getLinkRequests, limitInf, changePage } from './actions';
+import { getLinkRequests, limitInf, changePage, clearLinkRequestPaginator } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import PaginationLinkingRequests from './paginationLinkingRequests';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
@@ -24,6 +24,12 @@ class ComponentAssigned extends Component {
         const { updateTitleNavBar, validatePermissionsByModule } = this.props;
         updateTitleNavBar("Solicitudes de vinculación");
         validatePermissionsByModule(MODULE_CLIENTS);
+       
+    }
+
+    componentWillUnmount(){
+        
+        this.props.clearLinkRequestPaginator();
     }
 
     render() {
@@ -36,6 +42,7 @@ class ComponentAssigned extends Component {
             visibleTable = 'block';
             visibleMessage = 'none';
         }
+
         return (
             <div className="tab-pane quickZoomIn animated"
                 style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
@@ -76,7 +83,8 @@ function mapDispatchToProps(dispatch) {
         limitInf,
         changePage,
         changeStateSaveData,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        clearLinkRequestPaginator
     }, dispatch);
 }
 

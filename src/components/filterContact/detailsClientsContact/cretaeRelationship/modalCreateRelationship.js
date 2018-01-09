@@ -61,8 +61,7 @@ class ModalCreateRelationship extends Component {
         this.addClientToRelationship = this.addClientToRelationship.bind(this);
         this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
         this.updateKeyValueEconomicGroup = this.updateKeyValueEconomicGroup.bind(this);
-        this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this);
-        this.addClientsEconomicToRelationship = this.addClientsEconomicToRelationship.bind(this)
+        this.addClientsEconomicToRelationship = this.addClientsEconomicToRelationship.bind(this);
         thisForm = this;
     }
 
@@ -125,7 +124,7 @@ class ModalCreateRelationship extends Component {
 
     updateKeyValueClient(e) {
         const { fields: { idClient, nameClient }, clientsFindServer } = this.props;
-        if (e.keyCode === 13 || e.which === 13) {
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (nameClient.value !== "" && nameClient.value !== null && nameClient.value !== undefined && nameClient.value.length >= 3) {
                 $('.ui.search.clientRelationship').toggleClass('loading');
@@ -170,9 +169,9 @@ class ModalCreateRelationship extends Component {
     updateKeyValueEconomicGroup(e) {
         const { fields: { groupEconomic, economicGroupName }, economicGroupsByKeyword } = this.props;
         groupEconomic.onChange('');
-        if (e.keyCode === 13 || e.which === 13) {
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
-            if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
+            if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined && economicGroupName.value.length >= 3) {
                 $('.ui.search.economicGroup').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
                     let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
@@ -200,31 +199,17 @@ class ModalCreateRelationship extends Component {
                         $('#economicGroup').focus();
                     }, 150);
                 });
+            } else {
+                this.setState({
+                    showErrorForm: true,
+                    title: "Error de búsqueda",
+                    typeView: "error",
+                    message: "Señor usuario, para realizar la búsqueda de un grupo económico debe ingresar por lo menos tres caracteres."
+                });
             }
         }
     }
 
-    componentDidMount() {
-        $("#iconClientRelationship").click(function () {
-            var e = { keyCode: 13, consultclick: true };
-            thisForm.updateKeyValueClient(e);
-        });
-        $("#iconEconomicGroup").click(function () {
-            var e = { keyCode: 13, consultclick: true };
-            thisForm.updateKeyValueEconomicGroup(e);
-        });
-    }
-
-    componentWillUpdate() {
-        $("#iconClientRelationship").click(function () {
-            var e = { keyCode: 13, consultclick: true };
-            thisForm.updateKeyValueClient(e);
-        });
-        $("#iconEconomicGroup").click(function () {
-            var e = { keyCode: 13, consultclick: true };
-            thisForm.updateKeyValueEconomicGroup(e);
-        });
-    }
 
     addClientToRelationship() {
         const { fields: { idClient, nameClient } } = this.props;
@@ -345,16 +330,6 @@ class ModalCreateRelationship extends Component {
         }
     }
 
-    _onChangeGroupEconomic(e) {
-        const { fields: { economicGroupName }, economicGroupsByKeyword } = this.props;
-        if (e.keyCode === 13 || e.which === 13) {
-            e.preventDefault();
-            economicGroupsByKeyword(economicGroupName.value);
-            economicGroupName.onChange('');
-        } else {
-            economicGroupName.onChange(e.target.value);
-        }
-    }
 
     render() {
         const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness, idClient, nameClient, economicGroupName },
@@ -450,7 +425,6 @@ class ModalCreateRelationship extends Component {
                                                 type="text"
                                                 {...economicGroupName}
                                                 value={economicGroupName.value}
-                                                onChange={this._onChangeGroupEconomic}
                                                 placeholder="Ingrese un criterio de búsqueda..."
                                                 onKeyPress={this.updateKeyValueEconomicGroup}
                                                 touched={true}

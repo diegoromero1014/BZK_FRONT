@@ -151,7 +151,7 @@ class ModalArea extends Component {
   updateKeyValueUsersBanco(e) {
     const { fields: { areaResponsable, idEmployee }, filterUsersBanco } = this.props;
     const selector = $('.ui.search.areaResponsable');
-    if (e.keyCode === 13 || e.which === 13) {
+    if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined) {
         selector.toggleClass('loading');
