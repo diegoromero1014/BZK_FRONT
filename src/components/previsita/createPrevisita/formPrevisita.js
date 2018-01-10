@@ -173,9 +173,9 @@ class FormPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            var pattern = /(-?\d+)(\d{3})/;
+            var pattern = /(-?\d+)(\d{2})/;
             while (pattern.test(val)) {
-                val = val.replace(pattern, "$1,$2");
+                val = val.replace(pattern, "$1.$2");
             }
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
@@ -187,9 +187,9 @@ class FormPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                pattern = /(-?\d+)(\d{3})/;
+                pattern = /(-?\d+)(\d{2})/;
                 while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1,$2");
+                    val = val.replace(pattern, "$1.$2");
                 }
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
@@ -703,7 +703,7 @@ class FormPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                max="5"
+                                max="4"
                                 touched={true}
                                 placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}
