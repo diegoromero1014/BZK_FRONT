@@ -1,13 +1,13 @@
 /**
  * Created by Andres Hurtado on 17/03/2017.
  */
-import React, {Component} from 'react';
-import {Row, Col} from 'react-flexbox-grid';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {updateLinkEntity, addEntity} from './actions';
-import {getMasterDataFields} from '../../../selectsComponent/actions';
-import {FILTER_TYPE_LBO_ID} from '../../../selectsComponent/constants';
+import React, { Component } from 'react';
+import { Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { updateLinkEntity, addEntity } from './actions';
+import { getMasterDataFields } from '../../../selectsComponent/actions';
+import { FILTER_TYPE_LBO_ID } from '../../../selectsComponent/constants';
 import LinkEntity from './entityItem';
 import _ from 'lodash';
 
@@ -20,23 +20,23 @@ class LinkEntitiesClient extends Component {
     }
 
     _updateValue(index, e) {
-        const {updateLinkEntity} = this.props;
+        const { updateLinkEntity } = this.props;
         updateLinkEntity(index, "traderCode", e);
     }
 
     _updateValueList(index, value) {
-        const {updateLinkEntity} = this.props;
+        const { updateLinkEntity } = this.props;
         updateLinkEntity(index, "entity", value);
     }
 
     _addEntity() {
-        const {addEntity} = this.props;
+        const { addEntity } = this.props;
         const uuid = _.uniqueId('entity_');
         addEntity(uuid);
     }
 
     _mapLinkEntitiesItems(entity) {
-        const {selectsReducer} = this.props;
+        const { selectsReducer } = this.props;
         return <LinkEntity
             index={entity.uid}
             key={entity.uid}
@@ -47,32 +47,32 @@ class LinkEntitiesClient extends Component {
     }
 
     render() {
-        const {linkEntitiesClient, tabReducer} = this.props;
+        const { linkEntitiesClient, tabReducer } = this.props;
         return (
-            <Row style={{padding: "0px 10px 20px 20px"}}>
-                <Col xs={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
-                    <button title="Agregar entidad de vinculación" className="btn" style={{margin: '12px 0px 0px 12px',fontSize: '1.5em'}}
-                            type="button"
-                            onClick={this._addEntity}
+            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                <Col xs={12} md={12} lg={12} style={{ marginTop: "-50px", paddingRight: "35px", textAlign: "right" }}>
+                    <button title="Agregar entidad de vinculación" className="btn" style={{ margin: '12px 0px 0px 12px', fontSize: '1.5em' }}
+                        type="button"
+                        onClick={this._addEntity}
                     >
-                        <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}/>
+                        <i className="plus icon" style={{ color: "white", padding: "3px 0 0 5px" }} />
                     </button>
                 </Col>
-                <Col xs={12} md={12} lg={12} style={{marginTop: "5px", paddingRight: "35px"}}>
+                <Col xs={12} md={12} lg={12} style={{ marginTop: "5px", paddingRight: "35px" }}>
                     {tabReducer.get('errorEditLinkEntitiesClient') && linkEntitiesClient.size > 0 &&
-                    <div>
-                        <div className="ui pointing below red basic label">
-                            Debe ingresar todos los campos
+                        <div>
+                            <div className="ui pointing below red basic label">
+                                {tabReducer.get('errorEditLinkEntitiesClientMessage')}
+                            </div>
                         </div>
-                    </div>
                     }
                     <div style={tabReducer.get('errorEditLinkEntitiesClient') && linkEntitiesClient.size > 0 ? {
-                            paddingBottom: "20px",
-                            border: "1px solid red",
-                            borderRadius: "5px"
-                        } : {}}>
+                        paddingBottom: "20px",
+                        border: "1px solid red",
+                        borderRadius: "5px"
+                    } : {}}>
                         {linkEntitiesClient.size == 0 ? <center><h4>No tiene entidades vinculadas.</h4></center>
-                            :linkEntitiesClient.map(this._mapLinkEntitiesItems)
+                            : linkEntitiesClient.map(this._mapLinkEntitiesItems)
                         }
                     </div>
                 </Col>
@@ -89,7 +89,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({linkEntitiesClient, selectsReducer, tabReducer}) {
+function mapStateToProps({ linkEntitiesClient, selectsReducer, tabReducer }) {
     return {
         linkEntitiesClient,
         selectsReducer,

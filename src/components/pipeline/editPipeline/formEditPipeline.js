@@ -472,7 +472,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: { nameUsuario, idUsuario }, filterUsersBanco } = this.props;
             var self = this;
             idUsuario.onChange('');
-            if (e.keyCode === 13 || e.which === 13) {
+            if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
                     $('.ui.search.' + participantBanc).toggleClass('loading');

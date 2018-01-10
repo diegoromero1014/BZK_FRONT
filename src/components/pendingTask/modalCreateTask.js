@@ -78,7 +78,7 @@ class ModalCreateTask extends Component {
     const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
     const selector = $('.ui.search.responsable');
     idEmployee.onChange(null);
-    if (e.keyCode === 13 || e.which === 13) {
+    if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
         selector.toggleClass('loading');

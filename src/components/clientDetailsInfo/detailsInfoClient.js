@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import ActividadEconomica from "./actividadEconomica";
 import InventoryPolicy from "./inventoryPolicy";
+import ControlLinkedPayments from "./controlLinkedPayments";
 import MainCustomer from "./mainCustomer";
 import MainSupplier from "./mainSupplier";
 import MainCompetitor from "./mainCompetitor";
@@ -210,6 +211,11 @@ class DetailsInfoClient extends Component {
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
                         codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
                         componentView={<InventoryPolicy infoClient={infoClient} />} />
+
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
+                        codSection={accordion.controlLinkedPayments} title="Control para pagos entre vinculadas y cambios de control" icon="building"
+                        componentView={<ControlLinkedPayments infoClient={infoClient} />} />
+
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
                         codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"

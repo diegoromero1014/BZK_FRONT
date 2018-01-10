@@ -6,8 +6,8 @@ import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
     validateContactShareholder
 } from "../clientDetailsInfo/actions";
-import { Col, Row } from "react-flexbox-grid";
-import { goBack, redirectUrl } from "../globalComponents/actions";
+import {Col, Row} from "react-flexbox-grid";
+import {goBack, redirectUrl} from "../globalComponents/actions";
 import {
     clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
     consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
@@ -58,6 +58,7 @@ import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
 import InventorPolicy from "../contextClient/inventoryPolicy";
+import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
 import ComponentListMainClients from "../contextClient/listMainClients/componentListMainClients";
 import ComponentListMainSupplier from "../contextClient/listMainSupplier/componentListMainSupplier";
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
@@ -385,6 +386,8 @@ const validate = (values, props) => {
         if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
+        }else{
+            errors.detailNonOperatingIncome = null;
         }
     }
 
@@ -471,6 +474,21 @@ const validate = (values, props) => {
                 errors.operationsForeigns = null;
             }
         }
+
+        if (!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) {
+            errors.economicGroupName = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else {
+            errors.economicGroupName = null;
+        }
+
+        if (!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) {
+            errors.controlLinkedPayments = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else {
+            errors.controlLinkedPayments = null;
+    }
+
     }
 
     if (!values.segment) {
@@ -487,12 +505,7 @@ const validate = (values, props) => {
         errors.segment = null;
     }
 
-    if (!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) {
-        errors.controlLinkedPayments = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.controlLinkedPayments = null;
-    }
+
 
     if (eval(REGEX_SIMPLE_XSS_STRING).test(values.description)) {
         errors.description = VALUE_XSS_INVALID;
@@ -521,6 +534,7 @@ const validate = (values, props) => {
     } else {
         errors.inventoryPolicy = null;
     }
+
     //ComponentListLineBusiness
     //ComponentListDistributionChannel
     //ComponentListMainClients
@@ -583,8 +597,7 @@ class clientEdit extends Component {
             showFormAddMainClient: false,
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
-            showFormAddIntOperatrions: false,
-            controlLinkedPaymentsRequired: true
+            showFormAddIntOperatrions: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -691,11 +704,16 @@ class clientEdit extends Component {
     }
 
     _onChangeGroupEconomic(e) {
-        const { fields: { economicGroupName }, economicGroupsByKeyword } = this.props;
+        const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
+        if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
+            nitPrincipal.onChange("");
+            groupEconomic.onChange('');
+        }
         if (e.keyCode === 13 || e.which === 13) {
             e.preventDefault();
             economicGroupsByKeyword(economicGroupName.value);
             economicGroupName.onChange('');
+            groupEconomic.onChange('');
         } else {
             economicGroupName.onChange(e.target.value);
         }
@@ -703,38 +721,38 @@ class clientEdit extends Component {
 
     updateKeyValueUsersBanco(e) {
         const { fields: { groupEconomic, economicGroupName, nitPrincipal }, economicGroupsByKeyword } = this.props;
-        groupEconomic.onChange('');
-        nitPrincipal.onChange('');
-        if (e.keyCode === 13 || e.which === 13) {
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
+            groupEconomic.onChange('');
+            nitPrincipal.onChange('');
             e.preventDefault();
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
-                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
-                        data1.title = data1.group;
-                        data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
-                    });
-                    $('.ui.search.participantBanc')
-                        .search({
-                            cache: false,
-                            source: economicGroup1,
-                            searchFields: [
-                                'title',
-                                'description',
-                                'id',
-                                'relationshipManagerId'
-                            ],
-                            onSelect: function (event) {
-                                economicGroupName.onChange(event.group);
-                                groupEconomic.onChange(event.id);
-                                nitPrincipal.onChange(event.nitPrincipal);
-                                return 'default';
-                            }
+                        let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                        let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                            data1.title = data1.group;
+                            data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
                         });
-                    $('.ui.search.participantBanc').toggleClass('loading');
-                    $('.prompt').focus();
-                }
+                        $('.ui.search.participantBanc')
+                            .search({
+                                cache: false,
+                                source: economicGroup1,
+                                searchFields: [
+                                    'title',
+                                    'description',
+                                    'id',
+                                    'relationshipManagerId'
+                                ],
+                                onSelect: function (event) {
+                                    economicGroupName.onChange(event.group);
+                                    groupEconomic.onChange(event.id);
+                                    nitPrincipal.onChange(event.nitPrincipal);
+                                    return 'default';
+                                }
+                            });
+                        $('.ui.search.participantBanc').toggleClass('loading');
+                        $('.prompt').focus();
+                    }
                 );
             }
         }
@@ -1104,11 +1122,11 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
-            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
-            originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
-            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
+                country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+                dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
+                originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
+                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
+                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -1236,8 +1254,12 @@ class clientEdit extends Component {
     }
 
     _createJsonSaveContextClient() {
-        const { fields: { contextClientField, inventoryPolicy, customerTypology,
-            controlLinkedPayments }, clientInformacion } = this.props;
+        const {
+            fields: {
+                contextClientField, inventoryPolicy, customerTypology,
+                controlLinkedPayments
+            }, clientInformacion
+        } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -1410,11 +1432,15 @@ class clientEdit extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion } = nextProps;
-        let { errors } = this.props;
-        if (clientInformacion.get('noAppliedControlLinkedPayments') || stringValidate(controlLinkedPayments.value)) {
-            errors = [];
+        let { errors } = nextProps;
+        if (idButton === BUTTON_UPDATE) {
+        if (clientInformacion.get('noAppliedControlLinkedPayments')) {
+            errors = _.omit(errors, 'controlLinkedPayments');
         } else {
-            errors.controlLinkedPayments = OPTION_REQUIRED;
+            if (!stringValidate(controlLinkedPayments.value)) {
+                errors.controlLinkedPayments = OPTION_REQUIRED;
+            }
+        }
         }
         const errorsArray = _.toArray(errors);
         this.setState({
@@ -1457,8 +1483,8 @@ class clientEdit extends Component {
                 showLoading(true, MESSAGE_LOAD_DATA);
                 const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
-                constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
+                    constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
+                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1521,17 +1547,19 @@ class clientEdit extends Component {
 
     render() {
         const {
-            fields: { razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
-            liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
-            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-            otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-            participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-            termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
-            participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
-            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments }, handleSubmit,
+            fields: {
+                razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
+                district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+                liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
+                centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
+                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
+                participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
+                termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
+                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
+                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
+            }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1576,7 +1604,7 @@ class clientEdit extends Component {
                                     <BottonContactAdmin errorContact={errorContact} message={messageContact}
                                         functionToExecute={validateContactShareholder} />
                                     <BottonShareholderAdmin errorShareholder={errorShareholder}
-                                        message={messageShareholder}
+                                                            message={messageShareholder}
                                         functionToExecute={validateContactShareholder} />
                                 </div>
                                 :
@@ -1770,17 +1798,18 @@ class clientEdit extends Component {
                     </Col>
                     <ContextEconomicActivity contextClientField={contextClientField} />
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                        participation={participationLB} experience={experience}
-                        showFormLinebusiness={this.state.showFormAddLineOfBusiness}
+                                               participation={participationLB} experience={experience}
+                                               showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                         fnShowForm={this.showFormOut} contribution={contributionLB} />
 
                     <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                        participation={participationDC} contribution={contributionDC}
-                        showFormDistribution={this.state.showFormAddDistribution}
+                                                      participation={participationDC} contribution={contributionDC}
+                                                      showFormDistribution={this.state.showFormAddDistribution}
                         fnShowForm={this.showFormOut} />
                 </Row>
-                <InventorPolicy inventoryPolicy={inventoryPolicy} controlLinkedPayments={controlLinkedPayments}
-                    controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
+                <InventorPolicy inventoryPolicy={inventoryPolicy}/>
+                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
+                    controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1795,24 +1824,24 @@ class clientEdit extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <table style={{ width: "100%" }}>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <dl style={{
-                                            fontSize: "20px",
-                                            color: "#505050",
-                                            marginTop: "5px",
-                                            marginBottom: "5px"
-                                        }}>
-                                            <span className="section-title">Dirección sede principal</span>
-                                        </dl>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div className="tab-content-row"
+                            <tr>
+                                <td>
+                                    <dl style={{
+                                        fontSize: "20px",
+                                        color: "#505050",
+                                        marginTop: "5px",
+                                        marginBottom: "5px"
+                                    }}>
+                                        <span className="section-title">Dirección sede principal</span>
+                                    </dl>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div className="tab-content-row"
                                             style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </Col>
@@ -2115,18 +2144,18 @@ class clientEdit extends Component {
                 </Row>
 
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                    term={termMainClient} relevantInformation={relevantInformationMainClient}
-                    showFormMainClients={this.state.showFormAddMainClient}
+                                          term={termMainClient} relevantInformation={relevantInformationMainClient}
+                                          showFormMainClients={this.state.showFormAddMainClient}
                     fnShowForm={this.showFormOut} />
 
                 <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
-                    term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
-                    showFormMainSupplier={this.state.showFormAddMainSupplier}
+                                           term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                                           showFormMainSupplier={this.state.showFormAddMainSupplier}
                     fnShowForm={this.showFormOut} />
 
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor}
-                    showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                                             observations={obsevationsCompetitor}
+                                             showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} />
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -2142,28 +2171,30 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>Grupo económico/relación</span>
+                            <span>Grupo económico/relación </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                         </dt>
                         <dt>
                             <div className="ui search participantBanc fluid">
                                 <ComboBoxFilter className="prompt" id="inputEconomicGroup"
                                     style={{ borderRadius: "3px" }}
-                                    autoComplete="off"
-                                    disabled={allowChangeEconomicGroup}
-                                    type="text"
-                                    {...economicGroupName}
-                                    value={economicGroupName.value}
-                                    onChange={this._onChangeGroupEconomic}
-                                    placeholder="Ingrese un criterio de búsqueda..."
-                                    onKeyPress={this.updateKeyValueUsersBanco}
-                                    touched={true}
+                                                autoComplete="off"
+                                                disabled={allowChangeEconomicGroup}
+                                                type="text"
+                                                {...economicGroupName}
+                                                value={economicGroupName.value}
+                                                onChange={this._onChangeGroupEconomic}
+                                                placeholder="Ingrese un criterio de búsqueda..."
+                                                onKeyPress={this.updateKeyValueUsersBanco}
+                                                touched={true}
                                 />
                             </div>
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>NIT principal</span>
+                            <span>NIT principal </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                         </dt>
                         <dt style={{ marginTop: '8px' }}>
                             <span style={{ fontWeight: 'normal' }}>{nitPrincipal.value}</span>
@@ -2480,12 +2511,12 @@ class clientEdit extends Component {
                 </Row>
 
                 {_.isEqual(operationsForeignCurrency.value, "true") &&
-                    <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
-                        idCountry={idCountryIntOpe}
-                        participationCountry={participationIntOpeCountry}
-                        customerCoverage={customerCoverageIntOpe}
-                        descriptionCoverage={descriptionCoverageIntOpe}
-                        showFormIntOperations={this.state.showFormAddIntOperatrions}
+                <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                                            idCountry={idCountryIntOpe}
+                                            participationCountry={participationIntOpeCountry}
+                                            customerCoverage={customerCoverageIntOpe}
+                                            descriptionCoverage={descriptionCoverageIntOpe}
+                                            showFormIntOperations={this.state.showFormAddIntOperatrions}
                         fnShowForm={this.showFormOut} />
                 }
 
@@ -2517,13 +2548,13 @@ class clientEdit extends Component {
                         {idButton === BUTTON_UPDATE ?
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 50px", position: "fixed" }}
-                                onClick={this.clickButtonScrollTop} type="submit">
+                                    onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Actualizar/Sarlaft</span>
                             </button>
                             :
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                                onClick={this.clickButtonScrollTop} type="submit">
+                                    onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
                         }

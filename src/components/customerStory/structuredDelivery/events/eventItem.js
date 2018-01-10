@@ -28,12 +28,12 @@ class EventItem extends Component {
         const { updateEvent, index, structuredDeliveryEvents, updateEventErrors } = this.props;
         this.setState(_.set({}, prop, value));
         updateEvent(index, prop, value);
-        updateEventErrors(false);
-        structuredDeliveryEvents.map(map => {
-            if (_.isEqual(map.name, "") || _.isEqual(map.date, "")) {
-                updateEventErrors(true);
-            }
-        });
+        // updateEventErrors(false);
+        // structuredDeliveryEvents.map(map => {
+        //     if (_.isEqual(map.name, "") || _.isEqual(map.date, "")) {
+        //         updateEventErrors(true);
+        //     }
+        // });
     }
 
     _deleteEvent() {
@@ -42,12 +42,13 @@ class EventItem extends Component {
             showConfirm: false
         });
         deleteEvent(index);
-        const {structuredDeliveryEvents, updateEventErrors} = this.props;
+        const { structuredDeliveryEvents, updateEventErrors } = this.props;
         const arrayValues = _.remove(structuredDeliveryEvents.toArray(), (event) => event.uid !== index);
-        const errosName = _.filter(arrayValues, {"name": ""});
-        const errosDate = _.filter(arrayValues, {"date": ""});
-        if( _.size(errosName) > 0 || _.size(errosDate) ){
-             updateEventErrors(true);
+        const errosName = _.filter(arrayValues, { "name": "" });
+        const errosDate = _.filter(arrayValues, { "date": "" });
+        console.log(arrayValues)
+        if (_.size(errosName) > 0 || _.size(errosDate) > 0) {
+            updateEventErrors(true, errosName[0] ? errosName[0] : errosDate[0]);
         } else {
             updateEventErrors(false);
         }
