@@ -116,6 +116,7 @@ export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
+export const MODULE_SHEDULER = "Scheduler";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;

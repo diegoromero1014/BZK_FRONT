@@ -35,6 +35,7 @@ import Transactional from "./components/transactional/transactionalComponent";
 import WalletShare from "./components/transactional/walletShareComponent";
 import ControlDashboard from "./components/transactional/controlDashComponent";
 import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
+import Sheduler from "./components/sheduler/shedulerComponent";
 
 class App extends Component {
     render() {
@@ -86,6 +87,7 @@ export default (
                 <Route path="transactional" component={Transactional}></Route>
                 <Route path="walletShare" component={WalletShare}></Route>
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
+                <Route path="sheduler" component={Sheduler}></Route>
             </Route>
         </Route>
     </Grid>
