@@ -1,7 +1,8 @@
 import Immutable from 'immutable';
 import {
     GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PREVISIT,
-    CLEAR_PREVISIT, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT
+    CLEAR_PREVISIT, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT,
+    ASK_EDIT_PREVISITA, DELETE_BLOCKED_PREVISITA
 } from './constants';
 import {orderBy} from 'lodash';
 
@@ -14,7 +15,8 @@ const initialState = Immutable.Map({
     columnPrevisit: 'pvd.visitTime',
     orderPrevisit: 1,
     detailPrevisit: {},
-    ownerDraft: 0
+    ownerDraft: 0,
+    isBlocked: {}
 });
 
 export default (state = initialState, action) => {
@@ -58,6 +60,13 @@ export default (state = initialState, action) => {
                 map.set('page', 1)
                     .set('limInf', 0)
             });
+
+        case ASK_EDIT_PREVISITA:
+            return state.set('isBlocked', action.payload.data)
+
+        case DELETE_BLOCKED_PREVISITA:
+            return state.set('isBlocked', action.payload.data)
+
         default:
             return state;
     }

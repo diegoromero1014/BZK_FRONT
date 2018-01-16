@@ -21,12 +21,14 @@ import {
     TITLE_OTHERS_PARTICIPANTS,
     MESSAGE_ERROR,
     ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
-    VALUE_REQUIERED
+    VALUE_REQUIERED,
+    MESSAGE_ERROR_SWEET_ALERT,
+    TIME_REQUEST_BLOCK_REPORT
 } from "../../../constantsGlobal";
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit } from "../actions";
+import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
@@ -146,15 +148,94 @@ class FormEditPrevisita extends Component {
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+        this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
+        this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+    }
+
+    _closeShowErrorBlockedPrevisit() {
+        this.setState( { showErrorBlockedPreVisit: false } )
+         
+        if(this.state.shouldRedirect) {
+            redirectUrl("/dashboard/clientInformation")
+        }
+        
+    }
+
+    _canUserEditPrevisita(myUserName) {
+       
+        const { canEditPrevisita, id, swtShowMessage } = this.props;
+
+        return canEditPrevisita(id).then((success) => {
+
+            console.log(success)
+
+            let username = success.payload.data.data
+            
+                        if(_.isNull(username)) {
+                            console.log("null")
+                            swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+            
+
+                        } else if (username === myUserName) {
+
+                            if(! this.state.isEditable) {
+                                // Tengo permiso de editar y no estoy editando
+
+                                console.log("SETTING INTERVAL")
+
+                                this.setState({
+                                    showErrorBlockedPreVisit: false,
+                                    showMessage: false,
+                                    isEditable: !this.state.isEditable,
+                                    intervalId: setInterval(() => {this._canUserEditPrevisita(myUserName)  } , TIME_REQUEST_BLOCK_REPORT)
+                                })
+
+            
+                            }  
+            
+                        } else {
+
+                            if( this.state.isEditable ) {
+                                // Salir de edicion y detener intervalo
+
+                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true})
+
+                                clearInterval(this.state.intervalId);
+
+                            } else {
+                                // Mostar mensaje de el usuario que tiene bloqueado el informe
+                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false})
+                            }
+            
+                            
+            
+                        }
+        })
+
     }
 
     _editPreVisit() {
-        this.setState({
-            showMessage: false,
-            isEditable: !this.state.isEditable
-        });
+
+        showLoading(true, "Cargando...");
+
+        const { swtShowMessage } = this.props;
+
+        let detailPrevisitData = this.props.previsitReducer.get('detailPrevisit').data;
+        const myUserName = window.sessionStorage.getItem('userName')
+
+         this._canUserEditPrevisita(myUserName).then((success) => {
+
+            
+
+            showLoading(false, null);
+
+         }).catch((error) => {
+            showLoading(false, null);
+         })
+
     }
 
+    
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
@@ -200,9 +281,9 @@ class FormEditPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            var pattern = /(-?\d+)(\d{3})/;
+            var pattern = /(-?\d+)(\d{2})/;
             while (pattern.test(val)) {
-                val = val.replace(pattern, "$1,$2");
+                val = val.replace(pattern, "$1.$2");
             }
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
@@ -214,9 +295,9 @@ class FormEditPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                pattern = /(-?\d+)(\d{3})/;
+                pattern = /(-?\d+)(\d{2})/;
                 while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1,$2");
+                    val = val.replace(pattern, "$1.$2");
                 }
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
@@ -753,6 +834,19 @@ class FormEditPrevisita extends Component {
         }
     }
 
+    componentWillUnmount() {
+        const { disableBlockedReport, id } = this.props;
+
+        // Detener envio de peticiones para bloquear el informe
+        clearInterval(this.state.intervalId)
+        // Informar al backend que el informe se puede liberar
+        disableBlockedReport(id).then((success) => {
+           
+        }).catch((error) => {
+            
+        })
+    }
+
     render() {
         const {
             fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
@@ -786,7 +880,7 @@ class FormEditPrevisita extends Component {
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) &&
+                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (! this.state.isEditable) &&
                             <button type="button" onClick={this._editPreVisit}
                                 className={'btn btn-primary modal-button-edit'}
                                 style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
@@ -1131,6 +1225,7 @@ class FormEditPrevisita extends Component {
                         </button>
                     </div>
                 </div>
+
                 <SweetAlert
                     type="error"
                     show={this.state.showErrorSavePreVisit}
@@ -1167,6 +1262,18 @@ class FormEditPrevisita extends Component {
                     showCancelButton={true}
                     onCancel={this._closeCancelConfirmChanType}
                     onConfirm={this._closeConfirmChangeType} />
+
+                
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorBlockedPreVisit}
+                    title="Error al editar previsita"
+                    text={"Señor usuario, en este momento la previsita esta siendo editada por "+this.state.userEditingPrevisita
+                    +". Por favor intentar mas tarde"}
+                    onConfirm={ this._closeShowErrorBlockedPrevisit  }
+
+                />
+
             </form>
         );
     }
@@ -1185,7 +1292,9 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         showLoading,
         addListParticipant,
-        swtShowMessage
+        swtShowMessage,
+        canEditPrevisita,
+        disableBlockedReport
     }, dispatch);
 }
 

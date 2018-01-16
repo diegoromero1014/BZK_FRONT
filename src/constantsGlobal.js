@@ -200,3 +200,11 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
 /**
  * FIN REGEX XSS
  */
+
+
+ /**
+  * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
+  */
+
+export const NAME_REPORT_PREVISIT = "PreVisita"
+export const TIME_REQUEST_BLOCK_REPORT = 30000;
