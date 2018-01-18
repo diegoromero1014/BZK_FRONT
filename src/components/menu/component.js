@@ -38,8 +38,8 @@ const itemClients = {
     link: "/dashboard/clients",
 };
 const itemScheduler = {
-    text: "Scheduler",
-    icon: "building",
+    text: "Agenda",
+    icon: "calendar",
     link: "/dashboard/sheduler",
 };
 const itemContacts = {
