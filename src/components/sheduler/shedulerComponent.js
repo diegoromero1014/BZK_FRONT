@@ -3,64 +3,240 @@ import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import events from './events';
 import Modal from 'react-modal';
+import { reduxForm } from 'redux-form';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import { showLoading } from '../loading/actions';
+import { updateTitleNavBar } from '../navBar/actions';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
-
+import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
+import { consultInfoClient } from "../clientInformation/actions";
+import { consultList, consultDataSelect, consultListWithParameterUbication } from "../selectsComponent/actions";
+import { validatePermissionsByModule } from "../../actionsGlobal";
+import { MODULE_PREVISITS } from "../../constantsGlobal";
+import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
+import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES } from "../selectsComponent/constants";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import _ from 'lodash';
+import { filter } from 'rxjs/operator/filter';
+import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 
 
 BigCalendar.momentLocalizer(moment);
-
+const fields = ["team", "region", "zone"];
 
 class Sheduler extends Component {
     constructor(props) {
         super(props)
-        this.state={
+        this.state = {
             modalIsOpen: false
         }
-        this.eventStyleGetter = this.eventStyleGetter.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.bindClassParticipants = this.bindClassParticipants.bind(this);
+        this._onChangeTeam = this._onChangeTeam.bind(this);
+        this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
+        this.__onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
+        this._handlePrevisitsFind = this._handlePrevisitsFind.bind(this);
+        this._cleanSearch = this._cleanSearch.bind(this);
+
 
     }
 
 
-    _onExit() {
-        redirectUrl("/dashboard/clients");
+    componentWillMount() {
+        const { getSchedulerPrevisits, validatePermissionsByModule, updateTitleNavBar, consultList, consultDataSelect } = this.props;
+        validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            }
+        });
+        consultList(TEAM_FOR_EMPLOYEE);
+        consultDataSelect(LIST_REGIONS);
+        this.setState({
+            display: 'none'
+        })
+        updateTitleNavBar('Agenda');
     }
 
-    eventStyleGetter() {
-        const { events, start, end, isSelected } = this.props;
-        console.log(events);
-        var backgroundColor = '#' + '000000';
-        var color = '#' + 'fff'
-        var style = {
-            backgroundColor: backgroundColor,
-            opacity: 0.8,
-            color: color,
-            border: '0px',
-            display: 'block'
-        };
-        return {
-            style: style
-        };
-    }
-
-    openModal() {
-        this.setState({ modalIsOpen: true });
+    openModal(idClient, idPrevisit) {
+        const { consultInfoClient } = this.props;
+        window.localStorage.setItem("idClientSelected", idClient);
+        consultInfoClient().then((success) => {
+            this.setState({
+                modalIsOpen: true,
+                idPrevisit: idPrevisit
+            });
+        });
     }
 
     closeModal() {
         this.setState({ modalIsOpen: false });
     }
 
-    render() {
+    _onChangeRegionStatus(val) {
+        if (!_.isEqual(val, "")) {
+            const { fields: { team, region, zone }, consultListWithParameterUbication, changeRegion } = this.props;
+            region.onChange(val);
+            zone.onChange(null);
+            team.onChange(null);
+            changeRegion(val);
+            consultListWithParameterUbication(LIST_ZONES, val);
+            this._handlePrevisitsFind();
+        }
+        this.setState({
+            display: 'block'
+        });
+    }
 
+    _cleanSearch() {
+        const { resetForm, showLoading, clearFilter, consultList } = this.props;
+        showLoading(true, 'Cargando..');
+        resetForm();
+        clearFilter();
+        consultList(TEAM_FOR_EMPLOYEE).then((data) => {
+            if (_.has(data, 'payload.data.teamValueObjects')) {
+                this.setState({
+                    display: 'none'
+                });
+                showLoading(false, null);
+            }
+        });
+    }
+
+    _onChangeZoneStatus(val) {
+        const { fields: { zone }, changeZone } = this.props;
+        zone.onChange(val);
+        changeZone(val);
+        if (val) {
+            this._handlePrevisitsFind();
+        }
+        this.setState({
+            display: 'block'
+        });
+    }
+
+    _onChangeTeam(val) {
+        const { fields: { team, region, zone }, changeTeam } = this.props;
+        team.onChange(val);
+        changeTeam(val);
+        if (val) {
+            this._handlePrevisitsFind();
+        }
+        this.setState({
+            display: 'block'
+        });
+    }
+
+    _handlePrevisitsFind() {
+        const { fields: { team, region, zone }, getSchedulerPrevisits } = this.props;
+        getSchedulerPrevisits(team.value, region.value, zone.value).then((response) => {
+            let lista = JSON.parse(response.payload.data.schedulerListPreviist);
+            let jsonP = lista.map((item) => {
+                item.title = item.clientName;
+                item.start = item.initialDatePrevisit;
+                item.end = item.finalDatePrevisit;
+                return item;
+            });
+            return jsonP;
+        });
+    }
+
+    bindClassParticipants(listParticipants, userName) {
+        let isGrant = listParticipants.filter((item) => {
+            return item.toLowerCase() === userName.toLowerCase();
+        }).length > 0;
+        return isGrant ? 'cls-green' : 'cls-yelow';
+    }
+
+
+    render() {
+        const { fields: { team, region, zone }, schedulerPrevisitReduser, selectsReducer } = this.props;
+        const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
+        const userName = sessionStorage.getItem('userName');
         return (
             <div>
-                <div style={{ padding: '10px', background: 'white' }}>
+                <form>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px" }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                            <ComboBox
+                                name="region"
+                                labelInput="Región"
+                                {...region}
+                                onChange={val => this._onChangeRegionStatus(val)}
+                                value={region.value}
+                                onBlur={region.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                searchClient={'client'}
+                                data={selectsReducer.get(LIST_REGIONS) || []}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                            <ComboBox
+                                name="zona"
+                                labelInput="Zona"
+                                {...zone}
+                                onChange={val => this._onChangeZoneStatus(val)}
+                                value={zone.value}
+                                onBlur={zone.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                searchClient={'client'}
+                                data={selectsReducer.get(LIST_ZONES) || []}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                            <ComboBox
+                                name="celula"
+                                labelInput="Célula"
+                                {...team}
+                                onChange={val => this._onChangeTeam(val)}
+                                value={team.value}
+                                onBlur={team.onBlur}
+                                valueProp={'id'}
+                                textProp={'description'}
+                                searchClient={'client'}
+                                data={selectsReducer.get('teamValueObjects')}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                                <i className="erase icon"
+                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                            </button>
+                        </Col>
+                        <Col xs={12} sm={12} md={2} lg={3}>
+                            <div style={{ height: '80px', marginLeft: '30px' }}>
+                                <Row>
+                                    <div style={{
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        backgroundColor: GREEN_COLOR
+                                    }} />
+                                    <span style={{ marginLeft: '10px' }}> Está invitado</span>
+                                </Row>
+                                <Row style={{ marginTop: "5px" }}>
+                                    <div style={{
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        backgroundColor: ORANGE_COLOR
+                                    }} />
+                                    <span style={{ marginLeft: '10px' }}> No está invitado</span>
+                                </Row>
+                            </div>
+                        </Col>
+                    </Row>
+                </form>
+                <div style={{ padding: '10px', background: 'white', display: this.state.display }}>
                     <BigCalendar
                         {...this.props}
                         selectable
-                        events={events}
+                        events={data}
                         defaultView='week'
                         culture={'es'}
                         messages={{
@@ -72,26 +248,22 @@ class Sheduler extends Component {
 
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
-                        defaultDate={new Date(2017, 11, 4)}
-                        onSelectEvent={this.openModal}
-                        eventPropGetter={events => ({className: events.isGrant? 'cls-blue': 'cls-red' })}
+                        defaultDate={new Date()}
+                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
+                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />
                 </div>
                 <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Célula</h4>
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Previsita</h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-/**
- * lugar donde va el cuepo del modal
- */
-
-
+                            <EditPrevisit params={{ id: this.state.idPrevisit }} />
                         </div>
                     </div>
                 </Modal>
@@ -101,4 +273,29 @@ class Sheduler extends Component {
     }
 }
 
-export default Sheduler
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        getSchedulerPrevisits,
+        consultInfoClient,
+        validatePermissionsByModule,
+        updateTitleNavBar,
+        consultList,
+        consultDataSelect,
+        consultListWithParameterUbication,
+        changeTeam,
+        changeRegion,
+        showLoading,
+        clearFilter,
+        changeZone
+    }, dispatch);
+}
+function mapStateToProps({ schedulerPrevisitReduser, selectsReducer }, ownerProps) {
+    return {
+        schedulerPrevisitReduser,
+        selectsReducer,
+        fields
+    };
+}
+
+
+export default reduxForm({ form: SHEDULER_FILTER, fields }, mapStateToProps, mapDispatchToProps)(Sheduler);

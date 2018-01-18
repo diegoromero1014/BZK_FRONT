@@ -1,9 +1,8 @@
 export default [
   {
     'title': 'Previsita vizualizacion calendario',
-
-    'start': new Date(2017, 11, 5),
-    'end': new Date(2017, 11, 5),
+    'start': new Date(2018, 1, 12),
+    'end': new Date(2018, 1, 12),
     'isGrant': true
   },
   {

@@ -66,6 +66,7 @@ import partnersReducer from '../components/clients/partners/reducer';
 import menuReducer from '../components/menu/reducer';
 import transactionalReducer from '../components/transactional/reducer';
 import linkRequestsReducer from '../components/myPendings/linkingRequests/reducer';
+import schedulerPrevisitReduser from '../components/sheduler/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -133,6 +134,7 @@ export default combineReducers({
     riskGroupReducer,
     tabPartners: partnersReducer,
     menu: menuReducer,
-    transactional : transactionalReducer,
-    linkRequestsReducer
+    transactional: transactionalReducer,
+    linkRequestsReducer,
+    schedulerPrevisitReduser
 });
