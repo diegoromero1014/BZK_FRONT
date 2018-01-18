@@ -11,11 +11,11 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication } from "../selectsComponent/actions";
+import { consultList, consultDataSelect, consultListWithParameterUbication,consultListWithParameter } from "../selectsComponent/actions";
 import { validatePermissionsByModule } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
-import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES } from "../selectsComponent/constants";
+import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from "../selectsComponent/constants";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
@@ -77,12 +77,15 @@ class Sheduler extends Component {
 
     _onChangeRegionStatus(val) {
         if (!_.isEqual(val, "")) {
-            const { fields: { team, region, zone }, consultListWithParameterUbication, changeRegion } = this.props;
+            const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
             region.onChange(val);
             zone.onChange(null);
             team.onChange(null);
             changeRegion(val);
             consultListWithParameterUbication(LIST_ZONES, val);
+            consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: region.value
+            });
             this._handlePrevisitsFind();
         }
         this.setState({
@@ -106,9 +109,13 @@ class Sheduler extends Component {
     }
 
     _onChangeZoneStatus(val) {
-        const { fields: { zone }, changeZone } = this.props;
+        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
         zone.onChange(val);
         changeZone(val);
+        consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+            region: region.value,
+            zone: zone.value
+        });
         if (val) {
             this._handlePrevisitsFind();
         }
@@ -118,7 +125,7 @@ class Sheduler extends Component {
     }
 
     _onChangeTeam(val) {
-        const { fields: { team, region, zone }, changeTeam } = this.props;
+        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;        
         team.onChange(val);
         changeTeam(val);
         if (val) {
@@ -282,6 +289,7 @@ function mapDispatchToProps(dispatch) {
         consultList,
         consultDataSelect,
         consultListWithParameterUbication,
+        consultListWithParameter,
         changeTeam,
         changeRegion,
         showLoading,
