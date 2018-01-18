@@ -66,7 +66,7 @@ var idTypeVisitAuxTwo = null;
 var contollerErrorChangeType = false;
 
 const validate = values => {
-    const errors = {};
+    const errors = {};    
     return errors;
 };
 

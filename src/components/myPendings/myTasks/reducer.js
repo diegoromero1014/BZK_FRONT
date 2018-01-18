@@ -17,12 +17,12 @@ const initialState = Immutable.Map({
 export default (state = initialState, action = {}) => {
     switch (action.type) {
         case constants.FIND_PENDING_TASKS:
-            const response = action.payload.data;
+            let response_tasks = action.payload.data;
             return state.withMutations(map => {
                 map
-                    .set('status', response.status)
-                    .set('rowCount', _.get(response, 'data.rowCount', 0))
-                    .set('pendingTaskListByUser', _.get(response, 'data.rows', []));
+                    .set('status', response_tasks.status)
+                    .set('rowCount', _.get(response_tasks, 'data.rowCount', 0))
+                    .set('pendingTaskListByUser', _.get(response_tasks, 'data.rows', []));
             });
         case constants.CHANGE_PAGE:
             return state.set('page', action.currentPage);
@@ -74,7 +74,54 @@ export default (state = initialState, action = {}) => {
             return state.set('pendingTaskListByUser', []);
         case constants.UPDATE_USERNAME_TASK:
             return state.set('userName', action.username);
+
+
+
+
+
+        case constants.FIND_PENDING_TASKS_TEAM:
+            let response_task_team = action.payload.data;
+            return state.withMutations(map => {
+                map
+                    .set('statusTeamTask', response_task_team.status)
+                    .set('rowCountTeamTask', _.get(response_task_team, 'data.rowCount', 0))
+                    .set('pendingTaskTeamListByUser', _.get(response_task_team, 'data.rows', []));
+            });
+        case constants.CHANGE_PAGE_TEAM:
+            return state.set('pageTeam', action.currentPage);
+        case constants.LIMITE_INF_TEAM:
+            return state.set('limInfTeam', action.limInfe);
+        case constants.CLEAR_MY_PENDINGS_PAGINATOR_TEAM:
+            return state.withMutations(map => {
+                map
+                    .set('pageTeam', 1)
+                    .set('limInfTeam', 0);
+            });
+        case constants.CLEAR_LIST_MY_PENDINGS_TEAM:
+            return state.set('pendingTaskTeamListByUser', []);
+        case constants.ORDER_COLUMN_MY_PENDING_TEAM:
+            return state.withMutations(map => {
+                map
+                    .set('orderMyPendingTeam', action.orderMyPending)
+                    .set('columnMyPendingTeam', action.columnMyPending)
+            });
+        case constants.CLEAR_PENDING_TASK_TEAM:
+            return state.withMutations(map => {
+                map
+                    .set('pageTeam', 1)
+                    .set('limInfTeam', 0)
+                    .set('rowCountTeamTask', 0)
+                    .set('pendingTaskTeamListByUser', []);
+            });
+        case constants.CLEAR_MY_PENDINGS_TEAM_ORDER:
+            return state.withMutations(map => {
+                map
+                    .set('orderMyPendingTeam', 0)
+                    .set('columnMyPendingTeam', "")
+            });
+
         default:
             return state;
+
     }
 }
