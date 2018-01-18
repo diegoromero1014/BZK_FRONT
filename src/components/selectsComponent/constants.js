@@ -19,6 +19,7 @@ export const FILTER_CITY = 'city';
 export const FILTER_HOBBIES = 'hobbies';
 export const FILTER_SPORTS = 'sports';
 export const TEAM_FOR_EMPLOYEE = 'teamsByEmployee';
+export const TEAM_FOR_EMPLOYEE_REGION_ZONE = 'teamsByEmployeeRegionZone';
 export const TEAM_FOR_REGION_EMPLOYEE = 'teamsByRegionByEmployee';
 export const FILTER_MULTISELECT_FIELDS = 'multiselect_fields';
 export const FILTER_ATTITUDE_OVER_GROUP = 'attitudeOverGroup';

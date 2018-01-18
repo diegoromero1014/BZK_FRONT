@@ -56,7 +56,7 @@ export function consultList(field) {
   }
 }
 
-export function consultListWithParameter(field, parentId) {
+export function consultListWithParameter(field, parameter) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -70,10 +70,15 @@ export function consultListWithParameter(field, parentId) {
       "debug": true,
       "isSuccessful": true
     },
-    messageBody: {
-      "parentId": parentId
-    }
+    messageBody: {}
   };
+
+  if (typeof parameter === "object") {
+    json.messageBody = parameter;
+  } else {
+    json.messageBody = { "parentId": parentId };
+  }
+
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
