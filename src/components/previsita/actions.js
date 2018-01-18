@@ -1,7 +1,8 @@
-import { APP_URL } from '../../constantsGlobal';
+import { APP_URL, NAME_REPORT_PREVISIT } from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
+
 
 export function pdfDescarga(idclient, idPrevisit) {
   window.open(APP_URL + "/pdfReportPreVisit?idClient=" + idclient + "&idPrevisit=" + idPrevisit + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
@@ -193,3 +194,74 @@ export function validateDatePreVisit(startDate,finalDate, id){
     payload: request
   };
 }
+
+
+// Consultar si puedo editar previsita
+
+export function canEditPrevisita(idPrevisit) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+  
+    "messageBody": {
+      "client_id": window.localStorage.getItem('idClientSelected'),
+      "username": window.sessionStorage.getItem('userName'),
+      "report_id": idPrevisit,
+      "report_type": NAME_REPORT_PREVISIT
+    }
+      
+  }
+
+  let request = axios.post(APP_URL+'/getUserBlockingReport', json);
+  
+  return{
+      type: constants.ASK_EDIT_PREVISITA,
+      payload: request
+  };
+}
+
+export function disableBlockedReport (idPrevisit) {
+
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+  
+    "messageBody": {
+      "client_id": window.localStorage.getItem('idClientSelected'),
+      "username": window.sessionStorage.getItem('userName'),
+      "report_id": idPrevisit,
+      "report_type": NAME_REPORT_PREVISIT
+    }
+      
+  }
+
+  let request = axios.post(APP_URL+'/deleteBlockedReport', json);
+
+  return {
+    type: constants.DELETE_BLOCKED_PREVISITA,
+    payload: request
+  };
+
+}
+
+
