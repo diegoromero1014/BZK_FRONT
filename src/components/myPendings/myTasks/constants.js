@@ -23,3 +23,8 @@ export const CLEAR_MY_PENDINGS_PAGINATOR_TEAM = 'CLEAR_MY_PENDINGS_PAGINATOR_TEA
 export const CLEAR_LIST_MY_PENDINGS_TEAM = 'CLEAR_LIST_MY_PENDINGS_TEAM';
 export const ORDER_COLUMN_MY_PENDING_TEAM = 'ORDER_COLUMN_MY_PENDING_TEAM';
 export const CLEAR_PENDING_TASK_TEAM = 'CLEAR_PENDING_TASK_TEAM';
+export const CLEAR_MY_PENDINGS_TEAM_ORDER = 'CLEAR_MY_PENDINGS_TEAM_ORDER';
+
+
+export const ERROR_TITLE_FILTERS_TEAM = 'Error ejecutando la consulta';
+export const ERROR_TITLE_FILTERS_TEAM_MESSAGE = 'Señor usuario, por favor seleccione un filtro para ejecutar la consulta.';

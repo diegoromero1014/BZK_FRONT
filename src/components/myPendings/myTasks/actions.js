@@ -7,7 +7,7 @@ import {
   LIMITE_INF_TEAM,
   CLEAR_MY_PENDINGS_PAGINATOR_TEAM,
   CLEAR_LIST_MY_PENDINGS_TEAM,
-  CLEAR_PENDING_TASK_TEAM ,
+  CLEAR_PENDING_TASK_TEAM,
   CLEAR_MY_PENDINGS_TEAM_ORDER,
   ORDER_COLUMN_MY_PENDING_TEAM
 } from './constants';
@@ -180,7 +180,7 @@ export function updateUserNameTask(username) {
 }
 
 
-export function tasksTeamByUser(pageNum, maxRows, parameters, orderMyPending, columnMyPending) {
+export function tasksTeamByUser(pageNum, maxRows, region, zone, team, taskStatus, dateTaskTeam, idUsuario, orderMyPending, columnMyPending) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -198,7 +198,12 @@ export function tasksTeamByUser(pageNum, maxRows, parameters, orderMyPending, co
     "messageBody": {
       "pageNum": pageNum,
       "maxRows": maxRows,
-      "keyWord": '',
+      'region': region,
+      'zone': zone,
+      'team': team,
+      'taskStatus': taskStatus,
+      'dateTaskTeam': dateTaskTeam,
+      'idUsuario': idUsuario,
       "order": orderMyPending,
       "columnOrder": columnMyPending
     }

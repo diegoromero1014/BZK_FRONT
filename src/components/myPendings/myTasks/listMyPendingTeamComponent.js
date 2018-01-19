@@ -7,8 +7,8 @@ import {
     orderColumnMyPending,
     clearMyPendingPaginator,
     clearMyPendingsOrder,
-    clearMyPendingTeamPaginator, 
-    orderColumnMyPendingTeam, 
+    clearMyPendingTeamPaginator,
+    orderColumnMyPendingTeam,
     tasksTeamByUser
 } from './actions';
 import GridComponent from '../../grid/component';
@@ -23,7 +23,12 @@ import { TASK_STATUS } from '../../selectsComponent/constants';
 import { has, get, indexOf } from 'lodash';
 import { showLoading } from '../../loading/actions';
 
-let keyWord = "";
+let region = "";
+let zone = "";
+let team = "";
+let taskStatus = "";
+let dateTaskTeam = "";
+let idUsuario = "";
 
 class ListMyPendingTeamComponent extends Component {
 
@@ -55,8 +60,23 @@ class ListMyPendingTeamComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (keyWord !== nextProps.keyWordParameter) {
-            keyWord = nextProps.keyWordParameter;
+        if (region !== nextProps.region) {
+            region = nextProps.region;
+        }
+        if (zone !== nextProps.zone) {
+            zone = nextProps.zone;
+        }
+        if (team !== nextProps.team) {
+            team = nextProps.team;
+        }
+        if (taskStatus !== nextProps.taskStatus) {
+            taskStatus = nextProps.taskStatus;
+        }
+        if (dateTaskTeam !== nextProps.dateTaskTeam) {
+            dateTaskTeam = nextProps.dateTaskTeam;
+        }
+        if (idUsuario !== nextProps.idUsuario) {
+            idUsuario = nextProps.idUsuario;
         }
     }
 
@@ -72,7 +92,7 @@ class ListMyPendingTeamComponent extends Component {
 
         showLoading(true, MESSAGE_LOAD_DATA);
 
-        tasksTeamByUser(0, NUMBER_RECORDS, keyWord, orderMyPending, columnMyPending).then((data) => {
+        tasksTeamByUser(0, NUMBER_RECORDS, region, zone, team, taskStatus, dateTaskTeam, idUsuario, orderMyPending, columnMyPending).then((data) => {
             if (has(data, 'payload.data.data')) {
                 showLoading(false, null);
             }
