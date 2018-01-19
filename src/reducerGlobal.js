@@ -36,6 +36,8 @@ export default (state = initialState, action) => {
         case constants.MODULE_PREVISITS:
             const permissionsPrevisits = action.payload.data.data.permissions;
             return state.set('permissionsPrevisits', permissionsPrevisits);
+        case constants.CLEAR_PERMISSIONS_MODULE_PREVISITS:
+            return state.set('permissionsPrevisits', [])
         case constants.MODULE_VISITS:
             const permissionsVisits = action.payload.data.data.permissions;
             return state.set('permissionsVisits', permissionsVisits);

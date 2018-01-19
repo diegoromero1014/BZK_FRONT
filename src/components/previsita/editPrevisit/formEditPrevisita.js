@@ -153,63 +153,60 @@ class FormEditPrevisita extends Component {
     }
 
     _closeShowErrorBlockedPrevisit() {
-        this.setState( { showErrorBlockedPreVisit: false } )
-         
-        if(this.state.shouldRedirect) {
+        this.setState({ showErrorBlockedPreVisit: false })
+
+        if (this.state.shouldRedirect) {
             redirectUrl("/dashboard/clientInformation")
         }
-        
+
     }
 
     _canUserEditPrevisita(myUserName) {
-       
+
         const { canEditPrevisita, id, swtShowMessage } = this.props;
 
         return canEditPrevisita(id).then((success) => {
 
-            console.log(success)
 
             let username = success.payload.data.data
-            
-                        if(_.isNull(username)) {
-                            console.log("null")
-                            swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
-            
 
-                        } else if (username === myUserName) {
+            if (_.isNull(username)) {
+                swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
 
-                            if(! this.state.isEditable) {
-                                // Tengo permiso de editar y no estoy editando
 
-                                console.log("SETTING INTERVAL")
+            } else if (username === myUserName) {
 
-                                this.setState({
-                                    showErrorBlockedPreVisit: false,
-                                    showMessage: false,
-                                    isEditable: !this.state.isEditable,
-                                    intervalId: setInterval(() => {this._canUserEditPrevisita(myUserName)  } , TIME_REQUEST_BLOCK_REPORT)
-                                })
+                if (!this.state.isEditable) {
+                    // Tengo permiso de editar y no estoy editando
 
-            
-                            }  
-            
-                        } else {
 
-                            if( this.state.isEditable ) {
-                                // Salir de edicion y detener intervalo
+                    this.setState({
+                        showErrorBlockedPreVisit: false,
+                        showMessage: false,
+                        isEditable: !this.state.isEditable,
+                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                    })
 
-                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true})
 
-                                clearInterval(this.state.intervalId);
+                }
 
-                            } else {
-                                // Mostar mensaje de el usuario que tiene bloqueado el informe
-                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false})
-                            }
-            
-                            
-            
-                        }
+            } else {
+
+                if (this.state.isEditable) {
+                    // Salir de edicion y detener intervalo
+
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
+
+                    clearInterval(this.state.intervalId);
+
+                } else {
+                    // Mostar mensaje de el usuario que tiene bloqueado el informe
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
+                }
+
+
+
+            }
         })
 
     }
@@ -223,19 +220,19 @@ class FormEditPrevisita extends Component {
         let detailPrevisitData = this.props.previsitReducer.get('detailPrevisit').data;
         const myUserName = window.sessionStorage.getItem('userName')
 
-         this._canUserEditPrevisita(myUserName).then((success) => {
+        this._canUserEditPrevisita(myUserName).then((success) => {
 
-            
+
 
             showLoading(false, null);
 
-         }).catch((error) => {
+        }).catch((error) => {
             showLoading(false, null);
-         })
+        })
 
     }
 
-    
+
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
@@ -841,16 +838,16 @@ class FormEditPrevisita extends Component {
         clearInterval(this.state.intervalId)
         // Informar al backend que el informe se puede liberar
         disableBlockedReport(id).then((success) => {
-           
+
         }).catch((error) => {
-            
+
         })
     }
 
     render() {
         const {
             fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
-            clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar
+            clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar, viewBottons
         } = this.props;
         const ownerDraft = previsitReducer.get('ownerDraft');
         const detailPrevisit = previsitReducer.get('detailPrevisit');
@@ -880,7 +877,7 @@ class FormEditPrevisita extends Component {
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (! this.state.isEditable) &&
+                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (!this.state.isEditable) &&
                             <button type="button" onClick={this._editPreVisit}
                                 className={'btn btn-primary modal-button-edit'}
                                 style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
@@ -1180,16 +1177,16 @@ class FormEditPrevisita extends Component {
                     </Col>
                 </Row>
                 <div className="" style={{
-                    position: "fixed",
+                    position: viewBottons ? " absolute" : " fixed",
                     border: "1px solid #C2C2C2",
-                    bottom: "0px",
+                    bottom: viewBottons ? null : "0px",
                     width: "100%",
                     marginBottom: "0px",
                     backgroundColor: "#F8F8F8",
                     height: "50px",
-                    background: "rgba(255,255,255,0.75)"
+                    background: viewBottons ? null : "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
+                    <div style={{ width: "580px", height: "100%", position: viewBottons ? " absolute" : " fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
                             style={this.state.isEditable === true && ownerDraft === 0 ? {
                                 float: "right",
@@ -1209,17 +1206,17 @@ class FormEditPrevisita extends Component {
                         </button>
                         <button className="btn" type="button" onClick={this._onClickPDF} style={{
                             float: "right",
-                            margin: "8px 0px 0px 292px",
-                            position: "fixed",
+                            margin: viewBottons ? "8px 10px 0px 10px" : "8px 0px 0px -120px",
+                            position: viewBottons ? null : "fixed",
                             backgroundColor: "#eb984e"
                         }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={{
                             float: "right",
-                            margin: "8px 0px 0px 450px",
-                            position: "fixed",
-                            backgroundColor: "rgb(193, 193, 193)"
+                            margin: viewBottons ? "8px 0px 0px 45px" : "8px 0px 0px -120px",
+                            position: viewBottons ? null : "fixed",
+                            backgroundColor: viewBottons ? null : "rgb(193, 193, 193)"
                         }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
@@ -1263,18 +1260,18 @@ class FormEditPrevisita extends Component {
                     onCancel={this._closeCancelConfirmChanType}
                     onConfirm={this._closeConfirmChangeType} />
 
-                
+
                 <SweetAlert
                     type="error"
                     show={this.state.showErrorBlockedPreVisit}
                     title="Error al editar previsita"
-                    text={"Señor usuario, en este momento la previsita esta siendo editada por "+this.state.userEditingPrevisita
-                    +". Por favor intentar mas tarde"}
-                    onConfirm={ this._closeShowErrorBlockedPrevisit  }
+                    text={"Señor usuario, en este momento la previsita esta siendo editada por " + this.state.userEditingPrevisita
+                        + ". Por favor intentar mas tarde"}
+                    onConfirm={this._closeShowErrorBlockedPrevisit}
 
                 />
 
-            </form>
+            </form >
         );
     }
 }

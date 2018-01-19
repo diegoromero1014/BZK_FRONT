@@ -12,7 +12,7 @@ import { goBack, redirectUrl } from "../globalComponents/actions";
 import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
 import { consultList, consultDataSelect, consultListWithParameterUbication, consultListWithParameter } from "../selectsComponent/actions";
-import { validatePermissionsByModule, validateValue } from "../../actionsGlobal";
+import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
 import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from "../selectsComponent/constants";
@@ -53,16 +53,12 @@ class Sheduler extends Component {
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, validatePermissionsByModule, updateTitleNavBar, consultList, consultDataSelect, getAllTeamsByEmployee } = this.props;
-        
-        validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
-            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
-            }
-        });
+        const { getSchedulerPrevisits, updateTitleNavBar, consultList, consultDataSelect, getAllTeamsByEmployee } = this.props;
+
+
+
 
         getAllTeamsByEmployee();
-        consultList(TEAM_FOR_EMPLOYEE);
         consultDataSelect(LIST_REGIONS);
 
         this.setState({
@@ -71,10 +67,24 @@ class Sheduler extends Component {
         updateTitleNavBar('Agenda');
     }
 
-    openModal(idClient, idPrevisit) {
+    openModal(idClient, idPrevisit, celulasUser, celulaPrevisita) {
+
+        const { clearPrevisitPermissions, validatePermissionsByModule, showLoading } = this.props;
+        showLoading(true, 'Cargando..');
+        if (!_.includes(celulasUser, celulaPrevisita)) {
+            clearPrevisitPermissions()
+        } else {
+            validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+                if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                    redirectUrl("/login");
+                }
+            });
+        }
+
         const { consultInfoClient } = this.props;
         window.localStorage.setItem("idClientSelected", idClient);
         consultInfoClient().then((success) => {
+            showLoading(false, null);
             this.setState({
                 modalIsOpen: true,
                 idPrevisit: idPrevisit
@@ -94,9 +104,7 @@ class Sheduler extends Component {
             team.onChange(null);
             changeRegion(val);
             consultListWithParameterUbication(LIST_ZONES, val);
-            consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
-                region: region.value
-            });
+
             this._handlePrevisitsFind();
         }
         this.setState({
@@ -117,7 +125,6 @@ class Sheduler extends Component {
                 showLoading(false, null);
             }
         });
-        consultList(TEAM_FOR_EMPLOYEE);
     }
 
     _onChangeZoneStatus(val) {
@@ -149,8 +156,8 @@ class Sheduler extends Component {
     }
 
     _handlePrevisitsFind() {
-        const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits } = this.props;
-        console.log("id", idUsuario.value);
+        const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
+        showLoading(true, 'Cargando..');
         getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value).then((response) => {
             let lista = JSON.parse(response.payload.data.schedulerListPreviist);
             let jsonP = lista.map((item) => {
@@ -161,16 +168,16 @@ class Sheduler extends Component {
             });
             return jsonP;
         });
+        showLoading(false, null);
+
     }
 
     bindClassParticipants(listParticipants, userName, celulasUser, celulaPrevisita) {
 
+        console.log("celulasUser", celulasUser);
+        console.log("celulaPrevisita", celulaPrevisita);
 
-        console.log("bindClassParticipans")
-        console.log(celulasUser)
-        console.log(celulaPrevisita)
-
-        if ( ! _.includes(celulasUser, celulaPrevisita) ) {
+        if (!_.includes(celulasUser, celulaPrevisita)) {
             return 'cls-gray'
         }
 
@@ -258,7 +265,7 @@ class Sheduler extends Component {
         return (
             <div>
                 <form>
-                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px" }}>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px", padding: "10px" }}>
                         <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
                             <ComboBox
                                 name="region"
@@ -311,6 +318,7 @@ class Sheduler extends Component {
                                             type="text"
                                             value={nameUsuario.value}
                                             onChange={nameUsuario.onChange}
+                                            onBLur={this._handlePrevisitsFind}
                                             placeholder="Creador"
                                             onKeyPress={this.updateKeyValueUsersBanco}
                                             onSelect={val => this._updateValue(val)}
@@ -378,8 +386,8 @@ class Sheduler extends Component {
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
                         defaultDate={new Date()}
-                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
-                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName, schedulerPrevisitReduser.get('celulasAgendaPrevisita').data , data.clientTeam) })}
+                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit, schedulerPrevisitReduser.get('celulasAgendaPrevisita').data, data.clientTeam)}
+                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName, schedulerPrevisitReduser.get('celulasAgendaPrevisita').data, data.clientTeam) })}
                     />
                 </div>
                 <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
@@ -392,7 +400,7 @@ class Sheduler extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <EditPrevisit params={{ id: this.state.idPrevisit }} />
+                            <EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} />
                         </div>
                     </div>
                 </Modal>
@@ -418,7 +426,8 @@ function mapDispatchToProps(dispatch) {
         clearFilter,
         changeZone,
         getAllTeamsByEmployee,
-        filterUsersBanco
+        filterUsersBanco,
+        clearPrevisitPermissions
     }, dispatch);
 }
 function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient }, ownerProps) {
