@@ -7,3 +7,4 @@ export const CHANGE_ZONE = "CHANGE_ZONE";
 export const SHEDULER_FILTER = "shedulerFilter";
 export const GREEN_COLOR = "#5cb85c";
 export const ORANGE_COLOR = "#f39c12";
+export const GRAY_COLOR = "#dcdcdc";
