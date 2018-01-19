@@ -1,8 +1,9 @@
 import Immutable from 'immutable';
-import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT } from "./constants";
+import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, GET_TEAMS_EMPLOYEE } from "./constants";
 
 const initialState = Immutable.Map({
-    schedulerPrevisitList: []
+    schedulerPrevisitList: [],
+    celulasAgendaPrevisita: []
 });
 
 export default (state = initialState, action) => {
@@ -15,6 +16,7 @@ export default (state = initialState, action) => {
                     item.title = item.clientName;
                     item.start = new Date(item.initialDatePrevisit);
                     item.end = new Date(item.finalDatePrevisit);
+
                     return item;
                 }));
             });
@@ -29,6 +31,15 @@ export default (state = initialState, action) => {
                     return item;
                 }));
             });
+
+        case GET_TEAMS_EMPLOYEE:
+
+            const celulas = action.payload.data;
+
+            return state.withMutations(map => {
+                map.set('celulasAgendaPrevisita', celulas)
+            })
+
         default:
             return state;
     }

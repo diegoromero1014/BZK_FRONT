@@ -1,6 +1,6 @@
 import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
-import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, CHANGE_TEAM, CHANGE_REGION, CHANGE_ZONE } from "./constants";
+import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, CHANGE_TEAM, CHANGE_REGION, CHANGE_ZONE, GET_TEAMS_EMPLOYEE } from "./constants";
 
 export function getSchedulerPrevisits(idTeam, idRegion, idZone) {
     const json = {
@@ -77,4 +77,33 @@ export function changeZone(idZone) {
         type: CHANGE_ZONE,
         idZone
     }
+}
+
+export function getAllTeamsByEmployee() {
+
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            username: window.sessionStorage.getItem('userName')
+        }
+    }
+
+    let request = axios.post(APP_URL+'/TeamsByEmployee', json);
+    
+      return {
+        type: GET_TEAMS_EMPLOYEE,
+        payload: request
+      };
+
 }
