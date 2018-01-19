@@ -2,7 +2,7 @@ import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
 import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, CHANGE_TEAM, CHANGE_REGION, CHANGE_ZONE } from "./constants";
 
-export function getSchedulerPrevisits(idTeam, idRegion, idZone) {
+export function getSchedulerPrevisits(idTeam, idRegion, idZone, idUser) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -19,7 +19,8 @@ export function getSchedulerPrevisits(idTeam, idRegion, idZone) {
         "messageBody": {
             idTeam: idTeam,
             idRegion: idRegion,
-            idZone: idZone
+            idZone: idZone,
+            idCreatedBy: idUser
         }
     }
 

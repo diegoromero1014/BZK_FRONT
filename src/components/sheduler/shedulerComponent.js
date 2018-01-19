@@ -11,26 +11,29 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication,consultListWithParameter } from "../selectsComponent/actions";
-import { validatePermissionsByModule } from "../../actionsGlobal";
+import { consultList, consultDataSelect, consultListWithParameterUbication, consultListWithParameter } from "../selectsComponent/actions";
+import { validatePermissionsByModule, validateValue } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
-import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
+import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
 import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from "../selectsComponent/constants";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
+import $ from 'jquery';
 import { filter } from 'rxjs/operator/filter';
 import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
+import { filterUsersBanco } from '../participantsVisitPre/actions';
 
 
 BigCalendar.momentLocalizer(moment);
-const fields = ["team", "region", "zone"];
-
+const fields = ["team", "region", "zone", "nameUsuario", "idUsuario"];
+var usersBanco = [];
 class Sheduler extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalIsOpen: false
+            modalIsOpen: false,
+            idUser: 0
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -40,6 +43,10 @@ class Sheduler extends Component {
         this.__onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
         this._handlePrevisitsFind = this._handlePrevisitsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
+        this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
+        this._updateValue = this._updateValue.bind(this);
+
+
 
 
     }
@@ -106,6 +113,7 @@ class Sheduler extends Component {
                 showLoading(false, null);
             }
         });
+        consultList(TEAM_FOR_EMPLOYEE);
     }
 
     _onChangeZoneStatus(val) {
@@ -125,7 +133,7 @@ class Sheduler extends Component {
     }
 
     _onChangeTeam(val) {
-        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;        
+        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
         team.onChange(val);
         changeTeam(val);
         if (val) {
@@ -137,8 +145,9 @@ class Sheduler extends Component {
     }
 
     _handlePrevisitsFind() {
-        const { fields: { team, region, zone }, getSchedulerPrevisits } = this.props;
-        getSchedulerPrevisits(team.value, region.value, zone.value).then((response) => {
+        const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits } = this.props;
+        console.log("id", idUsuario.value);
+        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value).then((response) => {
             let lista = JSON.parse(response.payload.data.schedulerListPreviist);
             let jsonP = lista.map((item) => {
                 item.title = item.clientName;
@@ -157,9 +166,79 @@ class Sheduler extends Component {
         return isGrant ? 'cls-green' : 'cls-yelow';
     }
 
+    _updateValue(value) {
+        const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
+        var contactClient = contactsByClient.get('contacts');
+        var userSelected;
+        _.map(contactClient, contact => {
+            if (contact.id.toString() === value) {
+                userSelected = contact;
+                return contact;
+            }
+        });
+        if (validateValue(userSelected)) {
+            nameUsuario.onChange(userSelected.nameComplet);
+            this._handlePrevisitsFind();
+        }
+    }
+
+    componentDidMount() {
+        self = this;
+        $("#iconSearchParticipants").click(function () {
+            var e = { keyCode: 13, consultclick: true };
+            self.updateKeyValueUsersBanco(e);
+        });
+    }
+
+    componentWillUpdate() {
+        self = this;
+        $("#iconSearchParticipants").click(function () {
+            var e = { keyCode: 13, consultclick: true };
+            self.updateKeyValueUsersBanco(e);
+        });
+    }
+
+    updateKeyValueUsersBanco(e) {
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const selfThis = this;
+        if (e.keyCode === 13 || e.which === 13) {
+            e.consultclick ? "" : e.preventDefault();
+            if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+                $('.ui.search.participantBanc').toggleClass('loading');
+                filterUsersBanco(nameUsuario.value).then((data) => {
+                    usersBanco = _.get(data, 'payload.data.data');
+                    $('.ui.search.participantBanc')
+                        .search({
+                            cache: false,
+                            source: usersBanco,
+                            maxResults: 1500,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'idUsuario',
+                                'cargo'
+                            ],
+                            onSelect: function (event) {
+                                nameUsuario.onChange(event.title);
+                                idUsuario.onChange(event.idUsuario);
+                                selfThis._handlePrevisitsFind();
+                                selfThis.setState({
+                                    display: 'block'
+                                });
+                                return 'default';
+                            }
+                        });
+                    $('.ui.search.participantBanc').toggleClass('loading');
+                    setTimeout(function () {
+                        $('#inputParticipantBanc').focus();
+                    }, 150);
+                });
+            }
+        }
+    }
 
     render() {
-        const { fields: { team, region, zone }, schedulerPrevisitReduser, selectsReducer } = this.props;
+        const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
         const userName = sessionStorage.getItem('userName');
         return (
@@ -208,6 +287,26 @@ class Sheduler extends Component {
                                 data={selectsReducer.get('teamValueObjects')}
                             />
                         </Col>
+                        <Col xs={12} sm={12} md={3} lg={2}>
+                            <dt>
+                                <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+                                    <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
+                                        <input className="prompt" id="inputParticipantBanc"
+                                            style={{ borderRadius: "3px" }}
+                                            autoComplete="off"
+                                            type="text"
+                                            value={nameUsuario.value}
+                                            onChange={nameUsuario.onChange}
+                                            placeholder="Creador"
+                                            onKeyPress={this.updateKeyValueUsersBanco}
+                                            onSelect={val => this._updateValue(val)}
+                                        />
+                                        <i className="search icon" id="iconSearchParticipants"></i>
+                                    </div>
+                                    <div className="menu results"></div>
+                                </div>
+                            </dt>
+                        </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                 title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
@@ -215,8 +314,8 @@ class Sheduler extends Component {
                                     style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                             </button>
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={3}>
-                            <div style={{ height: '80px', marginLeft: '30px' }}>
+                        <Col xs={12} sm={12} md={2} lg={2}>
+                            <div style={{ height: '80px', marginLeft: '0px' }}>
                                 <Row>
                                     <div style={{
                                         borderRadius: '50%',
@@ -234,6 +333,15 @@ class Sheduler extends Component {
                                         backgroundColor: ORANGE_COLOR
                                     }} />
                                     <span style={{ marginLeft: '10px' }}> No está invitado</span>
+                                </Row>
+                                <Row style={{ marginTop: "5px" }}>
+                                    <div style={{
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        backgroundColor: GRAY_COLOR
+                                    }} />
+                                    <span style={{ marginLeft: '10px' }}> No pertenece a la celula</span>
                                 </Row>
                             </div>
                         </Col>
@@ -294,13 +402,15 @@ function mapDispatchToProps(dispatch) {
         changeRegion,
         showLoading,
         clearFilter,
+        filterUsersBanco,
         changeZone
     }, dispatch);
 }
-function mapStateToProps({ schedulerPrevisitReduser, selectsReducer }, ownerProps) {
+function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient }, ownerProps) {
     return {
         schedulerPrevisitReduser,
         selectsReducer,
+        contactsByClient,
         fields
     };
 }
