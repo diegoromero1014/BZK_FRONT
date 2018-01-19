@@ -17,13 +17,17 @@ import {
     changePageTeam,
     limitiInfTeam,
     clearMyPendingTeamPaginator,
-    clearOnlyListPendingTaskTeam
+    clearOnlyListPendingTaskTeam,
+    clearMyPendingsTeamOrder,
+    clearPendingTaskTeam
 
 } from "./actions";
 import {
     NUMBER_RECORDS,
     MY_PENDINGS_TITLE,
-    MY_PENDINGS_BY_TEAM_TITLE
+    MY_PENDINGS_BY_TEAM_TITLE,
+    ERROR_TITLE_FILTERS_TEAM,
+    ERROR_TITLE_FILTERS_TEAM_MESSAGE
 } from "./constants";
 import ListPendingTaskComponent from "./listMyPendingComponent";
 import ListMyPendingTeamComponent from "./ListMyPendingTeamComponent";
@@ -40,7 +44,6 @@ import {
     RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
 import { validateResponse } from "../../../actionsGlobal";
-import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
@@ -48,8 +51,17 @@ import { showLoading } from "../../loading/actions";
 import { getMasterDataFields, consultList, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } from '../../selectsComponent/actions';
 import { TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE, TEAM_FOR_REGION_EMPLOYEE, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import { filterUsersBanco } from '../../participantsVisitPre/actions';
 
-const fields = ["region", "zone", "team",];
+import _ from "lodash";
+import $ from 'jquery';
+
+
+const fields = ["region", "zone", "team", "taskStatus", "dateTaskTeam",
+    "objetoUsuario", "nameUsuario", "idUsuario", "cargoUsuario", "empresaUsuario"
+];
+var usersBanco = [];
 
 class ModalComponentPending extends Component {
 
@@ -60,7 +72,10 @@ class ModalComponentPending extends Component {
             teamViewTask: false,
             region: '',
             zone: '',
-            team: ''
+            team: '',
+            enabledZona: false,
+            dateTaskTeam: ""
+
         };
         this.consultInfoMyPendingTask = this.consultInfoMyPendingTask.bind(this);
         this._handleMyPendingByClientsFind = this._handleMyPendingByClientsFind.bind(this);
@@ -72,6 +87,11 @@ class ModalComponentPending extends Component {
         this._onChangeRegion = this._onChangeRegion.bind(this);
         this._onChangeZone = this._onChangeZone.bind(this);
         this._onChangeTeam = this._onChangeTeam.bind(this);
+        this._onChangeTaskState = this._onChangeTaskState.bind(this);
+        this._changeDateTaskTeam = this._changeDateTaskTeam.bind(this);
+        this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
+        //this._updateValue = this._updateValue.bind(this);
+        //this._changeDateTaskTeamOnBlur = this._changeDateTaskTeamOnBlur.bind(this);
     }
 
     _handleChangeKeyword(e) {
@@ -98,11 +118,11 @@ class ModalComponentPending extends Component {
     }
 
     componentWillMount() {
-        const { clearPendingTask, consultList, updateTitleNavBar, getMasterDataFields, showLoading, swtShowMessage } = this.props;
+        const { clearPendingTask, consultList, updateTitleNavBar, getMasterDataFields, showLoading, swtShowMessage, consultListWithParameter } = this.props;
         clearPendingTask();
         showLoading(true, MESSAGE_LOAD_DATA);
-
-        consultList(TEAM_FOR_EMPLOYEE);
+        // consultList(TEAM_FOR_EMPLOYEE);
+        consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, { region: "", zone: "" });
 
         getMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES]).then((data) => {
             this.consultInfoMyPendingTask();
@@ -118,7 +138,7 @@ class ModalComponentPending extends Component {
 
     consultInfoMyPendingTask() {
         const { tasksByUser, clearMyPendingPaginator, clearOnlyListPendingTask, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
-        updateTitleNavBar(MY_PENDINGS_TITLE);
+
         clearOnlyListPendingTask();
         clearMyPendingPaginator();
         tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending).then((data) => {
@@ -134,15 +154,20 @@ class ModalComponentPending extends Component {
     }
 
     consultInfoMyPendingTeamTask() {
-        const { fields: { region, zone, team }, tasksTeamByUser, clearMyPendingTeamPaginator,
-            clearOnlyListPendingTaskTeam, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, tasksTeamByUser, clearMyPendingTeamPaginator,
+            clearOnlyListPendingTaskTeam, clearMyPendingsTeamOrder, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
+            console.log([region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value])
 
-        updateTitleNavBar(MY_PENDINGS_BY_TEAM_TITLE);
+        if ( !region.value && !zone.value && !team.value && !taskStatus.value && !dateTaskTeam.value && !idUsuario.value) {
+            swtShowMessage(MESSAGE_ERROR, ERROR_TITLE_FILTERS_TEAM, ERROR_TITLE_FILTERS_TEAM_MESSAGE);
+            return;
+        }
 
         clearMyPendingTeamPaginator();
         clearOnlyListPendingTaskTeam();
+        clearMyPendingsTeamOrder();
 
-        tasksTeamByUser(0, NUMBER_RECORDS, { region: region, zone: zone, team: team }).then((data) => {
+        tasksTeamByUser(0, NUMBER_RECORDS, region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             }
@@ -151,6 +176,7 @@ class ModalComponentPending extends Component {
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
+
     }
 
     _handleMyPendingByClientsFind() {
@@ -165,61 +191,175 @@ class ModalComponentPending extends Component {
 
 
     _changeViewModeTeamTask() {
+        const { fields: { region, zone, team }, clearMyPendingTeamPaginator, clearOnlyListPendingTaskTeam, clearPendingTaskTeam, updateTitleNavBar } = this.props;
+
         this.state.teamViewTask = !this.state.teamViewTask;
 
         clearMyPendingTeamPaginator();
         clearOnlyListPendingTaskTeam();
 
-        clearOnlyListPendingTask();
-        clearMyPendingPaginator();
+        region.onChange("");
+        zone.onChange("");
+        team.onChange("");
 
-        if (this.state.teamViewTask) {
-            this.consultInfoMyPendingTeamTask();
-        } else {
+        clearPendingTaskTeam();
+
+        if (!this.state.teamViewTask) {
+            updateTitleNavBar(MY_PENDINGS_TITLE);
             this.consultInfoMyPendingTask();
+        } else {
+            updateTitleNavBar(MY_PENDINGS_BY_TEAM_TITLE);
         }
     }
 
     _cleanSearch() {
         this.setState({ keywordMyPending: "" });
-        const { tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder, clearOnlyListPendingTask, showLoading } = this.props;
+        const { fields: { region, zone, team, nameUsuario, idUsuario, cargoUsuario, empresaUsuario, taskStatus, dateTaskTeam }, tasksByUser, clearMyPendingPaginator,
+            clearMyPendingsOrder, clearMyPendingsTeamOrder, clearOnlyListPendingTask,
+            showLoading, clearOnlyListPendingTaskTeam, clearMyPendingTeamPaginator, clearPendingTaskTeam, consultListWithParameter } = this.props;
+
+
+        region.onChange("");
+        zone.onChange("");
+        team.onChange("");
+
+        nameUsuario.onChange("");
+        idUsuario.onChange("");
+        cargoUsuario.onChange("");
+        empresaUsuario.onChange("");
+        taskStatus.onChange("");
+        dateTaskTeam.onChange("");
+
         clearOnlyListPendingTask();
         clearMyPendingPaginator();
         clearMyPendingsOrder();
+
+        clearPendingTaskTeam();
+
         showLoading(true, MESSAGE_LOAD_DATA);
+
+        consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, { region: "", zone: "" });
+
         tasksByUser(0, NUMBER_RECORDS, "", null, "").then((data) => {
             showLoading(false, '');
         });
+
+        this.setState({
+            enabledZona: false
+        })
+
     }
 
 
     _onChangeRegion(val) {
         const { fields: { region, zone, team }, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } = this.props;
-        consultListWithParameterUbication(LIST_ZONES, val);
+
+        consultListWithParameterUbication(LIST_ZONES, region.value);
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
             region: region.value
         });
-        this.consultInfoMyPendingTeamTask();
+
+        this.setState({
+            enabledZona: true
+        })
+
+        zone.onChange("");
+        team.onChange("");
+
+        if (region.value) {
+            //this.consultInfoMyPendingTeamTask();
+        }
     }
+
     _onChangeZone() {
         const { fields: { region, zone, team }, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } = this.props;
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
             region: region.value,
             zone: zone.value
         });
-        this.consultInfoMyPendingTeamTask();
-    }
-    _onChangeTeam() {
-        this.consultInfoMyPendingTeamTask();
+
+        team.onChange("");
+
+        if (zone.value) {
+            //this.consultInfoMyPendingTeamTask();
+        }
     }
 
+    _onChangeTeam() {
+        const { fields: { region, zone, team } } = this.props;
+        if (team.value) {
+            //this.consultInfoMyPendingTeamTask();
+        }
+    }
+    _onChangeTaskState() {
+
+    }
+
+
+    _changeDateTaskTeam(value) {
+        const { fields: { region, zone, team, dateTaskTeam } } = this.props;
+        dateTaskTeam.onChange(value);
+        /*this.setState({
+            dateTaskTeam: value
+        })*/
+        //this.consultInfoMyPendingTeamTask();
+    }
+
+
+    updateKeyValueUsersBanco(e) {
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const selfThis = this;
+        if (e.keyCode === 13 || e.which === 13) {
+            e.consultclick ? "" : e.preventDefault();
+            if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+                $('.ui.search.participantBanc').toggleClass('loading');
+                filterUsersBanco(nameUsuario.value).then((data) => {
+                    usersBanco = _.get(data, 'payload.data.data');
+                    $('.ui.search.participantBanc')
+                        .search({
+                            cache: false,
+                            source: usersBanco,
+                            maxResults: 1500,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'idUsuario',
+                                'cargo'
+                            ],
+                            onSelect: (event) => {
+                                objetoUsuario.onChange(event);
+                                nameUsuario.onChange(event.title);
+                                idUsuario.onChange(event.idUsuario);
+                                cargoUsuario.onChange(event.cargo);
+                                empresaUsuario.onChange(event.empresa);
+                                return 'default';
+                            }
+                        });
+                    $('.ui.search.participantBanc').toggleClass('loading');
+                    setTimeout(() => {
+                        $('#inputParticipantBanc').focus();
+                    }, 150);
+                });
+            }
+        }
+    }
+
+
+
     render() {
-        const { fields: { region, zone, team }, myPendingsReducer, reducerGlobal, selectsReducer } = this.props;
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario }, myPendingsReducer, reducerGlobal, selectsReducer } = this.props;
         let visibleTable = 'none';
+        let visibleTableTeam = 'none';
         let visibleMessage = 'block';
+        let visibleMessageTeam = 'block';
         if (myPendingsReducer.get('rowCount') !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
+        }
+
+        if (myPendingsReducer.get('rowCountTeamTask') !== 0) {
+            visibleTableTeam = 'block';
+            visibleMessageTeam = 'none';
         }
         return (
             <div className="tab-pane quickZoomIn animated"
@@ -228,9 +368,9 @@ class ModalComponentPending extends Component {
                     <form>
                         <Row style={{ borderBottom: "2px solid #D9DEDF" }}>
                             {this.state.teamViewTask &&
+                                <Row style={{ width: "100%", marginLeft: "2px", marginBottom: "15px" }}>
 
-                                <Row style={{ width: "60%", marginLeft: "2px" }}>
-                                    <Col xs={12} sm={12} md={4} lg={4}>
+                                    <Col xs={12} sm={12} md={3} lg={3}>
                                         <ComboBox
                                             labelInput="Región"
                                             {...region}
@@ -243,7 +383,7 @@ class ModalComponentPending extends Component {
                                             data={selectsReducer.get(LIST_REGIONS) || []}
                                         />
                                     </Col>
-                                    <Col xs={12} sm={12} md={4} lg={4}>
+                                    <Col xs={12} sm={12} md={3} lg={3}>
                                         <ComboBox
                                             labelInput="zona"
                                             {...zone}
@@ -253,10 +393,11 @@ class ModalComponentPending extends Component {
                                             valueProp={'id'}
                                             textProp={'value'}
                                             searchClient={'client'}
+                                            disabled={this.state.enabledZona ? '' : 'disabled'}
                                             data={selectsReducer.get(LIST_ZONES) || []}
                                         />
                                     </Col>
-                                    <Col xs={12} sm={12} md={4} lg={4}>
+                                    <Col xs={12} sm={12} md={3} lg={3}>
                                         <ComboBox
                                             name="celula"
                                             labelInput="Célula"
@@ -270,9 +411,57 @@ class ModalComponentPending extends Component {
                                             data={selectsReducer.get('teamValueObjects')}
                                         />
                                     </Col>
+                                    <Col xs={12} sm={12} md={3} lg={3}>
+                                        <ComboBox
+                                            name="estadoTarea"
+                                            labelInput="Estado"
+                                            {...taskStatus}
+                                            value={taskStatus.value}
+                                            onBlur={taskStatus.onBlur}
+                                            onChange={val => this._onChangeTaskState(val)}
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            searchClient={'client'}
+                                            data={selectsReducer.get('taskStatus')}
+                                        />
+                                    </Col>
                                 </Row>
                             }
+                            {this.state.teamViewTask &&
+                                <Row style={{ width: "65%", marginLeft: "2px" }}>
+                                    <Col xs={12} sm={12} md={6} lg={6}>
+                                        <DateTimePickerUi
+                                            {...dateTaskTeam}
+                                            value={dateTaskTeam.value}
+                                            culture='es'
+                                            format={"DD/MM/YYYY"}
+                                            time={false}
+                                            onChange={val => this._changeDateTaskTeam(val)}
+                                        />
+                                    </Col>
+                                    <Col xs={12} sm={12} md={6} lg={6}>
 
+                                        <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+                                            <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
+                                                <input className="prompt" id="inputParticipantBanc"
+                                                    style={{ borderRadius: "3px" }}
+                                                    autoComplete="off"
+                                                    type="text"
+                                                    value={nameUsuario.value}
+                                                    onChange={nameUsuario.onChange}
+                                                    placeholder="Ingrese un criterio de búsqueda..."
+                                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                                />
+                                                <i className="search icon" id="iconSearchParticipants"></i>
+                                            </div>
+                                            <div className="menu results"></div>
+                                        </div>
+
+                                    </Col>
+
+
+                                </Row>
+                            }
 
 
                             {!this.state.teamViewTask &&
@@ -290,21 +479,28 @@ class ModalComponentPending extends Component {
                             }
 
 
+                            <Col xs={12} sm={12} md={2} lg={4} style={{ width: '100%' }}>
+                                {this.state.teamViewTask &&
 
-                            <Col xs={12} sm={12} md={2} lg={1} style={{ width: '100%' }}>
+                                    <button className="btn btn-primary" type="button" onClick={this.consultInfoMyPendingTeamTask}
+                                        title="Buscar" style={{ marginLeft: "17px" }}>
+                                        <i className="search icon"
+                                            style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
+                                    </button>
+
+                                }
                                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                     title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
                                     <i className="erase icon"
                                         style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                 </button>
-                            </Col>
-                            <Col xs={12} sm={12} md={3} lg={3} style={{ width: '100%' }}>
                                 <button className="btn btn-primary" type="button" onClick={this._changeViewModeTeamTask}
                                     title="Cambiar modo de visualización" style={{ marginLeft: "17px" }}>
                                     <i className="refresh icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                     Cambiar tipo de búsqueda
-                            </button>
+                                </button>
                             </Col>
+
                             {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
 
                                 <Col xs={12} sm={12} md={2} lg={1} style={{ width: '100%' }}>
@@ -318,7 +514,7 @@ class ModalComponentPending extends Component {
                                 </Col>
                             }
                             <Col xs={12} sm={12} md={12} lg={12} >
-                                <div style={{ height: "50px", marginLeft: "30px", width: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div style={{ height: "50px", marginLeft: "30px", width: "auto", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
                                     <Row style={{ width: "150px", display: "flex", flexDirection: "row", alignItems: "center" }}>
                                         <div style={{
                                             borderRadius: '50%',
@@ -328,7 +524,7 @@ class ModalComponentPending extends Component {
                                         }} />
                                         <span style={{ marginLeft: '10px' }}> Tarea vencida</span>
                                     </Row>
-                                    <Row style={{ width: "250px", display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                    <Row style={{ width: "225px", display: "flex", flexDirection: "row", alignItems: "center" }}>
                                         <div style={{
                                             borderRadius: '50%',
                                             width: '20px',
@@ -376,18 +572,20 @@ class ModalComponentPending extends Component {
                 }
                 {this.state.teamViewTask &&
                     <div>
-                        <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px' }}>
+                        <Grid style={{ display: visibleTableTeam, width: "100%", marginBottom: '10px' }}>
                             <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
                                 <Col style={{ width: '100%' }}>
-                                    <ListMyPendingTeamComponent keyWordParameter={this.state.keywordMyPending} />
+                                    <ListMyPendingTeamComponent region={region.value} zone={zone.value}
+                                        team={team.value} taskStatus={taskStatus.value} dateTaskTeam={dateTaskTeam.value} idUsuario={idUsuario.value} />
                                     <div style={{ marginBottom: '10px' }}>
-                                        <PaginationPendingTeamTask keyWordParameter={this.state.keywordMyPending} />
+                                        <PaginationPendingTeamTask region={region.value} zone={zone.value}
+                                            team={team.value} taskStatus={taskStatus.value} dateTaskTeam={dateTaskTeam.value} idUsuario={idUsuario.value} />
                                     </div>
                                 </Col>
                             </Row>
                         </Grid>
 
-                        <Grid style={{ display: visibleMessage, width: "100%" }}>
+                        <Grid style={{ display: visibleMessageTeam, width: "100%" }}>
                             <Row center="xs">
                                 <Col xs={12} sm={8} md={12} lg={12} style={{ marginTop: '15px' }}>
                                     <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
@@ -425,7 +623,10 @@ function mapDispatchToProps(dispatch) {
         clearOnlyListPendingTaskTeam,
         consultList,
         consultListWithParameterUbication,
-        consultListWithParameter
+        consultListWithParameter,
+        clearMyPendingsTeamOrder,
+        clearPendingTaskTeam,
+        filterUsersBanco
     }, dispatch);
 }
 
