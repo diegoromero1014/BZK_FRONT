@@ -10,6 +10,10 @@ import SweetAlert from 'sweetalert-react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
+import {
+  VALUE_REQUIERED, VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from "../../constantsGlobal";
 
 
 const validate = values => {
@@ -23,7 +27,8 @@ class ParticipantesOtros extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showEmptyParticipantOtro: false
+      showEmptyParticipantOtro: false,
+      showInvalidCharacter: false,
     }
     this._addParticipantOther = this._addParticipantOther.bind(this);
     this._submitValores = this._submitValores.bind(this);
@@ -31,7 +36,14 @@ class ParticipantesOtros extends Component {
 
   _addParticipantOther() {
     const { fields: { nombrePersona, cargoPersona, empresaPersona }, participants, addParticipant } = this.props;
+
     if (nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined) {
+      if (eval(REGEX_SIMPLE_XSS_STRING).test(nombrePersona.value) || eval(REGEX_SIMPLE_XSS_STRING).test(cargoPersona.value)|| eval(REGEX_SIMPLE_XSS_STRING).test(empresaPersona.value)) {
+        this.setState({
+          showInvalidCharacter: true
+        });
+        return;
+      }
       const uuid = _.uniqueId('participanOther_');
       var otherParticipant = {
         tipoParticipante: KEY_PARTICIPANT_OTHER,
@@ -152,6 +164,13 @@ class ParticipantesOtros extends Component {
           title="Error participante"
           text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
           onConfirm={() => this.setState({ showEmptyParticipantOtro: false })}
+        />
+        <SweetAlert
+          type="error"
+          show={this.state.showInvalidCharacter}
+          title="Error participante"
+          text={REGEX_SIMPLE_XSS_MESAGE}
+          onConfirm={() => this.setState({ showInvalidCharacter: false })}
         />
       </div>
     );

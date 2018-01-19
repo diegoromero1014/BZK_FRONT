@@ -17,7 +17,7 @@ import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
     TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
     ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
-    VALUE_REQUIERED
+    VALUE_REQUIERED,REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse } from '../../../actionsGlobal';
@@ -394,6 +394,7 @@ class FormPrevisita extends Component {
     _submitCreatePrevisita() {
         const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
         var errorInForm = false;
+        var errorMessage=  "Señor usuario, debe ingresar todos los campos obligatorios.";
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -411,6 +412,12 @@ class FormPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+            errorInForm = true;
+            this.setState({
+            lugarPrevisitError: VALUE_XSS_INVALID            
+            });
+            errorMessage=  REGEX_SIMPLE_XSS_MESAGE;         
         }
 
         if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
@@ -602,7 +609,7 @@ class FormPrevisita extends Component {
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
-            message = "Señor usuario, debe ingresar todos los campos obligatorios.";
+            message =errorMessage;
             this.setState({ showMessageCreatePreVisit: true });
         }
     }
