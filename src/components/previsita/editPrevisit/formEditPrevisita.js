@@ -85,6 +85,58 @@ const validate = values => {
     return errors;
 };
 
+const stylesButtons = {
+    "SAVE_DRAFT": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px -120px",
+            position: " fixed",
+            backgroundColor: "#00B5AD"
+        },
+        modal: {
+            float: "right",
+            margin: "8px 5px 0px ",
+            backgroundColor: "#00B5AD"
+        }
+    },
+    "SAVE_PUBLISHED": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 107px",
+            position: " fixed",
+        },
+        modal: {
+            float: "right",
+            margin: "8px 0px 5px"
+        }
+    },
+    "PDF": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 292px",
+            position: "fixed",
+            backgroundColor: "#eb984e"
+        },
+        modal: {
+            float: "right",
+            margin: "8px 10px 5px",
+            backgroundColor: "#eb984e"
+        }
+    },
+    "CLOSED": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 450px",
+            position: "fixed",
+            backgroundColor: "rgb(193, 193, 193)"
+        },
+        modal: {
+            float: "right",
+            margin: "8px 0px 0px 45px"
+        }
+    }
+};
+
 class FormEditPrevisita extends Component {
 
     constructor(props) {
@@ -178,34 +230,24 @@ class FormEditPrevisita extends Component {
 
                 if (!this.state.isEditable) {
                     // Tengo permiso de editar y no estoy editando
-
-
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
                         isEditable: !this.state.isEditable,
                         intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
-
-
                 }
 
             } else {
 
                 if (this.state.isEditable) {
                     // Salir de edicion y detener intervalo
-
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
-
                     clearInterval(this.state.intervalId);
-
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
                 }
-
-
-
             }
         })
 
@@ -221,8 +263,6 @@ class FormEditPrevisita extends Component {
         const myUserName = window.sessionStorage.getItem('userName')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
-
-
 
             showLoading(false, null);
 
@@ -1186,39 +1226,29 @@ class FormEditPrevisita extends Component {
                     height: "50px",
                     background: viewBottons ? null : "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{ width: "580px", height: "100%", position: viewBottons ? " absolute" : " fixed", right: "0px" }}>
+                    <div style={{ width: viewBottons ? "100%" : "580px", height: "100%", position: viewBottons ? " absolute" : " fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                            style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                float: "right",
-                                margin: "8px 0px 0px -120px",
-                                position: "fixed",
-                                backgroundColor: "#00B5AD"
-                            } : { display: "none" }}>
+                            style={
+                                (this.state.isEditable === true && ownerDraft === 0) ?
+                                    stylesButtons["SAVE_DRAFT"][viewBottons ? "modal" : "form"]
+                                    : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                            style={this.state.isEditable === true ? {
-                                float: "right",
-                                margin: "8px 0px 0px 107px",
-                                position: "fixed"
-                            } : { display: "none" }}>
+                            style={(this.state.isEditable === true) ?
+                                stylesButtons["SAVE_PUBLISHED"][viewBottons ? "modal" : "form"]
+                                : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
-                        <button className="btn" type="button" onClick={this._onClickPDF} style={{
-                            float: "right",
-                            margin: viewBottons ? "8px 10px 0px 10px" : "8px 0px 0px -120px",
-                            position: viewBottons ? null : "fixed",
-                            backgroundColor: "#eb984e"
-                        }}>
+                        <button className="btn" type="button" onClick={this._onClickPDF} style={
+                            stylesButtons["PDF"][viewBottons ? "modal" : "form"]
+                        }>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
-                        <button className="btn" type="button" onClick={this._onCloseButton} style={{
-                            float: "right",
-                            margin: viewBottons ? "8px 0px 0px 45px" : "8px 0px 0px -120px",
-                            position: viewBottons ? null : "fixed",
-                            backgroundColor: viewBottons ? null : "rgb(193, 193, 193)"
-                        }}>
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                        <button className="btn" type="button" onClick={this._onCloseButton} style={
+                            stylesButtons["CLOSED"][viewBottons ? "modal" : "form"]
+                        }>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelars</span>
                         </button>
                     </div>
                 </div>

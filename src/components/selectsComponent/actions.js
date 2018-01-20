@@ -86,6 +86,12 @@ export function consultListWithParameter(field, parameter) {
   }
 }
 
+export function clrearConsultListWithParameter(field) {
+  return {
+    type: field
+  }
+}
+
 export function consultListWithParameterUbication(field, parentId) {
   const json = {
     messageHeader: {
@@ -108,6 +114,12 @@ export function consultListWithParameterUbication(field, parentId) {
   return {
     type: field,
     payload: request
+  }
+}
+
+export function clearConsultListWithParameterUbication(field) {
+  return {
+    type: field
   }
 }
 

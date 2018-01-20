@@ -9,9 +9,9 @@ import { showLoading } from '../loading/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
-import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee } from './actions';
+import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee, getRegionsByEmployee } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication, consultListWithParameter } from "../selectsComponent/actions";
+import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter } from "../selectsComponent/actions";
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
@@ -40,27 +40,20 @@ class Sheduler extends Component {
         this.bindClassParticipants = this.bindClassParticipants.bind(this);
         this._onChangeTeam = this._onChangeTeam.bind(this);
         this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
-        this.__onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
+        this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
         this._handlePrevisitsFind = this._handlePrevisitsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._updateValue = this._updateValue.bind(this);
-
-
-
-
+        this.onBlurClear = this.onBlurClear.bind(this);
     }
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, updateTitleNavBar, consultList, consultDataSelect, getAllTeamsByEmployee } = this.props;
-
-
-
-
+        const { getSchedulerPrevisits, updateTitleNavBar, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
+        getRegionsByEmployee();
         getAllTeamsByEmployee();
         consultDataSelect(LIST_REGIONS);
-
         this.setState({
             display: 'none'
         })
@@ -68,7 +61,6 @@ class Sheduler extends Component {
     }
 
     openModal(idClient, idPrevisit, celulasUser, celulaPrevisita) {
-
         const { clearPrevisitPermissions, validatePermissionsByModule, showLoading } = this.props;
         showLoading(true, 'Cargando..');
         if (!_.includes(celulasUser, celulaPrevisita)) {
@@ -89,6 +81,12 @@ class Sheduler extends Component {
                 modalIsOpen: true,
                 idPrevisit: idPrevisit
             });
+        });
+    }
+
+    onBlurClear() {
+        this.setState({
+            display: 'none'
         });
     }
 
@@ -113,12 +111,13 @@ class Sheduler extends Component {
     }
 
     _cleanSearch() {
-        const { resetForm, showLoading, clearFilter, consultList } = this.props;
-        showLoading(true, 'Cargando..');
+        const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication } = this.props;
+        showLoading(true, "cargando..");
         resetForm();
-        clearFilter();
-        consultList(TEAM_FOR_EMPLOYEE).then((data) => {
-            if (_.has(data, 'payload.data.teamValueObjects')) {
+        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
+        clearConsultListWithParameterUbication(LIST_ZONES);
+        clearFilter().then((data) => {
+            if (_.has(data, "payload")) {
                 this.setState({
                     display: 'none'
                 });
@@ -305,7 +304,7 @@ class Sheduler extends Component {
                                 valueProp={'id'}
                                 textProp={'description'}
                                 searchClient={'client'}
-                                data={selectsReducer.get('teamValueObjects')}
+                                data={selectsReducer.get('teamValueObjects') || []}
                             />
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2}>
@@ -318,7 +317,7 @@ class Sheduler extends Component {
                                             type="text"
                                             value={nameUsuario.value}
                                             onChange={nameUsuario.onChange}
-                                            onBLur={this._handlePrevisitsFind}
+                                            onBlur={this.onBlurClear}
                                             placeholder="Creador"
                                             onKeyPress={this.updateKeyValueUsersBanco}
                                             onSelect={val => this._updateValue(val)}
@@ -419,6 +418,7 @@ function mapDispatchToProps(dispatch) {
         consultList,
         consultDataSelect,
         consultListWithParameterUbication,
+        clearConsultListWithParameterUbication,
         consultListWithParameter,
         changeTeam,
         changeRegion,
@@ -426,6 +426,8 @@ function mapDispatchToProps(dispatch) {
         clearFilter,
         changeZone,
         getAllTeamsByEmployee,
+        getRegionsByEmployee,
+        clrearConsultListWithParameter,
         filterUsersBanco,
         clearPrevisitPermissions
     }, dispatch);
