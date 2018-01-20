@@ -50,7 +50,9 @@ class Sheduler extends Component {
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, updateTitleNavBar, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
+        const { getSchedulerPrevisits, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
+        clearConsultListWithParameterUbication(LIST_ZONES);
+        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
         getRegionsByEmployee();
         getAllTeamsByEmployee();
         consultDataSelect(LIST_REGIONS);
@@ -98,9 +100,9 @@ class Sheduler extends Component {
         if (!_.isEqual(val, "")) {
             const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
             region.onChange(val);
-            zone.onChange(null);
-            team.onChange(null);
             changeRegion(val);
+            clearConsultListWithParameterUbication(LIST_ZONES);
+            clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
             consultListWithParameterUbication(LIST_ZONES, val);
 
             this._handlePrevisitsFind();
@@ -114,10 +116,11 @@ class Sheduler extends Component {
         const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication } = this.props;
         showLoading(true, "cargando..");
         resetForm();
-        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
-        clearConsultListWithParameterUbication(LIST_ZONES);
+
         clearFilter().then((data) => {
             if (_.has(data, "payload")) {
+                clearConsultListWithParameterUbication(LIST_ZONES);
+                clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
                 this.setState({
                     display: 'none'
                 });
@@ -127,9 +130,11 @@ class Sheduler extends Component {
     }
 
     _onChangeZoneStatus(val) {
-        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
+        const { fields: { team, region, zone }, consultListWithParameterUbication, clrearConsultListWithParameter, consultListWithParameter, changeRegion } = this.props;
         zone.onChange(val);
         changeZone(val);
+        clearConsultListWithParameterUbication(LIST_ZONES);
+        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
             region: region.value,
             zone: zone.value
@@ -173,8 +178,6 @@ class Sheduler extends Component {
 
     bindClassParticipants(listParticipants, userName, celulasUser, celulaPrevisita) {
 
-        console.log("celulasUser", celulasUser);
-        console.log("celulaPrevisita", celulaPrevisita);
 
         if (!_.includes(celulasUser, celulaPrevisita)) {
             return 'cls-gray'
