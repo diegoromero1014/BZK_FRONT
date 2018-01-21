@@ -90,12 +90,12 @@ const stylesButtons = {
         form: {
             float: "right",
             margin: "8px 0px 0px -120px",
-            position: " fixed",
+            position: "fixed",
             backgroundColor: "#00B5AD"
         },
         modal: {
             float: "right",
-            margin: "8px 5px 0px ",
+            margin: "8px 5px 10px",
             backgroundColor: "#00B5AD"
         }
     },
@@ -103,7 +103,7 @@ const stylesButtons = {
         form: {
             float: "right",
             margin: "8px 0px 0px 107px",
-            position: " fixed",
+            position: "fixed",
         },
         modal: {
             float: "right",
@@ -132,7 +132,7 @@ const stylesButtons = {
         },
         modal: {
             float: "right",
-            margin: "8px 0px 0px 45px"
+            margin: "8px 0px 0px"
         }
     }
 };
@@ -1229,26 +1229,26 @@ class FormEditPrevisita extends Component {
                     <div style={{ width: viewBottons ? "100%" : "580px", height: "100%", position: viewBottons ? " absolute" : " fixed", right: "0px" }}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
                             style={
-                                (this.state.isEditable === true && ownerDraft === 0) ?
-                                    stylesButtons["SAVE_DRAFT"][viewBottons ? "modal" : "form"]
+                                !(this.state.isEditable === true && ownerDraft === 0) ?
+                                    stylesButtons["SAVE_DRAFT"][!viewBottons ? "form" : "modal"]
                                     : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                            style={(this.state.isEditable === true) ?
-                                stylesButtons["SAVE_PUBLISHED"][viewBottons ? "modal" : "form"]
+                            style={!(this.state.isEditable === true) ?
+                                stylesButtons["SAVE_PUBLISHED"][!viewBottons ? "form" : "modal"]
                                 : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onClickPDF} style={
-                            stylesButtons["PDF"][viewBottons ? "modal" : "form"]
+                            stylesButtons["PDF"][!viewBottons ? "form" : "modal"]
                         }>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
                         <button className="btn" type="button" onClick={this._onCloseButton} style={
-                            stylesButtons["CLOSED"][viewBottons ? "modal" : "form"]
+                            stylesButtons["CLOSED"][!viewBottons ? "form" : "modal"]
                         }>
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelars</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>

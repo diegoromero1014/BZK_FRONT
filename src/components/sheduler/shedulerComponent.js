@@ -365,7 +365,7 @@ class Sheduler extends Component {
                                         height: '20px',
                                         backgroundColor: GRAY_COLOR
                                     }} />
-                                    <span style={{ marginLeft: '10px' }}> No pertenece a la celula</span>
+                                    <span style={{ marginLeft: '10px' }}> No pertenece a la célula</span>
                                 </Row>
                             </div>
                         </Col>
