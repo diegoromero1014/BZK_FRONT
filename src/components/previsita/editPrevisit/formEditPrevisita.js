@@ -86,6 +86,26 @@ const validate = values => {
 };
 
 const stylesButtons = {
+
+
+    "BUTTON_CONTENT": {
+        form: {
+            width: "580px",
+            height: "100%",
+            position: "fixed",
+            right: "0px"
+        },
+        modal: {
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            right: "0px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            padding: "10px"
+        }
+    },
     "SAVE_DRAFT": {
         form: {
             float: "right",
@@ -94,8 +114,7 @@ const stylesButtons = {
             backgroundColor: "#00B5AD"
         },
         modal: {
-            float: "right",
-            margin: "8px 5px 0px ",
+            marginLeft: "10px",
             backgroundColor: "#00B5AD"
         }
     },
@@ -106,8 +125,7 @@ const stylesButtons = {
             position: " fixed",
         },
         modal: {
-            float: "right",
-            margin: "8px 0px 5px"
+            marginLeft: "10px"
         }
     },
     "PDF": {
@@ -118,8 +136,7 @@ const stylesButtons = {
             backgroundColor: "#eb984e"
         },
         modal: {
-            float: "right",
-            margin: "8px 10px 5px",
+            marginLeft: "10px",
             backgroundColor: "#eb984e"
         }
     },
@@ -131,8 +148,8 @@ const stylesButtons = {
             backgroundColor: "rgb(193, 193, 193)"
         },
         modal: {
-            float: "right",
-            margin: "8px 0px 0px 45px"
+            backgroundColor: "rgb(193, 193, 193)",
+            marginLeft: "10px"
         }
     }
 };
@@ -1226,7 +1243,7 @@ class FormEditPrevisita extends Component {
                     height: "50px",
                     background: viewBottons ? null : "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{ width: viewBottons ? "100%" : "580px", height: "100%", position: viewBottons ? " absolute" : " fixed", right: "0px" }}>
+                    <div style={stylesButtons["BUTTON_CONTENT"][viewBottons ? "modal" : "form"]}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
                             style={
                                 (this.state.isEditable === true && ownerDraft === 0) ?
@@ -1248,7 +1265,7 @@ class FormEditPrevisita extends Component {
                         <button className="btn" type="button" onClick={this._onCloseButton} style={
                             stylesButtons["CLOSED"][viewBottons ? "modal" : "form"]
                         }>
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelars</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
