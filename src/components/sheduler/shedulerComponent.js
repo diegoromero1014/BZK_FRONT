@@ -11,11 +11,11 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee, getRegionsByEmployee } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter } from "../selectsComponent/actions";
+import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists } from "../selectsComponent/actions";
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
-import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from "../selectsComponent/constants";
+import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
@@ -97,16 +97,19 @@ class Sheduler extends Component {
     }
 
     _onChangeRegionStatus(val) {
-        if (!_.isEqual(val, "")) {
-            const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
-            region.onChange(val);
-            changeRegion(val);
-            clearConsultListWithParameterUbication(LIST_ZONES);
-            clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
-            consultListWithParameterUbication(LIST_ZONES, val);
 
+        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion, clearLists } = this.props;
+        region.onChange(val);
+        zone.onChange("");
+        team.onChange("");
+
+        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+
+        if (!_.isEqual(val, "")) {
+            consultListWithParameterUbication(LIST_ZONES, val);
             this._handlePrevisitsFind();
         }
+
         this.setState({
             display: 'block'
         });
@@ -130,18 +133,20 @@ class Sheduler extends Component {
     }
 
     _onChangeZoneStatus(val) {
-        const { fields: { team, region, zone }, consultListWithParameterUbication, clrearConsultListWithParameter, consultListWithParameter, changeRegion } = this.props;
+        const { fields: { team, region, zone }, consultListWithParameterUbication, clrearConsultListWithParameter, consultListWithParameter, changeRegion, clearLists } = this.props;
         zone.onChange(val);
-        changeZone(val);
-        clearConsultListWithParameterUbication(LIST_ZONES);
-        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
-        consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
-            region: region.value,
-            zone: zone.value
-        });
+        team.onChange("");
+        
+        clearLists([TEAM_VALUE_OBJECTS]);
+
         if (val) {
+            consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: region.value,
+                zone: zone.value
+            });
             this._handlePrevisitsFind();
         }
+
         this.setState({
             display: 'block'
         });
@@ -432,7 +437,8 @@ function mapDispatchToProps(dispatch) {
         getRegionsByEmployee,
         clrearConsultListWithParameter,
         filterUsersBanco,
-        clearPrevisitPermissions
+        clearPrevisitPermissions,
+        clearLists
     }, dispatch);
 }
 function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient }, ownerProps) {
