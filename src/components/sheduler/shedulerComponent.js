@@ -116,14 +116,14 @@ class Sheduler extends Component {
     }
 
     _cleanSearch() {
-        const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication } = this.props;
+        const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
         showLoading(true, "cargando..");
         resetForm();
 
+        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+
         clearFilter().then((data) => {
             if (_.has(data, "payload")) {
-                clearConsultListWithParameterUbication(LIST_ZONES);
-                clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
                 this.setState({
                     display: 'none'
                 });
@@ -136,7 +136,7 @@ class Sheduler extends Component {
         const { fields: { team, region, zone }, consultListWithParameterUbication, clrearConsultListWithParameter, consultListWithParameter, changeRegion, clearLists } = this.props;
         zone.onChange(val);
         team.onChange("");
-        
+
         clearLists([TEAM_VALUE_OBJECTS]);
 
         if (val) {
