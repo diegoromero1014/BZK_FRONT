@@ -271,6 +271,8 @@ class FormEditPrevisita extends Component {
                             this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
                         }
                     }
+        }).catch( (error) => {
+            return error
         })
 
     }
@@ -795,7 +797,7 @@ class FormEditPrevisita extends Component {
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
                 let part = result.payload.data.data;
-                console.log(part)//idStatusDocument
+                
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
