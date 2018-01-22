@@ -167,21 +167,17 @@ class FormEditPrevisita extends Component {
 
         return canEditPrevisita(id).then((success) => {
 
-            console.log(success)
-
             let username = success.payload.data.data
             
                         if(_.isNull(username)) {
-                            console.log("null")
+                            
                             swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
             
 
-                        } else if (username === myUserName) {
+                        } else if (username.toUpperCase() === myUserName.toUpperCase()) {
 
                             if(! this.state.isEditable) {
                                 // Tengo permiso de editar y no estoy editando
-
-                                console.log("SETTING INTERVAL")
 
                                 this.setState({
                                     showErrorBlockedPreVisit: false,
