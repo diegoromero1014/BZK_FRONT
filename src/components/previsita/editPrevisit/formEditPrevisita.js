@@ -28,7 +28,7 @@ import {
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport } from "../actions";
+import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport, changeOwnerDraftPrevisit } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
@@ -83,6 +83,75 @@ let firstLoadInfo = false;
 const validate = values => {
     const errors = {};
     return errors;
+};
+
+const stylesButtons = {
+
+
+    "BUTTON_CONTENT": {
+        form: {
+            width: "580px",
+            height: "100%",
+            position: "fixed",
+            right: "0px"
+        },
+        modal: {
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            right: "0px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            padding: "10px"
+        }
+    },
+    "SAVE_DRAFT": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px -120px",
+            position: "fixed",
+            backgroundColor: "#00B5AD"
+        },
+        modal: {
+            marginLeft: "10px",
+            backgroundColor: "#00B5AD"
+        }
+    },
+    "SAVE_PUBLISHED": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 107px",
+            position: "fixed",
+        },
+        modal: {
+            marginLeft: "10px"
+        }
+    },
+    "PDF": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 292px",
+            position: "fixed",
+            backgroundColor: "#eb984e"
+        },
+        modal: {
+            marginLeft: "10px",
+            backgroundColor: "#eb984e"
+        }
+    },
+    "CLOSED": {
+        form: {
+            float: "right",
+            margin: "8px 0px 0px 450px",
+            position: "fixed",
+            backgroundColor: "rgb(193, 193, 193)"
+        },
+        modal: {
+            backgroundColor: "rgb(193, 193, 193)",
+            marginLeft: "10px"
+        }
+    }
 };
 
 class FormEditPrevisita extends Component {
@@ -153,29 +222,29 @@ class FormEditPrevisita extends Component {
     }
 
     _closeShowErrorBlockedPrevisit() {
-        this.setState( { showErrorBlockedPreVisit: false } )
-         
-        if(this.state.shouldRedirect) {
+        this.setState({ showErrorBlockedPreVisit: false })
+
+        if (this.state.shouldRedirect) {
             redirectUrl("/dashboard/clientInformation")
         }
-        
+
     }
 
     _canUserEditPrevisita(myUserName) {
-       
+
         const { canEditPrevisita, id, swtShowMessage } = this.props;
 
         return canEditPrevisita(id).then((success) => {
 
             let username = success.payload.data.data
             
+                        
                         if(_.isNull(username)) {
-                            
+                            // Error servidor
                             swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
             
-
                         } else if (username.toUpperCase() === myUserName.toUpperCase()) {
-
+                            // Usuario pidiendo permiso es el mismo que esta bloqueando
                             if(! this.state.isEditable) {
                                 // Tengo permiso de editar y no estoy editando
 
@@ -186,26 +255,22 @@ class FormEditPrevisita extends Component {
                                     intervalId: setInterval(() => {this._canUserEditPrevisita(myUserName)  } , TIME_REQUEST_BLOCK_REPORT)
                                 })
 
-            
-                            }  
-            
-                        } else {
 
-                            if( this.state.isEditable ) {
-                                // Salir de edicion y detener intervalo
-
-                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true})
-
-                                clearInterval(this.state.intervalId);
-
-                            } else {
-                                // Mostar mensaje de el usuario que tiene bloqueado el informe
-                                this.setState({showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false})
                             }
-            
-                            
-            
+
+                    } else {
+                        // El reporte esta siendo editado por otra persona
+
+                        if (this.state.isEditable) {
+                            // Estoy editando pero no tengo permisos
+                            // Salir de edicion y detener intervalo
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
+                            clearInterval(this.state.intervalId);
+                        } else {
+                            // Mostar mensaje de el usuario que tiene bloqueado el informe
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
                         }
+                    }
         })
 
     }
@@ -219,19 +284,17 @@ class FormEditPrevisita extends Component {
         let detailPrevisitData = this.props.previsitReducer.get('detailPrevisit').data;
         const myUserName = window.sessionStorage.getItem('userName')
 
-         this._canUserEditPrevisita(myUserName).then((success) => {
-
-            
+        this._canUserEditPrevisita(myUserName).then((success) => {
 
             showLoading(false, null);
 
-         }).catch((error) => {
+        }).catch((error) => {
             showLoading(false, null);
-         })
+        })
 
     }
 
-    
+
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
         pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
@@ -721,7 +784,7 @@ class FormEditPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading } = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading, changeOwnerDraftPrevisit } = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
@@ -732,6 +795,7 @@ class FormEditPrevisita extends Component {
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
                 let part = result.payload.data.data;
+                console.log(part)//idStatusDocument
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
@@ -825,6 +889,9 @@ class FormEditPrevisita extends Component {
                     }
                     addTask(task);
                 });
+
+                changeOwnerDraftPrevisit(part.documentStatus);
+
                 showLoading(false, null);
             });
         }
@@ -837,16 +904,16 @@ class FormEditPrevisita extends Component {
         clearInterval(this.state.intervalId)
         // Informar al backend que el informe se puede liberar
         disableBlockedReport(id).then((success) => {
-           
+
         }).catch((error) => {
-            
+
         })
     }
 
     render() {
         const {
             fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
-            clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar
+            clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar, viewBottons
         } = this.props;
         const ownerDraft = previsitReducer.get('ownerDraft');
         const detailPrevisit = previsitReducer.get('detailPrevisit');
@@ -876,7 +943,7 @@ class FormEditPrevisita extends Component {
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (! this.state.isEditable) &&
+                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (!this.state.isEditable) &&
                             <button type="button" onClick={this._editPreVisit}
                                 className={'btn btn-primary modal-button-edit'}
                                 style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
@@ -1176,47 +1243,36 @@ class FormEditPrevisita extends Component {
                     </Col>
                 </Row>
                 <div className="" style={{
-                    position: "fixed",
+                    position: viewBottons ? " absolute" : " fixed",
                     border: "1px solid #C2C2C2",
-                    bottom: "0px",
+                    bottom: viewBottons ? null : "0px",
                     width: "100%",
                     marginBottom: "0px",
                     backgroundColor: "#F8F8F8",
                     height: "50px",
-                    background: "rgba(255,255,255,0.75)"
+                    background: viewBottons ? null : "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
+                    <div style={stylesButtons["BUTTON_CONTENT"][viewBottons ? "modal" : "form"]}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                            style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                float: "right",
-                                margin: "8px 0px 0px -120px",
-                                position: "fixed",
-                                backgroundColor: "#00B5AD"
-                            } : { display: "none" }}>
+                            style={(this.state.isEditable === true && ownerDraft === 0) ?
+                                stylesButtons["SAVE_DRAFT"][!viewBottons ? "form" : "modal"]
+                                : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                            style={this.state.isEditable === true ? {
-                                float: "right",
-                                margin: "8px 0px 0px 107px",
-                                position: "fixed"
-                            } : { display: "none" }}>
+                            style={this.state.isEditable === true ?
+                                stylesButtons["SAVE_PUBLISHED"][!viewBottons ? "form" : "modal"]
+                                : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                         </button>
-                        <button className="btn" type="button" onClick={this._onClickPDF} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 292px",
-                            position: "fixed",
-                            backgroundColor: "#eb984e"
-                        }}>
+                        <button className="btn" type="button" onClick={this._onClickPDF} style={
+                            stylesButtons["PDF"][!viewBottons ? "form" : "modal"]
+                        }>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
                         </button>
-                        <button className="btn" type="button" onClick={this._onCloseButton} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 450px",
-                            position: "fixed",
-                            backgroundColor: "rgb(193, 193, 193)"
-                        }}>
+                        <button className="btn" type="button" onClick={this._onCloseButton} style={
+                            stylesButtons["CLOSED"][!viewBottons ? "form" : "modal"]
+                        }>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
@@ -1259,18 +1315,18 @@ class FormEditPrevisita extends Component {
                     onCancel={this._closeCancelConfirmChanType}
                     onConfirm={this._closeConfirmChangeType} />
 
-                
+
                 <SweetAlert
                     type="error"
                     show={this.state.showErrorBlockedPreVisit}
                     title="Error al editar previsita"
-                    text={"Señor usuario, en este momento la previsita esta siendo editada por "+this.state.userEditingPrevisita
-                    +". Por favor intentar mas tarde"}
-                    onConfirm={ this._closeShowErrorBlockedPrevisit  }
+                    text={"Señor usuario, en este momento la previsita esta siendo editada por " + this.state.userEditingPrevisita
+                        + ". Por favor intentar mas tarde"}
+                    onConfirm={this._closeShowErrorBlockedPrevisit}
 
                 />
 
-            </form>
+            </form >
         );
     }
 }
@@ -1290,7 +1346,8 @@ function mapDispatchToProps(dispatch) {
         addListParticipant,
         swtShowMessage,
         canEditPrevisita,
-        disableBlockedReport
+        disableBlockedReport,
+        changeOwnerDraftPrevisit
     }, dispatch);
 }
 

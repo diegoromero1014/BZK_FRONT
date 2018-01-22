@@ -1,9 +1,10 @@
 import Immutable from 'immutable';
-import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, GET_TEAMS_EMPLOYEE } from "./constants";
+import { GET_REGIONS, GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, GET_TEAMS_EMPLOYEE } from "./constants";
 
 const initialState = Immutable.Map({
     schedulerPrevisitList: [],
-    celulasAgendaPrevisita: []
+    celulasAgendaPrevisita: [],
+    regionsByEmployee: []
 });
 
 export default (state = initialState, action) => {
@@ -33,13 +34,16 @@ export default (state = initialState, action) => {
             });
 
         case GET_TEAMS_EMPLOYEE:
-
             const celulas = action.payload.data;
-
             return state.withMutations(map => {
                 map.set('celulasAgendaPrevisita', celulas)
-            })
+            });
 
+        case GET_REGIONS:
+            const regions = action.payload.data;
+            return state.withMutations(map => {
+                map.set('regiosnList', regions)
+            });
         default:
             return state;
     }
