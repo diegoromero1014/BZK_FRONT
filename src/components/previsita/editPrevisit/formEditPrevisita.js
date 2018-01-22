@@ -789,8 +789,7 @@ class FormEditPrevisita extends Component {
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
-                let part = result.payload.data.data;
-                console.log(part)//idStatusDocument
+                let part = result.payload.data.data;                
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
