@@ -1245,14 +1245,13 @@ class FormEditPrevisita extends Component {
                 }}>
                     <div style={stylesButtons["BUTTON_CONTENT"][viewBottons ? "modal" : "form"]}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                            style={
-                                !(this.state.isEditable === true && ownerDraft === 0) ?
+                            style={ (this.state.isEditable === true && ownerDraft === 0) ?
                                     stylesButtons["SAVE_DRAFT"][!viewBottons ? "form" : "modal"]
                                     : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                            style={!(this.state.isEditable === true) ?
+                            style={ this.state.isEditable === true ?
                                 stylesButtons["SAVE_PUBLISHED"][!viewBottons ? "form" : "modal"]
                                 : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
