@@ -156,9 +156,9 @@ class ModalComponentPending extends Component {
     consultInfoMyPendingTeamTask() {
         const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, tasksTeamByUser, clearMyPendingTeamPaginator,
             clearOnlyListPendingTaskTeam, clearMyPendingsTeamOrder, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
-            console.log([region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value])
+        console.log([region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value])
 
-        if ( !region.value && !zone.value && !team.value && !taskStatus.value && !dateTaskTeam.value && !idUsuario.value) {
+        if (!region.value && !zone.value && !team.value && !taskStatus.value && !dateTaskTeam.value && !idUsuario.value) {
             swtShowMessage(MESSAGE_ERROR, ERROR_TITLE_FILTERS_TEAM, ERROR_TITLE_FILTERS_TEAM_MESSAGE);
             return;
         }
@@ -428,7 +428,7 @@ class ModalComponentPending extends Component {
                                 </Row>
                             }
                             {this.state.teamViewTask &&
-                                <Row style={{ width: "65%", marginLeft: "2px" }}>
+                                <Row style={{ width: "60%", marginLeft: "2px" }}>
                                     <Col xs={12} sm={12} md={6} lg={6}>
                                         <DateTimePickerUi
                                             {...dateTaskTeam}
@@ -479,40 +479,39 @@ class ModalComponentPending extends Component {
                             }
 
 
-                            <Col xs={12} sm={12} md={2} lg={4} style={{ width: '100%' }}>
+                            <Col xs={12} sm={12} md={2} lg={4} style={{ width: '100%', minWidth: "436px" }}>
                                 {this.state.teamViewTask &&
 
                                     <button className="btn btn-primary" type="button" onClick={this.consultInfoMyPendingTeamTask}
-                                        title="Buscar" style={{ marginLeft: "17px" }}>
+                                        title="Buscar" style={{ marginLeft: "10px" }}>
                                         <i className="search icon"
                                             style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                     </button>
 
                                 }
                                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                    title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                                    title="Limpiar búsqueda" style={{ marginLeft: "10px" }}>
                                     <i className="erase icon"
                                         style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                 </button>
                                 <button className="btn btn-primary" type="button" onClick={this._changeViewModeTeamTask}
-                                    title="Cambiar modo de visualización" style={{ marginLeft: "17px" }}>
+                                    title="Cambiar modo de visualización" style={{ marginLeft: "10px" }}>
                                     <i className="refresh icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                     Cambiar tipo de búsqueda
                                 </button>
-                            </Col>
+                                {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
 
-                            {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
-
-                                <Col xs={12} sm={12} md={2} lg={1} style={{ width: '100%' }}>
                                     <Tooltip text="Descarga de tareas pendientes">
                                         <button className="btn btn-primary" type="button" onClick={this._downloadPendingTask}
-                                            style={{ marginLeft: '-15px' }}>
+                                            style={{ marginLeft: "10px" }} >
                                             <i className="file excel outline icon"
                                                 style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
                                         </button>
                                     </Tooltip>
-                                </Col>
-                            }
+
+                                }
+                            </Col>
+
                             <Col xs={12} sm={12} md={12} lg={12} >
                                 <div style={{ height: "50px", marginLeft: "30px", width: "auto", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
                                     <Row style={{ width: "150px", display: "flex", flexDirection: "row", alignItems: "center" }}>
