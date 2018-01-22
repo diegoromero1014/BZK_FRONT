@@ -407,7 +407,7 @@ class Sheduler extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} />
+                            <EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} closeModal={this.closeModal} />
                         </div>
                     </div>
                 </Modal>

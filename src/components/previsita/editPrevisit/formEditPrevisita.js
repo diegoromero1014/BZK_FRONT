@@ -551,8 +551,13 @@ class FormEditPrevisita extends Component {
     }
 
     _closeConfirmCloseVisit() {
+        const { viewBottons,closeModal } = this.props;
         this.setState({ showConfirm: false });
-        redirectUrl("/dashboard/clientInformation");
+        if (viewBottons === true) {
+            closeModal();
+        } else {
+            redirectUrl("/dashboard/clientInformation");
+        }
     }
 
     _submitCreatePrevisita() {
@@ -790,7 +795,6 @@ class FormEditPrevisita extends Component {
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
                 let part = result.payload.data.data;
-                console.log(part)//idStatusDocument
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
