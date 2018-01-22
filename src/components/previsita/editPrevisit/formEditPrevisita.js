@@ -219,6 +219,25 @@ class FormEditPrevisita extends Component {
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
         this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+        this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
+    }
+
+
+    _validateBlockOnSave() {
+
+        console.log("validando bloqueo");
+
+        showLoading(true, "Cargando...");
+
+        const myUserName = window.sessionStorage.getItem('userName')
+
+        this._canUserEditPrevisita(myUserName).then((success) => {
+            this._submitCreatePrevisita()
+            showLoading(false, "Cargando...");
+        }).catch((error) => {
+            console.log(error)
+            showLoading(false, "Cargando...");
+        })
     }
 
     _closeShowErrorBlockedPrevisit() {
@@ -272,7 +291,11 @@ class FormEditPrevisita extends Component {
                             // Mostar mensaje de el usuario que tiene bloqueado el informe
                             this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
                         }
+
+                        return Promise.reject("error");
                     }
+
+                    return success
         }).catch( (error) => {
             return error
         })
@@ -570,6 +593,7 @@ class FormEditPrevisita extends Component {
     }
 
     _submitCreatePrevisita() {
+
         const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
@@ -785,6 +809,8 @@ class FormEditPrevisita extends Component {
             message = "Señor usuario, debe ingresar todos los campos obligatorios.";
             this.setState({ showMessageCreatePreVisit: true });
         }
+
+    
     }
 
     componentWillMount() {
@@ -942,7 +968,7 @@ class FormEditPrevisita extends Component {
         }
 
         return (
-            <form onSubmit={handleSubmit(this._submitCreatePrevisita)}
+            <form onSubmit={handleSubmit(this._validateBlockOnSave)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
                 className="my-custom-tab"
                 style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>

@@ -208,7 +208,7 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
   */
 
 export const NAME_REPORT_PREVISIT = "PreVisita"
-export const TIME_REQUEST_BLOCK_REPORT = 30000;
+export const TIME_REQUEST_BLOCK_REPORT = 15000;
 
 /**
  * Reestablecer permisos
