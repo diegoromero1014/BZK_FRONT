@@ -236,36 +236,41 @@ class FormEditPrevisita extends Component {
 
         return canEditPrevisita(id).then((success) => {
 
-
             let username = success.payload.data.data
+            
+                        
+                        if(_.isNull(username)) {
+                            // Error servidor
+                            swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+            
+                        } else if (username.toUpperCase() === myUserName.toUpperCase()) {
+                            // Usuario pidiendo permiso es el mismo que esta bloqueando
+                            if(! this.state.isEditable) {
+                                // Tengo permiso de editar y no estoy editando
 
-            if (_.isNull(username)) {
-                swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+                                this.setState({
+                                    showErrorBlockedPreVisit: false,
+                                    showMessage: false,
+                                    isEditable: !this.state.isEditable,
+                                    intervalId: setInterval(() => {this._canUserEditPrevisita(myUserName)  } , TIME_REQUEST_BLOCK_REPORT)
+                                })
 
 
-            } else if (username === myUserName) {
+                            }
 
-                if (!this.state.isEditable) {
-                    // Tengo permiso de editar y no estoy editando
-                    this.setState({
-                        showErrorBlockedPreVisit: false,
-                        showMessage: false,
-                        isEditable: !this.state.isEditable,
-                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
-                    })
-                }
+                    } else {
+                        // El reporte esta siendo editado por otra persona
 
-            } else {
-
-                if (this.state.isEditable) {
-                    // Salir de edicion y detener intervalo
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
-                    clearInterval(this.state.intervalId);
-                } else {
-                    // Mostar mensaje de el usuario que tiene bloqueado el informe
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
-                }
-            }
+                        if (this.state.isEditable) {
+                            // Estoy editando pero no tengo permisos
+                            // Salir de edicion y detener intervalo
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
+                            clearInterval(this.state.intervalId);
+                        } else {
+                            // Mostar mensaje de el usuario que tiene bloqueado el informe
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
+                        }
+                    }
         })
 
     }
