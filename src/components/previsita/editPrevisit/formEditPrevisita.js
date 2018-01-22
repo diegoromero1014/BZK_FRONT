@@ -236,7 +236,9 @@ class FormEditPrevisita extends Component {
 
         return canEditPrevisita(id).then((success) => {
 
-            let username = success.payload.data.data
+            let username = success.payload.data.data.username
+
+            let name = success.payload.data.data.name
             
                         
                         if(_.isNull(username)) {
@@ -264,11 +266,11 @@ class FormEditPrevisita extends Component {
                         if (this.state.isEditable) {
                             // Estoy editando pero no tengo permisos
                             // Salir de edicion y detener intervalo
-                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: true })
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
                             clearInterval(this.state.intervalId);
                         } else {
                             // Mostar mensaje de el usuario que tiene bloqueado el informe
-                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
+                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
                         }
                     }
         }).catch( (error) => {
