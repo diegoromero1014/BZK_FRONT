@@ -28,7 +28,7 @@ import {
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport } from "../actions";
+import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport, changeOwnerDraftPrevisit } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
@@ -779,7 +779,7 @@ class FormEditPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading } = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading, changeOwnerDraftPrevisit } = this.props;
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
@@ -790,6 +790,7 @@ class FormEditPrevisita extends Component {
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
                 let part = result.payload.data.data;
+                console.log(part)//idStatusDocument
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
@@ -883,6 +884,9 @@ class FormEditPrevisita extends Component {
                     }
                     addTask(task);
                 });
+
+                changeOwnerDraftPrevisit(part.documentStatus);
+
                 showLoading(false, null);
             });
         }
@@ -1245,13 +1249,13 @@ class FormEditPrevisita extends Component {
                 }}>
                     <div style={stylesButtons["BUTTON_CONTENT"][viewBottons ? "modal" : "form"]}>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                            style={ (this.state.isEditable === true && ownerDraft === 0) ?
-                                    stylesButtons["SAVE_DRAFT"][!viewBottons ? "form" : "modal"]
-                                    : { display: "none" }}>
+                            style={(this.state.isEditable === true && ownerDraft === 0) ?
+                                stylesButtons["SAVE_DRAFT"][!viewBottons ? "form" : "modal"]
+                                : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}
-                            style={ this.state.isEditable === true ?
+                            style={this.state.isEditable === true ?
                                 stylesButtons["SAVE_PUBLISHED"][!viewBottons ? "form" : "modal"]
                                 : { display: "none" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
@@ -1337,7 +1341,8 @@ function mapDispatchToProps(dispatch) {
         addListParticipant,
         swtShowMessage,
         canEditPrevisita,
-        disableBlockedReport
+        disableBlockedReport,
+        changeOwnerDraftPrevisit
     }, dispatch);
 }
 
