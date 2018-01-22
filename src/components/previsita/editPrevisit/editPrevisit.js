@@ -20,11 +20,11 @@ class EditPrevisit extends Component {
   }
 
   render() {
-    const { params: { id }, viewBottons } = this.props;
+    const { params: { id }, viewBottons, closeModal } = this.props;
     return (
       <div>
         <HeaderPrevisita />
-        <FormEditPrevisita id={id} viewBottons={viewBottons} />
+        <FormEditPrevisita id={id} viewBottons={viewBottons} closeModal={closeModal} />
       </div>
     );
   }

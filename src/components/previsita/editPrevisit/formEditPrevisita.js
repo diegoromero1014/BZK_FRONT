@@ -271,6 +271,8 @@ class FormEditPrevisita extends Component {
                             this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: username, shouldRedirect: false })
                         }
                     }
+        }).catch( (error) => {
+            return error
         })
 
     }
@@ -556,8 +558,13 @@ class FormEditPrevisita extends Component {
     }
 
     _closeConfirmCloseVisit() {
+        const { viewBottons,closeModal } = this.props;
         this.setState({ showConfirm: false });
-        redirectUrl("/dashboard/clientInformation");
+        if (viewBottons === true) {
+            closeModal();
+        } else {
+            redirectUrl("/dashboard/clientInformation");
+        }
     }
 
     _submitCreatePrevisita() {
@@ -794,7 +801,7 @@ class FormEditPrevisita extends Component {
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
                 const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
-                let part = result.payload.data.data;                
+                let part = result.payload.data.data;
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
