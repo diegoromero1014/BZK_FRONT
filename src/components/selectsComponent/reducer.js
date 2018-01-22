@@ -135,6 +135,8 @@ export default (state = initialState, action) => {
             return state.set('pipelineClientNeeds', clientNeeds);
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.LIST_REGIONS_BY_EMPLOYEE:
+            return state.set('region', defaultData(action, 'payload.data.masterDataDetailEntries'));
         case constants.LIST_ZONES:
             return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FULLFILLMENT_COVENANT:

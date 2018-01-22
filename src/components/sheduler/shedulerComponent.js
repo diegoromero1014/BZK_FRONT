@@ -9,9 +9,9 @@ import { showLoading } from '../loading/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
-import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee, getRegionsByEmployee } from './actions';
+import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists } from "../selectsComponent/actions";
+import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists, getRegionsByEmployee } from "../selectsComponent/actions";
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
@@ -23,6 +23,7 @@ import $ from 'jquery';
 import { filter } from 'rxjs/operator/filter';
 import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
+import { limitiInf } from '../myPendings/myTasks/actions';
 
 
 BigCalendar.momentLocalizer(moment);
@@ -50,12 +51,16 @@ class Sheduler extends Component {
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
-        clearConsultListWithParameterUbication(LIST_ZONES);
-        clrearConsultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE);
-        getRegionsByEmployee();
+        const { getSchedulerPrevisits, clearLists, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
+        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        getRegionsByEmployee().then((regions) => {
+            let listaRegiones = regions.payload.data.masterDataDetailEntries
+            if (listaRegiones.length == 0) {
+                consultDataSelect(LIST_REGIONS);
+            }
+        });
         getAllTeamsByEmployee();
-        consultDataSelect(LIST_REGIONS);
+
         this.setState({
             display: 'none'
         })

@@ -109,30 +109,4 @@ export function getAllTeamsByEmployee() {
 
 }
 
-export function getRegionsByEmployee() {
 
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": {
-
-        }
-    }
-
-    let request = axios.post(APP_URL + '/regionsByEmployee', json);
-    return {
-        type: GET_REGIONS,
-        payload: request
-    };
-
-}

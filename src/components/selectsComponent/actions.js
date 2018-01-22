@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
   TEAM_FOR_REGION_EMPLOYEE, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
-  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS
+  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS, LIST_REGIONS_BY_EMPLOYEE
 } from './constants';
 import { isUndefined, isNull } from 'lodash';
 
@@ -290,4 +290,32 @@ export function clearLists(lists) {
     type: CLEAR_LISTS,
     lists
   }
+}
+
+export function getRegionsByEmployee() {
+
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+
+    }
+  }
+
+  let request = axios.post(APP_URL + '/regionsByEmployee', json);
+  return {
+    type: LIST_REGIONS_BY_EMPLOYEE,
+    payload: request
+  };
+
 }
