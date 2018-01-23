@@ -232,6 +232,9 @@ class FormEditPrevisita extends Component {
         const myUserName = window.sessionStorage.getItem('userName')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
+
+            console.log(success)
+
             this._submitCreatePrevisita()
             showLoading(false, "Cargando...");
         }).catch((error) => {
@@ -263,6 +266,8 @@ class FormEditPrevisita extends Component {
                         if(_.isNull(username)) {
                             // Error servidor
                             swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+
+                            return Promise.reject(new Error('Error interno del servidor'))
             
                         } else if (username.toUpperCase() === myUserName.toUpperCase()) {
                             // Usuario pidiendo permiso es el mismo que esta bloqueando
@@ -279,25 +284,23 @@ class FormEditPrevisita extends Component {
 
                             }
 
-                    } else {
-                        // El reporte esta siendo editado por otra persona
-
-                        if (this.state.isEditable) {
-                            // Estoy editando pero no tengo permisos
-                            // Salir de edicion y detener intervalo
-                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
-                            clearInterval(this.state.intervalId);
                         } else {
-                            // Mostar mensaje de el usuario que tiene bloqueado el informe
-                            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
+                            // El reporte esta siendo editado por otra persona
+
+                            if (this.state.isEditable) {
+                                // Estoy editando pero no tengo permisos
+                                // Salir de edicion y detener intervalo
+                                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+                                clearInterval(this.state.intervalId);
+                            } else {
+                                // Mostar mensaje de el usuario que tiene bloqueado el informe
+                                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
+                            }
+
+                            return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
                         }
 
-                        return Promise.reject("error");
-                    }
-
-                    return success
-        }).catch( (error) => {
-            return error
+                        return success
         })
 
     }
