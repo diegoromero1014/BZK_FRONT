@@ -23,7 +23,9 @@ import {
     ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
     VALUE_REQUIERED,
     MESSAGE_ERROR_SWEET_ALERT,
-    TIME_REQUEST_BLOCK_REPORT
+    TIME_REQUEST_BLOCK_REPORT,
+    REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+
 } from "../../../constantsGlobal";
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
@@ -599,6 +601,7 @@ class FormEditPrevisita extends Component {
 
         const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
+        var errorMessage=  "Señor usuario, debe ingresar todos los campos obligatorios.";
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -616,6 +619,12 @@ class FormEditPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
+        } else  if  (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+            errorInForm  =  true;
+            this.setState({
+                lugarPrevisitError:  VALUE_XSS_INVALID
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
         if (typeButtonClick === SAVE_PUBLISHED) {
             if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
@@ -809,7 +818,7 @@ class FormEditPrevisita extends Component {
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
-            message = "Señor usuario, debe ingresar todos los campos obligatorios.";
+            message = errorMessage;
             this.setState({ showMessageCreatePreVisit: true });
         }
 
