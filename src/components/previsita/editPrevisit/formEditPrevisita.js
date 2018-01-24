@@ -263,46 +263,46 @@ class FormEditPrevisita extends Component {
             let username = success.payload.data.data.username
 
             let name = success.payload.data.data.name
-            
-                        
-                        if(_.isNull(username)) {
-                            // Error servidor
-                            swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
-
-                            return Promise.reject(new Error('Error interno del servidor'))
-            
-                        } else if (username.toUpperCase() === myUserName.toUpperCase()) {
-                            // Usuario pidiendo permiso es el mismo que esta bloqueando
-                            if(! this.state.isEditable) {
-                                // Tengo permiso de editar y no estoy editando
-
-                                this.setState({
-                                    showErrorBlockedPreVisit: false,
-                                    showMessage: false,
-                                    isEditable: !this.state.isEditable,
-                                    intervalId: setInterval(() => {this._canUserEditPrevisita(myUserName)  } , TIME_REQUEST_BLOCK_REPORT)
-                                })
 
 
-                            }
+            if (_.isNull(username)) {
+                // Error servidor
+                swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
 
-                        } else {
-                            // El reporte esta siendo editado por otra persona
+                return Promise.reject(new Error('Error interno del servidor'))
 
-                            if (this.state.isEditable) {
-                                // Estoy editando pero no tengo permisos
-                                // Salir de edicion y detener intervalo
-                                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
-                                clearInterval(this.state.intervalId);
-                            } else {
-                                // Mostar mensaje de el usuario que tiene bloqueado el informe
-                                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
-                            }
+            } else if (username.toUpperCase() === myUserName.toUpperCase()) {
+                // Usuario pidiendo permiso es el mismo que esta bloqueando
+                if (!this.state.isEditable) {
+                    // Tengo permiso de editar y no estoy editando
 
-                            return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
-                        }
+                    this.setState({
+                        showErrorBlockedPreVisit: false,
+                        showMessage: false,
+                        isEditable: !this.state.isEditable,
+                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                    })
 
-                        return success
+
+                }
+
+            } else {
+                // El reporte esta siendo editado por otra persona
+
+                if (this.state.isEditable) {
+                    // Estoy editando pero no tengo permisos
+                    // Salir de edicion y detener intervalo
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+                    clearInterval(this.state.intervalId);
+                } else {
+                    // Mostar mensaje de el usuario que tiene bloqueado el informe
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
+                }
+
+                return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
+            }
+
+            return success
         })
 
     }
@@ -588,7 +588,7 @@ class FormEditPrevisita extends Component {
     }
 
     _closeConfirmCloseVisit() {
-        const { viewBottons,closeModal } = this.props;
+        const { viewBottons, closeModal } = this.props;
         this.setState({ showConfirm: false });
         if (viewBottons === true) {
             closeModal();
@@ -601,7 +601,7 @@ class FormEditPrevisita extends Component {
 
         const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
-        var errorMessage=  "Señor usuario, debe ingresar todos los campos obligatorios.";
+        var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -619,21 +619,20 @@ class FormEditPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
-        } else  if  (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
-            errorInForm  =  true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+            errorInForm = true;
             this.setState({
-                lugarPrevisitError:  VALUE_XSS_INVALID
+                lugarPrevisitError: VALUE_XSS_INVALID
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
-        if (typeButtonClick === SAVE_PUBLISHED) {
-            if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: "Debe ingresar un valor"
-                });
-            }
+        if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+            errorInForm = true;
+            this.setState({
+                durationPreVisitError: "Debe ingresar un valor"
+            });
         }
+
         if (typeButtonClick === SAVE_PUBLISHED) {
             if (_.isEmpty(htmlToText(this.state.targetPrevisit)) || this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") {
                 errorInForm = true;
@@ -822,7 +821,7 @@ class FormEditPrevisita extends Component {
             this.setState({ showMessageCreatePreVisit: true });
         }
 
-    
+
     }
 
     componentWillMount() {
@@ -1060,9 +1059,9 @@ class FormEditPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                max="5"
+                                max="4"
+                                touched={true}
                                 placeholder="Duración previsita"
-                                error={_.isEmpty(this.state.durationPreVisitError) ? VALUE_REQUIERED : (REGEX_SIMPLE_XSS.test(this.state.durationPreVisitError) ? VALUE_XSS_INVALID : null)}
                                 error={this.state.durationPreVisitError}
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
