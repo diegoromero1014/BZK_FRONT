@@ -432,8 +432,7 @@ function mapDispatchToProps(dispatch) {
         getRecentClients,
         swtShowMessage,
         showLoading,
-        deleteAllRecentClients,
-        getRecentClients
+        deleteAllRecentClients
     }, dispatch);
 }
 

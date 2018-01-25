@@ -87,6 +87,8 @@ export default (state = initialState, action) => {
             return state.set('dataTypeAttitudeOverGroup', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TEAM_FOR_EMPLOYEE:
             return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
+        case constants.TEAM_FOR_EMPLOYEE_REGION_ZONE:
+            return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
         case constants.TEAM_FOR_REGION_EMPLOYEE:
             return state.set('teamValueObjects', defaultData(action, 'payload.data.data'));
         case constants.TYPE_NOTES:
@@ -133,6 +135,8 @@ export default (state = initialState, action) => {
             return state.set('pipelineClientNeeds', clientNeeds);
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.LIST_REGIONS_BY_EMPLOYEE:
+            return state.set('region', defaultData(action, 'payload.data.masterDataDetailEntries'));
         case constants.LIST_ZONES:
             return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FULLFILLMENT_COVENANT:

@@ -116,6 +116,7 @@ export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
+export const MODULE_SHEDULER = "Scheduler";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -200,3 +201,17 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
 /**
  * FIN REGEX XSS
  */
+
+
+ /**
+  * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
+  */
+
+export const NAME_REPORT_PREVISIT = "PreVisita"
+export const TIME_REQUEST_BLOCK_REPORT = 15000;
+
+/**
+ * Reestablecer permisos
+ */
+
+export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREVISITS"

@@ -319,3 +319,11 @@ export function htmlToText(html) {
     tag.innerHTML = html;
     return tag.innerText.trim();
 }
+
+export function clearPrevisitPermissions(){
+
+    return {
+        type: constants.CLEAR_PERMISSIONS_MODULE_PREVISITS
+    }
+
+}
