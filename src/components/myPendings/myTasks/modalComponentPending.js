@@ -4,6 +4,7 @@ import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import { Col, Grid, Row } from "react-flexbox-grid";
 import { redirectUrl } from "../../globalComponents/actions";
+import { consultParameterServer, formValidateKeyEnter, htmlToText } from '../../../actionsGlobal';
 import { updateTitleNavBar } from "../../navBar/actions";
 import {
     clearMyPendingPaginator,
@@ -347,7 +348,7 @@ class ModalComponentPending extends Component {
 
 
     render() {
-        const { fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario }, myPendingsReducer, reducerGlobal, selectsReducer } = this.props;
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario }, myPendingsReducer, reducerGlobal, selectsReducer, formValidateKeyEnter } = this.props;
         let visibleTable = 'none';
         let visibleTableTeam = 'none';
         let visibleMessage = 'block';
@@ -365,7 +366,7 @@ class ModalComponentPending extends Component {
             <div className="tab-pane quickZoomIn animated"
                 style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
                 <div style={{ padding: '10px', overflow: 'initial' }}>
-                    <form>
+                    <form onKeyPress={val => formValidateKeyEnter(val, true)} >
                         <Row style={{ borderBottom: "2px solid #D9DEDF" }}>
                             {this.state.teamViewTask &&
                                 <Row style={{ width: "100%", marginLeft: "2px", marginBottom: "15px" }}>
@@ -625,7 +626,8 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameter,
         clearMyPendingsTeamOrder,
         clearPendingTaskTeam,
-        filterUsersBanco
+        filterUsersBanco,
+        formValidateKeyEnter
     }, dispatch);
 }
 
