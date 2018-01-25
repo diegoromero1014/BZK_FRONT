@@ -10,7 +10,9 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { contactsByClientFindServer } from '../contact/actions';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import { APP_URL } from '../../constantsGlobal';
+import { APP_URL, 
+  VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -30,7 +32,8 @@ class ParticipantesBancolombia extends Component {
     this.state = {
       showEmptyParticipantBanco: false,
       showParticipantExistBanco: false,
-      validateConsultParticipants: false
+      validateConsultParticipants: false,
+      showInvalidCharacter: false,
     }
     this._addParticipantBanc = this._addParticipantBanc.bind(this);
     this._updateValue = this._updateValue.bind(this);
@@ -45,6 +48,12 @@ class ParticipantesBancolombia extends Component {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
+      if (eval(REGEX_SIMPLE_XSS_STRING).test(nameUsuario.value)) {
+        this.setState({
+          showInvalidCharacter: true
+        });
+        return;
+      }
       if (particip === undefined) {
         const uuid = _.uniqueId('participanBanco_');
         var clientParticipant = {
@@ -261,6 +270,13 @@ class ParticipantesBancolombia extends Component {
           title="Participante existente"
           text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
           onConfirm={() => this.setState({ showParticipantExistBanco: false })}
+        />
+        <SweetAlert
+          type="error"
+          show={this.state.showInvalidCharacter}
+          title="Error participante"
+          text={REGEX_SIMPLE_XSS_MESAGE}
+          onConfirm={() => this.setState({ showInvalidCharacter: false })}
         />
       </div>
     );
