@@ -270,7 +270,7 @@ const validate = (values, props) => {
     }
 
 
-    if (values.justifyExClient && isExclient) {
+    if (!values.justifyExClient && isExclient) {
         errors.justifyExClient = OPTION_REQUIRED
     }
 
@@ -965,7 +965,7 @@ class clientCertify extends React.Component {
 
             <div>
 
-                { /* Inicio Informacion de ubicacion y correspondencia */ }
+                { /* Inicio Informacion de ubicación y correspondencia */ }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -1423,7 +1423,7 @@ class clientCertify extends React.Component {
                         isRequired={!isExclient}
                     />
                     <SelectsJustificacion
-                        visible={'false'}
+                        visible={isExclient ? 'false' : 'true' }
                         title="Justificación excliente"
                         labelInput="Seleccione..."
                         value={justifyExClient.value}
@@ -1495,7 +1495,7 @@ class clientCertify extends React.Component {
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
-                    text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir de la vista de edición?"
+                    text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir de la vista de certificación?"
                     showCancelButton={true}
                     onCancel={() => this.setState({ showExitAlert: false })}
                     onConfirm={() => this._onConfirmExit()} />
@@ -1518,7 +1518,7 @@ class clientCertify extends React.Component {
                     type="error"
                     show={this.state.showEr}
                     title="Error editando cliente"
-                    text="Señor usuario, ocurrió un error editando el cliente."
+                    text="Señor usuario, ocurrió un error certificando el cliente."
                     onConfirm={() => this._closeError()}
                 />
                 <SweetAlert
