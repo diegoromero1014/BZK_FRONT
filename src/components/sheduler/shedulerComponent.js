@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
-import events from './events';
 import Modal from 'react-modal';
 import { reduxForm } from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
@@ -9,7 +8,7 @@ import { showLoading } from '../loading/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { goBack, redirectUrl } from "../globalComponents/actions";
-import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter, getAllTeamsByEmployee } from './actions';
+import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
 import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists, getRegionsByEmployee } from "../selectsComponent/actions";
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
@@ -51,7 +50,7 @@ class Sheduler extends Component {
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, clearLists, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getAllTeamsByEmployee, getRegionsByEmployee } = this.props;
+        const { getSchedulerPrevisits, clearLists, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getRegionsByEmployee } = this.props;
         clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
         getRegionsByEmployee().then((regions) => {
             let listaRegiones = regions.payload.data.masterDataDetailEntries
@@ -59,7 +58,6 @@ class Sheduler extends Component {
                 consultDataSelect(LIST_REGIONS);
             }
         });
-        getAllTeamsByEmployee();
 
         this.setState({
             display: 'none'
@@ -67,18 +65,14 @@ class Sheduler extends Component {
         updateTitleNavBar('Agenda');
     }
 
-    openModal(idClient, idPrevisit, celulasUser, celulaPrevisita) {
+    openModal(idClient, idPrevisit) {
         const { clearPrevisitPermissions, validatePermissionsByModule, showLoading } = this.props;
         showLoading(true, 'Cargando..');
-        if (!_.includes(celulasUser, celulaPrevisita)) {
-            clearPrevisitPermissions()
-        } else {
-            validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
-                if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                    redirectUrl("/login");
-                }
-            });
-        }
+        validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                redirectUrl("/login");
+            }
+        });
 
         const { consultInfoClient } = this.props;
         window.localStorage.setItem("idClientSelected", idClient);
@@ -186,13 +180,7 @@ class Sheduler extends Component {
 
     }
 
-    bindClassParticipants(listParticipants, userName, celulasUser, celulaPrevisita) {
-
-
-        if (!_.includes(celulasUser, celulaPrevisita)) {
-            return 'cls-gray'
-        }
-
+    bindClassParticipants(listParticipants, userName) {
         let isGrant = listParticipants.filter((item) => {
             return item.toLowerCase() === userName.toLowerCase();
         }).length > 0;
@@ -368,15 +356,6 @@ class Sheduler extends Component {
                                     }} />
                                     <span style={{ marginLeft: '10px' }}> No está invitado</span>
                                 </Row>
-                                <Row style={{ marginTop: "5px" }}>
-                                    <div style={{
-                                        borderRadius: '50%',
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: GRAY_COLOR
-                                    }} />
-                                    <span style={{ marginLeft: '10px' }}> No pertenece a la célula</span>
-                                </Row>
                             </div>
                         </Col>
                     </Row>
@@ -398,8 +377,8 @@ class Sheduler extends Component {
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
                         defaultDate={new Date()}
-                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit, schedulerPrevisitReduser.get('celulasAgendaPrevisita').data, data.clientTeam)}
-                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName, schedulerPrevisitReduser.get('celulasAgendaPrevisita').data, data.clientTeam) })}
+                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
+                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />
                 </div>
                 <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
@@ -438,7 +417,6 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         clearFilter,
         changeZone,
-        getAllTeamsByEmployee,
         getRegionsByEmployee,
         clrearConsultListWithParameter,
         filterUsersBanco,
