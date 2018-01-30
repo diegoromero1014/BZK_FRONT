@@ -54,7 +54,7 @@ import {
 import { showLoading } from "../loading/actions";
 
 const fields = [
-    'economicGroupName', 'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
+    'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
     'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone'
@@ -65,6 +65,14 @@ const valuesYesNo = [
     { 'id': true, 'value': "Si" },
     { 'id': false, 'value': "No" }
 ];
+
+const EDIT_STYLE = {
+    border: '1px solid #e5e9ec',
+    backgroundColor: '#F8F8F8',
+    borderRadius: '2px',
+    margin: '0px 28px 0 20px',
+    height: '60px'
+};
 
 
 var initValueJustifyNonGeren = false;
@@ -105,6 +113,13 @@ const validate = (values, props) => {
         errorScrollTop = true;
     } else {
         errors.idCIIU = null;
+    }
+
+    if (!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) {
+        errors.economicGroupName = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.economicGroupName = null;
     }
 
     if (!values.addressClient && !isExclient) {
@@ -260,6 +275,13 @@ const validate = (values, props) => {
     }
 
 
+
+    if (errorScrollTop && clickButttonSave) {
+        clickButttonSave = false;
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    }
+
+
     return errors
 
 }
@@ -315,18 +337,43 @@ class clientCertify extends React.Component {
         this._submitCertifyClient = this._submitCertifyClient.bind(this);
         this._saveClient = this._saveClient.bind(this);
         this._closeSuccess = this._closeSuccess.bind(this);
+        this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
+        this._onConfirmExit = this._onConfirmExit.bind(this);
+
+    }
+
+    componentWillUnmount() {
+      
+        const { sendErrorsUpdate, updateErrorsNotes } = this.props;
+        sendErrorsUpdate([]);
+        isProspect = false;
+        oldJustifyGeren = '';
+        oldJustifyNoNeedLME = '';
+        infoJustificationForNoRM = true;
+        infoJustificationNeedLME = true;
+        clickButttonSave = false;
+
+        initValueJustifyNonGeren = false;
+        initValueJustifyNonLME = false;
+
+        updateErrorsNotes(false);
 
     }
 
     componentWillMount() {
 
-        const { clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, consultList, updateTitleNavBar  } = this.props; 
+        const { fields: { nitPrincipal, economicGroupName  },   clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar  } = this.props; 
 
         clearNotes();
         updateErrorsNotes(false);
+        clearValuesAdressess();
         updateTitleNavBar("Certificar cliente");
 
         var infoClient = clientInformacion.get('responseClientInfo');
+
+        if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
+            setNotes(infoClient.notes);
+        }
 
         if (window.localStorage.getItem('sessionToken') === "") {
             redirectUrl("/login");
@@ -336,8 +383,6 @@ class clientCertify extends React.Component {
                 redirectUrl("/dashboard/clientInformation");
 
             }else {
-
-                console.log("buscando datos")
 
                 showLoading(true, MESSAGE_LOAD_DATA);
 
@@ -356,9 +401,32 @@ class clientCertify extends React.Component {
                 })
 
                 consultList(constants.CIIU);
+                if (infoClient.economicGroup !== null && infoClient.economicGroup !== '' && infoClient.economicGroup !== undefined && infoClient.economicGroup !== "null") {
+                    economicGroupsByKeyword(infoClient.nitPrincipal);
+                    nitPrincipal.onChange(infoClient.nitPrincipal);
+                    economicGroupName.onChange(infoClient.economicGroupKey);
+                }
             }
 
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        let { errors } = nextProps;
+
+        const errorsArray = _.toArray(errors);
+
+        this.setState({
+            sumErrorsForm: errorsArray.length
+        });
+    
+    }
+
+    _handleGroupEconomicFind() {
+        const { fields: { groupEconomic }, economicGroupsByKeyword } = this.props;
+        economicGroupsByKeyword(groupEconomic.value);
+        groupEconomic.onChange('');
     }
 
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
@@ -396,20 +464,9 @@ class clientCertify extends React.Component {
     }
 
     _closeSuccess() {
-        const { sendErrorsUpdate, updateErrorsNotes } = this.props;
-        sendErrorsUpdate([]);
-        this.setState({ show: false, showEx: false, showEr: false });
+
+        this.setState({ showExitAlert: false, showEx: false, showEr: false });
         
-        isProspect = false;
-        updateErrorsNotes(false);
-        oldJustifyGeren = '';
-        oldJustifyNoNeedLME = '';
-        infoJustificationForNoRM = true;
-        infoJustificationNeedLME = true;
-        clickButttonSave = false;
-        
-        initValueJustifyNonGeren = false;
-        initValueJustifyNonLME = false;
         goBack();
     }
 
@@ -593,10 +650,13 @@ class clientCertify extends React.Component {
     }
 
     _closeWindow() {
-        goBack();
+
+        this.setState({ showExitAlert: true });
+
     }
 
     _onConfirmExit() {
+        this.setState({ showExitAlert: false })
         goBack();
     }
 
@@ -875,6 +935,34 @@ class clientCertify extends React.Component {
         return (
 
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
+
+            { /* VENTANA DE ERRORES */ }
+
+            <div>
+                    <p style={{ paddingTop: '10px' }}></p>
+                    <Row xs={12} md={12} lg={12} style={ EDIT_STYLE }>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+                            {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
+                                <div>
+                                    <span
+                                        style={{ marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt" }}>Falta información obligatoria del cliente (ver campos seleccionados).</span>
+                                </div>
+                                :
+                                <div>
+                                    <span style={{
+                                        marginLeft: "20px",
+                                        marginTop: "10px",
+                                        color: "green",
+                                        fontSize: "12pt"
+                                    }}>La información del cliente está completa, recuerde revisarla. </span>
+                                </div>
+                            }
+                            
+                        </Col>
+                    </Row>
+                </div>
+
+
             <div>
 
                 { /* Inicio Informacion de ubicacion y correspondencia */ }
@@ -988,7 +1076,7 @@ class clientCertify extends React.Component {
                 </Row>
                 <Row style={{ padding: "0px 20px 10px 20px" }}>
                     
-                    <Col xs style={{ marginLeft: "10px" }}>
+                    <Col xs style={{ marginLeft: "0" }}>
                         <dt>
                             <span>Teléfono</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
                         </dt>
@@ -1195,21 +1283,7 @@ class clientCertify extends React.Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={8} md={8} lg={8} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Detalle de ingresos no operacionales u originados en actividades diferente a la principal</span>
-                        </dt>
-                        <dt>
-                            <Input
-                                name="txtBarrio"
-                                type="text"
-                                max="250"
-                                placeholder="Ingrese el detalle"
-                                {...detailNonOperatingIncome}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
+                    
                 </Row>
 
 
@@ -1375,8 +1449,11 @@ class clientCertify extends React.Component {
                     </Col>
                 </Row>
                 
-                <div style={{ marginBottom:"30px" }} >
+                <div  >
                     <NotesClient />
+                </div>
+
+                <div style={{height: "100px" }}>
                 </div>
                 
                 <div className="" style={{
@@ -1413,14 +1490,14 @@ class clientCertify extends React.Component {
             <ModalErrorsUpdateClient modalIsOpen={tabReducer.get('modalErrorsIsOpen')} />
                 <SweetAlert
                     type="warning"
-                    show={this.state.show}
+                    show={this.state.showExitAlert}
                     title="Confirmación salida"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir de la vista de edición?"
                     showCancelButton={true}
-                    onCancel={() => this.setState({ show: false })}
+                    onCancel={() => this.setState({ showExitAlert: false })}
                     onConfirm={() => this._onConfirmExit()} />
                 
                 <SweetAlert
@@ -1484,7 +1561,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             justifyExClient: infoClient.justificationForLostClient,
             justifyNoLME: infoClient.justificationForCreditNeed,
             idCIIU: infoClient.ciiu,
-
+            groupEconomic: infoClient.economicGroup,
             annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
             dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,
             assets: infoClient.assets === 0 ? '0' : fomatInitialStateNumber(infoClient.assets),
