@@ -33,7 +33,7 @@ class NoteItem extends Component {
     }
 
     updateValue(prop, value) {
-        const { updateNote, index, updateErrorsNotes, notes } = this.props;
+        const { updateNote, index, updateErrorsNotes, notes, shouldUpdateNoteErrors } = this.props;
         this.setState(_.set({}, prop, value));
         updateNote(index, prop, value);
         let notesArray = [];
@@ -45,13 +45,18 @@ class NoteItem extends Component {
             notesArray.push(noteItem);
         });
         updateErrorsNotes(false, "");
-        notesArray.forEach(function (note) {
-            if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
-                updateErrorsNotes(true, VALUE_XSS_INVALID);
-            }
-        });
+
+        if(shouldUpdateNoteErrors) {
+            notesArray.forEach(function (note) {
+                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
+                    updateErrorsNotes(true, "Debe ingresar todos los campos");
+                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
+                    updateErrorsNotes(true, VALUE_XSS_INVALID);
+                }
+            });
+        }
+
+        
     }
 
     _deleteNote() {
@@ -60,14 +65,19 @@ class NoteItem extends Component {
     }
 
     componentWillMount() {
-        const { combo, body } = this.props;
+        const { combo, body, shouldUpdateNoteErrors } = this.props;
         this.updateValue("combo", combo);
         this.updateValue("body", body);
-        if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
-            updateErrorsNotes(true, "Debe ingresar todos los campos");
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(body)) {
-            updateErrorsNotes(true, VALUE_XSS_INVALID);
+
+        if(shouldUpdateNoteErrors) {
+            if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
+                updateErrorsNotes(true, "Debe ingresar todos los campos");
+            } else if (eval(REGEX_SIMPLE_XSS_STRING).test(body)) {
+                updateErrorsNotes(true, VALUE_XSS_INVALID);
+            }
         }
+
+        
     }
 
     componentDidMount() {
@@ -77,13 +87,13 @@ class NoteItem extends Component {
     }
 
     render() {
-        const { combo, body, data, index, _onBlurField } = this.props;
+        const { combo, body, data, index, _onBlurField, shouldUpdateNoteErrors } = this.props;
         return (
             <div>
                 <Row>
                     <Col xs={12} md={3} lg={3} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Tipo de nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Tipo de nota </span> {shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>)  }  </dt>
                             <ComboBox
                                 name={`typeNote${index}`}
                                 value={this.state.combo}
@@ -98,7 +108,7 @@ class NoteItem extends Component {
                     </Col>
                     <Col xs={10} md={8} lg={8} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Descripción de la nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Descripción de la nota</span>  { shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>) } </dt>
                             <Input
                                 type="text"
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
