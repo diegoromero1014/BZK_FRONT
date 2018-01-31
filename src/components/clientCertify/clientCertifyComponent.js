@@ -612,7 +612,7 @@ class clientCertify extends React.Component {
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
         const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
-        if (addNoteNoGeren && addNoteNoNeedLME) {
+        if (addNoteNoGeren && addNoteNoNeedLME && !isExclient) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
@@ -624,7 +624,7 @@ class clientCertify extends React.Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
-        } else if (addNoteNoGeren) {
+        } else if (addNoteNoGeren && !isExclient) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
@@ -632,7 +632,7 @@ class clientCertify extends React.Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
-        } else if (addNoteNoNeedLME) {
+        } else if (addNoteNoNeedLME && !isExclient) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,

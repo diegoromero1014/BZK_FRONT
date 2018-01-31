@@ -87,13 +87,13 @@ class NoteItem extends Component {
     }
 
     render() {
-        const { combo, body, data, index, _onBlurField } = this.props;
+        const { combo, body, data, index, _onBlurField, shouldUpdateNoteErrors } = this.props;
         return (
             <div>
                 <Row>
                     <Col xs={12} md={3} lg={3} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Tipo de nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Tipo de nota </span> {shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>)  }  </dt>
                             <ComboBox
                                 name={`typeNote${index}`}
                                 value={this.state.combo}
@@ -108,7 +108,7 @@ class NoteItem extends Component {
                     </Col>
                     <Col xs={10} md={8} lg={8} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Descripción de la nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Descripción de la nota</span>  { shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>)  } </dt>
                             <Input
                                 type="text"
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
