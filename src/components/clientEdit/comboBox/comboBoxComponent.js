@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, DefaultProps } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { scrollToComponent } from '../../scrollTo/scrollComponent';
 import $ from 'jquery';
 import _ from 'lodash';
@@ -150,7 +150,7 @@ comboBoxComponent.PropTypes = {
     defaultValue: PropTypes.string
 };
 
-comboBoxComponent.DefaultProps = {
+comboBoxComponent.defaultProps = {
     showEmptyObject: false
 }
 

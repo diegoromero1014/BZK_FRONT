@@ -1211,11 +1211,12 @@ class clientEdit extends Component {
                 "otherOriginResource": otherOriginResource.value,
                 "countryOriginId": countryOrigin.value,
                 "originCityResource": originCityResource.value,
-                "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
+                "operationsForeignCurrency": operationsForeignCurrency.value? (operationsForeignCurrency.value === 'false' ? 0 : 1): '',
                 "otherOperationsForeign": otherOperationsForeign.value,
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
                 "idCustomerTypology": customerTypology.value
             };
+            console.log('Hola ' + operationsForeignCurrency.value + ' hola ');
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
@@ -2685,6 +2686,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
+
     return {
         clientInformacion,
         selectsReducer,
