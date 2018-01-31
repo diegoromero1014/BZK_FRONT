@@ -26,8 +26,7 @@ import {
 } from '../../constantsGlobal';
 
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
-//import ComboBox from "../../ui/comboBox/comboBoxComponent";
-import ComboBox from "./comboBox/comboBoxComponent";
+import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import Input from "../../ui/input/inputComponent";
