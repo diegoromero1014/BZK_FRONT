@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Col } from 'react-flexbox-grid';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
+//import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBox from '../clientEdit/comboBox/comboBoxComponent';
 import _ from 'lodash';
 import { stringValidate } from '../../actionsGlobal';
 import { VALUE_REQUIERED } from '../../constantsGlobal';
@@ -33,6 +34,7 @@ class ClientTypology extends Component {
                         {...customerTypology}
                         error={!stringValidate(customerTypology.value) && fieldRequiered ? VALUE_REQUIERED : ''}
                         touched={true}
+                        showEmptyObject={true}
                     />
                 </div>
             </Col>
