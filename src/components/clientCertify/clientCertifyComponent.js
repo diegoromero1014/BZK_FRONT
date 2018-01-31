@@ -115,7 +115,7 @@ const validate = (values, props) => {
         errors.idCIIU = null;
     }
 
-    if (!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) {
+    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !isExclient) {
         errors.economicGroupName = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
@@ -174,7 +174,7 @@ const validate = (values, props) => {
     }
 
 
-    if (!values.dateSalesAnnuals || values.dateSalesAnnuals === ''  && !isExclient) {
+    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '')  && !isExclient) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
     } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dateSalesAnnuals)) {
@@ -307,6 +307,7 @@ function SelectsJustificacion(props) {
                     touched={true}
                     parentId="dashboardComponentScroll"
                     onChange={props.onChange}
+                    showEmptyObject={props.showEmptyObject ? true: false}
                 />
             </dt>
         </Col>;
@@ -488,7 +489,8 @@ class clientCertify extends React.Component {
         } = this.props;
         
         const infoClient = clientInformacion.get('responseClientInfo');
-        if (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
+        // ¿Porque existe esta validacion de fecha? Evita el guardado y no lanza error
+        if (isExclient || moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": infoClient.clientIdType,
@@ -643,8 +645,10 @@ class clientCertify extends React.Component {
         } else {
 
             if(!tabReducer.get('errorNotesEditClient')){
+                console.log("saveClient")
                 this._saveClient()
             }else{
+                console.log("error")
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
 
@@ -1378,6 +1382,7 @@ class clientCertify extends React.Component {
                         onChange={val => this._onChangeJustifyNoGeren(val)}
                         touched={true}
                         isRequired={!isExclient}
+                        showEmptyObject={true}
                     />
                     <Col xs={12} md={4} lg={4}>
                         <dt>
@@ -1431,6 +1436,7 @@ class clientCertify extends React.Component {
                         onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
                         touched={true}
                         isRequired={!isExclient}
+                        showEmptyObject={true}
                     />
                     <SelectsJustificacion
                         visible={isExclient ? 'false' : 'true' }
@@ -1446,6 +1452,7 @@ class clientCertify extends React.Component {
                         onChange={justifyExClient.onChange}
                         touched={true}
                         isRequired={isExclient}
+                        showEmptyObject={true}
                     />
                 </Row>
                 <Row style={{ padding: "0px 10px 10px 20px" }}>

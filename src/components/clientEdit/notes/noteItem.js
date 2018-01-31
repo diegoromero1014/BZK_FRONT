@@ -108,7 +108,7 @@ class NoteItem extends Component {
                     </Col>
                     <Col xs={10} md={8} lg={8} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Descripción de la nota</span>  { shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>)  } </dt>
+                            <dt><span>Descripción de la nota</span>  { shouldUpdateNoteErrors && (<span style={{ color: "red" }}>*</span>) } </dt>
                             <Input
                                 type="text"
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
