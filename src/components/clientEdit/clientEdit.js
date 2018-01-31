@@ -2345,7 +2345,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <NotesClient shouldUpdateNoteErrors={false} />
+                <NotesClient shouldUpdateNoteErrors={ idButton !== BUTTON_EDIT}  />
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
