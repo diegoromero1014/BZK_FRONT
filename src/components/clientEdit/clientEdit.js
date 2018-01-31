@@ -1216,7 +1216,7 @@ class clientEdit extends Component {
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
                 "idCustomerTypology": customerTypology.value
             };
-            console.log('Hola ' + operationsForeignCurrency.value + ' hola ');
+           
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
@@ -2345,7 +2345,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <NotesClient />
+                <NotesClient shouldUpdateNoteErrors={false} />
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
