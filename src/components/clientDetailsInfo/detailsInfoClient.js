@@ -82,6 +82,10 @@ class DetailsInfoClient extends Component {
         });
     }
 
+    _clickButtonClientCertify() {
+        redirectUrl("/dashboard/certifyClient");
+    }
+
     _clickButtonStudyCredit() {
         redirectUrl("/dashboard/creditStudy");
     }
@@ -274,6 +278,10 @@ class DetailsInfoClient extends Component {
                                     <Col style={paddingLink}>
                                         <a style={styleLink} onClick={this._clickButtonClientEdit}>
                                             <span>Editar/Modificar</span></a>
+                                    </Col>}
+                                {allowAccessAndEdit &&
+                                    <Col style={paddingButtons}  onClick={this._clickButtonClientCertify}>
+                                        <button className="btn"><span>Certificar cliente</span></button>
                                     </Col>}
                                 {allowAccessAndEdit &&
                                     <Col style={paddingButtons} onClick={this._clickButtonClientUpdate}>
