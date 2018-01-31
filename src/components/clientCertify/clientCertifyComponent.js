@@ -362,11 +362,16 @@ class clientCertify extends React.Component {
 
     componentWillMount() {
 
+        infoJustificationForNoRM = true;
+        infoJustificationNeedLME = true;
+        infoMarcaGeren = true;
+
         const { fields: { nitPrincipal, economicGroupName  },   clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar  } = this.props; 
 
-        clearNotes();
+        
         updateErrorsNotes(false);
         clearValuesAdressess();
+        clearNotes();
         updateTitleNavBar("Certificar cliente");
 
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -536,7 +541,7 @@ class clientCertify extends React.Component {
                         "province": province.value,
                         "city": city.value,
                         "neighborhood": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].neighborhood,
-                        "isPrincipalAddress": infoClient.isPrincipalAddress,
+                        "isPrincipalAddress": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].isPrincipalAddress,
                         "phoneNumber": telephone.value,
                         "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
                     }],
@@ -581,8 +586,6 @@ class clientCertify extends React.Component {
 
     _submitCertifyClient() {
 
-        console.log("submit certifyClient")
-
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -611,8 +614,6 @@ class clientCertify extends React.Component {
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
 
-            console.log("setNotes")
-
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -625,8 +626,6 @@ class clientCertify extends React.Component {
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
 
-            console.log("add note No gerenciado")
-
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -634,8 +633,6 @@ class clientCertify extends React.Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
         } else if (addNoteNoNeedLME) {
-
-            console.log("add note no need lme")
 
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,
@@ -645,7 +642,13 @@ class clientCertify extends React.Component {
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
 
-            this._saveClient()
+            if(!tabReducer.get('errorNotesEditClient')){
+                this._saveClient()
+            }else{
+                document.getElementById('dashboardComponentScroll').scrollTop = 0;
+            }
+
+           
         }
     }
 
@@ -927,9 +930,6 @@ class clientCertify extends React.Component {
         var infoClient = clientInformacion.get('responseClientInfo');
         isExclient = infoClient.relationshipStatusName === "Excliente";
 
-
-
-        console.log(infoClient)
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         return (
@@ -1019,6 +1019,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese la dirección"
                                 {...addressClient}
                                 touched={true}
+                                
                             />
                         </dt>
                     </Col>
@@ -1039,6 +1040,8 @@ class clientCertify extends React.Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                                 touched={true}
+                                showEmptyObject={true}
+                                
                             />
                         </div>
                     </Col>
@@ -1050,11 +1053,14 @@ class clientCertify extends React.Component {
                                 labelInput="Seleccione departamento..."
                                 {...province}
                                 onChange={val => this._onChangeProvince(val)}
+                                value={province.value}
+                                onBlur={province.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataTypeProvince') || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1065,11 +1071,14 @@ class clientCertify extends React.Component {
                                 name="city"
                                 labelInput="Seleccione ciudad..."
                                 {...city}
+                                value={city.value}
+                                onBlur={city.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataTypeCity') || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1121,6 +1130,7 @@ class clientCertify extends React.Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataCIIU')}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1450,7 +1460,7 @@ class clientCertify extends React.Component {
                 </Row>
                 
                 <div  >
-                    <NotesClient />
+                    <NotesClient shouldUpdateNoteErrors={!isExclient} />
                 </div>
 
                 <div style={{height: "100px" }}>
