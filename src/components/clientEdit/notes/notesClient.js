@@ -37,19 +37,19 @@ class NotesClient extends Component {
   }
 
   _mapNotesItems(note) {
-    const { selectsReducer, shouldUpdateNoteErrors } = this.props;
+    const { selectsReducer } = this.props;
     return <Note
       index={note.uid}
       key={note.uid}
       body={note.body}
       combo={note.combo}
       data={selectsReducer.get(TYPE_NOTES)}
-      shouldUpdateNoteErrors={shouldUpdateNoteErrors}
+     
     />
   }
 
   render() {
-    const { notes, tabReducer, shouldUpdateNoteErrors } = this.props;
+    const { notes, tabReducer } = this.props;
     
     return (
       <Row style={{ padding: "0px 10px 20px 20px" }}>
@@ -75,9 +75,7 @@ class NotesClient extends Component {
   }
 }
 
-NotesClient.defaultProps = {
-  shouldUpdateNoteErrors: true
-}
+
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({

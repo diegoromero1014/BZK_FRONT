@@ -340,6 +340,8 @@ class clientCertify extends React.Component {
         this._closeSuccess = this._closeSuccess.bind(this);
         this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
         this._onConfirmExit = this._onConfirmExit.bind(this);
+        this._closeError = this._closeError.bind(this);
+        this._onChangeCity = this._onChangeCity.bind(this);
 
     }
 
@@ -367,7 +369,7 @@ class clientCertify extends React.Component {
         infoJustificationNeedLME = true;
         infoMarcaGeren = true;
 
-        const { fields: { nitPrincipal, economicGroupName  },   clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar  } = this.props; 
+        const { fields: { nitPrincipal, economicGroupName  },   clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar, consultListWithParameterUbication  } = this.props; 
 
         
         updateErrorsNotes(false);
@@ -427,6 +429,10 @@ class clientCertify extends React.Component {
             sumErrorsForm: errorsArray.length
         });
     
+    }
+
+    _closeError() {
+        this.setState({ show: false, showEx: false, showEr: false, showErrorClientExists: false });
     }
 
     _handleGroupEconomicFind() {
@@ -614,7 +620,7 @@ class clientCertify extends React.Component {
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
         const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
-        if (addNoteNoGeren && addNoteNoNeedLME && !isExclient) {
+        if (addNoteNoGeren && addNoteNoNeedLME) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
@@ -626,7 +632,7 @@ class clientCertify extends React.Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
-        } else if (addNoteNoGeren && !isExclient) {
+        } else if (addNoteNoGeren) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
@@ -634,7 +640,7 @@ class clientCertify extends React.Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
-        } else if (addNoteNoNeedLME && !isExclient) {
+        } else if (addNoteNoNeedLME) {
 
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,
@@ -645,10 +651,10 @@ class clientCertify extends React.Component {
         } else {
 
             if(!tabReducer.get('errorNotesEditClient')){
-                console.log("saveClient")
+                
                 this._saveClient()
             }else{
-                console.log("error")
+                
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
 
@@ -690,6 +696,13 @@ class clientCertify extends React.Component {
         if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
             city.onChange('');
         }
+    }
+
+    _onChangeCity(val) {
+
+        const { fields: { country, province, city }, selectsReducer } = this.props;
+
+        city.onChange(val);
     }
 
     _onChangeGroupEconomic(e) {
@@ -1177,6 +1190,7 @@ class clientCertify extends React.Component {
                                 {...city}
                                 value={city.value}
                                 onBlur={city.onBlur}
+                                onChange={val => this._onChangeCity(val)}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
@@ -1525,7 +1539,7 @@ class clientCertify extends React.Component {
                 </Row>
                 
                 <div  >
-                    <NotesClient shouldUpdateNoteErrors={!isExclient} />
+                    <NotesClient />
                 </div>
 
                 <div style={{height: "100px" }}>
