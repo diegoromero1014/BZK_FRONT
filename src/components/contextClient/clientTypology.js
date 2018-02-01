@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Col } from 'react-flexbox-grid';
-//import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import ComboBox from '../clientEdit/comboBox/comboBoxComponent';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import _ from 'lodash';
 import { stringValidate } from '../../actionsGlobal';
 import { VALUE_REQUIERED } from '../../constantsGlobal';
