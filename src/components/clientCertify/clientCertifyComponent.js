@@ -57,7 +57,7 @@ const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone'
+    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber'
 ]
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -555,7 +555,7 @@ class clientCertify extends React.Component {
                 "originGoods": infoClient.originGoods,
                 "originResources": infoClient.originResources,
                 "taxNature": infoClient.taxNature,
-                "detailNonOperatinIncome": detailNonOperatingIncome.value,
+                "detailNonOperatinIncome": infoClient.detailNonOperatinIncome,
                 "otherOriginGoods": infoClient.otherOriginGoods,
                 "otherOriginResource": infoClient.otherOriginResource,
                 "countryOriginId": infoClient.countryOriginId,
@@ -928,7 +928,7 @@ class clientCertify extends React.Component {
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-            addressClient, country, province, city, telephone   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer } = this.props;
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer } = this.props;
         
         
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -966,8 +966,108 @@ class clientCertify extends React.Component {
                     </Row>
                 </div>
 
+                { /* FIN VENTANA DE ERRORES  */ }
+
+
+                { /* INFORMACION CLIENTE */ }
+
+                <Row style={{ padding: "10px 28px 10px 20px" }}>
+                    <Col xs={12} md={4} lg={4}>
+                        <dt><span>Razón social </span></dt>
+                        <dt>
+                            <Input
+                                name="razonSocial"
+                                type="text"
+                                max="150"
+                                placeholder="Razón social del cliente"
+                                {...razonSocial}
+                                disabled={true}
+                            />
+                        </dt>
+                    </Col>
+                    <Col xs={12} md={4} lg={4}>
+                        <dt><span>Tipo de documento </span></dt>
+                        <dt>
+                            
+                            <Input
+                                 name="tipoDocumento"
+                                 type="text"
+                                 placeholder="Tipo de documento del cliente"
+                                 {...idTypeClient}
+                                 disabled={true}
+                                 touched={true}
+                            />
+
+                        </dt>
+                    </Col>
+                    <Col xs={12} md={4} lg={4}>
+                        <dt><span>Número de documento </span></dt>
+                        <dt>
+                            <Input
+                                name="documento"
+                                type="text"
+                                max="20"
+                                placeholder="Número de documento del cliente"
+                                {...idNumber}
+                                touched={true}
+                                disabled={true}
+                            />
+                        </dt>
+                    </Col>
+
+                    </Row>
+
+                { /* FIN INFORMACION CLIENTE*/ }
+
 
             <div>
+
+                
+
+                {/* Inicio Actividad Economica */}
+
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                            <div className="tab-content-row"
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="payment icon" style={{ fontSize: "25px" }} />
+                            <span className="title-middle"> Actividad económica</span>
+                        </div>
+                    </Col>
+                </Row>
+                <Row style={{ padding: "0px 10px 10px 0px" }}>
+                    
+                    <Col xs>
+                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
+                            <ComboBox
+                                name="idCIIU"
+                                labelInput="Seleccione CIIU..."
+                                {...idCIIU}
+                                onChange={val => this._onChangeCIIU(val)}
+                                onBlur={idCIIU.onBlur}
+                                valueProp={'id'}
+                                textProp={'ciiu'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get('dataCIIU')}
+                                touched={true}
+                                showEmptyObject={true}
+                            />
+                        </div>
+                    </Col>
+                    <Col xs>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
+                            </span>
+                        </div>
+                    </Col>
+                </Row>
+
+                {/* Fin Actividad Economica */   }
+
 
                 { /* Inicio Informacion de ubicación y correspondencia */ }
 
@@ -1106,49 +1206,7 @@ class clientCertify extends React.Component {
                     </Col>
                 </Row>
 
-                {/* Inicio Actividad Economica */}
-
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Actividad económica</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 0px" }}>
-                    
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="idCIIU"
-                                labelInput="Seleccione CIIU..."
-                                {...idCIIU}
-                                onChange={val => this._onChangeCIIU(val)}
-                                onBlur={idCIIU.onBlur}
-                                valueProp={'id'}
-                                textProp={'ciiu'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataCIIU')}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
-                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
-                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
-                            </span>
-                        </div>
-                    </Col>
-                </Row>
-
-                {/* Fin Actividad Economica */   }
+                { /* Fin Informacion de ubicación y correspondencia */ }
 
 
                 {/* Inicio Informacion financiera  */}
@@ -1570,6 +1628,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
         notes,
         tabReducer,
         initialValues: {
+            razonSocial: infoClient.clientName,
+            idTypeClient: infoClient.clientNameType,
             idNumber: infoClient.clientIdNumber,
             marcGeren: infoClient.isManagedByRm,
             centroDecision: infoClient.isDecisionCenter,
