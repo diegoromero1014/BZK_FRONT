@@ -30,33 +30,8 @@ class NoteItem extends Component {
         };
         this.updateValue = this.updateValue.bind(this);
         this._deleteNote = this._deleteNote.bind(this);
-        this.validateNotes = this.validateNotes.bind(this);
     }
 
-    validateNotes(){
-
-        const { updateErrorsNotes, notes } = this.props;
-
-        let notesArray = [];
-        notes.map(map => {
-            var noteItem = {
-                "typeOfNote": map.combo,
-                "note": map.body
-            }
-            notesArray.push(noteItem);
-        });
-        updateErrorsNotes(false, "");
-
-        
-            notesArray.forEach(function (note) {
-                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                    updateErrorsNotes(true, "Debe ingresar todos los campos");
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
-                    updateErrorsNotes(true, VALUE_XSS_INVALID);
-                }
-            });
-
-    }
 
     updateValue(prop, value) {
         const { updateNote, index, updateErrorsNotes, notes } = this.props;
@@ -86,9 +61,14 @@ class NoteItem extends Component {
     }
 
     _deleteNote() {
-        const { index, deleteNote, updateErrorsNotes} = this.props;
+        const { index, deleteNote, updateErrorsNotes, onDeletedNote} = this.props;
+
         deleteNote(index);
-        this.validateNotes();
+        //Avisar al padre que una nota se elimino
+        onDeletedNote();
+
+        
+
     }
 
     componentWillMount() {

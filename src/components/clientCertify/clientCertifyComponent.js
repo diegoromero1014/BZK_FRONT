@@ -271,7 +271,10 @@ const validate = (values, props) => {
 
 
     if (!values.justifyExClient && isExclient) {
-        errors.justifyExClient = OPTION_REQUIRED
+        errors.justifyExClient = OPTION_REQUIRED;
+        errorScrollTop = true;
+    }else {
+        errors.justifyExClient = null;
     }
 
 

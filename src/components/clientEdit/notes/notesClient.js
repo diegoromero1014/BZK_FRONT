@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { deleteNote, updateNote, addNote } from './actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
+import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
 import { CLIENT_ID_TYPE, TYPE_NOTES } from '../../selectsComponent/constants';
 import Note from './noteItem';
 import _ from 'lodash';
@@ -11,8 +12,15 @@ import _ from 'lodash';
 class NotesClient extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      shouldValidateNotes: false
+    }
+
     this._mapNotesItems = this._mapNotesItems.bind(this);
     this._addNote = this._addNote.bind(this);
+    this.validateNotes = this.validateNotes.bind(this);
+  
   }
 
   _updateValue(index, e) {
@@ -23,6 +31,37 @@ class NotesClient extends Component {
   _updateValueList(index, value) {
     const { updateNote } = this.props;
     updateNote(index, "combo", value);
+  }
+
+  componentDidUpdate() {
+    if(this.state.shouldValidateNotes) {
+      this.validateNotes()
+    }
+  }
+
+  validateNotes() {
+
+    const { updateErrorsNotes, notes } = this.props;
+
+    let notesArray = [];
+        notes.map(map => {
+            var noteItem = {
+                "typeOfNote": map.combo,
+                "note": map.body
+            }
+            notesArray.push(noteItem);
+        });
+        updateErrorsNotes(false, "");
+
+        
+            notesArray.forEach(function (note) {
+                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
+                    updateErrorsNotes(true, "Debe ingresar todos los campos");
+                } 
+            });
+
+
+            this.setState({shouldValidateNotes: false})
   }
 
   componentWillMount() {
@@ -44,6 +83,7 @@ class NotesClient extends Component {
       body={note.body}
       combo={note.combo}
       data={selectsReducer.get(TYPE_NOTES)}
+      onDeletedNote={() => this.setState({shouldValidateNotes: true})}
      
     />
   }
@@ -82,7 +122,8 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     deleteNote,
     updateNote,
-    addNote
+    addNote,
+    updateErrorsNotes
   }, dispatch);
 }
 
