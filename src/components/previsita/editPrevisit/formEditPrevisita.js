@@ -333,12 +333,17 @@ class FormEditPrevisita extends Component {
     }
 
     _closeMessageCreatePreVisit() {
+        const { viewBottons, closeModal } = this.props;
         if (typeMessage === "success") {
             this.setState({
                 showMessageCreatePreVisit: false,
                 dateVisit: ""
             });
-            redirectUrl("/dashboard/clientInformation");
+            if (viewBottons) {
+                closeModal();
+            } else {
+                redirectUrl("/dashboard/clientInformation");
+            }
         } else {
             this.setState({
                 showMessageCreatePreVisit: false
