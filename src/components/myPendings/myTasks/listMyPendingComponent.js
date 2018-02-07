@@ -39,7 +39,6 @@ class ListMyPendingComponent extends Component {
 
     componentWillMount() {
         const {validatePermissionsByModule} = this.props;
-
         validatePermissionsByModule(MODULE_TASKS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");

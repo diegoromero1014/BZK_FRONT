@@ -413,7 +413,7 @@ class ModalComponentContact extends Component {
             "attitudeOverGroup": tipoActitud.value,
             "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false
-        }
+        };
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
             changeStateSaveData(false, "");
