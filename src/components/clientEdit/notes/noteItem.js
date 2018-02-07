@@ -32,6 +32,7 @@ class NoteItem extends Component {
         this._deleteNote = this._deleteNote.bind(this);
     }
 
+
     updateValue(prop, value) {
         const { updateNote, index, updateErrorsNotes, notes } = this.props;
         this.setState(_.set({}, prop, value));
@@ -45,29 +46,45 @@ class NoteItem extends Component {
             notesArray.push(noteItem);
         });
         updateErrorsNotes(false, "");
-        notesArray.forEach(function (note) {
-            if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
-                updateErrorsNotes(true, VALUE_XSS_INVALID);
-            }
-        });
+
+        
+            notesArray.forEach(function (note) {
+                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
+                    updateErrorsNotes(true, "Debe ingresar todos los campos");
+                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
+                    updateErrorsNotes(true, VALUE_XSS_INVALID);
+                }
+            });
+        
+
+        
     }
 
     _deleteNote() {
-        const { index, deleteNote } = this.props;
+        const { index, deleteNote, updateErrorsNotes, onDeletedNote} = this.props;
+
         deleteNote(index);
+        //Avisar al padre que una nota se elimino
+        onDeletedNote();
+
+        
+
     }
 
     componentWillMount() {
         const { combo, body } = this.props;
         this.updateValue("combo", combo);
         this.updateValue("body", body);
-        if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
-            updateErrorsNotes(true, "Debe ingresar todos los campos");
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(body)) {
-            updateErrorsNotes(true, VALUE_XSS_INVALID);
-        }
+
+        
+            if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
+                updateErrorsNotes(true, "Debe ingresar todos los campos");
+            } else if (eval(REGEX_SIMPLE_XSS_STRING).test(body)) {
+                updateErrorsNotes(true, VALUE_XSS_INVALID);
+            }
+        
+
+        
     }
 
     componentDidMount() {
@@ -83,7 +100,7 @@ class NoteItem extends Component {
                 <Row>
                     <Col xs={12} md={3} lg={3} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Tipo de nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Tipo de nota </span>  (<span style={{ color: "red" }}>*</span>)    </dt>
                             <ComboBox
                                 name={`typeNote${index}`}
                                 value={this.state.combo}
@@ -98,7 +115,7 @@ class NoteItem extends Component {
                     </Col>
                     <Col xs={10} md={8} lg={8} style={{ marginTop: "15px" }}>
                         <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                            <dt><span>Descripción de la nota(</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Descripción de la nota</span>  (<span style={{ color: "red" }}>*</span>) </dt>
                             <Input
                                 type="text"
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}

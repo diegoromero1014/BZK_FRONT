@@ -8,6 +8,7 @@ import ShareholderComponent from "./components/clients/partners/shareholder/comp
 import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
 import CreatePropspect from "./components/propspect/createPropspect";
 import ClientEdit from "./components/clientEdit/clientEdit";
+import ClientCertify from "./components/clientCertify/clientCertifyComponent";
 import Previsita from "./components/previsita/createPrevisita/createPrevisita";
 import EditPrevisita from "./components/previsita/editPrevisit/editPrevisit";
 import Visit from "./components/visit/createVisit/createVisit";
@@ -60,6 +61,7 @@ export default (
                 <Route path="creditStudy" component={StudyCredit}></Route>
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
+                <Route path="certifyClient" component={ClientCertify}></Route>
                 <Route path="previsita" component={Previsita}></Route>
                 <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>

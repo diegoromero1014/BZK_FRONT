@@ -76,7 +76,7 @@ export function consultListWithParameter(field, parameter) {
   if (typeof parameter === "object") {
     json.messageBody = parameter;
   } else {
-    json.messageBody = { "parentId": parentId };
+    json.messageBody = { "parentId": parameter };
   }
 
   const request = axios.post(APP_URL + "/" + field, json);
