@@ -38,7 +38,6 @@ export function getAssigned(pagination) {
     }
 }
 
-
 export function limitInf(limInf) {
     return {
         type: LIMITE_INF,

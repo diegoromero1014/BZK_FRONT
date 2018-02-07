@@ -3,9 +3,13 @@ import { Row, Col } from 'react-flexbox-grid';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
-import { VALUE_REQUIERED } from '../../constantsGlobal';
+import {
+    VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
+import { MESSAGE_CONTEXT } from './constants';
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
@@ -37,6 +41,10 @@ class ContextEconomicActivity extends Component {
                                 (<span style={{ color: "red" }}>*</span>)
                             </div>
                         }
+                        <ToolTipComponent text={MESSAGE_CONTEXT}>
+                            <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                className="help circle icon blue" />
+                        </ToolTipComponent>
                     </dt>
                     <ToolTipComponent text={this.elementMessageContext()} position="right center" action="focus" size="tiny"
                         children={
@@ -49,7 +57,8 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : ''}
+                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value) ? VALUE_XSS_INVALID : '')}
+
                                 touched={true}
                             />
                         } />

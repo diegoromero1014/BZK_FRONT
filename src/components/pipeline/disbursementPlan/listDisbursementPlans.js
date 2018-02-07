@@ -141,7 +141,6 @@ class ListDisbursementPlans extends Component {
                         listDisbursementPlans = _.remove(listDisbursementPlans, (item) => {
                             return !_.isEqual(item.id, this.state.entitySeleted.id);
                         });
-                        console.log('disbursementAmountNum', disbursementAmountNum);
                         disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, disbursementAmountNum).toFixed(2);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
                         listDisbursementPlans.push(updateValue);

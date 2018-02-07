@@ -83,12 +83,12 @@ class ModalComponentEconomicGroup extends Component {
   updateKeyValueClient(e) {
     const { clientsFindServer, swtShowMessage } = this.props;
     const self = this;
-    if (e.keyCode === 13 || e.which === 13) {
+    if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       const nameClient = this.state.nameClientSearch;
       if (stringValidate(nameClient) && nameClient.length >= 3) {
         $('.ui.search.clientRelationship').toggleClass('loading');
-        clientsFindServer(nameClient, 0, 150, "", "", "").then((data) => {
+        clientsFindServer(nameClient, 0, 150, "", "", null, null, null, null).then((data) => {
           clients = _.get(data, 'payload.data.data.rows', []);
           $('.ui.search.clientRelationship')
             .search({
@@ -153,39 +153,45 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   render() {
-    const { clientEconomicGroupReducer } = this.props;
+    const { clientEconomicGroupReducer, clientInformacion} = this.props;
     const nameEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nameEconomicGroup", "");
     const nitEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nitEconomicGroup", "");
     const clientsEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []);
+    const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
+
     return (
       <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: "hidden", marginBottom: '15px' }}>
-        <Row style={{ padding: "10px 20px 20px 20px" }}>
-
-          <Col xs={10} md={8} lg={6}>
-            <dt><span>Cliente </span></dt>
-            <dd>
-              <div className="ui dropdown search clientRelationship fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                <ComboBoxFilter className="prompt" id="clientRelationship" idIcon="iconClientRelationship"
-                  style={{ borderRadius: "3px" }}
-                  autoComplete="off"
-                  type="text"
-                  value={this.state.nameClientSearch}
-                  onBlur={() => console.log('')}
-                  placeholder="Ingrese un criterio de búsqueda..."
-                  onChange={(e) => this.setState({ nameClientSearch: e.target.value })}
-                  onKeyPress={this.updateKeyValueClient}
-                  touched={true}
-                />
-              </div>
-            </dd>
-          </Col>
-          <Col xs={2} md={4} lg={4}>
-            <button className="btn btn-primary" type="button" onClick={this.addClientToRelationship}
-              style={{ cursor: 'pointer', marginTop: '35px' }}>
-              <i className="plus icon"></i> Agregar
-            </button>
-          </Col>
-
+        
+          {
+            haveAccessEdit &&
+            <Row style={{ padding: "10px 20px 0px 20px" }}>
+                <Col xs={10} md={8} lg={6}>
+                  <dt><span>Cliente </span></dt>
+                  <dd>
+                    <div className="ui dropdown search clientRelationship fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+                      <ComboBoxFilter className="prompt" id="clientRelationship" idIcon="iconClientRelationship"
+                        style={{ borderRadius: "3px" }}
+                        autoComplete="off"
+                        type="text"
+                        value={this.state.nameClientSearch}
+                        onBlur={() => console.log('')}
+                        placeholder="Ingrese un criterio de búsqueda..."
+                        onChange={(e) => this.setState({ nameClientSearch: e.target.value })}
+                        onKeyPress={this.updateKeyValueClient}
+                        touched={true}
+                      />
+                    </div>
+                  </dd>
+                </Col>
+                <Col xs={2} md={4} lg={4}>
+                  <button className="btn btn-primary" type="button" onClick={this.addClientToRelationship}
+                    style={{ cursor: 'pointer', marginTop: '35px' }}>
+                    <i className="plus icon"></i> Agregar
+                  </button>
+                </Col>  
+              </Row>
+          }
+        <Row style={{ padding: "0px 20px 20px 20px" }}>
           <Col xs={12} md={12} lg={12} style={{ paddingTop: '20px' }}>
             <div className="news-page content">
               <div className="team-modal" style={{ textAlign: 'center', marginBottom: "30px" }}>

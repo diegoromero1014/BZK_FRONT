@@ -11,25 +11,32 @@ class comboBoxFilter extends Component {
     }
 
     componentDidMount() {
-        const {onKeyPress} = this.props;
-        const self = this;
-        $("#iconSearchUserFilter").click(function () {
-            onKeyPress(e);
-        });
+        const {onKeyPress, disabled,idIcon} = this.props;
+        const _idIcon = idIcon === undefined ? "iconSearchUserFilter" : idIcon;
+        if (_.isEmpty(disabled)) {
+            if(!_.isEqual("disabled",disabled)) {
+                $(`#${_idIcon}`).click(function (e) {
+                    onKeyPress(e);
+                });
+            }
+        }
     }
 
     render() {
-        const {nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId, 
-            onChange, onBlur, onKeyPress, onSelect, value, id, idIcon} = this.props;
+        const {
+            nameInput, max, labelInput, data, touched, disabled, invalid, error, scrollTo, name, parentId,
+            onChange, onBlur, onKeyPress, onSelect, value, id, idIcon
+        } = this.props;
         if (touched && invalid) {
             scrollTo(parentId);
         }
+        const _disabled = _.isEmpty(disabled) ? "" : disabled;
         return (
-            <div className={disabled}>
-                <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${disabled}`}
-                     style={{border: "0px", zIndex: "1", padding: "0px"}}>
+            <div className={_disabled}>
+                <div className={`styleWidthComponents ui dropdown search selection fluid ${name} ${_disabled}`}
+                     style={{border: "0px", zIndex: "3", padding: "0px"}}>
                     <div className="ui icon input" style={{width: "100%"}}>
-                        <input className={`prompt ${disabled}`} id={ id === undefined ? "inputParticipantBanc" : id}
+                        <input className={`prompt ${_disabled}`} id={id === undefined ? "inputParticipantBanc" : id}
                                style={{borderRadius: "3px"}}
                                autoComplete="off"
                                type="text"
@@ -39,12 +46,13 @@ class comboBoxFilter extends Component {
                                placeholder="Ingrese un criterio de búsqueda..."
                                onKeyPress={onKeyPress}
                                onSelect={onSelect}
-                               disabled={disabled}
+                               disabled={_disabled}
                                maxLength={max}
                         />
-                        <i className="search icon" id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}></i>
+                        <i disabled={_disabled} className={`search icon ${_disabled}`}
+                           id={idIcon === undefined ? "iconSearchUserFilter" : idIcon}/>
                     </div>
-                    <div className="menu results" id="resultstUserSearch"></div>
+                    <div className="menu results" id="resultstUserSearch"/>
                 </div>
                 {
                     touched && error &&
@@ -59,7 +67,8 @@ class comboBoxFilter extends Component {
     }
 }
 
-comboBoxFilter.PropTypes = {
+comboBoxFilter
+    .PropTypes = {
     nameInput: PropTypes.string,
     labelInput: PropTypes.string,
     data: PropTypes.array,

@@ -13,8 +13,9 @@ class ActividadEconomica extends Component {
     _mapValuesParticipation(entity, idx) {
         return <tr key={idx}>
             <td>{entity.lineOfBusiness}</td>
-            <td >{entity.participation} %</td>
+            <td>{entity.participation} %</td>
             <td>{entity.experience}</td>
+            <td>{entity.contribution != null ? entity.contribution + "%" : ""}</td>
         </tr>
     }
 
@@ -22,6 +23,7 @@ class ActividadEconomica extends Component {
         return <tr key={idx}>
             <td>{entity.distributionChannel}</td>
             <td>{entity.participation} %</td>
+            <td>{entity.contribution != null ? entity.contribution + "%" : ""}</td>
         </tr>
     }
 
@@ -52,20 +54,20 @@ class ActividadEconomica extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <table style={{ width: "100%" }}>
                             <thead>
-                            <tr>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></th>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipología del cliente</span></th>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Gerencias de estrategia sectorial</span></th>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}></span></th>
-                            </tr>
+                                <tr>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Naturaleza Tributaria</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Tipología del cliente</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Gerencias de estrategia sectorial</span></th>
+                                    <th><span style={{ fontWeight: "bold", color: "#4C5360" }}></span></th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.taxNatureKey}</td>
-                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.valueCustomerTypology}</td>
-                                <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.srtManagementsOfSectorStrategy}</td>
-                                <td style={{ width: "20%", verticalAlign: "initial" }}></td>
-                            </tr>
+                                <tr>
+                                    <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.taxNatureKey}</td>
+                                    <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.valueCustomerTypology}</td>
+                                    <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.srtManagementsOfSectorStrategy}</td>
+                                    <td style={{ width: "20%", verticalAlign: "initial" }}></td>
+                                </tr>
                             </tbody>
                         </table>
                     </Col>
@@ -88,6 +90,7 @@ class ActividadEconomica extends Component {
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Línea de negocio</span></td>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Participación</span></td>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Experiencia (años)</span></td>
+                                        <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Contribución</span></td>
                                     </tr>
                                     <tbody>
                                         {contextClient.listParticipation.map(this._mapValuesParticipation)}
@@ -114,6 +117,7 @@ class ActividadEconomica extends Component {
                                     <tr>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Canal de distribución</span></td>
                                         <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Participación</span></td>
+                                        <td><span style={{ fontWeight: "bold", color: "#4C5360" }}>Contribución</span></td>
                                     </tr>
                                     <tbody>
                                         {contextClient.listDistribution.map(this._mapValuesDistribution)}

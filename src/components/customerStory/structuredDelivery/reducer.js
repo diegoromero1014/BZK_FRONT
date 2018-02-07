@@ -11,7 +11,10 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case UPDATE_EVENT_ERRORS:
-            return state.set("eventErrors", action.payload);
+            return state.withMutations(map => {
+                map.set('eventErrors', action.payload.isError)
+                    .set('eventMessageErrors', action.payload.message);
+            });
         case SAVE_STRUCTURED_DELIVERY:
             return state.set('responseSaveStructuredDelivery', action.payload.data);
         case STRUCTURED_DELIVERY_DETAIL:

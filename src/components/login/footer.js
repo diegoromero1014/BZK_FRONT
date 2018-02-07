@@ -52,7 +52,7 @@ class Footer extends Component {
                   <div style={{height: '15px', width: '15px'}} onClick={this._clickButtonActiveLogs}>.</div>
                 </div>
               </div>
-              <Modal isOpen={this.state.modalIsOpen} contentLabel=" " onRequestClose={this.closeModal}
+              <Modal isOpen={this.state.modalIsOpen} contentLabel="Logs" onRequestClose={this.closeModal}
                      className="modalBt4-fade modal fade contact-detail-modal in">
                 <div className="modalBt4-dialog modalBt4-lg">
                   <div className="modalBt4-content modal-content" style={{width: '400px'}}>

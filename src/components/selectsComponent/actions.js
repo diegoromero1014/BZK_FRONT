@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
   TEAM_FOR_REGION_EMPLOYEE, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
-  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS
+  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS, LIST_REGIONS_BY_EMPLOYEE
 } from './constants';
 import { isUndefined, isNull } from 'lodash';
 
@@ -48,7 +48,7 @@ export function consultList(field) {
     },
     messageBody: {
     }
-  }
+  };
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
@@ -56,7 +56,7 @@ export function consultList(field) {
   }
 }
 
-export function consultListWithParameter(field, parentId) {
+export function consultListWithParameter(field, parameter) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
@@ -70,14 +70,25 @@ export function consultListWithParameter(field, parentId) {
       "debug": true,
       "isSuccessful": true
     },
-    messageBody: {
-      "parentId": parentId
-    }
+    messageBody: {}
   };
+
+  if (typeof parameter === "object") {
+    json.messageBody = parameter;
+  } else {
+    json.messageBody = { "parentId": parameter };
+  }
+
   const request = axios.post(APP_URL + "/" + field, json);
   return {
     type: field,
     payload: request
+  }
+}
+
+export function clrearConsultListWithParameter(field) {
+  return {
+    type: field
   }
 }
 
@@ -106,6 +117,12 @@ export function consultListWithParameterUbication(field, parentId) {
   }
 }
 
+export function clearConsultListWithParameterUbication(field) {
+  return {
+    type: field
+  }
+}
+
 /**
  * @param fields lista de nombres de las listas que se quieren consultar
  */
@@ -127,7 +144,7 @@ export function getMasterDataFields(fields, onlyWithoutParents) {
       "fields": fields,
       "onlyWithoutParents": isUndefined(onlyWithoutParents) || isNull(onlyWithoutParents) ? false : onlyWithoutParents
     }
-  }
+  };
 
   const request = axios.post(APP_URL + "/masterDataByFields", json);
 
@@ -166,7 +183,7 @@ export function economicGroupsByKeyword(keyword) {
     messageBody: {
       "keyword": keyword
     }
-  }
+  };
   const request = axios.post(APP_URL + "/economicGroupsByKeyword", json);
   return {
     type: ECONOMIC_GROUPS,
@@ -273,4 +290,32 @@ export function clearLists(lists) {
     type: CLEAR_LISTS,
     lists
   }
+}
+
+export function getRegionsByEmployee() {
+
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+
+    }
+  }
+
+  let request = axios.post(APP_URL + '/regionsByEmployee', json);
+  return {
+    type: LIST_REGIONS_BY_EMPLOYEE,
+    payload: request
+  };
+
 }

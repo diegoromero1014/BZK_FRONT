@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
-import {Menu} from "semantic-ui-react";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { Menu } from "semantic-ui-react";
 import MenuListFatherComponent from "./menuListFatherComponent";
 import MenuItem from "./menuItem";
-import {connect} from "react-redux";
-import {getAlertsByUser} from "../alerts/actions";
+import { connect } from "react-redux";
+import { getAlertsByUser } from "../alerts/actions";
 import _ from "lodash";
-import {initialMenuPermissions} from "./actions";
+import { initialMenuPermissions } from "./actions";
 
 
 const menuItemLogOut = [
@@ -23,9 +23,10 @@ const menuItemLogOut = [
 class MenuListComponent extends Component {
 
     _mapMenuItems(item, idx) {
-        var children = item.children;
+        const children = item.children;
         if (_.isEqual(item.children, undefined) || _.isEqual(item.children, null)) {
             return <MenuItem
+                key={_.uniqueId("MenuItem_")}
                 labelText={item.text}
                 linkUrl={item.link}
                 iconClassName={item.icon}
@@ -33,7 +34,7 @@ class MenuListComponent extends Component {
 
         } else {
             return <MenuListFatherComponent
-                key={idx}
+                key={_.uniqueId("MenuItem_") + idx}
                 iconClassName={item.icon}
                 labelText={item.text}
                 labelTextFather={item.labelTextFather}
@@ -45,15 +46,15 @@ class MenuListComponent extends Component {
     }
 
     render() {
-        const {menu } = this.props;
+        const { menu } = this.props;
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
         const btnLogoutStyle = { position: 'absolute', bottom: '0px', width: '100%', backgroundColor: "black" };
         const userNameLogged = _.toLower(window.sessionStorage.getItem('userName'));
         return (
-            <Menu inverted vertical secundary fluid attached="top" style={{ backgroundColor: '#00448c' }}>
+            <Menu key={_.uniqueId("Menu_")} inverted vertical fluid attached="top" style={{ backgroundColor: '#00448c' }}>
                 {menuListItem.map(this._mapMenuItems)}
                 <MenuListFatherComponent
-                    key={_.uniqueId()}
+                    key={_.uniqueId("MenuListFatherComponent_")}
                     iconClassName='user circle'
                     labelText={userNameLogged}
                     style={btnLogoutStyle}

@@ -23,7 +23,7 @@ class MenuListFatherComponent extends Component {
     }
 
     _mapMenuItemsChildren(item, idx) {
-        return (<Dropdown.Item onClick={this._handleClickMenuItemChildren.bind(this, item.link)}>
+        return (<Dropdown.Item key={_.uniqueId("MenuListFatherComponent_")} onClick={this._handleClickMenuItemChildren.bind(this, item.link)}>
             {!_.isUndefined(item.icon) && 
                 <Icon name={item.icon} />
             }
@@ -42,10 +42,10 @@ class MenuListFatherComponent extends Component {
             </span>
         );
         return (
-            <Dropdown style={style} trigger={iconAndText} className={`link item ${activeItem}`}>
+            <Dropdown key={_.uniqueId("MenuListFatherComponent_")} style={style} trigger={iconAndText} className={`link item ${activeItem}`}>
                 <Dropdown.Menu>
                     {!_.isUndefined(linkUrlFather) &&
-                        <Dropdown.Item onClick={this._handleClickMenuItemChildren.bind(this, linkUrlFather)} >
+                        <Dropdown.Item key={_.uniqueId("MenuListFatherComponent_")} onClick={this._handleClickMenuItemChildren.bind(this, linkUrlFather)} >
                             {labelTextFather}
                         </Dropdown.Item>
                     }

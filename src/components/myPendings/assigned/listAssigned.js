@@ -5,7 +5,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import _ from 'lodash';
-import moment from 'moment';
 import {
   shorterStringValue, stringValidate, mapDateValueFromTask,
   validateResponse

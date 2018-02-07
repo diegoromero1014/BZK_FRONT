@@ -45,7 +45,11 @@ import {
     OPTION_REQUIRED,
     VALUE_REQUIERED,
     INVALID_EMAIL,
-    MESSAGE_LOAD_DATA
+    MESSAGE_LOAD_DATA,
+    REGEX_SIMPLE_XSS,
+    REGEX_SIMPLE_XSS_STRING,
+    VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -112,16 +116,22 @@ const validate = values => {
     }
     if (!values.contactIdentityNumber) {
         errors.contactIdentityNumber = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactIdentityNumber)) {
+        errors.contactIdentityNumber = VALUE_XSS_INVALID;
     } else {
         errors.contactIdentityNumber = null;
     }
     if (!values.contactFirstName) {
         errors.contactFirstName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactFirstName)) {
+        errors.contactFirstName = VALUE_XSS_INVALID;
     } else {
         errors.contactFirstName = null;
     }
     if (!values.contactFirstLastName) {
         errors.contactFirstLastName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactFirstLastName)) {
+        errors.contactFirstLastName = VALUE_XSS_INVALID;
     } else {
         errors.contactFirstLastName = null;
     }
@@ -130,12 +140,16 @@ const validate = values => {
     } else {
         if (!(/\S+@\S+\.\S+/.test(values.contactEmailAddress))) {
             errors.contactEmailAddress = INVALID_EMAIL;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactEmailAddress)) {
+            errors.contactEmailAddress = VALUE_XSS_INVALID;
         } else {
             errors.contactFunctions = null;
         }
     }
     if (!values.contactTelephoneNumber) {
         errors.contactTelephoneNumber = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactTelephoneNumber)) {
+        errors.contactTelephoneNumber = VALUE_XSS_INVALID;
     } else {
         errors.contactTelephoneNumber = null;
     }
@@ -148,9 +162,53 @@ const validate = values => {
     }
     if (!values.contactAddress || values.contactAddress === '') {
         errors.contactAddress = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactAddress)) {
+        errors.contactAddress = VALUE_XSS_INVALID;
     } else {
         errors.contactAddress = null;
     }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactNeighborhood)) {
+        errors.contactNeighborhood = VALUE_XSS_INVALID;
+    }else {
+        errors.contactNeighborhood = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactPostalCode)) {
+        errors.contactPostalCode = VALUE_XSS_INVALID;
+    }else {
+        errors.contactPostalCode = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactExtension)) {
+        errors.contactExtension = VALUE_XSS_INVALID;
+    }else {
+        errors.contactExtension = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMobileNumber)) {
+        errors.contactMobileNumber = VALUE_XSS_INVALID;
+    }else {
+        errors.contactMobileNumber = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMiddleName)) {
+        errors.contactMiddleName = VALUE_XSS_INVALID;
+    }else {
+        errors.contactMiddleName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactSecondLastName)) {
+        errors.contactSecondLastName = VALUE_XSS_INVALID;
+    }else {
+        errors.contactSecondLastName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactDateOfBirth)) {
+        errors.contactDateOfBirth = VALUE_XSS_INVALID;
+    }else {
+        errors.contactDateOfBirth = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactRelevantFeatures)) {
+        errors.contactRelevantFeatures = VALUE_XSS_INVALID;
+    }else {
+        errors.contactRelevantFeatures = null;
+    }
+
     return errors;
 };
 
@@ -172,7 +230,8 @@ class ContactDetailsModalComponent extends Component {
         this.state = {
             isEditable: false,
             generoData: [],
-            showErrorForm: false
+            showErrorForm: false,
+            showErrorXss: false,
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -936,7 +995,13 @@ class ContactDetailsModalComponent extends Component {
                         >{'Guardar información contacto'}</button>
                     </div>
                 }
-
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorXss}
+                    title="Campos obligatorios"
+                    text={REGEX_SIMPLE_XSS_MESAGE}
+                    onConfirm={() => this.setState({ showErrorXss: false })}
+                />
                 <SweetAlert
                     type="error"
                     show={this.state.showErrorForm}
@@ -1029,6 +1094,11 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;
-        thisForm.setState({ showErrorForm: true });
+        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+            thisForm.setState({ showErrorXss: true });
+        } else {
+            thisForm.setState({ showErrorForm: true });
+        }
+
     }
 }, mapStateToProps, mapDispatchToProps)(ContactDetailsModalComponent);

@@ -1,4 +1,4 @@
-export const VERSION_DATE = "17/11/2017";
+export const VERSION_DATE = "07/02/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -11,6 +11,7 @@ export const CONSULT_VALUE_LOGS = 'CONSULT_VALUE_LOGS';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 export const REQUEST_ERROR = 500;
+export const REQUEST_ERROR_XSS = 600;
 export const REQUEST_SUCCESS = 200;
 export const ERROR_MESSAGE_REQUEST_TITLE = 'Error cargando información';
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
@@ -60,6 +61,7 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
+export const VALUE_XSS_INVALID = "La información ingresada contiene caracteres invalidos.";
 export const INVALID_EMAIL = "Debe ingresar un formato válido";
 export const DATE_REQUIERED = "Debe seleccionar un día";
 export const DATE_START_AFTER = "La fecha inicial es superior a la final";
@@ -113,6 +115,8 @@ export const MODULE_CUSTOMER_STORY = "Historial cliente";
 export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 export const MODULE_TRANSACTIONAL = "Transaccional";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
+export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
+export const MODULE_SHEDULER = "Scheduler";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -177,3 +181,37 @@ export const STYLE_BUTTON_BOTTOM = {
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;
 export const STR_YES = "Si";
+
+export const valuesYesNo = [
+    { 'id': true, 'value': "Si" },
+    { 'id': false, 'value': "No" }
+];
+
+/**
+ * INICIO REGEX XSS
+ */
+export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<?[\s\S]iframe|<?[\s\S]link|<?[\s\S]script|cmd|scriptlet|error=|http-equiv|@import)/g;
+export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g; 
+export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
+// export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
+export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|cmd|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_MESAGE_SHORT = "La información ingresada contiene caracteres invalidos.";
+export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada contiene caracteres peligrosos para la aplicación.";
+
+/**
+ * FIN REGEX XSS
+ */
+
+
+ /**
+  * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
+  */
+
+export const NAME_REPORT_PREVISIT = "PreVisita"
+export const TIME_REQUEST_BLOCK_REPORT = 15000;
+
+/**
+ * Reestablecer permisos
+ */
+
+export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREVISITS"
