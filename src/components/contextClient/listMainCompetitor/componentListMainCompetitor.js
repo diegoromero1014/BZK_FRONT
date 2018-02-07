@@ -5,7 +5,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -29,6 +32,30 @@ class ComponentListMainCompetitor extends Component {
         this._viewInformationCompetitor = this._viewInformationCompetitor.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainCompetitor = this._deleteMainCompetitor.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
+    }
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Principales competidores', message_error);
+        }
+        return _.isEmpty(message_error);
     }
 
     validateInfo(e) {
@@ -36,14 +63,14 @@ class ComponentListMainCompetitor extends Component {
         const { nameCompetitor, participation, term, observations, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(nameCompetitor.value) || _.isNull(nameCompetitor.value) || _.isEmpty(nameCompetitor.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
+      
+        let validFields = this.fieldValidation([
+            { required: true, value: nameCompetitor.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: observations.value, xss: true }
+        ])
 
-        if (_.isEqual(countErrors, 0)) {
+        if (validFields) {
             var listMainCompetitor = clientInformacion.get('listMainCompetitor');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -68,10 +95,11 @@ class ComponentListMainCompetitor extends Component {
             changeValueListClient('listMainCompetitor', listMainCompetitor);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
-        }
+        } 
+        // else {
+        //     this.setState({ errorForm: true });
+        //     swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
+        // }
     }
 
     clearValues() {
@@ -88,7 +116,7 @@ class ComponentListMainCompetitor extends Component {
         fnShowForm(MAIN_COMPETITOR, true);
         nameCompetitor.onChange(entity.nameCompetitor);
         participation.onChange(entity.participation.toString());
-        observations.onChange( validateValueExist(entity.observations) ? entity.observations.toString() : "");
+        observations.onChange(validateValueExist(entity.observations) ? entity.observations.toString() : "");
         this.setState({ entitySeleted: entity });
     }
 
@@ -145,12 +173,10 @@ class ComponentListMainCompetitor extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_MAIN_COMPETITOR}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_MAIN_COMPETITOR}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient('noAppliedMainCompetitors', !clientInformacion.get('noAppliedMainCompetitors'))
@@ -170,11 +196,13 @@ class ComponentListMainCompetitor extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
-                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px'}}>
+                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainCompetitor} type="button" title="Agregar competidor principal"
+                            <button className="btn" disabled={showFormMainCompetitor} type="button"
                                 onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                <ToolTipComponent text="Agregar competidor principal">
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </ToolTipComponent>
                             </button>
                         </Col>
                         {showFormMainCompetitor &&
@@ -187,7 +215,7 @@ class ComponentListMainCompetitor extends Component {
                                         max="100"
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
-                                        error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(nameCompetitor.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(nameCompetitor.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -206,7 +234,7 @@ class ComponentListMainCompetitor extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -214,11 +242,11 @@ class ComponentListMainCompetitor extends Component {
                         }
                         {showFormMainCompetitor &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button"  title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>
@@ -237,34 +265,35 @@ class ComponentListMainCompetitor extends Component {
                                         rows={3}
                                         placeholder="Observaciones"
                                         {...observations}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(observations.value) ? VALUE_XSS_INVALID : null}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
                         }
-                        {
-                            _.size(listMainCompetitor) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
-                                    <table className="ui striped table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Nombre del competidor</th>
-                                                <th>Participación</th>
-                                                <th>Observaciones</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listMainCompetitor.map(this._mapValuesMainCompetitor)}
-                                        </tbody>
-                                    </table>
-                                </Col>
-                                :
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado principales competidores</span>
-                                    </div>
-                                </Col>
+                        {_.size(listMainCompetitor) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre del competidor</th>
+                                            <th>Participación</th>
+                                            <th>Observaciones</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listMainCompetitor.map(this._mapValuesMainCompetitor)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado principales competidores</span>
+                                </div>
+                            </Col>
                         }
                         <SweetAlert
                             type="warning"

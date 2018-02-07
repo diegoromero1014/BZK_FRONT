@@ -20,17 +20,23 @@ export function seletedButton(idButton) {
     }
 }
 
-export function updateErrorsNotes(errorNotes) {
+export function updateErrorsNotes(errorNotes, message = "") {
     return {
         type: UPDATE_ERROR_NOTES,
-        payload: errorNotes
+        payload: {
+            status: errorNotes,
+            message: message
+        }
     };
 }
 
-export function updateErrorsLinkEntities(errorLinkEntities) {
+export function updateErrorsLinkEntities(errorLinkEntities, mensaje = "") {
     return {
         type: UPDATE_ERROR_LINK_ENTITIES,
-        payload: errorLinkEntities
+        payload: {
+            isError: errorLinkEntities,
+            message: mensaje
+        }
     }
 }
 
@@ -125,15 +131,15 @@ export function consultManagementDocumentaryService() {
     }
 }
 
-export function resetAccordion(){
-    return{
+export function resetAccordion() {
+    return {
         type: RESET_ACCORDION
     }
 }
 
 
-export function changeAccordionValue(accordion){
-    return{
+export function changeAccordionValue(accordion) {
+    return {
         type: CHANGE_ACCORDION,
         accordion
     }

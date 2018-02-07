@@ -12,7 +12,7 @@ class InventoryPolicy extends Component {
         const { contextClient } = infoClient;
         return (
             <div>
-                <Row>
+                <Row style={{ marginBottom: '20px' }}>
                     <Col xs={12} md={12} lg={12} style={{ textAlign: 'justify' }}>
                         {_.isNull(contextClient) || _.isUndefined(contextClient) ? "" : contextClient.inventoryPolicy}
                     </Col>

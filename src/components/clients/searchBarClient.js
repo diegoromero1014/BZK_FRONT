@@ -41,13 +41,13 @@ class SearchBarClient extends Component {
   }
 
   _handleClientsFind(e) {
-    const { clientsFindServer, valueTeam, valueCertification, linkingStatus, levelAEC } = this.props;
+    const { clientsFindServer, valueTeam, valueCertification, bussinesRol, management, decisionCenter, levelAEC } = this.props;
     const { clientR } = this.props;
     if (clientR.get('keyword') === '' || clientR.get('keyword') === undefined) {
       this.setState({ showEr: true });
     } else {
       const { changePage } = this.props;
-      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, valueCertification, valueTeam, linkingStatus, levelAEC).then((data) => {
+      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, valueCertification, valueTeam, bussinesRol, management, decisionCenter, levelAEC).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin')) {
           redirectUrl("/login");
         }
@@ -60,7 +60,7 @@ class SearchBarClient extends Component {
     const { clientR } = this.props;
     var keyword = clientR.get('keyword');
     return (
-      <div style={{ marginLeft: '17px' }}>
+      <div>
         <div className="InputAddOn">
           <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Búsqueda por cliente, NIT o grupo económico" value={keyword} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field" />
           <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>

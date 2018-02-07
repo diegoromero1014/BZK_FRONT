@@ -334,6 +334,7 @@ class FormVisita extends Component {
     const { detailPrevisit, selectsReducer, participants } = this.props;
     detailPrevisit(idPrevisitSeleted).then((result) => {
       var previsitConsult = result.payload.data.data;
+
       const listParticipants = {
         _client: [],
         _banco: [],

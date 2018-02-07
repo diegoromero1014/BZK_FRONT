@@ -16,7 +16,7 @@ class paginationAssigned extends Component {
   }
 
   _handleFindAssigned(limInf) {
-    const { getAssigned, assignedReducer, changeStateSaveData } = this.props;
+    const { getAssigned, assignedReducer, changeStateSaveData, swtShowMessage } = this.props;
     var paginationAssigned = {
       statusOfTask: assignedReducer.get('statusOfTask'),
       clientNumberOrName: assignedReducer.get('clientNumberOrName'),
@@ -100,7 +100,8 @@ function mapDispatchToProps(dispatch) {
     getAssigned,
     limitInf,
     changePage,
-    changeStateSaveData
+    changeStateSaveData,
+    swtShowMessage
   }, dispatch);
 }
 

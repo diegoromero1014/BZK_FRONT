@@ -20,6 +20,7 @@ const initialState = Immutable.Map({
     accordion: {
         economicActivity: OPEN_TAB,
         inventoryPolicy: OPEN_TAB,
+        controlLinkedPayments: OPEN_TAB,
         mainCustomer: OPEN_TAB,
         mainSupplier: OPEN_TAB,
         mainCompetition: OPEN_TAB,
@@ -41,9 +42,18 @@ export default (state = initialState, action) => {
         case CLICK_BUTTON_UPDATE_EDIT:
             return state.set("seletedButton", action.payload);
         case UPDATE_ERROR_LINK_ENTITIES:
-            return state.set("errorEditLinkEntitiesClient", action.payload);
+            // return state.set("errorEditLinkEntitiesClient", action.payload);
+            return state.withMutations(map => {
+                map.set('errorEditLinkEntitiesClient', action.payload.isError)
+                    .set('errorEditLinkEntitiesClientMessage', action.payload.message);
+            });
         case UPDATE_ERROR_NOTES:
-            return state.set("errorNotesEditClient", action.payload);
+            return state.withMutations(map => {
+                map.set('errorNotesEditClient', action.payload.status)
+                    .set('errorNotesEditClientMessage', action.payload.message);
+            });
+
+        // state.set("errorNotesEditClient", action.payload);
         case CHANGE_VALUE_MODAL_ERRORS:
             return state.set("modalErrorsIsOpen", action.payload);
         case MESSAGE_ERRORS_UPDATE:

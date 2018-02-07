@@ -6,7 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -59,19 +62,53 @@ class ComponentListIntOperations extends Component {
         this._getTitleSection = this._getTitleSection.bind(this);
     }
 
+    fieldValidation(fields, requiredMessage) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = requiredMessage;
+                break;
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Operaciones internacionales', message_error);
+        }
+        return _.isEmpty(message_error);
+    }
+
+
     validateInfo(e) {
         e.preventDefault();
         const { typeOperation, participation, idCountry, customerCoverage, descriptionCoverage, fnShowForm,
             changeValueListClient, clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(typeOperation.value) || _.isNull(typeOperation.value) || _.isEmpty(typeOperation.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
+        // if (_.isUndefined(typeOperation.value) || _.isNull(typeOperation.value) || _.isEmpty(typeOperation.value)) {
+        //     countErrors++;
+        // }
+        // if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
+        //     countErrors++;
+        // }
 
-        if (_.isEqual(countErrors, 0)) {
+        // if (_.isEqual(countErrors, 0)) {
+
+        let requiredMessage = 'Señor usuario, para agregar una operación internacional debe ingresar todos los valores.';
+
+        let validFields = this.fieldValidation([
+            { required: true, value: typeOperation.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: descriptionCoverage.value, xss: true }
+        ], requiredMessage)
+
+        if (validFields) {
             if (_.size(this.state.listCountrys) > 0) {
                 var listOperations = clientInformacion.get('listOperations');
                 if (_.isNull(this.state.entitySeleted)) {
@@ -104,23 +141,33 @@ class ComponentListIntOperations extends Component {
             } else {
                 swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe agregar por lo menos un país.');
             }
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe ingresar todos los valores.');
         }
+        // else {
+        //     this.setState({ errorForm: true });
+        //     swtShowMessage('error', 'Operaciones internacionales', 'Señor usuario, para agregar una operación internacional debe ingresar todos los valores.');
+        // }
     }
 
     _addConstryParticipation(e) {
         e.preventDefault();
         const { idCountry, participationCountry, selectsReducer, swtShowMessage } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(idCountry.value) || _.isNull(idCountry.value) || _.isEmpty(idCountry.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participationCountry.value) || _.isNull(participationCountry.value) || _.isEmpty(participationCountry.value)) {
-            countErrors++;
-        }
-        if (_.isEqual(countErrors, 0)) {
+        // if (_.isUndefined(idCountry.value) || _.isNull(idCountry.value) || _.isEmpty(idCountry.value)) {
+        //     countErrors++;
+        // }
+        // if (_.isUndefined(participationCountry.value) || _.isNull(participationCountry.value) || _.isEmpty(participationCountry.value)) {
+        //     countErrors++;
+        // }
+        // if (_.isEqual(countErrors, 0)) {
+        let requiredMessage = 'Señor usuario, para agregar un país debe ingresar todos los valores.';
+
+        let validFields = this.fieldValidation([
+            { required: true, value: idCountry.value, xss: true },
+            { required: true, value: participationCountry.value, xss: true }
+        ], requiredMessage)
+
+
+        if (validFields) {
             if (_.size(_.filter(this.state.listCountrys, ["idCountry", idCountry.value.toString()])) === 0) {
                 const newCountry = {
                     "id": _.uniqueId('mainIntO_'),
@@ -137,10 +184,11 @@ class ComponentListIntOperations extends Component {
             } else {
                 swtShowMessage('error', 'Error agregando país', 'Señor usuario, el país que quiere agregar ya se encuentra en la lista de países.');
             }
-        } else {
-            this.setState({ errorCountryForm: true });
-            swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
-        }
+        } 
+        // else {
+        //     this.setState({ errorCountryForm: true });
+        //     swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
+        // }
     }
 
     clearValues() {
@@ -260,12 +308,10 @@ class ComponentListIntOperations extends Component {
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
                             <div style={{ fontSize: "25px", marginTop: "5px", marginBottom: "5px" }}>
                                 {this._getTitleSection()}
-                                <ToolTipComponent text={MESSAGE_INT_OPERATIONS}
-                                    children={
-                                        <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                            className="help circle icon blue" />
-                                    }
-                                />
+                                <ToolTipComponent text={MESSAGE_INT_OPERATIONS}>
+                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                        className="help circle icon blue" />
+                                </ToolTipComponent>
                                 <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                     onClick={() => {
                                         changeValueListClient('noAppliedIntOperations', !clientInformacion.get('noAppliedIntOperations'));
@@ -277,7 +323,7 @@ class ComponentListIntOperations extends Component {
                     </Col>
                     <Col xs={12} md={12} lg={12}>
                         {showCheckValidateSection &&
-                            <div style={{marginLeft: '20px'}}>
+                            <div style={{ marginLeft: '20px' }}>
                                 <input type="checkbox" id="checkSectionIntOperations"
                                     checked={valueCheckSectionIntOperations}
                                     onClick={functionChangeIntOperations} />
@@ -289,9 +335,11 @@ class ComponentListIntOperations extends Component {
                 {!clientInformacion.get('noAppliedIntOperations') &&
                     <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
                         <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormIntOperations} type="button" title="Agregar operación internacional"
+                            <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                <ToolTipComponent text="Agregar operación internacional">
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </ToolTipComponent>
                             </button>
                         </Col>
                         {showFormIntOperations &&
@@ -324,7 +372,7 @@ class ComponentListIntOperations extends Component {
                                             {...participation}
                                             value={participation.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -340,11 +388,11 @@ class ComponentListIntOperations extends Component {
                                     </div>
                                 </Col>
                                 <Col xs={5} md={5} lg={4}>
-                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                    <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                         Agregar
                                     </button>
-                                    <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                    <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                         style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                         Cancelar
                                     </button>
@@ -361,6 +409,8 @@ class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
+                                            error={eval(REGEX_SIMPLE_XSS_STRING).test(descriptionCoverage.value) ? VALUE_XSS_INVALID : null}
+                                            touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
                                 </Col>
@@ -398,13 +448,13 @@ class ComponentListIntOperations extends Component {
                                             {...participationCountry}
                                             value={participationCountry.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, participationCountry.value, true, 2)}
-                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : null}
+                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participationCountry.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorCountryForm}
                                         />
                                     </div>
                                 </Col>
                                 <Col xs={4} md={3} lg={2}>
-                                    <button className="btn btn-secondary" type="button" onClick={this._addConstryParticipation} title="Adicionar país"
+                                    <button className="btn btn-secondary" type="button" onClick={this._addConstryParticipation}
                                         style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                         Agregar país
                                     </button>

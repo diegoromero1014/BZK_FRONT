@@ -44,8 +44,8 @@ class SelectTaskComponent extends Component {
   }
 
   render() {
-    const { colorTraffict, selectsReducer, isEditable } = this.props;
-    var  editable  = isEditable;
+    const { colorTraffict, selectsReducer, isEditable, styles } = this.props;
+    var editable = isEditable;
     if (validateIsNullOrUndefined(isEditable)) {
       editable = true;
     }

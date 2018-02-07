@@ -2,35 +2,46 @@ import moment from "moment";
 import { reduxForm } from "redux-form";
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
-import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import ComboBox from "../../../../../ui/comboBox/comboBoxComponent";
-import InputComponent from '../../../../../ui/input/inputComponent';
-import ComboBoxFilter from "../../../../../ui/comboBoxFilter/comboBoxFilter";
+import InputComponent from "../../../../../ui/input/inputComponent";
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
-import { SAVE, FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from "../constants";
 import {
-    validateExistsBoardMember, saveBoardMember, getBoardMembers, clearFilters,
-    changeKeyword
-} from "../actions";
-import { changeStateSaveData } from '../../../../dashboard/actions';
+    LOWER_INITIAL_LIMIT,
+    NUMBER_RECORDS,
+    TITLE_TOOLTIP_BOARD_MEMBERS,
+    TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS
+} from "../constants";
+import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
+import { changeStateSaveData } from "../../../../dashboard/actions";
 import _ from "lodash";
-import $ from "jquery";
 import {
-    OPTION_REQUIRED, VALUE_REQUIERED, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    EDITAR, MESSAGE_LOAD_DATA
-} from '../../../../../constantsGlobal';
-import { validateResponse, stringValidate } from '../../../../../actionsGlobal';
-import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
+    EDITAR,
+    MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA,
+    OPTION_REQUIRED,
+    TITLE_ERROR_SWEET_ALERT,
+    VALUE_REQUIERED,
+    REGEX_SIMPLE_XSS,
+    REGEX_SIMPLE_XSS_STRING,
+    VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS_MESAGE
+} from "../../../../../constantsGlobal";
+import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
+import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
+import Textarea from "../../../../../ui/textarea/textareaComponent";
+import ToolTip from "../../../../toolTip/toolTipComponent";
+import SweetAlert from 'sweetalert-react';
 
-const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName"];
+const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};
 let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
 let showAuditFields = false;
 
 const validate = (values) => {
+
     if (!values.typeOfDocument) {
         errors.typeOfDocument = OPTION_REQUIRED;
     } else {
@@ -38,34 +49,48 @@ const validate = (values) => {
     }
     if (!values.numberDocument) {
         errors.numberDocument = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numberDocument)) {
+        errors.numberDocument = VALUE_XSS_INVALID;
     } else {
         errors.numberDocument = null;
     }
     if (!values.firstName) {
         errors.firstName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstName)) {
+        errors.firstName = VALUE_XSS_INVALID;
     } else {
         errors.firstName = null;
     }
     if (!values.firstLastName) {
         errors.firstLastName = VALUE_REQUIERED;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstLastName)) {
+        errors.firstLastName = VALUE_XSS_INVALID;
     } else {
         errors.firstLastName = null;
     }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
+        errors.middleName = VALUE_XSS_INVALID;
+    } else {
+        errors.middleName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
+        errors.secondLastName = VALUE_XSS_INVALID;
+    } else {
+        errors.secondLastName = null;
+    }
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observations)) {
+        errors.observations = VALUE_XSS_INVALID;
+    } else {
+        errors.observations = null;
+    }
+
     return errors;
 };
 
 function GetBtnAllowEditOrBtnSearchExists(props) {
     if (!props.thisSelf.state.allowsEditingOFDocument) {
-        return <div />/*<Col xs>
-            <dl style={{ width: '100%' }}>
-                <button type="button" className="btn btn-primary"
-                    style={{ marginTop: '35px' }}
-                    onClick={props.thisSelf._onClickClear}>
-                    <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                        className="erase icon" ></i>
-                </button>
-            </dl>
-        </Col>*/
+        return <div />
     } else {
         if (_.isUndefined(props.boardMember)) {
             return <Col xs>
@@ -74,7 +99,7 @@ function GetBtnAllowEditOrBtnSearchExists(props) {
                         style={{ marginTop: '35px' }}
                         onClick={props.thisSelf._validateExistBoardMember}>
                         <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
-                            className="search icon"></i>
+                            className="search icon" />
                     </button>
                 </dl>
             </Col>
@@ -86,7 +111,7 @@ function GetBtnAllowEditOrBtnSearchExists(props) {
                             className={'btn btn-primary modal-button-edit'}
                             style={{ marginTop: '35px' }}>
                             Editar
-            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
+                            <i className={'icon edit'} style={{ marginLeft: '5px' }}></i>
                         </button>
                     </dl>
                 </Col>
@@ -112,7 +137,8 @@ class ModalCreateBoardMembers extends Component {
             //controla si se puede editar la información del miembro de junta, valores (true, false)
             isEditable: false,
             //controla si puede editar los campos de tipo de documento y número de documento
-            allowsEditingOFDocument: true
+            allowsEditingOFDocument: true,
+            showErrorXss: false,
         }
         momentLocalizer(moment);
     }
@@ -139,14 +165,18 @@ class ModalCreateBoardMembers extends Component {
     }
 
     /**
-     * Se ejecuta cuando se da clic en el botón guardar, valida si es para crear o actualizar 
+     * Se ejecuta cuando se da clic en el botón guardar, valida si es para crear o actualizar
      * un miembro de junta
      */
     _handleBoardMember() {
-        const { fields: { idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName }, saveBoardMember, validateExistsBoardMember,
+        const {
+            fields: {
+                idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
+            firstLastName, secondLastName, observations
+            }, saveBoardMember, validateExistsBoardMember,
             swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
-            getBoardMembers, boardMembersReducer } = this.props;
+            getBoardMembers, boardMembersReducer
+        } = this.props;
         var boardMember = {
             idClientBoardMember: null,
             idClient: window.localStorage.getItem('idClientSelected'),
@@ -156,7 +186,8 @@ class ModalCreateBoardMembers extends Component {
             firstName: firstName.value,
             middleName: middleName.value,
             firstLastName: firstLastName.value,
-            secondLastName: secondLastName.value
+            secondLastName: secondLastName.value,
+            observations: observations.value
         };
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         saveBoardMember(boardMember).then((data) => {
@@ -187,14 +218,26 @@ class ModalCreateBoardMembers extends Component {
     }
 
     /**
-     * Llama un servicio que valida si el miembro de junta ya existe, si existe, carga la información, 
+     * Llama un servicio que valida si el miembro de junta ya existe, si existe, carga la información,
      * en cualquier caso muestra el resto del formulario para permitir el registro
      */
     _validateExistBoardMember() {
-        const { fields: { idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName }, validateExistsBoardMember, swtShowMessage,
-            changeStateSaveData } = this.props;
+        const {
+            fields: {
+                idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
+            firstLastName, secondLastName, observations
+            }, validateExistsBoardMember, swtShowMessage,
+            changeStateSaveData
+        } = this.props;
+
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
+
+
+            if (eval(REGEX_SIMPLE_XSS_STRING).test(numberDocument.value)) {
+                this.setState({ showErrorXss: true });
+                return;
+            }
+
             var jsonBoardMember = {
                 idTypeDocument: typeOfDocument.value,
                 numberDocument: (numberDocument.value).trim(),
@@ -222,6 +265,7 @@ class ModalCreateBoardMembers extends Component {
                             middleName.onChange(detailBoardMember.middleName);
                             firstLastName.onChange(detailBoardMember.firstLastName);
                             secondLastName.onChange(detailBoardMember.secondLastName);
+                            observations.onChange(detailBoardMember.observations);
                             allowShowCompleteForm = true;
                             showAuditFields = true;
                             this._sendAuditInformation(false, detailBoardMember.userNameCreate, detailBoardMember.userNameUpdate, detailBoardMember.dateUpdate, detailBoardMember.dateCreate);
@@ -238,6 +282,7 @@ class ModalCreateBoardMembers extends Component {
                         middleName.onChange('');
                         firstLastName.onChange('');
                         secondLastName.onChange('');
+                        observations.onChange('');
                     }
                     if (allowShowCompleteForm) {
                         this.setState({
@@ -260,12 +305,12 @@ class ModalCreateBoardMembers extends Component {
     }
 
     /**
-     * Recibe la información de auditoría del miembro de junta, la procesa y guarda en 
+     * Recibe la información de auditoría del miembro de junta, la procesa y guarda en
      * las variables que se usan en la vista
-     * @param {*} userNameCreate 
-     * @param {*} userNameUpdate 
-     * @param {*} dateUpdate 
-     * @param {*} dateCreate 
+     * @param {*} userNameCreate
+     * @param {*} userNameUpdate
+     * @param {*} dateUpdate
+     * @param {*} dateCreate
      */
     _sendAuditInformation(cleanFields, userNameCreate, userNameUpdate, dateUpdate, dateCreate) {
         if (cleanFields) {
@@ -304,8 +349,12 @@ class ModalCreateBoardMembers extends Component {
     }
 
     render() {
-        const { initialValues, fields: { idBoardMember, typeOfDocument, numberDocument, firstName,
-            middleName, firstLastName, secondLastName }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer } = this.props;
+        const {
+            initialValues, fields: {
+                idBoardMember, typeOfDocument, numberDocument, firstName,
+                middleName, firstLastName, secondLastName, observations
+            }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer
+        } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -313,7 +362,7 @@ class ModalCreateBoardMembers extends Component {
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>
                             Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
-                          </p>
+                        </p>
                         <Row>
                             <Col xs>
                                 <dt><span>Tipo de documento (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -387,6 +436,30 @@ class ModalCreateBoardMembers extends Component {
                                 />
                             </Col>
                         </Row>
+                        <Row>
+                            <dt style={{ visibility: this.state.showCompleteForm }}>
+                                <div style={{ width: "100%", float: "left" }}>
+                                    <span style={{ marginLeft: "6px" }}>Observaciones</span>
+                                    <ToolTip text={TITLE_TOOLTIP_BOARD_MEMBERS}>
+                                        <i className="help circle icon blue"
+                                            style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
+                                    </ToolTip>
+                                </div>
+                            </dt>
+                        </Row>
+                        <Row>
+                            <Col xs style={{ visibility: this.state.showCompleteForm }}>
+                                <Textarea
+                                    name="observations"
+                                    type="text"
+                                    max="1000"
+                                    title={TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS}
+                                    style={{ width: '100%', height: '130px' }}
+                                    {...observations}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                />
+                            </Col>
+                        </Row>
                         {showAuditFields &&
                             < Row style={{ padding: "20px 10px 0px 0px", visibility: this.state.showCompleteForm }}>
                                 <Col xs={6} md={3} lg={3}>
@@ -436,10 +509,19 @@ class ModalCreateBoardMembers extends Component {
                         <span>Guardar</span>
                     </button>
                     <button className="modal-button-edit btn btn-default btnDefaultAyax"
-                        onClick={() => { isOpen() }}>
+                        onClick={() => {
+                            isOpen()
+                        }}>
                         <span>Cancelar</span>
                     </button>
                 </div>
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorXss}
+                    title="Campos obligatorios"
+                    text={REGEX_SIMPLE_XSS_MESAGE}
+                    onConfirm={() => this.setState({ showErrorXss: false })}
+                />
             </form >
         );
     }
@@ -472,7 +554,8 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
                 firstName: boardMember.firstName,
                 middleName: boardMember.middleName,
                 firstLastName: boardMember.firstLastName,
-                secondLastName: boardMember.secondLastName
+                secondLastName: boardMember.secondLastName,
+                observations: boardMember.observations
             }
         }
     } else {
@@ -487,7 +570,8 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
                 firstName: null,
                 middleName: null,
                 firstLastName: null,
-                secondLastName: null
+                secondLastName: null,
+                observations: null
             }
         };
     }

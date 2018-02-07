@@ -1,24 +1,38 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
+import ToolTipComponent from '../toolTip/toolTipComponent';
+import { MESSAGE_INVENTORY_POLICE } from './constants';
+import {
+    VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
+import { stringValidate } from '../../actionsGlobal';
 
 class InventorPolicy extends Component {
+
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
+        const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
+            showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                         <div className="tab-content-row"
                             style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-
                         <i className="cubes icon" style={{ fontSize: "25px" }} />
                         <span className="title-middle"> Política de Inventarios</span>
+                        <ToolTipComponent text={MESSAGE_INVENTORY_POLICE}>
+                            <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                className="help circle icon blue" />
+                        </ToolTipComponent>
                     </div>
                 </Col>
                 <Col xs={12} md={12} lg={12}>
@@ -57,5 +71,15 @@ InventorPolicy.PropTypes = {
     functionChangeInventoryPolicy: PropTypes.func
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+    }, dispatch);
+}
 
-export default InventorPolicy;
+function mapStateToProps({ clientInformacion }, ownerProps) {
+    return {
+        clientInformacion
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InventorPolicy);

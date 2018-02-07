@@ -3,7 +3,7 @@ import {
     CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
     CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT
 } from './constants';
-import {UPDATE_CONTEXT_CLIENT} from '../customerStory/constants'
+import { UPDATE_CONTEXT_CLIENT } from '../customerStory/constants'
 import { isEmpty, set } from 'lodash';
 
 const initialState = Immutable.Map({
@@ -23,18 +23,18 @@ const initialState = Immutable.Map({
     noAppliedMainSuppliers: false,
     noAppliedMainCompetitors: false,
     noAppliedIntOperations: false,
-
+    noAppliedControlLinkedPayments: false,
     otherListMainCustomer: [],
     otherListMainSupplier: [],
     otherNoAppliedMainClients: false,
-    otherNoAppliedMainSuppliers: false,
+    otherNoAppliedMainSuppliers: false
 });
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case CONSULT_INFO_CLIENT:
             const { status, validateLogin, data } = action.payload.data;
-            const dataClient = isEmpty(data) ? [] : JSON.parse(data);
+            const dataClient = isEmpty(data) ? [] : data;
             const contextClient = _.isUndefined(dataClient) || _.isNull(dataClient) ? null : dataClient.contextClient;
             const listParticipation = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listParticipation) ? [] : contextClient.listParticipation;
             const listDistribution = _.isUndefined(contextClient) || _.isNull(contextClient) || _.isNull(contextClient.listDistribution) ? [] : contextClient.listDistribution;
@@ -48,6 +48,7 @@ export default (state = initialState, action) => {
             const noAppliedMainSuppliers = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedMainSuppliers;
             const noAppliedMainCompetitors = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedMainCompetitors;
             const noAppliedIntOperations = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedIntOperations;
+            const noAppliedControlLinkedPayments = _.isUndefined(contextClient) || _.isNull(contextClient) ? false : contextClient.noAppliedControlLinkedPayments;
             return state.withMutations(map => {
                 map
                     .set('status', status)
@@ -64,15 +65,15 @@ export default (state = initialState, action) => {
                     .set('noAppliedMainClients', noAppliedMainClients)
                     .set('noAppliedMainSuppliers', noAppliedMainSuppliers)
                     .set('noAppliedMainCompetitors', noAppliedMainCompetitors)
+                    .set('noAppliedControlLinkedPayments', noAppliedControlLinkedPayments)
                     .set('noAppliedIntOperations', noAppliedIntOperations);
             });
         case UPDATE_CONTEXT_CLIENT:
             var { data } = action.payload.data;
             const otherListMainCustomer = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainCustomer) ? [] : data.listMainCustomer;
             const otherListMainSupplier = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainSupplier) ? [] : data.listMainSupplier;
-
             const otherNoAppliedMainClients = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainClients) ? false : data.noAppliedMainClients;
-            const otherNoAppliedMainSuppliers = _.isUndefined(data) || _.isNull(data)  || _.isNull(data.noAppliedMainSuppliers) ? false : data.noAppliedMainSuppliers;
+            const otherNoAppliedMainSuppliers = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainSuppliers) ? false : data.noAppliedMainSuppliers;
             return state.withMutations(map => {
                 map
                     .set('otherListMainCustomer', otherListMainCustomer)

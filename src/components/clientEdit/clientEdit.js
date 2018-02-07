@@ -1,91 +1,70 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import SweetAlert from "sweetalert-react";
-import {bindActionCreators} from "redux";
-import {updateTitleNavBar} from "../navBar/actions";
+import { bindActionCreators } from "redux";
+import { updateTitleNavBar } from "../navBar/actions";
 import {
-    seletedButton,
-    sendErrorsUpdate,
-    updateClient,
-    updateErrorsNotes,
+    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
     validateContactShareholder
 } from "../clientDetailsInfo/actions";
 import {Col, Row} from "react-flexbox-grid";
 import {goBack, redirectUrl} from "../globalComponents/actions";
 import {
-    clearValuesAdressess,
-    consultDataSelect,
-    consultList,
-    consultListWithParameter,
-    consultListWithParameterUbication,
-    economicGroupsByKeyword,
-    getMasterDataFields
+    clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
+    consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
 } from "../selectsComponent/actions";
 import * as constants from "../selectsComponent/constants";
 import {
-    GOVERNMENT,
-    CONSTRUCT_PYME,
-    KEY_DESMONTE,
-    KEY_EXCEPCION,
-    KEY_EXCEPCION_NO_GERENCIADO,
-    KEY_EXCEPCION_NO_NECESITA_LME,
-    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
-    KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE,
-    MAXIMUM_OPERATIONS_FOREIGNS,
-    TITLE_DESCRIPTION
+    GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
+    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
+    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
 } from "./constants";
 import {
-    ALLOWS_NEGATIVE_INTEGER,
-    DATE_REQUIERED,
-    MESSAGE_LOAD_DATA,
-    MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER,
-    OPTION_REQUIRED,
-    VALUE_REQUIERED
-} from "../../constantsGlobal";
-import {BUTTON_EDIT, BUTTON_UPDATE, UPDATE} from "../clientDetailsInfo/constants";
+    ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
+    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
+
+import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
-import {reduxForm} from "redux-form";
+import { reduxForm } from "redux-form";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import NotesClient from "./notes/notesClient";
 import ProductsClient from "./products/productList";
-import {clearProducts, setProducts} from "./products/actions";
-import {clearNotes, deleteNote, setNotes} from "./notes/actions";
-import {createProspect} from "../propspect/actions";
-import {changeStateSaveData} from "../dashboard/actions";
+import { clearProducts, setProducts } from "./products/actions";
+import { clearNotes, deleteNote, setNotes } from "./notes/actions";
+import { createProspect } from "../propspect/actions";
+import { changeStateSaveData } from "../dashboard/actions";
 import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
 import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import {swtShowMessage} from "../sweetAlertMessages/actions";
+import { swtShowMessage } from "../sweetAlertMessages/actions";
 import numeral from "numeral";
 import _ from "lodash";
 import $ from "jquery";
-import {showLoading} from "../loading/actions";
+import { showLoading } from "../loading/actions";
 import {
-    DISTRIBUTION_CHANNEL,
-    INT_OPERATIONS,
-    LINE_OF_BUSINESS,
-    MAIN_CLIENTS,
-    MAIN_COMPETITOR,
-    MAIN_SUPPLIER
+    DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
+    MAIN_COMPETITOR, MAIN_SUPPLIER
 } from "../contextClient/constants";
 import ClientTypology from "../contextClient/ClientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
 import InventorPolicy from "../contextClient/inventoryPolicy";
+import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
 import ComponentListMainClients from "../contextClient/listMainClients/componentListMainClients";
 import ComponentListMainSupplier from "../contextClient/listMainSupplier/componentListMainSupplier";
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
-import {saveCreditStudy} from "../clients/creditStudy/actions";
-import {validateResponse} from "../../actionsGlobal";
+import { saveCreditStudy } from "../clients/creditStudy/actions";
+import { validateResponse, stringValidate } from "../../actionsGlobal";
 
 let idButton;
 let errorContact;
@@ -101,9 +80,9 @@ var messageShareholder = '', messageContact = '';
 
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
-    {'id': '', 'value': "Seleccione..."},
-    {'id': true, 'value': "Si"},
-    {'id': false, 'value': "No"}
+    { 'id': '', 'value': "Seleccione..." },
+    { 'id': true, 'value': "Si" },
+    { 'id': false, 'value': "No" }
 ];
 
 const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCIIU", "idSubCIIU", "addressClient", "country", "city",
@@ -116,7 +95,8 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
     "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
     "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe"];
+    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "contributionDC",
+    "contributionLB", "controlLinkedPayments"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -162,21 +142,30 @@ const validate = (values, props) => {
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.razonSocial)) {
+        errors.razonSocial = VALUE_XSS_INVALID;
+        errorScrollTop = true;
     } else {
         errors.razonSocial = null;
     }
+
     if (!values.idTypeClient) {
         errors.idTypeClient = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.idTypeClient = null;
     }
+
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.idNumber)) {
+        errors.idNumber = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.idNumber = null;
     }
+
     if (!values.idCIIU) {
         errors.idCIIU = OPTION_REQUIRED;
         errorScrollTop = true;
@@ -189,108 +178,153 @@ const validate = (values, props) => {
     } else {
         errors.idSubCIIU = null;
     }
+
     if (!values.addressClient) {
         errors.addressClient = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.addressClient)) {
+        errors.addressClient = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.addressClient = null;
     }
+
     if (!values.telephone) {
         errors.telephone = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.telephone)) {
+        errors.telephone = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.telephone = null;
     }
+
     if (!values.annualSales) {
         errors.annualSales = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.annualSales)) {
+        errors.annualSales = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.annualSales = null;
     }
+
     if (!values.country) {
         errors.country = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.country = null;
     }
+
     if (!values.province) {
         errors.province = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.province = null;
     }
+
     if (!values.city) {
         errors.city = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.city = null;
     }
+
     if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
         errors.dateSalesAnnuals = DATE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dateSalesAnnuals)) {
+        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.dateSalesAnnuals = null;
     }
+
     if (!values.liabilities) {
         errors.liabilities = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.liabilities)) {
+        errors.liabilities = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.liabilities = null;
     }
+
     if (!values.assets) {
         errors.assets = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.assets)) {
+        errors.assets = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.assets = null;
     }
+
     if (!values.operatingIncome) {
         errors.operatingIncome = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.operatingIncome)) {
+        errors.operatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.operatingIncome = null;
     }
+
     if (!values.nonOperatingIncome) {
         errors.nonOperatingIncome = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.nonOperatingIncome)) {
+        errors.nonOperatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.nonOperatingIncome = null;
     }
+
     if (!values.expenses) {
         errors.expenses = VALUE_REQUIERED;
+        errorScrollTop = true;
+    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.expenses)) {
+        errors.expenses = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.expenses = null;
     }
+
     if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect) {
         errors.marcGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.marcGeren = null;
     }
+
     if (values.marcGeren === 'false' && !values.justifyNoGeren) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoGeren = null;
     }
+
     if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect) {
         errors.centroDecision = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.centroDecision = null;
     }
+
     if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect) {
         errors.necesitaLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.necesitaLME = null;
     }
+
     if (values.necesitaLME === 'false' && !values.justifyNoLME) {
         errors.justifyNoLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoLME = null;
     }
+
     if (values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') {
         errors.reportVirtual = OPTION_REQUIRED;
         errorScrollTop = true;
@@ -308,6 +342,9 @@ const validate = (values, props) => {
         if (values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') {
             errors.otherOriginGoods = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginGoods)) {
+            errors.otherOriginGoods = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.otherOriginGoods = null;
         }
@@ -315,6 +352,9 @@ const validate = (values, props) => {
     if (otherOriginResourceEnable !== 'disabled') {
         if (values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') {
             errors.otherOriginResource = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginResource)) {
+            errors.otherOriginResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
             errors.otherOriginResource = null;
@@ -324,12 +364,34 @@ const validate = (values, props) => {
         if (values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') {
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOperationsForeign)) {
+            errors.otherOperationsForeign = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.otherOperationsForeign = null;
         }
     }
 
-    //Valido los campos que sopn cenesarios para actualizar un cliente
+    //Valido que el cliente tenga ciudad de origen de los recursos
+    if (values.originCityResource) {
+        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+            errors.originCityResource = VALUE_XSS_INVALID;
+            errorScrollTop = true;
+        } else {
+            errors.originCityResource = null;
+        }
+    }
+
+    if (values.detailNonOperatingIncome) {
+        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+            errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
+            errorScrollTop = true;
+        }else{
+            errors.detailNonOperatingIncome = null;
+        }
+    }
+
+    //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
         if (values.taxNature === null || values.taxNature === undefined || values.taxNature === '') {
             errors.taxNature = OPTION_REQUIRED;
@@ -348,6 +410,9 @@ const validate = (values, props) => {
             if (numeral(values.nonOperatingIncome).format('0') > 0) {
                 if (values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') {
                     errors.detailNonOperatingIncome = OPTION_REQUIRED;
+                    errorScrollTop = true;
+                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+                    errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
                     errorScrollTop = true;
                 } else {
                     errors.detailNonOperatingIncome = null;
@@ -383,6 +448,9 @@ const validate = (values, props) => {
         if (values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') {
             errors.originCityResource = OPTION_REQUIRED;
             errorScrollTop = true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+            errors.originCityResource = VALUE_XSS_INVALID;
+            errorScrollTop = true;
         } else {
             errors.originCityResource = null;
         }
@@ -406,13 +474,28 @@ const validate = (values, props) => {
                 errors.operationsForeigns = null;
             }
         }
+
+        if (!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) {
+            errors.economicGroupName = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else {
+            errors.economicGroupName = null;
+        }
+
+        if (!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) {
+            errors.controlLinkedPayments = OPTION_REQUIRED;
+            errorScrollTop = true;
+        } else {
+            errors.controlLinkedPayments = null;
+    }
+
     }
 
     if (!values.segment) {
         errors.segment = OPTION_REQUIRED;
     } else {
         const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if(_.isEqual(CONSTRUCT_PYME, value)){
+        if (_.isEqual(CONSTRUCT_PYME, value)) {
             if (!values.subSegment) {
                 errors.subSegment = OPTION_REQUIRED;
             } else {
@@ -421,6 +504,43 @@ const validate = (values, props) => {
         }
         errors.segment = null;
     }
+
+
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.description)) {
+        errors.description = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.description = null;
+    }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.neighborhood)) {
+        errors.neighborhood = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.neighborhood = null;
+    }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
+        errors.contextClientField = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.contextClientField = null;
+    }
+
+    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
+        errors.inventoryPolicy = VALUE_XSS_INVALID;
+        errorScrollTop = true;
+    } else {
+        errors.inventoryPolicy = null;
+    }
+
+    //ComponentListLineBusiness
+    //ComponentListDistributionChannel
+    //ComponentListMainClients
+    //ComponentListMainSupplier
+    //ComponentListMainCompetitor
+    //ComponentListIntOperations
 
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
@@ -512,13 +632,13 @@ class clientEdit extends Component {
     }
 
     _closeWindow() {
-        this.setState({show: true});
+        this.setState({ show: true });
     }
 
     _onConfirmExit() {
-        const {sendErrorsUpdate, updateErrorsNotes} = this.props;
+        const { sendErrorsUpdate, updateErrorsNotes } = this.props;
         sendErrorsUpdate([]);
-        this.setState({show: false});
+        this.setState({ show: false });
         countOperationsForeign = 0;
         countOriginGoods = 0;
         countOriginResource = 0;
@@ -539,28 +659,28 @@ class clientEdit extends Component {
 
     showFormOut(property, value) {
         if (_.isEqual(LINE_OF_BUSINESS, property)) {
-            this.setState({showFormAddLineOfBusiness: value});
+            this.setState({ showFormAddLineOfBusiness: value });
         } else if (_.isEqual(DISTRIBUTION_CHANNEL, property)) {
-            this.setState({showFormAddDistribution: value});
+            this.setState({ showFormAddDistribution: value });
         } else if (_.isEqual(MAIN_CLIENTS, property)) {
-            this.setState({showFormAddMainClient: value});
+            this.setState({ showFormAddMainClient: value });
         } else if (_.isEqual(MAIN_SUPPLIER, property)) {
-            this.setState({showFormAddMainSupplier: value});
+            this.setState({ showFormAddMainSupplier: value });
         } else if (_.isEqual(MAIN_COMPETITOR, property)) {
-            this.setState({showFormAddMainCompetitor: value});
+            this.setState({ showFormAddMainCompetitor: value });
         } else if (_.isEqual(INT_OPERATIONS, property)) {
-            this.setState({showFormAddIntOperatrions: value});
+            this.setState({ showFormAddIntOperatrions: value });
         }
     }
 
     _closeError() {
-        this.setState({show: false, showEx: false, showEr: false, showErrorClientExists: false});
+        this.setState({ show: false, showEx: false, showEr: false, showErrorClientExists: false });
     }
 
     _closeSuccess() {
-        const {sendErrorsUpdate, updateErrorsNotes} = this.props;
+        const { sendErrorsUpdate, updateErrorsNotes } = this.props;
         sendErrorsUpdate([]);
-        this.setState({show: false, showEx: false, showEr: false});
+        this.setState({ show: false, showEx: false, showEr: false });
         countOperationsForeign = 0;
         countOriginGoods = 0;
         countOriginResource = 0;
@@ -580,25 +700,30 @@ class clientEdit extends Component {
     }
 
     _closeSuccessSaveUpdate() {
-        this.setState({showExitoSaveNotUpdate: false});
+        this.setState({ showExitoSaveNotUpdate: false });
     }
 
     _onChangeGroupEconomic(e) {
-        const {fields: {economicGroupName}, economicGroupsByKeyword} = this.props;
+        const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
+        if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
+            nitPrincipal.onChange("");
+            groupEconomic.onChange('');
+        }
         if (e.keyCode === 13 || e.which === 13) {
             e.preventDefault();
             economicGroupsByKeyword(economicGroupName.value);
             economicGroupName.onChange('');
+            groupEconomic.onChange('');
         } else {
             economicGroupName.onChange(e.target.value);
         }
     }
 
     updateKeyValueUsersBanco(e) {
-        const {fields: {groupEconomic, economicGroupName, nitPrincipal}, economicGroupsByKeyword} = this.props;
-        groupEconomic.onChange('');
-        nitPrincipal.onChange('');
-        if (e.keyCode === 13 || e.which === 13) {
+        const { fields: { groupEconomic, economicGroupName, nitPrincipal }, economicGroupsByKeyword } = this.props;
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
+            groupEconomic.onChange('');
+            nitPrincipal.onChange('');
             e.preventDefault();
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
@@ -634,7 +759,7 @@ class clientEdit extends Component {
     }
 
     _updateValue(value) {
-        const {fields: {nitPrincipal, groupEconomic, economicGroupName}, economicGroupsByKeyword} = this.props;
+        const { fields: { nitPrincipal, groupEconomic, economicGroupName }, economicGroupsByKeyword } = this.props;
         let userSelected;
         _.map(contactClient, contact => {
             if (contact.id.toString() === value) {
@@ -651,7 +776,7 @@ class clientEdit extends Component {
     _onChangeMarcGeren(val) {
         if (!infoMarcaGeren && val === 'true') {
             var dataTypeNote, idExcepcionNoGerenciado;
-            const {selectsReducer, deleteNote, notes, updateErrorsNotes} = this.props;
+            const { selectsReducer, deleteNote, notes, updateErrorsNotes } = this.props;
             dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
             idExcepcionNoGerenciado = _.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id');
             const notesWithoutNoGeren = _.remove(notes.toArray(), (note) => {
@@ -673,7 +798,7 @@ class clientEdit extends Component {
             infoMarcaGeren = false;
         }
         if (val === 'true' || val === true && initValueJustifyNonGeren) {
-            const {fields: {justifyNoGeren}} = this.props;
+            const { fields: { justifyNoGeren } } = this.props;
             justifyNoGeren.onChange('');
         } else {
             initValueJustifyNonGeren = true;
@@ -682,7 +807,7 @@ class clientEdit extends Component {
 
     _onChangeValueNeedLME(val) {
         const {
-            fields: {necesitaLME, justifyNoLME}, clientInformacion,
+            fields: { necesitaLME, justifyNoLME }, clientInformacion,
             selectsReducer, deleteNote, notes, updateErrorsNotes
         } = this.props;
         if (val === 'true' || val && initValueJustifyNonLME) {
@@ -712,7 +837,7 @@ class clientEdit extends Component {
     }
 
     _onChangeJustifyNoGeren(val) {
-        const {selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote} = this.props;
+        const { selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if (!infoJustificationForNoRM || infoClient.justificationForNoRM !== val) {
             let dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
@@ -765,7 +890,7 @@ class clientEdit extends Component {
     }
 
     _onChangeValueJustifyNoNeedLME(val) {
-        const {selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote} = this.props;
+        const { selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         if (!infoJustificationNeedLME || infoClient.justificationForCreditNeed !== val) {
             let dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
@@ -817,7 +942,7 @@ class clientEdit extends Component {
     }
 
     _handleGroupEconomicFind() {
-        const {fields: {groupEconomic}, economicGroupsByKeyword} = this.props;
+        const { fields: { groupEconomic }, economicGroupsByKeyword } = this.props;
         economicGroupsByKeyword(groupEconomic.value);
         groupEconomic.onChange('');
     }
@@ -854,11 +979,11 @@ class clientEdit extends Component {
 
     //Detecta el cambio en el select de ciiu para ejecutar la consulta de subciiu
     _onChangeCIIU(val) {
-        const {fields: {idCIIU, idSubCIIU}} = this.props;
+        const { fields: { idCIIU, idSubCIIU } } = this.props;
         idCIIU.onChange(val);
-        const {clientInformacion} = this.props;
+        const { clientInformacion } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        const {consultListWithParameter} = this.props;
+        const { consultListWithParameter } = this.props;
         consultListWithParameter(constants.SUB_CIIU, val);
         if (!_.isEqual(infoClient.ciiu, idCIIU.value)) {
             idSubCIIU.onChange('');
@@ -866,7 +991,7 @@ class clientEdit extends Component {
     }
 
     _onChangeOperationsForeigns(val) {
-        const {fields: {otherOperationsForeign}, selectsReducer, clientInformacion} = this.props;
+        const { fields: { otherOperationsForeign }, selectsReducer, clientInformacion } = this.props;
         var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
         var idOptionOther = _.get(_.filter(dataOperationsForeigns, ['key', KEY_OPTION_OTHER_OPERATIONS_FOREIGNS]), '[0].id');
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -894,7 +1019,7 @@ class clientEdit extends Component {
     }
 
     _onChangeOriginGoods(val) {
-        const {fields: {otherOriginGoods, originGoods}, selectsReducer, clientInformacion} = this.props;
+        const { fields: { otherOriginGoods, originGoods }, selectsReducer, clientInformacion } = this.props;
         var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
         var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -921,7 +1046,7 @@ class clientEdit extends Component {
     }
 
     _onChangeOriginResource(val) {
-        const {fields: {otherOriginResource}, selectsReducer, clientInformacion} = this.props;
+        const { fields: { otherOriginResource }, selectsReducer, clientInformacion } = this.props;
         var dataOriginResource = selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE);
         var idOptionOther = _.get(_.filter(dataOriginResource, ['key', KEY_OPTION_OTHER_ORIGIN_RESOURCE]), '[0].id');
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -950,11 +1075,11 @@ class clientEdit extends Component {
 
     //Detecta el cambio en el select de country para ejecutar la consulta de province
     _onChangeCountry(val) {
-        const {clientInformacion} = this.props;
+        const { clientInformacion } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        const {fields: {country, province, city}} = this.props;
+        const { fields: { country, province, city } } = this.props;
         country.onChange(val);
-        const {consultListWithParameterUbication} = this.props;
+        const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
         if (!_.isEqual(infoClient.addresses[0].country, country.value)) {
             province.onChange('');
@@ -964,11 +1089,11 @@ class clientEdit extends Component {
 
     //Detecta el cambio en el select de province para ejecutar la consulta de city
     _onChangeProvince(val) {
-        const {clientInformacion} = this.props;
+        const { clientInformacion } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
-        const {fields: {country, province, city}} = this.props;
+        const { fields: { country, province, city } } = this.props;
         province.onChange(val);
-        const {consultListWithParameterUbication} = this.props;
+        const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(constants.FILTER_CITY, province.value);
         if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
             city.onChange('');
@@ -1085,7 +1210,7 @@ class clientEdit extends Component {
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
                 "idCustomerTypology": customerTypology.value
             };
-            const {createProspect, sendErrorsUpdate, updateClient, saveCreditStudy} = this.props;
+            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
                 if (_.get(data, 'payload.data.status', 500) === 200) {
@@ -1095,7 +1220,7 @@ class clientEdit extends Component {
                                 if (typeSave === BUTTON_EDIT) {
                                     changeStateSaveData(false, "");
                                     messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                                    this.setState({showEx: true});
+                                    this.setState({ showEx: true });
                                 } else {
                                     updateClient(UPDATE).then((data) => {
                                         if (!_.get(data, 'payload.data.validateLogin')) {
@@ -1104,31 +1229,39 @@ class clientEdit extends Component {
                                         } else {
                                             changeStateSaveData(false, "");
                                             messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                                            this.setState({showEx: true});
+                                            this.setState({ showEx: true });
                                         }
                                     });
                                 }
                             } else {
-                                this.setState({showErrorClientExists: true});
+                                changeStateSaveData(false, "");
+                                this.setState({ showErrorClientExists: true });
                             }
                         } else {
-                            this.setState({showEr: true});
+                            changeStateSaveData(false, "");
+                            this.setState({ showEr: true });
                         }
                     });
                 } else {
-                    this.setState({showEr: true});
+                    changeStateSaveData(false, "");
+                    this.setState({ showEr: true });
                 }
             }, (reason) => {
                 changeStateSaveData(false, "");
-                this.setState({showEr: true});
+                this.setState({ showEr: true });
             });
         }
     }
 
     _createJsonSaveContextClient() {
-        const {fields: {contextClientField, inventoryPolicy, customerTypology}, clientInformacion} = this.props;
+        const {
+            fields: {
+                contextClientField, inventoryPolicy, customerTypology,
+                controlLinkedPayments
+            }, clientInformacion
+        } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
-        const {contextClient} = infoClient;
+        const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
@@ -1169,6 +1302,7 @@ class clientEdit extends Component {
         const noAppliedMainSuppliers = clientInformacion.get('noAppliedMainSuppliers');
         const noAppliedMainCompetitors = clientInformacion.get('noAppliedMainCompetitors');
         const noAppliedIntOperations = clientInformacion.get('noAppliedIntOperations');
+        const noAppliedControlLinkedPayments = clientInformacion.get('noAppliedControlLinkedPayments');
         if (_.isUndefined(contextClient) || _.isNull(contextClient)) {
             return {
                 'customerTypology': customerTypology.value,
@@ -1176,6 +1310,7 @@ class clientEdit extends Component {
                 'idClient': infoClient.id,
                 'context': contextClientField.value,
                 'inventoryPolicy': inventoryPolicy.value,
+                'controlLinkedPayments': noAppliedControlLinkedPayments ? null : controlLinkedPayments.value,
                 'listParticipation': listLineOfBusiness,
                 'listDistribution': listDistribution,
                 'listMainCustomer': listMainCustomer,
@@ -1187,9 +1322,11 @@ class clientEdit extends Component {
                 noAppliedMainClients,
                 noAppliedMainSuppliers,
                 noAppliedMainCompetitors,
-                noAppliedIntOperations
+                noAppliedIntOperations,
+                noAppliedControlLinkedPayments
             };
         } else {
+            contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
             contextClient.customerTypology = customerTypology.value;
             contextClient.context = contextClientField.value;
             contextClient.inventoryPolicy = inventoryPolicy.value;
@@ -1205,13 +1342,14 @@ class clientEdit extends Component {
             contextClient.noAppliedMainSuppliers = noAppliedMainSuppliers;
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
+            contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
             return contextClient;
         }
     }
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-        const {fields: {justifyNoGeren, marcGeren, necesitaLME, justifyNoLME}, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage} = this.props;
+        const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
         const idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -1246,7 +1384,7 @@ class clientEdit extends Component {
                 typeOfNote: idExcepcionNoNeedLME,
                 typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
                 note: ''
-            } ]);
+            }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
             setNotes([{
@@ -1293,7 +1431,17 @@ class clientEdit extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {fields: {operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods}, errors} = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion } = nextProps;
+        let { errors } = nextProps;
+        if (idButton === BUTTON_UPDATE) {
+        if (clientInformacion.get('noAppliedControlLinkedPayments')) {
+            errors = _.omit(errors, 'controlLinkedPayments');
+        } else {
+            if (!stringValidate(controlLinkedPayments.value)) {
+                errors.controlLinkedPayments = OPTION_REQUIRED;
+            }
+        }
+        }
         const errorsArray = _.toArray(errors);
         this.setState({
             sumErrorsForm: errorsArray.length
@@ -1308,7 +1456,7 @@ class clientEdit extends Component {
         infoJustificationNeedLME = true;
         infoMarcaGeren = true;
         const {
-            fields: {nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns}, updateTitleNavBar,
+            fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
             clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
         } = this.props;
@@ -1333,7 +1481,7 @@ class clientEdit extends Component {
                 redirectUrl("/dashboard/clientInformation");
             } else {
                 showLoading(true, MESSAGE_LOAD_DATA);
-                const {economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields} = this.props;
+                const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                     constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
                     constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
@@ -1352,7 +1500,7 @@ class clientEdit extends Component {
                         showLoading(false, '');
                     }, (reason) => {
                         showLoading(false, '');
-                        this.setState({showEx: true});
+                        this.setState({ showEx: true });
                     });
                 consultList(constants.CIIU);
                 if (infoClient.economicGroup !== null && infoClient.economicGroup !== '' && infoClient.economicGroup !== undefined && infoClient.economicGroup !== "null") {
@@ -1366,24 +1514,24 @@ class clientEdit extends Component {
 
     _mapMessageErros(error, index) {
         return <div>
-            <span key={index} style={{marginLeft: "20px", fontSize: "12pt"}}>
+            <span key={index} style={{ marginLeft: "20px", fontSize: "12pt" }}>
                 {error}
             </span>
         </div>
     }
 
     _changeSegment(idSegment, firstConsult, subSegmentId) {
-        const {fields: {segment, customerTypology, subSegment}, selectsReducer, getMasterDataFields, consultListWithParameterUbication} = this.props;
+        const { fields: { segment, customerTypology, subSegment }, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
         if (!_.isUndefined(value)) {
-            if (_.isEqual(GOVERNMENT, value)) {
+            if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
             if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data)=>{
+                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data) => {
                     if (!_.isNull(subSegmentId) && firstConsult) {
                         subSegment.onChange(subSegmentId);
                     }
@@ -1408,9 +1556,11 @@ class clientEdit extends Component {
                 otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
                 participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
                 termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
-                idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe
-            }, handleSubmit, tabReducer, selectsReducer, clientInformacion, validateContactShareholder
+                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
+                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
+            }, handleSubmit,
+            tabReducer, selectsReducer, clientInformacion, validateContactShareholder
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
@@ -1429,15 +1579,15 @@ class clientEdit extends Component {
 
         }
         return (
-            <form onSubmit={handleSubmit(this._submitEditClient)} style={{backgroundColor: "#FFFFFF"}}>
+            <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
-                    <p style={{paddingTop: '10px'}}></p>
+                    <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
-                        <Col xs={12} md={12} lg={12} style={{marginTop: '20px'}}>
+                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
                             {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                                 <div>
                                     <span
-                                        style={{marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt"}}>Falta información obligatoria del cliente (ver campos seleccionados).</span>
+                                        style={{ marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt" }}>Falta información obligatoria del cliente (ver campos seleccionados).</span>
                                 </div>
                                 :
                                 <div>
@@ -1452,10 +1602,10 @@ class clientEdit extends Component {
                             {idButton === BUTTON_UPDATE ?
                                 <div>
                                     <BottonContactAdmin errorContact={errorContact} message={messageContact}
-                                                        functionToExecute={validateContactShareholder}/>
+                                        functionToExecute={validateContactShareholder} />
                                     <BottonShareholderAdmin errorShareholder={errorShareholder}
                                                             message={messageShareholder}
-                                                            functionToExecute={validateContactShareholder}/>
+                                        functionToExecute={validateContactShareholder} />
                                 </div>
                                 :
                                 <div></div>
@@ -1463,9 +1613,9 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-                <Row style={{padding: "10px 28px 10px 20px"}}>
+                <Row style={{ padding: "10px 28px 10px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
                             <Input
                                 name="razonSocial"
@@ -1477,7 +1627,7 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
                             <ComboBox
                                 name="tipoDocumento"
@@ -1494,7 +1644,7 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
                             <Input
                                 name="documento"
@@ -1502,12 +1652,13 @@ class clientEdit extends Component {
                                 max="20"
                                 placeholder="Número de documento del cliente"
                                 {...idNumber}
+                                touched={true}
                             />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{marginTop: "10px"}}>
-                            <dt><span>Segmento (</span><span style={{color: "red"}}>*</span>)</dt>
+                        <div style={{ marginTop: "10px" }}>
+                            <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
                             <ComboBox
                                 name="segment"
                                 labelInput="Segmento"
@@ -1516,7 +1667,7 @@ class clientEdit extends Component {
                                 onBlur={segment.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
-                                style={{marginBottom: '0px !important'}}
+                                style={{ marginBottom: '0px !important' }}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.SEGMENTS)}
                                 onChange={(val) => this._changeSegment(val, false, null)}
@@ -1526,8 +1677,8 @@ class clientEdit extends Component {
                     </Col>
                     {
                         isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
-                            <div style={{marginTop: "10px"}}>
-                                <dt><span>Subsegmento (</span><span style={{color: "red"}}>*</span>)</dt>
+                            <div style={{ marginTop: "10px" }}>
+                                <dt><span>Subsegmento (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <ComboBox
                                     name="subSegment"
                                     labelInput="Sebsegmento"
@@ -1544,21 +1695,21 @@ class clientEdit extends Component {
                         </Col>
                     }
                     <ClientTypology customerTypology={customerTypology}
-                                    data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)}/>
+                        data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
 
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{marginTop: "10px"}}>
+                        <div style={{ marginTop: "10px" }}>
                             <dt>
                                 <span>Breve descripción de la empresa</span>
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "15px", cursor: "pointer", marginLeft: "2px"}}
-                                   title={TITLE_DESCRIPTION}/>
+                                    style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
+                                    title={TITLE_DESCRIPTION} />
                             </dt>
                             <dt>
                                 <Textarea
                                     name="description"
                                     type="text"
-                                    style={{width: '100%', height: '100%'}}
+                                    style={{ width: '100%', height: '100%' }}
                                     onChange={val => this._onchangeValue("description", val)}
                                     placeholder="Ingrese la descripción"
                                     max="1000"
@@ -1569,19 +1720,19 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="payment icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="payment icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Actividad económica</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 0px"}}>
+                <Row style={{ padding: "0px 10px 10px 0px" }}>
                     <Col xs>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt><span>Naturaleza tributaria</span></dt>
                             <ComboBox
                                 name="idtaxNature"
@@ -1597,7 +1748,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs>
-                        <div style={{paddingLeft: "20px", marginTop: "10px"}}>
+                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
                             <dt><span>CIIU</span></dt>
                             <ComboBox
                                 name="idCIIU"
@@ -1614,15 +1765,15 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
-                            <dt style={{paddingBottom: "10px"}}><span>Sector</span></dt>
-                            <span style={{width: "25%", verticalAlign: "initial", paddingTop: "5px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
                                 {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
                             </span>
                         </div>
                     </Col>
                     <Col xs>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px", marginTop: "10px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt><span>SubCIIU</span></dt>
                             <ComboBox
                                 name="idSubCIIU"
@@ -1638,40 +1789,40 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs>
-                        <div style={{paddingLeft: "20px", paddingRight: "35px", marginTop: "10px"}}>
-                            <dt style={{paddingBottom: "10px"}}><span>Subsector</span></dt>
-                            <span style={{width: "25%", verticalAlign: "initial"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "35px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Subsector</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial" }}>
                                 {(idSubCIIU.value !== "" && idSubCIIU.value !== null && idSubCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector') : ''}
                             </span>
                         </div>
                     </Col>
-                    <ContextEconomicActivity contextClientField={contextClientField}/>
+                    <ContextEconomicActivity contextClientField={contextClientField} />
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
                                                participation={participationLB} experience={experience}
                                                showFormLinebusiness={this.state.showFormAddLineOfBusiness}
-                                               fnShowForm={this.showFormOut}/>
+                        fnShowForm={this.showFormOut} contribution={contributionLB} />
 
                     <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                                                      participation={participationDC}
+                                                      participation={participationDC} contribution={contributionDC}
                                                       showFormDistribution={this.state.showFormAddDistribution}
-                                                      fnShowForm={this.showFormOut}/>
+                        fnShowForm={this.showFormOut} />
                 </Row>
-
                 <InventorPolicy inventoryPolicy={inventoryPolicy}/>
-
-                <Row style={{padding: "20px 10px 10px 20px"}}>
+                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
+                    controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="browser icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="browser icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Información de ubicación y correspondencia</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 5px 20px 20px"}}>
+                <Row style={{ padding: "0px 5px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <table style={{width: "100%"}}>
+                        <table style={{ width: "100%" }}>
                             <tbody>
                             <tr>
                                 <td>
@@ -1688,15 +1839,15 @@ class clientEdit extends Component {
                             <tr>
                                 <td>
                                     <div className="tab-content-row"
-                                         style={{borderTop: "1px solid #505050", width: "99%"}}></div>
+                                            style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
-                    <Col xs={12} md={12} lg={12} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
+                    <Col xs={12} md={12} lg={12} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Dirección</span>
                         </dt>
@@ -1705,7 +1856,7 @@ class clientEdit extends Component {
                                 name="addressClient"
                                 validateEnter={true}
                                 type="text"
-                                style={{width: '100%', height: '100%'}}
+                                style={{ width: '100%', height: '100%' }}
                                 max="250"
                                 onChange={val => this._onchangeValue("addressClient", val)}
                                 placeholder="Ingrese la dirección"
@@ -1715,9 +1866,9 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 20px 10px 0px"}}>
+                <Row style={{ padding: "0px 20px 10px 0px" }}>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>País</span></dt>
                             <ComboBox
                                 name="country"
@@ -1735,7 +1886,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Departamento</span></dt>
                             <ComboBox
                                 name="province"
@@ -1751,7 +1902,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <div style={{paddingLeft: "20px", paddingRight: "15px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "15px" }}>
                             <dt><span>Ciudad</span></dt>
                             <ComboBox
                                 name="city"
@@ -1766,10 +1917,10 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 20px 10px 20px"}}>
+                <Row style={{ padding: "0px 20px 10px 20px" }}>
                     <Col xs={12} md={8} lg={8}>
                         <dt><span>Barrio</span></dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt style={{ marginRight: "17px" }}>
                             <Input
                                 name="txtBarrio"
                                 type="text"
@@ -1780,11 +1931,11 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs style={{marginLeft: "10px"}}>
+                    <Col xs style={{ marginLeft: "10px" }}>
                         <dt>
                             <span>Teléfono</span>
                         </dt>
-                        <dt style={{marginRight: "15px"}}>
+                        <dt style={{ marginRight: "15px" }}>
                             <Input
                                 name="txtTelefono"
                                 type="text"
@@ -1796,12 +1947,12 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "10px 0px 20px 20px", width: '100%'}}>
+                <Row style={{ padding: "10px 0px 20px 20px", width: '100%' }}>
                     <Col xs>
                         <dt>
                             <span>¿Desea consultar sus extractos de forma virtual?</span>
                         </dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt style={{ marginRight: "17px" }}>
                             <ComboBox
                                 name="extractsVirtual"
                                 labelInput="Seleccione..."
@@ -1814,11 +1965,11 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs style={{marginLeft: "10px"}}>
+                    <Col xs style={{ marginLeft: "10px" }}>
                         <dt>
                             <span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span>
                         </dt>
-                        <dt style={{marginRight: "15px"}}>
+                        <dt style={{ marginRight: "15px" }}>
                             <ComboBox
                                 name="reportVirtual"
                                 labelInput="Seleccione..."
@@ -1832,24 +1983,24 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="suitcase icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="suitcase icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Información financiera</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Ventas anuales</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 type="text"
                                 min={0}
                                 max="16"
@@ -1862,22 +2013,22 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Fecha de ventas anuales - DD/MM/YYYY</span>
                         </dt>
                         <dt>
                             <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
-                                              touched={true}/>
+                                touched={true} />
                         </dt>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Activos</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
                                 type="text"
@@ -1892,14 +2043,14 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Pasivos</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
                                 max="16"
@@ -1913,13 +2064,13 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Ingresos operacionales mensuales</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 onChange={val => this._onChangeValue("operatingIncome", val)}
                                 min={0}
@@ -1933,13 +2084,13 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Egresos mensuales</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
                                 max="16"
@@ -1954,14 +2105,14 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Ingresos no operacionales mensuales</span>
                         </dt>
                         <dt>
                             <Input
-                                style={{width: "100%", textAlign: "right"}}
+                                style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
                                 max="16"
@@ -1975,7 +2126,7 @@ class clientEdit extends Component {
                             />
                         </dt>
                     </Col>
-                    <Col xs={8} md={8} lg={8} style={{paddingRight: "20px"}}>
+                    <Col xs={8} md={8} lg={8} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Detalle de ingresos no operacionales u originados en actividades diferente a la principal</span>
                         </dt>
@@ -1995,37 +2146,38 @@ class clientEdit extends Component {
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                                           term={termMainClient} relevantInformation={relevantInformationMainClient}
                                           showFormMainClients={this.state.showFormAddMainClient}
-                                          fnShowForm={this.showFormOut}/>
+                    fnShowForm={this.showFormOut} />
 
                 <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
                                            term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                                            showFormMainSupplier={this.state.showFormAddMainSupplier}
-                                           fnShowForm={this.showFormOut}/>
+                    fnShowForm={this.showFormOut} />
 
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
                                              observations={obsevationsCompetitor}
                                              showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                                             fnShowForm={this.showFormOut}/>
+                    fnShowForm={this.showFormOut} />
 
-                <Row style={{padding: "20px 10px 10px 20px"}}>
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="book icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Datos de conocimiento comercial</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>Grupo económico/relación</span>
+                            <span>Grupo económico/relación </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                         </dt>
                         <dt>
                             <div className="ui search participantBanc fluid">
                                 <ComboBoxFilter className="prompt" id="inputEconomicGroup"
-                                                style={{borderRadius: "3px"}}
+                                    style={{ borderRadius: "3px" }}
                                                 autoComplete="off"
                                                 disabled={allowChangeEconomicGroup}
                                                 type="text"
@@ -2041,18 +2193,19 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>NIT principal</span>
+                            <span>NIT principal </span>
+                            {idButton === BUTTON_UPDATE && <span>(<span style={{ color: "red" }}>*</span>)</span>}
                         </dt>
-                        <dt style={{marginTop: '8px'}}>
-                            <span style={{fontWeight: 'normal'}}>{nitPrincipal.value}</span>
+                        <dt style={{ marginTop: '8px' }}>
+                            <span style={{ fontWeight: 'normal' }}>{nitPrincipal.value}</span>
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
-                    <Col xs={12} md={4} lg={4} style={{paddingRight: "10px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "10px" }}>
                         <dt>
                             <span>Marca gerenciamiento </span> {!infoClient.isProspect &&
-                        <div style={{display: "inline"}}></div>}
+                                <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
                             <ComboBox
@@ -2086,7 +2239,7 @@ class clientEdit extends Component {
                     <Col xs={12} md={4} lg={4}>
                         <dt>
                             <span>Centro de decisión </span> {!infoClient.isProspect &&
-                        <div style={{display: "inline"}}></div>}
+                                <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
                             <ComboBox
@@ -2102,11 +2255,11 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 20px"}}>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
                             <span>¿Necesita LME? </span> {!infoClient.isProspect &&
-                        <div style={{display: "inline"}}></div>}
+                                <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
                             <ComboBox
@@ -2152,31 +2305,31 @@ class clientEdit extends Component {
                         touched={true}
                     />
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="file outline icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="file outline icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Notas</span>
                         </div>
                     </Col>
                 </Row>
                 <NotesClient />
-                <Row style={{padding: "0px 10px 10px 20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="money icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="money icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Declaración de origen de bienes y/o fondos</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 0px 0px"}}>
+                <Row style={{ padding: "0px 10px 0px 0px" }}>
                     <Col xs={12} md={6} lg={6}>
-                        <dl style={{width: '100%'}}>
-                            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                        <dl style={{ width: '100%' }}>
+                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Origen de bienes</span></dt>
                                 <dd>
                                     <MultipleSelect
@@ -2195,7 +2348,7 @@ class clientEdit extends Component {
                             </div>
                         </dl>
                     </Col>
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>¿Cuál?</span>
                         </dt>
@@ -2213,10 +2366,10 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 0px 0px"}}>
+                <Row style={{ padding: "0px 10px 0px 0px" }}>
                     <Col xs={12} md={6} lg={6}>
-                        <dl style={{width: '100%'}}>
-                            <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                        <dl style={{ width: '100%' }}>
+                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Origen de recursos</span></dt>
                                 <dd>
                                     <MultipleSelect
@@ -2235,7 +2388,7 @@ class clientEdit extends Component {
                             </div>
                         </dl>
                     </Col>
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>¿Cuál?</span>
                         </dt>
@@ -2253,9 +2406,9 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 20px 0px"}}>
+                <Row style={{ padding: "0px 10px 20px 0px" }}>
                     <Col xs={12} md={6} lg={6}>
-                        <div style={{paddingLeft: "20px", paddingRight: "10px"}}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>País de origen</span></dt>
                             <ComboBox
                                 name="country"
@@ -2271,7 +2424,7 @@ class clientEdit extends Component {
                             />
                         </div>
                     </Col>
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+                    <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>Ciudad origen de los recursos</span>
                         </dt>
@@ -2287,22 +2440,22 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="world icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="world icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Información operaciones internacionales</span>
                         </div>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs>
                         <dt>
                             <span>¿Realiza operaciones en moneda extranjera?</span>
                         </dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt style={{ marginRight: "17px" }}>
                             <ComboBox
                                 name="operationsForeignCurrency"
                                 labelInput="Seleccione..."
@@ -2319,7 +2472,7 @@ class clientEdit extends Component {
                         <dt>
                             <span>¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera?</span>
                         </dt>
-                        <dt style={{marginRight: "17px"}}>
+                        <dt style={{ marginRight: "17px" }}>
                             <MultipleSelect
                                 {...operationsForeigns}
                                 name="operationsForeigns"
@@ -2337,8 +2490,8 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                <Row style={{padding: "0px 10px 10px 20px"}}>
-                    <Col xs={12} md={6} lg={6} style={{paddingRight: "20px"}}>
+                <Row style={{ padding: "0px 10px 10px 20px" }}>
+                    <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
                             <span>¿Cuál?</span>
                         </dt>
@@ -2364,20 +2517,20 @@ class clientEdit extends Component {
                                             customerCoverage={customerCoverageIntOpe}
                                             descriptionCoverage={descriptionCoverageIntOpe}
                                             showFormIntOperations={this.state.showFormAddIntOperatrions}
-                                            fnShowForm={this.showFormOut}/>
+                        fnShowForm={this.showFormOut} />
                 }
 
-                <Row style={{padding: "20px 10px 10px 20px"}}>
+                <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px"}}>
+                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
-                                 style={{borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px"}}/>
-                            <i className="product hunt icon" style={{fontSize: "25px"}}/>
+                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                            <i className="product hunt icon" style={{ fontSize: "25px" }} />
                             <span className="title-middle"> Descripción de los productos financieros en moneda extranjera</span>
                         </div>
                     </Col>
                 </Row>
-                <div style={{marginBottom: "50px"}}>
+                <div style={{ marginBottom: "50px" }}>
                     <ProductsClient />
                 </div>
                 <div className="" style={{
@@ -2391,18 +2544,18 @@ class clientEdit extends Component {
                     height: "50px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                    <div style={{width: "400px", height: "100%", position: "fixed", right: "0px"}}>
+                    <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
                         {idButton === BUTTON_UPDATE ?
                             <button className="btn"
-                                    style={{float: "right", margin: "8px 0px 0px 50px", position: "fixed"}}
+                                style={{ float: "right", margin: "8px 0px 0px 50px", position: "fixed" }}
                                     onClick={this.clickButtonScrollTop} type="submit">
-                                <span style={{color: "#FFFFFF", padding: "10px"}}>Actualizar/Sarlaft</span>
+                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Actualizar/Sarlaft</span>
                             </button>
                             :
                             <button className="btn"
-                                    style={{float: "right", margin: "8px 0px 0px 120px", position: "fixed"}}
+                                style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
                                     onClick={this.clickButtonScrollTop} type="submit">
-                                <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar</span>
+                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
                         }
                         <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
@@ -2411,11 +2564,11 @@ class clientEdit extends Component {
                             position: "fixed",
                             backgroundColor: "#C1C1C1"
                         }} type="button">
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </div>
                 </div>
-                <ModalErrorsUpdateClient modalIsOpen={tabReducer.get('modalErrorsIsOpen')}/>
+                <ModalErrorsUpdateClient modalIsOpen={tabReducer.get('modalErrorsIsOpen')} />
                 <SweetAlert
                     type="warning"
                     show={this.state.show}
@@ -2425,8 +2578,8 @@ class clientEdit extends Component {
                     cancelButtonText="Cancelar"
                     text="Señor usuario, perderá los cambios que no haya guardado. ¿Está seguro que desea salir de la vista de edición?"
                     showCancelButton={true}
-                    onCancel={() => this.setState({show: false})}
-                    onConfirm={() => this._onConfirmExit()}/>
+                    onCancel={() => this.setState({ show: false })}
+                    onConfirm={() => this._onConfirmExit()} />
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmSave}
@@ -2437,7 +2590,7 @@ class clientEdit extends Component {
                     text="¿Señor usuario, certifica que la información de su cliente, representante legal y accionistas se encuentra actualizada?"
                     showCancelButton={true}
                     onCancel={() => this._onConfirmSaveJustClient()}
-                    onConfirm={() => this._onConfirmSaveAllClient()}/>
+                    onConfirm={() => this._onConfirmSaveAllClient()} />
                 <SweetAlert
                     type="success"
                     show={this.state.showEx}
@@ -2499,9 +2652,9 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
-    const {contextClient} = infoClient;
+    const { contextClient } = infoClient;
     return {
         clientInformacion,
         selectsReducer,
@@ -2554,7 +2707,8 @@ function mapStateToProps({clientInformacion, selectsReducer, clientProductReduce
             subSegment: infoClient.subSegment,
             customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
             contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
-            inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy
+            inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy,
+            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments
         }
     };
 }

@@ -31,7 +31,7 @@ class buttonClientEconomicGroup extends Component {
           <button className="btn btn-primary" type="button" title="Ver grupo económico" style={{marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
             <i className="sitemap icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}></i>
           </button>
-          <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+          <Modal isOpen={this.state.modalIsOpen} contentLabel="Grupo económico" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
               <div className="modalBt4-content modal-content">
                 <div className="modalBt4-header modal-header">

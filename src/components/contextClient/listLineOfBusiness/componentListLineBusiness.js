@@ -3,9 +3,13 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, validateValueExist } from '../../../actionsGlobal';
+import { handleBlurValueNumber, validateValueExist, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED } from '../../../constantsGlobal';
+import {
+    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../../constantsGlobal';
+
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -28,28 +32,54 @@ class ComponentListLineBusiness extends Component {
         this._viewInformationLineBusiness = this._viewInformationLineBusiness.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteLineOfBusiness = this._deleteLineOfBusiness.bind(this);
+        this.fieldValidation = this.fieldValidation.bind(this);
+    }
+
+    fieldValidation(fields) {
+        const { swtShowMessage } = this.props;
+
+        let message_error = "";
+        for (var _field_i in fields) {
+            var _field = fields[_field_i];
+
+            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
+                message_error = 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.';
+                break;
+            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+                message_error = REGEX_SIMPLE_XSS_MESAGE;
+                break;
+            }
+        }
+
+        if (message_error) {
+            this.setState({ errorForm: true });
+            swtShowMessage('error', 'Líneas de negocios', message_error);
+        }
+        return _.isEmpty(message_error);
     }
 
     validateInfo(e) {
         e.preventDefault();
         const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, swtShowMessage } = this.props;
+            clientInformacion, swtShowMessage, contribution } = this.props;
         var countErrors = 0;
-        if (_.isUndefined(contextLineBusiness.value) || _.isNull(contextLineBusiness.value) || _.isEmpty(contextLineBusiness.value)) {
-            countErrors++;
-        }
-        if (_.isUndefined(participation.value) || _.isNull(participation.value) || _.isEmpty(participation.value)) {
-            countErrors++;
-        }
 
-        if (_.isEqual(countErrors, 0)) {
+        let validFields = this.fieldValidation([
+            { required: true, value: contextLineBusiness.value, xss: true },
+            { required: true, value: participation.value, xss: true },
+            { required: false, value: experience.value, xss: true },
+            { required: false, value: contribution.value, xss: true }
+        ])
+
+        if (validFields) {
             var listParticipation = clientInformacion.get('listParticipation');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
                     "id": _.uniqueId('line_'),
                     "lineOfBusiness": contextLineBusiness.value,
                     "participation": participation.value.replace(/,/g, ""),
-                    "experience": experience.value
+                    "experience": experience.value,
+                    "contribution": contribution.value
                 };
                 listParticipation.push(newValue);
             } else {
@@ -59,7 +89,8 @@ class ComponentListLineBusiness extends Component {
                     "idCreatedUser": this.state.entitySeleted.idCreatedUser,
                     "dateCreate": this.state.entitySeleted.dateCreate,
                     "participation": participation.value.replace(/,/g, ""),
-                    "experience": experience.value
+                    "experience": experience.value,
+                    "contribution": contribution.value
                 };
                 listParticipation = _.remove(listParticipation, (item) => !_.isEqual(item.id, this.state.entitySeleted.id));
                 listParticipation.push(updateValue);
@@ -67,27 +98,28 @@ class ComponentListLineBusiness extends Component {
             changeValueListClient('listParticipation', listParticipation);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } else {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Líneas de negocios', 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.');
         }
+
     }
 
     clearValues() {
-        const { contextLineBusiness, participation, experience, fnShowForm } = this.props;
+        const { contextLineBusiness, participation, experience, contribution, fnShowForm } = this.props;
         contextLineBusiness.onChange('');
         participation.onChange('');
         experience.onChange('');
+        contribution.onChange('');
         fnShowForm(LINE_OF_BUSINESS, false);
         this.setState({ entitySeleted: null, errorForm: false });
     }
 
     _viewInformationLineBusiness(entity) {
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
+            clientInformacion, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
         experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "");
+        contribution.onChange(entity.contribution);
         this.setState({ entitySeleted: entity });
     }
 
@@ -118,6 +150,7 @@ class ComponentListLineBusiness extends Component {
             <td>{entity.lineOfBusiness}</td>
             <td>{entity.participation} %</td>
             <td>{entity.experience}</td>
+            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -126,8 +159,9 @@ class ComponentListLineBusiness extends Component {
     }
 
     render() {
-        const { contextLineBusiness, participation, experience, showFormLinebusiness, fnShowForm,
-            clientInformacion, changeValueListClient, registrationRequired, origin } = this.props;
+        const { contextLineBusiness, participation, experience, showFormLinebusiness,
+            fnShowForm, contribution, clientInformacion, changeValueListClient,
+            registrationRequired, origin } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
@@ -140,12 +174,10 @@ class ComponentListLineBusiness extends Component {
                                     (<span style={{ color: "red" }}>*</span>)
                             </div>
                             }
-                            <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}
-                                children={
-                                    <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
-                                        className="help circle icon blue" />
-                                }
-                            />
+                            <ToolTipComponent text={MESSAGE_LINE_OF_BUSINESS}>
+                                <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
+                                    className="help circle icon blue" />
+                            </ToolTipComponent>
                             <input type="checkbox" title="No aplica" style={{ cursor: "pointer", marginLeft: '15px' }}
                                 onClick={() => {
                                     changeValueListClient('noAppliedLineOfBusiness', !clientInformacion.get('noAppliedLineOfBusiness'))
@@ -158,13 +190,15 @@ class ComponentListLineBusiness extends Component {
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button" title="Agregar línea de negocio"
+                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
                                 onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
-                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                <ToolTipComponent text="Agregar línea de negocio">
+                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                                </ToolTipComponent>
                             </button>
                         </Col>
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>Línea de negocio (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
@@ -173,14 +207,14 @@ class ComponentListLineBusiness extends Component {
                                         max="100"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
-                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(contextLineBusiness.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
                         }
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
@@ -192,14 +226,14 @@ class ComponentListLineBusiness extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : null}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
                         }
                         {showFormLinebusiness &&
-                            <Col xs={12} md={4} lg={3}>
+                            <Col xs={12} md={2} lg={2}>
                                 <div>
                                     <dt><span>Experiencia (años)</span></dt>
                                     <Input
@@ -210,47 +244,66 @@ class ComponentListLineBusiness extends Component {
                                         placeholder="Experiencia"
                                         {...experience}
                                         value={experience.value}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(experience.value) ? VALUE_XSS_INVALID : null}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
                                     />
                                 </div>
                             </Col>
                         }
                         {showFormLinebusiness &&
+                            <Col xs={12} md={2} lg={2}>
+                                <div>
+                                    <dt><span>% Contribución </span></dt>
+                                    <Input
+                                        name="contribution"
+                                        type="text"
+                                        min={0}
+                                        max="3"
+                                        placeholder="Contribución"
+                                        {...contribution}
+                                        value={contribution.value}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
+                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(contribution.value) ? VALUE_XSS_INVALID : null}
+                                    />
+                                </div>
+                            </Col>
+                        }
+                        {showFormLinebusiness &&
                             <Col xs={4} md={3} lg={3}>
-                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo} title="Agregar"
+                                <button className="btn btn-secondary" type="button" onClick={this.validateInfo}
                                     style={{ cursor: 'pointer', marginTop: '20px', marginRight: '15px', marginLeft: '15px' }}>
                                     Agregar
                                 </button>
-                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} title="Cancelar" onClick={this.clearValues}
+                                <button className="btn btn-primary" type="button" onClick={this.validateInfo} onClick={this.clearValues}
                                     style={{ cursor: 'pointer', marginTop: '20px', backgroundColor: "#C1C1C1" }}>
                                     Cancelar
                                 </button>
                             </Col>
                         }
-                        {
-                            _.size(listParticipation) > 0 ?
-                                <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
-                                    <table className="ui striped table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Línea de negocio</th>
-                                                <th>Participación</th>
-                                                <th>Experiencia (años)</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listParticipation.map(this._mapValuesParitipation)}
-                                        </tbody>
-                                    </table>
-                                </Col>
-                                :
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                                        <span className="form-item">No se han adicionado líneas de negocio</span>
-                                    </div>
-                                </Col>
+                        {_.size(listParticipation) > 0 ?
+                            <Col xs={12} md={12} lg={12} style={{ paddingRight: '15px', marginTop: '15px' }}>
+                                <table className="ui striped table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Línea de negocio</th>
+                                            <th>Participación</th>
+                                            <th>Experiencia (años)</th>
+                                            <th>Contribución</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listParticipation.map(this._mapValuesParitipation)}
+                                    </tbody>
+                                </table>
+                            </Col>
+                            :
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                    <span className="form-item">No se han adicionado líneas de negocio</span>
+                                </div>
+                            </Col>
                         }
                         <SweetAlert
                             type="warning"

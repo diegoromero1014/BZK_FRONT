@@ -210,7 +210,7 @@ class ModalNeed extends Component {
         let self = this;
         idEmployee.onChange(null);
         const selector = $('.ui.search.needResponsable');
-        if (e.keyCode === 13 || e.which === 13) {
+        if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined) {
                 selector.toggleClass('loading');
@@ -417,21 +417,21 @@ class ModalNeed extends Component {
                 </div>
                 <div className="modalBt4-footer modal-footer">
                     <button type="submit" className="btn btn-primary modal-button-edit" disabled={disabled} style={_.isEqual(disabled, "disabled") ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}>
-                        <span>Guardar</span>
+                        <span>Agregar</span>
                     </button>
                 </div>
                 <SweetAlert
                     type="success"
                     show={this.state.showSuccessAdd}
-                    title="Necesidad agregada"
-                    text="Señor usuario, la necesidad fue agregada exitosamente"
+                    title="Necesidad agregada exitosamente"
+                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán."
                     onConfirm={() => this._closeCreate()}
                 />
                 <SweetAlert
                     type="success"
                     show={this.state.showSuccessEdit}
-                    title="Necesidad editada"
-                    text="Señor usuario, la necesidad fue editada exitosamente"
+                    title="Necesidad editada exitosamente"
+                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán."
                     onConfirm={() => this._closeCreate()}
                 />
             </form>

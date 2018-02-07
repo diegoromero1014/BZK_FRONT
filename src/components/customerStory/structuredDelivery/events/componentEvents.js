@@ -56,7 +56,7 @@ class ComponentEvents extends Component {
                     {structuredDelivery.get('eventErrors') &&
                         <div style={{marginLeft: '10px'}}>
                             <div className="ui pointing below red basic label">
-                                Debe ingresar todos los campos
+                                {structuredDelivery.get('eventMessageErrors')} 
                             </div>
                         </div>
                     }
