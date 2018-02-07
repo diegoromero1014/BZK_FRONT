@@ -161,7 +161,7 @@ export function getDownloadPendingTask() {
       "isSuccessful": true
     },
     "messageBody": {
-
+      
     }
   };
 

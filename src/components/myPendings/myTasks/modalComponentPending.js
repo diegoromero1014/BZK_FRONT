@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { Col, Grid, Row } from "react-flexbox-grid";
 import { redirectUrl } from "../../globalComponents/actions";
 import { consultParameterServer, formValidateKeyEnter, htmlToText } from '../../../actionsGlobal';
+
 import { updateTitleNavBar } from "../../navBar/actions";
 import {
     clearMyPendingPaginator,
@@ -13,7 +14,6 @@ import {
     clearPendingTask,
     getDownloadPendingTask,
     tasksByUser,
-
     tasksTeamByUser,
     changePageTeam,
     limitiInfTeam,
@@ -21,8 +21,8 @@ import {
     clearOnlyListPendingTaskTeam,
     clearMyPendingsTeamOrder,
     clearPendingTaskTeam
-
 } from "./actions";
+
 import {
     NUMBER_RECORDS,
     MY_PENDINGS_TITLE,
@@ -30,6 +30,7 @@ import {
     ERROR_TITLE_FILTERS_TEAM,
     ERROR_TITLE_FILTERS_TEAM_MESSAGE
 } from "./constants";
+
 import ListPendingTaskComponent from "./listMyPendingComponent";
 import ListMyPendingTeamComponent from "./ListMyPendingTeamComponent";
 import PaginationPendingTask from "./paginationPendingTask";
@@ -45,10 +46,12 @@ import {
     RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
 import { validateResponse } from "../../../actionsGlobal";
+
 import Tooltip from "../../toolTip/toolTipComponent";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
+
 import { getMasterDataFields, consultList, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } from '../../selectsComponent/actions';
 import { TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE, TEAM_FOR_REGION_EMPLOYEE, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
@@ -119,6 +122,7 @@ class ModalComponentPending extends Component {
     }
 
     componentWillMount() {
+
         const { clearPendingTask, consultList, updateTitleNavBar, getMasterDataFields, showLoading, swtShowMessage, consultListWithParameter } = this.props;
         clearPendingTask();
         showLoading(true, MESSAGE_LOAD_DATA);
@@ -130,10 +134,12 @@ class ModalComponentPending extends Component {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
                 redirectUrl("/login");
             }
+
         }, (reason) => {
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
+
         updateTitleNavBar(MY_PENDINGS_TITLE);
     }
 
@@ -349,6 +355,7 @@ class ModalComponentPending extends Component {
 
     render() {
         const { fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario }, myPendingsReducer, reducerGlobal, selectsReducer, formValidateKeyEnter } = this.props;
+
         let visibleTable = 'none';
         let visibleTableTeam = 'none';
         let visibleMessage = 'block';
@@ -366,6 +373,7 @@ class ModalComponentPending extends Component {
             <div className="tab-pane quickZoomIn animated"
                 style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
                 <div style={{ padding: '10px', overflow: 'initial' }}>
+
                     <form onKeyPress={val => formValidateKeyEnter(val, true)} >
                         <Row style={{ borderBottom: "2px solid #D9DEDF" }}>
                             {this.state.teamViewTask &&
@@ -460,7 +468,6 @@ class ModalComponentPending extends Component {
 
                                     </Col>
 
-
                                 </Row>
                             }
 
@@ -548,6 +555,7 @@ class ModalComponentPending extends Component {
                     </form>
 
                 </div>
+
                 {!this.state.teamViewTask &&
                     <div>
                         <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px' }}>
