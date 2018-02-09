@@ -154,7 +154,7 @@ class ModalComponentPending extends Component {
             }
             showLoading(false, '');
         }, (reason) => {
-            console.log(reason);
+           
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -163,7 +163,6 @@ class ModalComponentPending extends Component {
     consultInfoMyPendingTeamTask() {
         const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, tasksTeamByUser, clearMyPendingTeamPaginator,
             clearOnlyListPendingTaskTeam, clearMyPendingsTeamOrder, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
-        console.log([region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value])
 
         if (!region.value && !zone.value && !team.value && !taskStatus.value && !dateTaskTeam.value && !idUsuario.value) {
             swtShowMessage(MESSAGE_ERROR, ERROR_TITLE_FILTERS_TEAM, ERROR_TITLE_FILTERS_TEAM_MESSAGE);

@@ -227,7 +227,6 @@ class FormEditPrevisita extends Component {
 
     _validateBlockOnSave() {
 
-        console.log("validando bloqueo");
 
         showLoading(true, "Cargando...");
 
@@ -235,12 +234,10 @@ class FormEditPrevisita extends Component {
 
         this._canUserEditPrevisita(myUserName).then((success) => {
 
-            console.log(success)
 
             this._submitCreatePrevisita()
             showLoading(false, "Cargando...");
         }).catch((error) => {
-            console.log(error)
             showLoading(false, "Cargando...");
         })
     }

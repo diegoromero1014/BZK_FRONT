@@ -4,31 +4,78 @@ import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
-import { NUMBER_RECORDS } from './constants';
+import { NUMBER_RECORDS, PAGE_INITIAL } from './constants';
 import { changeStateSaveData } from '../../dashboard/actions';
 import Tooltip from "../../toolTip/toolTipComponent";
 import ListLinkingRequests from './listLinkingRequests';
-import { getLinkRequests, limitInf, changePage, clearLinkRequestPaginator } from './actions';
+import { getLinkRequests, limitInf, changePage, clearLinkRequestPaginator, clearLinkRequests } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import PaginationLinkingRequests from './paginationLinkingRequests';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
-import { MODULE_CLIENTS } from '../../../constantsGlobal';
+import { MODULE_CLIENTS, MESSAGE_SAVE_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR } from '../../../constantsGlobal';
+import $ from 'jquery';
 
 class ComponentAssigned extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            keywordLinkingRequests: ''
+        };
+
+        this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+        this._findForKeyword = this._findForKeyword.bind(this);
+        this._cleanSearch = this._cleanSearch.bind(this);
+    }
+
+    _handleChangeKeyword(e) {
+        const { getLinkRequests } = this.props;
+        if (e.keyCode === 13 || e.which === 13) {
+            getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then((data) => {
+                changeStateSaveData(true, "Cargando..");
+            }, (reason) => {
+                changeStateSaveData(false, "");
+                swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+            });
+        } else {
+            this.setState({
+                keywordLinkingRequests: e.target.value,
+            });
+        }
+    }
+
+    _findForKeyword() {
+        const { getLinkRequests } = this.props;
+        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then((data) => {
+            changeStateSaveData(true, "Cargando..");
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+    }
+
+    _cleanSearch() {
+        const { getLinkRequests } = this.props;
+        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, null).then((data) => {
+            changeStateSaveData(true, "Cargando..");
+            this.setState({
+                keywordLinkingRequests: '',
+            });
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
     }
 
     componentWillMount() {
         const { updateTitleNavBar, validatePermissionsByModule } = this.props;
         updateTitleNavBar("Solicitudes de vinculación");
         validatePermissionsByModule(MODULE_CLIENTS);
-       
+
     }
 
-    componentWillUnmount(){
-        
+    componentWillUnmount() {
+
         this.props.clearLinkRequestPaginator();
     }
 
@@ -46,6 +93,34 @@ class ComponentAssigned extends Component {
         return (
             <div className="tab-pane quickZoomIn animated"
                 style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
+                <div style={{ padding: '10px', overflow: 'initial' }}>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF" }}>
+                        <Col xs={12} sm={12} md={8} lg={8}>
+                            <div className="InputAddOn">
+                                <input type="text" style={{ padding: '0px 11px !important' }}
+                                    id="searchExpression" onKeyPress={this._handleChangeKeyword}
+                                    placeholder="Búsqueda por número de documento y nombre del cliente"
+                                    value={this.state.keywordLinkingRequests}
+                                    onChange={this._handleChangeKeyword}
+                                    className="input-lg input InputAddOn-field"
+                                />
+                                <button id="searchClients" className="btn"
+                                    title="Búsqueda por número de documento y nombre del cliente"
+                                    type="button"
+                                    onClick={this._findForKeyword} style={{ backgroundColor: "#E0E2E2" }}>
+                                    <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
+                                </button>
+                            </div>
+                        </Col>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                                <i className="erase icon"
+                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
+                            </button>
+                        </Col>
+                    </Row>
+                </div>
                 <Grid style={{ display: visibleTable, width: "100%", marginBottom: '10px' }}>
                     <Row style={{ backgroundColor: 'white', marginLeft: '10px', marginRight: '10px' }}>
                         <Col style={{ width: '100%' }}>
@@ -84,7 +159,8 @@ function mapDispatchToProps(dispatch) {
         changePage,
         changeStateSaveData,
         validatePermissionsByModule,
-        clearLinkRequestPaginator
+        clearLinkRequestPaginator,
+        clearLinkRequests
     }, dispatch);
 }
 
