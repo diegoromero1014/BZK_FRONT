@@ -37,6 +37,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 
+import { xssValidation } from '../../actionsGlobal';
 
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,

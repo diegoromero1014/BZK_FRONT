@@ -17,10 +17,10 @@ import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
     TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
     ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
-    VALUE_REQUIERED,REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    VALUE_REQUIERED, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse } from '../../../actionsGlobal';
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse, xssValidation } from '../../../actionsGlobal';
 import { PROPUEST_OF_BUSINESS } from '../constants';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import Challenger from '../../methodologyChallenger/component';
@@ -66,7 +66,7 @@ var idTypeVisitAuxTwo = null;
 var contollerErrorChangeType = false;
 
 const validate = values => {
-    const errors = {};    
+    const errors = {};
     return errors;
 };
 
@@ -394,7 +394,7 @@ class FormPrevisita extends Component {
     _submitCreatePrevisita() {
         const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
         var errorInForm = false;
-        var errorMessage=  "Señor usuario, debe ingresar todos los campos obligatorios.";
+        var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
         if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -412,12 +412,12 @@ class FormPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
-            errorInForm = true;
+        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+            errorInForm = true;
             this.setState({
-            lugarPrevisitError: VALUE_XSS_INVALID            
+                lugarPrevisitError: VALUE_XSS_INVALID
             });
-            errorMessage=  REGEX_SIMPLE_XSS_MESAGE;         
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
         if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
@@ -428,17 +428,26 @@ class FormPrevisita extends Component {
 
         }
 
+
+
         if (typeButtonClick === SAVE_PUBLISHED) {
             if (_.isEmpty(htmlToText(this.state.targetPrevisit)) || this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") {
                 errorInForm = true;
                 this.setState({
                     targetPrevisitError: "Debe ingresar un valor"
                 });
+            } else if (xssValidation(this.state.targetPrevisit, true)) {
+                errorInForm = true;
+                this.setState({
+                    targetPrevisitError: VALUE_XSS_INVALID
+                });
+                errorMessage = REGEX_SIMPLE_XSS_MESAGE;
             }
         }
 
         //Validaciones de la metodología challenger y si estoy guardando como definitivo
         if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
+
             if (_.isEmpty(htmlToText(this.state.acondicionamiento)) || this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
                 errorInForm = true;
                 this.setState({
@@ -609,7 +618,7 @@ class FormPrevisita extends Component {
         } else {
             typeMessage = "error";
             titleMessage = "Campos obligatorios";
-            message =errorMessage;
+            message = errorMessage;
             this.setState({ showMessageCreatePreVisit: true });
         }
     }
