@@ -9,7 +9,7 @@ import {
     ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
-import { stringValidate } from '../../../actionsGlobal';
+import { stringValidate, xssValidation } from '../../../actionsGlobal';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -45,7 +45,7 @@ class ComponentListDistributionChannel extends Component {
             if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
                 message_error = 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.';
                 break;
-            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+            } if (_field.xss && xssValidation(_field.value)) {
                 message_error = REGEX_SIMPLE_XSS_MESAGE;
                 break;
             }
@@ -211,7 +211,7 @@ class ComponentListDistributionChannel extends Component {
                                         max="100"
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
-                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(distributionChannel.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : (xssValidation(distributionChannel.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -230,7 +230,7 @@ class ComponentListDistributionChannel extends Component {
                                         {...participation}
                                         value={participation.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -249,7 +249,7 @@ class ComponentListDistributionChannel extends Component {
                                         {...contribution}
                                         value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={eval(REGEX_SIMPLE_XSS_STRING).test(contribution.value) ? VALUE_XSS_INVALID : null}
+                                        error={xssValidation(contribution.value) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>

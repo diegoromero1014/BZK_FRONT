@@ -23,7 +23,7 @@ import {
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER
 } from '../../../../selectsComponent/constants';
 import { NUMBER_RECORDS } from '../constants';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../../../actionsGlobal';
 import * as constants from './constants';
 import { changeStateSaveData } from '../../../../dashboard/actions';
 import numeral from 'numeral';
@@ -62,14 +62,14 @@ const validate = (values) => {
 
   if (!values.numeroDocumento) {
     errors.numeroDocumento = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numeroDocumento)) {
+  } else if (xssValidation(values.numeroDocumento)) {
     errors.numeroDocumento = VALUE_XSS_INVALID;
   } else {
     errors.numeroDocumento = null;
   }
   if (!values.primerNombre && valueTypeShareholder === PERSONA_NATURAL) {
     errors.primerNombre = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.primerNombre)) {
+  } else if (xssValidation(values.primerNombre)) {
     errors.primerNombre = VALUE_XSS_INVALID;
   } else {
     errors.primerNombre = null;
@@ -77,21 +77,21 @@ const validate = (values) => {
 
   if (!values.primerApellido && valueTypeShareholder === PERSONA_NATURAL) {
     errors.primerApellido = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.primerApellido)) {
+  } else if (xssValidation(values.primerApellido)) {
     errors.primerApellido = VALUE_XSS_INVALID;
   } else {
     errors.primerApellido = null;
   }
   if (!values.razonSocial && valueTypeShareholder === PERSONA_JURIDICA) {
     errors.razonSocial = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.razonSocial)) {
+  } else if (xssValidation(values.razonSocial)) {
     errors.razonSocial = VALUE_XSS_INVALID;
   } else {
     errors.razonSocial = null;
   }
   if (!values.porcentajePart) {
     errors.porcentajePart = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.porcentajePart)) {
+  } else if (xssValidation(values.porcentajePart)) {
     errors.porcentajePart = VALUE_XSS_INVALID;
   } else {
     if (values.porcentajePart <= 0 || values.porcentajePart > 100) {
@@ -101,27 +101,27 @@ const validate = (values) => {
     }
   }
 
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.segundoNombre)) {
+  if (xssValidation(values.segundoNombre)) {
     errors.segundoNombre = VALUE_XSS_INVALID;
   } else {
     errors.segundoNombre = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.segundoApellido)) {
+  if (xssValidation(values.segundoApellido)) {
     errors.segundoApellido = VALUE_XSS_INVALID;
   } else {
     errors.segundoApellido = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.direccion)) {
+  if (xssValidation(values.direccion)) {
     errors.direccion = VALUE_XSS_INVALID;
   } else {
     errors.direccion = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numeroIdTributaria)) {
+  if (xssValidation(values.numeroIdTributaria)) {
     errors.numeroIdTributaria = VALUE_XSS_INVALID;
   } else {
     errors.numeroIdTributaria = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observaciones)) {
+  if (xssValidation(values.observaciones)) {
     errors.observaciones = VALUE_XSS_INVALID;
   } else {
     errors.observaciones = null;
@@ -201,7 +201,7 @@ class ModalComponentShareholder extends Component {
       searchShareholder, clearSearchShareholder } = this.props;
     if (tipoDocumento.value && numeroDocumento.value) {
 
-      if (eval(REGEX_SIMPLE_XSS_STRING).test(numeroDocumento.value)) {
+      if (xssValidation(numeroDocumento.value)) {
         this.setState({ showErrorXss: true });
         return;
       }

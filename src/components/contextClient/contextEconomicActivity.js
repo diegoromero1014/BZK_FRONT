@@ -7,7 +7,7 @@ import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-import { stringValidate } from '../../actionsGlobal';
+import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
 
@@ -57,7 +57,7 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value) ? VALUE_XSS_INVALID : '')}
+                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
 
                                 touched={true}
                             />

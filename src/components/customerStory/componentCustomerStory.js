@@ -107,8 +107,7 @@ class ComponentCustomerStory extends Component {
                                         data={VALUES_APROVE}
                                         value={this.state.valueAprove}
                                         error={this.state.errorAprove}
-                                        onChange={(val) => this._changeValueComboAprove(val)}
-                                        onBlur={() => console.log()}
+                                        onChange={(val) => this._changeValueComboAprove(val)}                                        
                                         touched={true}
                                     />
                                 </dt>

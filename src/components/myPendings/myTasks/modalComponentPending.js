@@ -154,7 +154,6 @@ class ModalComponentPending extends Component {
             }
             showLoading(false, '');
         }, (reason) => {
-           
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });

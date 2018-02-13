@@ -23,7 +23,7 @@ import {
   REGEX_SIMPLE_XSS_STRING
 } from '../../../../../constantsGlobal';
 import { changeStateSaveData } from '../../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
 import _ from 'lodash';
 import { redirectUrl } from '../../../../globalComponents/actions';
 import { showLoading } from '../../../../loading/actions';
@@ -49,28 +49,28 @@ const validate = values => {
   }
   if (!values.firstName && valueTypeShareholder === PERSONA_NATURAL) {
     errors.firstName = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstName)) {
+  } else if (xssValidation(values.firstName)) {
     errors.firstName = VALUE_XSS_INVALID;
   } else {
     errors.firstName = null;
   }
   if (!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL) {
     errors.firstLastName = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstLastName)) {
+  } else if (xssValidation(values.firstLastName)) {
     errors.firstLastName = VALUE_XSS_INVALID;
   } else {
     errors.firstLastName = null;
   }
   if (!values.shareHolderName && valueTypeShareholder === PERSONA_JURIDICA) {
     errors.shareHolderName = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.shareHolderName)) {
+  } else if (xssValidation(values.shareHolderName)) {
     errors.shareHolderName = VALUE_XSS_INVALID;
   } else {
     errors.shareHolderName = null;
   }
   if (!values.sharePercentage) {
     errors.sharePercentage = "Debe ingresar un valor";
-  } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.sharePercentage)) {
+  } else if (xssValidation(values.sharePercentage)) {
     errors.sharePercentage = VALUE_XSS_INVALID;
   } else {
     if (values.sharePercentage <= 0 || values.sharePercentage > 100) {
@@ -80,27 +80,27 @@ const validate = values => {
     }
   }
 
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.address)) {
+  if (xssValidation(values.address)) {
     errors.address = VALUE_XSS_INVALID;
   } else {
     errors.address = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.comment)) {
+  if (xssValidation(values.comment)) {
     errors.comment = VALUE_XSS_INVALID;
   } else {
     errors.comment = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
+  if (xssValidation(values.middleName)) {
     errors.middleName = VALUE_XSS_INVALID;
   } else {
     errors.middleName = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
+  if (xssValidation(values.secondLastName)) {
     errors.secondLastName = VALUE_XSS_INVALID;
   } else {
     errors.secondLastName = null;
   }
-  if (eval(REGEX_SIMPLE_XSS_STRING).test(values.tributaryNumber)) {
+  if (xssValidation(values.tributaryNumber)) {
     errors.tributaryNumber = VALUE_XSS_INVALID;
   } else {
     errors.tributaryNumber = null;

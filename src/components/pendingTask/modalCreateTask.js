@@ -13,7 +13,7 @@ import { getMasterDataFields } from '../selectsComponent/actions';
 import { TASK_STATUS } from '../selectsComponent/constants';
 import { createPendingTaskNew } from './createPendingTask/actions'
 import { clearUserTask, tasksByClientFindServer } from './actions';
-import { MESSAGE_SAVE_DATA, EDITAR } from '../../constantsGlobal';
+import { MESSAGE_SAVE_DATA, EDITAR, VALUE_XSS_INVALID } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
@@ -21,7 +21,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTa
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
+import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth, xssValidation } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
@@ -43,6 +43,8 @@ const validate = values => {
   }
   if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
     errors.tarea = "Debe ingresar un valor";
+  } else if (xssValidation(values.tarea, true)) {
+    errors.tarea = VALUE_XSS_INVALID;
   } else {
     errors.tarea = null;
   }
@@ -51,6 +53,13 @@ const validate = values => {
   } else {
     errors.idEstado = null;
   }
+
+  if (xssValidation(values.advance)) {
+    errors.advance = VALUE_XSS_INVALID;
+  } else {
+    errors.advance = null;
+  }
+
   return errors;
 };
 

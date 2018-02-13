@@ -47,8 +47,7 @@ class ModalObservation extends Component {
                 } else {
                     swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
                 }
-            }, (reason) => {
-                console.log("reason error _handleSaveObservation ", reason);
+            }, (reason) => {                
                 showLoading(false, '');
                 swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
             });
