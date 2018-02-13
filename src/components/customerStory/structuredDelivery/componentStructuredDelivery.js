@@ -10,7 +10,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask } from '../../../actionsGlobal';
+import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -32,32 +32,32 @@ const errors = {};
 
 const validate = (values) => {
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.corporateGobernance)) {
+    if (xssValidation(values.corporateGobernance)) {
         errors.corporateGobernance = VALUE_XSS_INVALID;
     } else {
         errors.corporateGobernance = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.reciprocity)) {
+    if (xssValidation(values.reciprocity)) {
         errors.reciprocity = VALUE_XSS_INVALID;
     } else {
         errors.reciprocity = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.specialConsiderations)) {
+    if (xssValidation(values.specialConsiderations)) {
         errors.specialConsiderations = VALUE_XSS_INVALID;
     } else {
         errors.specialConsiderations = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.businessWithAffiliates)) {
+    if (xssValidation(values.businessWithAffiliates)) {
         errors.businessWithAffiliates = VALUE_XSS_INVALID;
     } else {
         errors.businessWithAffiliates = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.mergers)) {
+    if (xssValidation(values.mergers)) {
         errors.mergers = VALUE_XSS_INVALID;
     } else {
         errors.mergers = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dificultSituations)) {
+    if (xssValidation(values.dificultSituations)) {
         errors.dificultSituations = VALUE_XSS_INVALID;
     } else {
         errors.dificultSituations = null;
@@ -89,11 +89,10 @@ class componentStructuredDelivery extends Component {
 
         let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
         let _arrValues = [corporateGobernance.value, reciprocity.value, specialConsiderations.value, businessWithAffiliates.value, mergers.value, dificultSituations.value]
-        console.log(stringValidate(_arrValues.join("")));
-
+        
         let succesValidateEmpty = stringValidate(_arrValues.join(""));
 
-        let succesValidateXss = _arrValues.filter((value) => eval(REGEX_SIMPLE_XSS_STRING).test(value)).length == 0;
+        let succesValidateXss = _arrValues.filter((value) => xssValidation(value)).length == 0;
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
 
@@ -105,7 +104,7 @@ class componentStructuredDelivery extends Component {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
                     allowSave = false;
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(event.name)) {
+                } else if (xssValidation(event.name)) {
                     updateEventErrors(true, VALUE_XSS_INVALID);
                     invalidMessage = REGEX_SIMPLE_XSS_MESAGE;
                     allowSave = false;

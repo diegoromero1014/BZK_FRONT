@@ -198,8 +198,10 @@ export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|cmd|&#|onabort|onbeforeunload|one
 
 export const REGEX_SIMPLE_XSS_STRING_TAG = "/<.*?>/g";
 export const REGEX_SIMPLE_XSS_STRING_R_W = "/cmd|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
-export const REGEX_SIMPLE_XSS_STRING_SPECIFIC = "/((<[\S\s]*(.*?([#-.]|[\[-^]|[?|{}]))\s*>)|(<meta|<xss|<style|<?[\s\S]iframe|<link|<?[\s\S]script|cmd|&#|scriptlet|error=|http-equiv|@import))/g";
+export const REGEX_SIMPLE_XSS_STRING_SPECIFIC = "/((<[\\S\\s]*(.*?([#-.]|[\\[-^]|[?|{}]))\\s*>)|(<meta|<xss|<style|<?[\\s\\S]iframe|<link|<?[\\s\\S]script|cmd|&#|scriptlet|error=|http-equiv|@import))/g";
 
+
+export const REGEX_SIMPLE_XSS_TITLE = "Información invalida";
 export const REGEX_SIMPLE_XSS_MESAGE_SHORT = "La información ingresada contiene caracteres invalidos.";
 export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada contiene caracteres peligrosos para la aplicación.";
 

@@ -23,13 +23,14 @@ import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
+import { xssValidation } from '../../../actionsGlobal';
 
 const fields = ["observationTrader"];
 const errors = {};
 
 const validate = (values) => {
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observationTrader)) {
+    if (xssValidation(values.observationTrader)) {
         errors.observationTrader = VALUE_XSS_INVALID;
     } else {
         errors.observationTrader = null;
@@ -75,8 +76,7 @@ class ButtonLinkClientComponent extends Component {
                 swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
             }
         }, (reason) => {
-            updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
-            console.log("reason consultState BlackListClient ", reason);
+            updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));            
             showLoading(false, '');
             swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
         });
@@ -110,7 +110,7 @@ class ButtonLinkClientComponent extends Component {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                         isValidLinkEntities = false;
-                    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(linkEntity.traderCode)) {
+                    } else if (xssValidation(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
                         inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
                         isValidLinkEntities = false;
@@ -136,7 +136,7 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if (eval(REGEX_SIMPLE_XSS_STRING).test(observationTrader.value)) {
+        if (xssValidation(observationTrader.value)) {
             inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
             isValidLinkEntities = false;
         }

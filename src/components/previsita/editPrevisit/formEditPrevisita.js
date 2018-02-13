@@ -27,7 +27,7 @@ import {
     REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 
 } from "../../../constantsGlobal";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
 import { PROPUEST_OF_BUSINESS } from "../constants";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport, changeOwnerDraftPrevisit } from "../actions";
@@ -179,6 +179,7 @@ class FormEditPrevisita extends Component {
             targetPrevisit: "",
             targetPrevisitError: null,
             pendingPrevisit: "",
+            pendingPrevisitError: "",
             acondicionamiento: "",
             acondicionamientoTouch: false,
             acondicionamientoError: "",
@@ -227,20 +228,14 @@ class FormEditPrevisita extends Component {
 
     _validateBlockOnSave() {
 
-        console.log("validando bloqueo");
-
         showLoading(true, "Cargando...");
 
         const myUserName = window.sessionStorage.getItem('userName')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
-
-            console.log(success)
-
             this._submitCreatePrevisita()
             showLoading(false, "Cargando...");
         }).catch((error) => {
-            console.log(error)
             showLoading(false, "Cargando...");
         })
     }
@@ -512,7 +507,8 @@ class FormEditPrevisita extends Component {
 
     _changePendingPrevisit(value) {
         this.setState({
-            pendingPrevisit: value
+            pendingPrevisit: value,
+            pendingPrevisitError: null,
         });
     }
 
@@ -624,7 +620,7 @@ class FormEditPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+        } else if (xssValidation(this.state.lugarPrevisit)) {
             errorInForm = true;
             this.setState({
                 lugarPrevisitError: VALUE_XSS_INVALID
@@ -701,6 +697,85 @@ class FormEditPrevisita extends Component {
                 nuestraSolucionError: null
             });
         }
+
+         /**
+         * Validaciones texto enriquecido
+         */
+        
+        if (xssValidation(this.state.targetPrevisit, true)) {
+            errorInForm = true;
+            this.setState({
+                targetPrevisitError: VALUE_XSS_INVALID
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        
+        if (xssValidation(this.state.pendingPrevisit, true)) {
+            errorInForm = true;
+            this.setState({
+                pendingPrevisitError: VALUE_XSS_INVALID
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.acondicionamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                acondicionamientoError: VALUE_XSS_INVALID,
+                acondicionamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.replanteamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                replanteamientoError: VALUE_XSS_INVALID,
+                replanteamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.ahogamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                ahogamientoError: VALUE_XSS_INVALID,
+                ahogamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.impacto, true)) {
+            errorInForm = true;
+            this.setState({
+                impactoError: VALUE_XSS_INVALID,
+                impactoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.nuevoModo, true)) {
+            errorInForm = true;
+            this.setState({
+                nuevoModoError: VALUE_XSS_INVALID,
+                nuevoModoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+        
+        if (xssValidation(this.state.nuestraSolucion, true)) {
+            errorInForm = true;
+            this.setState({
+                nuestraSolucionError: VALUE_XSS_INVALID,
+                nuestraSolucionTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+
+
+
         if (!errorInForm) {
             let dataBanco = [];
             _.map(participants.toArray(),
@@ -1236,7 +1311,8 @@ class FormEditPrevisita extends Component {
                             name="pendingPrevisit"
                             value={this.state.pendingPrevisit}
                             touched={true}
-                            onChange={val => this._changePendingPrevisit(val)}
+                            onChange={val => this._changePendingPrevisit(val)}                            
+                            error={this.state.pendingPrevisitError}
                             title="Ingrese pendientes, quejas y reclamos"
                             style={{ width: '100%', height: '178px' }}
                             readOnly={!this.state.isEditable}

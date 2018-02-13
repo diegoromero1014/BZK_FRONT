@@ -126,7 +126,7 @@ const validate = (values, props) => {
     if (!values.addressClient && !isExclient) {
         errors.addressClient = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.addressClient)) {
+    } else if (xssValidation(values.addressClient)) {
         errors.addressClient = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -136,7 +136,7 @@ const validate = (values, props) => {
     if (!values.telephone && !isExclient) {
         errors.telephone = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.telephone)) {
+    } else if (xssValidation(values.telephone)) {
         errors.telephone = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -167,7 +167,7 @@ const validate = (values, props) => {
     if (!values.annualSales  && !isExclient) {
         errors.annualSales = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.annualSales)) {
+    } else if (xssValidation(values.annualSales)) {
         errors.annualSales = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -178,7 +178,7 @@ const validate = (values, props) => {
     if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '')  && !isExclient) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dateSalesAnnuals)) {
+    } else if (xssValidation(values.dateSalesAnnuals)) {
         errors.dateSalesAnnuals = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -188,7 +188,7 @@ const validate = (values, props) => {
     if (!values.liabilities  && !isExclient) {
         errors.liabilities = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.liabilities)) {
+    } else if (xssValidation(values.liabilities)) {
         errors.liabilities = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -198,7 +198,7 @@ const validate = (values, props) => {
     if (!values.assets  && !isExclient) {
         errors.assets = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.assets)) {
+    } else if (xssValidation(values.assets)) {
         errors.assets = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -208,7 +208,7 @@ const validate = (values, props) => {
     if (!values.operatingIncome  && !isExclient) {
         errors.operatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.operatingIncome)) {
+    } else if (xssValidation(values.operatingIncome)) {
         errors.operatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -218,7 +218,7 @@ const validate = (values, props) => {
     if (!values.nonOperatingIncome  && !isExclient) {
         errors.nonOperatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.nonOperatingIncome)) {
+    } else if (xssValidation(values.nonOperatingIncome)) {
         errors.nonOperatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -228,7 +228,7 @@ const validate = (values, props) => {
     if (!values.expenses  && !isExclient) {
         errors.expenses = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.expenses)) {
+    } else if (xssValidation(values.expenses)) {
         errors.expenses = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {

@@ -16,8 +16,8 @@ import { addArea, editArea } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import { htmlToText } from "../../../actionsGlobal";
-import { MESSAGE_ERROR } from '../../../constantsGlobal';
+import { htmlToText, xssValidation } from "../../../actionsGlobal";
+import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
@@ -29,14 +29,20 @@ let thisForm;
 const validate = (values) => {
   if (!values.areaDes) {
     errors.areaDes = "Debe ingresar un valor";
+  } else if (xssValidation(values.areaDes)) {
+    errors.areaDes = VALUE_XSS_INVALID;
   } else {
     errors.areaDes = null;
   }
+
   if (!values.actionArea || _.isEmpty(htmlToText(values.actionArea))) {
     errors.actionArea = "Debe ingresar un valor";
+  } else if (xssValidation(values.actionArea, true)) {
+    errors.actionArea = VALUE_XSS_INVALID;
   } else {
     errors.actionArea = null;
   }
+
   if (!values.areaResponsable) {
     errors.areaResponsable = "Debe ingresar un valor";
   } else {
@@ -347,6 +353,15 @@ export default reduxForm({
   onSubmitFail: errors => {
     document.getElementById('modalComponentScrollArea').scrollTop = 0;
     const { swtShowMessage } = thisForm.props;
-    swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una área debe ingresar los campos obligatorios.");
+
+
+    let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
+
+    if (numXssValidation > 0) {
+      swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
+    } else {
+      swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una área debe ingresar los campos obligatorios.");
+    }
+
   }
 }, mapStateToProps, mapDispatchToProps)(ModalArea);

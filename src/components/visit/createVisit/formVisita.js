@@ -21,12 +21,15 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS
+  TITLE_OTHERS_PARTICIPANTS,
+  VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS_MESAGE,
+  REGEX_SIMPLE_XSS_TITLE
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import RaitingInternal from "../../clientInformation/ratingInternal";
 import { clearIdPrevisit, createVisti } from "../actions";
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
 import { downloadFilePdf } from "../../clientInformation/actions";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
@@ -130,6 +133,9 @@ class FormVisita extends Component {
     const { fields: { tipoVisita, fechaVisita, desarrolloGeneral },
       participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData } = this.props;
     var errorInForm = false;
+    let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
+    let errorMessageTitle = "Campos obligatorios";
+
     if (this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "") {
       errorInForm = true;
       this.setState({
@@ -148,6 +154,13 @@ class FormVisita extends Component {
       this.setState({
         conclusionsVisitError: "Debe ingresar la conclusión de la visita"
       });
+    } else if (xssValidation(this.state.conclusionsVisit, true)) {
+      errorInForm = true;
+      this.setState({
+        conclusionsVisitError: VALUE_XSS_INVALID
+      });
+      errorMessageTitle = REGEX_SIMPLE_XSS_TITLE;
+      errorMessage = REGEX_SIMPLE_XSS_MESAGE;
     }
 
     if (!errorInForm) {
@@ -164,9 +177,11 @@ class FormVisita extends Component {
           }
         }
       );
+
       if (dataBanco.length > 0 && dataBanco[0] === undefined) {
         dataBanco = [];
       }
+
       if (dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT) {
         var dataClient = [];
         _.map(participants.toArray(),
@@ -181,6 +196,7 @@ class FormVisita extends Component {
             }
           }
         );
+
         if (dataClient.length > 0 && dataClient[0] === undefined) {
           dataClient = [];
         }
@@ -199,6 +215,7 @@ class FormVisita extends Component {
             }
           }
         );
+
         var tareas = [];
         _.map(tasks.toArray(),
           function (task) {
@@ -216,6 +233,7 @@ class FormVisita extends Component {
         if (dataOthers.length > 0 && dataOthers[0] === undefined) {
           dataOthers = [];
         }
+
         var visitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
@@ -229,7 +247,9 @@ class FormVisita extends Component {
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
+
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
+
         createVisti(visitJson).then((data) => {
           changeStateSaveData(false, "");
           if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -262,8 +282,8 @@ class FormVisita extends Component {
       }
     } else {
       typeMessage = "error";
-      titleMessage = "Campos obligatorios";
-      message = "Señor usuario, debe ingresar todos los campos obligatorios.";
+      titleMessage =  errorMessageTitle;
+      message = errorMessage;
       this.setState({ showMessageCreateVisit: true });
     }
   }

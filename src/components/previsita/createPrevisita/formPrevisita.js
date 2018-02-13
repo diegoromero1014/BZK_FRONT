@@ -92,6 +92,7 @@ class FormPrevisita extends Component {
             targetPrevisit: "",
             targetPrevisitError: null,
             pendingPrevisit: "",
+            pendingPrevisitError: "",
             acondicionamiento: "",
             acondicionamientoTouch: false,
             acondicionamientoError: "",
@@ -306,7 +307,8 @@ class FormPrevisita extends Component {
 
     _changePendingPrevisit(value) {
         this.setState({
-            pendingPrevisit: value
+            pendingPrevisit: value,
+            pendingPrevisitError: null
         });
     }
 
@@ -412,7 +414,7 @@ class FormPrevisita extends Component {
             this.setState({
                 lugarPrevisitError: "Debe ingresar un valor"
             });
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(this.state.lugarPrevisit)) {
+        } else if (xssValidation(this.state.lugarPrevisit)) {
             errorInForm = true;
             this.setState({
                 lugarPrevisitError: VALUE_XSS_INVALID
@@ -500,6 +502,85 @@ class FormPrevisita extends Component {
                 nuestraSolucionError: null
             });
         }
+
+
+        /**
+         * Validaciones texto enriquecido
+         */
+        
+        if (xssValidation(this.state.targetPrevisit, true)) {
+            errorInForm = true;
+            this.setState({
+                targetPrevisitError: VALUE_XSS_INVALID
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        
+        if (xssValidation(this.state.pendingPrevisit, true)) {
+            errorInForm = true;
+            this.setState({
+                pendingPrevisitError: VALUE_XSS_INVALID
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.acondicionamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                acondicionamientoError: VALUE_XSS_INVALID,
+                acondicionamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.replanteamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                replanteamientoError: VALUE_XSS_INVALID,
+                replanteamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.ahogamiento, true)) {
+            errorInForm = true;
+            this.setState({
+                ahogamientoError: VALUE_XSS_INVALID,
+                ahogamientoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.impacto, true)) {
+            errorInForm = true;
+            this.setState({
+                impactoError: VALUE_XSS_INVALID,
+                impactoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+        if (xssValidation(this.state.nuevoModo, true)) {
+            errorInForm = true;
+            this.setState({
+                nuevoModoError: VALUE_XSS_INVALID,
+                nuevoModoTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+        
+        if (xssValidation(this.state.nuestraSolucion, true)) {
+            errorInForm = true;
+            this.setState({
+                nuestraSolucionError: VALUE_XSS_INVALID,
+                nuestraSolucionTouch: true
+            });
+            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+        }
+
+
+
         if (!errorInForm) {
             var dataBanco = [];
             _.map(participants.toArray(),
@@ -887,6 +968,7 @@ class FormPrevisita extends Component {
                             value={this.state.pendingPrevisit}
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
+                            error={this.state.pendingPrevisitError}
                             title="Ingrese pendientes, quejas y reclamos"
                             style={{ width: '100%', height: '178px' }}
                         />

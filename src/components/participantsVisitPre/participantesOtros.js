@@ -14,6 +14,7 @@ import {
   VALUE_REQUIERED, VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from "../../constantsGlobal";
+import { xssValidation} from "../../actionsGlobal";
 
 
 const validate = values => {
@@ -38,7 +39,7 @@ class ParticipantesOtros extends Component {
     const { fields: { nombrePersona, cargoPersona, empresaPersona }, participants, addParticipant } = this.props;
 
     if (nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined) {
-      if (eval(REGEX_SIMPLE_XSS_STRING).test(nombrePersona.value) || eval(REGEX_SIMPLE_XSS_STRING).test(cargoPersona.value)|| eval(REGEX_SIMPLE_XSS_STRING).test(empresaPersona.value)) {
+      if (xssValidation(nombrePersona.value) || xssValidation(cargoPersona.value)|| xssValidation(empresaPersona.value)) {
         this.setState({
           showInvalidCharacter: true
         });

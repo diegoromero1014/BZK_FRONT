@@ -331,12 +331,14 @@ export function clearPrevisitPermissions() {
 export function xssValidation(value, isFullValidation) {
     let hasXss = false;
 
+    let _value = String(value ? value : "").toLowerCase();
+
     if (!isFullValidation) {
-        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_TAG).test(value);
-        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(value);
+        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_TAG).test(_value);
+        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(_value);
     } else {
-        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_SPECIFIC).test(value);
-        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(value);
+        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_SPECIFIC).test(_value);
+        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(_value);
     }
 
     return hasXss;

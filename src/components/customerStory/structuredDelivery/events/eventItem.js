@@ -46,7 +46,7 @@ class EventItem extends Component {
         const arrayValues = _.remove(structuredDeliveryEvents.toArray(), (event) => event.uid !== index);
         const errosName = _.filter(arrayValues, { "name": "" });
         const errosDate = _.filter(arrayValues, { "date": "" });
-        console.log(arrayValues)
+        
         if (_.size(errosName) > 0 || _.size(errosDate) > 0) {
             updateEventErrors(true, errosName[0] ? errosName[0] : errosDate[0]);
         } else {

@@ -22,7 +22,7 @@ import {
     getMasterDataFields
 } from '../../selectsComponent/actions';
 import { createErrorsPriority, shouldHandleError } from '../../../utils';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
 import { OrderedMap } from 'immutable';
 import _ from 'lodash';
 import {
@@ -85,7 +85,7 @@ const validate = (values) => {
 
     if (!values.primerNombre) {
         errors.primerNombre = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.primerNombre)) {
+    } else if (xssValidation(values.primerNombre)) {
         errors.primerNombre = VALUE_XSS_INVALID;
     } else {
         errors.primerNombre = null;
@@ -93,7 +93,7 @@ const validate = (values) => {
 
     if (!values.primerApellido) {
         errors.primerApellido = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.primerApellido)) {
+    } else if (xssValidation(values.primerApellido)) {
         errors.primerApellido = VALUE_XSS_INVALID;
     } else {
         errors.primerApellido = null;
@@ -101,7 +101,7 @@ const validate = (values) => {
 
     if (!values.direccion || values.direccion === '') {
         errors.direccion = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.direccion)) {
+    } else if (xssValidation(values.direccion)) {
         errors.direccion = VALUE_XSS_INVALID;
     } else {
         errors.direccion = null;
@@ -109,7 +109,7 @@ const validate = (values) => {
 
     if (!values.telefono) {
         errors.telefono = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.telefono)) {
+    } else if (xssValidation(values.telefono)) {
         errors.telefono = VALUE_XSS_INVALID;
     } else {
         errors.telefono = null;
@@ -117,7 +117,7 @@ const validate = (values) => {
 
     if (!values.correo) {
         errors.correo = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.correo)) {
+    } else if (xssValidation(values.correo)) {
         errors.correo = VALUE_XSS_INVALID;
     } else {
         if (!(/\S+@\S+\.\S+/.test(values.correo))) {
@@ -165,49 +165,49 @@ const validate = (values) => {
 
     if (!values.numeroDocumento) {
         errors.numeroDocumento = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numeroDocumento)) {
+    } else if (xssValidation(values.numeroDocumento)) {
         errors.numeroDocumento = VALUE_XSS_INVALID;
     } else {
         errors.numeroDocumento = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.segundoNombre)) {
+    if (xssValidation(values.segundoNombre)) {
         errors.segundoNombre = VALUE_XSS_INVALID;
     } else {
         errors.segundoNombre = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.segundoApellido)) {
+    if (xssValidation(values.segundoApellido)) {
         errors.segundoApellido = VALUE_XSS_INVALID;
     } else {
         errors.segundoApellido = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.barrio)) {
+    if (xssValidation(values.barrio)) {
         errors.barrio = VALUE_XSS_INVALID;
     } else {
         errors.barrio = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.codigoPostal)) {
+    if (xssValidation(values.codigoPostal)) {
         errors.codigoPostal = VALUE_XSS_INVALID;
     } else {
         errors.codigoPostal = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.extension)) {
+    if (xssValidation(values.extension)) {
         errors.extension = VALUE_XSS_INVALID;
     } else {
         errors.extension = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.celular)) {
+    if (xssValidation(values.celular)) {
         errors.celular = VALUE_XSS_INVALID;
     } else {
         errors.celular = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactRelevantFeatures)) {
+    if (xssValidation(values.contactRelevantFeatures)) {
         errors.contactRelevantFeatures = VALUE_XSS_INVALID;
     } else {
         errors.contactRelevantFeatures = null;
@@ -346,7 +346,7 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
-            if (eval(REGEX_SIMPLE_XSS_STRING).test(numeroDocumento.value)) {
+            if (xssValidation(numeroDocumento.value)) {
                 this.setState({ showErrorXss: true });
                 return;
             }
