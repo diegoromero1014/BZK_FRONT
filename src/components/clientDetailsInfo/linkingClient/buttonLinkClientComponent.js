@@ -11,7 +11,7 @@ import { isEmpty, isEqual, get, isNil } from 'lodash';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { setEntities, clearEntities, saveLinkClient } from './linkEntitiesComponent/actions';
 import { updateErrorsLinkEntities } from '../../clientDetailsInfo/actions';
-import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS } from './linkEntitiesComponent/constants';
+import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
@@ -19,10 +19,12 @@ import { updateFieldInfoClient } from '../../clientInformation/actions';
 import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
+import { consultParameterServer } from "../../../actionsGlobal";
 import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
+import ToolTipComponent from '../../toolTip/toolTipComponent';
 
 const fields = ["observationTrader"];
 const errors = {};
@@ -37,6 +39,8 @@ const validate = (values) => {
 
     return errors;
 };
+
+let helpLinksMessage = "";
 
 class ButtonLinkClientComponent extends Component {
 
@@ -185,9 +189,16 @@ class ButtonLinkClientComponent extends Component {
     }
 
     componentWillMount() {
-        const { getMasterDataFields } = this.props;
+        const { getMasterDataFields, consultParameterServer } = this.props;
         getMasterDataFields([FILTER_TYPE_LBO_ID]);
         this._getListEntities();
+
+        consultParameterServer(HELP_LINK_MESSAGE).then((data) => {
+            if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
+              data.payload.data.parameter !== undefined) {
+              helpLinksMessage = JSON.parse(data.payload.data.parameter).value;
+            }
+          });
     }
 
     componentWillUnmount() {
@@ -361,9 +372,18 @@ class ButtonLinkClientComponent extends Component {
                                 }
                             </div>
                             <div className="modalBt4-footer modal-footer">
-                                <button type="button" onClick={this._handleSaveLinkingClient}
-                                    className="btn btn-primary modal-button-edit">Guardar
-                                </button>
+                                <Row >
+                                    <Col xs={9} md={9} lg={9}>   
+                                        <div style={{ textAlign: "left", fontStyle: "italic" }} >
+                                            <span>{helpLinksMessage}</span>
+                                        </div>
+                                    </Col>
+                                    <Col xs={3} md={3} lg={3}>  
+                                        <button type="button" onClick={this._handleSaveLinkingClient}
+                                            className="btn btn-primary modal-button-edit">Guardar
+                                        </button>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     </div>
@@ -385,7 +405,8 @@ function mapDispatchToProps(dispatch) {
         consultStateBlackListClient,
         showLoading,
         updateValuesBlackList,
-        consultInfoClient
+        consultInfoClient,
+        consultParameterServer
     }, dispatch);
 }
 
