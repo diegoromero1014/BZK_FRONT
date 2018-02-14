@@ -94,6 +94,8 @@ class ModalComponentPending extends Component {
         this._onChangeTaskState = this._onChangeTaskState.bind(this);
         this._changeDateTaskTeam = this._changeDateTaskTeam.bind(this);
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
+        this._loadResponsable = this._loadResponsable.bind(this);
+        this._changeResponsableInput = this._changeResponsableInput.bind(this);
         //this._updateValue = this._updateValue.bind(this);
         //this._changeDateTaskTeamOnBlur = this._changeDateTaskTeamOnBlur.bind(this);
     }
@@ -310,42 +312,66 @@ class ModalComponentPending extends Component {
         //this.consultInfoMyPendingTeamTask();
     }
 
-
-    updateKeyValueUsersBanco(e) {
+    _loadResponsable() {
         const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
         const selfThis = this;
+
+        if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+            $('.ui.search.participantBanc').toggleClass('loading');
+            filterUsersBanco(nameUsuario.value).then((data) => {
+                usersBanco = _.get(data, 'payload.data.data');
+                $('.ui.search.participantBanc')
+                    .search({
+                        cache: false,
+                        source: usersBanco,
+                        maxResults: 1500,
+                        searchFields: [
+                            'title',
+                            'description',
+                            'idUsuario',
+                            'cargo'
+                        ],
+                        onSelect: (event) => {
+                            objetoUsuario.onChange(event);
+                            nameUsuario.onChange(event.title);
+                            idUsuario.onChange(event.idUsuario);
+                            cargoUsuario.onChange(event.cargo);
+                            empresaUsuario.onChange(event.empresa);
+                            return 'default';
+                        }
+                    });
+                $('.ui.search.participantBanc').toggleClass('loading');
+                setTimeout(() => {
+                    $('#inputParticipantBanc').focus();
+                }, 150);
+            });
+        } else {
+            objetoUsuario.onChange(null);
+            nameUsuario.onChange(null);
+            idUsuario.onChange(null);
+            cargoUsuario.onChange(null);
+            empresaUsuario.onChange(null);
+        }
+    }
+
+
+    updateKeyValueUsersBanco(e) {
         if (e.keyCode === 13 || e.which === 13) {
             e.consultclick ? "" : e.preventDefault();
-            if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
-                $('.ui.search.participantBanc').toggleClass('loading');
-                filterUsersBanco(nameUsuario.value).then((data) => {
-                    usersBanco = _.get(data, 'payload.data.data');
-                    $('.ui.search.participantBanc')
-                        .search({
-                            cache: false,
-                            source: usersBanco,
-                            maxResults: 1500,
-                            searchFields: [
-                                'title',
-                                'description',
-                                'idUsuario',
-                                'cargo'
-                            ],
-                            onSelect: (event) => {
-                                objetoUsuario.onChange(event);
-                                nameUsuario.onChange(event.title);
-                                idUsuario.onChange(event.idUsuario);
-                                cargoUsuario.onChange(event.cargo);
-                                empresaUsuario.onChange(event.empresa);
-                                return 'default';
-                            }
-                        });
-                    $('.ui.search.participantBanc').toggleClass('loading');
-                    setTimeout(() => {
-                        $('#inputParticipantBanc').focus();
-                    }, 150);
-                });
-            }
+            this._loadResponsable();
+        }
+    }
+
+    _changeResponsableInput(e) {
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        nameUsuario.onChange(e);
+        
+        if (!e.currentTarget.value) {
+            objetoUsuario.onChange(null);
+            nameUsuario.onChange(null);
+            idUsuario.onChange(null);
+            cargoUsuario.onChange(null);
+            empresaUsuario.onChange(null);
         }
     }
 
@@ -438,6 +464,7 @@ class ModalComponentPending extends Component {
                                 <Row style={{ width: "60%", marginLeft: "2px" }}>
                                     <Col xs={12} sm={12} md={6} lg={6}>
                                         <DateTimePickerUi
+                                            placeholder="Fecha de cierre"
                                             {...dateTaskTeam}
                                             value={dateTaskTeam.value}
                                             culture='es'
@@ -455,11 +482,11 @@ class ModalComponentPending extends Component {
                                                     autoComplete="off"
                                                     type="text"
                                                     value={nameUsuario.value}
-                                                    onChange={nameUsuario.onChange}
-                                                    placeholder="Ingrese un criterio de búsqueda..."
+                                                    onChange={this._changeResponsableInput}
+                                                    placeholder="Responsable"
                                                     onKeyPress={this.updateKeyValueUsersBanco}
                                                 />
-                                                <i className="search icon" id="iconSearchParticipants"></i>
+                                                <i onClick={this._loadResponsable} className="search icon" id="iconSearchParticipants"></i>
                                             </div>
                                             <div className="menu results"></div>
                                         </div>
