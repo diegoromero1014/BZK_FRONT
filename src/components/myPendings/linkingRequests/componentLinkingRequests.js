@@ -29,10 +29,12 @@ class ComponentAssigned extends Component {
     }
 
     _handleChangeKeyword(e) {
-        const { getLinkRequests } = this.props;
+        const { getLinkRequests, changePage, changeStateSaveData } = this.props;
         if (e.keyCode === 13 || e.which === 13) {
+            changeStateSaveData(true, "Cargando..");
+            changePage(1);
             getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then((data) => {
-                changeStateSaveData(true, "Cargando..");
+                changeStateSaveData(false, "");
             }, (reason) => {
                 changeStateSaveData(false, "");
                 swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -45,9 +47,11 @@ class ComponentAssigned extends Component {
     }
 
     _findForKeyword() {
-        const { getLinkRequests } = this.props;
+        const { getLinkRequests, changePage, changeStateSaveData } = this.props;
+        changeStateSaveData(true, "Cargando..");
+        changePage(1);
         getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then((data) => {
-            changeStateSaveData(true, "Cargando..");
+            changeStateSaveData(false, "");
         }, (reason) => {
             changeStateSaveData(false, "");
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -56,12 +60,13 @@ class ComponentAssigned extends Component {
 
     _cleanSearch() {
         const { getLinkRequests, changePage } = this.props;
+        changeStateSaveData(true, "Cargando..");
         changePage(1);
         getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, null).then((data) => {
-            changeStateSaveData(true, "Cargando..");
             this.setState({
                 keywordLinkingRequests: '',
             });
+            changeStateSaveData(false, "");
         }, (reason) => {
             changeStateSaveData(false, "");
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
