@@ -8,10 +8,10 @@ import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import NeedBusiness from "../need/needBusiness";
 import AreaBusiness from "../area/areaBusiness";
-import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR } from "../../../constantsGlobal";
+import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
 import SweetAlert from "sweetalert-react";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
@@ -22,6 +22,8 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -146,6 +148,13 @@ class FormEdit extends Component {
                 errorInForm = true;
                 this.setState({ showErrorSaveBusiness: true });
             }
+        }
+
+        if (xssValidation(this.state.opportunities, true)) {
+            errorInForm = true;
+            this.setState({
+                opportunitiesError: VALUE_XSS_INVALID
+            });
         }
 
         if (!errorInForm) {

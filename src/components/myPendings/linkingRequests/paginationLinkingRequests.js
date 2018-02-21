@@ -12,10 +12,10 @@ class PaginationLinkingRequests extends Component {
     this._handleFind = this._handleFind.bind(this);
   }
 
-  _handleFind(limInf) {
+  _handleFind(limInf, keywordLinkingRequests) {
     const { getLinkRequests, changeStateSaveData, swtShowMessage } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
-    getLinkRequests(limInf, NUMBER_RECORDS).then((data) => {
+    getLinkRequests(limInf, NUMBER_RECORDS, keywordLinkingRequests).then((data) => {
       changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -27,11 +27,11 @@ class PaginationLinkingRequests extends Component {
   }
 
   _handlePaginar(page) {
-    const { changePage, limitInf } = this.props;
+    const { changePage, limitInf, keywordLinkingRequests } = this.props;
     var limInf = (page - 1);
     limitInf(limInf);
     changePage(page);
-    this._handleFind(limInf);
+    this._handleFind(limInf, keywordLinkingRequests);
   }
 
   render() {

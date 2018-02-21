@@ -64,7 +64,7 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate } from "../../actionsGlobal";
+import { validateResponse, stringValidate, xssValidation } from "../../actionsGlobal";
 
 let idButton;
 let errorContact;
@@ -142,7 +142,7 @@ const validate = (values, props) => {
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.razonSocial)) {
+    } else if (xssValidation(values.razonSocial)) {
         errors.razonSocial = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -159,7 +159,7 @@ const validate = (values, props) => {
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.idNumber)) {
+    } else if (xssValidation(values.idNumber)) {
         errors.idNumber = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -182,7 +182,7 @@ const validate = (values, props) => {
     if (!values.addressClient && idButton !== BUTTON_EDIT) {
         errors.addressClient = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.addressClient)) {
+    } else if (xssValidation(values.addressClient)) {
         errors.addressClient = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -192,7 +192,7 @@ const validate = (values, props) => {
     if (!values.telephone && idButton !== BUTTON_EDIT) {
         errors.telephone = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.telephone)) {
+    } else if (xssValidation(values.telephone)) {
         errors.telephone = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -202,7 +202,7 @@ const validate = (values, props) => {
     if (!values.annualSales && idButton !== BUTTON_EDIT) {
         errors.annualSales = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.annualSales)) {
+    } else if (xssValidation(values.annualSales)) {
         errors.annualSales = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -233,7 +233,7 @@ const validate = (values, props) => {
     if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && idButton !== BUTTON_EDIT ) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dateSalesAnnuals)) {
+    } else if (xssValidation(values.dateSalesAnnuals)) {
         errors.dateSalesAnnuals = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -243,7 +243,7 @@ const validate = (values, props) => {
     if (!values.liabilities && idButton !== BUTTON_EDIT) {
         errors.liabilities = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.liabilities)) {
+    } else if (xssValidation(values.liabilities)) {
         errors.liabilities = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -253,7 +253,7 @@ const validate = (values, props) => {
     if (!values.assets && idButton !== BUTTON_EDIT) {
         errors.assets = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.assets)) {
+    } else if (xssValidation(values.assets)) {
         errors.assets = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -263,7 +263,7 @@ const validate = (values, props) => {
     if (!values.operatingIncome && idButton !== BUTTON_EDIT) {
         errors.operatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.operatingIncome)) {
+    } else if (xssValidation(values.operatingIncome)) {
         errors.operatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -273,7 +273,7 @@ const validate = (values, props) => {
     if (!values.nonOperatingIncome && idButton !== BUTTON_EDIT) {
         errors.nonOperatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.nonOperatingIncome)) {
+    } else if (xssValidation(values.nonOperatingIncome)) {
         errors.nonOperatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -283,7 +283,7 @@ const validate = (values, props) => {
     if (!values.expenses && idButton !== BUTTON_EDIT) {
         errors.expenses = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.expenses)) {
+    } else if (xssValidation(values.expenses)) {
         errors.expenses = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -342,7 +342,7 @@ const validate = (values, props) => {
         if ((values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') && idButton !== BUTTON_EDIT) {
             errors.otherOriginGoods = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginGoods)) {
+        } else if (xssValidation(values.otherOriginGoods)) {
             errors.otherOriginGoods = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -353,7 +353,7 @@ const validate = (values, props) => {
         if ((values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') && idButton !== BUTTON_EDIT) {
             errors.otherOriginResource = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginResource)) {
+        } else if (xssValidation(values.otherOriginResource)) {
             errors.otherOriginResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -364,7 +364,7 @@ const validate = (values, props) => {
         if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOperationsForeign)) {
+        } else if (xssValidation(values.otherOperationsForeign)) {
             errors.otherOperationsForeign = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -374,7 +374,7 @@ const validate = (values, props) => {
 
     //Valido que el cliente tenga ciudad de origen de los recursos
     if (values.originCityResource) {
-        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+        if (xssValidation(values.originCityResource)) {
             errors.originCityResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -383,7 +383,7 @@ const validate = (values, props) => {
     }
 
     if (values.detailNonOperatingIncome) {
-        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+        if (xssValidation(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
         }else{
@@ -411,7 +411,7 @@ const validate = (values, props) => {
                 if ((values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
                     errors.detailNonOperatingIncome = OPTION_REQUIRED;
                     errorScrollTop = true;
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+                } else if (xssValidation(values.detailNonOperatingIncome)) {
                     errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
                     errorScrollTop = true;
                 } else {
@@ -448,7 +448,7 @@ const validate = (values, props) => {
         if ((values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') && idButton !== BUTTON_EDIT) {
             errors.originCityResource = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+        } else if (xssValidation(values.originCityResource)) {
             errors.originCityResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -507,28 +507,28 @@ const validate = (values, props) => {
 
 
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.description)) {
+    if (xssValidation(values.description)) {
         errors.description = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.description = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.neighborhood)) {
+    if (xssValidation(values.neighborhood)) {
         errors.neighborhood = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.neighborhood = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
+    if (xssValidation(values.contextClientField)) {
         errors.contextClientField = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.contextClientField = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
+    if (xssValidation(values.inventoryPolicy)) {
         errors.inventoryPolicy = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {

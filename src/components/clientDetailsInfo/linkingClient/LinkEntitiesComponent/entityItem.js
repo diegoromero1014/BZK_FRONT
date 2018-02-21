@@ -72,8 +72,7 @@ class EntityItem extends Component {
                                 defaultValue={this.state.entity}
                                 onChange={(val, text) => {
                                     return this._updateValue('entity', val, text);
-                                }}
-                                onBlur={() => console.log.bind(console)}
+                                }}                                
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={data}

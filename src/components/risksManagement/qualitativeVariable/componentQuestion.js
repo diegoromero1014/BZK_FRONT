@@ -58,8 +58,7 @@ class ComponentQuestion extends Component {
                         labelInput="Seleccione una respuesta"
                         disabled={qualitativeVariableReducer.get('fieldsEditable') ? '' : 'disabled'}
                         defaultValue={this.state.valueAnswer}
-                        value={this.state.valueAnswer}
-                        onBlur={() => console.log()}
+                        value={this.state.valueAnswer}                        
                         valueProp={'id'}
                         textProp={'answerOption'}
                         onChange={(id) => this._onChangeAnswer(id)}

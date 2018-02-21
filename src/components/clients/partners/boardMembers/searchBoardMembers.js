@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { changeKeyword, getBoardMembers, clearFilters } from './actions';
 import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import { changeStateSaveData } from '../../../dashboard/actions';
-import { validateResponse } from '../../../../actionsGlobal';
+import { validateResponse, xssValidation } from '../../../../actionsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { MESSAGE_LOAD_DATA, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, VALUE_XSS_INVALID } from '../../../../constantsGlobal';
 
@@ -33,7 +33,7 @@ class SearchBoardMembers extends Component {
     const { boardMembersReducer, getBoardMembers, clearFilters, changeStateSaveData, swtShowMessage } = this.props;
     var keyword = boardMembersReducer.get('keywordBoardMembers');
 
-    if (!eval(REGEX_SIMPLE_XSS_STRING).test(keyword)) {
+    if (!xssValidation(keyword)) {
       this.setState({
         errorKeyword: null
       });

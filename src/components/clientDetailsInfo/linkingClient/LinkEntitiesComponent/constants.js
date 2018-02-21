@@ -10,5 +10,6 @@ export const ENTITY_BANCOLOMBIA = "Bancolombia";
 export const ENTITY_VALORES_BANCOLOMBIA = "Valores bancolombia";
 export const SAVE_LINK_CLIENT = "SAVE_LINK_CLIENT";
 export const START_STATUS = "Iniciada";
+export const HELP_LINK_MESSAGE = "HELP_LINKS";
 
 

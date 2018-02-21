@@ -13,7 +13,7 @@ import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
 import { APP_URL, 
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
-import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
+import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
 
@@ -48,7 +48,7 @@ class ParticipantesBancolombia extends Component {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
-      if (eval(REGEX_SIMPLE_XSS_STRING).test(nameUsuario.value)) {
+      if (xssValidation(nameUsuario.value)) {
         this.setState({
           showInvalidCharacter: true
         });
