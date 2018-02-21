@@ -323,7 +323,6 @@ class Sheduler extends Component {
                                             placeholder="Creador"
                                             onKeyPress={this.updateKeyValueUsersBanco}
                                             onSelect={val => this._updateValue(val)}
-                                            className="input-lg input InputAddOn-field"
                                         />
                                         <i className="search icon" id="iconSearchParticipants"></i>
                                     </div>
