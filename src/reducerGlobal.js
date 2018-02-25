@@ -64,7 +64,9 @@ export default (state = initialState, action) => {
             return state.set('permissionsBoardMembers', permissionsBoardMembers);
         case constants.MODULE_COVENANTS:
             const permissionsCovenants = action.payload.data.data.permissions;
-            return state.set('permissionsCovenants', permissionsCovenants);   
+            return state.set('permissionsCovenants', permissionsCovenants);
+        case constants.BLOCK_REPORT_CONSTANT:
+            return state;   
         default:
             return state;
     }

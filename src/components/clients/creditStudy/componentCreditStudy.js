@@ -23,11 +23,12 @@ import {
     getContextClient, saveCreditStudy, validateInfoCreditStudy,
     updateNotApplyCreditContact
 } from './actions';
-import { validateResponse, stringValidate } from '../../../actionsGlobal';
+import { validateResponse, stringValidate, getUserBlockingReport } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT, 
+    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -56,6 +57,21 @@ var messageContact = 'La información de los contactos es válida, ';
 var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection, numberOfBoardMembers;
 var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
+
+
+const containerButtons = {
+    
+    position: "fixed",
+    border: "1px solid #C2C2C2",
+    bottom: "0px",
+    width: "100%",
+    marginBottom: "0px",
+    backgroundColor: "#F8F8F8",
+    height: "50px",
+    background: "rgba(255,255,255,0.75)"
+};
+
+const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
 
 const validate = (values, props) => {
     const errors = {}
@@ -97,6 +113,9 @@ class ComponentStudyCredit extends Component {
         this._handleChangeValueIntOperations = this._handleChangeValueIntOperations.bind(this);
         this._handleChangeValueNotApplyCreditContact = this._handleChangeValueNotApplyCreditContact.bind(this);
         this._validateInformationToSave = this._validateInformationToSave.bind(this);
+        this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
+        this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+
         this.state = {
             showConfirmExit: false,
             showSuccessMessage: false,
@@ -121,7 +140,12 @@ class ComponentStudyCredit extends Component {
             valueCheckNotApplyCreditContact: false,
             fieldContextRequired: false,
             customerTypology: false,
-            controlLinkedPaymentsRequired: true
+            controlLinkedPaymentsRequired: true,
+
+            isEditable: false,
+            showErrorBlockedPreVisit: false,
+            intervalId: null
+
         }
     }
 
@@ -231,7 +255,7 @@ class ComponentStudyCredit extends Component {
         redirectUrl("/dashboard/clientInformation");
     }
 
-    _createJsonSaveContextClient() {
+    _createJsonSaveContextClient(isDraft) {
         const { fields: { contextClientField, inventoryPolicy, customerTypology,
             controlLinkedPayments }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -297,7 +321,9 @@ class ComponentStudyCredit extends Component {
                 noAppliedMainSuppliers,
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
-                noAppliedControlLinkedPayments
+                noAppliedControlLinkedPayments,
+                
+                isDraft
             };
         } else {
             contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
@@ -317,6 +343,9 @@ class ComponentStudyCredit extends Component {
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
             contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
+
+            contextClient.isDraft = isDraft;
+
             return contextClient;
         }
     }
@@ -446,11 +475,22 @@ class ComponentStudyCredit extends Component {
         return allowSave;
     }
 
-    _submitSaveContextClient() {
-        if (this._validateInformationToSave()) {
+    _submitSaveContextClient(tipoGuardado) {
+
+        let isAvance;
+
+        if( typeof tipoGuardado == 'undefined') {
+            isAvance = false;
+        }else if(tipoGuardado == "Avance") {
+            isAvance = true;
+        }else {
+            isAvance = false;
+        }
+
+        if (isAvance || this._validateInformationToSave()) {
             const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
-            saveCreditStudy(this._createJsonSaveContextClient()).then((data) => {
+            saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
                 changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -487,11 +527,74 @@ class ComponentStudyCredit extends Component {
         });
     }
 
+
+    canUserEditBlockedReport(myUserName) {
+
+        const { getUserBlockingReport, swtShowMessage } = this.props;
+
+        return getUserBlockingReport(null).then((success) => {
+
+            let username = success.payload.data.data.username
+
+            let name = success.payload.data.data.name
+
+            if (_.isNull(username)) {
+                // Error servidor
+                swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+
+                return Promise.reject(new Error('Error interno del servidor'))
+
+            } else if (username.toUpperCase() === myUserName.toUpperCase()) {
+                // Usuario pidiendo permiso es el mismo que esta bloqueando
+                if (!this.state.isEditable) {
+                    // Tengo permiso de editar y no estoy editando
+
+                    this.setState({
+                        showErrorBlockedPreVisit: false,
+                        showMessage: false,
+                        isEditable: !this.state.isEditable,
+                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                    })
+
+                }
+
+            } else {
+                // El reporte esta siendo editado por otra persona
+                if (this.state.isEditable) {
+                    // Estoy editando pero no tengo permisos
+                    // Salir de edicion y detener intervalo
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+                    clearInterval(this.state.intervalId);
+                } else {
+                    // Mostar mensaje de el usuario que tiene bloqueado el informe
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
+                }
+
+                return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
+            }
+
+            return success
+        })
+
+    }
+
+    _closeShowErrorBlockedPrevisit() {
+        this.setState({ showErrorBlockedPreVisit: false })
+        redirectUrl("/dashboard/clientInformation")
+    }
+
+
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy } = this.props;
+            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
+        
+        let logUser = window.sessionStorage.getItem('userName');
+
+
+        this.canUserEditBlockedReport(logUser);
+        
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
         } else {
@@ -750,27 +853,30 @@ class ComponentStudyCredit extends Component {
                         <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
-                <div style={{
-                    marginTop: "50px", position: "fixed",
-                    border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
-                    backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
-                }}>
-                    <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
-                        <button className="btn"
-                            style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                            type="submit">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
-                        </button>
-                        <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 240px",
-                            position: "fixed",
-                            backgroundColor: "#C1C1C1"
-                        }} type="button">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                        </button>
+                <div className="" style={containerButtons}>
+                        <div style={{
+                            right: '0px',
+                            position: 'fixed',
+                            paddingRight: '15px'
+                        }}>
+                            <Row style={{ paddingTop: '8px' }}>
+
+
+                                    <Col style={paddingButtons} onClick={ () => this._submitSaveContextClient("Avance") } >
+                                        <button className="btn" type="button" style={ { backgroundColor: "#00B5AD" } } ><span >Guardar Avance</span></button>
+                                    </Col>
+
+                                    <Col style={paddingButtons}   >
+                                        <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
+                                    </Col>
+                                
+                                    <Col style={paddingButtons} onClick={this._closeWindow} >
+                                        <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
+                                    </Col>
+                                
+                            </Row>
+                        </div>
                     </div>
-                </div>
                 <SweetAlert
                     type="success"
                     show={this.state.showSuccessMessage}
@@ -789,6 +895,17 @@ class ComponentStudyCredit extends Component {
                     showCancelButton={true}
                     onCancel={() => this.setState({ showConfirmExit: false })}
                     onConfirm={() => this._onConfirmExit()} />
+
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorBlockedPreVisit}
+                    title="Error al editar el estudio de credito"
+                    text={"Señor usuario, en este momento el estudio de credito esta siendo editado por " + this.state.userEditingPrevisita
+                        + ". Por favor intentar mas tarde"}
+                    onConfirm={this._closeShowErrorBlockedPrevisit}
+
+                />
+
             </form>
         )
     }
@@ -804,7 +921,8 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         saveCreditStudy,
         validateInfoCreditStudy,
-        updateNotApplyCreditContact
+        updateNotApplyCreditContact,
+        getUserBlockingReport
     }, dispatch);
 }
 

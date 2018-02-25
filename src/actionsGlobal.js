@@ -327,3 +327,35 @@ export function clearPrevisitPermissions(){
     }
 
 }
+
+export function getUserBlockingReport(idEntity, type) {
+    const json = {
+      "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+    
+      "messageBody": {
+        "client_id": window.localStorage.getItem('idClientSelected'),
+        "username": window.sessionStorage.getItem('userName'),
+        "report_id": idEntity,
+        "report_type": type
+      }
+        
+    }
+  
+    let request = axios.post(constants.APP_URL+'/getUserBlockingReport', json);
+    
+    return{
+        type: constants.BLOCK_REPORT_CONSTANT,
+        payload: request
+    };
+  } 
