@@ -481,11 +481,12 @@ class ComponentStudyCredit extends Component {
 
         const { getUserBlockingReport, swtShowMessage } = this.props;
 
-        let idClient = window.localStorage.getItem('idClientSelected');
-
+        
         showLoading(true, "Cargando...");
 
-        this.canUserEditBlockedReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+        let username = window.sessionStorage.getItem('userName');
+
+        this.canUserEditBlockedReport(username).then((success) => {
 
             showLoading(false, "Cargando...");
 
