@@ -206,12 +206,24 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
  /**
   * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
   */
-export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
-export const NAME_REPORT_PREVISIT = "PreVisita";
-export const BLOCK_CREDIT_STUDY = "CreditStudy";
 
+ /**
+  * ACCIONES
+  */
+    export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
+    export const STOP_BLOCK_REPORT = "STOP_BLOCK_REPORT";
 
-export const TIME_REQUEST_BLOCK_REPORT = 20000;
+ /**
+  * TIPOS DE DOCUMENTOS BLOQUEADOS
+  */
+
+    export const NAME_REPORT_PREVISIT = "PreVisita";
+    export const BLOCK_CREDIT_STUDY = "CreditStudy";
+
+ /**
+  * PARAMETROS BLOQUEO
+  */
+    export const TIME_REQUEST_BLOCK_REPORT = 20000;
 
 
 /**

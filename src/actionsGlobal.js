@@ -328,7 +328,7 @@ export function clearPrevisitPermissions(){
 
 }
 
-export function getUserBlockingReport(idEntity, type) {
+export function getUserBlockingReport(idEntity, reportType) {
     const json = {
       "messageHeader": {
         "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -347,7 +347,7 @@ export function getUserBlockingReport(idEntity, type) {
         "client_id": window.localStorage.getItem('idClientSelected'),
         "username": window.sessionStorage.getItem('userName'),
         "report_id": idEntity,
-        "report_type": type
+        "report_type": reportType
       }
         
     }
@@ -359,3 +359,37 @@ export function getUserBlockingReport(idEntity, type) {
         payload: request
     };
   } 
+
+  export function stopBlockToReport (idEntity, reportType) {
+
+    const json = {
+      "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+      },
+    
+      "messageBody": {
+        "client_id": window.localStorage.getItem('idClientSelected'),
+        "username": window.sessionStorage.getItem('userName'),
+        "report_id": idEntity,
+        "report_type": reportType
+      }
+        
+    }
+  
+    let request = axios.post(constants.APP_URL+'/deleteBlockedReport', json);
+  
+    return {
+      type: constants.STOP_BLOCK_REPORT,
+      payload: request
+    };
+  
+  }

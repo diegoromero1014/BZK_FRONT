@@ -23,7 +23,7 @@ import {
     getContextClient, saveCreditStudy, validateInfoCreditStudy,
     updateNotApplyCreditContact
 } from './actions';
-import { validateResponse, stringValidate, getUserBlockingReport } from '../../../actionsGlobal';
+import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
@@ -477,33 +477,48 @@ class ComponentStudyCredit extends Component {
 
     _submitSaveContextClient(tipoGuardado) {
 
-        let isAvance;
+        const { getUserBlockingReport, swtShowMessage } = this.props;
 
-        if( typeof tipoGuardado == 'undefined') {
-            isAvance = false;
-        }else if(tipoGuardado == "Avance") {
-            isAvance = true;
-        }else {
-            isAvance = false;
-        }
+        let idClient = window.localStorage.getItem('idClientSelected');
 
-        if (isAvance || this._validateInformationToSave()) {
-            const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
-            changeStateSaveData(true, MESSAGE_LOAD_DATA);
-            saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
-                changeStateSaveData(false, "");
-                if (!validateResponse(data)) {
+        showLoading(true, "Cargando...");
+
+        this.canUserEditBlockedReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+
+            showLoading(false, "Cargando...");
+
+            let isAvance;
+
+            if( typeof tipoGuardado == 'undefined') {
+                isAvance = false;
+            }else if(tipoGuardado == "Avance") {
+                isAvance = true;
+            }else {
+                isAvance = false;
+            }
+
+            if (isAvance || this._validateInformationToSave()) {
+                const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
+                changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
+                    changeStateSaveData(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    } else {
+                        this.setState({
+                            showSuccessMessage: true
+                        });
+                    }
+                }, (reason) => {
+                    changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                } else {
-                    this.setState({
-                        showSuccessMessage: true
-                    });
-                }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            });
-        }
+                });
+            }
+
+        }).catch((error) => {
+            showLoading(false, "Cargando...");
+        })
+
     }
 
     _closeMessageSuccess() {
@@ -532,7 +547,13 @@ class ComponentStudyCredit extends Component {
 
         const { getUserBlockingReport, swtShowMessage } = this.props;
 
-        return getUserBlockingReport(null).then((success) => {
+        let idClient = window.localStorage.getItem('idClientSelected');
+
+        // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
+
+        console.log("getUserBlockingReport");
+
+        return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
             let username = success.payload.data.data.username
 
@@ -549,11 +570,13 @@ class ComponentStudyCredit extends Component {
                 if (!this.state.isEditable) {
                     // Tengo permiso de editar y no estoy editando
 
+                    console.log("Set interval");
+
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
                         isEditable: !this.state.isEditable,
-                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                        intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
 
                 }
@@ -581,6 +604,23 @@ class ComponentStudyCredit extends Component {
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
         redirectUrl("/dashboard/clientInformation")
+    }
+
+    componentWillUnmount() {
+
+        const { stopBlockToReport, id } = this.props;
+
+        let idClient = window.localStorage.getItem('idClientSelected');
+
+        // Detener envio de peticiones para bloquear el informe
+        clearInterval(this.state.intervalId)
+        // Informar al backend que el informe se puede liberar
+        stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+
+        }).catch((error) => {
+
+        })
+
     }
 
 
@@ -922,7 +962,8 @@ function mapDispatchToProps(dispatch) {
         saveCreditStudy,
         validateInfoCreditStudy,
         updateNotApplyCreditContact,
-        getUserBlockingReport
+        getUserBlockingReport,
+        stopBlockToReport
     }, dispatch);
 }
 
