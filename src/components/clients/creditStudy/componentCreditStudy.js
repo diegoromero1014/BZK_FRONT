@@ -23,7 +23,7 @@ import {
     getContextClient, saveCreditStudy, validateInfoCreditStudy,
     updateNotApplyCreditContact
 } from './actions';
-import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport } from '../../../actionsGlobal';
+import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
@@ -77,14 +77,14 @@ const validate = (values, props) => {
     const errors = {}
     let errorScrollTop = false;
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
+    if (xssValidation(values.contextClientField)) {
         errors.contextClientField = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.contextClientField = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
+    if (xssValidation(values.inventoryPolicy)) {
         errors.inventoryPolicy = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -444,11 +444,11 @@ class ComponentStudyCredit extends Component {
                             this.setState({
                                 fieldContextRequired: true
                             });
-                        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(contextClientField.value)) {
+                        } else if (xssValidation(contextClientField.value)) {
                             allowSave = false;
                         }
 
-                        if (eval(REGEX_SIMPLE_XSS_STRING).test(inventoryPolicy.value)) {
+                        if (xssValidation(inventoryPolicy.value)) {
                             allowSave = false;
                         }
 

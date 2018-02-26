@@ -1,4 +1,4 @@
-export const VERSION_DATE = "07/02/2018";
+export const VERSION_DATE = "19/02/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -190,13 +190,21 @@ export const valuesYesNo = [
 /**
  * INICIO REGEX XSS
  */
-export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<?[\s\S]iframe|<?[\s\S]link|<?[\s\S]script|cmd|scriptlet|error=|http-equiv|@import)/g;
+export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<iframe|<link|<script|(=.*cmd)|scriptlet|error=|http-equiv|@import)/g;
 export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g; 
 export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
 // export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
-export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|cmd|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+
+export const REGEX_SIMPLE_XSS_STRING_TAG = "/<.*?>/g";
+export const REGEX_SIMPLE_XSS_STRING_R_W = "/(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING_SPECIFIC = "/((<[\\S\\s]*(.*?([#-.]|[\\[-^]|[?|{}]))\\s*>)|(<meta|<xss|<style|<iframe|<link|<script|scriptlet|error=|http-equiv|@import))/g";
+
+
+export const REGEX_SIMPLE_XSS_TITLE = "Información invalida";
 export const REGEX_SIMPLE_XSS_MESAGE_SHORT = "La información ingresada contiene caracteres invalidos.";
 export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada contiene caracteres peligrosos para la aplicación.";
+
 
 /**
  * FIN REGEX XSS

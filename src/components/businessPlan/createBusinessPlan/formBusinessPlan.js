@@ -11,11 +11,11 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { consultDataSelect, consultList, getMasterDataFields } from '../../selectsComponent/actions';
 import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
-import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT } from '../../../constantsGlobal';
+import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID } from '../../../constantsGlobal';
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import SweetAlert from 'sweetalert-react';
 import { OBJECTIVE_BUSINESS } from '../constants';
-import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse } from '../../../actionsGlobal';
+import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { createBusiness, validateRangeDates } from '../actions';
@@ -83,18 +83,21 @@ class FormBusinessPlan extends Component {
     _submitCreateBusiness() {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
         var errorInForm = false;
+
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
             errorInForm = true;
             this.setState({
                 initialDateError: "Debe seleccionar una fecha"
             });
         }
+
         if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
             });
         }
+
         if (typeButtonClick === SAVE_PUBLISHED) {
             var needsBusiness = [];
             if (this.state.dateBusiness === null || this.state.dateBusiness === undefined || this.state.dateBusiness === "") {
@@ -115,11 +118,19 @@ class FormBusinessPlan extends Component {
                     opportunitiesError: "Debe ingresar un valor"
                 });
             }
+
             needsBusiness = needs.toArray();
             if (needsBusiness.length === 0) {
                 errorInForm = true;
                 this.setState({ showErrorSaveBusiness: true });
             }
+        }
+
+        if (xssValidation(this.state.opportunities, true)) {
+            errorInForm = true;
+            this.setState({
+                opportunitiesError: VALUE_XSS_INVALID
+            });
         }
 
         if (!errorInForm) {

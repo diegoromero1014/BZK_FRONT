@@ -92,6 +92,7 @@ class Sheduler extends Component {
     }
 
     closeModal() {
+        this._handlePrevisitsFind();
         this.setState({ modalIsOpen: false });
     }
 

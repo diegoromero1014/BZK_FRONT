@@ -20,6 +20,7 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
+import { xssValidation } from "../../../actionsGlobal";
 
 class NoteItem extends Component {
     constructor(props) {
@@ -51,7 +52,7 @@ class NoteItem extends Component {
             notesArray.forEach(function (note) {
                 if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
                     updateErrorsNotes(true, "Debe ingresar todos los campos");
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(note.note)) {
+                } else if (xssValidation(note.note)) {
                     updateErrorsNotes(true, VALUE_XSS_INVALID);
                 }
             });
@@ -79,7 +80,7 @@ class NoteItem extends Component {
         
             if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
                 updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (eval(REGEX_SIMPLE_XSS_STRING).test(body)) {
+            } else if (xssValidation(body)) {
                 updateErrorsNotes(true, VALUE_XSS_INVALID);
             }
         
@@ -106,7 +107,6 @@ class NoteItem extends Component {
                                 value={this.state.combo}
                                 defaultValue={this.state.combo}
                                 onChange={val => this.updateValue('combo', val)}
-                                onBlur={() => console.log.bind(console)}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={data}
@@ -121,8 +121,7 @@ class NoteItem extends Component {
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
                                 value={this.state.body}
                                 max={600}
-                                onChange={this.updateValue.bind(this, 'body')}
-                                onBlur={() => console.log}
+                                onChange={this.updateValue.bind(this, 'body')}                                
                             />
                         </div>
                     </Col>

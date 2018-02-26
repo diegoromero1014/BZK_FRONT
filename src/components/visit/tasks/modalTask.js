@@ -1,18 +1,19 @@
 import moment from "moment";
-import {reduxForm} from "redux-form";
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
+import { reduxForm } from "redux-form";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
 import SweetAlert from "sweetalert-react";
-import {Col, Row} from "react-flexbox-grid";
+import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
-import {addTask, editTask} from "./actions";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import { addTask, editTask } from "./actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import {htmlToText} from "../../../actionsGlobal";
+import { htmlToText, xssValidation } from "../../../actionsGlobal";
+import { VALUE_XSS_INVALID } from "../../../constantsGlobal";
 
 const fields = ["idEmployee", "responsable", "fecha", "tarea", "id"];
 const errors = {};
@@ -32,9 +33,13 @@ const validate = (values) => {
     }
     if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
         errors.tarea = "Debe ingresar un valor";
+    } else if (xssValidation(values.tarea, true)) {
+        errors.tarea = VALUE_XSS_INVALID;
     } else {
         errors.tarea = null;
     }
+
+
     return errors;
 };
 
@@ -58,7 +63,7 @@ class ModalTask extends Component {
     }
 
     componentDidMount() {
-        const {fields: {idEmployee, responsable, fecha, tarea, id}, taskEdit} = this.props;
+        const { fields: { idEmployee, responsable, fecha, tarea, id }, taskEdit } = this.props;
         if (taskEdit !== undefined) {
             id.onChange(taskEdit.id);
             idEmployee.onChange(taskEdit.idResponsable);
@@ -72,7 +77,7 @@ class ModalTask extends Component {
     }
 
     _closeCreate() {
-        const {isOpen, taskEdit} = this.props;
+        const { isOpen, taskEdit } = this.props;
         if (taskEdit !== undefined) {
             this.setState({
                 showSuccessEdit: false
@@ -87,7 +92,7 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const {fields: {responsable, idEmployee}, filterUsersBanco} = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
         const selector = $('.ui.search.responsable');
         idEmployee.onChange(null);
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -119,13 +124,13 @@ class ModalTask extends Component {
     }
 
     _updateValue(value) {
-        const {fields: {responsable}, contactsByClient} = this.props;
+        const { fields: { responsable }, contactsByClient } = this.props;
         responsable.onChange(value);
     }
 
 
     _handleCreateTask() {
-        const {fields: {responsable, fecha, tarea, idEmployee, id}, handleSubmit, error, addTask, editTask, taskEdit} = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit } = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
@@ -166,22 +171,22 @@ class ModalTask extends Component {
     }
 
     render() {
-        const {modalStatus, selectsReducer} = this.props;
-        const {initialValues, fields: {responsable, fecha, tarea}, handleSubmit, error} = this.props;
+        const { modalStatus, selectsReducer } = this.props;
+        const { initialValues, fields: { responsable, fecha, tarea }, handleSubmit, error } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     id="modalComponentScroll"
-                     style={{paddingBottom: "0px"}}>
+                    id="modalComponentScroll"
+                    style={{ paddingBottom: "0px" }}>
                     <dt className="business-title"><span
-                        style={{paddingLeft: '20px'}}>Adicionar pendiente a la reunión</span></dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
-                        <p style={{paddingTop: "10px", marginBottom: "0px"}}>Los campos marcados con asterisco (<span
-                            style={{color: "red"}}>*</span>) son obligatorios.</p>
-                        <Row style={{padding: "0px 10px 0px 0px"}}>
+                        style={{ paddingLeft: '20px' }}>Adicionar pendiente a la reunión</span></dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                        <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
+                            style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={6} md={6} lg={6}>
-                                <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBoxFilter
                                         name="responsableTask"
                                         labelInput="Ingrese un criterio de búsqueda..."
@@ -196,9 +201,9 @@ class ModalTask extends Component {
                                 </dt>
                             </Col>
                             <Col xs={6} md={6} lg={6}>
-                                <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span>
+                                <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span>
                                 </dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <DateTimePickerUi
                                         {...fecha}
                                         culture='es'
@@ -210,14 +215,15 @@ class ModalTask extends Component {
                         </Row>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <dt><span>Tarea (<span style={{color: "red"}}>*</span>)</span></dt>
-                                    <RichText
-                                        name="description"
-                                        type="text"
-                                        style={{width: '100%', height: '150pt'}}
-                                        {...tarea}
-                                        placeholder="Ingrese la descripción"
-                                    />
+                                <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <RichText
+                                    name="description"
+                                    type="text"
+                                    style={{ width: '100%', height: '150pt' }}
+                                    {...tarea}
+                                    touched={true}
+                                    placeholder="Ingrese la descripción"
+                                />
                             </Col>
                         </Row>
                     </div>
@@ -254,7 +260,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({tasks, selectsReducer, participants}, {taskEdit}) {
+function mapStateToProps({ tasks, selectsReducer, participants }, { taskEdit }) {
     if (taskEdit !== undefined) {
         return {
             participants,

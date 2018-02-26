@@ -11,7 +11,7 @@ import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-import { stringValidate } from '../../actionsGlobal';
+import { stringValidate, xssValidation } from '../../actionsGlobal';
 
 class ControlLinkedPayments extends Component {
 
@@ -62,7 +62,7 @@ class ControlLinkedPayments extends Component {
                             rows={7}
                             placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
                             {...controlLinkedPayments}
-                            error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
+                            error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (xssValidation(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
                             touched={true}
                         />
                     }

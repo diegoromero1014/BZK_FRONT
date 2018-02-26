@@ -123,17 +123,8 @@ class ListLinkingRequests extends Component {
         });
     }
 
-    componentDidMount() {
-        const { getLinkRequests, swtShowMessage, changeStateSaveData } = this.props;
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS).then((data) => {
-            changeStateSaveData(false, "");
-        }, (reason) => {
-            changeStateSaveData(false, "");
-            swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-        });
-    }
 
+    
     render() {
         const { linkRequestsReducer } = this.props;
         const modalTitle = 'Solicitudes de vinculación';

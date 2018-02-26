@@ -73,8 +73,12 @@ class comboBoxComponent extends Component {
                     value: id,
                     used: true
                 });
-                onBlur(id, text);
-                onChange(id, text);
+                if(onBlur){
+                    onBlur(id, text);
+                }
+                if(onChange){
+                    onChange(id, text);
+                }
             },
             forceSelection: false,
             selectOnKeydown: false

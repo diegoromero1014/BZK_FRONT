@@ -29,12 +29,17 @@ import {
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
   DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, VALUE_REQUIERED, MESSAGE_ERROR
+  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, 
+  VALUE_REQUIERED, 
+  MESSAGE_ERROR, 
+  VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS_TITLE,
+  REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
 import {
   consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
-  handleFocusValueNumber
+  handleFocusValueNumber, xssValidation
 } from "../../../actionsGlobal";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
@@ -83,6 +88,8 @@ const validate = values => {
   }
   if (!values.value) {
     errors.value = VALUE_REQUIERED;
+  } else if (xssValidation(values.value)) {
+    errors.value = VALUE_XSS_INVALID;
   } else {
     errors.value = null;
   }
@@ -112,32 +119,48 @@ const validate = values => {
 
   if (!values.opportunityName && !isChildren) {
     errors.opportunityName = VALUE_REQUIERED;
+  } else if (xssValidation(values.opportunityName)) {
+    errors.opportunityName = VALUE_XSS_INVALID;
   } else {
     errors.opportunityName = null;
   }
 
   if (!values.productFamily) {
     errors.productFamily = VALUE_REQUIERED;
+  } else if (xssValidation(values.productFamily)) {
+    errors.productFamily = VALUE_XSS_INVALID;
   } else {
     errors.productFamily = null;
   }
 
   if (!values.nameUsuario) {
     errors.nameUsuario = VALUE_REQUIERED;
+  } else if (xssValidation(values.nameUsuario)) {
+    errors.nameUsuario = VALUE_XSS_INVALID;
   } else {
     errors.nameUsuario = null;
   }
 
   if (!values.termInMonths) {
     errors.termInMonths = VALUE_REQUIERED;
+  } else if (xssValidation(values.termInMonths)) {
+    errors.termInMonths = VALUE_XSS_INVALID;
   } else {
     errors.termInMonths = null;
   }
 
   if (!values.termInMonthsValues) {
     errors.termInMonthsValues = VALUE_REQUIERED;
+  } else if (xssValidation(values.termInMonthsValues)) {
+    errors.termInMonthsValues = VALUE_XSS_INVALID;
   } else {
     errors.termInMonthsValues = null;
+  }
+
+  if (xssValidation(values.observations, true)) {
+    errors.observations = VALUE_XSS_INVALID;
+  } else {
+    errors.observations = null;
   }
 
   return errors;
@@ -171,6 +194,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         employeeResponsible: false,
         showConfirmChangeCurrency: false,
         errorValidate: false,
+        errorValidateXss: false,
         pendingUpdate: false,
         updateValues: {},
         probabilityEnabled: false,
@@ -1011,7 +1035,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <RichText
                     name="observations"
                     {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations) }
-                    placeholder="Ingrese una observación."
+                    placeholder="Ingrese una observación."                    
+                    touched={true}
                     style={{ width: '100%', height: '178px' }}
                   />
                 </Col>
@@ -1075,6 +1100,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               text='Señor usuario, debe ingresar los campos marcados con asterisco.'
               onConfirm={() => this.setState({ errorValidate: false })}
             />
+            <SweetAlert
+              type="error"
+              show={this.state.errorValidateXss}
+              title={REGEX_SIMPLE_XSS_TITLE}
+              text={REGEX_SIMPLE_XSS_MESAGE}
+              onConfirm={() => this.setState({ errorValidateXss: false })}
+            />
             <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { display: "none" }} className="modalBt4-footer modal-footer">
               <button type="submit" className="btn btn-primary modal-button-edit"
                 onClick={() => typeButtonClick = SAVE_DRAFT}>
@@ -1124,10 +1156,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     fields,
     form: name || _.uniqueId('business_'),
     validate,
-    onSubmitFail: errors => {
+    onSubmitFail: errors => {      
+      let numXssValidation =  Object.keys(errors).filter(item=>errors[item] == VALUE_XSS_INVALID).length;
+
       thisForm.setState({
-        errorValidate: true
+        errorValidateXss: numXssValidation > 0,
+        errorValidate: numXssValidation <= 0
       });
+
     }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
 }

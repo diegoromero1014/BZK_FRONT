@@ -15,8 +15,8 @@ import { addNeed, editNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
-import {MESSAGE_ERROR} from '../../../constantsGlobal';
+import { htmlToText, shorterStringValue, xssValidation } from "../../../actionsGlobal";
+import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 
@@ -32,11 +32,15 @@ const validate = (values) => {
     } else {
         errors.needType = null;
     }
+
     if (!values.descriptionNeed || _.isEmpty(htmlToText(values.descriptionNeed))) {
         errors.descriptionNeed = "Debe ingresar un valor";
+    } else if (xssValidation(values.descriptionNeed, true)) {
+        errors.descriptionNeed = VALUE_XSS_INVALID;
     } else {
         errors.descriptionNeed = null;
     }
+
     if (!values.needProduct) {
         errors.needProduct = "Debe seleccionar una opción";
     } else {
@@ -47,21 +51,31 @@ const validate = (values) => {
     } else {
         errors.needImplementation = null;
     }
+
     if (!values.needTask || _.isEmpty(htmlToText(values.needTask))) {
         errors.needTask = "Debe ingresar un valor";
+    } else if (xssValidation(values.needTask, true)) {
+        errors.needTask = VALUE_XSS_INVALID;
     } else {
         errors.needTask = null;
     }
+
     if (!values.needBenefits || _.isEmpty(htmlToText(values.needBenefits))) {
         errors.needBenefits = "Debe ingresar un valor";
+    } else if (xssValidation(values.needBenefits, true)) {
+        errors.needBenefits = VALUE_XSS_INVALID;
     } else {
         errors.needBenefits = null;
     }
+
     if (!values.needResponsable) {
         errors.needResponsable = "Debe ingresar un valor";
+    } else if (xssValidation(values.needResponsable, true)) {
+        errors.needResponsable = VALUE_XSS_INVALID;
     } else {
         errors.needResponsable = null;
     }
+
     if (!values.needDate) {
         errors.needDate = "Debe seleccionar una fecha";
     } else {
@@ -441,9 +455,9 @@ class ModalNeed extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getClientNeeds, 
-        getMasterDataFields, 
-        filterUsersBanco, 
+        getClientNeeds,
+        getMasterDataFields,
+        filterUsersBanco,
         addNeed,
         editNeed,
         swtShowMessage
@@ -495,7 +509,16 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalComponentScrollNeed').scrollTop = 0;
-        const {swtShowMessage} = thisForm.props;
-        swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
+        const { swtShowMessage } = thisForm.props;
+
+        let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
+        
+        if (numXssValidation > 0) {
+            swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
+        } else {
+            swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
+        }
+
     }
 }, mapStateToProps, mapDispatchToProps)(ModalNeed);
+

@@ -281,7 +281,7 @@ export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
         redirectUrl("/login");
     } else {
-        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS) ) {
+        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)) {
             return false;
         }
     }
@@ -320,7 +320,7 @@ export function htmlToText(html) {
     return tag.innerText.trim();
 }
 
-export function clearPrevisitPermissions(){
+export function clearPrevisitPermissions() {
 
     return {
         type: constants.CLEAR_PERMISSIONS_MODULE_PREVISITS
@@ -393,3 +393,18 @@ export function getUserBlockingReport(idEntity, reportType) {
     };
   
   }
+export function xssValidation(value, isFullValidation) {
+    let hasXss = false;
+
+    let _value = String(value ? value : "").toLowerCase();
+
+    if (!isFullValidation) {
+        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_TAG).test(_value);
+        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(_value);
+    } else {
+        hasXss = eval(constants.REGEX_SIMPLE_XSS_STRING_SPECIFIC).test(_value);
+        hasXss = hasXss || eval(constants.REGEX_SIMPLE_XSS_STRING_R_W).test(_value);
+    }
+
+    return hasXss;
+}

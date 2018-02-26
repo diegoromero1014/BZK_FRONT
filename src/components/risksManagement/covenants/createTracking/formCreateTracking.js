@@ -1,23 +1,24 @@
-import React, {Component} from "react";
-import {bindActionCreators} from "redux";
-import {reduxForm} from "redux-form";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { reduxForm } from "redux-form";
 import ComboBox from "../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../ui/input/inputComponent";
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../../ui/dateTimePicker/dateTimePickerComponent";
-import {Col, Row} from "react-flexbox-grid";
-import {DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED} from "../../../../constantsGlobal";
-import {redirectUrl} from "../../../globalComponents/actions";
-import {changeStatusCreate, clientCovenants, createTrackingCovenant, getInfoCovenant} from "../actions";
-import {FULLFILLMENT_COVENANT, VALID_COVENANT} from "../../../selectsComponent/constants";
-import {TITLE_FIELD_OBSERVED_VALUE} from "../constants";
-import {getMasterDataFields} from "../../../selectsComponent/actions";
-import {changePage, covenantsFindServer} from "../../../alertCovenants/actions";
-import {showLoading} from "../../../loading/actions";
-import {NUMBER_RECORDS} from "../../../alertCovenants/constants";
+import { Col, Row } from "react-flexbox-grid";
+import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
+import { xssValidation } from "../../../../actionsGlobal";
+import { redirectUrl } from "../../../globalComponents/actions";
+import { changeStatusCreate, clientCovenants, createTrackingCovenant, getInfoCovenant } from "../actions";
+import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
+import { TITLE_FIELD_OBSERVED_VALUE } from "../constants";
+import { getMasterDataFields } from "../../../selectsComponent/actions";
+import { changePage, covenantsFindServer } from "../../../alertCovenants/actions";
+import { showLoading } from "../../../loading/actions";
+import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
 import moment from "moment";
 import _ from "lodash";
-import {swtShowMessage} from "../../../sweetAlertMessages/actions";
+import { swtShowMessage } from "../../../sweetAlertMessages/actions";
 
 const fields = ["validCovenant", "fullfillmentCovenant", "observedValue", "dateFinancialStatements", "observations"];
 const errors = {};
@@ -36,18 +37,26 @@ const validate = (values) => {
     }
     if (!values.observedValue) {
         errors.observedValue = VALUE_REQUIERED;
+    } else if (xssValidation(values.observedValue)) {
+        errors.observedValue = VALUE_XSS_INVALID;
     } else {
         errors.observedValue = null;
     }
+// error={isMandatoryObservations ? VALUE_REQUIERED : null}
     if (isMandatoryObservations) {
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
         } else {
             errors.observations = null;
         }
-    }else{
+    } else if (xssValidation(values.observations)) {
+        errors.observations = VALUE_XSS_INVALID;;
+    } else {
         errors.observations = null;
     }
+
+    VALUE_XSS_INVALID
+    xssValidation
     return errors;
 };
 
@@ -65,22 +74,22 @@ class FormCreateTracking extends Component {
     }
 
     componentWillMount() {
-        const {getMasterDataFields} = this.props;
+        const { getMasterDataFields } = this.props;
         getMasterDataFields([VALID_COVENANT, FULLFILLMENT_COVENANT]);
     }
 
     _onChangeValidCovenant(val) {
-        const {selectsReducer, fields: {validCovenant}} = this.props;
+        const { selectsReducer, fields: { validCovenant } } = this.props;
         validCovenant.onChange(val);
         let validCovenantObj = _.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == val);
         isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES);
-        this.setState({isMandatoryObservations: isMandatoryObservations});
+        this.setState({ isMandatoryObservations: isMandatoryObservations });
     }
 
     _handleCreateTracking() {
         const {
-            fields: {validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations},
-            covenant, showLoading, createTrackingCovenant,swtShowMessage, changeStatusCreate, getInfoCovenant,
+            fields: { validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations },
+            covenant, showLoading, createTrackingCovenant, swtShowMessage, changeStatusCreate, getInfoCovenant,
             clientCovenants, isOpen
         } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
@@ -99,14 +108,14 @@ class FormCreateTracking extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.isEqual(_.get(data, 'payload.data.status'), 500)) {
-                    swtShowMessage("error","Creación seguimiento","Señor usuario, ocurrió un error tratando de crear el seguimiento.");
+                    swtShowMessage("error", "Creación seguimiento", "Señor usuario, ocurrió un error tratando de crear el seguimiento.");
                     console.error('Error creando seguimiento', _.get(data, 'payload.data.data'));
                 } else {
-                    swtShowMessage("success","Creación seguimiento","Señor usuario, el seguimiento se creó de forma exitosa.");
+                    swtShowMessage("success", "Creación seguimiento", "Señor usuario, el seguimiento se creó de forma exitosa.");
                     if (_.get(data, 'payload.data.data') || _.get(data, 'payload.data.data') === true) {
                         isOpen();
                     } else {
-                        getInfoCovenant(_.get(covenant.get('covenantInfo'),'idCovenant'));
+                        getInfoCovenant(_.get(covenant.get('covenantInfo'), 'idCovenant'));
                     }
                     this._handleRefreshAlertCovenants();
                     this.props.resetForm();
@@ -118,7 +127,7 @@ class FormCreateTracking extends Component {
     }
 
     _handleRefreshAlertCovenants() {
-        const {covenantsFindServer, alertCovenant, changePage, showLoading} = this.props;
+        const { covenantsFindServer, alertCovenant, changePage, showLoading } = this.props;
         const keyWordNameNit = alertCovenant.get('keywordNameNit');
         const statusCovenant = alertCovenant.get('statusCovenant');
         const order = alertCovenant.get('order');
@@ -133,19 +142,19 @@ class FormCreateTracking extends Component {
     }
 
     _cancelCreate() {
-        const {changeStatusCreate} = this.props;
+        const { changeStatusCreate } = this.props;
         this.props.resetForm();
         changeStatusCreate(false);
     }
 
     render() {
         const {
-            fields: {validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations},
+            fields: { validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations },
             handleSubmit, selectsReducer
         } = this.props;
         if (!_.isEmpty(validCovenant.value)) {
             isMandatoryObservations = _.isEmpty(observations.value) && !_.isEqual(_.get(_.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenant.value), 'value'), STR_YES);
-        }else {
+        } else {
             isMandatoryObservations = false;
         }
         return (
@@ -158,10 +167,10 @@ class FormCreateTracking extends Component {
                     overflow: 'initial',
                     marginTop: '10px'
                 }}>
-                    <Row xs={12} md={12} lg={12} style={{paddingBottom: '20px'}}>
-                        <Col xs={12} md={6} lg={4} style={{paddingRight: "15px"}}>
+                    <Row xs={12} md={12} lg={12} style={{ paddingBottom: '20px' }}>
+                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Covenant vigente (</span><span style={{color: "red"}}>*</span>)
+                                <span>Covenant vigente (</span><span style={{ color: "red" }}>*</span>)
                             </dt>
                             <ComboBox
                                 name="validCovenant"
@@ -173,9 +182,9 @@ class FormCreateTracking extends Component {
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
-                        <Col xs={12} md={6} lg={4} style={{paddingRight: "15px"}}>
+                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Cumplimiento del covenant (</span><span style={{color: "red"}}>*</span>)
+                                <span>Cumplimiento del covenant (</span><span style={{ color: "red" }}>*</span>)
                             </dt>
                             <ComboBox
                                 name="fullfillmentCovenant"
@@ -186,7 +195,7 @@ class FormCreateTracking extends Component {
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>
-                        <Col xs={12} md={6} lg={4} style={{paddingRight: "15px"}}>
+                        <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
                                 <span>Fecha de estados financieros </span>
                             </dt>
@@ -197,12 +206,12 @@ class FormCreateTracking extends Component {
                                 {...dateFinancialStatements}
                             />
                         </Col>
-                        <Col xs={12} md={12} lg={12} style={{paddingRight: "15px"}}>
+                        <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Valor observado (</span><span style={{color: "red"}}>*</span>)
+                                <span>Valor observado (</span><span style={{ color: "red" }}>*</span>)
                                 <i className="help circle icon blue"
-                                   style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}}
-                                   title={TITLE_FIELD_OBSERVED_VALUE}/>
+                                    style={{ fontSize: "14px", cursor: "pointer", marginLeft: "2px" }}
+                                    title={TITLE_FIELD_OBSERVED_VALUE} />
                             </dt>
                             <InputComponent
                                 name="observedValue"
@@ -211,31 +220,30 @@ class FormCreateTracking extends Component {
                                 max="100"
                             />
                         </Col>
-                        <Col xs={12} md={12} lg={12} style={{paddingRight: "15px"}}>
+                        <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px" }}>
                             <dt>
                                 <span>Observaciones
-                                    { this.state.isMandatoryObservations ?
-                                        <span> (<span style={{color: "red"}}>*</span>)</span> : ""}
+                                    {this.state.isMandatoryObservations ?
+                                        <span> (<span style={{ color: "red" }}>*</span>)</span> : ""}
                                 </span>
                             </dt>
                             <Textarea
+                                {...observations}
                                 name="observations"
                                 type="text"
                                 max="2000"
-                                {...observations}
-                                error={ isMandatoryObservations ? VALUE_REQUIERED : null}
                                 title="La longitud máxima de caracteres es de 2000"
-                                style={{width: '100%'}}
+                                style={{ width: '100%' }}
                             />
                         </Col>
                     </Row>
-                    <Row xs={12} md={12} lg={12} style={{paddingBottom: '30px', marginLeft: '3px'}}>
+                    <Row xs={12} md={12} lg={12} style={{ paddingBottom: '30px', marginLeft: '3px' }}>
                         <button className="btn" type="submit">
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Guardar</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                         </button>
                         <button className="btn" type="button" onClick={this._cancelCreate}
-                                style={{backgroundColor: "rgb(193, 193, 193)", marginLeft: '15px'}}>
-                            <span style={{color: "#FFFFFF", padding: "10px"}}>Cancelar</span>
+                            style={{ backgroundColor: "rgb(193, 193, 193)", marginLeft: '15px' }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
                         </button>
                     </Row>
                 </div>
@@ -260,7 +268,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, reducerGlobal, covenant, alertCovenant}, ownerProps) {
+function mapStateToProps({ selectsReducer, reducerGlobal, covenant, alertCovenant }, ownerProps) {
     return {
         selectsReducer,
         reducerGlobal,

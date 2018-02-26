@@ -4,12 +4,13 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, xssValidation } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
+
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -72,7 +73,7 @@ class ComponentListIntOperations extends Component {
             if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
                 message_error = requiredMessage;
                 break;
-            } if (_field.xss && eval(REGEX_SIMPLE_XSS_STRING).test(_field.value)) {
+            } if (_field.xss && xssValidation(_field.value)) {
                 message_error = REGEX_SIMPLE_XSS_MESAGE;
                 break;
             }
@@ -372,7 +373,7 @@ class ComponentListIntOperations extends Component {
                                             {...participation}
                                             value={participation.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participation.value) ? VALUE_XSS_INVALID : null)}
+                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -409,7 +410,7 @@ class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
-                                            error={eval(REGEX_SIMPLE_XSS_STRING).test(descriptionCoverage.value) ? VALUE_XSS_INVALID : null}
+                                            error={xssValidation(descriptionCoverage.value) ? VALUE_XSS_INVALID : null}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -448,7 +449,7 @@ class ComponentListIntOperations extends Component {
                                             {...participationCountry}
                                             value={participationCountry.value}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, participationCountry.value, true, 2)}
-                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (eval(REGEX_SIMPLE_XSS_STRING).test(participationCountry.value) ? VALUE_XSS_INVALID : null)}
+                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (xssValidation(participationCountry.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorCountryForm}
                                         />
                                     </div>
