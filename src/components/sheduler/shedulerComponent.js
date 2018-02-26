@@ -205,7 +205,7 @@ class Sheduler extends Component {
     }
 
     componentDidMount() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -213,7 +213,7 @@ class Sheduler extends Component {
     }
 
     componentWillUpdate() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);

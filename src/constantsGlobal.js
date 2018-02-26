@@ -131,7 +131,8 @@ export const TAB_CUSTOMER_STORY = 10;
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
-    API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
+    API_URL = "http://localhost:8084/Centricity";
+    //API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
 } else {
     API_URL = "http://localhost:8084/Centricity";
 }
