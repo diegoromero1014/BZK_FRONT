@@ -32,6 +32,7 @@ import {
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
+import { showLoading } from "../../loading/actions";
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import moment from 'moment';
 import {
@@ -144,7 +145,8 @@ class ComponentStudyCredit extends Component {
 
             isEditable: false,
             showErrorBlockedPreVisit: false,
-            intervalId: null
+            intervalId: null,
+            userEditingPrevisita: ''
 
         }
     }
@@ -575,7 +577,7 @@ class ComponentStudyCredit extends Component {
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
-                        isEditable: !this.state.isEditable,
+                        isEditable: true,
                         intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
 
@@ -586,10 +588,16 @@ class ComponentStudyCredit extends Component {
                 if (this.state.isEditable) {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+
+                    console.log("Limpiando interval")
                     clearInterval(this.state.intervalId);
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
+                    
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
+
+                    console.log("Otro usuario esta bloqueando")
+
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
                 }
 
@@ -615,11 +623,17 @@ class ComponentStudyCredit extends Component {
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
         // Informar al backend que el informe se puede liberar
-        stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
-        }).catch((error) => {
+        if (this.state.isEditable) {
 
-        })
+            console.log("stopBlockReport")
+
+            stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+
+            }).catch((error) => {
+    
+            })
+        }        
 
     }
 

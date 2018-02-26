@@ -161,7 +161,8 @@ class FormEditPrevisita extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isEditable: "",
+            isEditable: false,
+            intervalId: null,
             showErrorSavePreVisit: false,
             typePreVisit: "",
             typePreVisitError: null,
@@ -275,7 +276,7 @@ class FormEditPrevisita extends Component {
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
-                        isEditable: !this.state.isEditable,
+                        isEditable: true,
                         intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
 
@@ -288,7 +289,7 @@ class FormEditPrevisita extends Component {
                 if (this.state.isEditable) {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
                     clearInterval(this.state.intervalId);
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
@@ -1028,12 +1029,17 @@ class FormEditPrevisita extends Component {
 
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
-        // Informar al backend que el informe se puede liberar
-        disableBlockedReport(id).then((success) => {
 
-        }).catch((error) => {
+        if(this.state.isEditable) {
+            // Informar al backend que el informe se puede liberar
+            disableBlockedReport(id).then((success) => {
 
-        })
+            }).catch((error) => {
+
+            })
+        }
+
+        
     }
 
     render() {
