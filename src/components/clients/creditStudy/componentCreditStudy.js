@@ -359,6 +359,11 @@ class ComponentStudyCredit extends Component {
         const { contextClient } = infoClient;
         var allowSave = true;
         var contextClientInfo = studyCreditReducer.get('contextClient');
+
+        var shouldDisplayMessage = false;
+        var contentErrorMessage = "";
+
+
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         if (!infoValidate.numberOfValidShareholders) {
             allowSave = false;
@@ -399,6 +404,12 @@ class ComponentStudyCredit extends Component {
                                 lineofBusinessRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
+
+                           
+
                         }
                         if (listDistribution.length === 0 &&
                             (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
@@ -407,6 +418,9 @@ class ComponentStudyCredit extends Component {
                                 distributionRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainCustomer.length === 0 &&
                             (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
@@ -415,6 +429,9 @@ class ComponentStudyCredit extends Component {
                                 mainClientRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainSupplier.length === 0 &&
                             (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
@@ -423,6 +440,9 @@ class ComponentStudyCredit extends Component {
                                 mainSupplierRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainCompetitor.length === 0 &&
                             (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
@@ -431,6 +451,9 @@ class ComponentStudyCredit extends Component {
                                 mainCompetitorRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
                             (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
@@ -439,6 +462,9 @@ class ComponentStudyCredit extends Component {
                                 intOperationsRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
 
                         if (!stringValidate(contextClientField.value)) {
@@ -474,6 +500,11 @@ class ComponentStudyCredit extends Component {
                 }
             }
         }
+
+        if(shouldDisplayMessage) {
+            swtShowMessage('error','Estudio de crédito', contentErrorMessage);
+        }
+        
         return allowSave;
     }
 
