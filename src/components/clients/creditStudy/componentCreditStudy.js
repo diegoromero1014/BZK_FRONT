@@ -116,6 +116,8 @@ class ComponentStudyCredit extends Component {
         this._validateInformationToSave = this._validateInformationToSave.bind(this);
         this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+        
+        this._ismounted = false;
 
         this.state = {
             showConfirmExit: false,
@@ -146,7 +148,8 @@ class ComponentStudyCredit extends Component {
             isEditable: false,
             showErrorBlockedPreVisit: false,
             intervalId: null,
-            userEditingPrevisita: ''
+            userEditingPrevisita: '',
+            isComponentMounted: true
 
         }
     }
@@ -589,6 +592,16 @@ class ComponentStudyCredit extends Component {
 
         return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
+            console.log("isComponentMounted", this._ismounted);
+
+            if (! this._ismounted) {
+
+                console.log("El componente no esta mounted")
+
+                clearInterval(this.state.intervalId);
+                return;
+            }
+
             let username = success.payload.data.data.username
 
             let name = success.payload.data.data.name
@@ -605,6 +618,8 @@ class ComponentStudyCredit extends Component {
                     // Tengo permiso de editar y no estoy editando
 
                     console.log("Set interval");
+                    console.log("interval",this.state.intervalId);
+                    console.log("editable",this.state.isEditable);
 
                     this.setState({
                         showErrorBlockedPreVisit: false,
@@ -652,6 +667,10 @@ class ComponentStudyCredit extends Component {
 
         let idClient = window.localStorage.getItem('idClientSelected');
 
+        this._ismounted = false;
+
+        console.log("Unmounting...");
+
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
         // Informar al backend que el informe se puede liberar
@@ -676,15 +695,15 @@ class ComponentStudyCredit extends Component {
             getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         
-        let logUser = window.sessionStorage.getItem('userName');
-
-
-        this.canUserEditBlockedReport(logUser);
-        
         if (_.isEmpty(infoClient)) {
+            console.log("redirect");
             redirectUrl("/dashboard/clientInformation");
         } else {
+
+            let logUser = window.sessionStorage.getItem('userName');
             var idClient = window.localStorage.getItem('idClientSelected');
+
+            this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
@@ -726,6 +745,8 @@ class ComponentStudyCredit extends Component {
         const { fields: { notApplyCreditContact }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         notApplyCreditContact.onChange(infoClient.notApplyCreditContact);
+
+        this._ismounted = true;
     }
 
     render() {

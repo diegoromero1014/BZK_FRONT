@@ -224,8 +224,17 @@ class FormEditPrevisita extends Component {
         this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
+
+
+        this._ismounted = false;
     }
 
+
+    componentDidMount() {
+
+        this._ismounted = true;
+
+    }
 
     _validateBlockOnSave() {
 
@@ -261,6 +270,11 @@ class FormEditPrevisita extends Component {
 
             let name = success.payload.data.data.name
 
+
+            if(! this._ismounted) {
+                clearInterval(this.state.intervalId);
+                return;
+            }
 
             if (_.isNull(username)) {
                 // Error servidor
@@ -1029,6 +1043,8 @@ class FormEditPrevisita extends Component {
 
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
+
+        this._ismounted = false;
 
         if(this.state.isEditable) {
             // Informar al backend que el informe se puede liberar
