@@ -276,6 +276,15 @@ class FormEditPrevisita extends Component {
                 return;
             }
 
+            if(success.payload.data.data == null) {
+                clearInterval(this.state.intervalId);
+
+                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
+
+                return;
+            }
+
+
             if (_.isNull(username)) {
                 // Error servidor
                 swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
