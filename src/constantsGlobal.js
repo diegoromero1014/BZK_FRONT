@@ -223,3 +223,10 @@ export const TIME_REQUEST_BLOCK_REPORT = 15000;
  */
 
 export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREVISITS"
+
+/**
+ * Constantes totalidad de los campos requeridos
+ */
+
+ export const INCOMPLETE_INFORMATION = "Información incompleta";
+ export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
