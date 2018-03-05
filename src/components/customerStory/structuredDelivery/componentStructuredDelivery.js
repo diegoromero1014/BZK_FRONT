@@ -6,8 +6,9 @@ import { consultList } from '../../selectsComponent/actions';
 import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID, VALUE_REQUIERED,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
@@ -30,34 +31,49 @@ const fields = ["id", "corporateGobernance", "corporateGobernanceDate", "recipro
     "dificultSituationsDate"];
 const errors = {};
 
-const validate = (values) => {
+let const_callFromDeliveryClient = null; 
+let thisForm = null; 
 
-    if (xssValidation(values.corporateGobernance)) {
+const validate = (values) => {    
+
+    if (values.corporateGobernance == "" && const_callFromDeliveryClient) {
+        errors.corporateGobernance = VALUE_REQUIERED;
+    } else if (xssValidation(values.corporateGobernance)) {
         errors.corporateGobernance = VALUE_XSS_INVALID;
     } else {
         errors.corporateGobernance = null;
     }
-    if (xssValidation(values.reciprocity)) {
+    if (values.reciprocity == "" && const_callFromDeliveryClient) {
+        errors.reciprocity = VALUE_REQUIERED;
+    } else if (xssValidation(values.reciprocity)) {
         errors.reciprocity = VALUE_XSS_INVALID;
     } else {
         errors.reciprocity = null;
     }
-    if (xssValidation(values.specialConsiderations)) {
+    if (values.specialConsiderations == "" && const_callFromDeliveryClient) {
+        errors.specialConsiderations = VALUE_REQUIERED;
+    } else if (xssValidation(values.specialConsiderations)) {
         errors.specialConsiderations = VALUE_XSS_INVALID;
     } else {
         errors.specialConsiderations = null;
     }
-    if (xssValidation(values.businessWithAffiliates)) {
+    if (values.businessWithAffiliates == "" && const_callFromDeliveryClient) {
+        errors.businessWithAffiliates = VALUE_REQUIERED;
+    } else if (xssValidation(values.businessWithAffiliates)) {
         errors.businessWithAffiliates = VALUE_XSS_INVALID;
     } else {
         errors.businessWithAffiliates = null;
     }
-    if (xssValidation(values.mergers)) {
+    if (values.mergers == "" && const_callFromDeliveryClient) {
+        errors.mergers = VALUE_REQUIERED;
+    } else if (xssValidation(values.mergers)) {
         errors.mergers = VALUE_XSS_INVALID;
     } else {
         errors.mergers = null;
     }
-    if (xssValidation(values.dificultSituations)) {
+    if (values.dificultSituations == "" && const_callFromDeliveryClient) {
+        errors.dificultSituations = VALUE_REQUIERED;
+    } else if (xssValidation(values.dificultSituations)) {
         errors.dificultSituations = VALUE_XSS_INVALID;
     } else {
         errors.dificultSituations = null;
@@ -67,9 +83,14 @@ const validate = (values) => {
     return errors;
 };
 
+
+
 class componentStructuredDelivery extends Component {
     constructor(props) {
         super(props);
+
+        thisForm = this;
+
         this._submitStructuredDelivery = this._submitStructuredDelivery.bind(this);
         this._getStructuredDeliveryDetail = this._getStructuredDeliveryDetail.bind(this);
         this._closeEdit = this._closeEdit.bind(this);
@@ -212,7 +233,9 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
-        const { clearEvents, changeStateSaveData } = this.props;
+        const { clearEvents, changeStateSaveData,callFromDeliveryClient} = this.props;
+        
+        const_callFromDeliveryClient = callFromDeliveryClient;
         clearEvents();
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         this._getStructuredDeliveryDetail();
@@ -241,6 +264,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Gobierno corporativo - Junta directiva del cliente</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         corporateGobernanceDate.value &&
                                         <span style={{
@@ -270,6 +298,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Reciprocidades</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         reciprocityDate.value &&
                                         <span style={{
@@ -299,6 +332,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Consideraciones especiales de cuotas de manejo</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         specialConsiderationsDate.value &&
                                         <span style={{
@@ -324,6 +362,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Negocios del cliente con filiales</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         businessWithAffiliatesDate.value &&
                                         <span style={{
@@ -353,6 +396,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Fusiones - Adquisiciones</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         mergersDate.value &&
                                         <span style={{
@@ -383,6 +431,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Situaciones difíciles - Nuevos mercados</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         dificultSituationsDate.value &&
                                         <span style={{
@@ -460,5 +513,9 @@ function mapStateToProps({ navBar, customerStory, selectsReducer, reducerGlobal,
 export default reduxForm({
     form: 'formStructuredCustomer',
     fields,
-    validate
+    validate,
+    onSubmitFail : (data)=>  {
+        const { swtShowMessage } = thisForm.props;
+        swtShowMessage('error', INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED);
+    }
 }, mapStateToProps, mapDispatchToProps)(componentStructuredDelivery);
