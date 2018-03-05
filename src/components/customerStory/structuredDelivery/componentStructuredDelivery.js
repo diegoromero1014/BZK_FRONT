@@ -36,42 +36,42 @@ let thisForm = null;
 
 const validate = (values) => {    
 
-    if (values.corporateGobernance == "" && const_callFromDeliveryClient) {
+    if (!values.corporateGobernance && const_callFromDeliveryClient) {
         errors.corporateGobernance = VALUE_REQUIERED;
     } else if (xssValidation(values.corporateGobernance)) {
         errors.corporateGobernance = VALUE_XSS_INVALID;
     } else {
         errors.corporateGobernance = null;
     }
-    if (values.reciprocity == "" && const_callFromDeliveryClient) {
+    if (!values.reciprocity && const_callFromDeliveryClient) {
         errors.reciprocity = VALUE_REQUIERED;
     } else if (xssValidation(values.reciprocity)) {
         errors.reciprocity = VALUE_XSS_INVALID;
     } else {
         errors.reciprocity = null;
     }
-    if (values.specialConsiderations == "" && const_callFromDeliveryClient) {
+    if (!values.specialConsiderations && const_callFromDeliveryClient) {
         errors.specialConsiderations = VALUE_REQUIERED;
     } else if (xssValidation(values.specialConsiderations)) {
         errors.specialConsiderations = VALUE_XSS_INVALID;
     } else {
         errors.specialConsiderations = null;
     }
-    if (values.businessWithAffiliates == "" && const_callFromDeliveryClient) {
+    if (!values.businessWithAffiliates && const_callFromDeliveryClient) {
         errors.businessWithAffiliates = VALUE_REQUIERED;
     } else if (xssValidation(values.businessWithAffiliates)) {
         errors.businessWithAffiliates = VALUE_XSS_INVALID;
     } else {
         errors.businessWithAffiliates = null;
     }
-    if (values.mergers == "" && const_callFromDeliveryClient) {
+    if (!values.mergers && const_callFromDeliveryClient) {
         errors.mergers = VALUE_REQUIERED;
     } else if (xssValidation(values.mergers)) {
         errors.mergers = VALUE_XSS_INVALID;
     } else {
         errors.mergers = null;
     }
-    if (values.dificultSituations == "" && const_callFromDeliveryClient) {
+    if (!values.dificultSituations && const_callFromDeliveryClient) {
         errors.dificultSituations = VALUE_REQUIERED;
     } else if (xssValidation(values.dificultSituations)) {
         errors.dificultSituations = VALUE_XSS_INVALID;
