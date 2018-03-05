@@ -54,14 +54,6 @@ class ListNoveltiesRiskGroup extends Component {
 
     _renderCellView(data = []) {
         return data.map(item => {
-            const infoRiskGroup = {
-                code: item.riskGroupCode,
-                nameData: item.name,
-                novelty: item.novelty,
-                stateNovelty: item.stateNovelty,
-                codeEntity: item.codeEntity,
-                entity: item.entity
-            }
             let map_trans_novelty_type = {
                 "DELETE": "Eliminar",
                 "ADD": "Agregar",
@@ -72,6 +64,14 @@ class ListNoveltiesRiskGroup extends Component {
                 "APPROVED": "Aprobado",
                 "REJECTED": "Rechazado",
                 "PENDING": "Pendiente"
+            }
+            const infoRiskGroup = {
+                code: item.riskGroupCode,
+                nameData: item.name,
+                novelty: item.novelty,
+                novelty: map_trans_novelty_type[item.novelty],
+                stateNovelty: map_trans_novelty_state[item.stateNovelty],
+                entity: item.entity
             }
             return {
                 actions: {
