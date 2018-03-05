@@ -62,6 +62,17 @@ class ListNoveltiesRiskGroup extends Component {
                 codeEntity: item.codeEntity,
                 entity: item.entity
             }
+            let map_trans_novelty_type = {
+                "DELETE": "Eliminar",
+                "ADD": "Agregar",
+                "REMOVE": "Remover",
+                "EDIT": "Editar"
+            }
+            let map_trans_novelty_state = {
+                "APPROVED": "Aprobado",
+                "REJECTED": "Rechazado",
+                "PENDING": "Pendiente"
+            }
             return {
                 actions: {
                     actionView: true,
@@ -71,8 +82,8 @@ class ListNoveltiesRiskGroup extends Component {
                 },
                 code: item.riskGroupCode,
                 nameData: item.name,
-                novelty: item.novelty,
-                stateNovelty: item.stateNovelty
+                novelty: map_trans_novelty_type[item.novelty],
+                stateNovelty: map_trans_novelty_state[item.stateNovelty]
             }
         });
     }
@@ -81,11 +92,16 @@ class ListNoveltiesRiskGroup extends Component {
         const { riskGroupReducer } = this.props;
         const modalTitle = 'Observaciones grupos de riesgo';
         const data = riskGroupReducer.get("listNoveltiesRiskGroup");
-        return (
-            <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll', overflowX: 'hidden' }}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle}/>
-            </div>
-        )
+
+        if (data.length == 0) {
+            return (<div><p>Señor usuario, no se encontraron registros para mostrar</p></div>)
+        } else {
+            return (
+                <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll', overflowX: 'hidden' }}>
+                    <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
+                </div>
+            )
+        }
     }
 }
 
