@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
         case actions.CHANGE_PENDING:
             const isPending = action.isPending;
             let riskGroupTmp = state.get('riskGroupClients');
-            _.set(riskGroupTmp, 'isPending',isPending);
+            _.set(riskGroupTmp, 'isPending', isPending);
             return state.withMutations(map => {
                 map.set('riskGroupClients', riskGroupTmp);
             });
@@ -39,6 +39,16 @@ export default (state = initialState, action) => {
             const show = action.show;
             return state.withMutations(map => {
                 map.set('showModal', show);
+            });
+        case actions.LIST_NOVELTIES_RISK_GROUP:
+            const riskGroup = action.payload.data.data;
+            return state.withMutations(map => {
+                map.set('listNoveltiesRiskGroup', riskGroup);
+            });
+        case actions.GET_OBSERVATIONS_BY_RISK_GROUP:
+            const observationRiskGoup = action.payload.data.data;
+            return state.withMutations(map => {
+                map.set('observtionsRiskGroup', observationRiskGoup);
             });
         default:
             return state;

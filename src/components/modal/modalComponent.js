@@ -19,6 +19,7 @@ import ModalPendingAEC from '../myPendings/AEC/modalPendingAEC';
 import ModalViewEmailsGroup from '../contact/favoritesGroup/modalViewEmailsGroup';
 import ModalBoardMembers from '../clients/partners/boardMembers/createEditBoardMembers/modalBoardMembers';
 import ModalObsersationLinkingRequests from '../myPendings/linkingRequests/observations/modalObservation';
+import ModalObservationsRiskGroup from '../clientRiskGroup/observationsRiskGoup/modalObservationRiskGroup';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -89,6 +90,9 @@ class ModalComponentDialog extends Component {
                 cell = <ModalObsersationLinkingRequests idLinkingRequests={actions.idLinkingRequests}
                     client={actions.client} isOpen={this.closeModal} />
                 break;
+            case views.VIEW_OBSERVATIONS_BY_RISK_GROUP:
+                cell = <ModalObservationsRiskGroup idRiskGroup={actions.idRiskGroup} infoRiskGroup={actions.infoRiskGroup}
+                    isOpen={this.closeModal} />
         }
 
         return (cell);

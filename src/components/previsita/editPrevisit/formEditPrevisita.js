@@ -161,7 +161,8 @@ class FormEditPrevisita extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isEditable: "",
+            isEditable: false,
+            intervalId: null,
             showErrorSavePreVisit: false,
             typePreVisit: "",
             typePreVisitError: null,
@@ -223,8 +224,17 @@ class FormEditPrevisita extends Component {
         this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
+
+
+        this._ismounted = false;
     }
 
+
+    componentDidMount() {
+
+        this._ismounted = true;
+
+    }
 
     _validateBlockOnSave() {
 
@@ -261,6 +271,11 @@ class FormEditPrevisita extends Component {
             let name = success.payload.data.data.name
 
 
+            if(! this._ismounted) {
+                clearInterval(this.state.intervalId);
+                return;
+            }
+
             if (_.isNull(username)) {
                 // Error servidor
                 swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
@@ -275,7 +290,7 @@ class FormEditPrevisita extends Component {
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
-                        isEditable: !this.state.isEditable,
+                        isEditable: true,
                         intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
 
@@ -288,7 +303,7 @@ class FormEditPrevisita extends Component {
                 if (this.state.isEditable) {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true })
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
                     clearInterval(this.state.intervalId);
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
@@ -1028,12 +1043,19 @@ class FormEditPrevisita extends Component {
 
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
-        // Informar al backend que el informe se puede liberar
-        disableBlockedReport(id).then((success) => {
 
-        }).catch((error) => {
+        this._ismounted = false;
 
-        })
+        if(this.state.isEditable) {
+            // Informar al backend que el informe se puede liberar
+            disableBlockedReport(id).then((success) => {
+
+            }).catch((error) => {
+
+            })
+        }
+
+        
     }
 
     render() {

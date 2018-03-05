@@ -15,12 +15,16 @@ import {
     validateResponse
 } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
-import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup } from "./actions";
+import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
 import ModalComponentDeleteRiskGroup from "./modalComponentDeleteRiskGroup";
 import ModalComponentMemberRiskGroup from "./modalComponentMemberRiskGroup";
 import ClientsRiskGroup from "./clientsRiskGroup";
 import { showLoading } from "../loading/actions";
 import Modal from "react-modal";
+import { Menu, Segment } from 'semantic-ui-react'
+import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
+import ListNoveltiesRiskGroup from "./ListNoveltiesRiskGroup";
+
 
 import _ from "lodash";
 
@@ -56,7 +60,8 @@ class ModalComponentRiskGroup extends Component {
             showErrorForm: false,
             allowEditGroup: false,
             modalDelteRiskGroupIsOpen: false,
-            modalMemberIsOpen: false
+            modalMemberIsOpen: false,
+            tabActive: OPTION_RISK_GROUP
         };
 
         this.openModalDelteRiskGroup = this.openModalDelteRiskGroup.bind(this);
@@ -105,7 +110,7 @@ class ModalComponentRiskGroup extends Component {
             fields: { groupName }, getClientsRiskGroup, clientInformacion,
             nonValidateEnter, showLoading, isOpen, swtShowMessage, validateHasRiskGroup
         } = this.props;
-        const { validatePermissionsByModule } = this.props;
+        const { validatePermissionsByModule, getAllNoveltiesRiskGroup } = this.props;
 
 
         validatePermissionsByModule(MODULE_RISK_GROUP);
@@ -120,6 +125,7 @@ class ModalComponentRiskGroup extends Component {
             getClientsRiskGroup(infoClient.id).then((data) => {
                 if (validateResponse(data)) {
                     let riskGroup = _.get(data, 'payload.data.data');
+                    getAllNoveltiesRiskGroup(riskGroup.id);
                     groupName.onChange(riskGroup.name);
                     if (riskGroup.isPending != null && riskGroup.isPending) {
                         swtShowMessage('warning', 'Grupo de riesgo pendiente', 'Señor usuario, el grupo de riesgo se encuentra pendiente de aprobar eliminación por parte del analista de riegos.');
@@ -128,6 +134,7 @@ class ModalComponentRiskGroup extends Component {
                     swtShowMessage('error', 'Error consultado grupo de riesgo', 'Señor usuario, ocurrió un error tratando de consultar el grupo de riesgo.');
                     isOpen();
                 }
+
                 showLoading(false, "");
             });
         });
@@ -180,7 +187,7 @@ class ModalComponentRiskGroup extends Component {
             swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
         })
     }
-
+    handleItemClick = (e, { name }) => this.setState({ tabActive: name });
     _handlerSubmitGroup() {
         const { validateHasRiskGroup } = this.props;
         validateHasRiskGroup(() => {
@@ -189,7 +196,7 @@ class ModalComponentRiskGroup extends Component {
     }
 
     render() {
-
+        const { tabActive } = this.state;
         const {
             fields: { groupName, groupObservations }, validateHasRiskGroup,
             riskGroupReducer, clientInformacion, handleSubmit, reducerGlobal
@@ -210,156 +217,184 @@ class ModalComponentRiskGroup extends Component {
                 className="modalBt4-body modal-body business-content editable-form-content clearfix"
                 style={{ overflowX: "hidden", marginBottom: '15px' }}>
 
-                <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
-                    onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }}>
-                    <Row style={{ padding: "10px 20px 20px 20px" }}>
-                        <Col xs={12} md={6} lg={this.state.allowEditGroup ? 12 : 8}>
-                            <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                                <dt><span>Nombre del grupo </span>
-                                    {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
-                                </dt>
-                                {!this.state.allowEditGroup &&
-                                    <p style={{ wordBreak: "break-word" }}>{riskGroup ? riskGroup.name : ""}</p>
-                                }
-                                {this.state.allowEditGroup &&
-                                    <Input name="groupName"
-                                        type="text"
-                                        max="60"
-                                        {...groupName}
-                                    />
-                                }
-                            </div>
-                        </Col>
+                <Row style={{ padding: "15px" }}>
+                    <Col xs>
+                        <Menu attached='top' tabular>
+                            <Menu.Item name={OPTION_RISK_GROUP} active={tabActive === OPTION_RISK_GROUP} onClick={this.handleItemClick} />
+                            <Menu.Item name={OPTION_NOVELTY} active={tabActive === OPTION_NOVELTY} onClick={this.handleItemClick} />
+                        </Menu>
+                        <Segment>
+                            {tabActive === OPTION_RISK_GROUP &&
+                                <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
+                                    <div className="news-page content">
+                                        <div className="team-modal">
+                                            <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
+                                                onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }}>
+                                                <Row style={{ padding: "10px 20px 20px 20px" }}>
+                                                    <Col xs={12} md={6} lg={this.state.allowEditGroup ? 12 : 8}>
+                                                        <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                                                            <dt><span>Nombre del grupo </span>
+                                                                {this.state.allowEditGroup && <span>(<span style={{ color: "red" }}>*</span>)</span>}
+                                                            </dt>
+                                                            {!this.state.allowEditGroup &&
+                                                                <p style={{ wordBreak: "break-word" }}>{riskGroup ? riskGroup.name : ""}</p>
+                                                            }
+                                                            {this.state.allowEditGroup &&
+                                                                <Input name="groupName"
+                                                                    type="text"
+                                                                    max="60"
+                                                                    {...groupName}
+                                                                />
+                                                            }
+                                                        </div>
+                                                    </Col>
 
-                        {this.state.allowEditGroup &&
-                            <Col md={12}>
+                                                    {this.state.allowEditGroup &&
+                                                        <Col md={12}>
 
-                                <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                                    <dt><span>Observaciones </span>
-                                        <span>(<span style={{ color: "red" }}>*</span>)</span>
-                                    </dt>
-                                    <Textarea className="form-control need-input"
-                                        {...groupObservations}
-                                        name="groupObservations"
-                                        maxLength="250"
-                                    />
-                                </div>
-                            </Col>
-                        }
+                                                            <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                                                                <dt><span>Observaciones </span>
+                                                                    <span>(<span style={{ color: "red" }}>*</span>)</span>
+                                                                </dt>
+                                                                <Textarea className="form-control need-input"
+                                                                    {...groupObservations}
+                                                                    name="groupObservations"
+                                                                    maxLength="250"
+                                                                />
+                                                            </div>
+                                                        </Col>
+                                                    }
 
-                        <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 4} style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "flex-end",
-                            marginTop: "10px"
-                        }}>
-                            {this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit &&
-                                <div>
-                                    <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }}>
-                                        Guardar
-                                </button>
-                                    <button className="btn btn-default active" type="button"
-                                        onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
-                                        style={{ cursor: 'pointer', marginLeft: "10px" }}> Cancelar
-                                </button>
-                                </div>
-                            }
-                            {!this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit && !isPending &&
-                                <div>
-                                    <button className="btn btn-primary" type="button"
-                                        onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
-                                        style={{ cursor: 'pointer' }}>
-                                        Editar
-                                </button>
-                                </div>
-                            }
-                            {allowDelete && infoClient.haveAccessEdit && !isPending &&
-                                <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
-                                    style={{ cursor: 'pointer', marginLeft: "10px" }}>
-                                    Eliminar </button>
-                            }
+                                                    <Col xs={2} md={4} lg={this.state.allowEditGroup ? 12 : 4} style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "flex-end",
+                                                        marginTop: "10px"
+                                                    }}>
+                                                        {this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit &&
+                                                            <div>
+                                                                <button className="btn btn-primary" type="submit" style={{ cursor: 'pointer' }}>
+                                                                    Guardar
+                                                                </button>
+                                                                <button className="btn btn-default" type="button"
+                                                                    onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
+                                                                    style={{ cursor: 'pointer', marginLeft: "10px", backgroundColor: "#66778d" }}> Cancelar
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        {!this.state.allowEditGroup && allowEdit && infoClient.haveAccessEdit && !isPending &&
+                                                            <div>
+                                                                <button className="btn btn-primary" type="button"
+                                                                    onClick={() => this.setState({ allowEditGroup: !this.state.allowEditGroup })}
+                                                                    style={{ cursor: 'pointer' }}>
+                                                                    Editar
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        {allowDelete && infoClient.haveAccessEdit && !isPending &&
+                                                            <button className="btn btn-danger" type="button" onClick={this.openModalDelteRiskGroup}
+                                                                style={{ cursor: 'pointer', marginLeft: "10px" }}>
+                                                                Eliminar </button>
+                                                        }
 
 
-                            <Modal isOpen={this.state.modalDelteRiskGroupIsOpen}
-                                onRequestClose={this.closeModalDelteRiskGroup}
-                                className="modalBt4-fade modal fade contact-detail-modal in">
-                                <div className="modalBt4-dialog modalBt4-md">
-                                    <div className="modalBt4-content modal-content">
-                                        <div className="modalBt4-header modal-header">
-                                            <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
-                                                id="myModalLabel">Eliminar grupo de riesgo</h4>
-                                            <button type="button" onClick={this.closeModalDelteRiskGroup}
-                                                className="close" data-dismiss="modal" role="close">
-                                                <span className="modal-title" aria-hidden="true" role="close"><i
-                                                    className="remove icon modal-icon-close" role="close"></i></span>
-                                                <span className="sr-only">Close</span>
-                                            </button>
+                                                        <Modal isOpen={this.state.modalDelteRiskGroupIsOpen}
+                                                            onRequestClose={this.closeModalDelteRiskGroup}
+                                                            className="modalBt4-fade modal fade contact-detail-modal in">
+                                                            <div className="modalBt4-dialog modalBt4-md">
+                                                                <div className="modalBt4-content modal-content">
+                                                                    <div className="modalBt4-header modal-header">
+                                                                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
+                                                                            id="myModalLabel">Eliminar grupo de riesgo</h4>
+                                                                        <button type="button" onClick={this.closeModalDelteRiskGroup}
+                                                                            className="close" data-dismiss="modal" role="close">
+                                                                            <span className="modal-title" aria-hidden="true" role="close"><i
+                                                                                className="remove icon modal-icon-close" role="close"></i></span>
+                                                                            <span className="sr-only">Close</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    {<ModalComponentDeleteRiskGroup validateHasRiskGroup={validateHasRiskGroup}
+                                                                        riskGroup={riskGroup}
+                                                                        isOpen={this.closeModalDelteRiskGroup} />}
+                                                                </div>
+                                                            </div>
+                                                        </Modal>
+
+
+                                                    </Col>
+
+                                                    <SweetAlert
+                                                        type="error"
+                                                        show={this.state.showErrorForm}
+                                                        title="Campos obligatorios"
+                                                        text="Señor usuario, para editar un grupo de riesgo debe ingresar los campos obligatorios."
+                                                        onConfirm={() => this.setState({ showErrorForm: false })}
+                                                    />
+                                                </Row>
+                                            </form>
+
+                                            <hr style={{ width: "100%", height: "1px", margin: "0px" }} />
+                                            <Row style={{ padding: "10px 20px 20px 20px" }}>
+                                                <Col lg={12} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                                                    {!isPending &&
+                                                        <button className="btn btn-primary" type="button" onClick={this.openModalMember}
+                                                            style={{ cursor: 'pointer', marginLeft: "20px" }}>
+                                                            Agregar cliente
+                                                        </button>}
+                                                    <Modal isOpen={this.state.modalMemberIsOpen} onRequestClose={this.closeModalMember}
+                                                        className="modalBt4-fade modal fade contact-detail-modal in">
+                                                        <div className="modalBt4-dialog modalBt4-lg">
+                                                            <div className="modalBt4-content modal-content">
+                                                                <div className="modalBt4-header modal-header">
+                                                                    <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
+                                                                        id="myModalLabel">Agregar cliente</h4>
+                                                                    <button type="button" onClick={this.closeModalMember} className="close"
+                                                                        data-dismiss="modal" role="close">
+                                                                        <span className="modal-title" aria-hidden="true" role="close"><i
+                                                                            className="remove icon modal-icon-close" role="close"></i></span>
+                                                                        <span className="sr-only">Close</span>
+                                                                    </button>
+                                                                </div>
+                                                                {<ModalComponentMemberRiskGroup validateHasRiskGroup={validateHasRiskGroup}
+                                                                    riskGroup={riskGroup}
+                                                                    isOpen={this.closeModalMember} />}
+                                                            </div>
+                                                        </div>
+                                                    </Modal>
+
+                                                </Col>
+
+                                                <div className="team-modal" style={{
+                                                    width: "100%",
+                                                    display: "grid",
+                                                    gridTemplateColumns: "30% 30% 30%",
+                                                    justifyContent: "space-around",
+                                                    marginBottom: "30px"
+                                                }}>
+                                                    {members.length === 0 ?
+                                                        <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
+                                                            usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
+                                                        :
+                                                        members.map(this._mapClientItems)}
+                                                </div>
+
+                                            </Row>
                                         </div>
-                                        {<ModalComponentDeleteRiskGroup validateHasRiskGroup={validateHasRiskGroup}
-                                            riskGroup={riskGroup}
-                                            isOpen={this.closeModalDelteRiskGroup} />}
                                     </div>
                                 </div>
-                            </Modal>
-
-
-                        </Col>
-
-                        <SweetAlert
-                            type="error"
-                            show={this.state.showErrorForm}
-                            title="Campos obligatorios"
-                            text="Señor usuario, para editar un grupo de riesgo debe ingresar los campos obligatorios."
-                            onConfirm={() => this.setState({ showErrorForm: false })}
-                        />
-                    </Row>
-                </form>
-
-                <hr style={{ width: "100%", height: "1px", margin: "0px" }} />
-                <Row style={{ padding: "10px 20px 20px 20px" }}>
-                    <Col lg={12} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                        {!isPending &&
-                            <button className="btn btn-primary" type="button" onClick={this.openModalMember}
-                                style={{ cursor: 'pointer', marginLeft: "20px" }}>
-                                Agregar cliente
-                        </button>}
-                        <Modal isOpen={this.state.modalMemberIsOpen} onRequestClose={this.closeModalMember}
-                            className="modalBt4-fade modal fade contact-detail-modal in">
-                            <div className="modalBt4-dialog modalBt4-lg">
-                                <div className="modalBt4-content modal-content">
-                                    <div className="modalBt4-header modal-header">
-                                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
-                                            id="myModalLabel">Agregar cliente</h4>
-                                        <button type="button" onClick={this.closeModalMember} className="close"
-                                            data-dismiss="modal" role="close">
-                                            <span className="modal-title" aria-hidden="true" role="close"><i
-                                                className="remove icon modal-icon-close" role="close"></i></span>
-                                            <span className="sr-only">Close</span>
-                                        </button>
+                            }
+                            {tabActive === OPTION_NOVELTY &&
+                                <div className="horizontal-scroll-wrapper" style={{ overflow: 'hidden', background: '#fff' }}>
+                                    <div className="news-page content">
+                                        <div className="team-modal">
+                                            <ListNoveltiesRiskGroup riskGroupReducer={riskGroupReducer} />
+                                        </div>
                                     </div>
-                                    {<ModalComponentMemberRiskGroup validateHasRiskGroup={validateHasRiskGroup}
-                                        riskGroup={riskGroup}
-                                        isOpen={this.closeModalMember} />}
                                 </div>
-                            </div>
-                        </Modal>
+                            }
 
+                        </Segment>
                     </Col>
-
-                    <div className="team-modal" style={{
-                        width: "100%",
-                        display: "grid",
-                        gridTemplateColumns: "30% 30% 30%",
-                        justifyContent: "space-around",
-                        marginBottom: "30px"
-                    }}>
-                        {members.length === 0 ?
-                            <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
-                                usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
-                            :
-                            members.map(this._mapClientItems)}
-                    </div>
-
                 </Row>
             </div >
         )
@@ -374,7 +409,8 @@ function mapDispatchToProps(dispatch) {
         editNameRiskGroup,
         swtShowMessage,
         validatePermissionsByModule,
-        updateValuesRiskGroup
+        updateValuesRiskGroup,
+        getAllNoveltiesRiskGroup
     }, dispatch);
 }
 

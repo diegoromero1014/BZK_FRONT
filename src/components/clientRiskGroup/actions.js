@@ -1,4 +1,4 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import {
     CONSULT_RISK_GROUP,
     REMOVE_CLIENT_RISK_GROUP,
@@ -9,7 +9,10 @@ import {
     UPDATE_NAME_RISK_GROUP,
     CHANGE_PENDING,
     VALIDATE_RISK_GROUP_CODE_EXITS,
-    SHOW_MODAL_RISK_GROUP
+    SHOW_MODAL_RISK_GROUP,
+    LIST_NOVELTIES_RISK_GROUP,
+    SAVE_OBSERVATION,
+    GET_OBSERVATIONS_BY_RISK_GROUP
 } from './constants';
 import axios from 'axios';
 
@@ -36,6 +39,28 @@ export function getClientsRiskGroup(id) {
     }
 }
 
+export function getAllNoveltiesRiskGroup(id) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": id
+    };
+    const request = axios.post(APP_URL + "/getListNoveltiesRiskGroup", json);
+    return {
+        type: LIST_NOVELTIES_RISK_GROUP,
+        payload: request
+    }
+}
 
 export function removeClientRiskGroup(data) {
     const json = {
@@ -201,6 +226,64 @@ export function hasClientRequest(id) {
     const request = axios.post(APP_URL + "/clientHasGroup", json);
     return {
         type: HAS_RISK_GROUP,
+        payload: request
+    }
+}
+
+
+
+export function saveObservationsRiskGroup(codeEntityRiskGroup, entity, observation) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username": "",
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            codeEntity: codeEntityRiskGroup,
+            observations: observation,
+            entity: entity
+        }
+    };
+
+
+    var request = axios.post(APP_URL + "/saveObservationsRiskGroup", json);
+    return {
+        type: SAVE_OBSERVATION,
+        payload: request
+    }
+}
+
+export function getListObservationsRiskGroupById(idCodeEntity) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "username": "",
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": idCodeEntity
+    };
+
+
+    var request = axios.post(APP_URL + "/getListObservationsRiskGroupById", json);
+    return {
+        type: GET_OBSERVATIONS_BY_RISK_GROUP,
         payload: request
     }
 }
