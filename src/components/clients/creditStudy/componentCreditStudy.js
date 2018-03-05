@@ -596,7 +596,18 @@ class ComponentStudyCredit extends Component {
                 return;
             }
 
+
+            if(success.payload.data.data == null) {
+                clearInterval(this.state.intervalId);
+
+                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
+
+                return;
+            }
+
             let username = success.payload.data.data.username
+
+
 
             let name = success.payload.data.data.name
 
@@ -834,6 +845,7 @@ class ComponentStudyCredit extends Component {
                         <span >No aplican contactos con función estudio de crédito</span>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
+                        
                         <ClientTypology customerTypology={customerTypology}
                             data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
                             fieldRequiered={this.state.customerTypology}
@@ -988,8 +1000,8 @@ class ComponentStudyCredit extends Component {
                 <SweetAlert
                     type="error"
                     show={this.state.showErrorBlockedPreVisit}
-                    title="Error al editar el estudio de credito"
-                    text={"Señor usuario, en este momento el estudio de credito esta siendo editado por " + this.state.userEditingPrevisita
+                    title="Error al editar el estudio de crédito"
+                    text={"Señor usuario, en este momento el estudio de crédito esta siendo editado por " + this.state.userEditingPrevisita
                         + ". Por favor intentar mas tarde"}
                     onConfirm={this._closeShowErrorBlockedPrevisit}
 
