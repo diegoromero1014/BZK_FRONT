@@ -588,15 +588,9 @@ class ComponentStudyCredit extends Component {
 
         // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
 
-        console.log("getUserBlockingReport");
-
         return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
-            console.log("isComponentMounted", this._ismounted);
-
             if (! this._ismounted) {
-
-                console.log("El componente no esta mounted")
 
                 clearInterval(this.state.intervalId);
                 return;
@@ -616,11 +610,6 @@ class ComponentStudyCredit extends Component {
                 // Usuario pidiendo permiso es el mismo que esta bloqueando
                 if (!this.state.isEditable) {
                     // Tengo permiso de editar y no estoy editando
-
-                    console.log("Set interval");
-                    console.log("interval",this.state.intervalId);
-                    console.log("editable",this.state.isEditable);
-
                     this.setState({
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
@@ -636,14 +625,12 @@ class ComponentStudyCredit extends Component {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
 
-                    console.log("Limpiando interval")
+              
                     clearInterval(this.state.intervalId);
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
                     
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
-
-                    console.log("Otro usuario esta bloqueando")
 
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
                 }
@@ -669,15 +656,11 @@ class ComponentStudyCredit extends Component {
 
         this._ismounted = false;
 
-        console.log("Unmounting...");
-
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
         // Informar al backend que el informe se puede liberar
 
         if (this.state.isEditable) {
-
-            console.log("stopBlockReport")
 
             stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
@@ -696,7 +679,6 @@ class ComponentStudyCredit extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         
         if (_.isEmpty(infoClient)) {
-            console.log("redirect");
             redirectUrl("/dashboard/clientInformation");
         } else {
 
