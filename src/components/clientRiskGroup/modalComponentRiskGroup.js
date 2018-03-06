@@ -29,6 +29,9 @@ export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 
 const fields = ["groupName", "groupObservations"]
+
+const numberThumbsRow = 3;
+
 const validate = values => {
     const errors = {};
 
@@ -137,7 +140,16 @@ class ModalComponentRiskGroup extends Component {
         const { validateHasRiskGroup, riskGroupReducer } = this.props;
         const riskGroup = riskGroupReducer.get('riskGroupClients');
         const isPending = _.get(riskGroup, 'isPending', true);
+
+        let coord_position = index / numberThumbsRow;
+        let trunc_a = Math.trunc(coord_position);
+        let row_number = trunc_a + 1;
+        let trunc_b =  Math.trunc((coord_position - trunc_a ) * 10);
+        let column_number = trunc_b / numberThumbsRow;        
+
         return <ClientsRiskGroup
+            gridRow={row_number}
+            gridColumn={column_number}
             key={data.id}
             dataName={data.clientName}
             dataDocumentType={data.documentType}
@@ -346,13 +358,7 @@ class ModalComponentRiskGroup extends Component {
 
                     </Col>
 
-                    <div className="team-modal" style={{
-                        width: "100%",
-                        display: "grid",
-                        gridTemplateColumns: "30% 30% 30%",
-                        justifyContent: "space-around",
-                        marginBottom: "30px"
-                    }}>
+                    <div className="team-modal grid c-3" >
                         {members.length === 0 ?
                             <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
                                 usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>

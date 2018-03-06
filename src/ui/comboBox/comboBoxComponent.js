@@ -73,10 +73,10 @@ class comboBoxComponent extends Component {
                     value: id,
                     used: true
                 });
-                if(onBlur){
+                if (onBlur) {
                     onBlur(id, text);
                 }
-                if(onChange){
+                if (onChange) {
                     onChange(id, text);
                 }
             },
@@ -109,25 +109,28 @@ class comboBoxComponent extends Component {
 
         let comboData;
 
-        if(showEmptyObject) {
+        let _data = Object.assign([], data);// data?data:[]
+
+
+        if (showEmptyObject) {
             emptyObject[valueProp] = '';
             emptyObject[textProp] = "Seleccione...";
 
-            comboData = [emptyObject, ...data];
-        }else{
-            comboData = data;
+            comboData = [emptyObject, ..._data];
+        } else {
+            comboData = _data;
         }
 
         return (
             <div className={disabled} >
                 <div
                     className={`styleWidthComponents ui search selection dropdown  ${name} ${deployUp === true ? 'bottom pointing' : ''} ${disabled}`}
-                    style={{ minWidth: '7em', marginBottom: '0px'}}>
+                    style={{ minWidth: '7em', marginBottom: '0px' }}>
                     <input type="hidden" name={nameInput} value={defaultValue} disabled={disabled} placeholder="Seleccione..." className={disabled} />
                     <i className="dropdown icon" />
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
                     <div className={`right menu ${name}`}>
-                        {_.map(comboData , this.mapValuesToDropDown)}
+                        {_.map(comboData, this.mapValuesToDropDown)}
                     </div>
                 </div>
                 {
