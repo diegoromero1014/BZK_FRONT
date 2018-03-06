@@ -8,7 +8,7 @@ import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID, VALUE_REQUIERED,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
-    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED
+    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED, MOST_ADD_AN_EVENT
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
@@ -17,6 +17,8 @@ import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
+import {addEvent} from './events/actions';
+
 import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
 import _ from 'lodash';
 import {
@@ -105,7 +107,8 @@ class componentStructuredDelivery extends Component {
     _submitStructuredDelivery() {
         const {
             fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted, updateEventErrors
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, 
+            idClientSeleted, updateEventErrors, callFromDeliveryClient, addEvent
         } = this.props;
 
         let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
@@ -117,7 +120,15 @@ class componentStructuredDelivery extends Component {
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
 
-        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) {
+        if(callFromDeliveryClient && structuredDeliveryEvents.size == 0 ) {
+            const uuid = _.uniqueId('event_');
+            addEvent(uuid);
+            updateEventErrors(true, "Debe ingresar un evento");
+            swtShowMessage('error', INCOMPLETE_INFORMATION, MOST_ADD_AN_EVENT);
+            return;
+        }
+
+        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) { 
             let listEvents = [];
             let allowSave = true;
 
@@ -495,7 +506,8 @@ function mapDispatchToProps(dispatch) {
         setEvents,
         clearEvents,
         changeStateSaveData,
-        updateEventErrors
+        updateEventErrors,
+        addEvent
     }, dispatch);
 }
 
