@@ -23,14 +23,16 @@ import {
     getContextClient, saveCreditStudy, validateInfoCreditStudy,
     updateNotApplyCreditContact
 } from './actions';
-import { validateResponse, stringValidate, xssValidation } from '../../../actionsGlobal';
+import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT, 
+    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
+import { showLoading } from "../../loading/actions";
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import moment from 'moment';
 import {
@@ -56,6 +58,21 @@ var messageContact = 'La información de los contactos es válida, ';
 var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection, numberOfBoardMembers;
 var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
+
+
+const containerButtons = {
+    
+    position: "fixed",
+    border: "1px solid #C2C2C2",
+    bottom: "0px",
+    width: "100%",
+    marginBottom: "0px",
+    backgroundColor: "#F8F8F8",
+    height: "50px",
+    background: "rgba(255,255,255,0.75)"
+};
+
+const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
 
 const validate = (values, props) => {
     const errors = {}
@@ -97,6 +114,11 @@ class ComponentStudyCredit extends Component {
         this._handleChangeValueIntOperations = this._handleChangeValueIntOperations.bind(this);
         this._handleChangeValueNotApplyCreditContact = this._handleChangeValueNotApplyCreditContact.bind(this);
         this._validateInformationToSave = this._validateInformationToSave.bind(this);
+        this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
+        this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+        
+        this._ismounted = false;
+
         this.state = {
             showConfirmExit: false,
             showSuccessMessage: false,
@@ -121,7 +143,14 @@ class ComponentStudyCredit extends Component {
             valueCheckNotApplyCreditContact: false,
             fieldContextRequired: false,
             customerTypology: false,
-            controlLinkedPaymentsRequired: true
+            controlLinkedPaymentsRequired: true,
+
+            isEditable: false,
+            showErrorBlockedPreVisit: false,
+            intervalId: null,
+            userEditingPrevisita: '',
+            isComponentMounted: true
+
         }
     }
 
@@ -231,7 +260,7 @@ class ComponentStudyCredit extends Component {
         redirectUrl("/dashboard/clientInformation");
     }
 
-    _createJsonSaveContextClient() {
+    _createJsonSaveContextClient(isDraft) {
         const { fields: { contextClientField, inventoryPolicy, customerTypology,
             controlLinkedPayments }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -297,7 +326,9 @@ class ComponentStudyCredit extends Component {
                 noAppliedMainSuppliers,
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
-                noAppliedControlLinkedPayments
+                noAppliedControlLinkedPayments,
+                
+                isDraft
             };
         } else {
             contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
@@ -317,6 +348,9 @@ class ComponentStudyCredit extends Component {
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
             contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
+
+            contextClient.isDraft = isDraft;
+
             return contextClient;
         }
     }
@@ -328,6 +362,11 @@ class ComponentStudyCredit extends Component {
         const { contextClient } = infoClient;
         var allowSave = true;
         var contextClientInfo = studyCreditReducer.get('contextClient');
+
+        var shouldDisplayMessage = false;
+        var contentErrorMessage = "";
+
+
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         if (!infoValidate.numberOfValidShareholders) {
             allowSave = false;
@@ -368,6 +407,12 @@ class ComponentStudyCredit extends Component {
                                 lineofBusinessRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
+
+                           
+
                         }
                         if (listDistribution.length === 0 &&
                             (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
@@ -376,6 +421,9 @@ class ComponentStudyCredit extends Component {
                                 distributionRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainCustomer.length === 0 &&
                             (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
@@ -384,6 +432,9 @@ class ComponentStudyCredit extends Component {
                                 mainClientRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainSupplier.length === 0 &&
                             (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
@@ -392,6 +443,9 @@ class ComponentStudyCredit extends Component {
                                 mainSupplierRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (listMainCompetitor.length === 0 &&
                             (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
@@ -400,6 +454,9 @@ class ComponentStudyCredit extends Component {
                                 mainCompetitorRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
                         if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
                             (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
@@ -408,6 +465,9 @@ class ComponentStudyCredit extends Component {
                                 intOperationsRequired: true
                             });
                             allowSave = false;
+
+                            shouldDisplayMessage = true;
+                            contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
 
                         if (!stringValidate(contextClientField.value)) {
@@ -443,27 +503,59 @@ class ComponentStudyCredit extends Component {
                 }
             }
         }
+
+        if(shouldDisplayMessage) {
+            swtShowMessage('error','Estudio de crédito', contentErrorMessage);
+        }
+        
         return allowSave;
     }
 
-    _submitSaveContextClient() {
-        if (this._validateInformationToSave()) {
-            const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
-            changeStateSaveData(true, MESSAGE_LOAD_DATA);
-            saveCreditStudy(this._createJsonSaveContextClient()).then((data) => {
-                changeStateSaveData(false, "");
-                if (!validateResponse(data)) {
+    _submitSaveContextClient(tipoGuardado) {
+
+        const { getUserBlockingReport, swtShowMessage } = this.props;
+
+        
+        showLoading(true, "Cargando...");
+
+        let username = window.sessionStorage.getItem('userName');
+
+        this.canUserEditBlockedReport(username).then((success) => {
+
+            showLoading(false, "Cargando...");
+
+            let isAvance;
+
+            if( typeof tipoGuardado == 'undefined') {
+                isAvance = false;
+            }else if(tipoGuardado == "Avance") {
+                isAvance = true;
+            }else {
+                isAvance = false;
+            }
+
+            if (isAvance || this._validateInformationToSave()) {
+                const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
+                changeStateSaveData(true, MESSAGE_LOAD_DATA);
+                saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
+                    changeStateSaveData(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    } else {
+                        this.setState({
+                            showSuccessMessage: true
+                        });
+                    }
+                }, (reason) => {
+                    changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                } else {
-                    this.setState({
-                        showSuccessMessage: true
-                    });
-                }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            });
-        }
+                });
+            }
+
+        }).catch((error) => {
+            showLoading(false, "Cargando...");
+        })
+
     }
 
     _closeMessageSuccess() {
@@ -487,15 +579,124 @@ class ComponentStudyCredit extends Component {
         });
     }
 
+
+    canUserEditBlockedReport(myUserName) {
+
+        const { getUserBlockingReport, swtShowMessage } = this.props;
+
+        let idClient = window.localStorage.getItem('idClientSelected');
+
+        // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
+
+        return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+
+            if (! this._ismounted) {
+
+                clearInterval(this.state.intervalId);
+                return;
+            }
+
+
+            if(success.payload.data.data == null) {
+                clearInterval(this.state.intervalId);
+
+                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
+
+                return;
+            }
+
+            let username = success.payload.data.data.username
+
+
+
+            let name = success.payload.data.data.name
+
+            if (_.isNull(username)) {
+                // Error servidor
+                swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
+
+                return Promise.reject(new Error('Error interno del servidor'))
+
+            } else if (username.toUpperCase() === myUserName.toUpperCase()) {
+                // Usuario pidiendo permiso es el mismo que esta bloqueando
+                if (!this.state.isEditable) {
+                    // Tengo permiso de editar y no estoy editando
+                    this.setState({
+                        showErrorBlockedPreVisit: false,
+                        showMessage: false,
+                        isEditable: true,
+                        intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                    })
+
+                }
+
+            } else {
+                // El reporte esta siendo editado por otra persona
+                if (this.state.isEditable) {
+                    // Estoy editando pero no tengo permisos
+                    // Salir de edicion y detener intervalo
+
+              
+                    clearInterval(this.state.intervalId);
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
+                    
+                } else {
+                    // Mostar mensaje de el usuario que tiene bloqueado el informe
+
+                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
+                }
+
+                return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
+            }
+
+            return success
+        })
+
+    }
+
+    _closeShowErrorBlockedPrevisit() {
+        this.setState({ showErrorBlockedPreVisit: false })
+        redirectUrl("/dashboard/clientInformation")
+    }
+
+    componentWillUnmount() {
+
+        const { stopBlockToReport, id } = this.props;
+
+        let idClient = window.localStorage.getItem('idClientSelected');
+
+        this._ismounted = false;
+
+        // Detener envio de peticiones para bloquear el informe
+        clearInterval(this.state.intervalId)
+        // Informar al backend que el informe se puede liberar
+
+        if (this.state.isEditable) {
+
+            stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+
+            }).catch((error) => {
+    
+            })
+        }        
+
+    }
+
+
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy } = this.props;
+            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
+        
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
         } else {
+
+            let logUser = window.sessionStorage.getItem('userName');
             var idClient = window.localStorage.getItem('idClientSelected');
+
+            this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
@@ -537,6 +738,8 @@ class ComponentStudyCredit extends Component {
         const { fields: { notApplyCreditContact }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         notApplyCreditContact.onChange(infoClient.notApplyCreditContact);
+
+        this._ismounted = true;
     }
 
     render() {
@@ -642,6 +845,7 @@ class ComponentStudyCredit extends Component {
                         <span >No aplican contactos con función estudio de crédito</span>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
+                        
                         <ClientTypology customerTypology={customerTypology}
                             data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
                             fieldRequiered={this.state.customerTypology}
@@ -750,27 +954,30 @@ class ComponentStudyCredit extends Component {
                         <span style={overdueCreditStudy ? { color: "#D9534F" } : { marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
                     </Col>
                 </Row>
-                <div style={{
-                    marginTop: "50px", position: "fixed",
-                    border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px",
-                    backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)"
-                }}>
-                    <div style={{ width: "370px", height: "100%", position: "fixed", right: "0px" }}>
-                        <button className="btn"
-                            style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                            type="submit">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
-                        </button>
-                        <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 240px",
-                            position: "fixed",
-                            backgroundColor: "#C1C1C1"
-                        }} type="button">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                        </button>
+                <div className="" style={containerButtons}>
+                        <div style={{
+                            right: '0px',
+                            position: 'fixed',
+                            paddingRight: '15px'
+                        }}>
+                            <Row style={{ paddingTop: '8px' }}>
+
+
+                                    <Col style={paddingButtons} onClick={ () => this._submitSaveContextClient("Avance") } >
+                                        <button className="btn" type="button" style={ { backgroundColor: "#00B5AD" } } ><span >Guardar Avance</span></button>
+                                    </Col>
+
+                                    <Col style={paddingButtons}   >
+                                        <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
+                                    </Col>
+                                
+                                    <Col style={paddingButtons} onClick={this._closeWindow} >
+                                        <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
+                                    </Col>
+                                
+                            </Row>
+                        </div>
                     </div>
-                </div>
                 <SweetAlert
                     type="success"
                     show={this.state.showSuccessMessage}
@@ -789,6 +996,17 @@ class ComponentStudyCredit extends Component {
                     showCancelButton={true}
                     onCancel={() => this.setState({ showConfirmExit: false })}
                     onConfirm={() => this._onConfirmExit()} />
+
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorBlockedPreVisit}
+                    title="Error al editar el estudio de crédito"
+                    text={"Señor usuario, en este momento el estudio de crédito esta siendo editado por " + this.state.userEditingPrevisita
+                        + ". Por favor intentar mas tarde"}
+                    onConfirm={this._closeShowErrorBlockedPrevisit}
+
+                />
+
             </form>
         )
     }
@@ -804,7 +1022,9 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         saveCreditStudy,
         validateInfoCreditStudy,
-        updateNotApplyCreditContact
+        updateNotApplyCreditContact,
+        getUserBlockingReport,
+        stopBlockToReport
     }, dispatch);
 }
 

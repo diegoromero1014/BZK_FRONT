@@ -215,11 +215,35 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
   * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
   */
 
-export const NAME_REPORT_PREVISIT = "PreVisita"
-export const TIME_REQUEST_BLOCK_REPORT = 15000;
+ /**
+  * ACCIONES
+  */
+    export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
+    export const STOP_BLOCK_REPORT = "STOP_BLOCK_REPORT";
+
+ /**
+  * TIPOS DE DOCUMENTOS BLOQUEADOS
+  */
+
+    export const NAME_REPORT_PREVISIT = "PreVisita";
+    export const BLOCK_CREDIT_STUDY = "CreditStudy";
+
+ /**
+  * PARAMETROS BLOQUEO
+  */
+    export const TIME_REQUEST_BLOCK_REPORT = 5000;
+
 
 /**
  * Reestablecer permisos
  */
 
 export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREVISITS"
+
+/**
+ * Constantes totalidad de los campos requeridos
+ */
+
+ export const INCOMPLETE_INFORMATION = "Información incompleta";
+ export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
+ export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un evento";
