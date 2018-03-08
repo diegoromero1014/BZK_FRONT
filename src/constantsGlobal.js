@@ -246,3 +246,4 @@ export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREV
 
  export const INCOMPLETE_INFORMATION = "Información incompleta";
  export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
+ export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un evento";

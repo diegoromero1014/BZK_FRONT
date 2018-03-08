@@ -8,7 +8,7 @@ import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID, VALUE_REQUIERED,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
-    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED
+    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED, MOST_ADD_AN_EVENT
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
@@ -17,6 +17,8 @@ import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
+import {addEvent} from './events/actions';
+
 import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
 import _ from 'lodash';
 import {
@@ -36,42 +38,42 @@ let thisForm = null;
 
 const validate = (values) => {    
 
-    if (values.corporateGobernance == "" && const_callFromDeliveryClient) {
+    if (!values.corporateGobernance && const_callFromDeliveryClient) {
         errors.corporateGobernance = VALUE_REQUIERED;
     } else if (xssValidation(values.corporateGobernance)) {
         errors.corporateGobernance = VALUE_XSS_INVALID;
     } else {
         errors.corporateGobernance = null;
     }
-    if (values.reciprocity == "" && const_callFromDeliveryClient) {
+    if (!values.reciprocity && const_callFromDeliveryClient) {
         errors.reciprocity = VALUE_REQUIERED;
     } else if (xssValidation(values.reciprocity)) {
         errors.reciprocity = VALUE_XSS_INVALID;
     } else {
         errors.reciprocity = null;
     }
-    if (values.specialConsiderations == "" && const_callFromDeliveryClient) {
+    if (!values.specialConsiderations && const_callFromDeliveryClient) {
         errors.specialConsiderations = VALUE_REQUIERED;
     } else if (xssValidation(values.specialConsiderations)) {
         errors.specialConsiderations = VALUE_XSS_INVALID;
     } else {
         errors.specialConsiderations = null;
     }
-    if (values.businessWithAffiliates == "" && const_callFromDeliveryClient) {
+    if (!values.businessWithAffiliates && const_callFromDeliveryClient) {
         errors.businessWithAffiliates = VALUE_REQUIERED;
     } else if (xssValidation(values.businessWithAffiliates)) {
         errors.businessWithAffiliates = VALUE_XSS_INVALID;
     } else {
         errors.businessWithAffiliates = null;
     }
-    if (values.mergers == "" && const_callFromDeliveryClient) {
+    if (!values.mergers && const_callFromDeliveryClient) {
         errors.mergers = VALUE_REQUIERED;
     } else if (xssValidation(values.mergers)) {
         errors.mergers = VALUE_XSS_INVALID;
     } else {
         errors.mergers = null;
     }
-    if (values.dificultSituations == "" && const_callFromDeliveryClient) {
+    if (!values.dificultSituations && const_callFromDeliveryClient) {
         errors.dificultSituations = VALUE_REQUIERED;
     } else if (xssValidation(values.dificultSituations)) {
         errors.dificultSituations = VALUE_XSS_INVALID;
@@ -105,7 +107,8 @@ class componentStructuredDelivery extends Component {
     _submitStructuredDelivery() {
         const {
             fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted, updateEventErrors
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, 
+            idClientSeleted, updateEventErrors, callFromDeliveryClient, addEvent
         } = this.props;
 
         let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
@@ -117,7 +120,15 @@ class componentStructuredDelivery extends Component {
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
 
-        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) {
+        if(callFromDeliveryClient && structuredDeliveryEvents.size == 0 ) {
+            const uuid = _.uniqueId('event_');
+            addEvent(uuid);
+            updateEventErrors(true, "Debe ingresar un evento");
+            swtShowMessage('error', INCOMPLETE_INFORMATION, MOST_ADD_AN_EVENT);
+            return;
+        }
+
+        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) { 
             let listEvents = [];
             let allowSave = true;
 
@@ -495,7 +506,8 @@ function mapDispatchToProps(dispatch) {
         setEvents,
         clearEvents,
         changeStateSaveData,
-        updateEventErrors
+        updateEventErrors,
+        addEvent
     }, dispatch);
 }
 
