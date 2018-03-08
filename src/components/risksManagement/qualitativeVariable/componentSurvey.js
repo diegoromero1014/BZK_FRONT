@@ -28,6 +28,8 @@ import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
 import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
 import { changeStateSaveData } from '../../dashboard/actions';
 
+import moment from 'moment';
+
 class ComponentSurvey extends Component {
     constructor(props) {
         super(props);
@@ -134,6 +136,14 @@ class ComponentSurvey extends Component {
     render() {
         const { reducerGlobal, qualitativeVariableReducer } = this.props;
         const survey = qualitativeVariableReducer.get('survey');
+
+        console.log(survey);
+        console.log(survey.latestUpdated);
+
+        const fechaActualizacion = moment(survey.latestUpdated).locale('es').format("DD MMM YYYY");
+
+        console.log(fechaActualizacion);
+
         const listFactorCommercial = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const listFactorAnalyst = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
@@ -142,6 +152,12 @@ class ComponentSurvey extends Component {
             <Row>
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
                     <Col xs={12} md={12} lg={12}>
+                        <div style={{ }} >
+                            <span>Ultima fecha de diligenciamiento: </span><span>{fechaActualizacion}</span> 
+                        </div>
+                        <div>
+                            <span>Estado: {survey.estado}</span>
+                        </div>
                         <div style={{ textAlign: "right", marginRight: '10px' }}>
                             <span
                                 style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>{survey.name}</span>
