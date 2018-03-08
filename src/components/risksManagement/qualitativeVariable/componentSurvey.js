@@ -169,6 +169,8 @@ class ComponentSurvey extends Component {
                             }
                         </div>
 
+                        
+
                         <ComponentAccordion functionChange={() => this._changeOpenSection(COMMERCIAL_SECTION)}
                             codSection={this.state.openCommercial} title="Comercial"
                             componentView={listFactorCommercial.map((item) => this._mapFactors(item, false))} />
