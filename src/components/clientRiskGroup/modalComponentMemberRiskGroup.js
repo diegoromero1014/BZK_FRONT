@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from '../globalComponents/actions';
-import {reduxForm} from 'redux-form';
+import {reduxForm } from 'redux-form';
+
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import SweetAlert from 'sweetalert-react';
@@ -15,6 +16,8 @@ import {getMasterDataFields} from '../selectsComponent/actions';
 import {showLoading} from '../loading/actions';
 import MemberRiskGroup from './memberRiskGroup'
 import _ from 'lodash';
+
+import RemoteSubmitButton from './RemoteSubmitButton'
 
 const fields = [
     "idType", "idNumber"
@@ -127,6 +130,8 @@ class modalComponentMemberRiskGroup extends Component {
 
         const {fields: {idType, idNumber}, handleSubmit, isOpen, riskGroup, validateHasRiskGroup} = this.props;
         const {selectsReducer} = this.props;
+// onClick={() => dispatch(submit('submitMemberForm'))}
+// console.log(submit);
         return (
             <div>
                 <div id="content-modal-rosk-group"
@@ -199,9 +204,8 @@ class modalComponentMemberRiskGroup extends Component {
 
                 <div className="modalBt4-footer modal-footer">
                     {this.state.showForm &&
-                    <button className="btn btn-prymary" type="submit"
-                            form={"submitMemberForm"} style={{cursor: 'pointer', marginLeft: "20px"}}>
-                        Agregar </button>
+                        <RemoteSubmitButton/>
+                    
                     }
                     <button className="btn btn-default btnDefaultAyax " type="button"
                             style={{cursor: 'pointer', marginLeft: "20px"}} onClick={() => {
@@ -215,6 +219,7 @@ class modalComponentMemberRiskGroup extends Component {
         )
     };
 }
+// {/*form={"submitMemberForm"}  */}
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({

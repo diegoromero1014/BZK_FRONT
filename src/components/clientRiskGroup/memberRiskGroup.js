@@ -157,11 +157,11 @@ class memberRiskGroup extends Component {
             this.requestAddMemberRiskGroup();
         })
     }
-
+// this._handlerSubmitGroup
     render() {
         const {fields: {clientName, conformationReasonId, segmentClient, justification}, handleSubmit, clientsBasicInfo} = this.props;
         const {selectsReducer} = this.props;
-        return <form id={"submitMemberForm"} onSubmit={handleSubmit(this._handlerSubmitGroup)}
+        return <form id={"submitMemberForm"} onSubmit={handleSubmit()}
                      onKeyPress={val => formValidateKeyEnter(val, true)} style={{width: "100%"}}>
             <div id="content-modal-rosk-group"
                  className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -258,6 +258,10 @@ export default reduxForm({
     fields,
     destroyOnUnmount: true,
     validate,
+     onSubmit: data=>{
+         console.log("asdfadsf")
+
+     },
     onSubmitFail: errors => {
         thisForm.setState({showErrorForm: true});
     }
