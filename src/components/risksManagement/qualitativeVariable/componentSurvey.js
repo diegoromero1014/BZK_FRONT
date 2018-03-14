@@ -111,7 +111,8 @@ class ComponentSurvey extends Component {
             swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, para guardar la encuesta debe diligenciar por completo las preguntas que pertenezcan a su rol.');
         } else {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            const filterQuestions = analyst ? listquestions : filter(listquestions, ['analyst', false]);
+            //const filterQuestions = analyst ? listquestions : filter(listquestions, ['analyst', false]);
+            const filterQuestions = listquestions;
             const jsonSave = {
                 "idSurvey": get(qualitativeVariableReducer.get('survey'), 'id', null),
                 "idClient": window.localStorage.getItem('idClientSelected'),
