@@ -15,6 +15,7 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import { getListContactGroupById } from '../favoritesGroup/actions';
 import {
     consultDataSelect,
     consultList,
@@ -59,7 +60,7 @@ import Tooltip from '../../toolTip/toolTipComponent';
 const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
     "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
     "codigoPostal", "telefono", "extension", "celular", "correo", "tipoContacto", "tipoEntidad", "tipoFuncion", "tipoHobbie", "tipoDeporte",
-    "contactRelevantFeatures"
+    "contactRelevantFeatures", "listaFavoritos"
 ];
 const errors = {};
 var thisForm;
@@ -251,9 +252,10 @@ class ModalComponentContact extends Component {
     componentWillMount() {
         const {
             fields: { tipoDocumento }, getMasterDataFields, clearSearchContact,
-            nonValidateEnter
+            nonValidateEnter, getListContactGroupById
         } = this.props;
         nonValidateEnter(true);
+        getListContactGroupById();
         clearSearchContact();
         this.props.resetForm();
         tipoDocumento.onChange('');
@@ -377,7 +379,7 @@ class ModalComponentContact extends Component {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
             numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures
+            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             }, handleSubmit, error
         } = this.props;
         var messageBody = {
@@ -412,7 +414,8 @@ class ModalComponentContact extends Component {
             "socialStyle": tipoEstiloSocial.value,
             "attitudeOverGroup": tipoActitud.value,
             "contactRelevantFeatures": contactRelevantFeatures.value,
-            "callFromModuleContact": false
+            "callFromModuleContact": false,
+            "favoritesGroups": JSON.parse('[' + ((listaFavoritos.value) ? listaFavoritos.value : "") + ']')
         };
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
@@ -441,13 +444,14 @@ class ModalComponentContact extends Component {
     }
 
     render() {
-        const { modalStatus, selectsReducer, createContactReducer } = this.props;
+        const { modalStatus, selectsReducer, createContactReducer, groupsFavoriteContacts } = this.props;
         const {
             initialValues, fields: {
                 id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
                 tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
                 primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures
+                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, 
+                pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             }, handleSubmit, error, reducerGlobal
         } = this.props;
         return (
@@ -889,6 +893,24 @@ class ModalComponentContact extends Component {
                             </Col>
                         </Row>
                     </div>
+                    <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
+                        Favoritos
+                    </dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
+                        <Row>
+                            <Col xs>
+                                <dl style={{ width: '100%' }}>
+                                    <dt><span>Grupo de contactos favoritos</span></dt>
+                                    <dd><MultipleSelect name="listaFavoritos" labelInput="Seleccione"
+                                        {...listaFavoritos}
+                                        valueProp={'id'}
+                                        textProp={'name'}
+                                        data={groupsFavoriteContacts.get("listGroupFavorite") || []}
+                                    /></dd>
+                                </dl>
+                            </Col>
+                        </Row>            
+                    </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
                     <button type="submit" style={{ visibility: this.state.noExiste }}
@@ -942,12 +964,13 @@ class ModalComponentContact extends Component {
     }
 }
 
-function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal }, { fields }) {
+function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts }, { fields }) {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     if (contactDetail && contactDetail.contactIdentityNumber) {
         return {
             selectsReducer,
             reducerGlobal,
+            groupsFavoriteContacts,
             initialValues: {
                 id: contactDetail.id,
                 tipoDocumento: contactDetail.contactType,
@@ -985,6 +1008,7 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal }
         return {
             selectsReducer,
             reducerGlobal,
+            groupsFavoriteContacts,
             initialValues: {
                 tipoDocumento: '',
                 numeroDocumento: ''
@@ -1008,7 +1032,8 @@ function mapDispatchToProps(dispatch) {
         consultList,
         downloadFilePDF,
         changeStateSaveData,
-        nonValidateEnter
+        nonValidateEnter,
+        getListContactGroupById,
     }, dispatch);
 }
 

@@ -33,7 +33,8 @@ const initialState = Immutable.Map({
     keywordContactsByFunctionOrType: '',
     functionContactsByFunctionOrTpe: null,
     typeContactsByFunctionOrType: null,
-    lowerLimitContactsByFunctionOrType: 0
+    lowerLimitContactsByFunctionOrType: 0,
+    listGroupFavorite: []
 });
 
 export default (state = initialState, action = {}) => {
@@ -213,6 +214,8 @@ export default (state = initialState, action = {}) => {
             return state.set('typeContactsByFunctionOrType', action.type);
         case actions.SET_CONTACTS_BY_FUNCTION_OR_TYPE:
             return state.set('contactByFunctionOrTypeSelected', action.listContacts);
+        case actions.LIST_CONTACT_GROUP_FOR_ID:
+            return state.set('listGroupFavorite', action.payload.data.data);
         default:
             return state;
     }
