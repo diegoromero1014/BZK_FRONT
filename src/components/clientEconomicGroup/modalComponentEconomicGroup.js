@@ -65,7 +65,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   componentDidMount() {
-    self = this;
+    const self = this;
     $("#iconClientRelationship").click(function () {
       var e = { keyCode: 13, consultclick: true };
       self.updateKeyValueClient(e);
@@ -73,7 +73,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   componentWillUpdate() {
-    self = this;
+    const self = this;
     $("#iconClientRelationship").click(function () {
       var e = { keyCode: 13, consultclick: true };
       self.updateKeyValueClient(e);
