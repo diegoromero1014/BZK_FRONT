@@ -16,6 +16,9 @@ import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
 
+import SweetAlert from "sweetalert-react";
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+
 
 class FormLogin extends Component {
     constructor(props) {
@@ -23,8 +26,16 @@ class FormLogin extends Component {
         this.state = {
             usuario: "",
             password: "",
-            message: ""
+            message: "",
+            showMessageNotification: false,
+            messageTitle: 'Mensaje',
+            messageNotification: ''
+
+
         }
+
+        this._redirectLogin = this._redirectLogin.bind(this);
+
     }
 
     _handleChangeId(e) {
@@ -37,6 +48,11 @@ class FormLogin extends Component {
         this.setState({
             password: e.target.value
         })
+    }
+
+    _redirectLogin() {
+        this.setState({ showMessageNotification: false });
+        redirectUrl("/dashboard/clients");
     }
 
     _handleValidateLogin(e) {
@@ -52,11 +68,21 @@ class FormLogin extends Component {
                             message: (_.get(response, 'payload.data.data.message'))
                         });
                     } else {
+
                         const { saveSessionToken, redirectUrl } = this.props;
                         saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
-                        redirectUrl("/dashboard/clients");
+
+                        if (_.get(response, 'payload.data.data.messageNotification', true)){
+                            //Mensaje notificacion
+                            this.setState({showMessageNotification : true, messageNotification: _.get(response, 'payload.data.data.messageNotification') });
+
+                        } else {
+                            redirectUrl("/dashboard/clients");
+                        }
+
+                        
                     }
                 } else {
                     this.setState({
@@ -121,6 +147,15 @@ class FormLogin extends Component {
                         }
                     </button>
                 </div>
+                <SweetAlert
+                    type="warning"
+                    show={this.state.showMessageNotification}
+                    title={this.state.messageTitle}
+                    text={this.state.messageNotification}
+                    confirmButtonColor='#DD6B55'
+                    confirmButtonText='Ok'
+            
+                    onConfirm={this._redirectLogin} />
             </form>
         );
     }
