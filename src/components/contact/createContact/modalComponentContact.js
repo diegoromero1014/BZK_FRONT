@@ -1002,6 +1002,7 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, 
                 tipoEntidad: JSON.parse('["' + _.join(contactDetail.lineOfBusiness, '","') + '"]'),
                 tipoFuncion: contactDetail.function !== null && contactDetail.function !== "" && contactDetail.function !== undefined ? JSON.parse('["' + _.join(contactDetail.function, '","') + '"]') : contactDetail.function,
                 tipoDeporte: JSON.parse('["' + _.join(contactDetail.sports, '","') + '"]'),
+                listaFavoritos: JSON.parse('["' + _.join(contactDetail.favoritesGroups, '","') + '"]')
             }
         };
     } else {
