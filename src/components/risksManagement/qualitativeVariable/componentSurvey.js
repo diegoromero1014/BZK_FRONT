@@ -28,6 +28,8 @@ import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
 import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
 import { changeStateSaveData } from '../../dashboard/actions';
 
+import moment from 'moment';
+
 class ComponentSurvey extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +42,21 @@ class ComponentSurvey extends Component {
         this._changeOpenSection = this._changeOpenSection.bind(this);
         this._clickSimulateSurvey = this._clickSimulateSurvey.bind(this);
         this._clickChangeEditableFields = this._clickChangeEditableFields.bind(this);
+        this._reloadSurvey = this._reloadSurvey.bind(this);
+    }
+
+    _reloadSurvey() {
+        const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
+        
+        clearSurvey();
+        changeStateSaveData(true, MESSAGE_LOAD_DATA);
+
+        getSurveyQualitativeVarible().then((data) => {
+            changeStateSaveData(false, '');
+            if (!validateResponse(data)) {
+                swtShowMessage('error', 'Error consultando encuesta', 'Señor usuario, Ocurrió un error tratando de consultar la encuesta de variables cualitativas');
+            }
+        });
     }
 
     _changeOpenSection(type) {
@@ -79,7 +96,7 @@ class ComponentSurvey extends Component {
     _clickSaveSurvey() {
         const {
             reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage,
-            changeFieldsEditables, changeStateSaveData, getSurveyQualitativeVarible
+            changeFieldsEditables, changeStateSaveData, getSurveyQualitativeVarible, clearSurvey
         } = this.props;
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
@@ -94,7 +111,8 @@ class ComponentSurvey extends Component {
             swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, para guardar la encuesta debe diligenciar por completo las preguntas que pertenezcan a su rol.');
         } else {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            const filterQuestions = analyst ? listquestions : filter(listquestions, ['analyst', false]);
+            //const filterQuestions = analyst ? listquestions : filter(listquestions, ['analyst', false]);
+            const filterQuestions = listquestions;
             const jsonSave = {
                 "idSurvey": get(qualitativeVariableReducer.get('survey'), 'id', null),
                 "idClient": window.localStorage.getItem('idClientSelected'),
@@ -103,10 +121,17 @@ class ComponentSurvey extends Component {
             };
             changeFieldsEditables(false);
             saveResponseQualitativeSurvey(jsonSave).then((data) => {
+
+
+
                 if (!validateResponse(data)) {
                     changeStateSaveData(false);
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
+
+              
+                    clearSurvey();
+
                     getSurveyQualitativeVarible().then((data) => {
                         changeStateSaveData(false);
                         if (!validateResponse(data)) {
@@ -134,6 +159,15 @@ class ComponentSurvey extends Component {
     render() {
         const { reducerGlobal, qualitativeVariableReducer } = this.props;
         const survey = qualitativeVariableReducer.get('survey');
+
+        let fechaActualizacion = "";
+
+        if (survey.latestUpdated == null) {
+            fechaActualizacion = "";
+        }else {
+            fechaActualizacion = moment(survey.latestUpdated).locale('es').format("DD MMM YYYY");
+        }
+
         const listFactorCommercial = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const listFactorAnalyst = !validateValueExist(survey) || !validateValueExist(survey.listFactor) ? [] : _.get(survey, 'listFactor');
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
@@ -142,6 +176,12 @@ class ComponentSurvey extends Component {
             <Row>
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
                     <Col xs={12} md={12} lg={12}>
+                        <div style={{ }} >
+                            <span>Ultima fecha de diligenciamiento: </span><span>{fechaActualizacion}</span> 
+                        </div>
+                        <div>
+                            <span>Estado: {survey.estado}</span>
+                        </div>
                         <div style={{ textAlign: "right", marginRight: '10px' }}>
                             <span
                                 style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>{survey.name}</span>
@@ -152,6 +192,8 @@ class ComponentSurvey extends Component {
                                 </button>
                             }
                         </div>
+
+                        
 
                         <ComponentAccordion functionChange={() => this._changeOpenSection(COMMERCIAL_SECTION)}
                             codSection={this.state.openCommercial} title="Comercial"
@@ -167,15 +209,19 @@ class ComponentSurvey extends Component {
                                     <button className="btn" type="buttom" onClick={this._clickSimulateSurvey}
                                         style={{
                                             float: 'right',
-                                            margin: '8px 0px 0px 330px',
+                                            margin: '8px 0px 0px 230px',
                                             position: 'fixed',
                                             backgroundColor: "#00B5AD"
                                         }}>
                                         <span style={{ color: '#FFFFFF', padding: '10px' }}>Calificar</span>
                                     </button>
                                     <button className="btn" type="buttom" onClick={this._clickSaveSurvey}
-                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
+                                        style={{ float: 'right', margin: '8px 0px 0px 340px', position: 'fixed' }}>
                                         <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                                    </button>
+                                    <button className="btn" type="buttom" onClick={this._reloadSurvey}
+                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed'}}>
+                                        <span style={{ color: '#FFFFFF', padding: '10px' }}>Cancelar</span>
                                     </button>
                                 </div>
                             </div>
