@@ -351,3 +351,26 @@ export function setContactsByFunctionOrType(listContacts) {
         listContacts
     }
 }
+
+export function getListContactGroupById() {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+    };
+
+    const request = axios.post(APP_URL + "/getGroupsFavoriteContactById", json);
+    return {
+        type: constant.LIST_CONTACT_GROUP_FOR_ID,
+        payload: request
+    }
+}
