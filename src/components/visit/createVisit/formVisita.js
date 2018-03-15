@@ -64,7 +64,7 @@ class FormVisita extends Component {
     this.state = {
       showErrorSaveVisit: false,
       typeVisitError: null,
-      dateVisit: new Date(),
+      dateVisit: null,
       dateVisitError: null,
       showConfirm: false,
       activeItemTabBanc: '',
@@ -381,7 +381,7 @@ class FormVisita extends Component {
   }
 
   componentWillMount() {
-    const { visitReducer, nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants } = this.props;
+    const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants } = this.props;
     nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     clearParticipants();
@@ -391,36 +391,6 @@ class FormVisita extends Component {
     } else {
       clearIdPrevisit();
       getMasterDataFields([VISIT_TYPE]);
-
-      let fechaSeleccionada = moment().format('MM/DD/YYYY');
-      console.log("fecha componente", fechaSeleccionada);    
-
-      // Consultar la lista de previsitas por cliente
-      let visitas = visitReducer.get('visitList');
-
-      let fechasIguales = false;
-      let fechaVisita;
-      let visitaIgual = null;
-      
-
-      // Recorrer la respuesta comparando las fechas
-      for(let i = 0; i<visitas.length; i++ ) {
-
-        fechaVisita = moment(visitas[i].dateVisit).format('MM/DD/YYYY');
-
-        if(fechaVisita == fechaSeleccionada) {
-          fechasIguales = true;
-          visitaIgual = visitas[i];
-          break;
-        }
-
-      }
-      // Alertar en caso de que se encuentre una fecha igual
-      if(fechasIguales && visitaIgual) {
-        console.log("fechas iguales");
-        this.setState({showAlertDate: true, idEqualDateVisit: visitaIgual.id});
-      }
-
       consultParameterServer(LAST_VISIT_REVIEW).then((data) => {
         if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
           data.payload.data.parameter !== undefined) {
