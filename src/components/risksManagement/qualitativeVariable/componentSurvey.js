@@ -129,8 +129,7 @@ class ComponentSurvey extends Component {
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
 
-                    console.log("getSurveyQualitativeVariable");
-
+              
                     clearSurvey();
 
                     getSurveyQualitativeVarible().then((data) => {
@@ -160,8 +159,6 @@ class ComponentSurvey extends Component {
     render() {
         const { reducerGlobal, qualitativeVariableReducer } = this.props;
         const survey = qualitativeVariableReducer.get('survey');
-
-        console.log(survey);
 
         let fechaActualizacion = "";
 
