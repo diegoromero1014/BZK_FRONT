@@ -76,7 +76,7 @@ class FormLogin extends Component {
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
-                        
+
                         if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
                            //Mensaje notificacion
                            this.setState({showMessageNotification : true, messageNotification: messageNotification  });
@@ -154,7 +154,7 @@ class FormLogin extends Component {
                     title={this.state.messageTitle}
                     text={this.state.messageNotification}
                     confirmButtonColor='#DD6B55'
-                    confirmButtonText='Ok'
+                    confirmButtonText='Continuar'
             
                     onConfirm={this._redirectLogin} />
             </form>
