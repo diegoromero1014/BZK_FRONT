@@ -1,4 +1,4 @@
-// require('babel-polyfill');
+require('babel-polyfill');
 
 var path = require('path'),
     autoprefixer = require('autoprefixer'),
@@ -6,12 +6,15 @@ var path = require('path'),
     webpack = require('webpack'),
     ProvidePlugin = webpack.ProvidePlugin,
     config = {
-        entry: [
-            './src/index.js',
-            'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
-            'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
+        entry: {
+            'main': [
+                'babel-polyfill',
+                './src/index.js',
+                'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
+                'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
+            ]
             //, 'babel-polyfill'
-        ],
+        },
         devtool: 'eval',
         output: {
             path: path.join(__dirname, 'dist'),
@@ -69,7 +72,7 @@ var path = require('path'),
             ]
         },
         plugins: [
-            new ExtractTextPlugin('styles.css', {allChunks: true}),  // compiled css (single file only)
+            new ExtractTextPlugin('styles.css', { allChunks: true }),  // compiled css (single file only)
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"development"'
