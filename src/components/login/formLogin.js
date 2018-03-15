@@ -28,7 +28,7 @@ class FormLogin extends Component {
             password: "",
             message: "",
             showMessageNotification: false,
-            messageTitle: 'Mensaje',
+            messageTitle: '¡Aviso!',
             messageNotification: ''
 
 
