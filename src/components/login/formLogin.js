@@ -54,6 +54,7 @@ class FormLogin extends Component {
         this.setState({ showMessageNotification: false });
         redirectUrl("/dashboard/clients");
     }
+    
 
     _handleValidateLogin(e) {
         e.preventDefault();
@@ -74,15 +75,15 @@ class FormLogin extends Component {
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
-                        if (_.get(response, 'payload.data.data.messageNotification', true)){
-                            //Mensaje notificacion
-                            this.setState({showMessageNotification : true, messageNotification: _.get(response, 'payload.data.data.messageNotification') });
+                        let messageNotification = _.get(response, 'payload.data.data.messageNotification');
+                        
+                        if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
+                           //Mensaje notificacion
+                           this.setState({showMessageNotification : true, messageNotification: messageNotification  });
 
                         } else {
-                            redirectUrl("/dashboard/clients");
+                           redirectUrl("/dashboard/clients");
                         }
-
-                        
                     }
                 } else {
                     this.setState({
