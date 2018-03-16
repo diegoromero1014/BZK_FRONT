@@ -75,7 +75,7 @@ class FormVisita extends Component {
       orderContactId: 0,
       showAlertDate: false,
       titleMassageDate: '¡Atención!',
-      messageDate: 'Señor usuario, el cliente ya tiene asignada una visita para ese día; seleccione ir a la visita para editarla o seleccione continuar aqui para permanecer en esta vista.',
+      messageDate: 'Señor usuario, el cliente ya tiene asignada una visita para ese día; seleccione ir a la visita para editarla o seleccione continuar aquí para permanecer en esta vista.',
       idEqualDateVisit: null
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
@@ -720,7 +720,7 @@ class FormVisita extends Component {
           text={this.state.messageDate}
           confirmButtonColor='#DD6B55'
           confirmButtonText='Ir a la Visita!'
-          cancelButtonText="Continuar aqui"
+          cancelButtonText="Continuar aquí"
           showCancelButton={true}
           onCancel={() => this.setState({ showAlertDate: false })} 
           onConfirm={this._redirectToVisit} />

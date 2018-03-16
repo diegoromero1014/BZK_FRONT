@@ -220,8 +220,8 @@ class ComponentSurvey extends Component {
                                         <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
                                     </button>
                                     <button className="btn" type="buttom" onClick={this._reloadSurvey}
-                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed'}}>
-                                        <span style={{ color: '#FFFFFF', padding: '10px' }}>Cancelar</span>
+                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed', backgroundColor: '#c1c1c1'}}>
+                                        <span style={{ color: 'white', padding: '10px' }}>Cancelar</span>
                                     </button>
                                 </div>
                             </div>
