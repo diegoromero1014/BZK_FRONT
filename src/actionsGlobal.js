@@ -198,6 +198,41 @@ export function getStrDateByDateFormat(date, format) {
     return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);
 }
 
+export function stringToDate(dateString) {
+
+    if(!dateString) return new Date();
+
+    let arrFullDate = dateString.trim().split(" ");
+    let arrDate = arrFullDate[0].split("-");
+    let arrTime = arrFullDate[1].split(":");
+
+    return new Date(
+        parseInt(arrDate[0]), //year
+        (parseInt(arrDate[1]) - 1), //mounth
+        parseInt(arrDate[2]), //day
+        parseInt(arrTime[0]), //hour
+        parseInt(arrTime[1]), //minute
+        parseInt(arrTime[2]) //seconds
+    );
+}
+export function stringToDateEnd(dateString) {
+
+    if(!dateString) return new Date();
+
+    let arrFullDate = dateString.trim().split(" ");
+    let arrDate = arrFullDate[0].split("-");
+    let arrTime = arrFullDate[1].split(":");
+
+    return new Date(
+        parseInt(arrDate[0]), //year
+        (parseInt(arrDate[1]) - 1), //mounth
+        parseInt(arrDate[2]), //day
+        parseInt(arrTime[0] + 1), //hour
+        parseInt(arrTime[1]), //minute
+        parseInt(arrTime[2]) //seconds
+    );
+}
+
 export function handleFocusValueNumber(valuReduxForm, val) {
     //Elimino los caracteres no validos
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {

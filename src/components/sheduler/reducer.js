@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import { GET_REGIONS, GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT } from "./constants";
+import { stringToDate, stringToDateEnd } from "../../actionsGlobal";
 
 const initialState = Immutable.Map({
     schedulerPrevisitList: [],
@@ -11,26 +12,16 @@ export default (state = initialState, action) => {
         case GET_SCHEDULER_PREVISIT:
             const response = action.payload.data;
             let lista = JSON.parse(response.schedulerListPreviist);
-            return state.withMutations(map => {
-                map.set('schedulerPrevisitList', lista.map((item) => {
-                    item.title = item.clientName;
-                    item.start = new Date(item.initialDatePrevisit);
-                    item.end = new Date(item.finalDatePrevisit);
+           return state.set('schedulerPrevisitList', lista.map((item) => {
+                item.title = item.clientName;
+                item.start = stringToDate(item.initialDatePrevisit);// new Date();
+                item.end =  stringToDateEnd(item.initialDatePrevisit);//new Date();
 
-                    return item;
-                }));
-            });
-        case CLEAR_SCHEDULER_PREVISIT:
-            const response2 = action.payload.data;
-            let lista2 = JSON.parse(response2.schedulerListPreviist);
-            return state.withMutations(map => {
-                map.set('schedulerPrevisitList', lista2.map((item) => {
-                    item.title = null
-                    item.start = null
-                    item.end = null
-                    return item;
-                }));
-            });
+                console.log(JSON.stringify(item));
+                return item;
+            }));
+        case CLEAR_SCHEDULER_PREVISIT:            
+            return state.set('schedulerPrevisitList', []);
         case GET_REGIONS:
             const regions = action.payload.data;
             return state.withMutations(map => {
