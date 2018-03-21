@@ -56,7 +56,7 @@ class ListCreateRelationship extends Component {
     render() {
         const { filterContactsReducer, uploadTable } = this.props;
         return (
-            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
+            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'static' }}>
                 <Row style={{ marginTop: '20px' }}>
                     <Col xs={12} md={12} lg={12}>
                         <table className="ui striped table">

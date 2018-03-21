@@ -167,16 +167,18 @@ class Sheduler extends Component {
     _handlePrevisitsFind() {
         const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
         showLoading(true, 'Cargando..');
-        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value).then((response) => {
-            let lista = JSON.parse(response.payload.data.schedulerListPreviist);
-            let jsonP = lista.map((item) => {
-                item.title = item.clientName;
-                item.start = item.initialDatePrevisit;
-                item.end = item.finalDatePrevisit;
-                return item;
-            });
-            return jsonP;
-        });
+        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value)
+        // .then((response) => {
+        //     let lista = JSON.parse(response.payload.data.schedulerListPreviist);
+        //     let jsonP = lista.map((item) => {
+        //         item.title = item.clientName;
+        //         item.start = item.initialDatePrevisit;
+        //         item.end = item.finalDatePrevisit;
+        //         return item;
+        //     });
+        //     console.log()
+        //     return jsonP;
+        // });
         showLoading(false, null);
 
     }
@@ -205,7 +207,7 @@ class Sheduler extends Component {
     }
 
     componentDidMount() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -213,7 +215,7 @@ class Sheduler extends Component {
     }
 
     componentWillUpdate() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -263,6 +265,42 @@ class Sheduler extends Component {
         const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
         const userName = sessionStorage.getItem('userName');
+        //console.log("render", JSON.stringify(data1) );
+        // alert( JSON.stringify() )
+        // data.forEach(function (element) {
+        //     console.log("render", JSON.stringify(element));
+        // });
+
+        // const data2 = [
+        //     {
+        //         id: 0,
+        //         title: 'All Day Event very long title',
+        //         start: new Date(2018, 2, 15, 10, 30, 0, 0),
+        //         end: new Date(2018, 2, 15, 12, 30, 0, 0)
+        //     }
+        // ]
+        // const data2 = [
+        //     {
+        //         "idPrevisit": 5160868,
+        //         "idClient": 5160495,
+        //         "clientName": "Scripting",
+        //         "createdBy": null,
+        //         "listParticipantsBank": [
+        //             "lmcFront",
+        //             "lmcFront"
+        //         ],
+        //         "initialDatePrevisit": "2018-03-15 10:57:43",
+        //         "finalDatePrevisit": "2018-03-15 12:57:43",
+        //         "participantBank": null,
+        //         "clientTeam": 4936515,
+        //         "title": "Scripting",
+        //         "start": null,
+        //         "end": null
+        //     }
+        // ]
+
+        // let data = data2.concat(data1);
+
         return (
             <div>
                 <form>
@@ -378,8 +416,6 @@ class Sheduler extends Component {
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
                         defaultDate={new Date()}
-                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
-                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />
                 </div>
                 <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">

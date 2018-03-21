@@ -32,13 +32,15 @@ class clientsRiskGroup extends Component {
   }
 
   closeModalRemoveClient() {
+    
     this.setState({ modalRemoveClientIsOpen: false });
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup, isPending } = this.props;
+    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup, isPending, gridRow, gridColumn } = this.props;
+    let clsName = ["client-card", "g-c-" + gridColumn , "g-r-" + gridRow].join(" ");
     return (
-      <div key={key} className="client-card" style={{
+      <div key={key} className={clsName} style={{
         width: "100%",
         marginBottom: "15px",
         cursor: 'auto',

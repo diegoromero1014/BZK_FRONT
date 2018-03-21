@@ -40,7 +40,7 @@ class ListClientsValidations extends Component {
     render() {
         const { customerStory } = this.props;
         return (
-            <div className="tab-content break-word" style={{ borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
+            <div className="tab-content break-word" style={{ borderRadius: '3px', overflow: 'initial', position: 'initial', zIndex:"9" }}>
                 {customerStory.get('listClientsDelivery').length > 0 ?
                     <div style={{ marginTop: '20px' }}>
                         <Col xs={12} md={12} lg={12}>

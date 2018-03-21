@@ -140,7 +140,7 @@ class ListClientsContact extends Component {
         const { contactDetail, filterContactsReducer } = this.props;
         const valueCheckAll = contactDetail.get('listDeleteClientContact').length === contactDetail.get('listClientcontacts').length ? true : false;
         return (
-            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
+            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'static' }}>
                 {contactDetail.get('listClientcontacts').length > 0 ?
                     <Row style={{ marginTop: '20px' }}>
                         <Col xs={12} md={12} lg={12}>
