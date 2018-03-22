@@ -148,6 +148,10 @@ class DetailsInfoClient extends Component {
 
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
         const showFooterButtons = allowAccessAndEdit || allowLinked || allowCreditStudy;
+
+        const allowAccessRiskGroup = true;
+        const allowAccessContextClient = false;
+
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
@@ -158,7 +162,11 @@ class DetailsInfoClient extends Component {
                                 </th>
                                 <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Segmento</span></th>
                                 <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Subsegmento</span></th>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Grupo de riesgo</span></th>
+                                
+                                {
+                                    allowAccessRiskGroup && <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Grupo de riesgo</span></th>
+                                }
+                            
                             </tr>
                         </thead>
                         <tbody>
@@ -174,9 +182,15 @@ class DetailsInfoClient extends Component {
                                         <dd style={{ marginLeft: "0px" }}>{infoClient.subSegmentKey}</dd>
                                     </dl>
                                 </td>
-                                <td style={{ width: "25%", verticalAlign: "initial" }}>
-                                    <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
-                                </td>
+
+                                {
+                                    allowAccessRiskGroup &&
+                                    <td style={{ width: "25%", verticalAlign: "initial" }}>
+                                        <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
+                                    </td>
+                                }
+
+                                
                             </tr>
                         </tbody>
                     </table>
@@ -212,10 +226,16 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"
                         componentView={<ActividadEconomica infoClient={infoClient} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
+                    {
+
+                        allowAccessContextClient &&
+
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
                         codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
                         componentView={<InventoryPolicy infoClient={infoClient} />} />
 
+                    }
+                    
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
                         codSection={accordion.controlLinkedPayments} title="Control para pagos entre vinculadas y cambios de control" icon="building"
                         componentView={<ControlLinkedPayments infoClient={infoClient} />} />

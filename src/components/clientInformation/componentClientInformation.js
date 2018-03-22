@@ -63,6 +63,9 @@ class ComponentClientInformation extends Component {
         var showAECNoAplica = false;
         var showAECNivel = true;
         var aecStatus = "";
+
+        const allowAccessRiskGroup = false;
+
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
             if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -178,7 +181,7 @@ class ComponentClientInformation extends Component {
                                         </td>
                                     </tr>
                                     {
-                                        infoClient.hasRiskGroup &&
+                                        allowAccessRiskGroup && infoClient.hasRiskGroup &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
                                                 <ButtonRiskGroup />

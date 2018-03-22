@@ -30,6 +30,9 @@ class ActividadEconomica extends Component {
     render() {
         const { infoClient } = this.props;
         const { contextClient } = infoClient;
+
+        const allowAccessContextClient = false;
+
         return (
             <div>
                 <table style={{ width: "100%" }}>
@@ -72,13 +75,19 @@ class ActividadEconomica extends Component {
                         </table>
                     </Col>
                 </Row>
+                
+                { allowAccessContextClient &&
+                    
                 <Row>
                     <Col xs={12} md={12} lg={12} style={{ textAlign: 'justify', marginTop: '15px' }}>
                         <dt><span style={{ fontWeight: "bold", color: "#4C5360" }}>Contexto</span></dt>
                         {_.isNull(contextClient) || _.isUndefined(contextClient) ? "" : contextClient.context}
                     </Col>
                 </Row>
-                <Row style={{ marginTop: '20px', marginLeft: '1px' }}>
+                }
+                
+                { allowAccessContextClient &&
+                    <Row style={{ marginTop: '20px', marginLeft: '1px' }}>
                     <h3 style={{ width: '100%' }}>Líneas de negocio y participación en ventas</h3>
                     {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedLineOfBusiness ?
                         <span>No aplica</span>
@@ -105,7 +114,10 @@ class ActividadEconomica extends Component {
                             }
                         </div>
                     }
-                </Row>
+                </Row>    
+                }
+                {
+                allowAccessContextClient && 
                 <Row style={{ marginTop: '20px', marginLeft: '1px' }}>
                     <h3 style={{ width: '100%' }}>Canales de distribución y participación en ventas</h3>
                     {!_.isNull(contextClient) && !_.isUndefined(contextClient) && contextClient.noAppliedDistributionChannel ?
@@ -133,6 +145,8 @@ class ActividadEconomica extends Component {
                         </div>
                     }
                 </Row>
+                }
+                
             </div>
         );
     }
