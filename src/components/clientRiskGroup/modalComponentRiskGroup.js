@@ -376,13 +376,7 @@ class ModalComponentRiskGroup extends Component {
 
                                                 </Col>
 
-                                                <div className="team-modal" style={{
-                                                    width: "100%",
-                                                    display: "grid",
-                                                    gridTemplateColumns: "30% 30% 30%",
-                                                    justifyContent: "space-around",
-                                                    marginBottom: "30px"
-                                                }}>
+                                                <div className="team-modal grid c-3 " >
                                                     {members.length === 0 ?
                                                         <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
                                                             usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
@@ -407,15 +401,6 @@ class ModalComponentRiskGroup extends Component {
 
                         </Segment>
                     </Col>
-
-
-                    <div className="team-modal grid c-3" >
-                        {members.length === 0 ?
-                            <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
-                                usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
-                            :
-                            members.map(this._mapClientItems)}
-                    </div>
 
                 </Row>
             </div >
