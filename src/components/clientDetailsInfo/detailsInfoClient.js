@@ -235,12 +235,14 @@ class DetailsInfoClient extends Component {
                         componentView={<InventoryPolicy infoClient={infoClient} />} />
 
                     }
-                    
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
+
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
                         codSection={accordion.controlLinkedPayments} title="Control para pagos entre vinculadas y cambios de control" icon="building"
                         componentView={<ControlLinkedPayments infoClient={infoClient} />} />
-
-
+                    }
+                    
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
                         codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"
                         componentView={<UbicationCorrespondence infoClient={infoClient} />} />
@@ -249,17 +251,26 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.infoFinanciera} title="Información financiera" icon="suitcase"
                         componentView={<InfoFinanciera infoClient={infoClient} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
                         codSection={accordion.mainCustomer} title="Principales clientes" icon="users"
                         componentView={<MainCustomer infoClient={infoClient} />} />
+                    }
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainSupplier')}
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainSupplier')}
                         codSection={accordion.mainSupplier} title="Principales proveedores" icon="shipping"
                         componentView={<MainSupplier infoClient={infoClient} />} />
+                    }
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
                         codSection={accordion.mainCompetition} title="Principales competidores" icon="factory"
                         componentView={<MainCompetitor infoClient={infoClient} />} />
+                    }
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('dataComercial')}
                         codSection={accordion.dataComercial} title="Datos de conocimiento comercial" icon="book"
@@ -273,13 +284,21 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.declarationOfOrigin} title="Declaración de origen de bienes y/o fondos" icon="money"
                         componentView={<DeclarationOfOrigin infoClient={infoClient} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
                         codSection={accordion.internationalOperations} title="Información operaciones internacionales" icon="world"
                         componentView={<InternationalOperations infoClient={infoClient} />} />
+                    }
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
                         codSection={accordion.documentInformationServices} title="Consulta de servicios de información documental" icon="newspaper"
                         componentView={<DocumentInformationServices infoClient={infoClient} />} />
+                    }
+
+                    
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('foreignProducts')}
                         codSection={accordion.foreignProducts} title="Descripción de los productos financieros en moneda extranjera" icon="product hunt"
