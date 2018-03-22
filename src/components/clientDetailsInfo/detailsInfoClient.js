@@ -19,7 +19,7 @@ import { bindActionCreators } from "redux";
 import Products from "./product";
 import { connect } from "react-redux";
 import moment from "moment";
-import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR } from "../../constantsGlobal";
+import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO, GRUPO_RIESGO } from "../../constantsGlobal";
 import { validatePermissionsByModule, shorterStringValue } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { MENU_CLOSED } from "../navBar/constants";
@@ -149,8 +149,11 @@ class DetailsInfoClient extends Component {
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
         const showFooterButtons = allowAccessAndEdit || allowLinked || allowCreditStudy;
 
-        const allowAccessRiskGroup = true;
-        const allowAccessContextClient = false;
+        const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
+        const allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+
+        console.log("accessRiskGroup", allowAccessRiskGroup);
+        console.log("accessContextClient", allowAccessContextClient);
 
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
