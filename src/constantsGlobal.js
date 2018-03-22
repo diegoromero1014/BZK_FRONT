@@ -1,4 +1,4 @@
-export const VERSION_DATE = "19/02/2018";
+export const VERSION_DATE = "20/03/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -231,7 +231,7 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
  /**
   * PARAMETROS BLOQUEO
   */
-    export const TIME_REQUEST_BLOCK_REPORT = 5000;
+    export const TIME_REQUEST_BLOCK_REPORT = 30000;
 
 
 /**

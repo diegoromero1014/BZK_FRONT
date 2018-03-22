@@ -64,7 +64,7 @@ class FormVisita extends Component {
     this.state = {
       showErrorSaveVisit: false,
       typeVisitError: null,
-      dateVisit: new Date(),
+      dateVisit: null,
       dateVisitError: null,
       showConfirm: false,
       activeItemTabBanc: '',
@@ -72,7 +72,11 @@ class FormVisita extends Component {
       activeItemTabOther: '',
       conclusionsVisit: "",
       conclusionsVisitError: null,
-      orderContactId: 0
+      orderContactId: 0,
+      showAlertDate: false,
+      titleMassageDate: '¡Atención!',
+      messageDate: 'Señor usuario, el cliente ya tiene asignada una visita para ese día; seleccione ir a la visita para editarla o seleccione continuar aquí para permanecer en esta vista.',
+      idEqualDateVisit: null
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
@@ -86,6 +90,16 @@ class FormVisita extends Component {
     this._consultInfoPrevisit = this._consultInfoPrevisit.bind(this);
     this._addParticipantsToReducer = this._addParticipantsToReducer.bind(this);
     this._executeFunctionFromAssociatePrevisit = this._executeFunctionFromAssociatePrevisit.bind(this);
+    this._redirectToVisit = this._redirectToVisit.bind(this);
+  
+  }
+
+  _redirectToVisit() {
+    this.setState({ showAlertDate: false });
+
+    if (this.state.idEqualDateVisit) {
+      redirectUrl("/dashboard/visitaEditar/"+this.state.idEqualDateVisit);
+    }
   }
 
   _closeMessageCreateVisit() {
@@ -302,6 +316,43 @@ class FormVisita extends Component {
   }
 
   _changeDateVisit(value) {
+
+    const { visitReducer } = this.props;
+
+    
+
+    let fechaSeleccionada = moment(value).format('MM/DD/YYYY');
+    console.log("fecha componente", fechaSeleccionada);    
+
+    // Consultar la lista de previsitas por cliente
+    let visitas = visitReducer.get('visitList');
+
+    let fechasIguales = false;
+    let fechaVisita;
+    let visitaIgual = null;
+    
+
+    // Recorrer la respuesta comparando las fechas
+    for(let i = 0; i<visitas.length; i++ ) {
+
+      fechaVisita = moment(visitas[i].dateVisit).format('MM/DD/YYYY');
+
+      if(fechaVisita == fechaSeleccionada) {
+        fechasIguales = true;
+        visitaIgual = visitas[i];
+        break;
+      }
+
+    }
+    // Alertar en caso de que se encuentre una fecha igual
+    if(fechasIguales && visitaIgual) {
+      console.log("fechas iguales");
+      this.setState({showAlertDate: true, idEqualDateVisit: visitaIgual.id});
+    }
+
+    // Permitir el redirect
+
+
     this.setState({
       dateVisit: value,
       dateVisitError: null
@@ -662,6 +713,18 @@ class FormVisita extends Component {
           showCancelButton={true}
           onCancel={() => this.setState({ showConfirm: false })}
           onConfirm={this._closeConfirmCloseVisit} />
+        <SweetAlert
+          type="warning"
+          show={this.state.showAlertDate}
+          title={this.state.titleMassageDate}
+          text={this.state.messageDate}
+          confirmButtonColor='#DD6B55'
+          confirmButtonText='Ir a la Visita!'
+          cancelButtonText="Continuar aquí"
+          showCancelButton={true}
+          onCancel={() => this.setState({ showAlertDate: false })} 
+          onConfirm={this._redirectToVisit} />
+          />
       </form>
     );
   }
