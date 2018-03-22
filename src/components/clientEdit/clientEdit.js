@@ -22,7 +22,8 @@ import {
 import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
     ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    INFO_ESTUDIO_CREDITO
 } from '../../constantsGlobal';
 
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
@@ -137,8 +138,12 @@ const UPDATE_STYLE = {
 };
 
 const validate = (values, props) => {
+    const {reducerGlobal} = props;
+    const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+    
     const errors = {}
     let errorScrollTop = false;
+ 
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
@@ -463,7 +468,8 @@ const validate = (values, props) => {
             //En caso de que si realice operaciones, obligo a que me indique cuales
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
-                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
+                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+                    
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
                 } else {
@@ -482,7 +488,8 @@ const validate = (values, props) => {
             errors.economicGroupName = null;
         }
 
-        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT) {
+        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+           
             errors.controlLinkedPayments = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -543,10 +550,11 @@ const validate = (values, props) => {
     //ComponentListIntOperations
 
     if (errorScrollTop && clickButttonSave) {
+        console.log("error faltan datos");
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
-    
+   
     return errors;
 };
 
@@ -1450,9 +1458,10 @@ class clientEdit extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion } = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
         let { errors } = nextProps;
-        if (idButton === BUTTON_UPDATE) {
+        const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+        if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
             errors = _.omit(errors, 'controlLinkedPayments');
         } else {
@@ -1581,13 +1590,16 @@ class clientEdit extends Component {
                 participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
                 participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
             }, handleSubmit,
-            tabReducer, selectsReducer, clientInformacion, validateContactShareholder
+            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
         const isProspect = infoClient.isProspect;
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
+
+        const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+        console.log("allowRiskGroupEdit="+allowRiskGroupEdit);
         if (errorShareholder) {
             messageShareholder = 'Falta Accionistas';
         } else {
@@ -1599,12 +1611,14 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
+        
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+                            
                             {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                                 <div>
                                     <span
@@ -1821,20 +1835,29 @@ class clientEdit extends Component {
                             </span>
                         </div>
                     </Col>
+                    {allowRiskGroupEdit &&
                     <ContextEconomicActivity contextClientField={contextClientField} />
+                    }
+                    {allowRiskGroupEdit && 
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
                                                participation={participationLB} experience={experience}
                                                showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                         fnShowForm={this.showFormOut} contribution={contributionLB} />
-
+                    }
+                    {allowRiskGroupEdit &&
                     <ComponentListDistributionChannel distributionChannel={distributionChannel}
                                                       participation={participationDC} contribution={contributionDC}
                                                       showFormDistribution={this.state.showFormAddDistribution}
                         fnShowForm={this.showFormOut} />
+                    }
                 </Row>
+                {allowRiskGroupEdit &&
                 <InventorPolicy inventoryPolicy={inventoryPolicy}/>
+                }
+                {allowRiskGroupEdit &&
                 <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
                     controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
+                }
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -2170,21 +2193,24 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-
+                {allowRiskGroupEdit &&
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                                           term={termMainClient} relevantInformation={relevantInformationMainClient}
                                           showFormMainClients={this.state.showFormAddMainClient}
                     fnShowForm={this.showFormOut} />
-
+                }
+                {allowRiskGroupEdit &&
                 <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
                                            term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                                            showFormMainSupplier={this.state.showFormAddMainSupplier}
                     fnShowForm={this.showFormOut} />
-
+                }
+                {allowRiskGroupEdit &&
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
                                              observations={obsevationsCompetitor}
                                              showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} />
+                }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -2540,7 +2566,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
 
-                {_.isEqual(operationsForeignCurrency.value, "true") &&
+                {_.isEqual(operationsForeignCurrency.value, "true") && allowRiskGroupEdit &&
                 <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
                                             idCountry={idCountryIntOpe}
                                             participationCountry={participationIntOpeCountry}
@@ -2682,7 +2708,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
@@ -2692,6 +2718,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         clientProductReducer,
         tabReducer,
         notes,
+        reducerGlobal,
         initialValues: {
             razonSocial: infoClient.clientName,
             idTypeClient: infoClient.clientIdType,

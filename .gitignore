@@ -10,3 +10,4 @@ semantic.json
 dist/
 .gitignore
 .vscode/
+package-lock.json
