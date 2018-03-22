@@ -14,10 +14,9 @@ export default (state = initialState, action) => {
             let lista = JSON.parse(response.schedulerListPreviist);
            return state.set('schedulerPrevisitList', lista.map((item) => {
                 item.title = item.clientName;
-                item.start = stringToDate(item.initialDatePrevisit);// new Date();
-                item.end =  stringToDateEnd(item.initialDatePrevisit);//new Date();
+                item.start = stringToDate(item.initialDatePrevisit);
+                item.end =  stringToDate(item.finalDatePrevisit);
 
-                console.log(JSON.stringify(item));
                 return item;
             }));
         case CLEAR_SCHEDULER_PREVISIT:            
