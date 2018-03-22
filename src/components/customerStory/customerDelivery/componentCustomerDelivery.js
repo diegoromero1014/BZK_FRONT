@@ -5,11 +5,13 @@ import { Row, Col } from 'react-flexbox-grid';
 import { consultList } from '../../selectsComponent/actions';
 import { REASON_TRANFER } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
-import { OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER } from '../../../constantsGlobal';
+import {
+    OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER, VALUE_XSS_INVALID
+} from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
 import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
-import { validateResponse } from '../../../actionsGlobal';
+import { validateResponse, xssValidation } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
@@ -34,8 +36,8 @@ const validate = values => {
     } else {
         errors.reasonTranfer = null;
         errors.otherReason = null;
-        const valueSeleted = _.map( _.filter(valuesReasonTranfer, {"id": parseInt(values.reasonTranfer)}), "value");
-        if (  _.isEqual(valueSeleted[0], OTHER)) {
+        const valueSeleted = _.map(_.filter(valuesReasonTranfer, { "id": parseInt(values.reasonTranfer) }), "value");
+        if (_.isEqual(valueSeleted[0], OTHER)) {
             if (!values.otherReason) {
                 errors.otherReason = VALUE_REQUIERED;
             } else {
@@ -43,6 +45,11 @@ const validate = values => {
             }
         }
     }
+
+    if (xssValidation(values.otherReason)) {
+        errors.otherReason = VALUE_XSS_INVALID;
+    }
+
     return errors;
 }
 
@@ -94,14 +101,14 @@ class ComponentCustomerDelivery extends Component {
         const { consultList, getAllteams, getMasterDataFields, updateCheckEconomicGroup } = this.props;
         getAllteams();
         updateCheckEconomicGroup(false);
-        getMasterDataFields([REASON_TRANFER]).then( (data) => {
+        getMasterDataFields([REASON_TRANFER]).then((data) => {
             valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
         });
         this.consultClients(window.localStorage.getItem('idClientSelected'), null);
     }
 
-    _onChangeReasonTransfer(valueReason){
-        const {fields: { reasonTranfer, otherReason }} = this.props;
+    _onChangeReasonTransfer(valueReason) {
+        const { fields: { reasonTranfer, otherReason } } = this.props;
         reasonTranfer.onChange(valueReason);
         otherReason.onChange(null);
     }
@@ -116,7 +123,7 @@ class ComponentCustomerDelivery extends Component {
             const validateErrorsDeliveryClient = _.filter(customerStory.get('listClientsDelivery'), ['deliveryComplete', false]);
             const validateErrorsClients = _.filter(customerStory.get('listClientsDelivery'), ['mainClientsComplete', false]);
             const validateErrorsSuppliers = _.filter(customerStory.get('listClientsDelivery'), ['mainSuppliersComplete', false]);
-            if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0 || 
+            if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0 ||
                 _.size(validateErrorsClients) > 0 || _.size(validateErrorsSuppliers) > 0) {
                 swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
             } else {
@@ -190,8 +197,8 @@ class ComponentCustomerDelivery extends Component {
                                 &nbsp;&nbsp; ¿Traslada todo el grupo económico?
                             </label>
                         </Col>
-                        { _.isEqual( _.map( _.filter(valuesReasonTranfer, {"id": parseInt(reasonTranfer.value)}), "value")[0], OTHER) &&
-                            <Col xs={12} md={6} lg={6} style={{marginLeft: '7px', marginTop: '10px', paddingRight: '0px'}}>
+                        {_.isEqual(_.map(_.filter(valuesReasonTranfer, { "id": parseInt(reasonTranfer.value) }), "value")[0], OTHER) &&
+                            <Col xs={12} md={6} lg={6} style={{ marginLeft: '7px', marginTop: '10px', paddingRight: '0px' }}>
                                 <dt><span>Otro motivo (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <dt>
                                     <Input

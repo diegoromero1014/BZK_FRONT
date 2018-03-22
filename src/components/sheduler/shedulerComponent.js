@@ -415,7 +415,9 @@ class Sheduler extends Component {
 
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
-                        defaultDate={new Date()}
+                        defaultDate={new Date()}                        
+                        onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
+                        eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />
                 </div>
                 <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">

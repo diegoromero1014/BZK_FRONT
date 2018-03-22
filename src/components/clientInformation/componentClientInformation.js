@@ -10,7 +10,9 @@ import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR } from '../../constantsGlobal';
+import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE } from '../../constantsGlobal';
+import { validatePermissionsByModule } from '../../actionsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
@@ -22,11 +24,15 @@ import _ from 'lodash';
 class ComponentClientInformation extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            allow_visor_cliente: false
+        };
     }
 
     componentWillMount() {
         if (!_.isNull(window.localStorage.getItem('idClientSelected')) && !_.isUndefined(window.localStorage.getItem('idClientSelected'))) {
-            const { resetAccordion, tabReducer } = this.props;
+            const { resetAccordion, tabReducer, validatePermissionsByModule } = this.props;
             var tabActive = tabReducer.get('tabSelected');
             if (tabActive === null) {
                 resetAccordion();
@@ -35,14 +41,29 @@ class ComponentClientInformation extends Component {
             const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
             updateTitleNavBar("Mis clientes");
             showLoading(true, 'Cargando..');
+
+            validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+                let permissions = _.get(data, 'payload.data.data.permissions')
+                let allow_visor_cliente = (permissions.indexOf(VISOR_CLIENTE) >= 0)
+                this.setState({
+                    allow_visor_cliente: allow_visor_cliente
+                })
+
+            });
+
             consultInfoClient().then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin')) {
                     redirectUrl("/login");
                 }
                 showLoading(false, '');
             });
+
+
             viewAlertClient(true);
             updateTabSeletedCS(TAB_STORY);
+
+
+
         } else {
             redirectUrl("/login");
         }
@@ -193,6 +214,13 @@ class ComponentClientInformation extends Component {
                                             </td>
                                         </tr>
                                     }
+                                    {this.state.allow_visor_cliente &&
+                                        <tr>
+                                            <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
+                                                <ButtonClientVisorComponent clientdIdNumber={infoClient.clientIdNumber} />
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </Col>
@@ -213,7 +241,8 @@ function mapDispatchToProps(dispatch) {
         clearEntities,
         showLoading,
         resetAccordion,
-        updateTabSeletedCS
+        updateTabSeletedCS,
+        validatePermissionsByModule
     }, dispatch);
 }
 
