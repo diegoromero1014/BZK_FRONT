@@ -10,7 +10,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GRUPO_RIESGO } from '../../constantsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
@@ -58,13 +58,13 @@ class ComponentClientInformation extends Component {
     }
 
     render() {
-        const { clientInformacion } = this.props;
+        const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         var showAECNoAplica = false;
         var showAECNivel = true;
         var aecStatus = "";
 
-        const allowAccessRiskGroup = false;
+        const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
 
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
@@ -220,11 +220,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, navBar, tabReducer }, ownerProps) {
+function mapStateToProps({ clientInformacion, navBar, tabReducer, reducerGlobal }, ownerProps) {
     return {
         clientInformacion,
         tabReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 

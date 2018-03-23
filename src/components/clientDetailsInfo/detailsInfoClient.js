@@ -19,7 +19,7 @@ import { bindActionCreators } from "redux";
 import Products from "./product";
 import { connect } from "react-redux";
 import moment from "moment";
-import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO, GRUPO_RIESGO } from "../../constantsGlobal";
+import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO, GRUPO_RIESGO, GESTION_DOCUMENTAL } from "../../constantsGlobal";
 import { validatePermissionsByModule, shorterStringValue } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { MENU_CLOSED } from "../navBar/constants";
@@ -151,7 +151,7 @@ class DetailsInfoClient extends Component {
 
         const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
         const allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-
+        const allowAccessGestionDocumental = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GESTION_DOCUMENTAL), false);
         console.log("accessRiskGroup", allowAccessRiskGroup);
         console.log("accessContextClient", allowAccessContextClient);
 
@@ -186,13 +186,12 @@ class DetailsInfoClient extends Component {
                                     </dl>
                                 </td>
 
-                                {
+                                <td style={{ width: "25%", verticalAlign: "initial" }}>
+                                    {
                                     allowAccessRiskGroup &&
-                                    <td style={{ width: "25%", verticalAlign: "initial" }}>
                                         <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
-                                    </td>
-                                }
-
+                                    }
+                                </td>
                                 
                             </tr>
                         </tbody>
@@ -227,7 +226,7 @@ class DetailsInfoClient extends Component {
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"
-                        componentView={<ActividadEconomica infoClient={infoClient} />} />
+                        componentView={<ActividadEconomica infoClient={infoClient} reducerGlobal={reducerGlobal} />} />
 
                     {
 
@@ -295,7 +294,7 @@ class DetailsInfoClient extends Component {
                     }
 
                     {
-                        allowAccessContextClient &&
+                        allowAccessGestionDocumental &&
                         <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
                         codSection={accordion.documentInformationServices} title="Consulta de servicios de información documental" icon="newspaper"
                         componentView={<DocumentInformationServices infoClient={infoClient} />} />

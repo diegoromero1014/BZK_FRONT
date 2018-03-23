@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
+import { INFO_ESTUDIO_CREDITO } from '../../constantsGlobal';
 
 class ActividadEconomica extends Component {
 
@@ -28,10 +29,10 @@ class ActividadEconomica extends Component {
     }
 
     render() {
-        const { infoClient } = this.props;
+        const { infoClient, reducerGlobal } = this.props;
         const { contextClient } = infoClient;
 
-        const allowAccessContextClient = false;
+        const allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
 
         return (
             <div>
@@ -153,7 +154,8 @@ class ActividadEconomica extends Component {
 }
 
 ActividadEconomica.PropTypes = {
-    infoClient: PropTypes.object.isRequired
+    infoClient: PropTypes.object.isRequired,
+    reducerGlobal: PropTypes.object.isRequired
 }
 
 export default ActividadEconomica;
