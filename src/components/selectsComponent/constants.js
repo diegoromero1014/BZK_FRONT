@@ -77,3 +77,4 @@ export const REASON_CONFORMATION = "reasonConformation";
 export const CLEAR_LISTS = "clearLists";
 export const BUSINESS_ROL = "relationshipStatus";
 export const TEAM_VALUE_OBJECTS = "teamValueObjects";
+export const MANAGEMENT_BRAND = "managementBrand";

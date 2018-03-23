@@ -399,7 +399,8 @@ class clientCertify extends React.Component {
                 showLoading(true, MESSAGE_LOAD_DATA);
 
                 getMasterDataFields([constants.JUSTIFICATION_NO_RM,constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT, 
-                    constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY])
+                    constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
+                    constants.MANAGEMENT_BRAND])
                 .then((data) => {
                     if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                         consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1436,7 +1437,7 @@ class clientCertify extends React.Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={valuesYesNo}
+                                data={selectsReducer.get(constants.MANAGEMENT_BRAND) || []}
                                 {...marcGeren}
                                 onChange={val => this._onChangeMarcGeren(val)}
                                 touched={true}
