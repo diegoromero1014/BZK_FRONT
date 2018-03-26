@@ -62,8 +62,6 @@ class ComponentClientInformation extends Component {
             viewAlertClient(true);
             updateTabSeletedCS(TAB_STORY);
 
-
-
         } else {
             redirectUrl("/login");
         }
@@ -214,7 +212,7 @@ class ComponentClientInformation extends Component {
                                             </td>
                                         </tr>
                                     }
-                                    {this.state.allow_visor_cliente &&
+                                    {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
                                                 <ButtonClientVisorComponent clientdIdNumber={infoClient.clientIdNumber} />

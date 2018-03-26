@@ -1401,7 +1401,7 @@ class FormEditPrevisita extends Component {
                     </Col>
                 </Row>
                 <div className="" style={{
-                    position: viewBottons ? " absolute" : " fixed",
+                    position: viewBottons ? "absolute" : "fixed",
                     border: "1px solid #C2C2C2",
                     bottom: viewBottons ? null : "0px",
                     width: "100%",
