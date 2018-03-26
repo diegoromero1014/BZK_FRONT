@@ -102,6 +102,8 @@ var clickButttonSave = false;
 let isProspect = false;
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isExclient = false;
+//Valida si es necesario la justificacion para la marca de gerenciamiento
+let validateMarcManagement = false;
 
 
 const validate = (values, props) => {
@@ -242,7 +244,7 @@ const validate = (values, props) => {
         errors.marcGeren = null;
     }
 
-    if (values.marcGeren === 'false' && !values.justifyNoGeren  && !isExclient) {
+    if (validateMarcManagement === false && !values.justifyNoGeren  && !isExclient) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
@@ -326,7 +328,8 @@ class clientCertify extends React.Component {
         super(props)
 
         this.state = {
-            sumErrorsForm: false
+            sumErrorsForm: false,
+            showJustifyNoGeren: false
         }
 
         this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this)
@@ -400,7 +403,7 @@ class clientCertify extends React.Component {
 
                 getMasterDataFields([constants.JUSTIFICATION_NO_RM,constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT, 
                     constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
-                    constants.MANAGEMENT_BRAND])
+                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY])
                 .then((data) => {
                     if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                         consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -540,7 +543,7 @@ class clientCertify extends React.Component {
                 "marketLeader": infoClient.marketLeader,
                 "territory": infoClient.territory,
                 "actualizationDate": infoClient.actualizationDate,
-                "justificationForNoRM": marcGeren.value !== null && marcGeren.value.toString() === 'false' ? justifyNoGeren.value : '',
+                "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
                 "justificationForLostClient": justifyExClient.value,
                 "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
                 "isVirtualStatement": infoClient.isVirtualStatement,
@@ -623,7 +626,7 @@ class clientCertify extends React.Component {
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
         const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
-        const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
+        const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
 
@@ -766,7 +769,50 @@ class clientCertify extends React.Component {
     }
 
     _onChangeMarcGeren(val) {
-        if (!infoMarcaGeren && val === 'true') {
+
+        
+
+        // Traer el selectReducer con el select de campos
+        // Buscar el key que tenga el val
+
+        const { selectsReducer, clientInformacion } = this.props;
+        const optionMarcMagnament = selectsReducer.get(constants.MANAGEMENT_BRAND);
+
+        let optionSelected = null;
+
+        if(typeof optionMarcMagnament == 'undefined') {
+            var infoClient = clientInformacion.get('responseClientInfo');
+            // Crear el objeto optionSelected
+            optionSelected = {key: infoClient.isManagedByRmKey};
+        } else {
+            for (let i=0; i<optionMarcMagnament.length; i++) {
+                let option = optionMarcMagnament[i];
+    
+                
+                if(val == option.id) {
+                    optionSelected = option;
+                    break;
+                }
+            }
+        }
+
+        
+        
+
+        // Si el key es Gerenciamiento a Demanda.
+
+        
+        
+        
+        if(optionSelected.key == 'Gerenciamiento a Demanda') {
+            validateMarcManagement = false;
+            this.setState({showJustifyNoGeren : false });
+        } else {
+            validateMarcManagement = true;
+            this.setState({showJustifyNoGeren : true });
+        }
+
+        if (!infoMarcaGeren && validateMarcManagement === true) {
             var dataTypeNote, idExcepcionNoGerenciado;
             const { selectsReducer, deleteNote, notes, updateErrorsNotes } = this.props;
             dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -789,7 +835,7 @@ class clientCertify extends React.Component {
         } else {
             infoMarcaGeren = false;
         }
-        if (val === 'true' || val === true && initValueJustifyNonGeren) {
+        if (validateMarcManagement === true && initValueJustifyNonGeren) {
             const { fields: { justifyNoGeren } } = this.props;
             justifyNoGeren.onChange('');
         } else {
@@ -1445,7 +1491,7 @@ class clientCertify extends React.Component {
                         </dt>
                     </Col>
                     <SelectsJustificacion
-                        visible={marcGeren.value}
+                        visible={this.state.showJustifyNoGeren}
                         title="Justificación no gerenciamiento"
                         labelInput="Seleccione..."
                         value={justifyNoGeren.value}
