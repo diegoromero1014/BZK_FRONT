@@ -11,7 +11,7 @@ import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
@@ -77,11 +77,14 @@ class ComponentClientInformation extends Component {
     }
 
     render() {
-        const { clientInformacion } = this.props;
+        const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         var showAECNoAplica = false;
         var showAECNivel = true;
         var aecStatus = "";
+
+        const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
+
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
             if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -197,7 +200,7 @@ class ComponentClientInformation extends Component {
                                         </td>
                                     </tr>
                                     {
-                                        infoClient.hasRiskGroup &&
+                                        allowAccessRiskGroup && infoClient.hasRiskGroup &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
                                                 <ButtonRiskGroup />
@@ -244,11 +247,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, navBar, tabReducer }, ownerProps) {
+function mapStateToProps({ clientInformacion, navBar, tabReducer, reducerGlobal }, ownerProps) {
     return {
         clientInformacion,
         tabReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 
