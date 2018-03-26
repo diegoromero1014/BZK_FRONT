@@ -550,7 +550,7 @@ const validate = (values, props) => {
     //ComponentListIntOperations
 
     if (errorScrollTop && clickButttonSave) {
-        console.log("error faltan datos");
+        //console.log("error faltan datos");
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
@@ -1599,7 +1599,7 @@ class clientEdit extends Component {
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-        console.log("allowRiskGroupEdit="+allowRiskGroupEdit);
+        //console.log("allowRiskGroupEdit="+allowRiskGroupEdit);
         if (errorShareholder) {
             messageShareholder = 'Falta Accionistas';
         } else {
