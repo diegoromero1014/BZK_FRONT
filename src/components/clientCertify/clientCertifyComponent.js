@@ -769,12 +769,8 @@ class clientCertify extends React.Component {
     }
 
     _onChangeMarcGeren(val) {
-
-        
-
         // Traer el selectReducer con el select de campos
         // Buscar el key que tenga el val
-
         const { selectsReducer, clientInformacion } = this.props;
         const optionMarcMagnament = selectsReducer.get(constants.MANAGEMENT_BRAND);
 
@@ -796,14 +792,7 @@ class clientCertify extends React.Component {
             }
         }
 
-        
-        
-
         // Si el key es Gerenciamiento a Demanda.
-
-        
-        
-        
         if(optionSelected.key == 'Gerenciamiento a Demanda') {
             validateMarcManagement = false;
             this.setState({showJustifyNoGeren : false });
