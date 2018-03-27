@@ -58,7 +58,7 @@ class ContactComponent extends Component {
     return (
       <div className="tab-pane quickZoomIn animated"
         style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
-        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial' }}>
+        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'visible' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs={10} sm={10} md={11} lg={11}>
