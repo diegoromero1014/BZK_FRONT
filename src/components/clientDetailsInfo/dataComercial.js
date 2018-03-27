@@ -22,7 +22,7 @@ class DataComercial extends Component{
         </thead>
         <tbody>
           <tr>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm === null ? '' : ( infoClient.isManagedByRm ? 'Si' : 'No')}</td>
+            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm === null ? '' : ( infoClient.isManagedByRmKey) }</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForNoRMKey}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.economicGroupKey}</td>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.nitPrincipal}</td>
