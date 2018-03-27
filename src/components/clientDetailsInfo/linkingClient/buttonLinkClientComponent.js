@@ -342,7 +342,7 @@ class ButtonLinkClientComponent extends Component {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row style={{ paddingBottom: '10px' }}>
                                     <Col xs={12} md={12} lg={12}>
                                         <h4>Observación vinculación</h4>
                                         {_.isEmpty(infoClient.observationAdmin) ?
@@ -353,7 +353,7 @@ class ButtonLinkClientComponent extends Component {
                                     </Col>
                                 </Row>
                                 {infoClient.linkingRequestId == null &&
-                                    <Row style={{ paddingTop: '10px' }}>
+                                    <Row style={{ paddingBottom: '10px' }}>
                                         <Col xs={12} md={12} lg={12}>
                                             <h4>Observación</h4>
                                             <div>
