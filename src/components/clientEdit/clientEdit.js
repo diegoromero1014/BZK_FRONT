@@ -140,7 +140,7 @@ const UPDATE_STYLE = {
 };
 
 const validate = (values, props) => {
-    const {reducerGlobal} = props;
+    const {reducerGlobal, tabReducer} = props;
     const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
     
     const errors = {}
@@ -565,7 +565,7 @@ const validate = (values, props) => {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
    
-  
+
 
     return errors;
 };
@@ -1514,7 +1514,13 @@ class clientEdit extends Component {
             }
         }
         }
+
+        if (otherOperationsForeignEnable == 'disabled'){
+            errors = _.omit(errors, 'otherOperationsForeign');
+        }
+
         const errorsArray = _.toArray(errors);
+        
         this.setState({
             sumErrorsForm: errorsArray.length
         });
