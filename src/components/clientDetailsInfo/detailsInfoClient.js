@@ -286,12 +286,11 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.declarationOfOrigin} title="Declaración de origen de bienes y/o fondos" icon="money"
                         componentView={<DeclarationOfOrigin infoClient={infoClient} />} />
 
-                    {
-                        allowAccessContextClient &&
-                        <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
+                    
+                    <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
                         codSection={accordion.internationalOperations} title="Información operaciones internacionales" icon="world"
-                        componentView={<InternationalOperations infoClient={infoClient} />} />
-                    }
+                        componentView={<InternationalOperations infoClient={infoClient} allowAccessInfoContextClient={allowAccessContextClient} />} />
+                    
 
                     {
                         allowAccessGestionDocumental &&

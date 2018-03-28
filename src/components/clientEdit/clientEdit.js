@@ -470,7 +470,7 @@ const validate = (values, props) => {
             //En caso de que si realice operaciones, obligo a que me indique cuales
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
-                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
                     
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
