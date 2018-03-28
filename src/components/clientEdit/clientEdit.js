@@ -368,7 +368,13 @@ const validate = (values, props) => {
         }
     }
     if (otherOperationsForeignEnable !== 'disabled') {
+        
+        
+
         if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
+            
+            
+            
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
         } else if (xssValidation(values.otherOperationsForeign)) {
@@ -377,6 +383,8 @@ const validate = (values, props) => {
         } else {
             errors.otherOperationsForeign = null;
         }
+    }else{
+       
     }
 
     //Valido que el cliente tenga ciudad de origen de los recursos
@@ -557,6 +565,8 @@ const validate = (values, props) => {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
    
+  
+
     return errors;
 };
 
@@ -1634,7 +1644,7 @@ class clientEdit extends Component {
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-        //console.log("allowRiskGroupEdit="+allowRiskGroupEdit);
+        
         if (errorShareholder) {
             messageShareholder = 'Falta Accionistas';
         } else {

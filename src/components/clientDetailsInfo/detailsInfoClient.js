@@ -152,8 +152,7 @@ class DetailsInfoClient extends Component {
         const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
         const allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         const allowAccessGestionDocumental = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GESTION_DOCUMENTAL), false);
-        console.log("accessRiskGroup", allowAccessRiskGroup);
-        console.log("accessContextClient", allowAccessContextClient);
+        
 
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
