@@ -129,9 +129,9 @@ class MenuComponent extends Component {
             menuItems.push(itemContacts);
         }
         if (_.get(permissions, MODULE_TRANSACTIONAL)) {
-            menuItems.push(itemTransactional);
-            menuItems.push(itemScheduler);
+            menuItems.push(itemTransactional); 
         }
+        menuItems.push(itemScheduler);
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
