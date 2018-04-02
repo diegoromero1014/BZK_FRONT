@@ -96,10 +96,12 @@ class AlertCovenants extends Component {
 
     render() {
         var visibleTable = 'none';
+        var visibleDoots = 'none';
         var visibleMessage = 'block';
         const { alertCovenant } = this.props;
         if (_.size(alertCovenant.get('responseCovenants')) !== 0) {
-            visibleTable = 'flex';
+            visibleTable = 'block';
+            visibleDoots = 'flex';
             visibleMessage = 'none';
         }
         var statusCovenant = alertCovenant.get('statusCovenant');
@@ -134,7 +136,7 @@ class AlertCovenants extends Component {
                         Total: {numberTotalClientFiltered}
                     </div>
                 </Row>
-                <Row style={{ width: "98%", marginLeft: '12px', padding: '10px 5px 5px 10px', display: visibleTable, backgroundColor: '#FFF' }} xs={12} md={12} lg={12}>
+                <Row style={{ width: "98%", marginLeft: '12px', padding: '10px 5px 5px 10px', display: visibleDoots, backgroundColor: '#FFF' }} xs={12} md={12} lg={12}>
                     <Col xs={12} md={4} lg={4} style={{ display: '-webkit-inline-box' }}>
                         <div className="traffickLigth-item-covenants" style={{ backgroundColor: RED_COLOR , display: "-ms-inline-flexbox" }}></div>
                         <span style={{ marginLeft: '10px'}}>{optionsColorExpiration[1].text}</span>

@@ -1276,7 +1276,7 @@
 .team-modal.grid {
 	width: 100%;
 	display: grid;
-	grid-template-columns: 30% 30% 30%;
+	grid-template-columns: 33% 33% 33%;
 	justify-content: space-around;
 	margin-bottom: 30px;
 	display: -ms-grid;
@@ -1293,6 +1293,15 @@
 .team-modal.grid .client-card.g-r-1{-ms-grid-row:1}
 .team-modal.grid .client-card.g-r-2{-ms-grid-row:2}
 .team-modal.grid .client-card.g-r-3{-ms-grid-row:3}
+.team-modal.grid .client-card.g-r-4{-ms-grid-row:4}
+.team-modal.grid .client-card.g-r-5{-ms-grid-row:5}
+.team-modal.grid .client-card.g-r-6{-ms-grid-row:6}
+.team-modal.grid .client-card.g-r-7{-ms-grid-row:7}
+.team-modal.grid .client-card.g-r-8{-ms-grid-row:8}
+.team-modal.grid .client-card.g-r-9{-ms-grid-row:9}
+.team-modal.grid .client-card.g-r-10{-ms-grid-row:10}
+.team-modal.grid .client-card.g-r-11{-ms-grid-row:11}
+.team-modal.grid .client-card.g-r-12{-ms-grid-row:12}
 
 .team-modal.grid .client-card {
 	-ms-max-width: 95% !important;	

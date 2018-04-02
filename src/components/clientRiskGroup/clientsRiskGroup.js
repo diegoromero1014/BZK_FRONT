@@ -41,7 +41,7 @@ class clientsRiskGroup extends Component {
     let clsName = ["client-card", "g-c-" + gridColumn , "g-r-" + gridRow].join(" ");
     return (
       <div key={key} className={clsName} style={{
-        width: "100%",
+        width: "95%",
         marginBottom: "15px",
         cursor: 'auto',
         height: "auto",
