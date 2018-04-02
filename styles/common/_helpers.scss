@@ -106,3 +106,8 @@ textarea[contenteditable] {
 .clearfix:after {
 	clear: both;
 }
+
+//prevent clear function IE
+input::-ms-clear {
+    display: none;
+}
