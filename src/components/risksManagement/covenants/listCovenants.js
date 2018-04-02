@@ -93,28 +93,32 @@ class ListCovenantsComponent extends Component {
                             <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR}}/>
                             <span style={{
                                 marginLeft: '5px',
-                                marginRight: '10px'
+                                marginRight: '10px',
+                                display: "-ms-inline-flexbox"
                             }}>Covenants con seguimiento pendiente</span>
                         </Col>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
                             <div className="traffickLigth-item-covenants" style={{backgroundColor: ORANGE_COLOR}}/>
                             <span style={{
                                 marginLeft: '5px',
-                                marginRight: '10px'
+                                marginRight: '10px',
+                                display: "-ms-inline-flexbox"
                             }}>Covenants con seguimiento próximo mes</span>
                         </Col>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
                             <div className="traffickLigth-item-covenants" style={{backgroundColor: GREEN_COLOR}}/>
                             <span style={{
                                 marginLeft: '5px',
-                                marginRight: '10px'
+                                marginRight: '10px',
+                                display: "-ms-inline-flexbox"
                             }}>Covenants con revisión posterior</span>
                         </Col>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
                             <div className="traffickLigth-item-covenants" style={{backgroundColor: GRAY_COLOR}}/>
                             <span style={{
                                 marginLeft: '5px',
-                                marginRight: '10px'
+                                marginRight: '10px',
+                                display: "-ms-inline-flexbox"
                             }}>Covenants inactivos</span>
                         </Col>
                     </Row>
