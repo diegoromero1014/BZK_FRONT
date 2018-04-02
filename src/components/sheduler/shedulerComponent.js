@@ -33,7 +33,8 @@ class Sheduler extends Component {
         super(props)
         this.state = {
             modalIsOpen: false,
-            idUser: 0
+            idUser: 0,
+            display: 'none'
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -58,10 +59,7 @@ class Sheduler extends Component {
                 consultDataSelect(LIST_REGIONS);
             }
         });
-
-        this.setState({
-            display: 'none'
-        })
+        
         updateTitleNavBar('Agenda');
     }
 
@@ -110,26 +108,26 @@ class Sheduler extends Component {
             this._handlePrevisitsFind();
         }
 
-        this.setState({
-            display: 'block'
-        });
+
     }
 
     _cleanSearch() {
         const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
+        
         showLoading(true, "cargando..");
+
         resetForm();
 
         clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
-        clearFilter().then((data) => {
-            if (_.has(data, "payload")) {
-                this.setState({
-                    display: 'none'
-                });
-                showLoading(false, null);
-            }
+        clearFilter();
+
+        this.setState({
+            display: 'none'
         });
+        
+        showLoading(false, false);
+        
     }
 
     _onChangeZoneStatus(val) {
@@ -146,10 +144,7 @@ class Sheduler extends Component {
             });
             this._handlePrevisitsFind();
         }
-
-        this.setState({
-            display: 'block'
-        });
+      
     }
 
     _onChangeTeam(val) {
@@ -159,26 +154,18 @@ class Sheduler extends Component {
         if (val) {
             this._handlePrevisitsFind();
         }
-        this.setState({
-            display: 'block'
-        });
+        
     }
 
     _handlePrevisitsFind() {
         const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
         showLoading(true, 'Cargando..');
         getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value)
-        // .then((response) => {
-        //     let lista = JSON.parse(response.payload.data.schedulerListPreviist);
-        //     let jsonP = lista.map((item) => {
-        //         item.title = item.clientName;
-        //         item.start = item.initialDatePrevisit;
-        //         item.end = item.finalDatePrevisit;
-        //         return item;
-        //     });
-        //     console.log()
-        //     return jsonP;
-        // });
+
+        this.setState({
+            display: 'block'
+        });
+
         showLoading(false, null);
 
     }
@@ -265,41 +252,6 @@ class Sheduler extends Component {
         const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
         const userName = sessionStorage.getItem('userName');
-        //console.log("render", JSON.stringify(data1) );
-        // alert( JSON.stringify() )
-        // data.forEach(function (element) {
-        //     console.log("render", JSON.stringify(element));
-        // });
-
-        // const data2 = [
-        //     {
-        //         id: 0,
-        //         title: 'All Day Event very long title',
-        //         start: new Date(2018, 2, 15, 10, 30, 0, 0),
-        //         end: new Date(2018, 2, 15, 12, 30, 0, 0)
-        //     }
-        // ]
-        // const data2 = [
-        //     {
-        //         "idPrevisit": 5160868,
-        //         "idClient": 5160495,
-        //         "clientName": "Scripting",
-        //         "createdBy": null,
-        //         "listParticipantsBank": [
-        //             "lmcFront",
-        //             "lmcFront"
-        //         ],
-        //         "initialDatePrevisit": "2018-03-15 10:57:43",
-        //         "finalDatePrevisit": "2018-03-15 12:57:43",
-        //         "participantBank": null,
-        //         "clientTeam": 4936515,
-        //         "title": "Scripting",
-        //         "start": null,
-        //         "end": null
-        //     }
-        // ]
-
-        // let data = data2.concat(data1);
 
         return (
             <div>

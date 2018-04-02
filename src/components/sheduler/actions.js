@@ -56,7 +56,7 @@ export function clearFilter() {
     // var request = axios.post(APP_URL + "/schedulerPrevisits", json);
 
     return {
-        type: CLEAR_SCHEDULER_PREVISIT,
+        type: CLEAR_SCHEDULER_PREVISIT
         // payload: request
     }
 }
