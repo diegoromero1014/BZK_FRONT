@@ -103,7 +103,7 @@ let isProspect = false;
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isExclient = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
-let validateMarcManagement = false;
+let validateMarcManagement = true;
 
 
 const validate = (values, props) => {
@@ -329,7 +329,7 @@ class clientCertify extends React.Component {
 
         this.state = {
             sumErrorsForm: false,
-            showJustifyNoGeren: false
+            showJustifyNoGeren: true
         }
 
         this._onChangeGroupEconomic = this._onChangeGroupEconomic.bind(this)
@@ -776,14 +776,13 @@ class clientCertify extends React.Component {
 
         let optionSelected = null;
 
-        if(typeof optionMarcMagnament == 'undefined') {
+        if(typeof optionMarcMagnament == 'undefined' || typeof optionMarcMagnament == null) {
             var infoClient = clientInformacion.get('responseClientInfo');
             // Crear el objeto optionSelected
             optionSelected = {key: infoClient.isManagedByRmKey};
         } else {
             for (let i=0; i<optionMarcMagnament.length; i++) {
                 let option = optionMarcMagnament[i];
-    
                 
                 if(val == option.id) {
                     optionSelected = option;
@@ -793,7 +792,10 @@ class clientCertify extends React.Component {
         }
 
         // Si el key es Gerenciamiento a Demanda.
-        if(optionSelected.key == 'Gerenciamiento a Demanda') {
+        if(optionSelected == null) {
+            validateMarcManagement = true;
+            this.setState({showJustifyNoGeren: true});
+        }else if(optionSelected.key === 'Gerenciamiento a Demanda') {
             validateMarcManagement = false;
             this.setState({showJustifyNoGeren : false });
         } else {
@@ -1476,6 +1478,7 @@ class clientCertify extends React.Component {
                                 {...marcGeren}
                                 onChange={val => this._onChangeMarcGeren(val)}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </dt>
                     </Col>
