@@ -15,9 +15,11 @@ class DataComercial extends Component{
         <thead>
           <tr>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Marca gerenciamiento</span></th>            
+            <th>
             {infoClient.isManagedByRm && infoClient.isManagedByRmKey == 'Gerenciamiento a Demanda' && infoClient.justificationForNoRMKey &&
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no gerenciamiento</span></th>
+            <span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no gerenciamiento</span>
             }
+            </th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Grupo económico/Relación</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>NIT principal</span></th>
           </tr>
