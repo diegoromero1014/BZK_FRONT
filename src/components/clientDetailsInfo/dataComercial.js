@@ -14,8 +14,12 @@ class DataComercial extends Component{
       <table style={{width: "100%"}}>
         <thead>
           <tr>
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Marca gerenciamiento</span></th>
-            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no gerenciamiento</span></th>
+            <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Marca gerenciamiento</span></th>            
+            <th>
+              {infoClient.isManagedByRm && infoClient.isManagedByRmKey == 'Gerenciamiento a Demanda' && infoClient.justificationForNoRMKey &&
+                <span style={{fontWeight: "bold", color: "#4C5360"}}>Justificación no gerenciamiento</span>
+              }
+            </th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Grupo económico/Relación</span></th>
             <th><span style={{fontWeight: "bold", color: "#4C5360"}}>NIT principal</span></th>
           </tr>
@@ -23,8 +27,12 @@ class DataComercial extends Component{
         <tbody>
           <tr>
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.isManagedByRm === null ? '' : ( infoClient.isManagedByRmKey) }</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.justificationForNoRMKey}</td>
-            <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.economicGroupKey}</td>
+            <td style={{width: "25%", verticalAlign: "initial"}}>
+              {infoClient.isManagedByRm && infoClient.isManagedByRmKey == 'Gerenciamiento a Demanda' && infoClient.justificationForNoRMKey  &&                
+                <span>{infoClient.justificationForNoRMKey}</span>
+              }
+            </td>            
+            <td style={{width: "25%", verticalAlign: "initial"}}><span>{infoClient.economicGroupKey}</span></td>            
             <td style={{width: "25%", verticalAlign: "initial"}}>{infoClient.nitPrincipal}</td>
           </tr>
         </tbody>

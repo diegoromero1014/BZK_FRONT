@@ -114,7 +114,7 @@ let infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
 var clickButttonSave = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
-let validateMarcManagement = false;
+let validateMarcManagement = true;
 
 //Controla si el campo Segmento esta seleccionado constructor pyme.
 let isSegmentPymeConstruct = false;
@@ -619,7 +619,7 @@ class clientEdit extends Component {
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
             showFormAddIntOperatrions: false,
-            showJustifyNoGeren: false
+            showJustifyNoGeren: true
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -820,7 +820,10 @@ class clientEdit extends Component {
         }
 
         // Si el key es Gerenciamiento a Demanda.
-        if(optionSelected.key == 'Gerenciamiento a Demanda') {
+        if(optionSelected == null) {
+            validateMarcManagement = true;
+            this.setState({showJustifyNoGeren: true});
+        }else if(optionSelected.key === 'Gerenciamiento a Demanda') {
             validateMarcManagement = false;
             this.setState({showJustifyNoGeren : false });
         } else {
@@ -2323,6 +2326,7 @@ class clientEdit extends Component {
                                 {...marcGeren}
                                 onChange={val => this._onChangeMarcGeren(val)}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </dt>
                     </Col>
