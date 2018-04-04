@@ -33,7 +33,8 @@ class Sheduler extends Component {
         super(props)
         this.state = {
             modalIsOpen: false,
-            idUser: 0
+            idUser: 0,
+            display: 'none'
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -58,10 +59,7 @@ class Sheduler extends Component {
                 consultDataSelect(LIST_REGIONS);
             }
         });
-
-        this.setState({
-            display: 'none'
-        })
+        
         updateTitleNavBar('Agenda');
     }
 
@@ -110,26 +108,26 @@ class Sheduler extends Component {
             this._handlePrevisitsFind();
         }
 
-        this.setState({
-            display: 'block'
-        });
+
     }
 
     _cleanSearch() {
         const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
+        
         showLoading(true, "cargando..");
+
         resetForm();
 
         clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
-        clearFilter().then((data) => {
-            if (_.has(data, "payload")) {
-                this.setState({
-                    display: 'none'
-                });
-                showLoading(false, null);
-            }
+        clearFilter();
+
+        this.setState({
+            display: 'none'
         });
+        
+        showLoading(false, false);
+        
     }
 
     _onChangeZoneStatus(val) {
@@ -146,10 +144,7 @@ class Sheduler extends Component {
             });
             this._handlePrevisitsFind();
         }
-
-        this.setState({
-            display: 'block'
-        });
+      
     }
 
     _onChangeTeam(val) {
@@ -159,24 +154,18 @@ class Sheduler extends Component {
         if (val) {
             this._handlePrevisitsFind();
         }
-        this.setState({
-            display: 'block'
-        });
+        
     }
 
     _handlePrevisitsFind() {
         const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
         showLoading(true, 'Cargando..');
-        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value).then((response) => {
-            let lista = JSON.parse(response.payload.data.schedulerListPreviist);
-            let jsonP = lista.map((item) => {
-                item.title = item.clientName;
-                item.start = item.initialDatePrevisit;
-                item.end = item.finalDatePrevisit;
-                return item;
-            });
-            return jsonP;
+        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value)
+
+        this.setState({
+            display: 'block'
         });
+
         showLoading(false, null);
 
     }
@@ -205,7 +194,7 @@ class Sheduler extends Component {
     }
 
     componentDidMount() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -213,7 +202,7 @@ class Sheduler extends Component {
     }
 
     componentWillUpdate() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -263,6 +252,7 @@ class Sheduler extends Component {
         const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
         const userName = sessionStorage.getItem('userName');
+
         return (
             <div>
                 <form>
@@ -377,7 +367,7 @@ class Sheduler extends Component {
 
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
-                        defaultDate={new Date()}
+                        defaultDate={new Date()}                        
                         onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
                         eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />

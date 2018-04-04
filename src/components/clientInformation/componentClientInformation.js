@@ -10,7 +10,9 @@ import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR } from '../../constantsGlobal';
+import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { validatePermissionsByModule } from '../../actionsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
@@ -22,11 +24,15 @@ import _ from 'lodash';
 class ComponentClientInformation extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            allow_visor_cliente: false
+        };
     }
 
     componentWillMount() {
         if (!_.isNull(window.localStorage.getItem('idClientSelected')) && !_.isUndefined(window.localStorage.getItem('idClientSelected'))) {
-            const { resetAccordion, tabReducer } = this.props;
+            const { resetAccordion, tabReducer, validatePermissionsByModule } = this.props;
             var tabActive = tabReducer.get('tabSelected');
             if (tabActive === null) {
                 resetAccordion();
@@ -35,14 +41,27 @@ class ComponentClientInformation extends Component {
             const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
             updateTitleNavBar("Mis clientes");
             showLoading(true, 'Cargando..');
+
+            validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+                let permissions = _.get(data, 'payload.data.data.permissions')
+                let allow_visor_cliente = (permissions.indexOf(VISOR_CLIENTE) >= 0)
+                this.setState({
+                    allow_visor_cliente: allow_visor_cliente
+                })
+
+            });
+
             consultInfoClient().then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin')) {
                     redirectUrl("/login");
                 }
                 showLoading(false, '');
             });
+
+
             viewAlertClient(true);
             updateTabSeletedCS(TAB_STORY);
+
         } else {
             redirectUrl("/login");
         }
@@ -58,11 +77,14 @@ class ComponentClientInformation extends Component {
     }
 
     render() {
-        const { clientInformacion } = this.props;
+        const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         var showAECNoAplica = false;
         var showAECNivel = true;
         var aecStatus = "";
+
+        const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
+
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
             if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -178,7 +200,7 @@ class ComponentClientInformation extends Component {
                                         </td>
                                     </tr>
                                     {
-                                        infoClient.hasRiskGroup &&
+                                        allowAccessRiskGroup && infoClient.hasRiskGroup &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
                                                 <ButtonRiskGroup />
@@ -190,6 +212,13 @@ class ComponentClientInformation extends Component {
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>
                                                 <ButtonEconomicgroup />
+                                            </td>
+                                        </tr>
+                                    }
+                                    {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
+                                        <tr>
+                                            <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
+                                                <ButtonClientVisorComponent clientdIdNumber={infoClient.clientIdNumber} />
                                             </td>
                                         </tr>
                                     }
@@ -213,15 +242,17 @@ function mapDispatchToProps(dispatch) {
         clearEntities,
         showLoading,
         resetAccordion,
-        updateTabSeletedCS
+        updateTabSeletedCS,
+        validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, navBar, tabReducer }, ownerProps) {
+function mapStateToProps({ clientInformacion, navBar, tabReducer, reducerGlobal }, ownerProps) {
     return {
         clientInformacion,
         tabReducer,
-        navBar
+        navBar,
+        reducerGlobal
     };
 }
 

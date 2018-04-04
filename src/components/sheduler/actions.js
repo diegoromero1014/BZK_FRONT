@@ -33,31 +33,31 @@ export function getSchedulerPrevisits(idTeam, idRegion, idZone, idUser) {
 }
 
 export function clearFilter() {
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": {
-            idTeam: null,
-            idRegion: null,
-            idZone: null
-        }
-    }
+    // const json = {
+    //     "messageHeader": {
+    //         "sessionToken": window.localStorage.getItem('sessionToken'),
+    //         "timestamp": new Date().getTime(),
+    //         "service": "",
+    //         "status": "0",
+    //         "language": "es",
+    //         "displayErrorMessage": "",
+    //         "technicalErrorMessage": "",
+    //         "applicationVersion": "",
+    //         "debug": true,
+    //         "isSuccessful": true
+    //     },
+    //     "messageBody": {
+    //         idTeam: null,
+    //         idRegion: null,
+    //         idZone: null
+    //     }
+    // }
 
-    var request = axios.post(APP_URL + "/schedulerPrevisits", json);
+    // var request = axios.post(APP_URL + "/schedulerPrevisits", json);
 
     return {
-        type: CLEAR_SCHEDULER_PREVISIT,
-        payload: request
+        type: CLEAR_SCHEDULER_PREVISIT
+        // payload: request
     }
 }
 

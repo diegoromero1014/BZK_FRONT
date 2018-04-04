@@ -93,6 +93,11 @@ export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
 export const ANALYST = "Analista";
 export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
+export const VISOR_CLIENTE = "Visor cliente";
+
+export const INFO_ESTUDIO_CREDITO = "Info Estudio de Crédito";
+export const GESTION_DOCUMENTAL = "Gestión Documental";
+export const GRUPO_RIESGO = "Grupo de Riesgo";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";

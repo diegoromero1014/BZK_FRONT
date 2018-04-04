@@ -90,20 +90,23 @@ class ListCovenantsComponent extends Component {
                     <div>
                         <Row xs={12} md={12} lg={12} style={{marginBottom: '20px'}}>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
-                            <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR}}/>
+                            <div className="traffickLigth-item-covenants" style={{backgroundColor: RED_COLOR,
+                                display: "-ms-inline-flexbox"}}/>
                             <span style={{
                                 marginLeft: '5px',
                                 marginRight: '10px'
                             }}>Covenants con seguimiento pendiente</span>
                         </Col>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
-                            <div className="traffickLigth-item-covenants" style={{backgroundColor: ORANGE_COLOR}}/>
+                            <div className="traffickLigth-item-covenants" style={{backgroundColor: ORANGE_COLOR,
+                                display: "-ms-inline-flexbox"}}/>
                             <span style={{
                                 marginLeft: '5px',
                                 marginRight: '10px'
                             }}>Covenants con seguimiento próximo mes</span>
                         </Col>
-                        <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
+                        <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box',
+                                display: "-ms-inline-flexbox"}}>
                             <div className="traffickLigth-item-covenants" style={{backgroundColor: GREEN_COLOR}}/>
                             <span style={{
                                 marginLeft: '5px',
@@ -111,7 +114,8 @@ class ListCovenantsComponent extends Component {
                             }}>Covenants con revisión posterior</span>
                         </Col>
                         <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
-                            <div className="traffickLigth-item-covenants" style={{backgroundColor: GRAY_COLOR}}/>
+                            <div className="traffickLigth-item-covenants" style={{backgroundColor: GRAY_COLOR,
+                                display: "-ms-inline-flexbox"}}/>
                             <span style={{
                                 marginLeft: '5px',
                                 marginRight: '10px'
