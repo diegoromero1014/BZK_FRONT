@@ -141,6 +141,7 @@ class FormBusinessPlan extends Component {
                         "id": null,
                         "clientNeed": need.needIdType,
                         "clientNeedDescription": need.descriptionNeed,
+                        "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
                         "task": need.needTask,
