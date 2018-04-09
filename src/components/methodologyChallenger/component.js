@@ -7,12 +7,11 @@ import $ from 'jquery';
 import _ from "lodash";
 import ToolTip from "../toolTip/toolTipComponent";
 
-const titleAcondicionamiento = 'Describir el entorno y el negocio del cliente, tendencias y situación actual de la industria.';
-const titleReplanteamiento = 'Evidenciar problemas, riesgos u oportunidades que la industria tiene y que afectan la manera óptima de llevar los negocios. Puede usar también riesgos y oportunidades que el cliente no ha visto. Tenga en cuenta los objetivos estratégicos de la empresa.';
-const titleAhogamiento = 'Cuantificar el impacto del problema o de la oportunidad no aprovechada y relacionarla con alguna cuantía que le sea familiar al cliente.';
-const titleImpacto = 'Mostrar cómo la situación que estamos exponiendo impacta tanto a la función corporativa como a la persona que la ejerce.';
-const titleNuevoModo = 'Actuar en un rol de consultor para acordar conjuntamente con el cliente cuáles serían los pasos próximos para resolver el problema, mitigar el riesgo o aprovechar la oportunidad, invitando a que el cliente visualice ese escenario como posible y deseable.';
-const titleNuestraSolucion = 'Mostrar cómo Bancolombia con sus atributos únicos es el indicado para permitir la implementación del plan acordado en el punto anterior. Este es el momento para hablar de los productos y servicios que ofrecemos.';
+const titleClientTeach = 'Desarrolle la Investigación Mesurada: Construye el 333  y la DOFA. Luego, construya y valide su Insight Comercial Challenger y utilice la Coreografía Challenger para llevar un hilo conductor en el diálogo.';
+const titleAdaptMessage = 'Considere las 4 esferas de la adaptación (Sector, Empresa, Cargo, Individuo) y trabaje ante los diferentes estilos sociales (Amable. Orientado a la acción, Analítico, Expresivo).';
+const titleControlConversation = 'Conozca el Proceso de compra del cliente y use los verificadores (Binarios o tangibles) para entender si el cliente está tomando una decisión, enfatice las consecuencias negativas de mantenerse en el Status quo, aborde los asuntos relacionados con el dinero y enfrenta las objeciones.';
+const titleConstructiveTension = 'Cree, observe, aumente y relaje la tensión, desarrolle la Investigación acotada: Preguntas y peticiones poderosas, analice los supuestos incorrectos y use de forma estratégica de silencio.';
+
 
 
 class Challenger extends Component {
@@ -31,20 +30,20 @@ class Challenger extends Component {
     _seletedTabActive(tabSelect, e) {
         switch (tabSelect) {
             case 1:
-                $('.title.acondicionamiento').toggleClass('active');
-                $('.content.acondicionamiento').toggleClass('active');
+                $('.title.clientTeach').toggleClass('active');
+                $('.content.clientTeach').toggleClass('active');
                 break;
             case 2:
-                $('.title.replanteamiento').toggleClass('active');
-                $('.content.replanteamiento').toggleClass('active');
+                $('.title.adaptMessage').toggleClass('active');
+                $('.content.adaptMessage').toggleClass('active');
                 break;
             case 3:
-                $('.title.ahogamiento').toggleClass('active');
-                $('.content.ahogamiento').toggleClass('active');
+                $('.title.controlConversation').toggleClass('active');
+                $('.content.controlConversation').toggleClass('active');
                 break;
             case 4:
-                $('.title.impacto').toggleClass('active');
-                $('.content.impacto').toggleClass('active');
+                $('.title.constructiveTension').toggleClass('active');
+                $('.content.constructiveTension').toggleClass('active');
                 break;
             case 5:
                 $('.title.nuevoModo').toggleClass('active');
@@ -55,153 +54,109 @@ class Challenger extends Component {
                 $('.content.solucion').toggleClass('active');
                 break;
             default:
-                $('.title.acondicionamiento').toggleClass('active');
-                $('.content.acondicionamiento').toggleClass('active');
+                $('.title.clientTeach').toggleClass('active');
+                $('.content.clientTeach').toggleClass('active');
                 break;
         }
     }
 
     render() {
         const {
-            acondicionamiento, acondicionamientoTouch, acondicionamientoError, onChangeAcondicionamiento,
-            replanteamiento, replanteamientoTouch, replanteamientoError, onChangeReplanteamiento,
-            ahogamiento, ahogamientoTouch, ahogamientoError, onChangeAhogamiento,
-            impacto, impactoTouch, impactoError, onChangeImpacto,
-            nuevoModo, nuevoModoTouch, nuevoModoError, onChangeNuevoModo,
-            nuestraSolucion, nuestraSolucionTouch, nuestraSolucionError, onChangeNuestraSolucion,
+            clientTeach, clientTeachTouch, clientTeachError, onChangeClientTeach,
+            adaptMessage, adaptMessageTouch, adaptMessageError, onChangeAdaptMessage,
+            controlConversation, controlConversationTouch, controlConversationError, onChangeControlConversation,
+            constructiveTension, constructiveTensionTouch, constructiveTensionError, onChangeConstructiveTension,
             disabled
         } = this.props;
         const readOnly = !_.isEmpty(disabled);
         return (
             <div className="ui styled accordion" style={{width: "100%"}}>
-                <div className="title acondicionamiento active"
-                     style={acondicionamientoError !== null && acondicionamientoTouch ? {backgroundColor: '#FFEAEA'} : {}}
+                <div className="title clientTeach active"
+                     style={clientTeachError !== null && clientTeachTouch ? {backgroundColor: '#FFEAEA'} : {}}
                      onClick={this._seletedTabActive.bind(this, 1)}>
-                    <i className="dropdown icon"></i> Acondicionamiento (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleAcondicionamiento}>
+                    <i className="dropdown icon"></i>  ¿Qué le enseñará al cliente? (<span style={{color: "red"}}>*</span>)
+                    <ToolTip text={titleClientTeach}>
                         <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
                     </ToolTip>
                 </div>
-                <div className="content acondicionamiento active">
+                <div className="content clientTeach active">
                     <RichText
-                        value={acondicionamiento}
-                        touched={acondicionamientoTouch}
-                        error={acondicionamientoError}
-                        onChange={onChangeAcondicionamiento}
-                        name="targetPrevisit"
+                        value={clientTeach}
+                        touched={clientTeachTouch}
+                        error={clientTeachError}
+                        onChange={onChangeClientTeach}
+                        name="clientTeach"
                         style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
                         readOnly={readOnly}
                     />
                 </div>
-                <div className="title replanteamiento"
-                     style={replanteamientoError !== null && replanteamientoTouch ? {backgroundColor: '#FFEAEA'} : {}}
+                <div className="title adaptMessage"
+                     style={adaptMessageError !== null && adaptMessageTouch ? {backgroundColor: '#FFEAEA'} : {}}
                      onClick={this._seletedTabActive.bind(this, 2)}>
-                    <i className="dropdown icon"></i> Replanteamiento (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleReplanteamiento}>
+                    <i className="dropdown icon"></i> ¿Cómo adaptará el mensaje? (<span style={{color: "red"}}>*</span>)
+                    <ToolTip text={titleAdaptMessage}>
                         <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
                     </ToolTip>
                 </div>
-                <div className="content replanteamiento">
+                <div className="content adaptMessage">
                     <RichText
-                        value={replanteamiento}
-                        touched={replanteamientoTouch}
-                        error={replanteamientoError}
-                        onChange={onChangeReplanteamiento}
-                        name="replanteamiento"
+                        value={adaptMessage}
+                        touched={adaptMessageTouch}
+                        error={adaptMessageError}
+                        onChange={onChangeAdaptMessage}
+                        name="adaptMessage"
                         style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
                         readOnly={readOnly}
                     />
                 </div>
-                <div className="title ahogamiento"
-                     style={ahogamientoError !== null && ahogamientoTouch ? {backgroundColor: '#FFEAEA'} : {}}
+                <div className="title controlConversation"
+                     style={controlConversationError !== null && controlConversationTouch ? {backgroundColor: '#FFEAEA'} : {}}
                      onClick={this._seletedTabActive.bind(this, 3)}>
-                    <i className="dropdown icon"></i> Ahogamiento racional (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleAhogamiento}>
+                    <i className="dropdown icon"></i> ¿Cómo tomará el control de la conversación? (<span style={{color: "red"}}>*</span>)
+                    <ToolTip text={titleControlConversation}>
                         <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}
-                           title={titleAhogamiento}/>
+                           title={titleControlConversation}/>
                     </ToolTip>
                 </div>
-                <div className="content ahogamiento">
+                <div className="content controlConversation">
                     <RichText
-                        value={ahogamiento}
-                        touched={ahogamientoTouch}
-                        error={ahogamientoError}
-                        onChange={onChangeAhogamiento}
-                        name="ahogamiento"
+                        value={controlConversation}
+                        touched={controlConversationTouch}
+                        error={controlConversationError}
+                        onChange={onChangeControlConversation}
+                        name="controlConversation"
                         style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
                         readOnly={readOnly}
                     />
                 </div>
-                <div className="title impacto"
-                     style={impactoError !== null && impactoTouch ? {backgroundColor: '#FFEAEA'} : {}}
+                <div className="title constructiveTension"
+                     style={constructiveTensionError !== null && constructiveTensionTouch ? {backgroundColor: '#FFEAEA'} : {}}
                      onClick={this._seletedTabActive.bind(this, 4)}>
-                    <i className="dropdown icon"></i> Impacto emocional (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleImpacto}>
+                    <i className="dropdown icon"></i> ¿Cómo generará tensión constructiva? (<span style={{color: "red"}}>*</span>)
+                    <ToolTip text={titleConstructiveTension}>
                         <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
                     </ToolTip>
                 </div>
-                <div className="content impacto">
+                <div className="content constructiveTension">
                     <RichText
-                        value={impacto}
-                        touched={impactoTouch}
-                        error={impactoError}
-                        onChange={onChangeImpacto}
-                        name="impacto"
+                        value={constructiveTension}
+                        touched={constructiveTensionTouch}
+                        error={constructiveTensionError}
+                        onChange={onChangeConstructiveTension}
+                        name="constructiveTension"
                         style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
                         readOnly={readOnly}
                     />
                 </div>
-                <div className="title nuevoModo"
-                     style={nuevoModoError !== null && nuevoModoTouch ? {backgroundColor: '#FFEAEA'} : {}}
-                     onClick={this._seletedTabActive.bind(this, 5)}>
-                    <i className="dropdown icon"></i> Nuevo modo (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleNuevoModo}>
-                        <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
-                    </ToolTip>
-                </div>
-                <div className="content nuevoModo">
-                    <RichText
-                        value={nuevoModo}
-                        touched={nuevoModoTouch}
-                        error={nuevoModoError}
-                        onChange={onChangeNuevoModo}
-                        name="nuevoModo"
-                        title="La longitud máxima de caracteres es de 3500"
-                        style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
-                        placeholder="Ingrese un valor..."
-                        disabled={disabled}
-                        readOnly={readOnly}
-                    />
-                </div>
-                <div className="title solucion"
-                     style={nuestraSolucionError !== null && nuestraSolucionTouch ? {backgroundColor: '#FFEAEA'} : {}}
-                     onClick={this._seletedTabActive.bind(this, 6)}>
-                    <i className="dropdown icon"></i> Nuestra solución (<span style={{color: "red"}}>*</span>)
-                    <ToolTip text={titleNuestraSolucion}>
-                        <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
-                    </ToolTip>
-                </div>
-                <div className="content solucion">
-                    <RichText
-                        value={nuestraSolucion}
-                        touched={nuestraSolucionTouch}
-                        error={nuestraSolucionError}
-                        onChange={onChangeNuestraSolucion}
-                        name="nuestraSolucion"
-                        style={{width: '100%', height: '130pt', marginBottom: '10pt'}}
-                        placeholder="Ingrese un valor..."
-                        disabled={disabled}
-                        readOnly={readOnly}
-                    />
-                </div>
+                
             </div>
         );
     }
