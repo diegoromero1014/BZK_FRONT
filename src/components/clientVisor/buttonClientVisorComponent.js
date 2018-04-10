@@ -39,8 +39,6 @@ class buttonClientVisorComponent extends Component {
                 data.payload.data.parameter !== undefined) {
 
                 let parameter = JSON.parse(data.payload.data.parameter).value;
-
-
                 
                 this.setState({
                     visor_url: parameter.replace( URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber) 
