@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { consultParameterServer } from '../../actionsGlobal';
 import { GREEN_COLOR, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
-import { URL_VISOR_PARAMETER } from "./constants";
+import { URL_VISOR_PARAMETER, URL_VISOR_DOCUMENT_PARAMETER } from "./constants";
 
 class buttonClientVisorComponent extends Component {
 
@@ -39,9 +39,11 @@ class buttonClientVisorComponent extends Component {
                 data.payload.data.parameter !== undefined) {
 
                 let parameter = JSON.parse(data.payload.data.parameter).value;
-                console.log(clientdIdNumber, parameter);
+
+
+                
                 this.setState({
-                    visor_url: (parameter + clientdIdNumber)
+                    visor_url: parameter.replace( URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber) 
                 })
             }
         })
