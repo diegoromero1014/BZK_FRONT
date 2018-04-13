@@ -144,6 +144,8 @@ class ModalNeed extends Component {
             needResponsable.onChange(needEdit.needResponsable);
             statusNeed.onChange(needEdit.statusIdNeed);
             needDate.onChange(moment(needEdit.needFormat, 'DD/MM/YYYY'));
+        } else {
+            this._changeProductFamily(null);
         }
     }
 
@@ -162,9 +164,13 @@ class ModalNeed extends Component {
         this.props.resetForm();
     }
 
-    _changeProductFamily(currencyValue) {        
-        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(PRODUCTS, currencyValue);
+    _changeProductFamily(currencyValue) {
+        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;        
+        if (!currencyValue || currencyValue == null) {
+            needProduct.onChange('');
+            return;
+        }
+        consultListWithParameterUbication(PRODUCTS, currencyValue);  
         needProduct.onChange('');
       }
 
@@ -333,10 +339,9 @@ class ModalNeed extends Component {
                         </Row>
                         <Row style={{ paddingTop: '20px' }}>
                             <Col xs={6} md={3} lg={3}>
-                                <div style={{ paddingTop: "0px" }}>
-                                    <dt>
-                                    <span>Familia de productos (</span><span style={{ color: "red" }}>*</span>)
-                                </dt>
+                                <dt><span>Familia de productos (<span
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
                                         name='productFamily'
                                         labelInput="Seleccione..."
@@ -348,10 +353,10 @@ class ModalNeed extends Component {
                                         onChange={val => this._changeProductFamily(val)}
                                         disabled={disabled}
                                     />
-                                </div>
+                                </dt>
                             </Col>
                             <Col xs>
-                                <dt><span>Producto(s) que satisface(n) la necesidad  (<span
+                                <dt><span>Producto(s) que satisface(n) la necesidad (<span
                                     style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
@@ -532,8 +537,8 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
             initialValues: {
                 needType: '',
                 descriptionNeed: '',
-                needProduct: '',
                 productFamily: '',
+                needProduct: '',                
                 needImplementation: '',
                 needTask: '',
                 needBenefits: '',
