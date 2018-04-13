@@ -168,7 +168,6 @@ class ModalNeed extends Component {
         const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;        
         if (!currencyValue || currencyValue == null) {
             needProduct.onChange('');
-            return;
         }
         consultListWithParameterUbication(PRODUCTS, currencyValue);  
         needProduct.onChange('');
