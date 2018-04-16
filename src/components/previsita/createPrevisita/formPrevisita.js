@@ -93,24 +93,18 @@ class FormPrevisita extends Component {
             targetPrevisitError: null,
             pendingPrevisit: "",
             pendingPrevisitError: "",
-            acondicionamiento: "",
-            acondicionamientoTouch: false,
-            acondicionamientoError: "",
-            replanteamiento: "",
-            replanteamientoTouch: false,
-            replanteamientoError: "",
-            ahogamiento: "",
-            ahogamientoTouch: false,
-            ahogamientoError: "",
-            impacto: "",
-            impactoTouch: false,
-            impactoError: "",
-            nuevoModo: "",
-            nuevoModoTouch: false,
-            nuevoModoError: "",
-            nuestraSolucion: "",
-            nuestraSolucionTouch: false,
-            nuestraSolucionError: "",
+            clientTeach: "",
+            clientTeachTouch: false,
+            clientTeachError: "",
+            adaptMessage: "",
+            adaptMessageTouch: false,
+            adaptMessageError: "",
+            controlConversation: "",
+            controlConversationTouch: false,
+            controlConversationError: "",
+            constructiveTension: "",
+            constructiveTensionTouch: false,
+            constructiveTensionError: "",
         }
         this._submitCreatePrevisita = this._submitCreatePrevisita.bind(this);
         this._changeTypePreVisit = this._changeTypePreVisit.bind(this);
@@ -120,12 +114,10 @@ class FormPrevisita extends Component {
         this._closeConfirmCloseVisit = this._closeConfirmCloseVisit.bind(this);
         this._changeTargetPrevisit = this._changeTargetPrevisit.bind(this);
         this._changePendingPrevisit = this._changePendingPrevisit.bind(this);
-        this._changeAcondicionamiento = this._changeAcondicionamiento.bind(this);
-        this._changeAhogamiento = this._changeAhogamiento.bind(this);
-        this._changeReplanteamiento = this._changeReplanteamiento.bind(this);
-        this._changeImpacto = this._changeImpacto.bind(this);
-        this._changeNuevoModo = this._changeNuevoModo.bind(this);
-        this._changeNuestraSolucion = this._changeNuestraSolucion.bind(this);
+        this._changeClientTeach = this._changeClientTeach.bind(this);
+        this._changeControlConversation = this._changeControlConversation.bind(this);
+        this._changeAdaptMessage = this._changeAdaptMessage.bind(this);
+        this._changeConstructiveTension = this._changeConstructiveTension.bind(this);
         this._changeLugarPreVisit = this._changeLugarPreVisit.bind(this);
         this._closeConfirmChangeType = this._closeConfirmChangeType.bind(this);
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
@@ -247,18 +239,18 @@ class FormPrevisita extends Component {
             typePreVisit: parseInt(idTypeVisitAux),
             showConfirmChangeTypeVisit: false,
             typePreVisitError: null,
-            acondicionamiento: "",
-            acondicionamientoTouch: false,
-            acondicionamientoError: "",
-            replanteamiento: "",
-            replanteamientoTouch: false,
-            replanteamientoError: "",
-            ahogamiento: "",
-            ahogamientoTouch: false,
-            ahogamientoError: "",
-            impacto: "",
-            impactoTouch: false,
-            impactoError: "",
+            clientTeach: "",
+            clientTeachTouch: false,
+            clientTeachError: "",
+            adaptMessage: "",
+            adaptMessageTouch: false,
+            adaptMessageError: "",
+            controlConversation: "",
+            controlConversationTouch: false,
+            controlConversationError: "",
+            constructiveTension: "",
+            constructiveTensionTouch: false,
+            constructiveTensionError: "",
             nuevoModo: "",
             nuevoModoTouch: false,
             nuevoModoError: "",
@@ -312,53 +304,39 @@ class FormPrevisita extends Component {
         });
     }
 
-    _changeAcondicionamiento(value) {
+    _changeClientTeach(value) {
         this.setState({
-            acondicionamiento: value,
-            acondicionamientoTouch: true,
-            acondicionamientoError: null
+            clientTeach: value,
+            clientTeachTouch: true,
+            clientTeachError: null
         });
     }
 
-    _changeReplanteamiento(value) {
+    _changeAdaptMessage(value) {
         this.setState({
-            replanteamiento: value,
-            replanteamientoTouch: true,
-            replanteamientoError: null
+            adaptMessage: value,
+            adaptMessageTouch: true,
+            adaptMessageError: null
         });
     }
 
-    _changeAhogamiento(value) {
+    _changeControlConversation(value) {
         this.setState({
-            ahogamiento: value,
-            ahogamientoTouch: true,
-            ahogamientoError: null
+            controlConversation: value,
+            controlConversationTouch: true,
+            controlConversationError: null
         });
     }
 
-    _changeImpacto(value) {
+    _changeConstructiveTension(value) {
         this.setState({
-            impacto: value,
-            impactoTouch: true,
-            impactoError: null
+            constructiveTension: value,
+            constructiveTensionTouch: true,
+            constructiveTensionError: null
         });
     }
 
-    _changeNuevoModo(value) {
-        this.setState({
-            nuevoModo: value,
-            nuevoModoTouch: true,
-            nuevoModoError: null
-        });
-    }
-
-    _changeNuestraSolucion(value) {
-        this.setState({
-            nuestraSolucion: value,
-            nuestraSolucionTouch: true,
-            nuestraSolucionError: null
-        });
-    }
+   
 
     _clickSeletedTab(tab) {
         if (tab === 1) {
@@ -450,56 +428,41 @@ class FormPrevisita extends Component {
         //Validaciones de la metodología challenger y si estoy guardando como definitivo
         if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
 
-            if (_.isEmpty(htmlToText(this.state.acondicionamiento)) || this.state.acondicionamiento === null || this.state.acondicionamiento === undefined || this.state.acondicionamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.clientTeach)) || this.state.clientTeach === null || this.state.clientTeach === undefined || this.state.clientTeach === "") {
                 errorInForm = true;
                 this.setState({
-                    acondicionamientoError: "Debe ingresar un valor",
-                    acondicionamientoTouch: true
+                    clientTeachError: "Debe ingresar un valor",
+                    clientTeachTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.replanteamiento)) || this.state.replanteamiento === null || this.state.replanteamiento === undefined || this.state.replanteamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.adaptMessage)) || this.state.adaptMessage === null || this.state.adaptMessage === undefined || this.state.adaptMessage === "") {
                 errorInForm = true;
                 this.setState({
-                    replanteamientoError: "Debe ingresar un valor",
-                    replanteamientoTouch: true
+                    adaptMessageError: "Debe ingresar un valor",
+                    adaptMessageTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.ahogamiento)) || this.state.ahogamiento === null || this.state.ahogamiento === undefined || this.state.ahogamiento === "") {
+            if (_.isEmpty(htmlToText(this.state.controlConversation)) || this.state.controlConversation === null || this.state.controlConversation === undefined || this.state.controlConversation === "") {
                 errorInForm = true;
                 this.setState({
-                    ahogamientoError: "Debe ingresar un valor",
-                    ahogamientoTouch: true
+                    controlConversationError: "Debe ingresar un valor",
+                    controlConversationTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.impacto)) || this.state.impacto === null || this.state.impacto === undefined || this.state.impacto === "") {
+            if (_.isEmpty(htmlToText(this.state.constructiveTension)) || this.state.constructiveTension === null || this.state.constructiveTension === undefined || this.state.constructiveTension === "") {
                 errorInForm = true;
                 this.setState({
-                    impactoError: "Debe ingresar un valor",
-                    impactoTouch: true
+                    constructiveTensionError: "Debe ingresar un valor",
+                    constructiveTensionTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.nuevoModo)) || this.state.nuevoModo === null || this.state.nuevoModo === undefined || this.state.nuevoModo === "") {
-                errorInForm = true;
-                this.setState({
-                    nuevoModoError: "Debe ingresar un valor",
-                    nuevoModoTouch: true
-                });
-            }
-            if (_.isEmpty(htmlToText(this.state.nuestraSolucion)) || this.state.nuestraSolucion === null || this.state.nuestraSolucion === undefined || this.state.nuestraSolucion === "") {
-                errorInForm = true;
-                this.setState({
-                    nuestraSolucionError: "Debe ingresar un valor",
-                    nuestraSolucionTouch: true
-                });
-            }
+            
         } else {
             this.setState({
-                acondicionamientoError: null,
-                replanteamientoError: null,
-                ahogamientoError: null,
-                impactoError: null,
-                nuevoModoError: null,
-                nuestraSolucionError: null
+                clientTeachError: null,
+                adaptMessageError: null,
+                controlConversationError: null,
+                constructiveTensionError: null
             });
         }
 
@@ -525,38 +488,38 @@ class FormPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.acondicionamiento, true)) {
+        if (xssValidation(this.state.clientTeach, true)) {
             errorInForm = true;
             this.setState({
-                acondicionamientoError: VALUE_XSS_INVALID,
-                acondicionamientoTouch: true
+                clientTeachError: VALUE_XSS_INVALID,
+                clientTeachTouch: true
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.replanteamiento, true)) {
+        if (xssValidation(this.state.adaptMessage, true)) {
             errorInForm = true;
             this.setState({
-                replanteamientoError: VALUE_XSS_INVALID,
-                replanteamientoTouch: true
+                adaptMessageError: VALUE_XSS_INVALID,
+                adaptMessageTouch: true
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.ahogamiento, true)) {
+        if (xssValidation(this.state.controlConversation, true)) {
             errorInForm = true;
             this.setState({
-                ahogamientoError: VALUE_XSS_INVALID,
-                ahogamientoTouch: true
+                controlConversationError: VALUE_XSS_INVALID,
+                controlConversationTouch: true
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.impacto, true)) {
+        if (xssValidation(this.state.constructiveTension, true)) {
             errorInForm = true;
             this.setState({
-                impactoError: VALUE_XSS_INVALID,
-                impactoTouch: true
+                constructiveTensionError: VALUE_XSS_INVALID,
+                constructiveTensionTouch: true
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
@@ -646,12 +609,10 @@ class FormPrevisita extends Component {
                     "documentType": this.state.typePreVisit,
                     "visitLocation": this.state.lugarPrevisit,
                     "observations": this.state.pendingPrevisit,
-                    "conditioning": this.state.acondicionamiento,
-                    "rethinking": this.state.replanteamiento,
-                    "rationalDrowning": this.state.ahogamiento,
-                    "emotionalImpact": this.state.impacto,
-                    "newWay": this.state.nuevoModo,
-                    "ourSolution": this.state.nuestraSolucion,
+                    "clientTeach": this.state.clientTeach,
+                    "adaptMessage": this.state.adaptMessage,
+                    "controlConversation": this.state.controlConversation,
+                    "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit
                 }
@@ -729,7 +690,7 @@ class FormPrevisita extends Component {
 
     render() {
         const {
-            fields: { acondicionamiento, replanteamiento, ahogamiento, impacto, nuevoModo, nuestraSolucion },
+            fields: { clientTeach, adaptMessage, controlConversation, constructiveTension },
             clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar
         } = this.props;
 
@@ -918,30 +879,23 @@ class FormPrevisita extends Component {
                         <Row style={{ padding: "0px 23px 20px 20px" }}>
                             <Col xs={12} md={12} lg={12}>
                                 <Challenger
-                                    acondicionamiento={this.state.acondicionamiento}
-                                    acondicionamientoTouch={this.state.acondicionamientoTouch}
-                                    acondicionamientoError={this.state.acondicionamientoError}
-                                    onChangeAcondicionamiento={val => this._changeAcondicionamiento(val)}
-                                    replanteamiento={this.state.replanteamiento}
-                                    replanteamientoTouch={this.state.replanteamientoTouch}
-                                    replanteamientoError={this.state.replanteamientoError}
-                                    onChangeReplanteamiento={val => this._changeReplanteamiento(val)}
-                                    ahogamiento={this.state.ahogamiento}
-                                    ahogamientoTouch={this.state.ahogamientoTouch}
-                                    ahogamientoError={this.state.ahogamientoError}
-                                    onChangeAhogamiento={val => this._changeAhogamiento(val)}
-                                    impacto={this.state.impacto}
-                                    impactoTouch={this.state.impactoTouch}
-                                    impactoError={this.state.impactoError}
-                                    onChangeImpacto={val => this._changeImpacto(val)}
-                                    nuevoModo={this.state.nuevoModo}
-                                    nuevoModoTouch={this.state.nuevoModoTouch}
-                                    nuevoModoError={this.state.nuevoModoError}
-                                    onChangeNuevoModo={val => this._changeNuevoModo(val)}
-                                    nuestraSolucion={this.state.nuestraSolucion}
-                                    nuestraSolucionTouch={this.state.nuestraSolucionTouch}
-                                    nuestraSolucionError={this.state.nuestraSolucionError}
-                                    onChangeNuestraSolucion={val => this._changeNuestraSolucion(val)}
+                                    clientTeach={this.state.clientTeach}
+                                    clientTeachTouch={this.state.clientTeachTouch}
+                                    clientTeachError={this.state.clientTeachError}
+                                    onChangeClientTeach={val => this._changeClientTeach(val)}
+                                    adaptMessage={this.state.adaptMessage}
+                                    adaptMessageTouch={this.state.adaptMessageTouch}
+                                    adaptMessageError={this.state.adaptMessageError}
+                                    onChangeAdaptMessage={val => this._changeAdaptMessage(val)}
+                                    controlConversation={this.state.controlConversation}
+                                    controlConversationTouch={this.state.controlConversationTouch}
+                                    controlConversationError={this.state.controlConversationError}
+                                    onChangeControlConversation={val => this._changeControlConversation(val)}
+                                    constructiveTension={this.state.constructiveTension}
+                                    constructiveTensionTouch={this.state.constructiveTensionTouch}
+                                    constructiveTensionError={this.state.constructiveTensionError}
+                                    onChangeConstructiveTension={val => this._changeConstructiveTension(val)}
+                                    
                                 />
                             </Col>
                         </Row>
