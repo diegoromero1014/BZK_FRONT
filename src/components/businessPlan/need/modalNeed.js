@@ -6,11 +6,12 @@ import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { PRODUCTS_MASK } from "../../selectsComponent/constants";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { getClientNeeds, getMasterDataFields } from "../../selectsComponent/actions";
-import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED } from "./constants";
+import { getClientNeeds, getMasterDataFields, consultListWithParameterUbication, consultDataSelect } from "../../selectsComponent/actions";
+import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED, PRODUCT_FAMILY } from "./constants";
 import { addNeed, editNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
@@ -20,7 +21,7 @@ import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 
-const fields = ["idEmployee", "needType", "descriptionNeed", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
+const fields = ["idEmployee", "needType", "descriptionNeed", "productFamily", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
@@ -86,6 +87,11 @@ const validate = (values) => {
     } else {
         errors.statusNeed = null;
     }
+    if (!values.productFamily) {
+        errors.productFamily = "Debeseleccionar una opción";
+    } else {
+        errors.productFamily = null;
+    }
     return errors;
 };
 
@@ -99,6 +105,7 @@ class ModalNeed extends Component {
         this._closeCreate = this._closeCreate.bind(this);
         this._onClickDate = this._onClickDate.bind(this);
         this._scroll = this._scroll.bind(this);
+        this._changeProductFamily = this._changeProductFamily.bind(this);
         this.state = {
             showSuccessAdd: false,
             showSuccessEdit: false,
@@ -124,11 +131,12 @@ class ModalNeed extends Component {
     }
 
     componentDidMount() {
-        const { fields: { idEmployee, needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
+        const { fields: { idEmployee, needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
         if (needEdit !== undefined) {
             needType.onChange(needEdit.needIdType);
             descriptionNeed.onChange(needEdit.descriptionNeed);
-            needProduct.onChange(needEdit.needIdProduct);
+            productFamily.onChange(needEdit.productFamilyId);
+            needProduct.onChange(needEdit.needIdProduct);            
             needImplementation.onChange(needEdit.needIdImplementation);
             needTask.onChange(needEdit.needTask);
             needBenefits.onChange(needEdit.needBenefits);
@@ -136,6 +144,8 @@ class ModalNeed extends Component {
             needResponsable.onChange(needEdit.needResponsable);
             statusNeed.onChange(needEdit.statusIdNeed);
             needDate.onChange(moment(needEdit.needFormat, 'DD/MM/YYYY'));
+        } else {
+            this._changeProductFamily(null);
         }
     }
 
@@ -154,12 +164,23 @@ class ModalNeed extends Component {
         this.props.resetForm();
     }
 
+    _changeProductFamily(currencyValue) {
+        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;        
+        if (!currencyValue || currencyValue == null) {
+            needProduct.onChange('');
+        }
+        consultListWithParameterUbication(PRODUCTS, currencyValue);  
+        needProduct.onChange('');
+      }
+
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit } = this.props;
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit } = this.props;
         let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
-        let productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id', parseInt(needProduct.value)]), '[0].product');
+        let productF = _.get(_.filter(selectsReducer.get(PRODUCT_FAMILY), ['id', parseInt(productFamily.value)]), '[0].value');
+        let productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id', parseInt(needProduct.value)]), '[0].value');
+        
         if (needResponsable.value !== nameUsuario) {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
@@ -174,8 +195,10 @@ class ModalNeed extends Component {
                 needEdit.needType = needC;
                 needEdit.descriptionNeed = descriptionNeed.value;
                 needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
+                needEdit.productFamilyId = productFamily.value;
+                needEdit.productFamily = productF;
                 needEdit.needIdProduct = needProduct.value;
-                needEdit.needProduct = productC;
+                needEdit.needProduct = productC;                
                 needEdit.needIdImplementation = needImplementation.value;
                 needEdit.needImplementation = implementation;
                 needEdit.needTask = needTask.value;
@@ -198,8 +221,10 @@ class ModalNeed extends Component {
                     needType: needC,
                     descriptionNeed: descriptionNeed.value,
                     descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
+                    productFamilyId: productFamily.value,
+                    productFamily: productF,
                     needIdProduct: needProduct.value,
-                    needProduct: productC,
+                    needProduct: productC,                    
                     needIdImplementation: needImplementation.value,
                     needImplementation: implementation,
                     needTask: needTask.value,
@@ -263,14 +288,15 @@ class ModalNeed extends Component {
     }
 
     componentWillMount() {
-        const { getClientNeeds, getMasterDataFields, selectsReducer } = this.props;
+        const { getClientNeeds, getMasterDataFields, selectsReducer, consultDataSelect } = this.props;
         getClientNeeds();
-        getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCTS]);
+        consultDataSelect(PRODUCTS, PRODUCTS_MASK);        
+        getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCT_FAMILY]);        
     }
 
     render() {
         const { initialValues, selectsReducer, disabled, handleSubmit, error,
-            fields: { needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed } } = this.props;
+            fields: { needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed } } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateNeed)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -311,8 +337,25 @@ class ModalNeed extends Component {
                             </Col>
                         </Row>
                         <Row style={{ paddingTop: '20px' }}>
+                            <Col xs={6} md={3} lg={3}>
+                                <dt><span>Familia de productos (<span
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
+                                    <ComboBox
+                                        name='productFamily'
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...productFamily}                                        
+                                        parentId="dashboardComponentScroll"
+                                        data={selectsReducer.get(PRODUCT_FAMILY) || []}
+                                        onChange={val => this._changeProductFamily(val)}
+                                        disabled={disabled}
+                                    />
+                                </dt>
+                            </Col>
                             <Col xs>
-                                <dt><span>Producto(s) que satisface(n) la necesidad  (<span
+                                <dt><span>Producto(s) que satisface(n) la necesidad (<span
                                     style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
@@ -460,7 +503,9 @@ function mapDispatchToProps(dispatch) {
         filterUsersBanco,
         addNeed,
         editNeed,
-        swtShowMessage
+        swtShowMessage,
+        consultDataSelect,
+        consultListWithParameterUbication
     }, dispatch);
 }
 
@@ -472,7 +517,8 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
             initialValues: {
                 needType: needEdit.needIdType,
                 descriptionNeed: needEdit.descriptionNeed,
-                needProduct: needEdit.needIdProduct,
+                productFamily: needEdit.productFamilyId,
+                needProduct: needEdit.needIdProduct,                
                 needImplementation: needEdit.needIdImplementation,
                 needTask: needEdit.needTask,
                 needBenefits: needEdit.needBenefits,
@@ -490,7 +536,8 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
             initialValues: {
                 needType: '',
                 descriptionNeed: '',
-                needProduct: '',
+                productFamily: '',
+                needProduct: '',                
                 needImplementation: '',
                 needTask: '',
                 needBenefits: '',

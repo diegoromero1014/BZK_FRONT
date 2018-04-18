@@ -8,13 +8,15 @@ const initialState = Immutable.List();
 export default (state = initialState, action) => {
     switch (action.type) {
     case constants.ADD_NEED:
-      const need = action.data;
+      const need = action.data;     
       const newNeed = _.assign({}, {
         uuid: need.uuid,
         needType: need.needType,
         needIdType: need.needIdType,
         descriptionNeed: need.descriptionNeed,
         descriptionNeedText: need.descriptionNeedText,
+        productFamily:need.productFamily,
+        productFamilyId:need.productFamilyId,
         needProduct:need.needProduct,
         needIdProduct:need.needIdProduct,
         needImplementation: need.needImplementation,
@@ -27,7 +29,7 @@ export default (state = initialState, action) => {
         needFormat:need.needFormat,
         statusNeed: need.statusNeed,
         statusIdNeed: need.statusIdNeed
-      });
+      });      
       return state.push(newNeed);
     case constants.DELETE_NEED:
       return state.delete(action.index);
@@ -43,6 +45,8 @@ export default (state = initialState, action) => {
            item.needIdType= needEdit.needIdType;
            item.descriptionNeed= needEdit.descriptionNeed;
            item.descriptionNeedText= needEdit.descriptionNeedText;
+           item.productFamily = needEdit.productFamily;
+           item.productFamilyId = needEdit.productFamilyId;
            item.needProduct=needEdit.needProduct;
            item.needIdProduct=needEdit.needIdProduct;
            item.needImplementation=needEdit.needImplementation;

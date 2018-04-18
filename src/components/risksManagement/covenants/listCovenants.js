@@ -105,9 +105,9 @@ class ListCovenantsComponent extends Component {
                                 marginRight: '10px'
                             }}>Covenants con seguimiento próximo mes</span>
                         </Col>
-                        <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box',
-                                display: "-ms-inline-flexbox"}}>
-                            <div className="traffickLigth-item-covenants" style={{backgroundColor: GREEN_COLOR}}/>
+                        <Col xs={12} md={4} lg={3} style={{marginTop: "5px", display: '-webkit-inline-box'}}>
+                            <div className="traffickLigth-item-covenants" style={{backgroundColor: GREEN_COLOR,
+                             display: "-ms-inline-flexbox"}}/>
                             <span style={{
                                 marginLeft: '5px',
                                 marginRight: '10px'

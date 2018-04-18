@@ -321,8 +321,7 @@ class FormVisita extends Component {
 
     
 
-    let fechaSeleccionada = moment(value).format('MM/DD/YYYY');
-    console.log("fecha componente", fechaSeleccionada);    
+    let fechaSeleccionada = moment(value).format('MM/DD/YYYY');    
 
     // Consultar la lista de previsitas por cliente
     let visitas = visitReducer.get('visitList');
@@ -346,13 +345,10 @@ class FormVisita extends Component {
     }
     // Alertar en caso de que se encuentre una fecha igual
     if(fechasIguales && visitaIgual) {
-      console.log("fechas iguales");
       this.setState({showAlertDate: true, idEqualDateVisit: visitaIgual.id});
     }
 
     // Permitir el redirect
-
-
     this.setState({
       dateVisit: value,
       dateVisitError: null
