@@ -15,7 +15,29 @@ class SwtMessage extends Component {
     }
 
     _closeMessage() {
+        const {options} = this.props;
         this.props.swtCloseMessage();
+
+        options.onConfirmCallback();
+
+    }
+
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let isShow = this.props.isShow;
+
+        let button;
+
+        if (isShow) {
+            button = document.getElementsByClassName('confirm');
+
+            if (button.length > 0) {
+                
+                setTimeout(function(){ button[0].focus(); }, 1);
+                button[0].focus();
+            }
+        }
+
     }
 
     render() {
@@ -23,15 +45,20 @@ class SwtMessage extends Component {
             isShow,
             typeMessage,
             title,
-            message
+            message,
+            onConfirmCallback,
+            options
         } = this.props;
+
+        console.log(options)
+
         return (
             <SweetAlert
                 type={typeMessage}
                 show={isShow}
                 title={title}
                 text={message}
-                onConfirm={() => this._closeMessage()}
+                onConfirm={() => {this._closeMessage()}}
             />);
     }
 
@@ -46,6 +73,7 @@ function mapStateToProps({ swtMessage }) {
         typeMessage: swtMessage.get('typeMessage'),
         title: swtMessage.get('title'),
         message: swtMessage.get('message'),
+        options: swtMessage.get('props')
     };
 }
 

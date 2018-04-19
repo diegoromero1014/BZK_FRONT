@@ -14,6 +14,7 @@ import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, xssValidation } from "../../../actionsGlobal";
 import { VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 const fields = ["idEmployee", "responsable", "fecha", "tarea", "id"];
 const errors = {};
@@ -79,10 +80,16 @@ class ModalTask extends Component {
     _closeCreate() {
         const { isOpen, taskEdit } = this.props;
         if (taskEdit !== undefined) {
+
+            // Esto se puede borrar
+
             this.setState({
                 showSuccessEdit: false
             });
         } else {
+
+            // Esto se puede borrar
+
             this.setState({
                 showSuccessAdd: false
             });
@@ -145,6 +152,9 @@ class ModalTask extends Component {
                 taskEdit.fechaForm = fecha.value;
                 taskEdit.id = id.value;
                 editTask(taskEdit);
+
+                // Llamar la accion
+
                 this.setState({
                     showSuccessEdit: true
                 });
@@ -161,6 +171,9 @@ class ModalTask extends Component {
                     fechaForm: fecha.value
                 }
                 addTask(task);
+
+                // Aqui hay que llamar la accion
+
                 this.setState({
                     showSuccessAdd: true
                 });
@@ -256,7 +269,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addTask,
         editTask,
-        filterUsersBanco
+        filterUsersBanco,
+        swtShowMessage
     }, dispatch);
 }
 
