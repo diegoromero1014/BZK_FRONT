@@ -115,7 +115,7 @@ class ModalArea extends Component {
   }
 
   _handleCreateArea() {
-    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer } = this.props;
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage } = this.props;
     let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
     if (areaResponsable.value !== nameUsuario) {
       nameUsuario = areaResponsable.value;
@@ -131,9 +131,8 @@ class ModalArea extends Component {
       areaEdit.areaIdResponsable = idUsuario;
       areaEdit.areaResponsable = nameUsuario;
       editArea(areaEdit);
-      this.setState({
-        showSuccessEdit: true
-      });
+      swtShowMessage('success',"Área editada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán.", {onConfirmCallback: this._closeCreate});
+
     } else {
       const uuid = _.uniqueId('area_');
       let area = {
@@ -148,9 +147,8 @@ class ModalArea extends Component {
         statusArea: status
       }
       addArea(area);
-      this.setState({
-        showSuccessAdd: true
-      });
+      swtShowMessage('success',"Área agregada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán.",{onConfirmCallback: this._closeCreate});
+
     }
   }
 
@@ -286,20 +284,8 @@ class ModalArea extends Component {
             <span>Agregar</span>
           </button>
         </div>
-        <SweetAlert
-          type="success"
-          show={this.state.showSuccessAdd}
-          title="Área agregada exitosamente"
-          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán."
-          onConfirm={() => this._closeCreate()}
-        />
-        <SweetAlert
-          type="success"
-          show={this.state.showSuccessEdit}
-          title="Área editada exitosamente"
-          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán."
-          onConfirm={() => this._closeCreate()}
-        />
+        
+        
       </form>
     );
   }

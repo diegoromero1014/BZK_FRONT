@@ -174,7 +174,7 @@ class ModalNeed extends Component {
       }
 
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit } = this.props;
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
         let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
@@ -210,9 +210,9 @@ class ModalNeed extends Component {
                 needEdit.statusIdNeed = statusNeed.value;
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
-                this.setState({
-                    showSuccessEdit: true
-                });
+                
+                swtShowMessage('success',"Necesidad editada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.",{onConfirmCallback: this._closeCreate});
+
             } else {
                 const uuid = _.uniqueId('need_');
                 let need = {
@@ -237,9 +237,7 @@ class ModalNeed extends Component {
                     statusNeed: status
                 };
                 addNeed(need);
-                this.setState({
-                    showSuccessAdd: true
-                });
+                swtShowMessage('success',"Necesidad agregada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.",{onConfirmCallback: this._closeCreate});
             }
         }
     }
@@ -477,20 +475,8 @@ class ModalNeed extends Component {
                         <span>Agregar</span>
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessAdd}
-                    title="Necesidad agregada exitosamente"
-                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán."
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessEdit}
-                    title="Necesidad editada exitosamente"
-                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán."
-                    onConfirm={() => this._closeCreate()}
-                />
+                
+                
             </form>
         );
     }

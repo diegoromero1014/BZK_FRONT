@@ -23,6 +23,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth, xssValidation } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
 var usersBanco = [];
@@ -164,7 +165,7 @@ class ModalCreateTask extends Component {
   }
 
   _handleEditTask() {
-    const { createPendingTaskNew, changeStateSaveData, idClient } = this.props;
+    const { createPendingTaskNew, changeStateSaveData, idClient, swtShowMessage } = this.props;
     const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
       var messageBody = {
@@ -184,14 +185,18 @@ class ModalCreateTask extends Component {
           redirectUrl("/login");
         } else {
           if (_.get(data, 'payload.data.status') === 200) {
-            this.setState({ taskEdited: true });
+         
+            swtShowMessage('success',"Edición de tarea","Señor usuario, la tarea se editó exitosamente.",{onConfirmCallback: this._closeViewOrEditTask});
+
           } else {
-            this.setState({ showErrtask: true });
+            
+            swtShowMessage('error',"Error editando tarea","Señor usuario, ocurrió un error editando la tarea.");
+
           }
         }
       }, (reason) => {
         changeStateSaveData(false, "");
-        this.setState({ showErrtask: true });
+        swtShowMessage('error',"Error editando tarea","Señor usuario, ocurrió un error editando la tarea.");
       });
     } else {
       fecha.onChange('');
@@ -331,20 +336,8 @@ class ModalCreateTask extends Component {
             >{'Guardar'}</button>
           }
         </div>
-        <SweetAlert
-          type="success"
-          show={this.state.taskEdited}
-          title="Edición de tarea"
-          text="Señor usuario, la tarea se editó exitosamente."
-          onConfirm={() => this._closeViewOrEditTask()}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showErrtask}
-          title="Error editando tarea"
-          text="Señor usuario, ocurrió un error editando la tarea."
-          onConfirm={() => this.setState({ showErrtask: false })}
-        />
+        
+        
       </form>
     );
   }
@@ -363,6 +356,7 @@ function mapDispatchToProps(dispatch) {
     getInfoTaskUser,
     tasksByUser,
     validateValue,
+    swtShowMessage
   }, dispatch);
 }
 

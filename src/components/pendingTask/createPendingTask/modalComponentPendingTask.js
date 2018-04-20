@@ -18,6 +18,7 @@ import { TASK_STATUS } from "../../selectsComponent/constants";
 import { redirectUrl } from "../../globalComponents/actions";
 import { htmlToText, xssValidation } from '../../../actionsGlobal';
 import RichText from '../../richText/richTextComponent';
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 import _ from "lodash";
 import $ from "jquery";
@@ -133,7 +134,7 @@ class ModalComponentPendingTask extends Component {
     }
 
     _handleCreatePendingTask() {
-        const { createPendingTaskNew, tasksByClientFindServer } = this.props;
+        const { createPendingTaskNew, tasksByClientFindServer, swtShowMessage } = this.props;
         const { fields: { responsable, fecha, idEmployee, idEstado, tarea, advance }, handleSubmit, error, changeStateSaveData } = this.props;
         if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
             const messageBody = {
@@ -152,10 +153,10 @@ class ModalComponentPendingTask extends Component {
                     redirectUrl("/login");
                 } else {
                     if ((_.get(data, 'payload.data.status') === 200)) {
-                        this.setState({ showEx: true });
+                        swtShowMessage('success','Creación de tarea','Señor usuario, la tarea se creó exitosamente.',{onConfirmCallback: this._closeCreate})
                         tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-                    } else {
-                        this.setState({ showEr: true });
+                    } else {                       
+                        swtShowMessage('error','Error creando la tarea',"Señor usuario, ocurrió un error creando la tarea.");
                     }
                 }
             }, (reason) => {
@@ -261,20 +262,8 @@ class ModalComponentPendingTask extends Component {
                         className="btn btn-primary modal-button-edit">Guardar
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showEx}
-                    title="Creación de tarea"
-                    text="Señor usuario, la tarea se creó exitosamente."
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showEr}
-                    title="Error creando la tarea"
-                    text="Señor usuario, ocurrió un error creando la tarea."
-                    onConfirm={() => this.setState({ showEr: false })}
-                />
+                
+                
             </form>
         );
     }
@@ -288,7 +277,8 @@ function mapDispatchToProps(dispatch) {
         clearUserTaskOrder,
         tasksByClientFindServer,
         clearUserTaskCreate,
-        changeStateSaveData
+        changeStateSaveData,
+        swtShowMessage
     }, dispatch);
 }
 
