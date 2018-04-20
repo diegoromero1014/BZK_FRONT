@@ -1193,9 +1193,7 @@ class clientEdit extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         
         if (idButton === BUTTON_EDIT || (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined)) {
-            
-           
-
+   
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
@@ -1507,6 +1505,7 @@ class clientEdit extends Component {
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
         let { errors } = nextProps;
+        console.log(nextProps);
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
@@ -2835,7 +2834,7 @@ function fomatInitialStateNumber(val) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'formClientEdit',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

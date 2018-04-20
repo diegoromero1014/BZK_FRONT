@@ -42,8 +42,7 @@ class TextareaComponent extends Component {
             touched: true
         });
 
-        console.log('blur');
-
+        console.log(this.state.value);
         onChange(this.state.value);
         nonValidateEnter(true);
     }
@@ -51,12 +50,18 @@ class TextareaComponent extends Component {
 
     _onChange(e, event) {
         const { onChange, error, touched } = this.props;
-        console.log('change');
+
         this.setState({
             value: e.target.value
         });
 
         
+    }
+
+    componentWillMount() {
+        const {value} = this.props;
+
+        this.setState({value: value});
     }
 
 
@@ -72,11 +77,11 @@ class TextareaComponent extends Component {
                         placeholder={placeholder}
                         maxLength={max}
                         rows={rows}
-                        value={value || ''}
-                        {...this.props}
+                        value={this.state.value || ''}
+                        
                         style={style}
                         onChange={this._onChange}
-                        onKeyPress={this._onEnter}
+                        
                         onBlur={this._onBlur}
                     />
                 </div>
