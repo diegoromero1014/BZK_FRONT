@@ -9,11 +9,11 @@ import {
 } from "../actions";
 import { contactsFindServer } from "../../../filterContact/actions";
 import { swtShowMessage } from "../../../sweetAlertMessages/actions";
-import { joinName, shorterStringValue } from "../../../../actionsGlobal";
+import {joinName, shorterStringValue, xssValidation} from "../../../../actionsGlobal";
 import { showLoading } from "../../../loading/actions";
 import ButtonDeleteLocalComponent from "../../../grid/buttonDeleteLocalComponent";
 import ComboBoxFilter from "../../../../ui/comboBoxFilter/comboBoxFilter";
-import { MESSAGE_LOAD_DATA } from "../../../../constantsGlobal";
+import {MESSAGE_ERROR, MESSAGE_LOAD_DATA, VALUE_XSS_INVALID} from "../../../../constantsGlobal";
 import $ from "jquery";
 import BtnAddByFunctionOrType from './btnAddByFunctionOrType';
 import { MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
@@ -90,30 +90,31 @@ class ModalComponentGroup extends Component {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
         if (!_.isEqual(searchGroup.value.trim(), '')) {
-            getValidateExistGroup(searchGroup.value).then((data) => {
-                const groupSearch = _.get(data.payload, 'data.data', null);
-                if (!_.isNull(groupSearch)) {
-                    if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
+                getValidateExistGroup(searchGroup.value).then((data) => {
+                    const groupSearch = _.get(data.payload, 'data.data', null);
+                    if (!_.isNull(groupSearch)) {
+                        if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
+                            saveNameGroup(searchGroup.value);
+                            thisForm._saveGroupFavoriteContacts();
+                        } else {
+                            if (groupsFavoriteContacts.get('group').get('id') !== '') {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                saveNameGroup(searchGroup.value);
+                            } else {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                resetForm();
+                                resetModal();
+                                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            }
+                            showLoading(false, '');
+                        }
+                    } else {
+                        this.setState({ disableName: '', disabled: '', validateExistGroup: true });
                         saveNameGroup(searchGroup.value);
                         thisForm._saveGroupFavoriteContacts();
-                    } else {
-                        if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            saveNameGroup(searchGroup.value);
-                        } else {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            resetForm();
-                            resetModal();
-                            this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
-                        }
-                        showLoading(false, '');
                     }
-                } else {
-                    this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                    saveNameGroup(searchGroup.value);
-                    thisForm._saveGroupFavoriteContacts();
-                }
-            });
+                });
+
         } else {
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }
@@ -123,35 +124,47 @@ class ModalComponentGroup extends Component {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
         if (!_.isEqual(searchGroup.value.trim(), '')) {
-            getValidateExistGroup(searchGroup.value).then((data) => {
-                const groupSearch = _.get(data.payload, 'data.data', null);
-                if (!_.isNull(groupSearch)) {
-                    if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
+
+            if (xssValidation(searchGroup.value)){
+                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                resetForm();
+                resetModal();
+                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                showLoading(false, '');
+            }
+            else{
+                getValidateExistGroup(searchGroup.value).then((data) => {
+                    const groupSearch = _.get(data.payload, 'data.data', null);
+                    if (!_.isNull(groupSearch)) {
+                        if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
+                            saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
+                        } else {
+                            if (groupsFavoriteContacts.get('group').get('id') !== '') {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                saveNameGroup(searchGroup.value);
+                            } else {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                resetForm();
+                                resetModal();
+                                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            }
+                            showLoading(false, '');
+                        }
                     } else {
                         if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
                             saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
                         } else {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            resetForm();
-                            resetModal();
-                            this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            this.setState({ disableName: '', disabled: '', validateExistGroup: true });
+                            saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
                         }
-                        showLoading(false, '');
                     }
-                } else {
-                    if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
-                    } else {
-                        this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
-                    }
-                }
-            });
+                });
+            }
+
+
         } else {
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }

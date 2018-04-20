@@ -7,8 +7,8 @@ import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { VALUE_REQUIERED, SESSION_EXPIRED } from '../../constantsGlobal';
-import { validateResponse, formValidateKeyEnter, nonValidateEnter } from '../../actionsGlobal';
+import {VALUE_REQUIERED, SESSION_EXPIRED, VALUE_XSS_INVALID} from '../../constantsGlobal';
+import {validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation} from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import * as constants from '../selectsComponent/constants';
 import { findClientByStrTypeIdAndNumber } from '../clients/actions';
@@ -31,6 +31,8 @@ const validate = values => {
     }
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
+    } else if (xssValidation(values.idNumber)) {
+        errors.idNumber = VALUE_XSS_INVALID;
     } else {
         errors.idNumber = null;
     }

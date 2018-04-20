@@ -7,12 +7,12 @@ import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "sweetalert-react";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 
-import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED } from "../../constantsGlobal";
+import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
     validatePermissionsByModule,
-    validateResponse
+    validateResponse,xssValidation
 } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
@@ -41,12 +41,16 @@ const validate = values => {
 
     if (!values.groupName) {
         errors.groupName = VALUE_REQUIERED;
-    } else {
+    } else if (xssValidation(values.groupName)) {
+        errors.groupName = VALUE_XSS_INVALID;
+    }else {
         errors.groupName = null;
     }
 
     if (!values.groupObservations) {
         errors.groupObservations = VALUE_REQUIERED;
+    } else if (xssValidation(values.groupObservations)) {
+        errors.groupObservations = VALUE_XSS_INVALID;
     } else {
         errors.groupObservations = null;
     }
