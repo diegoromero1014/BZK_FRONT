@@ -137,7 +137,7 @@ class ModalTask extends Component {
 
 
     _handleCreateTask() {
-        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit, swtShowMessage } = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
@@ -153,11 +153,8 @@ class ModalTask extends Component {
                 taskEdit.id = id.value;
                 editTask(taskEdit);
 
-                // Llamar la accion
+                swtShowMessage('success', 'Tarea editada','Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
 
-                this.setState({
-                    showSuccessEdit: true
-                });
             } else {
                 const uuid = _.uniqueId('task_');
                 var task = {
@@ -174,9 +171,8 @@ class ModalTask extends Component {
 
                 // Aqui hay que llamar la accion
 
-                this.setState({
-                    showSuccessAdd: true
-                });
+                swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', { onConfirmCallback: this._closeCreate })
+
             }
         } else {
             fecha.onChange('');
@@ -246,20 +242,8 @@ class ModalTask extends Component {
                         <span>Guardar</span>
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessAdd}
-                    title="Tarea agregada"
-                    text="Señor usuario, la tarea fue agregada exitosamente"
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessEdit}
-                    title="Tarea editada"
-                    text="Señor usuario, la tarea fue editada exitosamente"
-                    onConfirm={() => this._closeCreate()}
-                />
+                
+                
             </form>
         );
     }

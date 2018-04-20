@@ -171,6 +171,7 @@ class ModalComponentPendingTask extends Component {
         const { fields: { responsable, fecha, idEstado, tarea, advance }, taskEdit, selectsReducer, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreatePendingTask)}>
+                
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
@@ -300,7 +301,7 @@ function mapStateToProps({ tasksByClient, selectsReducer }, { taskEdit }) {
 
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'formPendingTask',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(ModalComponentPendingTask);

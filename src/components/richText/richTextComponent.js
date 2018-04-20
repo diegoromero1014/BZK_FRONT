@@ -11,6 +11,11 @@ class RichText extends Component {
         this.reactQuillRef = null;
         this.quillRef = null;
         this.attachQuillRefs = this.attachQuillRefs.bind(this);
+        this.state = {
+            text: null
+        }
+
+        this.handleOnBlur = this.handleOnBlur.bind(this);
     }
 
     componentDidMount() {
@@ -31,6 +36,15 @@ class RichText extends Component {
         if (quillRef != null) this.quillRef = quillRef;
     }
 
+    handleOnBlur() {
+        
+        const {onChange} = this.props;
+        console.log('onBlur');
+        console.log(this.reactQuillRef.state.value);
+        onChange(this.reactQuillRef.state.value);
+        
+      }
+
     render() {
         const {value, touched, error, disabled} = this.props;
         if (!isNull(this.quillRef)) {
@@ -38,7 +52,7 @@ class RichText extends Component {
             const quillText = this.quillRef.getText();
         }
         return (
-            <div>
+            <div onBlur={() => this.handleOnBlur()}>
                 <ReactQuill
                     ref={(el) => {
                         this.reactQuillRef = el
@@ -47,7 +61,10 @@ class RichText extends Component {
                     value={value || ''}
                     modules={RichText.modules}
                     formats={RichText.formats}
-                    {...this.props}/>
+                    {...this.props}
+                    onChange={(value) => console.log() }
+                    
+                    />
                 {
                     touched && error &&
                     <div style={{marginTop: '15pt'}}>

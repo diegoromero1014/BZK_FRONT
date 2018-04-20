@@ -18,7 +18,13 @@ class SwtMessage extends Component {
         const {options} = this.props;
         this.props.swtCloseMessage();
 
-        options.onConfirmCallback();
+        if (typeof options !== 'undefined') {
+
+            if (typeof options.onConfirmCallback === "function") {
+                options.onConfirmCallback();
+            }
+
+        }
 
     }
 
@@ -49,8 +55,6 @@ class SwtMessage extends Component {
             onConfirmCallback,
             options
         } = this.props;
-
-        console.log(options)
 
         return (
             <SweetAlert

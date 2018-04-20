@@ -116,7 +116,7 @@ class ClientsFind extends Component {
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 }else {
-                    swtShowMessage('error', 'Title' ,'Prueba Foco PopUp', {onConfirmCallback : () => {alert("Funciona")}});
+                    swtShowMessage('error', 'Title' ,'Prueba Foco PopUp');
                 }
             });
         }

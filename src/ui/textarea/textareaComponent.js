@@ -36,24 +36,27 @@ class TextareaComponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter } = this.props;
+        const { nonValidateEnter, onChange } = this.props;
         
         this.setState({
             touched: true
         });
 
+        console.log('blur');
+
+        onChange(this.state.value);
         nonValidateEnter(true);
     }
 
 
     _onChange(e, event) {
         const { onChange, error, touched } = this.props;
-
+        console.log('change');
         this.setState({
             value: e.target.value
         });
 
-        onChange(e, event);
+        
     }
 
 
