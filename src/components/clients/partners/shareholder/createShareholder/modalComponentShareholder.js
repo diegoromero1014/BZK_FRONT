@@ -200,7 +200,6 @@ class ModalComponentShareholder extends Component {
     const { fields: { tipoDocumento, numeroDocumento },
       searchShareholder, clearSearchShareholder } = this.props;
 
-      console.log("tututtu--", "--"+numeroDocumento.value.trim());
       numeroDocumento.onChange(numeroDocumento.value.trim());
       
     if (tipoDocumento.value && numeroDocumento.value) {

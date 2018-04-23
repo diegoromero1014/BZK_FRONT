@@ -19,7 +19,7 @@ class inputComponent extends Component {
 
     _onChange(e, event) {
         const { onChange, error, touched } = this.props;
-        console.log("changin",e.target.value);
+
         this.setState({
             value: e.target.value
         });
