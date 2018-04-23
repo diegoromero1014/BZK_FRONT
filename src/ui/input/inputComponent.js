@@ -38,8 +38,10 @@ class inputComponent extends Component {
 
         const { onChange, onBlur } = this.props;
 
-        onChange(this.state.value);
-        onBlur(this.state.value);
+        let trimmed = this.state.value.trim(); 
+
+        onChange(trimmed);
+        onBlur(trimmed);
     }
 
     // _onBlur(e, event) {

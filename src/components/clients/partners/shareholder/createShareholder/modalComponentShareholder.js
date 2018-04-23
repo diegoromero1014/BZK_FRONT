@@ -44,6 +44,7 @@ var valueTypeShareholder;
 const validate = (values) => {
 
 
+
   if (!values.tipoDocumento) {
     errors.tipoDocumento = "Debe seleccionar una opción";
   } else {
@@ -64,7 +65,8 @@ const validate = (values) => {
     errors.numeroDocumento = "Debe ingresar un valor";
   } else if (xssValidation(values.numeroDocumento)) {
     errors.numeroDocumento = VALUE_XSS_INVALID;
-  } else {
+  } else if (values.numeroDocumento.trim()) {
+    errors.numeroDocumento = "Debe ingresar un valor"
     errors.numeroDocumento = null;
   }
   if (!values.primerNombre && valueTypeShareholder === PERSONA_NATURAL) {
@@ -198,18 +200,19 @@ class ModalComponentShareholder extends Component {
 
   _searchShareholder() {
     const { fields: { tipoDocumento, numeroDocumento },
-      searchShareholder, clearSearchShareholder } = this.props;
 
-      numeroDocumento.onChange(numeroDocumento.value.trim());
-      
-    if (tipoDocumento.value && numeroDocumento.value) {
+    searchShareholder, clearSearchShareholder } = this.props;
+    let numeroDocumentoTrimmed = numeroDocumento.value.trim();
+     numeroDocumento.onChange(numeroDocumentoTrimmed);
+    
+    if (tipoDocumento.value && numeroDocumentoTrimmed) {
 
-      if (xssValidation(numeroDocumento.value)) {
+      if (xssValidation(numeroDocumentoTrimmed)) {
         this.setState({ showErrorXss: true });
         return;
       }
 
-      searchShareholder(tipoDocumento.value, numeroDocumento.value,
+      searchShareholder(tipoDocumento.value, numeroDocumentoTrimmed,
         window.localStorage.getItem('idClientSelected')).then((data) => {
           if ((_.get(data, 'payload.data.shareholderExist'))) { //Si el accionista existe
             typeMessage = "warning";
@@ -286,24 +289,24 @@ class ModalComponentShareholder extends Component {
       numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;
     var messageBody = {
       "clientId": window.localStorage.getItem('idClientSelected'),
-      "shareHolderIdType": tipoDocumento.value,
-      "shareHolderIdNumber": numeroDocumento.value,
-      "shareHolderType": tipoPersona.value,
-      "shareHolderName": razonSocial.value,
-      "sharePercentage": porcentajePart.value,
-      "firstName": primerNombre.value,
-      "middleName": segundoNombre.value,
-      "firstLastName": primerApellido.value,
-      "secondLastName": segundoApellido.value,
-      "genderId": genero.value,
-      "shareHolderKindId": tipoAccionista.value,
-      "countryId": pais.value,
-      "provinceId": departamento.value,
-      "cityId": ciudad.value,
-      "address": direccion.value,
-      "fiscalCountryId": paisResidencia.value,
-      "tributaryNumber": numeroIdTributaria.value,
-      "comment": observaciones.value
+      "shareHolderIdType": tipoDocumento.value.trim(),
+      "shareHolderIdNumber": numeroDocumento.value.trim(),
+      "shareHolderType": tipoPersona.value.trim(),
+      "shareHolderName": razonSocial.value.trim(),
+      "sharePercentage": porcentajePart.value.trim(),
+      "firstName": primerNombre.value.trim(),
+      "middleName": segundoNombre.value.trim(),
+      "firstLastName": primerApellido.value.trim(),
+      "secondLastName": segundoApellido.value.trim(),
+      "genderId": genero.value.trim(),
+      "shareHolderKindId": tipoAccionista.value.trim(),
+      "countryId": pais.value.trim(),
+      "provinceId": departamento.value.trim(),
+      "cityId": ciudad.value.trim(),
+      "address": direccion.value.trim(),
+      "fiscalCountryId": paisResidencia.value.trim(),
+      "tributaryNumber": numeroIdTributaria.value.trim(),
+      "comment": observaciones.value.trim()
     }
 
     changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -426,7 +429,7 @@ class ModalComponentShareholder extends Component {
                   min={0}
                   max="5"
                   {...porcentajePart}
-                  onBlur={val => this._handleBlurValueNumber(porcentajePart, porcentajePart.value)}
+                  onBlur={val => this._handleBlurValueNumber(porcentajePart, val)}
                 />
               </Col>
               <Col xs={12} md={12} lg={12} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" } : { display: "none" }}>

@@ -345,7 +345,7 @@ class ComponentShareHolderDetail extends Component {
                   type="text"
                   min={0}
                   max="5"
-                  onBlur={val => this._handleBlurValueNumber(sharePercentage, sharePercentage.value)}
+                  onBlur={val => this._handleBlurValueNumber(sharePercentage, val)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>

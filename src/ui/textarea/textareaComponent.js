@@ -41,8 +41,10 @@ class TextareaComponent extends Component {
         this.setState({
             touched: true
         });
+        let trimmed = this.state.value.trim(); 
 
-        onChange(this.state.value);
+        onChange(trimmed);
+
         nonValidateEnter(true);
     }
 
