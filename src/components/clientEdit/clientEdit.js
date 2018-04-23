@@ -1004,6 +1004,7 @@ class clientEdit extends Component {
     }
 
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
+        console.log('_handleBlurValueNumber', val);
         var pattern;
         //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {

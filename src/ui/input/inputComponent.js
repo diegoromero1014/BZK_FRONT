@@ -14,6 +14,7 @@ class inputComponent extends Component {
         };
 
         this._onChange = this._onChange.bind(this);
+        this._onBlur = this._onBlur.bind(this);
     }
 
     _onChange(e, event) {
@@ -22,7 +23,16 @@ class inputComponent extends Component {
             value: e.target.value
         });
 
-        onChange(e.target.value, e);
+    }
+
+    _onBlur(e, event) {
+
+        const { onChange, onBlur } = this.props;
+
+        console.log('_onBlur',this.state.value);
+
+        onChange(this.state.value);
+        onBlur(this.state.value);
     }
 
     // _onBlur(e, event) {
@@ -40,6 +50,12 @@ class inputComponent extends Component {
     //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
     // }
 
+    componentWillMount() {
+        const {value} = this.props;
+
+        this.setState({value: value});
+    }
+
     render() {
         const { nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate } = this.props;
 
@@ -56,12 +72,12 @@ class inputComponent extends Component {
                         style={style}
                         onChange={this._onChange}
                         placeholder={placeholder}
-                        onBlur={onBlur}
+                        onBlur={this._onBlur}
                         disabled={disabled}
                         className={disabled}
                         onKeyPress={onKey}
                         onFocus={onFocus}
-                        value={value || ''}
+                        value={this.state.value || ''}
                     />
                 </div>
                 {
