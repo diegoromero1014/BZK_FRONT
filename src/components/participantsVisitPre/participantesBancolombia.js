@@ -16,6 +16,7 @@ import { APP_URL,
 import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 var self;
 const validate = values => {
@@ -42,7 +43,7 @@ class ParticipantesBancolombia extends Component {
 
   _addParticipantBanc() {
     const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant } = this.props;
-    if (validateValue(nameUsuario.value) && !validateIsNullOrUndefined(idUsuario.value)) {
+    if (validateValue(nameUsuario.value) && !(validateIsNullOrUndefined(idUsuario.value) || idUsuario.value <= 0)) {
       var particip = participants.find(function (item) {
         if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
           return item.idParticipante === objetoUsuario.value.idUsuario;
@@ -100,6 +101,12 @@ class ParticipantesBancolombia extends Component {
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);
       empresaUsuario.onChange(userSelected.company);
+    } else {
+
+      if (idUsuario.value > 0 ) {
+        idUsuario.onChange('');
+      }
+
     }
   }
 
@@ -130,11 +137,11 @@ class ParticipantesBancolombia extends Component {
   }
 
   updateKeyValueUsersBanco(e) {
-    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
     const selfThis = this;
     if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
-      if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+      if (nameUsuario.value !== "" && nameUsuario.value.length >= 3 && nameUsuario.value !== null && nameUsuario.value !== undefined) {
         $('.ui.search.participantBanc').toggleClass('loading');
         filterUsersBanco(nameUsuario.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -163,6 +170,11 @@ class ParticipantesBancolombia extends Component {
             $('#inputParticipantBanc').focus();
           }, 150);
         });
+      } else {
+        console.log('else')
+        if (nameUsuario.value.length <=3) {
+          swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+        }
       }
     }
   }
@@ -289,7 +301,8 @@ function mapDispatchToProps(dispatch) {
     addParticipant,
     clearParticipants,
     contactsByClientFindServer,
-    filterUsersBanco
+    filterUsersBanco,
+    swtShowMessage
   }, dispatch);
 }
 
