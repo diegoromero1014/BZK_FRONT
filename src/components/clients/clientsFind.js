@@ -115,8 +115,6 @@ class ClientsFind extends Component {
                 showLoading(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                }else {
-                    swtShowMessage('error', 'Title' ,'Prueba Foco PopUp');
                 }
             });
         }
