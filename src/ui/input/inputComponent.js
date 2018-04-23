@@ -29,8 +29,6 @@ class inputComponent extends Component {
 
         const { onChange, onBlur } = this.props;
 
-        console.log('_onBlur',this.state.value);
-
         onChange(this.state.value);
         onBlur(this.state.value);
     }

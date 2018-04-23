@@ -86,8 +86,6 @@ class ParticipantesBancolombia extends Component {
 
   _updateValue(value) {
 
-    console.log('onselect', value);
-
     const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
@@ -98,7 +96,6 @@ class ParticipantesBancolombia extends Component {
       }
     });
     if (validateValue(userSelected)) {
-      console.log('validateValue',userSelected);
       idUsuario.onChange(userSelected.id);
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);

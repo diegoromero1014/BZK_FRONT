@@ -42,7 +42,6 @@ class TextareaComponent extends Component {
             touched: true
         });
 
-        console.log(this.state.value);
         onChange(this.state.value);
         nonValidateEnter(true);
     }

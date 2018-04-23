@@ -39,8 +39,6 @@ class RichText extends Component {
     handleOnBlur() {
         
         const {onChange} = this.props;
-        console.log('onBlur');
-        console.log(this.reactQuillRef.state.value);
         onChange(this.reactQuillRef.state.value);
         
       }
@@ -51,6 +49,7 @@ class RichText extends Component {
             const quillSize = this.quillRef.getLength();
             const quillText = this.quillRef.getText();
         }
+        // No quitar el onChange={(value) => null }, se realiza para evitar que se llame el onChange de reduxForm
         return (
             <div onBlur={() => this.handleOnBlur()}>
                 <ReactQuill
@@ -62,7 +61,7 @@ class RichText extends Component {
                     modules={RichText.modules}
                     formats={RichText.formats}
                     {...this.props}
-                    onChange={(value) => console.log() }
+                    onChange={(value) => null }
                     
                     />
                 {
