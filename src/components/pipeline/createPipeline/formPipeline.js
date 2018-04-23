@@ -871,7 +871,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       max="10"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(2, commission, val, true)}
-                      onFocus={val => handleFocusValueNumber(commission, val)}
+                      onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
                 </Col>
@@ -922,7 +922,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value,val, true, 2)}
-                      onFocus={val => handleFocusValueNumber(value, val)}
+                      onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
                       onChange={val => this._changeValue(val)}
                     />
@@ -940,7 +940,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
-                      onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, val)}
+                      onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                       disabled={'disabled'}
                     />
                   </div>
@@ -1010,7 +1010,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
-                      onFocus={val => handleFocusValueNumber(areaAssetsValue, val)}
+                      onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>
                 </Col>
