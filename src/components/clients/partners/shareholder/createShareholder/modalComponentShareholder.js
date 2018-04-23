@@ -199,6 +199,10 @@ class ModalComponentShareholder extends Component {
   _searchShareholder() {
     const { fields: { tipoDocumento, numeroDocumento },
       searchShareholder, clearSearchShareholder } = this.props;
+
+      console.log("tututtu--", "--"+numeroDocumento.value.trim());
+      numeroDocumento.onChange(numeroDocumento.value.trim());
+      
     if (tipoDocumento.value && numeroDocumento.value) {
 
       if (xssValidation(numeroDocumento.value)) {

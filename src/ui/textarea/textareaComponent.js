@@ -7,7 +7,7 @@ import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REG
 import $ from 'jquery';
 import _ from 'lodash';
 
-class TextareaComponent extends Component {
+class TextareaComcponent extends Component {
     constructor(props) {
         super(props);
 
@@ -36,31 +36,37 @@ class TextareaComponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter, onChange } = this.props;
+        const { nonValidateEnter } = this.props;
         
         this.setState({
             touched: true
         });
 
-        onChange(this.state.value);
         nonValidateEnter(true);
     }
 
 
     _onChange(e, event) {
-        const { onChange, error, touched } = this.props;
+        const { onChange, error, touched, isFormik } = this.props;
 
-        this.setState({
-            value: e.target.value
-        });
+        if (isFormik) {
+            onChange(e);
+        }
+        else{
+            this.setState({
+                value: e.target.value
+            });
 
-        
+            onChange(e, event);
+        }
     }
 
-    componentWillMount() {
-        const {value} = this.props;
+    componentWillReceiveProps(nextProps) {
 
-        this.setState({value: value});
+        if(nextProps.value != this.state.value) {
+            this.setState({value: nextProps.value});
+        }
+
     }
 
 
@@ -76,11 +82,11 @@ class TextareaComponent extends Component {
                         placeholder={placeholder}
                         maxLength={max}
                         rows={rows}
-                        value={this.state.value || ''}
-                        
+                        value={value || ''}
+                        {...this.props}
                         style={style}
                         onChange={this._onChange}
-                        
+                        onKeyPress={this._onEnter}
                         onBlur={this._onBlur}
                     />
                 </div>
@@ -105,7 +111,8 @@ TextareaComponent.PropTypes = {
     min: PropTypes.string,
     defaultValue: PropTypes.string,
     style: PropTypes.object,
-    error: PropTypes.string
+    error: PropTypes.string,
+    isFormik: PropTypes.boolean
 };
 
 function mapDispatchToProps(dispatch) {

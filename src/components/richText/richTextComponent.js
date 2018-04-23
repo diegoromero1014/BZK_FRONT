@@ -43,6 +43,14 @@ class RichText extends Component {
         
       }
 
+      componentWillReceiveProps(nextProps) {
+
+        if(nextProps.value != this.state.value) {
+            this.setState({value: nextProps.value});
+        }
+
+    }
+    
     render() {
         const {value, touched, error, disabled} = this.props;
         if (!isNull(this.quillRef)) {
