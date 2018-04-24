@@ -118,8 +118,7 @@ class Challenger extends Component {
                      onClick={this._seletedTabActive.bind(this, 3)}>
                     <i className="dropdown icon"></i> ¿Cómo tomará el control de la conversación? (<span style={{color: "red"}}>*</span>)
                     <ToolTip text={titleControlConversation}>
-                        <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}
-                           title={titleControlConversation}/>
+                        <i className="help circle icon blue" style={{cursor: "pointer", marginLeft: "5px"}}/>
                     </ToolTip>
                 </div>
                 <div className="content controlConversation">
