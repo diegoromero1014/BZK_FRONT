@@ -34,6 +34,8 @@ const validate = values => {
   const errors = {};
   if (!values.responsable) {
     errors.responsable = "Debe ingresar un valor";
+  } else if (!values.idEmployee) {
+    errors.responsable = "Debe seleccionar un empleado";
   } else {
     errors.responsable = null;
   }
@@ -87,7 +89,6 @@ class ModalCreateTask extends Component {
   updateKeyValueUsersBanco(e) {
     const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
     const selector = $('.ui.search.responsable');
-    idEmployee.onChange(null);
     if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
@@ -168,6 +169,7 @@ class ModalCreateTask extends Component {
     const { createPendingTaskNew, changeStateSaveData, idClient, swtShowMessage } = this.props;
     const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
+
       var messageBody = {
         "id": id.value,
         "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.localStorage.getItem('idClientSelected') : idClient,
@@ -204,7 +206,8 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
+    
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity, idEmployee },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
     var visibleEdit, editAction;
@@ -268,7 +271,7 @@ class ModalCreateTask extends Component {
                   labelInput="Ingrese un criterio de búsqueda..."
                   {...responsable}
                   parentId="dashboardComponentScroll"
-                  onChange={responsable.onChange}
+                  onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
                   value={responsable.value}
                   onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                   onSelect={val => this._updateValue(val)}

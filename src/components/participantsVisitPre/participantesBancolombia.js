@@ -171,7 +171,6 @@ class ParticipantesBancolombia extends Component {
           }, 150);
         });
       } else {
-        console.log('else')
         if (nameUsuario.value.length <=3) {
           swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
         }
