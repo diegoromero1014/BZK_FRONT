@@ -830,35 +830,27 @@ class FormEditPrevisita extends Component {
                                     } else {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
-                                            titleMessage = "Edición previsita";
-                                            message = "Señor usuario, la previsita se editó de forma exitosa.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('success',"Edición previsita","Señor usuario, la previsita se editó de forma exitosa.", {onConfirmCallback: this._closeMessageCreatePreVisit});
                                         } else {
                                             typeMessage = "error";
-                                            titleMessage = "Edición previsita";
-                                            message = "Señor usuario, ocurrió un error editando la previsita.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('error',"Edición previsita","Señor usuario, ocurrió un error editando la previsita.", {onConfirmCallback: this._closeMessageCreatePreVisit});                                            
                                         }
                                     }
                                 }, (reason) => {
                                     changeStateSaveData(false, "");
-                                    typeMessage = "error";
-                                    titleMessage = "Edición previsita";
-                                    message = "Señor usuario, ocurrió un error editando la previsita.";
-                                    this.setState({ showMessageCreatePreVisit: true });
+                                    typeMessage = "error";  
+                                    swtShowMessage('error','Edición previsita','Señor usuario, ocurrió un error editando la previsita.',{onConfirmCallback: this._closeMessageCreatePreVisit}); 
                                 });
                             }
                         }
                     }
                 });
             } else {
-                this.setState({ showErrorSavePreVisit: true });
+                swtShowMessage('error','Error participantes',"Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia.")
             }
         } else {
             typeMessage = "error";
-            titleMessage = "Campos obligatorios";
-            message = errorMessage;
-            this.setState({ showMessageCreatePreVisit: true });
+            swtShowMessage('error','Campos obligatorios',errorMessage,{onConfirmCallback: this._closeMessageCreatePreVisit}); 
         }
 
 
@@ -1110,7 +1102,7 @@ class FormEditPrevisita extends Component {
                                 error={this.state.durationPreVisitError}
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, val, true, 2)}
                                 disabled={this.state.isEditable ? '' : 'disabled'}
                             />
                         </dt>
@@ -1361,13 +1353,7 @@ class FormEditPrevisita extends Component {
                     </div>
                 </div>
 
-                <SweetAlert
-                    type="error"
-                    show={this.state.showErrorSavePreVisit}
-                    title="Error participantes"
-                    text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({ showErrorSavePreVisit: false })}
-                />
+                
                 <SweetAlert
                     type={typeMessage}
                     show={this.state.showMessageCreatePreVisit}

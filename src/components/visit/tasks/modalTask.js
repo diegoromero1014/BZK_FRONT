@@ -101,12 +101,16 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
-        
+
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
+                if(responsable.value.length < 3) {
+                    swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                    return;
+                }
                 selector.toggleClass('loading');
                 filterUsersBanco(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
