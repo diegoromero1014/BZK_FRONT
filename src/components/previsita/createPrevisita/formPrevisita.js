@@ -633,22 +633,17 @@ class FormPrevisita extends Component {
                                     } else {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
-                                            titleMessage = "Creación previsita";
-                                            message = "Señor usuario, la previsita se creó de forma exitosa.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('success',"Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.",{onConfirmCallback: this._closeMessageCreatePreVisit});
+
                                         } else {
                                             typeMessage = "error";
-                                            titleMessage = "Creación previsita";
-                                            message = "Señor usuario, ocurrió un error creando la previsita.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
                                         }
                                     }
                                 }, (reason) => {
                                     changeStateSaveData(false, "");
                                     typeMessage = "error";
-                                    titleMessage = "Creación previsita";
-                                    message = "Señor usuario, ocurrió un error creando la previsita.";
-                                    this.setState({ showMessageCreateVisit: true });
+                                    swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
                                 });
                             }
                         }
@@ -660,9 +655,7 @@ class FormPrevisita extends Component {
             }
         } else {
             typeMessage = "error";
-            titleMessage = "Campos obligatorios";
-            message = errorMessage;
-            this.setState({ showMessageCreatePreVisit: true });
+            swtShowMessage('error',"Campos obligatorios", errorMessage ,{onConfirmCallback: this._closeMessageCreatePreVisit});
         }
     }
 
