@@ -132,7 +132,7 @@ class FormBusinessPlan extends Component {
                 opportunitiesError: VALUE_XSS_INVALID
             });
         }
-
+      
         if (!errorInForm) {
             var needsbB = [];
             _.map(needs.toArray(),
@@ -199,6 +199,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
+        console.log("jhoa", value);
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null

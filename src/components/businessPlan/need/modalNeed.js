@@ -97,6 +97,7 @@ const validate = (values) => {
     }  else {
         errors.productFamily = null;
     }
+    
     return errors;
 };
 
@@ -243,13 +244,18 @@ class ModalNeed extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { needResponsable, idEmployee }, filterUsersBanco } = this.props;
+        const { fields: { needResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         let self = this;
         
         const selector = $('.ui.search.needResponsable');
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined) {
+                if(needResponsable.value.length < 3) {
+                    swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                    return;
+                }
+               
                 selector.toggleClass('loading');
                 filterUsersBanco(needResponsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');

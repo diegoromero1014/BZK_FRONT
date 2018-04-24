@@ -62,6 +62,7 @@ const validate = (values) => {
   } else {
     errors.areaDate = null;
   }
+  
   return errors;
 };
 class ModalArea extends Component {
@@ -160,13 +161,17 @@ class ModalArea extends Component {
   }
 
   updateKeyValueUsersBanco(e) {
-    const { fields: { areaResponsable, idEmployee }, filterUsersBanco } = this.props;
+    const { fields: { areaResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
     let self = this;
     
     const selector = $('.ui.search.areaResponsable');
     if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined) {
+        if(areaResponsable.value.length < 3) {
+          swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+          return;
+      }
         selector.toggleClass('loading');
         filterUsersBanco(areaResponsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
