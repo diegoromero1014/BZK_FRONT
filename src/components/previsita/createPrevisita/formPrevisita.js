@@ -655,7 +655,8 @@ class FormPrevisita extends Component {
                     }
                 });
             } else {
-                this.setState({ showErrorSavePreVisit: true });
+                
+                swtShowMessage('error',"Error participantes","Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.");
             }
         } else {
             typeMessage = "error";
@@ -767,7 +768,7 @@ class FormPrevisita extends Component {
                                 error={this.state.durationPreVisitError}
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, val, true, 2)}
                             />
                         </dt>
                     </Col>
@@ -970,13 +971,7 @@ class FormPrevisita extends Component {
                         </button>
                     </div>
                 </div>
-                <SweetAlert
-                    type="error"
-                    show={this.state.showErrorSavePreVisit}
-                    title="Error participantes"
-                    text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({ showErrorSavePreVisit: false })}
-                />
+                
                 <SweetAlert
                     type={typeMessage}
                     show={this.state.showMessageCreatePreVisit}

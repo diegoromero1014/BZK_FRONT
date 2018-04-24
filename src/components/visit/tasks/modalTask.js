@@ -24,6 +24,8 @@ var idUsuario, nameUsuario;
 const validate = (values) => {
     if (!values.responsable) {
         errors.responsable = "Debe ingresar un valor";
+    } else if (!values.idEmployee) {
+        errors.responsable = "Debe seleccionar un empleado";
     } else {
         errors.responsable = null;
     }
@@ -101,7 +103,7 @@ class ModalTask extends Component {
     updateKeyValueUsersBanco(e) {
         const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
         const selector = $('.ui.search.responsable');
-        idEmployee.onChange(null);
+        
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
@@ -181,7 +183,7 @@ class ModalTask extends Component {
 
     render() {
         const { modalStatus, selectsReducer } = this.props;
-        const { initialValues, fields: { responsable, fecha, tarea }, handleSubmit, error } = this.props;
+        const { initialValues, fields: { responsable, fecha, tarea, idEmployee }, handleSubmit, error } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -201,7 +203,7 @@ class ModalTask extends Component {
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
                                         parentId="dashboardComponentScroll"
-                                        onChange={responsable.onChange}
+                                        onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
                                         value={responsable.value}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}

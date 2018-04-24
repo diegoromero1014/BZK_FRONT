@@ -1505,7 +1505,7 @@ class clientEdit extends Component {
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
         let { errors } = nextProps;
-        console.log(nextProps);
+    
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
