@@ -250,13 +250,7 @@ class FormPrevisita extends Component {
             controlConversationError: "",
             constructiveTension: "",
             constructiveTensionTouch: false,
-            constructiveTensionError: "",
-            nuevoModo: "",
-            nuevoModoTouch: false,
-            nuevoModoError: "",
-            nuestraSolucion: "",
-            nuestraSolucionTouch: false,
-            nuestraSolucionError: "",
+            constructiveTensionError: ""
         });
     }
 
@@ -524,23 +518,7 @@ class FormPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.nuevoModo, true)) {
-            errorInForm = true;
-            this.setState({
-                nuevoModoError: VALUE_XSS_INVALID,
-                nuevoModoTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
         
-        if (xssValidation(this.state.nuestraSolucion, true)) {
-            errorInForm = true;
-            this.setState({
-                nuestraSolucionError: VALUE_XSS_INVALID,
-                nuestraSolucionTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
 
 
 
