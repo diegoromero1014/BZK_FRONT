@@ -870,7 +870,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...commission}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(2, commission, commission.value, true)}
+                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
@@ -886,7 +886,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...roe}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, roe, roe.value, true)}
+                      onBlur={val => handleBlurValueNumber(1, roe, val, true)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
@@ -921,7 +921,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value,val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
                       onChange={val => this._changeValue(val)}
@@ -939,7 +939,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                       onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                       disabled={'disabled'}
                     />
@@ -962,7 +962,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           {...termInMonths}
                           max="3"
                           parentId="dashboardComponentScroll"
-                          onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                          onBlur={val => this._handleTermInMonths(termInMonths, val)}
                         />
                       </div>
                       <div style={{ width: "65%" }}>
@@ -1009,7 +1009,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>
