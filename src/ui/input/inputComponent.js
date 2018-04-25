@@ -19,7 +19,7 @@ class inputComponent extends Component {
 
     _onChange(e, event) {
         const { onChange, error, touched } = this.props;
-        console.log("changin",e.target.value);
+
         this.setState({
             value: e.target.value
         });
@@ -38,8 +38,10 @@ class inputComponent extends Component {
 
         const { onChange, onBlur } = this.props;
 
-        onChange(this.state.value);
-        onBlur(this.state.value);
+        let trimmed = this.state.value.trim(); 
+
+        onChange(trimmed);
+        onBlur(trimmed);
     }
 
     // _onBlur(e, event) {

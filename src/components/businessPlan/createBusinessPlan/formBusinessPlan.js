@@ -84,14 +84,14 @@ class FormBusinessPlan extends Component {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
         var errorInForm = false;
 
-        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 initialDateError: "Debe seleccionar una fecha"
             });
         }
 
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)  || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
@@ -132,7 +132,7 @@ class FormBusinessPlan extends Component {
                 opportunitiesError: VALUE_XSS_INVALID
             });
         }
-
+      
         if (!errorInForm) {
             var needsbB = [];
             _.map(needs.toArray(),
@@ -199,6 +199,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
+        console.log("jhoa", value);
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null

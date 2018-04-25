@@ -7,7 +7,7 @@ import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REG
 import $ from 'jquery';
 import _ from 'lodash';
 
-class TextareaComcponent extends Component {
+class TextareaComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -36,29 +36,33 @@ class TextareaComcponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter } = this.props;
+        const { nonValidateEnter, onChange } = this.props;
         
         this.setState({
             touched: true
         });
+        let trimmed = this.state.value.trim(); 
+
+        onChange(trimmed);
 
         nonValidateEnter(true);
     }
 
 
     _onChange(e, event) {
-        const { onChange, error, touched, isFormik } = this.props;
+        const { onChange, error, touched } = this.props;
 
-        if (isFormik) {
-            onChange(e);
-        }
-        else{
-            this.setState({
-                value: e.target.value
-            });
+        this.setState({
+            value: e.target.value
+        });
 
-            onChange(e, event);
-        }
+        
+    }
+
+    componentWillMount() {
+        const {value} = this.props;
+
+        this.setState({value: value});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -82,11 +86,11 @@ class TextareaComcponent extends Component {
                         placeholder={placeholder}
                         maxLength={max}
                         rows={rows}
-                        value={value || ''}
-                        {...this.props}
+                        value={this.state.value || ''}
+                        
                         style={style}
                         onChange={this._onChange}
-                        onKeyPress={this._onEnter}
+                        
                         onBlur={this._onBlur}
                     />
                 </div>
@@ -111,8 +115,7 @@ TextareaComponent.PropTypes = {
     min: PropTypes.string,
     defaultValue: PropTypes.string,
     style: PropTypes.object,
-    error: PropTypes.string,
-    isFormik: PropTypes.boolean
+    error: PropTypes.string
 };
 
 function mapDispatchToProps(dispatch) {

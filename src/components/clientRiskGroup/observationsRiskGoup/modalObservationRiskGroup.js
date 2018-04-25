@@ -125,7 +125,7 @@ class modalObservationRiskGroup extends Component {
                                 name="txtArea"
                                 value={this.state.observation}
                                 touched={true}
-                                onChange={(e) => this.setState({ observation: e.target.value })}
+                                onChange={(val) => this.setState({ observation: val })}
                                 title="Ingrese las observaciones"
                                 style={{ width: '100%', height: '108px' }}
                                 max={500}

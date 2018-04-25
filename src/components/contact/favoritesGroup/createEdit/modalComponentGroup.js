@@ -88,8 +88,9 @@ class ModalComponentGroup extends Component {
 
     _handleValidateExistGroup() {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
-        showLoading(true, MESSAGE_LOAD_DATA);
+        searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
+            showLoading(true, MESSAGE_LOAD_DATA);
             getValidateExistGroup(searchGroup.value).then((data) => {
                 const groupSearch = _.get(data.payload, 'data.data', null);
                 if (!_.isNull(groupSearch)) {
@@ -102,9 +103,9 @@ class ModalComponentGroup extends Component {
                             saveNameGroup(searchGroup.value);
                         } else {
                             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            resetForm();
-                            resetModal();
-                            this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            //resetForm();
+                            //resetModal();
+                            //this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
                         }
                         showLoading(false, '');
                     }
@@ -121,8 +122,9 @@ class ModalComponentGroup extends Component {
 
     _handleValidateExistGroupSearch() {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
-        showLoading(true, MESSAGE_LOAD_DATA);
+        searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
+            showLoading(true, MESSAGE_LOAD_DATA);
             getValidateExistGroup(searchGroup.value).then((data) => {
                 const groupSearch = _.get(data.payload, 'data.data', null);
                 if (!_.isNull(groupSearch)) {
@@ -135,9 +137,9 @@ class ModalComponentGroup extends Component {
                             saveNameGroup(searchGroup.value);
                         } else {
                             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            resetForm();
-                            resetModal();
-                            this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            //resetForm();
+                            //resetModal();
+                            //this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
                         }
                         showLoading(false, '');
                     }
@@ -153,6 +155,7 @@ class ModalComponentGroup extends Component {
                 }
             });
         } else {
+            
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }
     }
@@ -294,6 +297,7 @@ class ModalComponentGroup extends Component {
             }
         }
     }
+
 
     render() {
         let { groupId, fields: { contact, searchGroup }, groupsFavoriteContacts, selectsReducer } = this.props;

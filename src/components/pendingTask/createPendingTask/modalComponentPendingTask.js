@@ -32,6 +32,8 @@ const validate = values => {
     const errors = {};
     if (!values.responsable) {
         errors.responsable = "Debe ingresar un valor";
+    } else if (!values.idEmployee) {
+        errors.responsable = "Debe seleccionar un empleado";
     } else {
         errors.responsable = null;
     }
@@ -100,12 +102,16 @@ class ModalComponentPendingTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
-        idEmployee.onChange(null);
+       
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
+                if(responsable.value.length < 3) {
+                    swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                    return;
+                }
                 selector.toggleClass('loading');
                 filterUsersBanco(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
@@ -169,10 +175,9 @@ class ModalComponentPendingTask extends Component {
     }
 
     render() {
-        const { fields: { responsable, fecha, idEstado, tarea, advance }, taskEdit, selectsReducer, handleSubmit } = this.props;
+        const { fields: { responsable, fecha, idEstado, tarea, advance, idEmployee }, taskEdit, selectsReducer, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreatePendingTask)}>
-                
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
@@ -215,7 +220,7 @@ class ModalComponentPendingTask extends Component {
                                     labelInput="Ingrese un criterio de búsqueda..."
                                     {...responsable}
                                     parentId="dashboardComponentScroll"
-                                    onChange={responsable.onChange}
+                                    onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
                                     value={responsable.value}
                                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                     onSelect={val => this._updateValue(val)}

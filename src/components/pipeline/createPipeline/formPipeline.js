@@ -29,9 +29,9 @@ import {
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
   DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, 
-  VALUE_REQUIERED, 
-  MESSAGE_ERROR, 
+  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
+  VALUE_REQUIERED,
+  MESSAGE_ERROR,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
   REGEX_SIMPLE_XSS_MESAGE
@@ -137,6 +137,8 @@ const validate = values => {
     errors.nameUsuario = VALUE_REQUIERED;
   } else if (xssValidation(values.nameUsuario)) {
     errors.nameUsuario = VALUE_XSS_INVALID;
+  } else if (!values.idUsuario) {
+    errors.nameUsuario = "Seleccione un empleado"
   } else {
     errors.nameUsuario = null;
   }
@@ -517,12 +519,16 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     updateKeyValueUsersBanco(e) {
-      const { fields: { nameUsuario, idUsuario }, filterUsersBanco } = this.props;
+      const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
       var self = this;
-      idUsuario.onChange('');
+      // idUsuario.onChange('');
       if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
         e.consultclick ? "" : e.preventDefault();
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+          if (nameUsuario.value.length < 3) {
+            swtShowMessage('error', 'Error', 'Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+            return;
+          }
           $('.ui.search.' + participantBanc).toggleClass('loading');
           filterUsersBanco(nameUsuario.value).then((data) => {
             let usersBanco = _.get(data, 'payload.data.data');
@@ -744,9 +750,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         type="text"
                         {...nameUsuario}
                         value={nameUsuario.value}
-                        onChange={nameUsuario.onChange}
+                        onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
                         placeholder="Ingrese un criterio de búsqueda..."
-                        onKeyPress={this.updateKeyValueUsersBanco}
+                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                         onSelect={val => this._updateValue(val)}
                       />
                     </div>
@@ -870,7 +876,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...commission}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(2, commission, commission.value, true)}
+                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
@@ -886,7 +892,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...roe}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, roe, roe.value, true)}
+                      onBlur={val => handleBlurValueNumber(1, roe, val, true)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
@@ -921,7 +927,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
                       onChange={val => this._changeValue(val)}
@@ -939,7 +945,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                       onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                       disabled={'disabled'}
                     />
@@ -962,7 +968,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           {...termInMonths}
                           max="3"
                           parentId="dashboardComponentScroll"
-                          onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                          onBlur={val => this._handleTermInMonths(termInMonths, val)}
                         />
                       </div>
                       <div style={{ width: "65%" }}>
@@ -1009,7 +1015,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>
@@ -1034,8 +1040,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={12} md={12} lg={12}>
                   <RichText
                     name="observations"
-                    {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations) }
-                    placeholder="Ingrese una observación."                    
+                    {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations)}
+                    placeholder="Ingrese una observación."
                     touched={true}
                     style={{ width: '100%', height: '178px' }}
                   />
@@ -1156,8 +1162,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     fields,
     form: name || _.uniqueId('business_'),
     validate,
-    onSubmitFail: errors => {      
-      let numXssValidation =  Object.keys(errors).filter(item=>errors[item] == VALUE_XSS_INVALID).length;
+    onSubmitFail: errors => {
+      let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
 
       thisForm.setState({
         errorValidateXss: numXssValidation > 0,

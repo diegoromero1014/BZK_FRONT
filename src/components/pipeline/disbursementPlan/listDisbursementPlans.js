@@ -191,7 +191,7 @@ class ListDisbursementPlans extends Component {
                                     type="text"
                                     max="15"
                                     {...disbursementAmount}
-                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, disbursementAmount, disbursementAmount.value, true, 2)}
+                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, disbursementAmount, val, true, 2)}
                                     onFocus={val => handleFocusValueNumber(disbursementAmount, disbursementAmount.value)}
                                     error={_.isEmpty(disbursementAmount.value) ? VALUE_REQUIERED : null}
                                     touched={this.state.errorForm || registrationRequired}
