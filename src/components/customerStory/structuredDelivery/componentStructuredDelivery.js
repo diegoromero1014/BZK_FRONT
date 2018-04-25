@@ -115,7 +115,7 @@ class componentStructuredDelivery extends Component {
         let _arrValues = [corporateGobernance.value, reciprocity.value, specialConsiderations.value, businessWithAffiliates.value, mergers.value, dificultSituations.value]
         
         let succesValidateEmpty = stringValidate(_arrValues.join(""));
-
+        
         let succesValidateXss = _arrValues.filter((value) => xssValidation(value)).length == 0;
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
@@ -127,7 +127,7 @@ class componentStructuredDelivery extends Component {
             swtShowMessage('error', INCOMPLETE_INFORMATION, MOST_ADD_AN_EVENT);
             return;
         }
-
+       
         if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) { 
             let listEvents = [];
             let allowSave = true;
@@ -164,13 +164,9 @@ class componentStructuredDelivery extends Component {
                     if (!validateResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                     } else {
-                        this._getStructuredDeliveryDetail();
-                        this.setState({
-                            typeMessage: 'success',
-                            titleMessage: 'Entrega estructurada',
-                            message: 'Señor usuario, se ha guardado la información exitosamente.',
-                            showMessage: true
-                        });
+                        this._getStructuredDeliveryDetail();                 
+                        swtShowMessage('success', "Entrega estructurada", "Señor usuario, se ha guardado la información exitosamente.");
+                        this._closeEdit();
                     }
                     changeStateSaveData(false, "");
                     updateEventErrors(false);
@@ -187,11 +183,14 @@ class componentStructuredDelivery extends Component {
     }
 
     _closeEdit() {
+        
         const { closeModal } = this.props
+      
         this.setState({
             showMessage: false
         });
         if (!_.isUndefined(closeModal)) {
+           
             closeModal();
         }
     }
@@ -244,10 +243,11 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
-        const { clearEvents, changeStateSaveData,callFromDeliveryClient} = this.props;
+        const { clearEvents, changeStateSaveData,callFromDeliveryClient, updateEventErrors} = this.props;
         
         const_callFromDeliveryClient = callFromDeliveryClient;
         clearEvents();
+        updateEventErrors(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         this._getStructuredDeliveryDetail();
     }

@@ -18,9 +18,13 @@ class SwtMessage extends Component {
         const {options} = this.props;
         this.props.swtCloseMessage();
 
+        
+
         if (typeof options !== 'undefined') {
 
             if (typeof options.onConfirmCallback === "function") {
+        
+               
                 options.onConfirmCallback();
             }
 
