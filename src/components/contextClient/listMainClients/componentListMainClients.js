@@ -16,6 +16,7 @@ import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS, MESSAGE_RELEVANT_MAIN_CLIENTS } fro
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import { getValues } from "redux-form";
 
 class ComponentListMainClients extends Component {
     constructor(props) {
@@ -179,7 +180,7 @@ class ComponentListMainClients extends Component {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
             clientInformacion, showCheckValidateSection, valueCheckSectionMainClients,
             functionChangeCheckSectionMainClients, changeValueListClient, registrationRequired,
-            origin } = this.props;
+            origin, parentForm } = this.props;
         const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div>
@@ -238,7 +239,7 @@ class ComponentListMainClients extends Component {
                                         max="100"
                                         placeholder="Nombre del cliente"
                                         {...nameClient}
-                                        error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : (xssValidation(nameClient.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(parentForm[nameClient.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[nameClient.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -255,9 +256,9 @@ class ComponentListMainClients extends Component {
                                         max="3"
                                         placeholder="Plazo"
                                         {...term}
-                                        value={term.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
-                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : (xssValidation(term.value) ? VALUE_XSS_INVALID : null)}
+                                        value={parentForm[term.name]}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
+                                        error={_.isEmpty(parentForm[term.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[term.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -274,9 +275,9 @@ class ComponentListMainClients extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        value={parentForm[participation.name]}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -312,7 +313,7 @@ class ComponentListMainClients extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
-                                        error={xssValidation(relevantInformation.value) ? VALUE_XSS_INVALID : null}
+                                        error={xssValidation(parentForm[relevantInformation.name]) ? VALUE_XSS_INVALID : null}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -382,9 +383,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
     return {
-        clientInformacion
+        clientInformacion,
+        parentForm : getValues(form[ownerProps.formName])
     };
 }
 

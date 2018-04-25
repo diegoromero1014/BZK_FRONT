@@ -16,6 +16,8 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import { getValues } from "redux-form";
+
 
 class ComponentListLineBusiness extends Component {
     constructor(props) {
@@ -161,7 +163,7 @@ class ComponentListLineBusiness extends Component {
     render() {
         const { contextLineBusiness, participation, experience, showFormLinebusiness,
             fnShowForm, contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin } = this.props;
+            registrationRequired, origin, parentForm } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
@@ -207,7 +209,7 @@ class ComponentListLineBusiness extends Component {
                                         max="100"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
-                                        error={_.isEmpty(contextLineBusiness.value) ? VALUE_REQUIERED : (xssValidation(contextLineBusiness.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(parentForm[contextLineBusiness.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[contextLineBusiness.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -224,9 +226,9 @@ class ComponentListLineBusiness extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        value={parentForm[participation.name]}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -243,9 +245,9 @@ class ComponentListLineBusiness extends Component {
                                         max="3"
                                         placeholder="Experiencia"
                                         {...experience}
-                                        value={experience.value}
-                                        error={xssValidation(experience.value) ? VALUE_XSS_INVALID : null}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, experience.value)}
+                                        value={parentForm[experience.name]}
+                                        error={xssValidation(parentForm[experience.name]) ? VALUE_XSS_INVALID : null}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, val)}
                                     />
                                 </div>
                             </Col>
@@ -261,9 +263,9 @@ class ComponentListLineBusiness extends Component {
                                         max="3"
                                         placeholder="Contribución"
                                         {...contribution}
-                                        value={contribution.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={xssValidation(contribution.value) ? VALUE_XSS_INVALID : null}
+                                        value={parentForm[contribution.name]}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 0)}
+                                        error={xssValidation(parentForm[contribution.name]) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>
@@ -340,9 +342,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {        
     return {
-        clientInformacion
+        clientInformacion,
+        parentForm : getValues(form[ownerProps.formName])
     };
 }
 

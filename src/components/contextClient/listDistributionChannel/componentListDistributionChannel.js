@@ -16,6 +16,8 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { DISTRIBUTION_CHANNEL, MESSAGE_DISTRIBUTION_CHANNEL } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import { getValues } from "redux-form";
+
 
 class ComponentListDistributionChannel extends Component {
     constructor(props) {
@@ -165,7 +167,7 @@ class ComponentListDistributionChannel extends Component {
     render() {
         const { distributionChannel, participation, showFormDistribution, fnShowForm,
             contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin } = this.props;
+            registrationRequired, origin, parentForm } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
@@ -211,7 +213,7 @@ class ComponentListDistributionChannel extends Component {
                                         max="100"
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
-                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : (xssValidation(distributionChannel.value) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(parentForm[distributionChannel.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[distributionChannel.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -228,9 +230,9 @@ class ComponentListDistributionChannel extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
+                                        value={parentForm[participation.name]}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -248,8 +250,8 @@ class ComponentListDistributionChannel extends Component {
                                         placeholder="Contribución"
                                         {...contribution}
                                         value={contribution.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, contribution.value, false, 0)}
-                                        error={xssValidation(contribution.value) ? VALUE_XSS_INVALID : null}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 0)}
+                                        error={xssValidation(parentForm[contribution.name]) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>
@@ -324,9 +326,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
     return {
-        clientInformacion
+        clientInformacion,
+        parentForm : getValues(form[ownerProps.formName])
     };
 }
 

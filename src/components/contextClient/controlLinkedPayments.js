@@ -12,6 +12,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 import { stringValidate, xssValidation } from '../../actionsGlobal';
+import { getValues } from "redux-form";
 
 class ControlLinkedPayments extends Component {
 
@@ -30,7 +31,7 @@ class ControlLinkedPayments extends Component {
     }
 
     render() {
-        const { data, clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
+        const { data, clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired, parentForm } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -62,7 +63,7 @@ class ControlLinkedPayments extends Component {
                             rows={7}
                             placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
                             {...controlLinkedPayments}
-                            error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (xssValidation(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
+                            error={!stringValidate(parentForm[controlLinkedPayments.name]) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (xssValidation(parentForm[controlLinkedPayments.name]) ? VALUE_XSS_INVALID : '')}
                             touched={true}
                         />
                     }
@@ -79,9 +80,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
     return {
-        clientInformacion
+        clientInformacion,
+        parentForm : getValues(form[ownerProps.formName])
     };
 }
 

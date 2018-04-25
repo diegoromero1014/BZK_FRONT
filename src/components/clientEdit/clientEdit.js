@@ -619,7 +619,8 @@ class clientEdit extends Component {
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
             showFormAddIntOperatrions: false,
-            showJustifyNoGeren: true
+            showJustifyNoGeren: true,
+            shouldUpdate: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -1504,8 +1505,7 @@ class clientEdit extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
-        let { errors } = nextProps;
-        console.log(nextProps);
+        let { errors } = nextProps;        
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
@@ -1529,6 +1529,7 @@ class clientEdit extends Component {
         if (operationsForeignCurrency.value.toString() === 'false' && operationsForeigns.value !== '') {
             operationsForeigns.onChange('');
         }
+        this.setState({shouldUpdate: true});
     }
 
     componentWillMount() {
@@ -1892,13 +1893,13 @@ class clientEdit extends Component {
                     <ContextEconomicActivity contextClientField={contextClientField} />
                     }
                     {allowRiskGroupEdit && 
-                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness} formName="formClientEdit"
                                                participation={participationLB} experience={experience}
                                                showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                         fnShowForm={this.showFormOut} contribution={contributionLB} />
                     }
                     {allowRiskGroupEdit &&
-                    <ComponentListDistributionChannel distributionChannel={distributionChannel}
+                    <ComponentListDistributionChannel distributionChannel={distributionChannel} formName= "formClientEdit"
                                                       participation={participationDC} contribution={contributionDC}
                                                       showFormDistribution={this.state.showFormAddDistribution}
                         fnShowForm={this.showFormOut} />
@@ -1908,7 +1909,7 @@ class clientEdit extends Component {
                 <InventorPolicy inventoryPolicy={inventoryPolicy}/>
                 }
                 {allowRiskGroupEdit &&
-                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
+                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} formName= "formClientEdit"
                     controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
                 }
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -2112,7 +2113,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
                                 value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2141,7 +2142,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los activos"
                                 {...assets}
                                 value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2163,7 +2164,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los pasivos"
                                 {...liabilities}
                                 value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2183,7 +2184,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
                                 value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2203,7 +2204,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los egresos mensuales"
                                 {...expenses}
                                 value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2225,7 +2226,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
                                 {...nonOperatingIncome}
                                 value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
