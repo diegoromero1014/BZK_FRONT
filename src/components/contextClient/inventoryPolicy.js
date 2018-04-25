@@ -11,6 +11,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
+import { getValues } from "redux-form";
 
 class InventorPolicy extends Component {
 
@@ -20,7 +21,7 @@ class InventorPolicy extends Component {
 
     render() {
         const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
-            showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
+            showCheckValidateSection, functionChangeInventoryPolicy, parentForm } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -55,6 +56,7 @@ class InventorPolicy extends Component {
                             rows={7}
                             placeholder="Ingrese las políticas de inventario"
                             {...inventoryPolicy}
+                            value={parentForm[inventoryPolicy.name]}
                             touched={true}
                         />
                     </div>
@@ -76,9 +78,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
     return {
-        clientInformacion
+        clientInformacion,
+        parentForm: getValues(form[ownerProps.formName])
     };
 }
 

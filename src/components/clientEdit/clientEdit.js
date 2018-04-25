@@ -1507,7 +1507,7 @@ class clientEdit extends Component {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
 
         let { errors } = nextProps;
-        
+
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
         if (clientInformacion.get('noAppliedControlLinkedPayments')) {
@@ -1892,7 +1892,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     {allowRiskGroupEdit &&
-                    <ContextEconomicActivity contextClientField={contextClientField} />
+                    <ContextEconomicActivity contextClientField={contextClientField} formName="formClientEdit" />
                     }
                     {allowRiskGroupEdit && 
                     <ComponentListLineBusiness contextLineBusiness={contextLineBusiness} formName="formClientEdit"
@@ -1908,7 +1908,7 @@ class clientEdit extends Component {
                     }
                 </Row>
                 {allowRiskGroupEdit &&
-                <InventorPolicy inventoryPolicy={inventoryPolicy}/>
+                <InventorPolicy inventoryPolicy={inventoryPolicy} formName= "formClientEdit"/>
                 }
                 {allowRiskGroupEdit &&
                 <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} formName= "formClientEdit"
@@ -2249,23 +2249,23 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-                {allowRiskGroupEdit &&
+                {allowRiskGroupEdit &&                
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                                           term={termMainClient} relevantInformation={relevantInformationMainClient}
                                           showFormMainClients={this.state.showFormAddMainClient}
-                    fnShowForm={this.showFormOut} />
+                    fnShowForm={this.showFormOut} formName= "formClientEdit" />
                 }
                 {allowRiskGroupEdit &&
                 <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
                                            term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                                            showFormMainSupplier={this.state.showFormAddMainSupplier}
-                    fnShowForm={this.showFormOut} />
+                    fnShowForm={this.showFormOut} formName= "formClientEdit" />
                 }
                 {allowRiskGroupEdit &&
                 <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
                                              observations={obsevationsCompetitor}
                                              showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                    fnShowForm={this.showFormOut} />
+                    fnShowForm={this.showFormOut} formName= "formClientEdit" />
                 }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -2630,7 +2630,7 @@ class clientEdit extends Component {
                                             customerCoverage={customerCoverageIntOpe}
                                             descriptionCoverage={descriptionCoverageIntOpe}
                                             showFormIntOperations={this.state.showFormAddIntOperatrions}
-                        fnShowForm={this.showFormOut} />
+                        fnShowForm={this.showFormOut} formName= "formClientEdit" />
                 }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>

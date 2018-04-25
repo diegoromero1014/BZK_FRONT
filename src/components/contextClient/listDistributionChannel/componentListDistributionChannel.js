@@ -213,6 +213,7 @@ class ComponentListDistributionChannel extends Component {
                                         max="100"
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
+                                        value={parentForm[distributionChannel.name]}
                                         error={_.isEmpty(parentForm[distributionChannel.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[distributionChannel.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />

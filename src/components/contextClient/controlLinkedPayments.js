@@ -63,6 +63,7 @@ class ControlLinkedPayments extends Component {
                             rows={7}
                             placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
                             {...controlLinkedPayments}
+                            value={parentForm[controlLinkedPayments.name]}
                             error={!stringValidate(parentForm[controlLinkedPayments.name]) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (xssValidation(parentForm[controlLinkedPayments.name]) ? VALUE_XSS_INVALID : '')}
                             touched={true}
                         />

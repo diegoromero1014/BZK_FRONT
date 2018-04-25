@@ -239,6 +239,7 @@ class ComponentListMainClients extends Component {
                                         max="100"
                                         placeholder="Nombre del cliente"
                                         {...nameClient}
+                                        value={parentForm[nameClient.name]}
                                         error={_.isEmpty(parentForm[nameClient.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[nameClient.name]) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -313,6 +314,7 @@ class ComponentListMainClients extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
+                                        value={parentForm[relevantInformation.name]}
                                         error={xssValidation(parentForm[relevantInformation.name]) ? VALUE_XSS_INVALID : null}
                                         touched={this.state.errorForm || registrationRequired}
                                     />

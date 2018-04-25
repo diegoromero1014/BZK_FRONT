@@ -20,6 +20,7 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { IMPORT, EXPORT } from '../../clientDetailsInfo/constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import { getValues } from "redux-form";
 
 export const TYPE_OPERATION = [
     { 'id': '', 'value': "Seleccione..." },
@@ -300,7 +301,7 @@ class ComponentListIntOperations extends Component {
     render() {
         const { typeOperation, participation, idCountry, participationCountry, customerCoverage, descriptionCoverage,
             showFormIntOperations, fnShowForm, clientInformacion, selectsReducer, changeValueListClient, origin, valueCheckSectionIntOperations,
-            showCheckValidateSection, functionChangeIntOperations, registrationRequired } = this.props;
+            showCheckValidateSection, functionChangeIntOperations, registrationRequired, parentForm } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
             <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}>
@@ -371,9 +372,9 @@ class ComponentListIntOperations extends Component {
                                             max="5"
                                             placeholder="Participación"
                                             {...participation}
-                                            value={participation.value}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
-                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
+                                            value={parentForm[participation.name]}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                            error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -410,7 +411,8 @@ class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
-                                            error={xssValidation(descriptionCoverage.value) ? VALUE_XSS_INVALID : null}
+                                            value={parentForm[descriptionCoverage.name]}
+                                            error={xssValidation(parentForm[descriptionCoverage.name]) ? VALUE_XSS_INVALID : null}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -446,10 +448,10 @@ class ComponentListIntOperations extends Component {
                                             min={0}
                                             max="6"
                                             placeholder="Participación del país"
-                                            {...participationCountry}
-                                            value={participationCountry.value}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, participationCountry.value, true, 2)}
-                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (xssValidation(participationCountry.value) ? VALUE_XSS_INVALID : null)}
+                                            {...participationCountry}                                            
+                                            value={parentForm[participationCountry.name]}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 2)}
+                                            error={_.isEmpty(parentForm[participationCountry.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participationCountry.name]) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorCountryForm}
                                         />
                                     </div>
@@ -554,10 +556,11 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, form }, ownerProps) {
     return {
         clientInformacion,
-        selectsReducer
+        selectsReducer,
+        parentForm: getValues(form[ownerProps.formName])
     };
 }
 

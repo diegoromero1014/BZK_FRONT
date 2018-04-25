@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
@@ -10,6 +11,8 @@ import {
 import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
+import { getValues } from "redux-form";
+
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
@@ -30,7 +33,7 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
+        const { contextClientField, data, isCheckbox, fieldRequiered, origin, parentForm } = this.props;
         return (
             <Col xs={12} md={12} lg={12}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
@@ -57,7 +60,8 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
+                                value={parentForm[contextClientField.name]}
+                                error={!stringValidate(parentForm[contextClientField.name]) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(parentForm[contextClientField.name]) ? VALUE_XSS_INVALID : '')}
 
                                 touched={true}
                             />
@@ -72,4 +76,13 @@ ContextEconomicActivity.PropTypes = {
     contextClientField: PropTypes.object.isRequired
 }
 
-export default ContextEconomicActivity;
+
+
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
+    return {
+        clientInformacion,
+        parentForm : getValues(form[ownerProps.formName])
+    };
+}
+
+export default connect(mapStateToProps)(ContextEconomicActivity);
