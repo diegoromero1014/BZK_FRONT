@@ -245,15 +245,12 @@ export function handleFocusValueNumber(valuReduxForm, val) {
 
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
     //Elimino los caracteres no validos
-    console.log("val",val);
-    console.log("valuReduxForm", val);
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
         if (validos.indexOf(val.toString().charAt(i)) !== -1) {
             output += val.toString().charAt(i)
         }
     }
     val = output;
-    console.log("val2",val);
     /* Si typeValidation = 2 es por que el valor puede ser negativo
      Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
      */

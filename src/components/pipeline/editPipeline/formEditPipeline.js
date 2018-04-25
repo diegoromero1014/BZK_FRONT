@@ -109,9 +109,9 @@ const validate = values => {
 
     if (!values.opportunityName && !isChildren) {
         errors.opportunityName = VALUE_REQUIERED;
-    }  else if (xssValidation(values.opportunityName)) {
+    } else if (xssValidation(values.opportunityName)) {
         errors.opportunityName = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.opportunityName = null;
     }
 
@@ -127,7 +127,10 @@ const validate = values => {
         errors.nameUsuario = VALUE_REQUIERED;
     } else if (xssValidation(values.nameUsuario)) {
         errors.nameUsuario = VALUE_XSS_INVALID;
-    } else {
+    } else if (!values.idUsuario) {
+        errors.nameUsuario = "Seleccione un empleado"
+    }
+    else {
         errors.nameUsuario = null;
     }
 
@@ -491,12 +494,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         updateKeyValueUsersBanco(e) {
-            const { fields: { nameUsuario, idUsuario }, filterUsersBanco } = this.props;
+            const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
             var self = this;
-            idUsuario.onChange('');
+           // idUsuario.onChange('');
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+                    if (nameUsuario.value.length < 3) {
+                        swtShowMessage('error', 'Error', 'Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                        return;
+                    }
                     $('.ui.search.' + participantBanc).toggleClass('loading');
                     filterUsersBanco(nameUsuario.value).then((data) => {
                         let usersBanco = _.get(data, 'payload.data.data');
@@ -678,7 +685,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-            }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
+                }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
                 reducerGlobal, navBar } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -856,9 +863,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 type="text"
                                                 {...nameUsuario}
                                                 value={nameUsuario.value}
-                                                onChange={nameUsuario.onChange}
+                                                onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
                                                 placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={this.updateKeyValueUsersBanco}
+                                                onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                                 onSelect={val => this._updateValue(val)}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
@@ -1001,7 +1008,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             max="10"
                                             parentId="dashboardComponentScroll"
                                             disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, commission, commission.value, true)}
+                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, commission, val, true)}
                                             onFocus={val => handleFocusValueNumber(commission, commission.value)}
                                         />
                                     </div>
@@ -1017,7 +1024,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...roe}
                                             max="10"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, roe.value, true)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, val, true)}
                                             onFocus={val => handleFocusValueNumber(roe, roe.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
@@ -1055,7 +1062,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             max="15"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
                                             disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
                                             onChange={val => this._changeValue(val)}
@@ -1073,7 +1080,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             max="15"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                                             onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                                             disabled={'disabled'}
                                         />
@@ -1097,7 +1104,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                     max="4"
                                                     parentId="dashboardComponentScroll"
                                                     disabled={this.state.isEditable ? '' : 'disabled'}
-                                                    onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                                                    onBlur={val => this._handleTermInMonths(termInMonths, val)}
                                                 />
                                             </div>
                                             <div style={{ width: "65%" }}>
@@ -1145,7 +1152,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             max="15"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
