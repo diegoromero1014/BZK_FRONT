@@ -114,7 +114,7 @@ class ModalComponentEconomicGroup extends Component {
           }, 150);
         });
       } else {
-        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para agregar un cliente al grupo económico primero debe selecionar uno.');
+        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para realizar la busqueda es necesario ingresar mínimo 3 caracteres');
       }
     }
   }

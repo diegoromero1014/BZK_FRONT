@@ -42,7 +42,7 @@ class ParticipantesBancolombia extends Component {
   }
 
   _addParticipantBanc() {
-    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant } = this.props;
+    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant, swtShowMessage } = this.props;
     if (validateValue(nameUsuario.value) && !(validateIsNullOrUndefined(idUsuario.value) || idUsuario.value <= 0)) {
       var particip = participants.find(function (item) {
         if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
@@ -50,9 +50,7 @@ class ParticipantesBancolombia extends Component {
         }
       });
       if (xssValidation(nameUsuario.value)) {
-        this.setState({
-          showInvalidCharacter: true
-        });
+        swtShowMessage('error',"Error participante",REGEX_SIMPLE_XSS_MESAGE);
         return;
       }
       if (particip === undefined) {
@@ -74,14 +72,11 @@ class ParticipantesBancolombia extends Component {
         cargoUsuario.onChange('');
         empresaUsuario.onChange('');
       } else {
-        this.setState({
-          showParticipantExistBanco: true
-        });
+        swtShowMessage('error',"Participante existente","Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+
       }
     } else {
-      this.setState({
-        showEmptyParticipantBanco: true
-      });
+        swtShowMessage('error',"Error participante","Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
     }
   }
 
@@ -269,27 +264,6 @@ class ParticipantesBancolombia extends Component {
             </Col>
           }
         </Row>
-        <SweetAlert
-          type="error"
-          show={this.state.showEmptyParticipantBanco}
-          title="Error participante"
-          text="Señor usuario, para agregar un participante debe seleccionar un usuario del banco"
-          onConfirm={() => this.setState({ showEmptyParticipantBanco: false })}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showParticipantExistBanco}
-          title="Participante existente"
-          text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
-          onConfirm={() => this.setState({ showParticipantExistBanco: false })}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showInvalidCharacter}
-          title="Error participante"
-          text={REGEX_SIMPLE_XSS_MESAGE}
-          onConfirm={() => this.setState({ showInvalidCharacter: false })}
-        />
       </div>
     );
   }
