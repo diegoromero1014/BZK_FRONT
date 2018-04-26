@@ -11,19 +11,21 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 import { stringValidate } from '../../actionsGlobal';
-import { getValues } from "redux-form";
 
 class InventorPolicy extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            shouldUpdate: false
+        }
     }
 
     render() {
         const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
-            showCheckValidateSection, functionChangeInventoryPolicy, parentForm } = this.props;
-        return (
-            <Row style={{ padding: "20px 10px 10px 20px" }}>
+            showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
+        return (            
+            <Row style={{ padding: "20px 10px 10px 20px" }} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })} >
                 <Col xs={12} md={12} lg={12}>
                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                         <div className="tab-content-row"
@@ -56,7 +58,7 @@ class InventorPolicy extends Component {
                             rows={7}
                             placeholder="Ingrese las políticas de inventario"
                             {...inventoryPolicy}
-                            value={parentForm[inventoryPolicy.name]}
+                            value={inventoryPolicy.value}
                             touched={true}
                         />
                     </div>
@@ -78,10 +80,9 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, form }, ownerProps) {
+function mapStateToProps({ clientInformacion }, ownerProps) {
     return {
-        clientInformacion,
-        parentForm: getValues(form[ownerProps.formName])
+        clientInformacion
     };
 }
 

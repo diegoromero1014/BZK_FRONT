@@ -20,7 +20,6 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { IMPORT, EXPORT } from '../../clientDetailsInfo/constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
-import { getValues } from "redux-form";
 
 export const TYPE_OPERATION = [
     { 'id': '', 'value': "Seleccione..." },
@@ -49,7 +48,8 @@ class ComponentListIntOperations extends Component {
             listCountrys: [],
             updateView: false,
             errorForm: false,
-            errorCountryForm: false
+            errorCountryForm: false,
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -186,7 +186,7 @@ class ComponentListIntOperations extends Component {
             } else {
                 swtShowMessage('error', 'Error agregando país', 'Señor usuario, el país que quiere agregar ya se encuentra en la lista de países.');
             }
-        } 
+        }
         // else {
         //     this.setState({ errorCountryForm: true });
         //     swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
@@ -301,10 +301,11 @@ class ComponentListIntOperations extends Component {
     render() {
         const { typeOperation, participation, idCountry, participationCountry, customerCoverage, descriptionCoverage,
             showFormIntOperations, fnShowForm, clientInformacion, selectsReducer, changeValueListClient, origin, valueCheckSectionIntOperations,
-            showCheckValidateSection, functionChangeIntOperations, registrationRequired, parentForm } = this.props;
+            showCheckValidateSection, functionChangeIntOperations, registrationRequired } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
-            <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}>
+            <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}
+                onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "10px 10px 10px 0px" }}>
                     <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { padding: "20px 10px 10px 20px" } : {}}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
@@ -372,9 +373,8 @@ class ComponentListIntOperations extends Component {
                                             max="5"
                                             placeholder="Participación"
                                             {...participation}
-                                            value={parentForm[participation.name]}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
-                                            error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
+                                            error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -411,8 +411,7 @@ class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
-                                            value={parentForm[descriptionCoverage.name]}
-                                            error={xssValidation(parentForm[descriptionCoverage.name]) ? VALUE_XSS_INVALID : null}
+                                            error={xssValidation(descriptionCoverage.value) ? VALUE_XSS_INVALID : null}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -448,10 +447,9 @@ class ComponentListIntOperations extends Component {
                                             min={0}
                                             max="6"
                                             placeholder="Participación del país"
-                                            {...participationCountry}                                            
-                                            value={parentForm[participationCountry.name]}
+                                            {...participationCountry}
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 2)}
-                                            error={_.isEmpty(parentForm[participationCountry.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participationCountry.name]) ? VALUE_XSS_INVALID : null)}
+                                            error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (xssValidation(participationCountry.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorCountryForm}
                                         />
                                     </div>
@@ -556,11 +554,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, form }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer }, ownerProps) {
     return {
         clientInformacion,
-        selectsReducer,
-        parentForm: getValues(form[ownerProps.formName])
+        selectsReducer
     };
 }
 

@@ -16,7 +16,6 @@ import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS }
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
-import { getValues } from "redux-form";
 
 class ComponentListMainSupplier extends Component {
     constructor(props) {
@@ -27,7 +26,8 @@ class ComponentListMainSupplier extends Component {
             entitySeleted: null,
             errorForm: false,
             fieldReducerList: 'listMainSupplier',
-            fieldReducerNoApplied: 'noAppliedMainSuppliers'
+            fieldReducerNoApplied: 'noAppliedMainSuppliers',
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -178,10 +178,10 @@ class ComponentListMainSupplier extends Component {
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
-            functionChangeMainSupplier, registrationRequired, origin, parentForm } = this.props;
+            functionChangeMainSupplier, registrationRequired, origin } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
-            <div>
+            <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -235,9 +235,8 @@ class ComponentListMainSupplier extends Component {
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del proveedor"
-                                        {...nameSupplier}
-                                        value={parentForm[nameSupplier.name]}
-                                        error={_.isEmpty(parentForm[nameSupplier.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[nameSupplier.name]) ? VALUE_XSS_INVALID : null)}
+                                        {...nameSupplier}                                        
+                                        error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : (xssValidation(nameSupplier.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -254,9 +253,8 @@ class ComponentListMainSupplier extends Component {
                                         max="3"
                                         placeholder="Plazo"
                                         {...term}
-                                        value={parentForm[term.name]}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
-                                        error={_.isEmpty(parentForm[term.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[term.name]) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(term.value) ? VALUE_REQUIERED : (xssValidation(term.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -273,9 +271,8 @@ class ComponentListMainSupplier extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={parentForm[participation.name]}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
-                                        error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -311,8 +308,7 @@ class ComponentListMainSupplier extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
-                                        value={parentForm[relevantInformation.name]}
-                                        error={xssValidation(parentForm[relevantInformation.name]) ? VALUE_XSS_INVALID : null}
+                                        error={xssValidation(relevantInformation.value) ? VALUE_XSS_INVALID : null}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -384,10 +380,9 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, form }, ownerProps) {
+function mapStateToProps({ clientInformacion }, ownerProps) {
     return {
-        clientInformacion,
-        parentForm : getValues(form[ownerProps.formName])
+        clientInformacion
     };
 }
 

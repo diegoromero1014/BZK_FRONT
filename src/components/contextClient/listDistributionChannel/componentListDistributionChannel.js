@@ -16,7 +16,6 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { DISTRIBUTION_CHANNEL, MESSAGE_DISTRIBUTION_CHANNEL } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
-import { getValues } from "redux-form";
 
 
 class ComponentListDistributionChannel extends Component {
@@ -26,7 +25,8 @@ class ComponentListDistributionChannel extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: false
+            errorForm: false,
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -167,10 +167,11 @@ class ComponentListDistributionChannel extends Component {
     render() {
         const { distributionChannel, participation, showFormDistribution, fnShowForm,
             contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin, parentForm } = this.props;
+            registrationRequired, origin } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
-            <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}>
+            <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}
+                onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginBottom: "5px", width: '100%' }}>
@@ -213,8 +214,7 @@ class ComponentListDistributionChannel extends Component {
                                         max="100"
                                         placeholder="Canal de distribución"
                                         {...distributionChannel}
-                                        value={parentForm[distributionChannel.name]}
-                                        error={_.isEmpty(parentForm[distributionChannel.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[distributionChannel.name]) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(distributionChannel.value) ? VALUE_REQUIERED : (xssValidation(distributionChannel.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -231,9 +231,8 @@ class ComponentListDistributionChannel extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={parentForm[participation.name]}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
-                                        error={_.isEmpty(parentForm[participation.name]) ? VALUE_REQUIERED : (xssValidation(parentForm[participation.name]) ? VALUE_XSS_INVALID : null)}
+                                        error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -250,9 +249,8 @@ class ComponentListDistributionChannel extends Component {
                                         max="3"
                                         placeholder="Contribución"
                                         {...contribution}
-                                        value={contribution.value}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 0)}
-                                        error={xssValidation(parentForm[contribution.name]) ? VALUE_XSS_INVALID : null}
+                                        error={xssValidation(contribution.value) ? VALUE_XSS_INVALID : null}
                                     />
                                 </div>
                             </Col>
@@ -327,10 +325,9 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, form }, ownerProps) {
+function mapStateToProps({ clientInformacion }, ownerProps) {
     return {
-        clientInformacion,
-        parentForm : getValues(form[ownerProps.formName])
+        clientInformacion
     };
 }
 

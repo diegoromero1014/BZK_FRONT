@@ -11,12 +11,14 @@ import {
 import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
-import { getValues } from "redux-form";
 
 
 class ContextEconomicActivity extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            shouldUpdate: false
+        }
     }
 
     elementMessageContext() {
@@ -33,9 +35,9 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, fieldRequiered, origin, parentForm } = this.props;
+        const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
         return (
-            <Col xs={12} md={12} lg={12}>
+            <Col xs={12} md={12} lg={12} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
                     <dt>
                         <span>Contexto </span>
@@ -60,9 +62,7 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                value={parentForm[contextClientField.name]}
-                                error={!stringValidate(parentForm[contextClientField.name]) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(parentForm[contextClientField.name]) ? VALUE_XSS_INVALID : '')}
-
+                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
                                 touched={true}
                             />
                         } />
@@ -78,10 +78,9 @@ ContextEconomicActivity.PropTypes = {
 
 
 
-function mapStateToProps({ clientInformacion, form }, ownerProps) {
+function mapStateToProps({ clientInformacion }, ownerProps) {
     return {
-        clientInformacion,
-        parentForm : getValues(form[ownerProps.formName])
+        clientInformacion
     };
 }
 
