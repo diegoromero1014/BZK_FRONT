@@ -190,10 +190,13 @@ class ModalComponentPending extends Component {
         const { tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder, showLoading } = this.props;
         clearMyPendingPaginator();
         clearMyPendingsOrder();
-        showLoading(true, MESSAGE_LOAD_DATA);
-        tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "").then((data) => {
-            showLoading(false, '');
-        });
+        this.setState({ keywordMyPending: this.state.keywordMyPending.trim() });
+        if(this.state.keywordMyPending){
+            showLoading(true, MESSAGE_LOAD_DATA);
+            tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "").then((data) => {
+                showLoading(false, '');
+            });
+        }
     }
 
 
@@ -313,10 +316,14 @@ class ModalComponentPending extends Component {
     }
 
     _loadResponsable() {
-        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
         const selfThis = this;
 
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+            if(nameUsuario.value.length < 3) {
+                swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                return;
+            }
             $('.ui.search.participantBanc').toggleClass('loading');
             filterUsersBanco(nameUsuario.value).then((data) => {
                 usersBanco = _.get(data, 'payload.data.data');
@@ -484,7 +491,8 @@ class ModalComponentPending extends Component {
                                                     value={nameUsuario.value}
                                                     onChange={this._changeResponsableInput}
                                                     placeholder="Responsable"
-                                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                                                    
                                                 />
                                                 <i onClick={this._loadResponsable} className="search icon" id="iconSearchParticipants"></i>
                                             </div>
