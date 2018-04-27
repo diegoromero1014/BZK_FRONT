@@ -11,7 +11,6 @@ import {
 } from '../../../../constantsGlobal';
 import { validateResponse, validatePermissionsByModule } from '../../../../actionsGlobal';
 import { changeStateSaveData } from '../../../dashboard/actions';
-import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import _ from 'lodash';
 import moment from 'moment';

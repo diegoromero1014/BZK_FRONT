@@ -9,7 +9,7 @@ import { getMasterDataFields } from "../../selectsComponent/actions";
 import NeedBusiness from "../need/needBusiness";
 import AreaBusiness from "../area/areaBusiness";
 import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../../sweetalertFocus";
 import { OBJECTIVE_BUSINESS } from "../constants";
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";

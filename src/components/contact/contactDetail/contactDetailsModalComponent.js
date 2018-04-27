@@ -12,7 +12,7 @@ import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { downloadFilePDF } from '../actions';
 import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
@@ -781,6 +781,7 @@ class ContactDetailsModalComponent extends Component {
                                         name="contactAddress"
                                         maxLength="250"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
+                                        style={{ width: '100%', height: '100%' }}
                                     //onChange={val => this._onchangeValue("address", val)}
                                     />
                                 </dd>

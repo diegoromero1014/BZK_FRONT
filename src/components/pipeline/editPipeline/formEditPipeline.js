@@ -37,7 +37,7 @@ import {
     consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber,
     nonValidateEnter, validateResponse, xssValidation
 } from "../../../actionsGlobal";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../../sweetalertFocus";
 import moment from "moment";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";

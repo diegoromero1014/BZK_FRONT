@@ -26,7 +26,7 @@ import { createPrevisit, validateDatePreVisit } from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { MENU_CLOSED } from '../../navBar/constants';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
 import $ from 'jquery';
 import RichText from '../../richText/richTextComponent';

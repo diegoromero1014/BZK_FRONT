@@ -17,7 +17,7 @@ import Input from "../../ui/input/inputComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ModalErrorsUpdateClient from "../clientEdit/modalErrorsUpdateClient";
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 
 import NotesClient from "../clientEdit/notes/notesClient";
 

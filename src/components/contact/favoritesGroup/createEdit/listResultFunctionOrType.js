@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import SweetAlert from 'sweetalert-react';
 import Modal from 'react-modal';
 import _ from 'lodash';
 import moment from 'moment';

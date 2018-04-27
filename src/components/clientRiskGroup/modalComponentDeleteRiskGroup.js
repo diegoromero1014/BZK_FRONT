@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Col, Row} from "react-flexbox-grid";
 import {reduxForm} from "redux-form";
 import Textarea from "../../ui/textarea/textareaComponent";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import {VALUE_REQUIERED} from "../../constantsGlobal";
 import {formValidateKeyEnter, nonValidateEnter, validateResponse} from "../../actionsGlobal";

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateTitleNavBar } from '../../navBar/actions';
 import { STYLE_CONTAINER_BUTTONS, STYLE_BUTTONS_ACTIONS, MODULE_CONTACTS } from '../../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import FormContactDetails from '../../contact/contactDetail/contactDetailsModalComponent';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
 import ListClientsContact from './ListClientsContact';

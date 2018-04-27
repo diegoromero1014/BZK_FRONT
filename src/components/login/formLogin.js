@@ -16,7 +16,7 @@ import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 

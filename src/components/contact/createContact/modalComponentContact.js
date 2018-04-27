@@ -5,7 +5,7 @@ import { clearContactDelete } from '../actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
 import { NUMBER_RECORDS } from '../constants';
 import { bindActionCreators } from 'redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { reduxForm } from 'redux-form';

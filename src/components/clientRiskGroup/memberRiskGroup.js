@@ -6,7 +6,7 @@ import Input from "../../ui/input/inputComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { SESSION_EXPIRED, VALUE_REQUIERED } from "../../constantsGlobal";
 import { formValidateKeyEnter, nonValidateEnter, validateResponse } from "../../actionsGlobal";

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import { getClientsEconomicGroup, deleteRelationEconomicGroup } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse } from '../../actionsGlobal';

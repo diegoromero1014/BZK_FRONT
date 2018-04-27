@@ -12,7 +12,7 @@ import {
 } from '../../../constantsGlobal';
 
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { INT_OPERATIONS, MESSAGE_INT_OPERATIONS } from '../constants';
 import { FILTER_COUNTRY } from '../../selectsComponent/constants';

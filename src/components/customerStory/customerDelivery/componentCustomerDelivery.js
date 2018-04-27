@@ -16,7 +16,7 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 import Input from '../../../ui/input/inputComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
 
 const fields = ["idCelula", "reasonTranfer", "otherReason"];

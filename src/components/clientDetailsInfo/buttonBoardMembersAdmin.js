@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import BoardMembersInfo from '../clients/partners/boardMembers/component';
 import { redirectUrl } from '../globalComponents/actions';
 import { MODULE_BOARD_MEMBERS } from '../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 
 class ButtonBoardMembersAdmin extends Component {
     constructor(props) {

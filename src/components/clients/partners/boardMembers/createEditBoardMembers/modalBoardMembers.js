@@ -33,7 +33,7 @@ import { stringValidate, validateResponse, xssValidation } from "../../../../../
 import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../../../sweetalertFocus';
 
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};

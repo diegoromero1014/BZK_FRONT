@@ -11,7 +11,7 @@ import { stringValidate, handleFocusValueNumber, handleBlurValueNumber } from '.
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { updateDisbursementPlans } from '../actions';
 import ToolTip from '../../toolTip/toolTipComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
 import moment from 'moment';
 

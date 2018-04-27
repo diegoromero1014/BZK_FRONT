@@ -6,7 +6,7 @@ import { MESSAGE_SAVE_DATA } from '../../../../constantsGlobal';
 import { shorterStringValue } from '../../../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../../sweetalertFocus';
 import _ from 'lodash';
 
 class ListCreateRelationship extends Component {
