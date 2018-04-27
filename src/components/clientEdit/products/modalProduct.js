@@ -358,7 +358,7 @@ class ModalProduct extends Component {
                   value={this.state.averageMontlyAmount}
                   error={this.state.averageMontlyAmountError}
                   onChange={val => this._changeAverageMontlyAmount(val)}
-                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, this.state.averageMontlyAmount)}
+                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, val)}
                 />
               </Col>
             </Row>
