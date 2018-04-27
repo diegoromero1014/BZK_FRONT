@@ -8,8 +8,8 @@ import Textarea from "../../ui/textarea/textareaComponent";
 
 import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
-import { SESSION_EXPIRED, VALUE_REQUIERED } from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse } from "../../actionsGlobal";
+import {SESSION_EXPIRED, VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../constantsGlobal";
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import * as constants from "../selectsComponent/constants";
@@ -25,9 +25,12 @@ const validate = values => {
 
     if (!values.clientName) {
         errors.clientName = VALUE_REQUIERED;
+    } else if (xssValidation(values.clientName)) {
+        errors.clientName = VALUE_XSS_INVALID;
     } else {
         errors.clientName = null;
     }
+
 
     if (!values.conformationReasonId) {
         errors.conformationReasonId = VALUE_REQUIERED;
@@ -37,9 +40,12 @@ const validate = values => {
 
     if (!values.justification) {
         errors.justification = VALUE_REQUIERED;
+    } else if (xssValidation(values.justification)) {
+        errors.justification = VALUE_XSS_INVALID;
     } else {
         errors.justification = null;
     }
+
 
     return errors;
 };

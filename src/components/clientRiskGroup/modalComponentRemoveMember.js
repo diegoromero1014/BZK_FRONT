@@ -8,8 +8,14 @@ import Textarea from '../../ui/textarea/textareaComponent';
 
 import SweetAlert from '../sweetalertFocus';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, MESSAGE_LOAD_DATA, VALUE_REQUIERED } from '../../constantsGlobal';
-import { stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter } from '../../actionsGlobal';
+import {
+    REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, MESSAGE_LOAD_DATA, VALUE_REQUIERED,
+    VALUE_XSS_INVALID
+} from '../../constantsGlobal';
+import {
+    stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter,
+    xssValidation
+} from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, removeClientRiskGroup } from './actions';
 import ClientsRiskGroup from './clientsRiskGroup';
@@ -25,6 +31,8 @@ const validate = values => {
 
   if (!values.justification) {
     errors.justification = VALUE_REQUIERED;
+  } else if (xssValidation(values.justification)) {
+      errors.justification = VALUE_XSS_INVALID;
   } else {
     errors.justification = null;
   }

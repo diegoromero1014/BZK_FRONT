@@ -16,7 +16,10 @@ import _ from 'lodash';
 import numeral from 'numeral';
 import {changeStateSaveData} from '../dashboard/actions';
 import {MENU_CLOSED} from '../navBar/constants';
-import {MESSAGE_SAVE_DATA, MODULE_PROSPECT, OPTION_REQUIRED, VALUE_REQUIERED} from '../../constantsGlobal';
+import {
+    MESSAGE_SAVE_DATA, MODULE_PROSPECT, OPTION_REQUIRED, VALUE_REQUIERED,
+    VALUE_XSS_INVALID
+} from '../../constantsGlobal';
 import {
     consultDataSelect,
     consultList,
@@ -26,6 +29,7 @@ import {
 import {SEGMENTS, SUBSEGMENTS} from '../selectsComponent/constants';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import {CONSTRUCT_PYME} from '../clientEdit/constants';
+import {xssValidation} from '../../actionsGlobal';
 
 const valuesYesNo = [
     {'id': true, 'value': "Si"},
@@ -46,10 +50,15 @@ const fields = ["razonSocial", "descriptionCompany", "reportVirtual", "extractsV
 const validate = (values, props) => {
     const errors = {}
     if (!values.razonSocial) {
-        errors.razonSocial = OPTION_REQUIRED;
-    } else {
+        errors.razonSocial = VALUE_REQUIERED;
+    }
+    else if(xssValidation(values.razonSocial)){
+        errors.razonSocial = VALUE_XSS_INVALID;
+    }
+    else {
         errors.razonSocial = null;
     }
+
     if (!values.idCelula) {
         errors.idCelula = VALUE_REQUIERED;
     } else {
@@ -68,6 +77,47 @@ const validate = (values, props) => {
         }
         errors.segment = null;
     }
+
+    if(xssValidation(values.descriptionCompany)){
+        errors.descriptionCompany = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.address)){
+        errors.address = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.district)){
+        errors.district = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.telephone)){
+        errors.telephone = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.anualSales)){
+        errors.anualSales = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.assets)){
+        errors.assets = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.liabilities)){
+        errors.liabilities = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.operatingIncome)){
+        errors.operatingIncome = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.nonOperatingIncome)){
+        errors.nonOperatingIncome = VALUE_XSS_INVALID;
+    }
+
+    if(xssValidation(values.expenses)){
+        errors.expenses = VALUE_XSS_INVALID;
+    }
+
     return errors;
 };
 
@@ -785,5 +835,14 @@ function mapStateToProps({propspectReducer, selectsReducer, reducerGlobal, notes
 export default reduxForm({
     form: 'submitValidation',
     fields,
-    validate
+    validate,
+    onSubmitFail: errors => {
+
+        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+            thisForm.setState({ showEr: true });
+        } else {
+            thisForm.setState({ showEr: true });
+        }
+
+    }
 }, mapStateToProps, mapDispatchToProps)(FormCreateProspect);
