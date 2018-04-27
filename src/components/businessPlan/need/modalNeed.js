@@ -2,7 +2,6 @@ import moment from "moment";
 import { reduxForm } from "redux-form";
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
-import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";

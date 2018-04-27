@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import BotonCreateNeed from './botonCreateNeed';
 import {DELETE_NEED_VIEW} from './constants';
 import {deleteNeed} from './actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import Modal from 'react-modal';
 import ModalNeed from './modalNeed';
 import _ from 'lodash';
