@@ -15,6 +15,7 @@ class inputComponent extends Component {
 
         this._onChange = this._onChange.bind(this);
         this._onBlur = this._onBlur.bind(this);
+        this._onKey = this._onKey.bind(this);
     }
 
     _onChange(e, event) {
@@ -28,8 +29,8 @@ class inputComponent extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if(nextProps.value != this.state.value) {
-            this.setState({value: nextProps.value});
+        if (nextProps.value != this.state.value) {
+            this.setState({ value: nextProps.value });
         }
 
     }
@@ -38,7 +39,7 @@ class inputComponent extends Component {
 
         const { onChange, onBlur } = this.props;
 
-        let trimmed = this.state.value.trim(); 
+        let trimmed = this.state.value.trim();
 
         onChange(trimmed);
         onBlur(trimmed);
@@ -59,10 +60,28 @@ class inputComponent extends Component {
     //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
     // }
 
-    componentWillMount() {
-        const {value} = this.props;
+    _onKey(e) {
 
-        this.setState({value: value});
+        const { onChange, onBlur, onKey } = this.props;
+
+        if ((e.keyCode === 13 || e.which === 13)) {
+            let trimmed = this.state.value.trim();
+            onChange(trimmed);
+            onBlur(trimmed);
+        }
+
+        if (onKey) {
+            onKey(e);
+        }
+
+    }
+
+
+
+    componentWillMount() {
+        const { value } = this.props;
+
+        this.setState({ value: value });
     }
 
     render() {
@@ -84,7 +103,7 @@ class inputComponent extends Component {
                         onBlur={this._onBlur}
                         disabled={disabled}
                         className={disabled}
-                        onKeyPress={onKey}
+                        onKeyPress={this._onKey}
                         onFocus={onFocus}
                         value={this.state.value || ''}
                     />
