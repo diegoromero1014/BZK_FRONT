@@ -116,7 +116,9 @@ class ModalComponentGroup extends Component {
                 });
 
         } else {
+            showLoading(false, '');
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
+
         }
     }
 
@@ -127,9 +129,6 @@ class ModalComponentGroup extends Component {
 
             if (xssValidation(searchGroup.value)){
                 swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
-                resetForm();
-                resetModal();
-                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
                 showLoading(false, '');
             }
             else{
@@ -166,6 +165,7 @@ class ModalComponentGroup extends Component {
 
 
         } else {
+            showLoading(false, '');
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }
     }
