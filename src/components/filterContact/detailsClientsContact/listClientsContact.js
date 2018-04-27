@@ -9,7 +9,7 @@ import { shorterStringValue } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import ModalEditRelationship from './modalEditRelationship';
 import ModalCreateRelationship from './cretaeRelationship/modalCreateRelationship';
 import Modal from 'react-modal';

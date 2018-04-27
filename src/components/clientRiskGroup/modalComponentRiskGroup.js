@@ -4,7 +4,7 @@ import { reduxForm } from "redux-form";
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 
 import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED } from "../../constantsGlobal";

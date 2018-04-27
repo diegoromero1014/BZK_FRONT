@@ -6,7 +6,7 @@ import Input from '../../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { deleteEvent, updateEvent } from './actions';
 import { updateEventErrors } from '../actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../../sweetalertFocus';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 

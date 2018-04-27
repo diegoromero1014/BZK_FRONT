@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form';
 
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { VALUE_REQUIERED, SESSION_EXPIRED } from '../../constantsGlobal';
 import { validateResponse, formValidateKeyEnter, nonValidateEnter } from '../../actionsGlobal';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { reduxForm } from 'redux-form';

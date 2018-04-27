@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../../navBar/actions';
 import { redirectUrl } from '../../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import ClientTypology from '../../contextClient/ClientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';

@@ -5,7 +5,7 @@ import {consultManagementDocumentaryService, clearManagementDocumentary} from '.
 import {changeStateSaveData} from '../../dashboard/actions';
 import {CONSUMING_SERVICE} from '../../../constantsGlobal';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import {shorterStringValue} from '../../../actionsGlobal';
 import Tooltip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';

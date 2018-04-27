@@ -12,7 +12,7 @@ import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import moment from 'moment';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { downloadFilePDF } from '../actions';
 import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';

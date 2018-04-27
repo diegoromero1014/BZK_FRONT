@@ -3,7 +3,6 @@ import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { bindActionCreators } from "redux";
 import { Col, Row } from "react-flexbox-grid";
 import { reduxForm } from "redux-form";
-import SweetAlert from "sweetalert-react";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import { createPendingTaskNew } from "./actions.js";

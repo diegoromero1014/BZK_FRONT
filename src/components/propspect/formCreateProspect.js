@@ -3,7 +3,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import {reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import Textarea from '../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import {createProspect} from './actions';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';

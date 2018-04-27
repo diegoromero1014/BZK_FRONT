@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
 import { deleteBusiness } from './ducks';
 import BtnCreateBusiness from '../btnCreateBusiness';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
 import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
 import { shorterStringValue } from '../../../actionsGlobal';

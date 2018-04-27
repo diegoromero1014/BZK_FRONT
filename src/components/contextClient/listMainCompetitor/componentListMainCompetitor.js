@@ -10,7 +10,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_COMPETITOR, MESSAGE_MAIN_COMPETITOR } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';

@@ -14,7 +14,7 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import AlertErrorYearNoSeleted from '../globalComponents/alertErrorYearNoSeleted';
 import { MODULE_MANAGERIAL_VIEW, BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_COLOR } from '../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
 
 const itemsChart = [

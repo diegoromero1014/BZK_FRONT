@@ -38,7 +38,7 @@ import {updateTabSeletedRisksManagment} from "../risksManagement/actions";
 import {TAB_AEC} from "../risksManagement/constants";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import Tooltip from "../toolTip/toolTipComponent";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import {showLoading} from '../loading/actions';
 import {isNil} from 'lodash';
 

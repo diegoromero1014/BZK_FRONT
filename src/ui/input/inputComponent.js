@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
-import SweetAlert from "sweetalert-react";
 import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 
 class inputComponent extends Component {

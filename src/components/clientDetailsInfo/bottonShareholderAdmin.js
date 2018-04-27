@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import ShareholderInfo from '../clients/partners/shareholder/component';
 import { redirectUrl } from '../globalComponents/actions';
 import { MODULE_SHAREHOLDERS } from '../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 
 class BottonShareholderAdmin extends Component {
   constructor(props) {

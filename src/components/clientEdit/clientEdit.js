@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { bindActionCreators } from "redux";
 import { updateTitleNavBar } from "../navBar/actions";
 import {

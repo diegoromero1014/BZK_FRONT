@@ -31,7 +31,7 @@ import RaitingInternal from "../../clientInformation/ratingInternal";
 import { clearIdPrevisit, createVisti } from "../actions";
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
 import { downloadFilePdf } from "../../clientInformation/actions";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../../sweetalertFocus";
 import moment from "moment";
 import ButtonAssociateComponent from "./associateVisit";
 import { detailPrevisit } from "../../previsita/actions";

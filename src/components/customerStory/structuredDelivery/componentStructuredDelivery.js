@@ -13,7 +13,7 @@ import {
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';

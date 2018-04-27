@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { redirectUrl } from '../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import { MODULE_CUSTOMER_STORY } from '../../constantsGlobal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

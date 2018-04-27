@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { clientsFindServer, changePage, changeKeyword } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import { redirectUrl } from '../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 
