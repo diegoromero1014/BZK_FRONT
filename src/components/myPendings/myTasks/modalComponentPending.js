@@ -508,8 +508,11 @@ class ModalComponentPending extends Component {
                             {!this.state.teamViewTask &&
                                 <Col xs={12} sm={12} md={6} lg={6}>
                                     <div className="InputAddOn">
-                                        <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente"
-                                            value={this.state.keywordMyPending} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword}
+                                        <input type="text" style={{ padding: '0px 11px !important' }} 
+                                            placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente"
+                                            value={this.state.keywordMyPending} 
+                                            onKeyPress={this._handleChangeKeyword} 
+                                            onChange={this._handleChangeKeyword}
                                             className="input-lg input InputAddOn-field" />
                                         <button id="searchExpression" className="btn" title="Búsqueda por tipo de documento, número de documento y nombre del cliente" type="button"
                                             onClick={this._handleMyPendingByClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
