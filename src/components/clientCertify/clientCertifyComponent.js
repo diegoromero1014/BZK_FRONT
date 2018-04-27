@@ -1293,7 +1293,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
                                 value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
                                 touched={true}
                             />
                         </dt>
@@ -1322,7 +1322,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese los activos"
                                 {...assets}
                                 value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
                                 touched={true}
                             />
                         </dt>
@@ -1344,7 +1344,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese los pasivos"
                                 {...liabilities}
                                 value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
                                 touched={true}
                             />
                         </dt>
@@ -1364,7 +1364,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
                                 value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
@@ -1384,7 +1384,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese los egresos mensuales"
                                 {...expenses}
                                 value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
                                 touched={true}
                             />
                         </dt>
@@ -1406,7 +1406,7 @@ class clientCertify extends React.Component {
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
                                 {...nonOperatingIncome}
                                 value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
