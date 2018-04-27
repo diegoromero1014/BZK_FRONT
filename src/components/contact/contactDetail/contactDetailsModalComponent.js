@@ -781,6 +781,7 @@ class ContactDetailsModalComponent extends Component {
                                         name="contactAddress"
                                         maxLength="250"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
+                                        style={{ width: '100%', height: '100%' }}
                                     //onChange={val => this._onchangeValue("address", val)}
                                     />
                                 </dd>

@@ -86,7 +86,7 @@ class TextareaComponent extends Component {
                         maxLength={max}
                         rows={rows}
                         value={this.state.value || ''}
-                        
+                        disabled={disabled}
                         style={style}
                         onChange={this._onChange}
                         
