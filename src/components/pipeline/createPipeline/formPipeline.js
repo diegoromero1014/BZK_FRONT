@@ -526,7 +526,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         e.consultclick ? "" : e.preventDefault();
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
           if (nameUsuario.value.length < 3) {
-            swtShowMessage('error', 'Error', 'Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+            swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
             return;
           }
           $('.ui.search.' + participantBanc).toggleClass('loading');

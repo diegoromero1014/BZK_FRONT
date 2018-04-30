@@ -108,7 +108,7 @@ class ModalComponentPendingTask extends Component {
             e.consultclick ? "" : e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
                 if(responsable.value.length < 3) {
-                    swtShowMessage('error','Error','Señor usuario, para realizar la busqueda es necesario ingresar mas de 3 caracteres');
+                    swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
                     return;
                 }
                 selector.toggleClass('loading');
