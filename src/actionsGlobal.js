@@ -245,7 +245,6 @@ export function handleFocusValueNumber(valuReduxForm, val) {
 
 export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allowsDecimal, lengthDecimal) {
     //Elimino los caracteres no validos
-    console.log("hola");
     for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
         if (validos.indexOf(val.toString().charAt(i)) !== -1) {
             output += val.toString().charAt(i)
