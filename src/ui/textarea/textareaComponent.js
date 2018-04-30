@@ -49,15 +49,11 @@ class TextareaComponent extends Component {
 
 
     _onChange(e, event) {
-        const { onChange, error, touched, forceOnChange } = this.props;
+        const { onChange, error, touched } = this.props;
 
         this.setState({
             value: e.target.value
         });
-
-        if(forceOnChange){
-            onChange(e);
-        }
         
     }
 
