@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import {changeKeyword, contactsFindServer, changePage, clearContacts, changeSearchAllIntoContacts} from './actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import {updateTitleNavBar} from '../navBar/actions';
 import ContactListItem from './contactListItem';
 import {MESSAGE_LOAD_DATA} from '../../constantsGlobal';

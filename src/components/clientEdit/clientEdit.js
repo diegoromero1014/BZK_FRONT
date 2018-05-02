@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { bindActionCreators } from "redux";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
     validateContactShareholder
 } from "../clientDetailsInfo/actions";
-import {Col, Row} from "react-flexbox-grid";
-import {goBack, redirectUrl} from "../globalComponents/actions";
+import { Col, Row } from "react-flexbox-grid";
+import { goBack, redirectUrl } from "../globalComponents/actions";
 import {
     clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
     consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
@@ -140,12 +140,12 @@ const UPDATE_STYLE = {
 };
 
 const validate = (values, props) => {
-    const {reducerGlobal, tabReducer} = props;
+    const { reducerGlobal, tabReducer } = props;
     const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-    
+
     const errors = {}
     let errorScrollTop = false;
- 
+
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
@@ -237,7 +237,7 @@ const validate = (values, props) => {
         errors.city = null;
     }
 
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && idButton !== BUTTON_EDIT ) {
+    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && idButton !== BUTTON_EDIT) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
     } else if (xssValidation(values.dateSalesAnnuals)) {
@@ -368,13 +368,13 @@ const validate = (values, props) => {
         }
     }
     if (otherOperationsForeignEnable !== 'disabled') {
-        
-        
+
+
 
         if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
-            
-            
-            
+
+
+
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
         } else if (xssValidation(values.otherOperationsForeign)) {
@@ -383,8 +383,8 @@ const validate = (values, props) => {
         } else {
             errors.otherOperationsForeign = null;
         }
-    }else{
-       
+    } else {
+
     }
 
     //Valido que el cliente tenga ciudad de origen de los recursos
@@ -401,7 +401,7 @@ const validate = (values, props) => {
         if (xssValidation(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
-        }else{
+        } else {
             errors.detailNonOperatingIncome = null;
         }
     }
@@ -479,7 +479,7 @@ const validate = (values, props) => {
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
                 if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
-                    
+
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
                 } else {
@@ -499,12 +499,12 @@ const validate = (values, props) => {
         }
 
         if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
-           
+
             errors.controlLinkedPayments = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
             errors.controlLinkedPayments = null;
-    }
+        }
 
     }
 
@@ -564,7 +564,7 @@ const validate = (values, props) => {
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
-   
+
 
 
     return errors;
@@ -619,7 +619,8 @@ class clientEdit extends Component {
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
             showFormAddIntOperatrions: false,
-            showJustifyNoGeren: true
+            showJustifyNoGeren: true,
+            shouldUpdate: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -750,31 +751,31 @@ class clientEdit extends Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                        let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
-                        let economicGroup2 = _.forEach(economicGroup1, function (data1) {
-                            data1.title = data1.group;
-                            data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                        data1.title = data1.group;
+                        data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    });
+                    $('.ui.search.participantBanc')
+                        .search({
+                            cache: false,
+                            source: economicGroup1,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'id',
+                                'relationshipManagerId'
+                            ],
+                            onSelect: function (event) {
+                                economicGroupName.onChange(event.group);
+                                groupEconomic.onChange(event.id);
+                                nitPrincipal.onChange(event.nitPrincipal);
+                                return 'default';
+                            }
                         });
-                        $('.ui.search.participantBanc')
-                            .search({
-                                cache: false,
-                                source: economicGroup1,
-                                searchFields: [
-                                    'title',
-                                    'description',
-                                    'id',
-                                    'relationshipManagerId'
-                                ],
-                                onSelect: function (event) {
-                                    economicGroupName.onChange(event.group);
-                                    groupEconomic.onChange(event.id);
-                                    nitPrincipal.onChange(event.nitPrincipal);
-                                    return 'default';
-                                }
-                            });
-                        $('.ui.search.participantBanc').toggleClass('loading');
-                        $('.prompt').focus();
-                    }
+                    $('.ui.search.participantBanc').toggleClass('loading');
+                    $('.prompt').focus();
+                }
                 );
             }
         }
@@ -803,16 +804,16 @@ class clientEdit extends Component {
 
         let optionSelected = null;
 
-        if(typeof optionMarcMagnament == 'undefined') {
+        if (typeof optionMarcMagnament == 'undefined') {
             var infoClient = clientInformacion.get('responseClientInfo');
             // Crear el objeto optionSelected
-            optionSelected = {key: infoClient.isManagedByRmKey};
+            optionSelected = { key: infoClient.isManagedByRmKey };
         } else {
-            for (let i=0; i<optionMarcMagnament.length; i++) {
+            for (let i = 0; i < optionMarcMagnament.length; i++) {
                 let option = optionMarcMagnament[i];
-    
-                
-                if(val == option.id) {
+
+
+                if (val == option.id) {
                     optionSelected = option;
                     break;
                 }
@@ -820,15 +821,15 @@ class clientEdit extends Component {
         }
 
         // Si el key es Gerenciamiento a Demanda.
-        if(optionSelected == null) {
+        if (optionSelected == null) {
             validateMarcManagement = true;
-            this.setState({showJustifyNoGeren: true});
-        }else if(optionSelected.key === 'Gerenciamiento a Demanda') {
+            this.setState({ showJustifyNoGeren: true });
+        } else if (optionSelected.key === 'Gerenciamiento a Demanda') {
             validateMarcManagement = false;
-            this.setState({showJustifyNoGeren : false });
+            this.setState({ showJustifyNoGeren: false });
         } else {
             validateMarcManagement = true;
-            this.setState({showJustifyNoGeren : true });
+            this.setState({ showJustifyNoGeren: true });
         }
         if (!infoMarcaGeren && validateMarcManagement === true) {
             var dataTypeNote, idExcepcionNoGerenciado;
@@ -1178,11 +1179,11 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-                country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
-                dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
-                originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
-                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
+            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
+            originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
+            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
+            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -1191,10 +1192,8 @@ class clientEdit extends Component {
             productsArray.push(_.omit(map, ['uid']))
         });
         const infoClient = clientInformacion.get('responseClientInfo');
-        
+
         if (idButton === BUTTON_EDIT || (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined)) {
-            
-           
 
             const jsonCreateProspect = {
                 "id": infoClient.id,
@@ -1265,12 +1264,12 @@ class clientEdit extends Component {
                 "otherOriginResource": otherOriginResource.value,
                 "countryOriginId": countryOrigin.value,
                 "originCityResource": originCityResource.value,
-                "operationsForeignCurrency": operationsForeignCurrency.value? (operationsForeignCurrency.value === 'false' ? 0 : 1): '',
+                "operationsForeignCurrency": operationsForeignCurrency.value ? (operationsForeignCurrency.value === 'false' ? 0 : 1) : '',
                 "otherOperationsForeign": otherOperationsForeign.value,
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
                 "idCustomerTypology": customerTypology.value
             };
-           
+
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
@@ -1318,7 +1317,7 @@ class clientEdit extends Component {
         const {
             fields: {
                 contextClientField, inventoryPolicy, customerTypology,
-                controlLinkedPayments
+            controlLinkedPayments
             }, clientInformacion
         } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -1410,7 +1409,7 @@ class clientEdit extends Component {
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-       
+
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -1420,11 +1419,11 @@ class clientEdit extends Component {
         let existNoteExceptionNoNeedLME = false;
         notes.map(map => {
             if (map.combo === idExcepcionNoGerenciado) {
-                
+
                 existNoteExceptionNoGeren = true;
             }
             if (map.combo === idExcepcionNoNeedLME) {
-               
+
                 existNoteExceptionNoNeedLME = true;
             }
             const noteItem = {
@@ -1440,7 +1439,7 @@ class clientEdit extends Component {
         const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
-           
+
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1452,7 +1451,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
-           
+
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1460,7 +1459,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
         } else if (addNoteNoNeedLME) {
-            
+
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,
                 typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
@@ -1468,33 +1467,33 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
-           
+
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
-            if ((errorContact || errorShareholder)  && idButton !== BUTTON_EDIT) {
-                
+            if ((errorContact || errorShareholder) && idButton !== BUTTON_EDIT) {
+
                 updateErrorsNotes(false);
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
-            if ((_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient'))  || idButton === BUTTON_EDIT) {
-               
+            if ((_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) || idButton === BUTTON_EDIT) {
+
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
                     this.state.showFormAddMainSupplier || this.state.showFormAddMainCompetitor || this.state.showFormAddIntOperatrions) {
-                        
-                        swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+
+                    swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
-                   
+
                     if (idButton === BUTTON_UPDATE) {
                         this.setState({
                             showConfirmSave: true
                         });
                     } else {
-                        
+
                         this._saveClient(BUTTON_EDIT);
                     }
                 }
             } else {
-               
+
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
         }
@@ -1506,30 +1505,33 @@ class clientEdit extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
+
         let { errors } = nextProps;
+
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
         if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
-        if (clientInformacion.get('noAppliedControlLinkedPayments')) {
-            errors = _.omit(errors, 'controlLinkedPayments');
-        } else {
-            if (!stringValidate(controlLinkedPayments.value)) {
-                errors.controlLinkedPayments = OPTION_REQUIRED;
+            if (clientInformacion.get('noAppliedControlLinkedPayments')) {
+                errors = _.omit(errors, 'controlLinkedPayments');
+            } else {
+                if (!stringValidate(controlLinkedPayments.value)) {
+                    errors.controlLinkedPayments = OPTION_REQUIRED;
+                }
             }
         }
-        }
 
-        if (otherOperationsForeignEnable == 'disabled'){
+        if (otherOperationsForeignEnable == 'disabled') {
             errors = _.omit(errors, 'otherOperationsForeign');
         }
 
         const errorsArray = _.toArray(errors);
-        
+
         this.setState({
             sumErrorsForm: errorsArray.length
         });
         if (operationsForeignCurrency.value.toString() === 'false' && operationsForeigns.value !== '') {
             operationsForeigns.onChange('');
         }
+        this.setState({ shouldUpdate: true });
     }
 
     componentWillMount() {
@@ -1564,9 +1566,9 @@ class clientEdit extends Component {
                 showLoading(true, MESSAGE_LOAD_DATA);
                 const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
-                    constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
-                    constants.MANAGEMENT_BRAND])
+                constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
+                constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
+                constants.MANAGEMENT_BRAND])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1575,7 +1577,7 @@ class clientEdit extends Component {
                         var dataOriginGoods = JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]');
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
-                        
+
                         this._changeSegment(infoClient.segment, true, infoClient.subSegment);
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
@@ -1633,16 +1635,16 @@ class clientEdit extends Component {
         const {
             fields: {
                 razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-                district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
-                liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-                centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
-                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-                participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-                termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
-                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
-                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
+            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+            liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
+            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
+            otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
+            participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
+            termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
+            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
+            participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
             }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal
         } = this.props;
@@ -1653,7 +1655,7 @@ class clientEdit extends Component {
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-        
+
         if (errorShareholder) {
             messageShareholder = 'Falta Accionistas';
         } else {
@@ -1665,14 +1667,14 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
-        
+
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
-                            
+
                             {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                                 <div>
                                     <span
@@ -1693,7 +1695,7 @@ class clientEdit extends Component {
                                     <BottonContactAdmin errorContact={errorContact} message={messageContact}
                                         functionToExecute={validateContactShareholder} />
                                     <BottonShareholderAdmin errorShareholder={errorShareholder}
-                                                            message={messageShareholder}
+                                        message={messageShareholder}
                                         functionToExecute={validateContactShareholder} />
                                 </div>
                                 :
@@ -1767,7 +1769,7 @@ class clientEdit extends Component {
                     {
                         isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
                             <div style={{ marginTop: "10px" }}>
-                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT &&(<span style={{ color: "red" }}>*</span>)}</dt>
+                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
                                 <ComboBox
                                     name="subSegment"
                                     labelInput="Sebsegmento"
@@ -1890,27 +1892,27 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                     {allowRiskGroupEdit &&
-                    <ContextEconomicActivity contextClientField={contextClientField} />
-                    }
-                    {allowRiskGroupEdit && 
-                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                                               participation={participationLB} experience={experience}
-                                               showFormLinebusiness={this.state.showFormAddLineOfBusiness}
-                        fnShowForm={this.showFormOut} contribution={contributionLB} />
+                        <ContextEconomicActivity contextClientField={contextClientField} />
                     }
                     {allowRiskGroupEdit &&
-                    <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                                                      participation={participationDC} contribution={contributionDC}
-                                                      showFormDistribution={this.state.showFormAddDistribution}
-                        fnShowForm={this.showFormOut} />
+                        <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                            participation={participationLB} experience={experience}
+                            showFormLinebusiness={this.state.showFormAddLineOfBusiness}
+                            fnShowForm={this.showFormOut} contribution={contributionLB} />
+                    }
+                    {allowRiskGroupEdit &&
+                        <ComponentListDistributionChannel distributionChannel={distributionChannel}
+                            participation={participationDC} contribution={contributionDC}
+                            showFormDistribution={this.state.showFormAddDistribution}
+                            fnShowForm={this.showFormOut} />
                     }
                 </Row>
                 {allowRiskGroupEdit &&
-                <InventorPolicy inventoryPolicy={inventoryPolicy}/>
+                    <InventorPolicy inventoryPolicy={inventoryPolicy} />
                 }
                 {allowRiskGroupEdit &&
-                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
-                    controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
+                    <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
+                        controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
                 }
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -1926,24 +1928,24 @@ class clientEdit extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <table style={{ width: "100%" }}>
                             <tbody>
-                            <tr>
-                                <td>
-                                    <dl style={{
-                                        fontSize: "20px",
-                                        color: "#505050",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <span className="section-title">Dirección sede principal</span>
-                                    </dl>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="tab-content-row"
+                                <tr>
+                                    <td>
+                                        <dl style={{
+                                            fontSize: "20px",
+                                            color: "#505050",
+                                            marginTop: "5px",
+                                            marginBottom: "5px"
+                                        }}>
+                                            <span className="section-title">Dirección sede principal</span>
+                                        </dl>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div className="tab-content-row"
                                             style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </Col>
@@ -2113,7 +2115,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
                                 value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2142,7 +2144,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los activos"
                                 {...assets}
                                 value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2164,7 +2166,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los pasivos"
                                 {...liabilities}
                                 value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2184,7 +2186,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
                                 value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2204,7 +2206,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los egresos mensuales"
                                 {...expenses}
                                 value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2226,7 +2228,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
                                 {...nonOperatingIncome}
                                 value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2248,22 +2250,22 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
                 {allowRiskGroupEdit &&
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                                          term={termMainClient} relevantInformation={relevantInformationMainClient}
-                                          showFormMainClients={this.state.showFormAddMainClient}
-                    fnShowForm={this.showFormOut} />
+                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
+                        term={termMainClient} relevantInformation={relevantInformationMainClient}
+                        showFormMainClients={this.state.showFormAddMainClient}
+                        fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
-                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
-                                           term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
-                                           showFormMainSupplier={this.state.showFormAddMainSupplier}
-                    fnShowForm={this.showFormOut} />
+                    <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                        term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                        showFormMainSupplier={this.state.showFormAddMainSupplier}
+                        fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
-                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                                             observations={obsevationsCompetitor}
-                                             showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                    fnShowForm={this.showFormOut} />
+                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                        observations={obsevationsCompetitor}
+                        showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                        fnShowForm={this.showFormOut} />
                 }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
@@ -2286,15 +2288,15 @@ class clientEdit extends Component {
                             <div className="ui search participantBanc fluid">
                                 <ComboBoxFilter className="prompt" id="inputEconomicGroup"
                                     style={{ borderRadius: "3px" }}
-                                                autoComplete="off"
-                                                disabled={allowChangeEconomicGroup}
-                                                type="text"
-                                                {...economicGroupName}
-                                                value={economicGroupName.value}
-                                                onChange={this._onChangeGroupEconomic}
-                                                placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={this.updateKeyValueUsersBanco}
-                                                touched={true}
+                                    autoComplete="off"
+                                    disabled={allowChangeEconomicGroup}
+                                    type="text"
+                                    {...economicGroupName}
+                                    value={economicGroupName.value}
+                                    onChange={this._onChangeGroupEconomic}
+                                    placeholder="Ingrese un criterio de búsqueda..."
+                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                    touched={true}
                                 />
                             </div>
                         </dt>
@@ -2344,7 +2346,7 @@ class clientEdit extends Component {
                         data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
                         onChange={val => this._onChangeJustifyNoGeren(val)}
                         touched={true}
-                        
+
                     />
                     <Col xs={12} md={4} lg={4}>
                         <dt>
@@ -2622,12 +2624,12 @@ class clientEdit extends Component {
                 </Row>
 
                 {_.isEqual(operationsForeignCurrency.value, "true") && allowRiskGroupEdit &&
-                <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
-                                            idCountry={idCountryIntOpe}
-                                            participationCountry={participationIntOpeCountry}
-                                            customerCoverage={customerCoverageIntOpe}
-                                            descriptionCoverage={descriptionCoverageIntOpe}
-                                            showFormIntOperations={this.state.showFormAddIntOperatrions}
+                    <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                        idCountry={idCountryIntOpe}
+                        participationCountry={participationIntOpeCountry}
+                        customerCoverage={customerCoverageIntOpe}
+                        descriptionCoverage={descriptionCoverageIntOpe}
+                        showFormIntOperations={this.state.showFormAddIntOperatrions}
                         fnShowForm={this.showFormOut} />
                 }
 
@@ -2659,13 +2661,13 @@ class clientEdit extends Component {
                         {idButton === BUTTON_UPDATE ?
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 50px", position: "fixed" }}
-                                    onClick={this.clickButtonScrollTop} type="submit">
+                                onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Actualizar/Sarlaft</span>
                             </button>
                             :
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                                    onClick={this.clickButtonScrollTop} type="submit">
+                                onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
                         }
@@ -2835,7 +2837,7 @@ function fomatInitialStateNumber(val) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'formClientEdit',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

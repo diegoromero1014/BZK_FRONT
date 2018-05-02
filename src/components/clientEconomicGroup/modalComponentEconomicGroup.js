@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS } from '../../constantsGlobal';
 import { stringValidate, validateIsNullOrUndefined, validateResponse } from '../../actionsGlobal';
@@ -114,7 +113,7 @@ class ModalComponentEconomicGroup extends Component {
           }, 150);
         });
       } else {
-        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para agregar un cliente al grupo económico primero debe selecionar uno.');
+        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para realizar la busqueda es necesario ingresar mínimo 3 caracteres');
       }
     }
   }

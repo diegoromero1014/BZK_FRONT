@@ -10,7 +10,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS, MESSAGE_RELEVANT_MAIN_CLIENTS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -26,7 +26,8 @@ class ComponentListMainClients extends Component {
             entitySeleted: null,
             errorForm: false,
             fieldReducerList: 'listMainCustomer',
-            fieldReducerNoApplied: 'noAppliedMainClients'
+            fieldReducerNoApplied: 'noAppliedMainClients',
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -182,7 +183,7 @@ class ComponentListMainClients extends Component {
             origin } = this.props;
         const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
-            <div>
+            <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -237,7 +238,7 @@ class ComponentListMainClients extends Component {
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del cliente"
-                                        {...nameClient}
+                                        {...nameClient}                                        
                                         error={_.isEmpty(nameClient.value) ? VALUE_REQUIERED : (xssValidation(nameClient.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -254,9 +255,8 @@ class ComponentListMainClients extends Component {
                                         min={0}
                                         max="3"
                                         placeholder="Plazo"
-                                        {...term}
-                                        value={term.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
+                                        {...term}                                        
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : (xssValidation(term.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -273,9 +273,8 @@ class ComponentListMainClients extends Component {
                                         min={0}
                                         max="5"
                                         placeholder="Participación"
-                                        {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
+                                        {...participation}                                        
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -311,7 +310,7 @@ class ComponentListMainClients extends Component {
                                         max="1300"
                                         rows={3}
                                         placeholder="Información relevante"
-                                        {...relevantInformation}
+                                        {...relevantInformation}                                        
                                         error={xssValidation(relevantInformation.value) ? VALUE_XSS_INVALID : null}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -382,7 +381,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion, form }, ownerProps) {
     return {
         clientInformacion
     };

@@ -190,10 +190,13 @@ class ModalComponentPending extends Component {
         const { tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder, showLoading } = this.props;
         clearMyPendingPaginator();
         clearMyPendingsOrder();
-        showLoading(true, MESSAGE_LOAD_DATA);
-        tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "").then((data) => {
-            showLoading(false, '');
-        });
+        this.setState({ keywordMyPending: this.state.keywordMyPending.trim() });
+        if(this.state.keywordMyPending){
+            showLoading(true, MESSAGE_LOAD_DATA);
+            tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "").then((data) => {
+                showLoading(false, '');
+            });
+        }
     }
 
 
@@ -313,10 +316,14 @@ class ModalComponentPending extends Component {
     }
 
     _loadResponsable() {
-        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
         const selfThis = this;
 
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+            if(nameUsuario.value.length < 3) {
+                swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                return;
+            }
             $('.ui.search.participantBanc').toggleClass('loading');
             filterUsersBanco(nameUsuario.value).then((data) => {
                 usersBanco = _.get(data, 'payload.data.data');
@@ -484,7 +491,8 @@ class ModalComponentPending extends Component {
                                                     value={nameUsuario.value}
                                                     onChange={this._changeResponsableInput}
                                                     placeholder="Responsable"
-                                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                                                    
                                                 />
                                                 <i onClick={this._loadResponsable} className="search icon" id="iconSearchParticipants"></i>
                                             </div>
@@ -500,8 +508,11 @@ class ModalComponentPending extends Component {
                             {!this.state.teamViewTask &&
                                 <Col xs={12} sm={12} md={6} lg={6}>
                                     <div className="InputAddOn">
-                                        <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente"
-                                            value={this.state.keywordMyPending} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword}
+                                        <input type="text" style={{ padding: '0px 11px !important' }} 
+                                            placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente"
+                                            value={this.state.keywordMyPending} 
+                                            onKeyPress={this._handleChangeKeyword} 
+                                            onChange={this._handleChangeKeyword}
                                             className="input-lg input InputAddOn-field" />
                                         <button id="searchExpression" className="btn" title="Búsqueda por tipo de documento, número de documento y nombre del cliente" type="button"
                                             onClick={this._handleMyPendingByClientsFind} style={{ backgroundColor: "#E0E2E2" }}>

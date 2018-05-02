@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
@@ -11,9 +12,13 @@ import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
 
+
 class ContextEconomicActivity extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            shouldUpdate: false
+        }
     }
 
     elementMessageContext() {
@@ -32,7 +37,7 @@ class ContextEconomicActivity extends Component {
     render() {
         const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
         return (
-            <Col xs={12} md={12} lg={12}>
+            <Col xs={12} md={12} lg={12} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
                     <dt>
                         <span>Contexto </span>
@@ -58,7 +63,6 @@ class ContextEconomicActivity extends Component {
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
                                 error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
-
                                 touched={true}
                             />
                         } />
@@ -72,4 +76,12 @@ ContextEconomicActivity.PropTypes = {
     contextClientField: PropTypes.object.isRequired
 }
 
-export default ContextEconomicActivity;
+
+
+function mapStateToProps({ clientInformacion }, ownerProps) {
+    return {
+        clientInformacion
+    };
+}
+
+export default connect(mapStateToProps)(ContextEconomicActivity);

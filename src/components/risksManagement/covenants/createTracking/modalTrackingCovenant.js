@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../ui/input/inputComponent';

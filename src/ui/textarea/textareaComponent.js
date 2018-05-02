@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { nonValidateEnter } from '../../actionsGlobal';
-import SweetAlert from "sweetalert-react";
 import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 import $ from 'jquery';
 import _ from 'lodash';
@@ -36,11 +35,14 @@ class TextareaComponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter } = this.props;
+        const { nonValidateEnter, onChange } = this.props;
         
         this.setState({
             touched: true
         });
+        let trimmed = this.state.value.trim(); 
+
+        onChange(trimmed);
 
         nonValidateEnter(true);
     }
@@ -52,8 +54,21 @@ class TextareaComponent extends Component {
         this.setState({
             value: e.target.value
         });
+        
+    }
 
-        onChange(e, event);
+    componentWillMount() {
+        const {value} = this.props;
+
+        this.setState({value: value});
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        if(nextProps.value != this.state.value) {
+            this.setState({value: nextProps.value});
+        }
+
     }
 
 
@@ -69,11 +84,11 @@ class TextareaComponent extends Component {
                         placeholder={placeholder}
                         maxLength={max}
                         rows={rows}
-                        value={value || ''}
-                        {...this.props}
+                        value={this.state.value || ''}
+                        disabled={disabled}
                         style={style}
                         onChange={this._onChange}
-                        onKeyPress={this._onEnter}
+                        
                         onBlur={this._onBlur}
                     />
                 </div>

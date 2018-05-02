@@ -46,7 +46,7 @@ import {
 } from "../../../actionsGlobal";
 import { MENU_CLOSED } from "../../navBar/constants";
 import { addTask } from "../tasks/actions";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../../sweetalertFocus";
 import moment from "moment";
 import _ from "lodash";
 import RichText from "../../richText/richTextComponent";

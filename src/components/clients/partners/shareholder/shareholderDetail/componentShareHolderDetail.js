@@ -3,7 +3,7 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../../../sweetalertFocus';
 import { NUMBER_RECORDS } from '../constants';
 import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
 import { getDetailShareHolder, toggleModalShareholder } from './actions';
@@ -345,7 +345,7 @@ class ComponentShareHolderDetail extends Component {
                   type="text"
                   min={0}
                   max="5"
-                  onBlur={val => this._handleBlurValueNumber(sharePercentage, sharePercentage.value)}
+                  onBlur={val => this._handleBlurValueNumber(sharePercentage, val)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>

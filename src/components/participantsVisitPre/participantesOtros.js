@@ -6,7 +6,7 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import { addParticipant, clearParticipants } from './actions';
 import { KEY_PARTICIPANT_OTHER } from './constants';
-import SweetAlert from 'sweetalert-react';
+import SweetAlertFocus from '../sweetalertFocus';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
@@ -159,14 +159,14 @@ class ParticipantesOtros extends Component {
             </Col>
           }
         </Row>
-        <SweetAlert
+        <SweetAlertFocus
           type="error"
           show={this.state.showEmptyParticipantOtro}
           title="Error participante"
           text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
           onConfirm={() => this.setState({ showEmptyParticipantOtro: false })}
         />
-        <SweetAlert
+        <SweetAlertFocus
           type="error"
           show={this.state.showInvalidCharacter}
           title="Error participante"

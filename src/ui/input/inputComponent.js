@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
-import SweetAlert from "sweetalert-react";
 import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 
 class inputComponent extends Component {
@@ -14,15 +13,35 @@ class inputComponent extends Component {
         };
 
         this._onChange = this._onChange.bind(this);
+        this._onBlur = this._onBlur.bind(this);
+        this._onKey = this._onKey.bind(this);
     }
 
     _onChange(e, event) {
         const { onChange, error, touched } = this.props;
+
         this.setState({
             value: e.target.value
         });
 
-        onChange(e.target.value, e);
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        if (nextProps.value != this.state.value) {
+            this.setState({ value: nextProps.value });
+        }
+
+    }
+
+    _onBlur(e, event) {
+
+        const { onChange, onBlur } = this.props;
+
+        let trimmed = this.state.value.trim();
+
+        onChange(trimmed);
+        onBlur(trimmed);
     }
 
     // _onBlur(e, event) {
@@ -40,6 +59,30 @@ class inputComponent extends Component {
     //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
     // }
 
+    _onKey(e) {
+
+        const { onChange, onBlur, onKey } = this.props;
+
+        if ((e.keyCode === 13 || e.which === 13)) {
+            let trimmed = this.state.value.trim();
+            onChange(trimmed);
+            onBlur(trimmed);
+        }
+
+        if (onKey) {
+            onKey(e);
+        }
+
+    }
+
+
+
+    componentWillMount() {
+        const { value } = this.props;
+
+        this.setState({ value: value });
+    }
+
     render() {
         const { nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate } = this.props;
 
@@ -56,12 +99,12 @@ class inputComponent extends Component {
                         style={style}
                         onChange={this._onChange}
                         placeholder={placeholder}
-                        onBlur={onBlur}
+                        onBlur={this._onBlur}
                         disabled={disabled}
                         className={disabled}
-                        onKeyPress={onKey}
+                        onKeyPress={this._onKey}
                         onFocus={onFocus}
-                        value={value || ''}
+                        value={this.state.value || ''}
                     />
                 </div>
                 {

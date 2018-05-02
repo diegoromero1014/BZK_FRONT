@@ -5,7 +5,6 @@ import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 import {addParticipant, clearParticipants} from './actions';
-import SweetAlert from 'sweetalert-react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {contactsByClientFindServer} from '../contact/actions';
@@ -17,6 +16,7 @@ import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
 import {NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT} from './constants';
 import _ from 'lodash';
 import Tooltip from "../toolTip/toolTipComponent";
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 const validate = values => {
     const errors = {}
@@ -43,7 +43,7 @@ class ParticipantesCliente extends Component {
     }
 
     _addParticipantClient() {
-        const {fields: {idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo}, participants, addParticipant} = this.props;
+        const {fields: {idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo}, participants, addParticipant, swtShowMessage} = this.props;
         if (contactoCliente.value !== "" && contactoCliente.value !== null && contactoCliente.value !== undefined) {
             var particip = participants.find(function (item) {
                 return item.idParticipante === idContacto.value;
@@ -72,14 +72,11 @@ class ParticipantesCliente extends Component {
                 estiloSocial.onChange('');
                 actitudGrupo.onChange('');
             } else {
-                this.setState({
-                    showParticipantExist: true
-                });
+                swtShowMessage('error',"Participante existente","Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+
             }
         } else {
-            this.setState({
-                showEmptyParticipant: true
-            });
+            swtShowMessage('error',"Error participante","Señor usuario, para agregar un participante debe seleccionar un contacto");
         }
     }
 
@@ -115,6 +112,7 @@ class ParticipantesCliente extends Component {
                 return contact;
             }
         });
+
         if (contactSelected !== null && contactSelected !== undefined) {
             idContacto.onChange(contactSelected.id);
             nameContacto.onChange(contactSelected.nameComplet);
@@ -163,6 +161,8 @@ class ParticipantesCliente extends Component {
                                         valueProp={'id'}
                                         textProp={'nameComplet'}
                                         data={contactsByClient.get('contacts')}
+                                        onComboChange={(val) => console.log(val)}
+                                    
                                     />
                                 </dt>
                             </Col>
@@ -239,20 +239,8 @@ class ParticipantesCliente extends Component {
                         </Col>
                     }
                 </Row>
-                <SweetAlert
-                    type="error"
-                    show={this.state.showEmptyParticipant}
-                    title="Error participante"
-                    text="Señor usuario, para agregar un participante debe seleccionar un contacto"
-                    onConfirm={() => this.setState({showEmptyParticipant: false})}
-                />
-                <SweetAlert
-                    type="error"
-                    show={this.state.showParticipantExist}
-                    title="Participante existente"
-                    text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
-                    onConfirm={() => this.setState({showParticipantExist: false})}
-                />
+                
+                
             </div>
         );
     }
@@ -265,7 +253,8 @@ function mapDispatchToProps(dispatch) {
         contactsByClientFindServer,
         clearParticipants,
         downloadFilePDF,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        swtShowMessage
     }, dispatch);
 }
 

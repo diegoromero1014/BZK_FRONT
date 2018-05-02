@@ -26,7 +26,7 @@ import { createPrevisit, validateDatePreVisit } from '../actions';
 import Challenger from '../../methodologyChallenger/component';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { MENU_CLOSED } from '../../navBar/constants';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
 import $ from 'jquery';
 import RichText from '../../richText/richTextComponent';
@@ -250,13 +250,7 @@ class FormPrevisita extends Component {
             controlConversationError: "",
             constructiveTension: "",
             constructiveTensionTouch: false,
-            constructiveTensionError: "",
-            nuevoModo: "",
-            nuevoModoTouch: false,
-            nuevoModoError: "",
-            nuestraSolucion: "",
-            nuestraSolucionTouch: false,
-            nuestraSolucionError: "",
+            constructiveTensionError: ""
         });
     }
 
@@ -524,23 +518,7 @@ class FormPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (xssValidation(this.state.nuevoModo, true)) {
-            errorInForm = true;
-            this.setState({
-                nuevoModoError: VALUE_XSS_INVALID,
-                nuevoModoTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
         
-        if (xssValidation(this.state.nuestraSolucion, true)) {
-            errorInForm = true;
-            this.setState({
-                nuestraSolucionError: VALUE_XSS_INVALID,
-                nuestraSolucionTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
 
 
 
@@ -633,35 +611,29 @@ class FormPrevisita extends Component {
                                     } else {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
-                                            titleMessage = "Creación previsita";
-                                            message = "Señor usuario, la previsita se creó de forma exitosa.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('success',"Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.",{onConfirmCallback: this._closeMessageCreatePreVisit});
+
                                         } else {
                                             typeMessage = "error";
-                                            titleMessage = "Creación previsita";
-                                            message = "Señor usuario, ocurrió un error creando la previsita.";
-                                            this.setState({ showMessageCreatePreVisit: true });
+                                            swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
                                         }
                                     }
                                 }, (reason) => {
                                     changeStateSaveData(false, "");
                                     typeMessage = "error";
-                                    titleMessage = "Creación previsita";
-                                    message = "Señor usuario, ocurrió un error creando la previsita.";
-                                    this.setState({ showMessageCreateVisit: true });
+                                    swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
                                 });
                             }
                         }
                     }
                 });
             } else {
-                this.setState({ showErrorSavePreVisit: true });
+                
+                swtShowMessage('error',"Error participantes","Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.");
             }
         } else {
             typeMessage = "error";
-            titleMessage = "Campos obligatorios";
-            message = errorMessage;
-            this.setState({ showMessageCreatePreVisit: true });
+            swtShowMessage('error',"Campos obligatorios", errorMessage ,{onConfirmCallback: this._closeMessageCreatePreVisit});
         }
     }
 
@@ -767,7 +739,7 @@ class FormPrevisita extends Component {
                                 error={this.state.durationPreVisitError}
                                 type="text"
                                 onChange={val => this._changeDurationPreVisit(val)}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, this.state.durationPreVisit, true, 2)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, val, true, 2)}
                             />
                         </dt>
                     </Col>
@@ -970,13 +942,7 @@ class FormPrevisita extends Component {
                         </button>
                     </div>
                 </div>
-                <SweetAlert
-                    type="error"
-                    show={this.state.showErrorSavePreVisit}
-                    title="Error participantes"
-                    text="Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia."
-                    onConfirm={() => this.setState({ showErrorSavePreVisit: false })}
-                />
+                
                 <SweetAlert
                     type={typeMessage}
                     show={this.state.showMessageCreatePreVisit}

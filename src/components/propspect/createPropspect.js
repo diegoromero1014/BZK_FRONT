@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
@@ -8,10 +8,11 @@ import { redirectUrl } from '../globalComponents/actions';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import { consultDataSelect, consultList } from '../selectsComponent/actions';
-import { SESSION_EXPIRED } from '../../constantsGlobal';
+import {SESSION_EXPIRED, VALUE_XSS_INVALID} from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import {xssValidation} from '../../actionsGlobal';
 import _ from 'lodash';
 
 var prospectInApplication = true;
@@ -25,12 +26,19 @@ const validate = values => {
   const errors = {}
   if (!values.idType) {
     errors.idType = "Debe seleccionar un valor";
-  } else {
+  }
+  else
+  {
     errors.idType = null;
   }
   if (!values.idNumber) {
     errors.idNumber = "Debe ingresar un valor";
-  } else {
+  }
+  else if(xssValidation(values.idNumber))
+  {
+      errors.idNumber = VALUE_XSS_INVALID;
+  }
+  else {
     errors.idNumber = null;
   }
   return errors
@@ -201,5 +209,14 @@ function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
 export default reduxForm({
   form: 'submitValidation',
   fields: ["idType", "idNumber"],
-  validate
+  validate,
+  onSubmitFail: errors => {
+
+        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+            thisForm.setState({ showEr: true });
+        } else {
+            thisForm.setState({ showEr: true });
+        }
+
+  }
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);

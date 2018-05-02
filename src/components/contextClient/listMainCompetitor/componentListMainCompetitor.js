@@ -10,7 +10,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_COMPETITOR, MESSAGE_MAIN_COMPETITOR } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -24,7 +24,9 @@ class ComponentListMainCompetitor extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: false
+            errorForm: false,
+            shouldUpdate: false
+
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -63,7 +65,7 @@ class ComponentListMainCompetitor extends Component {
         const { nameCompetitor, participation, term, observations, fnShowForm, changeValueListClient,
             clientInformacion, swtShowMessage } = this.props;
         var countErrors = 0;
-      
+
         let validFields = this.fieldValidation([
             { required: true, value: nameCompetitor.value, xss: true },
             { required: true, value: participation.value, xss: true },
@@ -95,7 +97,7 @@ class ComponentListMainCompetitor extends Component {
             changeValueListClient('listMainCompetitor', listMainCompetitor);
             this.clearValues();
             this.setState({ entitySeleted: null });
-        } 
+        }
         // else {
         //     this.setState({ errorForm: true });
         //     swtShowMessage('error', 'Principales competidores', 'Señor usuario, para agregar un competidor principal debe ingresar todos los valores.');
@@ -160,7 +162,7 @@ class ComponentListMainCompetitor extends Component {
             functionChangeMainCompetitor, registrationRequired, origin } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
-            <div>
+            <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -232,8 +234,7 @@ class ComponentListMainCompetitor extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />

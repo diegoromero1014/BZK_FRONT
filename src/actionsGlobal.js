@@ -251,7 +251,6 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
         }
     }
     val = output;
-
     /* Si typeValidation = 2 es por que el valor puede ser negativo
      Si typeValidation = 1 es por que el valor solo pueder ser mayor o igual a cero
      */

@@ -11,6 +11,11 @@ class RichText extends Component {
         this.reactQuillRef = null;
         this.quillRef = null;
         this.attachQuillRefs = this.attachQuillRefs.bind(this);
+        this.state = {
+            text: null
+        }
+
+        this.handleOnBlur = this.handleOnBlur.bind(this);
     }
 
     componentDidMount() {
@@ -31,14 +36,30 @@ class RichText extends Component {
         if (quillRef != null) this.quillRef = quillRef;
     }
 
+    handleOnBlur() {
+        
+        const {onChange} = this.props;
+        onChange(this.reactQuillRef.state.value);
+        
+      }
+
+      componentWillReceiveProps(nextProps) {
+
+        if(nextProps.value != this.state.value) {
+            this.setState({value: nextProps.value});
+        }
+
+    }
+    
     render() {
         const {value, touched, error, disabled} = this.props;
         if (!isNull(this.quillRef)) {
             const quillSize = this.quillRef.getLength();
             const quillText = this.quillRef.getText();
         }
+        // No quitar el onChange={(value) => null }, se realiza para evitar que se llame el onChange de reduxForm
         return (
-            <div>
+            <div onBlur={() => this.handleOnBlur()}>
                 <ReactQuill
                     ref={(el) => {
                         this.reactQuillRef = el
@@ -47,7 +68,10 @@ class RichText extends Component {
                     value={value || ''}
                     modules={RichText.modules}
                     formats={RichText.formats}
-                    {...this.props}/>
+                    {...this.props}
+                    onChange={(value) => null }
+                    
+                    />
                 {
                     touched && error &&
                     <div style={{marginTop: '15pt'}}>

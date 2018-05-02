@@ -13,7 +13,7 @@ import NeedBusiness from '../need/needBusiness';
 import AreaBusiness from '../area/areaBusiness';
 import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID } from '../../../constantsGlobal';
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
-import SweetAlert from 'sweetalert-react';
+import SweetAlertFocus from '../../sweetalertFocus';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -84,14 +84,14 @@ class FormBusinessPlan extends Component {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
         var errorInForm = false;
 
-        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 initialDateError: "Debe seleccionar una fecha"
             });
         }
 
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)  || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
@@ -132,7 +132,7 @@ class FormBusinessPlan extends Component {
                 opportunitiesError: VALUE_XSS_INVALID
             });
         }
-
+      
         if (!errorInForm) {
             var needsbB = [];
             _.map(needs.toArray(),
@@ -199,6 +199,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
+        console.log("jhoa", value);
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null
@@ -458,21 +459,21 @@ class FormBusinessPlan extends Component {
                         </button>
                     </div>
                 </div>
-                <SweetAlert
+                <SweetAlertFocus
                     type="error"
                     show={this.state.showErrorSaveBusiness}
                     title="Error necesidades"
                     text="Señor usuario, para guardar un plan de negocio como definitivo debe agregar como mínimo una necesidad."
                     onConfirm={() => this.setState({ showErrorSaveBusiness: false })}
                 />
-                <SweetAlert
+                <SweetAlertFocus
                     type={typeMessage}
                     show={this.state.showMessageCreateBusiness}
                     title={titleMessage}
                     text={message}
                     onConfirm={this._closeMessageCreateBusiness}
                 />
-                <SweetAlert
+                <SweetAlertFocus
                     type="warning"
                     show={this.state.showConfirm}
                     title={titleMessage}

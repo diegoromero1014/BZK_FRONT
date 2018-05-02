@@ -11,12 +11,10 @@ import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
+import {xssValidation} from "../../actionsGlobal";
+import {VALUE_XSS_INVALID,MESSAGE_ERROR} from "../../constantsGlobal";
 
 const fields = ["observations"];
-
-const validate = (values) => {
-    return {};
-};
 
 class ModalObservation extends Component {
 
@@ -29,28 +27,45 @@ class ModalObservation extends Component {
         const {isOpen, fields:{observations}, alertPortfolioExpId, saveObservationPortfolioExp,
             showLoading, swtShowMessage, alertPortfolioExpiration, clientsPortfolioExpirationFindServer} = this.props;
         showLoading(true, 'Guardando...');
-        saveObservationPortfolioExp(alertPortfolioExpId, observations.value)
-            .then((data) => {
-                showLoading(false, null);
-                if (_.isEqual(_.get(data, 'payload.status'), 200)) {
-                    // refresh table
-                    const keywordNameNit = alertPortfolioExpiration.get('keywordNameNit');
-                    const idZone = alertPortfolioExpiration.get('idZone');
-                    const order = alertPortfolioExpiration.get('order');
-                    const idRegion = alertPortfolioExpiration.get('idRegion');
-                    const pageNum = alertPortfolioExpiration.get('pageNum');
-                    const columnOrder = alertPortfolioExpiration.get('columnOrder');
-                    const idTeam = alertPortfolioExpiration.get('idTeam');
-                    clientsPortfolioExpirationFindServer(keywordNameNit,idTeam,idRegion,idZone,pageNum,10,order,columnOrder);
-                    isOpen();
-                    swtShowMessage('success', 'Edición observaciones', 'Señor usuario, se guardaron correctamente las observaciones.');
-                } else {
-                    swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
-                }
-            }, (reason) => {                
+        
+        if (!_.isEqual(observations.value.trim(), '')) {
+
+            if (xssValidation(observations.value)){
+                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
                 showLoading(false, '');
-                swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
-            });
+            }
+            else{
+                saveObservationPortfolioExp(alertPortfolioExpId, observations.value)
+                .then((data) => {
+                    showLoading(false, null);
+                    if (_.isEqual(_.get(data, 'payload.status'), 200)) {
+                        // refresh table
+                        const keywordNameNit = alertPortfolioExpiration.get('keywordNameNit');
+                        const idZone = alertPortfolioExpiration.get('idZone');
+                        const order = alertPortfolioExpiration.get('order');
+                        const idRegion = alertPortfolioExpiration.get('idRegion');
+                        const pageNum = alertPortfolioExpiration.get('pageNum');
+                        const columnOrder = alertPortfolioExpiration.get('columnOrder');
+                        const idTeam = alertPortfolioExpiration.get('idTeam');
+                        clientsPortfolioExpirationFindServer(keywordNameNit,idTeam,idRegion,idZone,pageNum,10,order,columnOrder);
+                        isOpen();
+                        swtShowMessage('success', 'Edición observaciones', 'Señor usuario, se guardaron correctamente las observaciones.');
+                    } else {
+                        swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
+                    }
+                }, (reason) => {                
+                    showLoading(false, '');
+                    swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
+                });
+            }
+        }
+        else {
+            showLoading(false, '');
+            swtShowMessage('error', 'Observaciones', 'Señor usuario, las observaciones no pueden estar vacías');
+        }
+        
+        
+       
     }
 
     render() {
@@ -112,6 +127,5 @@ function mapStateToProps({reducerGlobal, alertPortfolioExpiration}, {alertPortfo
 
 export default reduxForm({
     form: 'submitModalObservationAlertPortfolioExp',
-    fields,
-    validate
+    fields
 }, mapStateToProps, mapDispatchToProps)(ModalObservation);

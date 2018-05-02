@@ -11,7 +11,7 @@ import PaginationAssociateVisit from './paginationAssociateVisit';
 import { Col } from 'react-flexbox-grid';
 import { NUMBER_RECORDS } from '../constants';
 import Modal from 'react-modal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { Button, Icon } from 'semantic-ui-react'
 import moment from 'moment';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';

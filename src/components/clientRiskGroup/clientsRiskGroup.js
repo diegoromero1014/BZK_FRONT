@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
