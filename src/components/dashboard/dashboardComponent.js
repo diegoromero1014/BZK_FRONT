@@ -14,19 +14,15 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
-      console.log(document.cookie.indexOf('estadoconexion='));
 
       let token = window.localStorage.getItem('sessionTokenFront');
 
       if( token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1){
         window.localStorage.setItem('sessionTokenFront','');
         document.cookie = 'estadoconexion=activa;path=/';
-        
         redirectUrl("/login");
   
       } else {
-        console.log('lo deja pasar');
-        console.log(window.localStorage.getItem('sessionTokenFront'))
         const {loadObservablesLeftTimer} = this.props;
         loadObservablesLeftTimer();
       }

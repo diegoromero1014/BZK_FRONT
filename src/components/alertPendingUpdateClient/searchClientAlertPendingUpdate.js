@@ -47,7 +47,7 @@ class SearchBarClient extends Component {
     _handleChangeKeyword(e, val) {
         const { changeKeyword, swtShowMessage } = this.props;
         changeKeyword(e.target.value);
-        console.log("val",val)
+        
         if (e.keyCode === 13 || e.which === 13) {
             if (e.target.value < 3) {
                 swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');

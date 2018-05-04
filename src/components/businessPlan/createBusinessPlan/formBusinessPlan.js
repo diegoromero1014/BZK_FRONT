@@ -199,7 +199,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
-        console.log("jhoa", value);
+        
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null

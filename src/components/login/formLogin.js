@@ -115,8 +115,6 @@ class FormLogin extends Component {
 
         } else {
             // El usuario ya se encuentra logueado
-            console.log('ya tiene una sesion activa');
-            console.log(token);
             redirectUrl("/dashboard/clients");
         }
 
