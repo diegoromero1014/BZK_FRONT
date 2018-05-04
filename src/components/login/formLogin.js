@@ -102,10 +102,25 @@ class FormLogin extends Component {
 
     componentWillMount() {
         const { stopObservablesLeftTimer, clearStateLogin } = this.props;
-        stopObservablesLeftTimer();
-        //Limpiar variables de sesion (idClientSelected)
-        clearSessionUserName();
-        clearStateLogin();
+
+        let token = window.localStorage.getItem('sessionTokenFront');
+
+        if (token == null || token === '') {
+
+            stopObservablesLeftTimer();
+            //Limpiar variables de sesion (idClientSelected)
+            clearSessionUserName();
+            //Esto no hace nada
+            clearStateLogin();
+
+        } else {
+            // El usuario ya se encuentra logueado
+            console.log('ya tiene una sesion activa');
+            console.log(token);
+            redirectUrl("/dashboard/clients");
+        }
+
+        
     }
 
     render() {

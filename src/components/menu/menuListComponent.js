@@ -13,7 +13,7 @@ const menuItemLogOut = [
     {
         text: "Cerrar sesión",
         icon: "sign out",
-        link: "/login",
+        link: "/logout",
         style: {
             backgroundColor: "black"
         }

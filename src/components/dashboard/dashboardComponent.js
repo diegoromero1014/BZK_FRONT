@@ -15,7 +15,10 @@ class Dashboard extends Component {
 
     componentWillMount(){
       console.log(document.cookie.indexOf('estadoconexion='));
-      if( window.localStorage.getItem('sessionTokenFront') === "" || document.cookie.indexOf('estadoconexion=') == -1){
+
+      let token = window.localStorage.getItem('sessionTokenFront');
+
+      if( token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1){
         window.localStorage.setItem('sessionTokenFront','');
         document.cookie = 'estadoconexion=activa;path=/';
         
