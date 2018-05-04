@@ -103,6 +103,7 @@ class FormLogin extends Component {
     componentWillMount() {
         const { stopObservablesLeftTimer, clearStateLogin } = this.props;
         stopObservablesLeftTimer();
+        //Limpiar variables de sesion (idClientSelected)
         clearSessionUserName();
         clearStateLogin();
     }

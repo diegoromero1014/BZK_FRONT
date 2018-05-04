@@ -34,7 +34,7 @@ class SearchBarClient extends Component{
     componentWillMount(){
         const {getAlertsByUser} = this.props;
         const self = this;
-        if( window.localStorage.getItem('sessionToken') === "" ){
+        if( window.localStorage.getItem('sessionTokenFront') === "" ){
             redirectUrl("/login");
         }
         getAlertsByUser().then((data) => {

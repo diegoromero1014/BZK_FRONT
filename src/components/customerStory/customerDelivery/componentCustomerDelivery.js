@@ -80,7 +80,7 @@ class ComponentCustomerDelivery extends Component {
                 this.consultClients(null, economicGroup);
             }
         } else {
-            this.consultClients(window.localStorage.getItem('idClientSelected'), null);
+            this.consultClients(window.sessionStorage.getItem('idClientSelected'), null);
         }
         this.setState({ checkEconomicGroup: !this.state.checkEconomicGroup });
         updateCheckEconomicGroup(!this.state.checkEconomicGroup);
@@ -105,7 +105,7 @@ class ComponentCustomerDelivery extends Component {
         getMasterDataFields([REASON_TRANFER]).then((data) => {
             valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
         });
-        this.consultClients(window.localStorage.getItem('idClientSelected'), null);
+        this.consultClients(window.sessionStorage.getItem('idClientSelected'), null);
     }
 
     _onChangeReasonTransfer(valueReason) {

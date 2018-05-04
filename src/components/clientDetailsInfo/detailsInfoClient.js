@@ -41,7 +41,7 @@ class DetailsInfoClient extends Component {
 
     componentWillMount() {
         const { login, validatePermissionsByModule } = this.props;
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
         validatePermissionsByModule(MODULE_CLIENTS).then((data) => {

@@ -31,7 +31,7 @@ class ComponentClientInformation extends Component {
     }
 
     componentWillMount() {
-        if (!_.isNull(window.localStorage.getItem('idClientSelected')) && !_.isUndefined(window.localStorage.getItem('idClientSelected'))) {
+        if (!_.isNull(window.sessionStorage.getItem('idClientSelected')) && !_.isUndefined(window.sessionStorage.getItem('idClientSelected'))) {
             const { resetAccordion, tabReducer, validatePermissionsByModule } = this.props;
             var tabActive = tabReducer.get('tabSelected');
             if (tabActive === null) {
@@ -63,7 +63,7 @@ class ComponentClientInformation extends Component {
             updateTabSeletedCS(TAB_STORY);
 
         } else {
-            redirectUrl("/login");
+            redirectUrl("/dashboard/clients");
         }
     }
 

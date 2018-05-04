@@ -72,7 +72,7 @@ class LinkModalComponent extends Component {
         switch (properties.component) {
             case VIEW_CONTACT:
                 const clientId = get(properties, 'id.clientId');
-                window.localStorage.setItem('idClientSelected', clientId);
+                window.sessionStorage.setItem('idClientSelected', clientId);
         }
         this.setState({modalIsOpen: true});
     }

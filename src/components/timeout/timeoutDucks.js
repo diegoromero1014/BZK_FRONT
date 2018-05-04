@@ -11,7 +11,7 @@ function getLastDateToken() {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken')
+            "sessionToken": window.localStorage.getItem('sessionTokenFront')
         },
         messageBody: ""
     }

@@ -248,7 +248,7 @@ class ContactDetailsModalComponent extends Component {
         const that = this;
         showLoading(true, MESSAGE_LOAD_DATA);
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
-        const idClient = callFromModuleContact ? null : window.localStorage.getItem('idClientSelected');
+        const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
             FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]).then(function (data) {
                 getContactDetails(contactId, idClient)
@@ -440,7 +440,7 @@ class ContactDetailsModalComponent extends Component {
         const contact = contactDetail.get('contactDetailList');
         const { saveContact } = this.props;
         const jsonUpdateContact = {
-            "client": window.localStorage.getItem('idClientSelected'),
+            "client": window.sessionStorage.getItem('idClientSelected'),
             "id": contact.id,
             "title": contactTitle.value !== undefined ? contactTitle.value : null,
             "gender": contactGender.value !== undefined ? contactGender.value : null,
@@ -487,7 +487,7 @@ class ContactDetailsModalComponent extends Component {
                 if (_.get(data, 'payload.data.status') === 200) {
                     this._closeViewOrEditContact();
                     swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
-                    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }

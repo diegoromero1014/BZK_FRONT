@@ -27,7 +27,7 @@ class SearchBarClient extends Component {
   componentWillMount() {
     const { login, updateTabSeleted } = this.props;
     updateTabSeleted(null);
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
   }

@@ -1556,7 +1556,7 @@ class clientEdit extends Component {
         if (infoClient !== null && infoClient.foreignProducts !== null && infoClient.foreignProducts !== undefined && infoClient.foreignProducts !== '') {
             setProducts(infoClient.foreignProducts);
         }
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         } else {
             if (_.isEmpty(infoClient)) {

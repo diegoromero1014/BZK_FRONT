@@ -251,7 +251,7 @@ class Sheduler extends Component {
     render() {
         const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
-        const userName = sessionStorage.getItem('userName');
+        const userName = localStorage.getItem('userNameFront');
 
         return (
             <div>

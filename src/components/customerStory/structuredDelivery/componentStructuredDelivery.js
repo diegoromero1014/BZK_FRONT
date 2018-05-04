@@ -146,7 +146,7 @@ class componentStructuredDelivery extends Component {
                     dateEvent: moment(event.date, 'DD/MM/YYYY').format("YYYY-MM-DD HH:mm:ss")
                 });
             });
-            const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
+            const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.sessionStorage.getItem('idClientSelected') : idClientSeleted;
             var jsonStructuredDelivery = {
                 "id": id.value,
                 "idClient": idClientSave,
@@ -204,7 +204,7 @@ class componentStructuredDelivery extends Component {
             }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData, idClientSeleted
         } = this.props;
         clearEvents();
-        const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
+        const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.sessionStorage.getItem('idClientSelected') : idClientSeleted;
         structuredDeliveryDetail(idClientSave).then((data) => {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);

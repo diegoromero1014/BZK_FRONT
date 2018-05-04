@@ -42,7 +42,7 @@ class PaginationVisitComponent extends Component{
 
   _handleVisitByClientsFind(limInf){
     const {visitByClientFindServer,visitReducer} = this.props;
-    visitByClientFindServer(window.localStorage.getItem('idClientSelected'),limInf,NUMBER_RECORDS,visitReducer.get('columnVisit'),visitReducer.get('orderVisit'),v1);
+    visitByClientFindServer(window.sessionStorage.getItem('idClientSelected'),limInf,NUMBER_RECORDS,visitReducer.get('columnVisit'),visitReducer.get('orderVisit'),v1);
   }
 
   render(){

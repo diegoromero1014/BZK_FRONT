@@ -83,7 +83,7 @@ class FormEdit extends Component {
 
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
     }
 
     _closeConfirmClose() {
@@ -195,7 +195,7 @@ class FormEdit extends Component {
             );
             let businessJson = {
                 "id": detailBusiness.data.id,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,

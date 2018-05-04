@@ -232,7 +232,7 @@ class FormEditPrevisita extends Component {
 
         showLoading(true, "Cargando...");
 
-        const myUserName = window.sessionStorage.getItem('userName')
+        const myUserName = window.localStorage.getItem('userNameFront')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
 
@@ -326,7 +326,7 @@ class FormEditPrevisita extends Component {
         const { swtShowMessage } = this.props;
 
         let detailPrevisitData = this.props.previsitReducer.get('detailPrevisit').data;
-        const myUserName = window.sessionStorage.getItem('userName')
+        const myUserName = window.localStorage.getItem('userNameFront')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
 
@@ -341,7 +341,7 @@ class FormEditPrevisita extends Component {
 
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
     }
 
     _closeMessageCreatePreVisit() {
@@ -796,7 +796,7 @@ class FormEditPrevisita extends Component {
                 }
                 const previsitJson = {
                     "id": id,
-                    "client": window.localStorage.getItem('idClientSelected'),
+                    "client": window.sessionStorage.getItem('idClientSelected'),
                     "visitTime": parseInt(moment(this.state.datePreVisit).format('x')),
                     "participatingContacts": dataClient.length === 0 ? null : dataClient,
                     "participatingEmployees": dataBanco.length === 0 ? null : dataBanco,

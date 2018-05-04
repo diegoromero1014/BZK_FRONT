@@ -5,13 +5,13 @@ import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
 
 export function pdfDescarga(idclient, idPrevisit) {
-  window.open(APP_URL + "/pdfReportPreVisit?idClient=" + idclient + "&idPrevisit=" + idPrevisit + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
+  window.open(APP_URL + "/pdfReportPreVisit?idClient=" + idclient + "&idPrevisit=" + idPrevisit + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
 }
 
 export function createPrevisit(jsonVisit) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -35,7 +35,7 @@ export function createPrevisit(jsonVisit) {
 export function previsitByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, consultAsocietePrevisit) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -115,7 +115,7 @@ export function orderColumnPrevisit(orderPrevisit, columnPrevisit) {
 export function detailPrevisit(idPrevisit) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -141,7 +141,7 @@ export function detailPrevisit(idPrevisit) {
 export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -169,7 +169,7 @@ export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasP
 export function validateDatePreVisit(startDate,finalDate, id){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -181,8 +181,8 @@ export function validateDatePreVisit(startDate,finalDate, id){
       "isSuccessful": true
     },
     "messageBody": {
-      "idClient": window.localStorage.getItem('idClientSelected'),
-      "userName": window.sessionStorage.getItem('userName'),
+      "idClient": window.sessionStorage.getItem('idClientSelected'),
+      "userName": window.localStorage.getItem('userNameFront'),
       "initialDate": startDate,
       "endTime": finalDate,
       "idPreVisit": id
@@ -201,7 +201,7 @@ export function validateDatePreVisit(startDate,finalDate, id){
 export function canEditPrevisita(idPrevisit) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -214,8 +214,8 @@ export function canEditPrevisita(idPrevisit) {
     },
   
     "messageBody": {
-      "client_id": window.localStorage.getItem('idClientSelected'),
-      "username": window.sessionStorage.getItem('userName'),
+      "client_id": window.sessionStorage.getItem('idClientSelected'),
+      "username": window.localStorage.getItem('userNameFront'),
       "report_id": idPrevisit,
       "report_type": NAME_REPORT_PREVISIT
     }
@@ -234,7 +234,7 @@ export function disableBlockedReport (idPrevisit) {
 
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -247,8 +247,8 @@ export function disableBlockedReport (idPrevisit) {
     },
   
     "messageBody": {
-      "client_id": window.localStorage.getItem('idClientSelected'),
-      "username": window.sessionStorage.getItem('userName'),
+      "client_id": window.sessionStorage.getItem('idClientSelected'),
+      "username": window.localStorage.getItem('userNameFront'),
       "report_id": idPrevisit,
       "report_type": NAME_REPORT_PREVISIT
     }

@@ -63,7 +63,7 @@ export function clearManagementDocumentary() {
 export function validateContactShareholder() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -74,7 +74,7 @@ export function validateContactShareholder() {
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": window.localStorage.getItem('idClientSelected')
+        "messageBody": window.sessionStorage.getItem('idClientSelected')
     };
 
     const request = axios.post(APP_URL + "/validateInfoClient", json);
@@ -87,7 +87,7 @@ export function validateContactShareholder() {
 export function updateClient(typeConsult) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": typeConsult,
             "status": "0",
@@ -98,7 +98,7 @@ export function updateClient(typeConsult) {
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": window.localStorage.getItem('idClientSelected')
+        "messageBody": window.sessionStorage.getItem('idClientSelected')
     };
 
     const request = axios.post(APP_URL + "/updateDataClient", json);
@@ -111,7 +111,7 @@ export function updateClient(typeConsult) {
 export function consultManagementDocumentaryService() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "status": "0",
             "language": "es",
@@ -121,7 +121,7 @@ export function consultManagementDocumentaryService() {
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": window.localStorage.getItem('idClientSelected')
+        "messageBody": window.sessionStorage.getItem('idClientSelected')
     };
 
     const request = axios.post(APP_URL + "/managementDocumentaryService", json);

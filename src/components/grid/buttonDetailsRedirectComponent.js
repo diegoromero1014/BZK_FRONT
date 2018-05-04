@@ -73,7 +73,7 @@ class ButtonDetailsRedirectComponent extends Component {
     }
 
     _handleRedirect(urlRedirect, idClient) {
-        window.localStorage.setItem('idClientSelected', idClient);
+        window.sessionStorage.setItem('idClientSelected', idClient);
         const { consultInfoClient, showLoading } = this.props;
         consultInfoClient().then((data) => {
             showLoading(false, null);

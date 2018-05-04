@@ -55,7 +55,7 @@ class ViewManagement extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const {changeTabSeletedChartView, updateTitleNavBar, validatePermissionsByModule} = this.props;

@@ -40,7 +40,7 @@ class ClientsPendingUpdate extends Component {
 
     componentWillMount() {
         const {showLoading} = this.props;
-        if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
+        if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             const {clearFilter, consultList, getMasterDataFields, consultDataSelect, updateTitleNavBar} = this.props;

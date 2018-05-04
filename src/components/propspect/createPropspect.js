@@ -59,7 +59,7 @@ class CreatePropspect extends Component {
   componentWillMount() {
     const { clearAllState } = this.props;
     clearAllState();
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
     const { consultDataSelect, consultList } = this.props;

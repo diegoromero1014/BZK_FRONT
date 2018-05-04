@@ -33,13 +33,13 @@ class ShareholderComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const { clearShareholder, shareholdersByClientFindServer, clientInformacion, validatePermissionsByModule } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       clearShareholder();
-      shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'),
+      shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'),
         NUMBER_RECORDS, "sh.sharePercentage", 1, "", "", "").then((data) => {
           if (_.get(data, 'payload.data.rowCount') !== 0) {
             enableClickCertificationShareholder = "disabled";

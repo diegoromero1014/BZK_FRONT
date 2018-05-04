@@ -171,7 +171,7 @@ class FormBusinessPlan extends Component {
             );
             var businessJson = {
                 "id": null,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,

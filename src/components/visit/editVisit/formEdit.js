@@ -151,7 +151,7 @@ class FormEdit extends Component {
 
     _onClickPDF() {
         const { pdfDescarga } = this.props;
-        pdfDescarga(window.localStorage.getItem('idClientSelected'), this.state.idVisit);
+        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), this.state.idVisit);
     }
 
     _closeConfirmCloseVisit() {
@@ -250,7 +250,7 @@ class FormEdit extends Component {
 
                 let visitJson = {
                     "id": detailVisit.data.id,
-                    "client": window.localStorage.getItem('idClientSelected'),
+                    "client": window.sessionStorage.getItem('idClientSelected'),
                     "visitTime": moment(this.state.dateVisit).format('x'),
                     "participatingContacts": dataClient.length === 0 ? null : dataClient,
                     "participatingEmployees": dataBanco,

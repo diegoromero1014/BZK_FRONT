@@ -6,7 +6,7 @@ export function createContactNew(jsonCreateContact){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "service": "",
         "status": "0",
         "language": "es",
@@ -30,7 +30,7 @@ export function searchContact(typeDocument,numberDocument,clientId){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
          "username":"lmejias",
          "service": "",
         "status": "0",

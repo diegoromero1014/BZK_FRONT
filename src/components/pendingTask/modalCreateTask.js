@@ -155,7 +155,7 @@ class ModalCreateTask extends Component {
     if (!_.isUndefined(functCloseModal) && !_.isNull(functCloseModal)) {
       functCloseModal();
     } else {
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
       clearMyPendingPaginator();
       tasksByUser(0, NUMBER_RECORDS, "", "", "");
     }
@@ -175,7 +175,7 @@ class ModalCreateTask extends Component {
 
       var messageBody = {
         "id": id.value,
-        "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.localStorage.getItem('idClientSelected') : idClient,
+        "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.sessionStorage.getItem('idClientSelected') : idClient,
         "task": tarea.value,
         "advance": advance.value,
         "status": idEstado.value,
@@ -216,7 +216,7 @@ class ModalCreateTask extends Component {
     var visibleEdit, editAction;
     var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
-      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), localStorage.getItem('userNameFront').toLowerCase());
     } else {
       editAction = true;
     }

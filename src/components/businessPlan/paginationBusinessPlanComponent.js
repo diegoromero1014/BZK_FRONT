@@ -39,7 +39,7 @@ class PaginationBusinessPlanComponent extends Component{
 
   _handleBusinessPlanByClientsFind(limInf){
     const {businessPlanByClientFindServer, businessPlanReducer} = this.props;
-    businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), limInf,NUMBER_RECORDS, businessPlanReducer.get('columnBusinessPlan'),businessPlanReducer.get('orderBusinessPlan'),v1,"");
+    businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), limInf,NUMBER_RECORDS, businessPlanReducer.get('columnBusinessPlan'),businessPlanReducer.get('orderBusinessPlan'),v1,"");
   }
 
   render(){

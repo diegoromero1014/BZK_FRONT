@@ -390,7 +390,7 @@ class clientCertify extends React.Component {
             setNotes(infoClient.notes);
         }
 
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         } else {
             if (_.isEmpty(infoClient)) {

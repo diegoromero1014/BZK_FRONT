@@ -14,9 +14,16 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
-      if( window.localStorage.getItem('sessionToken') === "" ){
+      console.log(document.cookie.indexOf('estadoconexion='));
+      if( window.localStorage.getItem('sessionTokenFront') === "" || document.cookie.indexOf('estadoconexion=') == -1){
+        window.localStorage.setItem('sessionTokenFront','');
+        document.cookie = 'estadoconexion=activa;path=/';
+        
         redirectUrl("/login");
+  
       } else {
+        console.log('lo deja pasar');
+        console.log(window.localStorage.getItem('sessionTokenFront'))
         const {loadObservablesLeftTimer} = this.props;
         loadObservablesLeftTimer();
       }

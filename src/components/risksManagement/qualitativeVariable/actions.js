@@ -6,7 +6,7 @@ import axios from 'axios';
 export function getAllowSurveyQualitativeVarible(idClient) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -30,7 +30,7 @@ export function getAllowSurveyQualitativeVarible(idClient) {
 export function getSurveyQualitativeVarible() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -41,7 +41,7 @@ export function getSurveyQualitativeVarible() {
             "debug": true,
             "isSuccessful": true
         },
-        "messageBody": window.localStorage.getItem('idClientSelected')
+        "messageBody": window.sessionStorage.getItem('idClientSelected')
     }
     var request = axios.post(APP_URL + "/getSurveyQualitativeVariable", json);
     return {
@@ -83,7 +83,7 @@ export function changeValueModalIsOpen( value ){
 export function saveResponseQualitativeSurvey(jsonSave) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",

@@ -110,7 +110,7 @@ class ParticipantesBancolombia extends Component {
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
     if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
     }
   }
 

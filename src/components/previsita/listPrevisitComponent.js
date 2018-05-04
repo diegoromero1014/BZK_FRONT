@@ -52,7 +52,7 @@ class ListPrevisitComponent extends Component {
 		const {previsitByClientFindServer, orderColumnPrevisit, clearPrevisitOrder} = this.props;
 		clearPrevisitOrder();
 		orderColumnPrevisit(orderPrevisit, columnPrevisit);
-		previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnPrevisit, orderPrevisit, v1);
+		previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnPrevisit, orderPrevisit, v1);
 	}
 
 	_renderHeaders() {
@@ -83,7 +83,7 @@ class ListPrevisitComponent extends Component {
 		return _.forOwn(data, function(value, key) {
 			let json1 = {
 				'messageHeader': {
-					'sessionToken': window.localStorage.getItem('sessionToken'),
+					'sessionToken': window.localStorage.getItem('sessionTokenFront'),
 					'timestamp': new Date().getTime(),
 					'service': '',
 					'status': '0',

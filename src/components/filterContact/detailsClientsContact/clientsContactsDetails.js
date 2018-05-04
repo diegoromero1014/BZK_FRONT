@@ -30,7 +30,7 @@ class ClientsContactsDetails extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         } else if (window.localStorage.getItem('idContactSelected') === "") {
             redirectUrl("/dashboard/clients");

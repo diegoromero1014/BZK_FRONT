@@ -35,12 +35,12 @@ class PrevisitComponent extends Component {
   }
 
   componentWillMount() {
-    if( window.localStorage.getItem('sessionToken') === "" ) {
+    if( window.localStorage.getItem('sessionTokenFront') === "" ) {
       redirectUrl("/login");
     } else {
       const {previsitByClientFindServer, clearPrevisit, validatePermissionsByModule} = this.props;
       clearPrevisit();
-      previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+      previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
       validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");

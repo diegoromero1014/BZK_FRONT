@@ -49,7 +49,7 @@ class MenuListComponent extends Component {
         const { menu } = this.props;
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
         const btnLogoutStyle = { position: 'absolute', bottom: '0px', width: '100%', backgroundColor: "black" };
-        const userNameLogged = _.toLower(window.sessionStorage.getItem('userName'));
+        const userNameLogged = _.toLower(window.localStorage.getItem('userNameFront'));
         return (
             <Menu key={_.uniqueId("Menu_")} inverted vertical fluid attached="top" style={{ backgroundColor: '#00448c' }}>
                 {menuListItem.map(this._mapMenuItems)}

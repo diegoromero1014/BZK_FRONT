@@ -42,7 +42,7 @@ class ViewAlerts extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
         const {updateTitleNavBar, validatePermissionsByModule, showLoading, getAlertsByUser} = this.props;

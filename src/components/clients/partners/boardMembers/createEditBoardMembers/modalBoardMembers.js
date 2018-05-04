@@ -179,7 +179,7 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
         var boardMember = {
             idClientBoardMember: null,
-            idClient: window.localStorage.getItem('idClientSelected'),
+            idClient: window.sessionStorage.getItem('idClientSelected'),
             idBoardMember: idBoardMember.value,
             idTypeOfDocument: typeOfDocument.value,
             numberDocument: (numberDocument.value).trim(),
@@ -198,7 +198,7 @@ class ModalCreateBoardMembers extends Component {
                 if (data.payload.data.data) {
                     clearFilters();
                     changeKeyword('');
-                    getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
+                    getBoardMembers(window.sessionStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
                         if (!validateResponse(data)) {
                             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         }
@@ -241,7 +241,7 @@ class ModalCreateBoardMembers extends Component {
             var jsonBoardMember = {
                 idTypeDocument: typeOfDocument.value,
                 numberDocument: (numberDocument.value).trim(),
-                idClient: window.localStorage.getItem('idClientSelected')
+                idClient: window.sessionStorage.getItem('idClientSelected')
             };
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             validateExistsBoardMember(jsonBoardMember).then((data) => {

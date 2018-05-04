@@ -33,7 +33,7 @@ export function validateLogin(username, password) {
 }
 
 export function saveSessionToken(sessionToken) {
-    window.localStorage.setItem('sessionToken', sessionToken);
+    window.localStorage.setItem('sessionTokenFront', sessionToken);
     return {
         type: CHANGE_STATUS_LOGIN,
         payload: ""
@@ -41,7 +41,7 @@ export function saveSessionToken(sessionToken) {
 }
 
 export function saveSessionUserName(userName){
-    window.sessionStorage.setItem('userName',userName);
+    window.localStorage.setItem('userNameFront',userName);
 }
 
 export function clearSessionUserName(){

@@ -47,7 +47,7 @@ class ButtonAssociateComponent extends Component {
         clearPrevisit();
         changePageAssociateVisit(1);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
-        previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
+        previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
             if (validateResponse(data)) {
                 changeStateSaveData(false, "");
             }

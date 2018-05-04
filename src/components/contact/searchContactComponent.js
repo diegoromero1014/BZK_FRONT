@@ -65,7 +65,7 @@ class SearchContactComponent extends Component {
         errorKeyword: null
       });
 
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
         v1,
         v2,
         v3);

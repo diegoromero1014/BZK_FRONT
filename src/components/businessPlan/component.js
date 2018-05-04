@@ -26,12 +26,12 @@ class BusinessPlanComponent extends Component {
   }
 
   componentWillMount(){
-    if( window.localStorage.getItem('sessionToken') === "" ){
+    if( window.localStorage.getItem('sessionTokenFront') === "" ){
       redirectUrl("/login");
     }else{
       const {businessPlanByClientFindServer, clearBusinessPlan, validatePermissionsByModule} = this.props;
       clearBusinessPlan();
-      businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.initialValidityDate",1,"","");
+      businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.initialValidityDate",1,"","");
       validatePermissionsByModule(MODULE_BUSSINESS_PLAN).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
           redirectUrl("/login");

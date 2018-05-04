@@ -30,7 +30,7 @@ class SearchContacts extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         } else {
             const {clearContacts, updateTitleNavBar} = this.props;
