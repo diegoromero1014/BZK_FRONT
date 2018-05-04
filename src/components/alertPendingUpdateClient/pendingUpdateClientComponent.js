@@ -24,6 +24,7 @@ import {updateTitleNavBar} from '../navBar/actions';
 import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsPendingUpdate from './listClientPendingUpdate';
 import _ from 'lodash';
+import {onSessionExpire} from '../../actionsGlobal'
 
 const fields = ["team", "region", "zone"];
 const titleModule = 'Alerta de clientes pendientes por actualizar';
@@ -47,7 +48,7 @@ class ClientsPendingUpdate extends Component {
             showLoading(true, 'Cargando..');
             getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
                 if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                    redirectUrl("/login");
+                    onSessionExpire();
                 }
             });
             consultList(constants.TEAM_FOR_EMPLOYEE);

@@ -12,7 +12,7 @@ import {SESSION_EXPIRED, VALUE_XSS_INVALID} from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import {xssValidation} from '../../actionsGlobal';
+import {xssValidation, onSessionExpire} from '../../actionsGlobal';
 import _ from 'lodash';
 
 var prospectInApplication = true;
@@ -65,7 +65,7 @@ class CreatePropspect extends Component {
     const { consultDataSelect, consultList } = this.props;
     consultDataSelect(constants.CLIENT_ID_TYPE).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-        redirectUrl("/login");
+        onSessionExpire();
       }
     });
     consultList(constants.TEAM_FOR_EMPLOYEE);

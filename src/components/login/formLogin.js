@@ -115,6 +115,9 @@ class FormLogin extends Component {
 
         } else {
             // El usuario ya se encuentra logueado
+            
+            console.log(token);
+            
             redirectUrl("/dashboard/clients");
         }
 

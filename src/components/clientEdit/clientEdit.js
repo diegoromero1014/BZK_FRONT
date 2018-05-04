@@ -65,7 +65,7 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate, xssValidation } from "../../actionsGlobal";
+import { validateResponse, stringValidate, xssValidation, onSessionExpire } from "../../actionsGlobal";
 
 let idButton;
 let errorContact;
@@ -1285,7 +1285,7 @@ class clientEdit extends Component {
                                     updateClient(UPDATE).then((data) => {
                                         if (!_.get(data, 'payload.data.validateLogin')) {
                                             changeStateSaveData(false, "");
-                                            redirectUrl("/login");
+                                            onSessionExpire();
                                         } else {
                                             changeStateSaveData(false, "");
                                             messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";

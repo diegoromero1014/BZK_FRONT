@@ -12,7 +12,7 @@ import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants'
 import SelectFilterContact from '../../../selectsComponent/selectFilterContact/selectFilterComponent';
 import $ from 'jquery';
 import { redirectUrl } from '../../../globalComponents/actions';
-import { validatePermissionsByModule } from '../../../../actionsGlobal';
+import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
 import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
 
@@ -61,7 +61,7 @@ class ShareholderComponent extends Component {
         );
       validatePermissionsByModule(MODULE_SHAREHOLDERS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-          redirectUrl("/login");
+          onSessionExpire();
         } else {
           if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
             this.setState({ openMessagePermissions: true });

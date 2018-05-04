@@ -11,7 +11,7 @@ import PaginationBusinessPlanComponent from './paginationBusinessPlanComponent';
 import {updateTitleNavBar} from '../navBar/actions';
 import ButtonDownloadBusinessPlanComponent from './downloadBusinessPlan/buttonDownloadBusinessPlanComponent';
 import {MODULE_BUSSINESS_PLAN, CREAR, DESCARGAR} from '../../constantsGlobal';
-import {validatePermissionsByModule} from '../../actionsGlobal';
+import {validatePermissionsByModule, onSessionExpire} from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 
 class BusinessPlanComponent extends Component {
@@ -34,7 +34,7 @@ class BusinessPlanComponent extends Component {
       businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"bp.initialValidityDate",1,"","");
       validatePermissionsByModule(MODULE_BUSSINESS_PLAN).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
-          redirectUrl("/login");
+          onSessionExpire();
         } else {
           if( !_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false' ) {
             this.setState({ openMessagePermissions: true });

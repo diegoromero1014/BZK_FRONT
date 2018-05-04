@@ -9,7 +9,7 @@ import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import {SESSION_EXPIRED, VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from "../../actionsGlobal";
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import * as constants from "../selectsComponent/constants";
@@ -73,7 +73,7 @@ class memberRiskGroup extends Component {
         const { consultDataSelect } = this.props;
         consultDataSelect(constants.REASON_CONFORMATION).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                redirectUrl("/login");
+                onSessionExpire();
             }
         });
     }

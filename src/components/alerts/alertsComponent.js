@@ -18,7 +18,7 @@ import { clearFilter as clearFilterBlackList } from '../alertBlackList/actions';
 import { updateNumberTotalClients } from '../alertPendingUpdateClient/actions';
 import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE_COVENANT_ALERT, CODE_BLACK_LIST_ALERT } from './constants';
 import * as constants from '../selectsComponent/constants';
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { MODULE_ALERTS, MODULE_CLIENTS, BLUE_COLOR } from '../../constantsGlobal';
 import { COLOR_ITEMS_MENU } from '../menu/constants';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
@@ -55,7 +55,7 @@ class ViewAlerts extends Component {
         });
         validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
+                onSessionExpire();
             } else {
                 if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
                     redirectUrl("/dashboard");
