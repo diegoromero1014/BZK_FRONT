@@ -9,12 +9,14 @@ class inputComponent extends Component {
         super(props);
 
         this.state = {
-            value: ''
+            value: '',
+            focus: false
         };
 
         this._onChange = this._onChange.bind(this);
         this._onBlur = this._onBlur.bind(this);
         this._onKey = this._onKey.bind(this);
+        this._onFocus = this._onFocus.bind(this);
     }
 
     _onChange(e, event) {
@@ -40,24 +42,27 @@ class inputComponent extends Component {
 
         let trimmed = this.state.value.trim();
 
+        this.setState({
+            focus: false
+        })
+
         onChange(trimmed);
         onBlur(trimmed);
     }
 
-    // _onBlur(e, event) {
-    //     const { onBlur } = this.props;
-    //     this.setState({
-    //         xssNotification: REGEX_SIMPLE_XSS.test(e.target.value),
-    //         value: e.target.value
-    //     });
+    _onFocus(e) {
+        const { onFocus } = this.props;
 
-    //     onBlur(e, event);
-    // }
+        this.setState({
+            focus: true
+        })
 
-    // _onInvalid(e, event) {
-    //     event.preventDefault();
-    //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
-    // }
+        if (onFocus) {
+            onFocus(e);
+        }
+    }
+
+
 
     _onKey(e) {
 
@@ -83,6 +88,15 @@ class inputComponent extends Component {
         this.setState({ value: value });
     }
 
+    componentWillReceiveProps(nextProps) {
+
+        if(nextProps.value != this.state.value && ! this.state.focus) {
+            this.setState({value: nextProps.value});
+        }
+
+    }
+
+
     render() {
         const { nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate } = this.props;
 
@@ -103,7 +117,7 @@ class inputComponent extends Component {
                         disabled={disabled}
                         className={disabled}
                         onKeyPress={this._onKey}
-                        onFocus={onFocus}
+                        onFocus={this._onFocus}
                         value={this.state.value || ''}
                     />
                 </div>
