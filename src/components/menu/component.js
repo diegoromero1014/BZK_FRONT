@@ -140,8 +140,8 @@ class MenuComponent extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
-            redirectUrl("/login");
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
+            
         } else {
             const { consultModulesAccess, showLoading } = this.props;
             showLoading(true, 'Cargando...');

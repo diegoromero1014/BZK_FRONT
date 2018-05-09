@@ -6,7 +6,7 @@ import axios from 'axios';
 export function draftsDocumentsByUser(pageNum, maxRows, keyWord, orderDrafts, columnDrafts) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username":"",
       "timestamp": new Date().getTime(),
       "service": "",
@@ -38,7 +38,7 @@ export function draftsDocumentsByUser(pageNum, maxRows, keyWord, orderDrafts, co
 export function getInfoDraftDocument(idTask) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username":"",
       "timestamp": new Date().getTime(),
       "service": "",

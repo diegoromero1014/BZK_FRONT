@@ -8,7 +8,7 @@ import { redirectUrl } from './components/globalComponents/actions';
 export function consultParameterServer(tagConsult) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -34,7 +34,7 @@ export function consultParameterServer(tagConsult) {
 export function changeValueActiveLog(value) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -58,7 +58,7 @@ export function changeValueActiveLog(value) {
 export function consultValueActiveLog() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -94,7 +94,7 @@ export function formValidateKeyEnter(e, validate) {
 export function validatePermissionsByModule(module) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -313,6 +313,7 @@ export function formatCurrency(value, format) {
  */
 export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
+        window.localStorage.setItem('sessionTokenFront','');
         redirectUrl("/login");
     } else {
         if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)) {
@@ -365,7 +366,7 @@ export function clearPrevisitPermissions() {
 export function getUserBlockingReport(idEntity, reportType) {
     const json = {
       "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "timestamp": new Date().getTime(),
         "service": "",
         "status": "0",
@@ -378,8 +379,8 @@ export function getUserBlockingReport(idEntity, reportType) {
       },
     
       "messageBody": {
-        "client_id": window.localStorage.getItem('idClientSelected'),
-        "username": window.sessionStorage.getItem('userName'),
+        "client_id": window.sessionStorage.getItem('idClientSelected'),
+        "username": window.localStorage.getItem('userNameFront'),
         "report_id": idEntity,
         "report_type": reportType
       }
@@ -398,7 +399,7 @@ export function getUserBlockingReport(idEntity, reportType) {
 
     const json = {
       "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "timestamp": new Date().getTime(),
         "service": "",
         "status": "0",
@@ -411,8 +412,8 @@ export function getUserBlockingReport(idEntity, reportType) {
       },
     
       "messageBody": {
-        "client_id": window.localStorage.getItem('idClientSelected'),
-        "username": window.sessionStorage.getItem('userName'),
+        "client_id": window.sessionStorage.getItem('idClientSelected'),
+        "username": window.localStorage.getItem('userNameFront'),
         "report_id": idEntity,
         "report_type": reportType
       }
@@ -441,4 +442,9 @@ export function xssValidation(value, isFullValidation) {
     }
 
     return hasXss;
+}
+
+export function onSessionExpire() {
+    window.localStorage.setItem('sessionTokenFront','');
+    redirectUrl("/login");
 }

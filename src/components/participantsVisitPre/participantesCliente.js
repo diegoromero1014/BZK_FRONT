@@ -90,7 +90,7 @@ class ParticipantesCliente extends Component {
         clearParticipants();
         this.props.resetForm();
         const valuesContactsClient = contactsByClient.get('contacts');
-        contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
+        contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
         validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");

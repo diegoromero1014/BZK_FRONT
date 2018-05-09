@@ -49,7 +49,7 @@ class ListPendingTaskComponent extends Component {
     const { tasksByClientFindServer, orderColumnUserTask, clearUserTaskPaginator } = this.props;
     clearUserTaskPaginator();
     orderColumnUserTask(orderTask, columnTask);
-    tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, columnTask, orderTask, v1);
+    tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, columnTask, orderTask, v1);
   }
 
 
@@ -58,7 +58,7 @@ class ListPendingTaskComponent extends Component {
     return _.forOwn(data, function (value, key) {
       var json1 = {
         "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionToken'),
+          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",
@@ -70,7 +70,7 @@ class ListPendingTaskComponent extends Component {
           "isSuccessful": true
         },
         "messageBody": {
-          "clientId": window.localStorage.getItem('idClientSelected'),
+          "clientId": window.sessionStorage.getItem('idClientSelected'),
           "contactId": value.id,
           "clientContactId": value.idClientContact
         }

@@ -9,7 +9,7 @@ import axios from 'axios';
 export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder, order, status) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",

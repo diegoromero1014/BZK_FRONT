@@ -19,7 +19,7 @@ import axios from 'axios';
 export function getClientsRiskGroup(id) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -42,7 +42,7 @@ export function getClientsRiskGroup(id) {
 export function getAllNoveltiesRiskGroup(id) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -65,7 +65,7 @@ export function getAllNoveltiesRiskGroup(id) {
 export function removeClientRiskGroup(data) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -88,7 +88,7 @@ export function removeClientRiskGroup(data) {
 export function deleteRiskGroup(data) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -112,7 +112,7 @@ export function deleteRiskGroup(data) {
 export function addClientRiskGroup(data) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -145,7 +145,7 @@ export function addClientRiskGroup(data) {
 export function editNameRiskGroup(riskGroup) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -168,7 +168,7 @@ export function editNameRiskGroup(riskGroup) {
 export function validateRiskGroupCodeExists(riskGroup) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -210,7 +210,7 @@ export function showModalRiskGroup(show) {
 export function hasClientRequest(id) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -235,7 +235,7 @@ export function hasClientRequest(id) {
 export function saveObservationsRiskGroup(codeEntityRiskGroup, entity, observation) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -265,7 +265,7 @@ export function saveObservationsRiskGroup(codeEntityRiskGroup, entity, observati
 export function getListObservationsRiskGroupById(idCodeEntity) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",

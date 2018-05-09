@@ -18,8 +18,18 @@ class MenuListFatherComponent extends Component {
     _handleClickMenuItemChildren(link, labelText) {
         if (!_.isEqual(link, undefined) && !_.isEqual(link, null)) {
             this.props.changeActiveItemMenu(this.props.labelText);
+            if (link === '/logout') {
+                // Click en logout
+                this.clearSessionVariables()
+                redirectUrl('/login')         
+            }
             redirectUrl(link);
         }
+    }
+
+    clearSessionVariables() {
+        window.localStorage.setItem('sessionTokenFront','');
+        window.localStorage.setItem('userNameFront','');
     }
 
     _mapMenuItemsChildren(item, idx) {

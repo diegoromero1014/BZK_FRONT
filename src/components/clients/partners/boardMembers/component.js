@@ -33,7 +33,7 @@ class ComponentBoardMembers extends Component {
     componentWillMount() {
         const { boardMembersReducer, getBoardMembers, changeStateSaveData, swtShowMessage, getMasterDataFields,
             validatePermissionsByModule, clearFilters, changeKeyword } = this.props;
-        var idClient = window.localStorage.getItem('idClientSelected');
+        var idClient = window.sessionStorage.getItem('idClientSelected');
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         clearFilters();
         changeKeyword('');

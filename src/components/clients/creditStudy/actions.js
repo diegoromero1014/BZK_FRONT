@@ -9,7 +9,7 @@ import _ from 'lodash';
 export function getContextClient(idClient, type) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -34,7 +34,7 @@ export function saveCreditStudy(jsonCreditStudy) {
     const jsonComplete = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "service": "",
             "status": "0",
             "language": "es",
@@ -57,7 +57,7 @@ export function validateInfoCreditStudy(idClient) {
     const jsonComplete = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "service": "",
             "status": "0",
             "language": "es",
@@ -80,7 +80,7 @@ export function updateNotApplyCreditContact(jsonCreditContact) {
     const jsonComplete = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "service": "",
             "status": "0",
             "language": "es",

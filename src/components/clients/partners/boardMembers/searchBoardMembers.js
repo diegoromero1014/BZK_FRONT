@@ -39,7 +39,7 @@ class SearchBoardMembers extends Component {
       });
       clearFilters();
       changeStateSaveData(true, MESSAGE_LOAD_DATA);
-      getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, keyword).then((data) => {
+      getBoardMembers(window.sessionStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, keyword).then((data) => {
         changeStateSaveData(false, "");
         if (!validateResponse(data)) {
           swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);

@@ -6,7 +6,7 @@ import axios from 'axios';
 export function consultInfoClient(){
   const json = {
     "messageHeader":{
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -18,7 +18,7 @@ export function consultInfoClient(){
       "isSuccessful": true
     },
     "messageBody":{
-      "clientId": window.localStorage.getItem('idClientSelected')
+      "clientId": window.sessionStorage.getItem('idClientSelected')
     }
   };
 

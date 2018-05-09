@@ -213,7 +213,7 @@ class ModalComponentShareholder extends Component {
       }
 
       searchShareholder(tipoDocumento.value, numeroDocumentoTrimmed,
-        window.localStorage.getItem('idClientSelected')).then((data) => {
+        window.sessionStorage.getItem('idClientSelected')).then((data) => {
           if ((_.get(data, 'payload.data.shareholderExist'))) { //Si el accionista existe
             typeMessage = "warning";
             titleMessage = "Advertencia";
@@ -288,7 +288,7 @@ class ModalComponentShareholder extends Component {
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
       numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;
     var messageBody = {
-      "clientId": window.localStorage.getItem('idClientSelected'),
+      "clientId": window.sessionStorage.getItem('idClientSelected'),
       "shareHolderIdType": tipoDocumento.value.trim(),
       "shareHolderIdNumber": numeroDocumento.value.trim(),
       "shareHolderType": tipoPersona.value.trim(),
@@ -326,13 +326,13 @@ class ModalComponentShareholder extends Component {
               typeMessage = "success";
               titleMessage = "Creación de accionista";
               message = "Señor usuario, el accionista se creó de forma exitosa.";
-              shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
+              shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
             }
           } else {
             typeMessage = "success";
             titleMessage = "Creación de accionista";
             message = "Señor usuario, el accionista se creó de forma exitosa.";
-            shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
+            shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
           }
         } else {
           typeMessage = "error";

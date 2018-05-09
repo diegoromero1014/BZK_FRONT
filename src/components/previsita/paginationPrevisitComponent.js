@@ -39,7 +39,7 @@ class PaginationPrevisitComponent extends Component {
 
 	_handlePrevisitByClientsFind(limInf) {
 		const {previsitByClientFindServer, previsitReducer} = this.props;
-		previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), limInf, NUMBER_RECORDS, previsitReducer.get('columnPrevisit'), previsitReducer.get('orderPrevisit'), v1);
+		previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), limInf, NUMBER_RECORDS, previsitReducer.get('columnPrevisit'), previsitReducer.get('orderPrevisit'), v1);
 	}
 
 	render() {

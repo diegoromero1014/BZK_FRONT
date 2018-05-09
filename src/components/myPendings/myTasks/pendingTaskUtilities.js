@@ -26,7 +26,7 @@ export const mapDateColor = (date) => {
 
 export const mapDataGrid = (data = [], permissionsEdit) => {
     return data.map(item => {
-        const editStateTask = item.userName.toLowerCase() === sessionStorage.getItem('userName').toLowerCase();
+        const editStateTask = item.userName.toLowerCase() === localStorage.getItem('userNameFront').toLowerCase();
         return {
             actions: {
                 actionView: true,

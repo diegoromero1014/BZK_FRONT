@@ -259,7 +259,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _onClickPDF() {
             const { pdfDescarga, params: { id } } = this.props;
-            pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+            pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
         }
 
         _changeCurrency(currencyValue) {
@@ -409,7 +409,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
                             let pipelineJson = {
                                 "id": idPipeline,
-                                "client": window.localStorage.getItem('idClientSelected'),
+                                "client": window.sessionStorage.getItem('idClientSelected'),
                                 "documentStatus": typeButtonClick,
                                 "product": product.value,
                                 "businessStatus": businessStatus.value,

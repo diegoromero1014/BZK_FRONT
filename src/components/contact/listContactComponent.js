@@ -61,7 +61,7 @@ class ListContactComponent extends Component {
     const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2, value3, clearContactPaginator, orderColumnContact } = this.props;
     clearContactPaginator();
     orderColumnContact(order, column);
-    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, column, order, contactsByClient.get('keywordContact'),
+    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, column, order, contactsByClient.get('keywordContact'),
       v1,
       v2,
       v3);
@@ -74,7 +74,7 @@ class ListContactComponent extends Component {
     return _.forOwn(data, function (value, key) {
       var json1 = {
         "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionToken'),
+          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",
@@ -86,7 +86,7 @@ class ListContactComponent extends Component {
           "isSuccessful": true
         },
         "messageBody": {
-          "clientId": window.localStorage.getItem('idClientSelected'),
+          "clientId": window.sessionStorage.getItem('idClientSelected'),
           "contactId": value.id,
           "clientContactId": value.idClientContact
         }

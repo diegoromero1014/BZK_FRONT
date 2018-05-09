@@ -11,7 +11,7 @@ class ItemObservation extends Component {
 
     render() {
         const { idx, item } = this.props;
-        const userName = sessionStorage.getItem('userName').toLowerCase();
+        const userName = localStorage.getItem('userNameFront').toLowerCase();
         let color = "#EFEFEF";
         let activeUser = false;
         if (item.userNameCreate.toLowerCase() == userName) {

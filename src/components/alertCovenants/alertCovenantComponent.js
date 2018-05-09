@@ -51,7 +51,7 @@ class AlertCovenants extends Component {
 
     componentWillMount() {
         const { redirectUrl, defaultValues, updateTitleNavBar, showLoading } = this.props;
-        if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
+        if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             showLoading(true, 'Cargando..');

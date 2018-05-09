@@ -20,7 +20,7 @@ import Products from "./product";
 import { connect } from "react-redux";
 import moment from "moment";
 import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO, GRUPO_RIESGO, GESTION_DOCUMENTAL } from "../../constantsGlobal";
-import { validatePermissionsByModule, shorterStringValue } from "../../actionsGlobal";
+import { validatePermissionsByModule, shorterStringValue, onSessionExpire } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { MENU_CLOSED } from "../navBar/constants";
 import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
@@ -41,12 +41,12 @@ class DetailsInfoClient extends Component {
 
     componentWillMount() {
         const { login, validatePermissionsByModule } = this.props;
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
         validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
+                onSessionExpire();
             } else {
                 if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
                     redirectUrl("/dashboard");
@@ -75,7 +75,7 @@ class DetailsInfoClient extends Component {
         //Valido si el cliente tiene un representante legal y accionistas
         validateContactShareholder().then((data) => {
             if (!_.get(data, 'payload.data.validateLogin')) {
-                redirectUrl("/login");
+                onSessionExpire();
             } else {
                 redirectUrl("/dashboard/clientEdit");
             }

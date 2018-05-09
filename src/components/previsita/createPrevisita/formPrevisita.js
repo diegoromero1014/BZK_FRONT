@@ -578,7 +578,7 @@ class FormPrevisita extends Component {
                 }
                 var previsitJson = {
                     "id": null,
-                    "client": window.localStorage.getItem('idClientSelected'),
+                    "client": window.sessionStorage.getItem('idClientSelected'),
                     "visitTime": parseInt(moment(this.state.datePreVisit).format('x')),
                     "participatingContacts": dataClient.length === 0 ? null : dataClient,
                     "participatingEmployees": dataBanco.length === 0 ? null : dataBanco,

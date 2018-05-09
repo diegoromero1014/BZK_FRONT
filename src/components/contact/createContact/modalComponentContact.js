@@ -353,7 +353,7 @@ class ModalComponentContact extends Component {
                 return;
             }
 
-            searchContact(tipoDocumento.value, documentNumber, window.localStorage.getItem('idClientSelected')).then((data) => {
+            searchContact(tipoDocumento.value, documentNumber, window.sessionStorage.getItem('idClientSelected')).then((data) => {
                 if ((_.get(data, 'payload.data.isClientContact'))) {
                     clearSearchContact();
                     this.props.resetForm();
@@ -384,7 +384,7 @@ class ModalComponentContact extends Component {
         } = this.props;
         var messageBody = {
             "id": id.value,
-            "client": window.localStorage.getItem('idClientSelected'),
+            "client": window.sessionStorage.getItem('idClientSelected'),
             "title": tipoTratamiendo.value,
             "gender": tipoGenero.value,
             "contactType": tipoDocumento.value,
@@ -425,7 +425,7 @@ class ModalComponentContact extends Component {
             } else {
                 if ((_.get(data, 'payload.data.status') === 200)) {
                     this.setState({ showEx: true });
-                    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                 } else {
                     this.setState({ showEr: true });
                 }

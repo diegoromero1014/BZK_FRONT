@@ -12,7 +12,7 @@ import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
 import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
@@ -31,7 +31,7 @@ class ComponentClientInformation extends Component {
     }
 
     componentWillMount() {
-        if (!_.isNull(window.localStorage.getItem('idClientSelected')) && !_.isUndefined(window.localStorage.getItem('idClientSelected'))) {
+        if (!_.isNull(window.sessionStorage.getItem('idClientSelected')) && !_.isUndefined(window.sessionStorage.getItem('idClientSelected'))) {
             const { resetAccordion, tabReducer, validatePermissionsByModule } = this.props;
             var tabActive = tabReducer.get('tabSelected');
             if (tabActive === null) {
@@ -53,7 +53,7 @@ class ComponentClientInformation extends Component {
 
             consultInfoClient().then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin')) {
-                    redirectUrl("/login");
+                    onSessionExpire();
                 }
                 showLoading(false, '');
             });
@@ -63,7 +63,7 @@ class ComponentClientInformation extends Component {
             updateTabSeletedCS(TAB_STORY);
 
         } else {
-            redirectUrl("/login");
+            redirectUrl("/dashboard/clients");
         }
     }
 

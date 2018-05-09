@@ -431,7 +431,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
               let pipelineJson = {
                 "id": null,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "documentStatus": typeButtonClick,
                 "product": product.value,
                 "businessStatus": businessStatus.value,

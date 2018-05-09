@@ -16,7 +16,7 @@ class ButtonDownloadBusinessPlanComponent extends Component {
 	_downloadBusinessPlans() {
 		const {changeStateSaveData, getCsvBusinessPlanByClient, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		getCsvBusinessPlanByClient(window.localStorage.getItem('idClientSelected'), null).then(function(data) {
+		getCsvBusinessPlanByClient(window.sessionStorage.getItem('idClientSelected'), null).then(function(data) {
 			changeStateSaveData(false, "");
 			if (data.payload.data.status === 200) {
 				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');

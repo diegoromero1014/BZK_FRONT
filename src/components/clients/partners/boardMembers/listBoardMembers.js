@@ -53,7 +53,7 @@ class ListBoardMembers extends Component {
         swtShowMessage('success', "Miembro de junta", 'Señor usuario, el miembro de junta se eliminó exitosamente');
         clearFilters();
         changeKeyword('');
-        getBoardMembers(window.localStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
+        getBoardMembers(window.sessionStorage.getItem('idClientSelected'), LOWER_INITIAL_LIMIT, NUMBER_RECORDS, '').then((data) => {
           if (!validateResponse(data)) {
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
           }

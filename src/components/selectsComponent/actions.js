@@ -11,7 +11,7 @@ export function consultDataSelect(field, mask) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -36,7 +36,7 @@ export function consultList(field) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -60,7 +60,7 @@ export function consultListWithParameter(field, parameter) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -96,7 +96,7 @@ export function consultListWithParameterUbication(field, parentId) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -130,7 +130,7 @@ export function getMasterDataFields(fields, onlyWithoutParents) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -170,7 +170,7 @@ export function economicGroupsByKeyword(keyword) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -195,7 +195,7 @@ export function getPipelineProducts() {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -218,7 +218,7 @@ export function getPipelineCurrencies() {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -241,7 +241,7 @@ export function getClientNeeds() {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -264,7 +264,7 @@ export function consultTeamsByRegionByEmployee(idRegion) {
   const json = {
     messageHeader: {
       "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "service": "",
       "status": "0",
       "language": "es",
@@ -296,7 +296,7 @@ export function getRegionsByEmployee() {
 
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",

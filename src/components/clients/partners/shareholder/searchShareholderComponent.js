@@ -61,7 +61,7 @@ class SearchShareholderComponent extends Component {
         errorKeyword: null
       });
 
-      shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, _keywordShareholder, v1, v2);
+      shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, _keywordShareholder, v1, v2);
 
     } else {
       this.setState({
