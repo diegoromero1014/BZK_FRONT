@@ -44,10 +44,8 @@ const validate = (values) => {
         errors.observedValue = null;
     }
     // error={isMandatoryObservations ? VALUE_REQUIERED : null}
-    console.log("observations", isMandatoryObservations);
     if (isMandatoryObservations) {
 
-        console.log(values.observations)
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
         } else {
@@ -58,7 +56,7 @@ const validate = (values) => {
     } else {
         errors.observations = null;
     }
-
+    
     if (isFinancialStatements) {
         if (!values.dateFinancialStatements) {
             errors.dateFinancialStatements = VALUE_REQUIERED;
@@ -120,10 +118,12 @@ class FormCreateTracking extends Component {
         const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant } } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         this.validateCovenantObservation(validCovenant.value, val);
-        fullfillmentCovenant.onChange(val);
+        
         let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == val);
         isFinancialStatements = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
         this.setState({ isFinancialStatements: isFinancialStatements });
+
+        fullfillmentCovenant.onChange(val);
     }
 
     _handleCreateTracking() {
@@ -219,6 +219,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...validCovenant}
                                 onChange={val => this._onChangeValidCovenant(val)}
+                                onBlur={() => null}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
@@ -233,6 +234,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...fullfillmentCovenant}
                                 onChange={val => this._onFullfillmentCovenant(val)}
+                                onBlur={() => null}
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>
