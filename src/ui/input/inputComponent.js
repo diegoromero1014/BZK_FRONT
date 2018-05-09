@@ -3,6 +3,8 @@ import $ from 'jquery';
 import _ from 'lodash';
 import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 
+let inputFocus = false;
+
 class inputComponent extends Component {
 
     constructor(props) {
@@ -28,23 +30,13 @@ class inputComponent extends Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        if (nextProps.value != this.state.value) {
-            this.setState({ value: nextProps.value });
-        }
-
-    }
-
     _onBlur(e, event) {
 
         const { onChange, onBlur } = this.props;
 
         let trimmed = this.state.value.trim();
 
-        this.setState({
-            focus: false
-        })
+        inputFocus = false;
 
         onChange(trimmed);
         onBlur(trimmed);
@@ -52,10 +44,7 @@ class inputComponent extends Component {
 
     _onFocus(e) {
         const { onFocus } = this.props;
-
-        this.setState({
-            focus: true
-        })
+        inputFocus = true;
 
         if (onFocus) {
             onFocus(e);
@@ -90,8 +79,8 @@ class inputComponent extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if(nextProps.value != this.state.value && ! this.state.focus) {
-            this.setState({value: nextProps.value});
+        if (nextProps.value != this.state.value && !inputFocus) {
+            this.setState({ value: nextProps.value });
         }
 
     }
