@@ -13,7 +13,10 @@ class NavBarComponent extends Component {
 
     componentWillMount(){
       const {consultModulesAccess} = this.props;
-      consultModulesAccess();
+      if (window.localStorage.getItem('sessionTokenFront')) {
+        consultModulesAccess();
+      }
+      
     }
 
     render() {

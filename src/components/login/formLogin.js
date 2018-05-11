@@ -75,6 +75,9 @@ class FormLogin extends Component {
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
+                        // Activar cookie
+                        document.cookie = 'estadoconexion=activa;path=/';
+
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
 
                         if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
