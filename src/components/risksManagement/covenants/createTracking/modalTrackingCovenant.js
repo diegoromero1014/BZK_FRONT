@@ -52,10 +52,6 @@ class ModaltrackingCovenant extends Component {
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.idCovenant) ? "" : infoCovenant.idCovenant}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
-                                <dt style={{ paddingTop: '5px' }}>Condición de referencia</dt>
-                                <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.referenceCondition) ? "" : infoCovenant.referenceCondition}</dd>
-                            </Col>
-                            <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Valor de referencia</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.referenceValue) ? "" : infoCovenant.referenceValue}</dd>
                             </Col>

@@ -44,10 +44,8 @@ const validate = (values) => {
         errors.observedValue = null;
     }
     // error={isMandatoryObservations ? VALUE_REQUIERED : null}
-    console.log("observations", isMandatoryObservations);
     if (isMandatoryObservations) {
 
-        console.log(values.observations)
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
         } else {
