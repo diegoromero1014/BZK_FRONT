@@ -58,7 +58,7 @@ class ListPipelineComponent extends Component {
     const {pipelineByClientFindServer,orderColumnPipeline,clearPipelinePaginator} = this.props;
     clearPipelinePaginator();
     orderColumnPipeline(orderPipeline,columnPipeline);
-    pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnPipeline,orderPipeline,v1,v2);
+    pipelineByClientFindServer(window.sessionStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnPipeline,orderPipeline,v1,v2);
 }
   _renderHeaders(){
     return [
@@ -93,7 +93,7 @@ class ListPipelineComponent extends Component {
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
-                  "sessionToken": window.localStorage.getItem('sessionToken'),
+                  "sessionToken": window.localStorage.getItem('sessionTokenFront'),
                       "timestamp": new Date().getTime(),
                       "service": "",
                       "status": "0",

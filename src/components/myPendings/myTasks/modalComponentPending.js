@@ -45,7 +45,7 @@ import {
     SESSION_EXPIRED,
     RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
-import { validateResponse } from "../../../actionsGlobal";
+import { validateResponse, onSessionExpire } from "../../../actionsGlobal";
 
 import Tooltip from "../../toolTip/toolTipComponent";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
@@ -134,7 +134,7 @@ class ModalComponentPending extends Component {
         getMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES]).then((data) => {
             this.consultInfoMyPendingTask();
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                redirectUrl("/login");
+                onSessionExpire();
             }
 
         }, (reason) => {

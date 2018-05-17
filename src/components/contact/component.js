@@ -28,13 +28,13 @@ class ContactComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2,
         value3, clearContact, validatePermissionsByModule } = this.props;
       clearContact();
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
       validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");

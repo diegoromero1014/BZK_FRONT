@@ -128,7 +128,7 @@ class ButtonDeleteComponent extends Component {
             if (actionsDelete.typeDelete === DELETE_TYPE_CONTACT) {
                 clearContactCreate();
                 clearContactOrder();
-                contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
+                contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
                     "",
                     "",
                     "");
@@ -138,32 +138,32 @@ class ButtonDeleteComponent extends Component {
             } else if (actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER) {
                 clearShareholderCreate();
                 clearShareholderOrder();
-                shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
+                shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
             } else if (actionsDelete.typeDelete === DELETE_TYPE_VISIT) {
                 clearVisitOrder();
                 clearVisitPaginator();
-                visitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "vd.visitTime", 1, "");
+                visitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "vd.visitTime", 1, "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
             } else if (actionsDelete.typeDelete === DELETE_TYPE_PREVISIT) {
                 clearPrevisitOrder();
                 clearPrevisitPaginator();
-                previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+                previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
             } else if (actionsDelete.typeDelete === DELETE_TYPE_PIPELINE) {
                 clearPipelineOrder();
                 clearPipelinePaginator();
-                pipelineByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.need", 1, "", "");
+                pipelineByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pe.need", 1, "", "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");
             } else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN) {
                 clearBusinessPlanOrder();
                 clearBusinessPlanPaginator();
-                businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.initialValidityDate", 1, "", "");
+                businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.initialValidityDate", 1, "", "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");

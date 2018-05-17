@@ -11,7 +11,7 @@ import AreaBusiness from "../area/areaBusiness";
 import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
 import SweetAlert from "../../sweetalertFocus";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
@@ -83,7 +83,7 @@ class FormEdit extends Component {
 
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
     }
 
     _closeConfirmClose() {
@@ -195,7 +195,7 @@ class FormEdit extends Component {
             );
             let businessJson = {
                 "id": detailBusiness.data.id,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,
@@ -309,7 +309,7 @@ class FormEdit extends Component {
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    redirectUrl("/login");
+                                    onSessionExpire();
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === 200)) {
                                         typeMessage = "success";

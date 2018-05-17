@@ -43,7 +43,7 @@ class ButtonSaveListMainSuppliers extends Component {
         const { clientsByEconomicGroup, customerStory, clientInformacion } = this.props;
         const checkEconomicGroup = customerStory.get('checkEconomicGroup');
         const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
-        const idClient = window.localStorage.getItem('idClientSelected');
+        const idClient = window.sessionStorage.getItem('idClientSelected');
         this.setState({ modalIsOpen: false });
         clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
             if (!validateResponse(data)) {
@@ -66,7 +66,7 @@ class ButtonSaveListMainSuppliers extends Component {
                 }
                 const checkEconomicGroup = customerStory.get('checkEconomicGroup');
                 const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
-                const idClient = window.localStorage.getItem('idClientSelected');
+                const idClient = window.sessionStorage.getItem('idClientSelected');
                 clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
                     if (!validateResponse(data)) {
                         swtShowMessage('error', 'Error validando clientes', 'Señor usuario, ocurrió un error validando los clientes.');

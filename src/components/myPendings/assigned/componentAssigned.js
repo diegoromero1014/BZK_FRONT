@@ -141,7 +141,7 @@ class ComponentAssigned extends Component {
     _downloadTaskAssigned() {
         const {getExcelTaskAssigned, changeStateSaveData, swtShowMessage} = this.props;
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-        getExcelTaskAssigned(window.localStorage.getItem('idClientSelected')).then((data) => {
+        getExcelTaskAssigned(window.sessionStorage.getItem('idClientSelected')).then((data) => {
             changeStateSaveData(false, "");
             if (validateResponse(data)) {
                 window.open(APP_URL + '/getExcelReport?filename=' + _.get(data, 'payload.data.data.filename', null) + '&id=' + _.get(data, 'payload.data.data.sessionToken', null), '_blank');

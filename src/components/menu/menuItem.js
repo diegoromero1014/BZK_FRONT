@@ -11,7 +11,7 @@ class MenuItem extends Component {
     _handleClickMenuItem(e) {
         const {linkUrl, changeActiveItemMenu, labelText} = this.props;
         if (linkUrl === "/login") {
-            window.localStorage.setItem('sessionToken', '');
+            window.localStorage.setItem('sessionTokenFront', '');
         }
         if (!_.isEqual(linkUrl, undefined) && !_.isEqual(linkUrl, null)) {
             changeActiveItemMenu(labelText);

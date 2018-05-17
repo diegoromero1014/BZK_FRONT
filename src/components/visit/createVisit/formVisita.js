@@ -250,7 +250,7 @@ class FormVisita extends Component {
 
         var visitJson = {
           "id": null,
-          "client": window.localStorage.getItem('idClientSelected'),
+          "client": window.sessionStorage.getItem('idClientSelected'),
           "visitTime": moment(this.state.dateVisit).format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,

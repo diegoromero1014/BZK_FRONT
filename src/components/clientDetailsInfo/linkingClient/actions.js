@@ -10,7 +10,7 @@ export function consultStateBlackListClient(jsonLinkEntityClient){
     const jsonComplete = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "service": "",
             "status": "0",
             "language": "es",

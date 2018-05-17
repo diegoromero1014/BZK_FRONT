@@ -75,6 +75,9 @@ class FormLogin extends Component {
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
+                        // Activar cookie
+                        document.cookie = 'estadoconexion=activa;path=/';
+
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
 
                         if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
@@ -102,9 +105,26 @@ class FormLogin extends Component {
 
     componentWillMount() {
         const { stopObservablesLeftTimer, clearStateLogin } = this.props;
-        stopObservablesLeftTimer();
-        clearSessionUserName();
-        clearStateLogin();
+
+        let token = window.localStorage.getItem('sessionTokenFront');
+
+        if (token == null || token === '') {
+
+            stopObservablesLeftTimer();
+            //Limpiar variables de sesion (idClientSelected)
+            clearSessionUserName();
+            //Esto no hace nada
+            clearStateLogin();
+
+        } else {
+            // El usuario ya se encuentra logueado
+            
+            console.log(token);
+            
+            redirectUrl("/dashboard/clients");
+        }
+
+        
     }
 
     render() {

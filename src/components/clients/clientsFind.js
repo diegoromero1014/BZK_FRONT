@@ -32,7 +32,7 @@ import {
     VISUALIZAR,
     valuesYesNo
 } from "../../constantsGlobal";
-import {validatePermissionsByModule, validateResponse} from "../../actionsGlobal";
+import {validatePermissionsByModule, validateResponse, onSessionExpire} from "../../actionsGlobal";
 import {updateTabSeleted} from "../clientDetailsInfo/actions";
 import {updateTabSeletedRisksManagment} from "../risksManagement/actions";
 import {TAB_AEC} from "../risksManagement/constants";
@@ -66,7 +66,7 @@ class ClientsFind extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
+        if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
@@ -90,7 +90,7 @@ class ClientsFind extends Component {
                     return level.key !== AEC_NO_APLICA;
                 });
                 if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                    redirectUrl("/login");
+                    onSessionExpire();
                 }
             });
             consultList(constants.TEAM_FOR_EMPLOYEE);
@@ -99,12 +99,12 @@ class ClientsFind extends Component {
             clearContact();
             validatePermissionsByModule(MODULE_PROSPECT).then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                    redirectUrl("/login");
+                    onSessionExpire();
                 }
             });
             validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                    redirectUrl("/login");
+                    onSessionExpire();
                 } else {
                     if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
                         redirectUrl("/dashboard");

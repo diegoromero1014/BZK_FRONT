@@ -8,7 +8,7 @@ import {
 export function getLinkRequests(pageNum, maxRows, keyWord) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -37,7 +37,7 @@ export function getLinkRequests(pageNum, maxRows, keyWord) {
 export function getListObservactionsByIdLink(idLinkingRequests) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -63,7 +63,7 @@ export function getListObservactionsByIdLink(idLinkingRequests) {
 export function saveObservationLinkingRequest(idLinkingRequests, observation) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",

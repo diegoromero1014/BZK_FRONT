@@ -143,7 +143,7 @@ class ModalComponentPendingTask extends Component {
         const { fields: { responsable, fecha, idEmployee, idEstado, tarea, advance }, handleSubmit, error, changeStateSaveData } = this.props;
         if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
             const messageBody = {
-                "clientId": window.localStorage.getItem('idClientSelected'),
+                "clientId": window.sessionStorage.getItem('idClientSelected'),
                 "task": tarea.value,
                 "advance": advance.value,
                 "status": idEstado.value,
@@ -159,7 +159,7 @@ class ModalComponentPendingTask extends Component {
                 } else {
                     if ((_.get(data, 'payload.data.status') === 200)) {
                         swtShowMessage('success','Creación de tarea','Señor usuario, la tarea se creó exitosamente.',{onConfirmCallback: this._closeCreate})
-                        tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+                        tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
                     } else {                       
                         swtShowMessage('error','Error creando la tarea',"Señor usuario, ocurrió un error creando la tarea.");
                     }

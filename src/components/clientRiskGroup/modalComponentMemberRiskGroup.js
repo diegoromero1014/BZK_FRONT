@@ -8,7 +8,7 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import SweetAlert from '../sweetalertFocus';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import {VALUE_REQUIERED, SESSION_EXPIRED, VALUE_XSS_INVALID} from '../../constantsGlobal';
-import {validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation} from '../../actionsGlobal';
+import {validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation, onSessionExpire} from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import * as constants from '../selectsComponent/constants';
 import { findClientByStrTypeIdAndNumber } from '../clients/actions';
@@ -69,7 +69,7 @@ class modalComponentMemberRiskGroup extends Component {
         this.setState({ showForm: false });
         this.props.getMasterDataFields([constants.SHAREHOLDER_ID_TYPE]).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                redirectUrl("/login");
+                onSessionExpire();
             }
         });
 

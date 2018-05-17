@@ -30,11 +30,11 @@ class ClientListItem extends Component {
   _handleClickClientItem(e) {
     const { navBar, dataId, dataIsAccess, dataDeleveryClient } = this.props;
     if (dataIsAccess) {
-      window.localStorage.setItem('idClientSelected', dataId);
+      window.sessionStorage.setItem('idClientSelected', dataId);
       redirectUrl("/dashboard/clientInformation");
     } else {
       if (_.get(navBar.get('mapModulesAccess'), MODULE_CUSTOMER_STORY) && dataDeleveryClient) {
-        window.localStorage.setItem('idClientSelected', dataId);
+        window.sessionStorage.setItem('idClientSelected', dataId);
         const { updateTabSeleted } = this.props;
         updateTabSeleted(TAB_CUSTOMER_STORY);
         redirectUrl("/dashboard/clientInformation");

@@ -15,7 +15,7 @@ class LinkComponent extends Component {
 
     _redirect() {
         const {url, idClient} = this.props;
-        window.localStorage.setItem('idClientSelected', idClient);
+        window.sessionStorage.setItem('idClientSelected', idClient);
         redirectUrl(url);
     }
 

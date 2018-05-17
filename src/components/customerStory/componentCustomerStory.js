@@ -43,13 +43,13 @@ class ComponentCustomerStory extends Component {
         } else {
             const { aproveRejectDeliveryClient, swtShowMessage, consultInfoClient, changeStateSaveData } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            aproveRejectDeliveryClient(window.localStorage.getItem('idClientSelected'), valueAprove).then((data) => {
+            aproveRejectDeliveryClient(window.sessionStorage.getItem('idClientSelected'), valueAprove).then((data) => {
                 if (validateResponse(data)) {
                     if (_.isEqual(valueAprove, true) || _.isEqual(valueAprove, 'true')) {
                         consultInfoClient();
                         swtShowMessage('success', 'Entrega de clientes', 'Señor usuario, el cambio de célula del cliente se realizó de forma exitosa.');
                     } else {
-                        window.localStorage.setItem('idClientSelected', null);
+                        window.sessionStorage.setItem('idClientSelected', null);
                         swtShowMessage('success', 'Entrega de clientes', 'Señor usuario, el cambio de célula del cliente se rechazó de forma exitosa.');
                         redirectUrl("/dashboard/clients");
                     }

@@ -15,7 +15,7 @@ import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DA
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import SweetAlertFocus from '../../sweetalertFocus';
 import { OBJECTIVE_BUSINESS } from '../constants';
-import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation } from '../../../actionsGlobal';
+import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation, onSessionExpire } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { createBusiness, validateRangeDates } from '../actions';
@@ -171,7 +171,7 @@ class FormBusinessPlan extends Component {
             );
             var businessJson = {
                 "id": null,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,
@@ -199,7 +199,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
-        console.log("jhoa", value);
+        
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null
@@ -272,7 +272,7 @@ class FormBusinessPlan extends Component {
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    redirectUrl("/login");
+                                    onSessionExpire();
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === 200)) {
                                         typeMessage = "success";

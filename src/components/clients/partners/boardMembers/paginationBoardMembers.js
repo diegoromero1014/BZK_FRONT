@@ -21,7 +21,7 @@ class PaginationBoardMembers extends Component {
   _handleFind(limInf) {
     const { getBoardMembers, swtShowMessage, changeStateSaveData, boardMembersReducer } = this.props;
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
-    getBoardMembers(window.localStorage.getItem('idClientSelected'), limInf, NUMBER_RECORDS, boardMembersReducer.get('keywordBoardMembers')).then((data) => {
+    getBoardMembers(window.sessionStorage.getItem('idClientSelected'), limInf, NUMBER_RECORDS, boardMembersReducer.get('keywordBoardMembers')).then((data) => {
       changeStateSaveData(false, "");
       if (!validateResponse(data)) {
         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);

@@ -54,9 +54,9 @@ class SearchUserTaskComponent extends Component {
     clearUserTaskPaginator();
     clearUserTaskOrder();
     if(this.state.keywordUserTask === '' || this.state.keywordUserTask === undefined) {
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "");
+      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "");
     } else {
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, this.state.keywordContact);
+      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, this.state.keywordContact);
     }
   }
 

@@ -52,7 +52,7 @@ class DownloadVisits extends Component {
 				}
 			});
 		} else {
-			getCsvVisitsByClient(window.localStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function (data) {
+			getCsvVisitsByClient(window.sessionStorage.getItem('idClientSelected'), this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function (data) {
 				if (data.payload.data.status === 200) {
 					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 					isOpen();

@@ -194,7 +194,7 @@ class ComponentStudyCredit extends Component {
         const { fields: { notApplyCreditContact }, updateNotApplyCreditContact, swtShowMessage,
             changeStateSaveData } = this.props;
         var jsonCreditContact = {
-            idClient: window.localStorage.getItem('idClientSelected'),
+            idClient: window.sessionStorage.getItem('idClientSelected'),
             notApplyCreditContact: !notApplyCreditContact.value
         }
         notApplyCreditContact.onChange(!notApplyCreditContact.value);
@@ -518,7 +518,7 @@ class ComponentStudyCredit extends Component {
         
         showLoading(true, "Cargando...");
 
-        let username = window.sessionStorage.getItem('userName');
+        let username = window.localStorage.getItem('userNameFront');
 
         this.canUserEditBlockedReport(username).then((success) => {
 
@@ -567,7 +567,7 @@ class ComponentStudyCredit extends Component {
 
     _validateInfoStudyCredit() {
         const { swtShowMessage, changeStateSaveData, validateInfoCreditStudy } = this.props;
-        var idClient = window.localStorage.getItem('idClientSelected');
+        var idClient = window.sessionStorage.getItem('idClientSelected');
         validateInfoCreditStudy(idClient).then((data) => {
             changeStateSaveData(false, "");
             if (!validateResponse(data)) {
@@ -584,7 +584,7 @@ class ComponentStudyCredit extends Component {
 
         const { getUserBlockingReport, swtShowMessage } = this.props;
 
-        let idClient = window.localStorage.getItem('idClientSelected');
+        let idClient = window.sessionStorage.getItem('idClientSelected');
 
         // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
 
@@ -663,7 +663,7 @@ class ComponentStudyCredit extends Component {
 
         const { stopBlockToReport, id } = this.props;
 
-        let idClient = window.localStorage.getItem('idClientSelected');
+        let idClient = window.sessionStorage.getItem('idClientSelected');
 
         this._ismounted = false;
 
@@ -693,8 +693,8 @@ class ComponentStudyCredit extends Component {
             redirectUrl("/dashboard/clientInformation");
         } else {
 
-            let logUser = window.sessionStorage.getItem('userName');
-            var idClient = window.localStorage.getItem('idClientSelected');
+            let logUser = window.localStorage.getItem('userNameFront');
+            var idClient = window.sessionStorage.getItem('idClientSelected');
 
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {

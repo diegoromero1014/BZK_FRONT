@@ -12,7 +12,7 @@ import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants'
 import SelectFilterContact from '../../../selectsComponent/selectFilterContact/selectFilterComponent';
 import $ from 'jquery';
 import { redirectUrl } from '../../../globalComponents/actions';
-import { validatePermissionsByModule } from '../../../../actionsGlobal';
+import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
 import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
 
@@ -33,13 +33,13 @@ class ShareholderComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const { clearShareholder, shareholdersByClientFindServer, clientInformacion, validatePermissionsByModule } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       clearShareholder();
-      shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'),
+      shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'),
         NUMBER_RECORDS, "sh.sharePercentage", 1, "", "", "").then((data) => {
           if (_.get(data, 'payload.data.rowCount') !== 0) {
             enableClickCertificationShareholder = "disabled";
@@ -61,7 +61,7 @@ class ShareholderComponent extends Component {
         );
       validatePermissionsByModule(MODULE_SHAREHOLDERS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-          redirectUrl("/login");
+          onSessionExpire();
         } else {
           if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
             this.setState({ openMessagePermissions: true });

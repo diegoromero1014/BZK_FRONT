@@ -48,7 +48,7 @@ class ModalComponentTeam extends Component {
             teamAssistants: []
         });
         showLoading(true, MESSAGE_LOAD_DATA);
-        getClientTeam(window.localStorage.getItem('idClientSelected')).then((data) => {
+        getClientTeam(window.sessionStorage.getItem('idClientSelected')).then((data) => {
             const status = data.payload.data.status;
             const validateLogin = data.payload.data.validateLogin;
             showLoading(false, '');

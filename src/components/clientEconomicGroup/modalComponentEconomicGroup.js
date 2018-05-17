@@ -5,7 +5,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS } from '../../constantsGlobal';
-import { stringValidate, validateIsNullOrUndefined, validateResponse } from '../../actionsGlobal';
+import { stringValidate, validateIsNullOrUndefined, validateResponse, onSessionExpire } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
 import ClientsEconomicGroup from './clientsEconomicGroup';
@@ -43,7 +43,7 @@ class ModalComponentEconomicGroup extends Component {
         });
       } else {
         if (_.get(data, 'payload.data.data.validateLogin')) {
-          redirectUrl("/login");
+          onSessionExpire();
         }
       }
     });

@@ -28,12 +28,12 @@ class VisitComponent extends Component {
   }
 
   componentWillMount(){
-    if( window.localStorage.getItem('sessionToken') === "" ){
+    if( window.localStorage.getItem('sessionTokenFront') === "" ){
       redirectUrl("/login");
     }else{
       const {visitByClientFindServer,clearVisit, validatePermissionsByModule} = this.props;
       clearVisit();
-      visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
+      visitByClientFindServer(window.sessionStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,"vd.visitTime",1,"");
       validatePermissionsByModule(MODULE_VISITS).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false' ) {
           redirectUrl("/login");

@@ -35,6 +35,7 @@ class ModaltrackingCovenant extends Component {
     render() {
         const {covenant, isOpen} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
+        console.log(infoCovenant.strCovenant);
         const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.creationTimestamp.split(" ")[0], 'DD MMM YYYY');
         const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
         return (
@@ -45,15 +46,11 @@ class ModaltrackingCovenant extends Component {
                         <Row>
                             <Col xs={12} md={12} lg={12} >
                                 <dt style={{ paddingTop: '5px' }}>Covenant</dt>
-                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.covenant}</dd>
+                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.strCovenant}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Id covenant</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.idCovenant) ? "" : infoCovenant.idCovenant}</dd>
-                            </Col>
-                            <Col xs={12} md={6} lg={4} >
-                                <dt style={{ paddingTop: '5px' }}>Condición de referencia</dt>
-                                <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.referenceCondition) ? "" : infoCovenant.referenceCondition}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Valor de referencia</dt>
