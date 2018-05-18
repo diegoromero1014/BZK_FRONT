@@ -48,15 +48,16 @@ const validate = (values) => {
 
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
-        } else {
+        } else if (xssValidation(values.observations)) {
+            errors.observations = VALUE_XSS_INVALID;;
+        }
+        else {
             errors.observations = null;
         }
-    } else if (xssValidation(values.observations)) {
-        errors.observations = VALUE_XSS_INVALID;;
     } else {
         errors.observations = null;
     }
-    
+
     if (isFinancialStatements) {
         if (!values.dateFinancialStatements) {
             errors.dateFinancialStatements = VALUE_REQUIERED;
@@ -118,7 +119,7 @@ class FormCreateTracking extends Component {
         const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant } } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         this.validateCovenantObservation(validCovenant.value, val);
-        
+
         let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == val);
         isFinancialStatements = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
         this.setState({ isFinancialStatements: isFinancialStatements });
