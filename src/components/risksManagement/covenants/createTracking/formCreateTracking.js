@@ -86,6 +86,7 @@ class FormCreateTracking extends Component {
         this._onChangeValidCovenant = this._onChangeValidCovenant.bind(this);
         this._onFullfillmentCovenant = this._onFullfillmentCovenant.bind(this);
         this.validateCovenantObservation = this.validateCovenantObservation.bind(this);
+        this._onBlurComboBox  =  this._onBlurComboBox.bind(this);
 
     }
 
@@ -107,6 +108,10 @@ class FormCreateTracking extends Component {
         }
         this.setState({ isMandatoryObservations: isMandatoryObservations });
 
+    }
+
+    _onBlurComboBox() {
+        this.setState(this.state);
     }
 
     _onChangeValidCovenant(val) {
@@ -220,7 +225,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...validCovenant}
                                 onChange={val => this._onChangeValidCovenant(val)}
-                                onBlur={() => null}
+                                onBlur={()  =>  this._onBlurComboBox()}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
@@ -235,7 +240,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...fullfillmentCovenant}
                                 onChange={val => this._onFullfillmentCovenant(val)}
-                                onBlur={() => null}
+                                onBlur={()  =>  this._onBlurComboBox()}
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>
