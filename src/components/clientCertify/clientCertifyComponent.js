@@ -54,6 +54,15 @@ import {
 
 import { showLoading } from "../loading/actions";
 
+
+import Errores from './components/Errores';
+import InfoCliente from './components/InfoCliente';
+import InfoClientePN from './components/InfoClientePN';
+import ActividadEconomica from './components/ActividadEconomica';
+
+import Ubicacion from './components/Ubicacion';
+import {validate as validateUbicacion} from './components/Ubicacion';
+
 const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
@@ -104,189 +113,16 @@ let isProspect = false;
 let isExclient = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
 let validateMarcManagement = true;
+//Establece si el ciente a editar es persona natural para controlar las validaciones
+let isPersonaNatural = true;
 
 
 const validate = (values, props) => {
 
-    const errors = {}
+    let errors = {}
     let errorScrollTop = false;
 
-    if (!values.idCIIU && !isExclient) {
-        errors.idCIIU = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.idCIIU = null;
-    }
-
-    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !isExclient) {
-        errors.economicGroupName = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.economicGroupName = null;
-    }
-
-    if (!values.addressClient && !isExclient) {
-        errors.addressClient = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.addressClient)) {
-        errors.addressClient = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.addressClient = null;
-    }
-
-    if (!values.telephone && !isExclient) {
-        errors.telephone = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.telephone = null;
-    }
-
-    if (!values.country  && !isExclient) {
-        errors.country = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.country = null;
-    }
-
-    if (!values.province  && !isExclient) {
-        errors.province = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.province = null;
-    }
-
-    if (!values.city  && !isExclient) {
-        errors.city = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.city = null;
-    }
-
-    if (!values.annualSales  && !isExclient) {
-        errors.annualSales = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.annualSales)) {
-        errors.annualSales = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.annualSales = null;
-    }
-
-
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '')  && !isExclient) {
-        errors.dateSalesAnnuals = DATE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.dateSalesAnnuals)) {
-        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.dateSalesAnnuals = null;
-    }
-
-    if (!values.liabilities  && !isExclient) {
-        errors.liabilities = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.liabilities = null;
-    }
-
-    if (!values.assets  && !isExclient) {
-        errors.assets = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.assets = null;
-    }
-
-    if (!values.operatingIncome  && !isExclient) {
-        errors.operatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.operatingIncome = null;
-    }
-
-    if (!values.nonOperatingIncome  && !isExclient) {
-        errors.nonOperatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.nonOperatingIncome = null;
-    }
-
-    if (!values.expenses  && !isExclient) {
-        errors.expenses = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.expenses = null;
-    }
-
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isExclient) {
-        errors.marcGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.marcGeren = null;
-    }
-
-    if (validateMarcManagement === false && !values.justifyNoGeren  && !isExclient) {
-        errors.justifyNoGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoGeren = null;
-    }
-
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '')  && !isExclient) {
-        errors.centroDecision = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.centroDecision = null;
-    }
-
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '')  && !isExclient) {
-        errors.necesitaLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.necesitaLME = null;
-    }
-
-    if (values.necesitaLME === 'false' && !values.justifyNoLME  && !isExclient) {
-        errors.justifyNoLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoLME = null;
-    }
-
-
-    if (!values.justifyExClient && isExclient) {
-        errors.justifyExClient = OPTION_REQUIRED;
-        errorScrollTop = true;
-    }else {
-        errors.justifyExClient = null;
-    }
-
-
-
-    if (errorScrollTop && clickButttonSave) {
-        clickButttonSave = false;
-        document.getElementById('dashboardComponentScroll').scrollTop = 0;
-    }
-
+    errors = validateUbicacion(values, props, errors);
 
     return errors
 
@@ -339,16 +175,13 @@ class clientCertify extends React.Component {
         this._onChangeValueNeedLME = this._onChangeValueNeedLME.bind(this);
         this._onChangeValueJustifyNoNeedLME = this._onChangeValueJustifyNoNeedLME.bind(this);
         this._closeWindow = this._closeWindow.bind(this);
-        this._onChangeCIIU = this._onChangeCIIU.bind(this);
-        this._onChangeCountry = this._onChangeCountry.bind(this);
-        this._onChangeProvince = this._onChangeProvince.bind(this);
         this._submitCertifyClient = this._submitCertifyClient.bind(this);
         this._saveClient = this._saveClient.bind(this);
         this._closeSuccess = this._closeSuccess.bind(this);
         this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
         this._onConfirmExit = this._onConfirmExit.bind(this);
         this._closeError = this._closeError.bind(this);
-        this._onChangeCity = this._onChangeCity.bind(this);
+        
 
     }
 
@@ -681,37 +514,7 @@ class clientCertify extends React.Component {
         goBack();
     }
 
-    _onChangeCountry(val) {
-        const { clientInformacion } = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
-        const { fields: { country, province, city } } = this.props;
-        country.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-        if (!_.isEqual(infoClient.addresses[0].country, country.value)) {
-            province.onChange('');
-            city.onChange('');
-        }
-    }
-
-    _onChangeProvince(val) {
-        const { clientInformacion } = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
-        const { fields: { country, province, city } } = this.props;
-        province.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-        if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
-            city.onChange('');
-        }
-    }
-
-    _onChangeCity(val) {
-
-        const { fields: { country, province, city }, selectsReducer } = this.props;
-
-        city.onChange(val);
-    }
+    
 
     _onChangeGroupEconomic(e) {
         const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
@@ -972,12 +775,6 @@ class clientCertify extends React.Component {
         }
     }
 
-    _onChangeCIIU(val) {
-        const { fields: { idCIIU, idSubCIIU } } = this.props;
-        idCIIU.onChange(val);
-    }
-
-    
     render(){
 
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
@@ -995,275 +792,19 @@ class clientCertify extends React.Component {
 
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
 
-            { /* VENTANA DE ERRORES */ }
+                <Errores sumErrorsForm={this.state.sumErrorsForm} />
+
+                {
+                    isPersonaNatural ? 
+                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} /> 
+                    : 
+                        <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
+                }
 
             <div>
-                    <p style={{ paddingTop: '10px' }}></p>
-                    <Row xs={12} md={12} lg={12} style={ EDIT_STYLE }>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
-                            {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
-                                <div>
-                                    <span
-                                        style={{ marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt" }}>Falta información obligatoria del cliente (ver campos seleccionados).</span>
-                                </div>
-                                :
-                                <div>
-                                    <span style={{
-                                        marginLeft: "20px",
-                                        marginTop: "10px",
-                                        color: "green",
-                                        fontSize: "12pt"
-                                    }}>La información del cliente está completa, recuerde revisarla. </span>
-                                </div>
-                            }
-                            
-                        </Col>
-                    </Row>
-                </div>
+                <ActividadEconomica idCIIU={idCIIU} isExclient={isExclient} />
 
-                { /* FIN VENTANA DE ERRORES  */ }
-
-
-                { /* INFORMACION CLIENTE */ }
-
-                <Row style={{ padding: "10px 28px 10px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social </span></dt>
-                        <dt>
-                            <Input
-                                name="razonSocial"
-                                type="text"
-                                max="150"
-                                placeholder="Razón social del cliente"
-                                {...razonSocial}
-                                disabled={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento </span></dt>
-                        <dt>
-                            
-                            <Input
-                                 name="tipoDocumento"
-                                 type="text"
-                                 placeholder="Tipo de documento del cliente"
-                                 {...idTypeClient}
-                                 disabled={true}
-                                 touched={true}
-                            />
-
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento </span></dt>
-                        <dt>
-                            <Input
-                                name="documento"
-                                type="text"
-                                max="20"
-                                placeholder="Número de documento del cliente"
-                                {...idNumber}
-                                touched={true}
-                                disabled={true}
-                            />
-                        </dt>
-                    </Col>
-
-                    </Row>
-
-                { /* FIN INFORMACION CLIENTE*/ }
-
-
-            <div>
-
-                
-
-                {/* Inicio Actividad Economica */}
-
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Actividad económica</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 0px" }}>
-                    
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="idCIIU"
-                                labelInput="Seleccione CIIU..."
-                                {...idCIIU}
-                                onChange={val => this._onChangeCIIU(val)}
-                                onBlur={idCIIU.onBlur}
-                                valueProp={'id'}
-                                textProp={'ciiu'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataCIIU')}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
-                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
-                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
-                            </span>
-                        </div>
-                    </Col>
-                </Row>
-
-                {/* Fin Actividad Economica */   }
-
-
-                { /* Inicio Informacion de ubicación y correspondencia */ }
-
-                <Row style={{ padding: "20px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="browser icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Información de ubicación y correspondencia</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 5px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <table style={{ width: "100%" }}>
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <dl style={{
-                                        fontSize: "20px",
-                                        color: "#505050",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <span className="section-title">Dirección sede principal</span>
-                                    </dl>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="tab-content-row"
-                                            style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Dirección</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Textarea
-                                name="addressClient"
-                                validateEnter={true}
-                                type="text"
-                                style={{ width: '100%', height: '100%' }}
-                                max="250"
-                                onChange={val => this._onchangeValue("addressClient", val)}
-                                placeholder="Ingrese la dirección"
-                                {...addressClient}
-                                touched={true}
-                                
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 20px 10px 0px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>País</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="country"
-                                labelInput="Seleccione país..."
-                                {...country}
-                                onChange={val => this._onChangeCountry(val)}
-                                value={country.value}
-                                onBlur={country.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
-                                touched={true}
-                                showEmptyObject={true}
-                                
-                            />
-                        </div>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Departamento</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="province"
-                                labelInput="Seleccione departamento..."
-                                {...province}
-                                onChange={val => this._onChangeProvince(val)}
-                                value={province.value}
-                                onBlur={province.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeProvince') || []}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "15px" }}>
-                            <dt><span>Ciudad</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="city"
-                                labelInput="Seleccione ciudad..."
-                                {...city}
-                                value={city.value}
-                                onBlur={city.onBlur}
-                                onChange={val => this._onChangeCity(val)}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeCity') || []}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 20px 10px 20px" }}>
-                    
-                    <Col xs style={{ marginLeft: "0" }}>
-                        <dt>
-                            <span>Teléfono</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt style={{ marginRight: "15px" }}>
-                            <Input
-                                name="txtTelefono"
-                                type="text"
-                                max="30"
-                                placeholder="Ingrese el teléfono"
-                                {...telephone}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-
-                { /* Fin Informacion de ubicación y correspondencia */ }
-
+                <Ubicacion addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
 
                 {/* Inicio Informacion financiera  */}
 
