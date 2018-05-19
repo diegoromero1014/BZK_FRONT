@@ -7,12 +7,13 @@ import { validateProspectExists, clearState, clearAllState } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
-import { consultDataSelect, consultList } from '../selectsComponent/actions';
-import {SESSION_EXPIRED, VALUE_XSS_INVALID} from '../../constantsGlobal';
+import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
+import { SESSION_EXPIRED, VALUE_XSS_INVALID } from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
+import * as constantsPropect from './constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import {xssValidation, onSessionExpire} from '../../actionsGlobal';
+import { xssValidation, onSessionExpire } from '../../actionsGlobal';
 import _ from 'lodash';
 
 var prospectInApplication = true;
@@ -27,16 +28,22 @@ const validate = values => {
   if (!values.idType) {
     errors.idType = "Debe seleccionar un valor";
   }
-  else
-  {
+  else {
     errors.idType = null;
   }
+
+  if (!values.clientType) {
+    errors.clientType = "Debe seleccionar un valor";
+  }
+  else {
+    errors.clientType = null;
+  }
+
   if (!values.idNumber) {
     errors.idNumber = "Debe ingresar un valor";
   }
-  else if(xssValidation(values.idNumber))
-  {
-      errors.idNumber = VALUE_XSS_INVALID;
+  else if (xssValidation(values.idNumber)) {
+    errors.idNumber = VALUE_XSS_INVALID;
   }
   else {
     errors.idNumber = null;
@@ -49,10 +56,14 @@ class CreatePropspect extends Component {
     super(props);
     this.state = {
       showEr: false,
-      showEx: false
+      showEx: false,
+      idTypeMaster: [],
+      idTypeMasterSelector: "",
+      personType: null
     }
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onClickButtonChange = this._onClickButtonChange.bind(this);
+    this.clientetypeChange = this.clientetypeChange.bind(this);
     this._closeError = this._closeError.bind(this);
   }
 
@@ -62,12 +73,14 @@ class CreatePropspect extends Component {
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
-    const { consultDataSelect, consultList } = this.props;
-    consultDataSelect(constants.CLIENT_ID_TYPE).then((data) => {
+    const { consultDataSelect, consultList, getMasterDataFields } = this.props;
+
+    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CLIENT_TYPE, constants.DOCUMENT_TYPE_PERSON]).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
         onSessionExpire();
       }
     });
+
     consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
@@ -77,10 +90,11 @@ class CreatePropspect extends Component {
 
   _onClickButtonChange() {
     prospectInApplication = true;
-    const { fields: { idType, idNumber }, clearAllState } = this.props;
+    const { fields: { idType, idNumber, clientType }, clearAllState } = this.props;
     clearAllState();
     idNumber.onChange('');
     idType.onChange('');
+    clientType.onChange('');
   };
 
   _clickButtonCreateProps(formData) {
@@ -104,8 +118,37 @@ class CreatePropspect extends Component {
       });
   }
 
+
+  clientetypeChange(valor) {
+    const { fields: { idType }, selectsReducer } = this.props;
+    let clientTypes = selectsReducer.get('clientType');
+    
+    if (clientTypes) {
+      let clientType = clientTypes.find(type => type.id == valor);
+      let idTypeMaster = clientType.key == constantsPropect.NATURE_PERSON ?
+        constants.DOCUMENT_TYPE_PERSON : constants.CLIENT_ID_TYPE;
+
+      this.setState({
+        idTypeMaster: selectsReducer.get(idTypeMaster),
+        idTypeMasterSelector: idTypeMaster,
+        personType: _.filter(selectsReducer.get('clientType'), ['id', parseInt(valor)]).pop()
+      });
+
+    } else {
+      this.setState({
+        idTypeMaster: [],
+        idTypeMasterSelector: "",
+        personType: null
+      });
+    }
+
+    idType.onChange('');
+
+
+  }
+
   render() {
-    const { fields: { idType, idNumber }, error, handleSubmit, clearState } = this.props
+    const { fields: { idType, idNumber, clientType }, error, handleSubmit, clearState } = this.props
     const { propspectReducer } = this.props;
     const { selectsReducer } = this.props;
     const status = propspectReducer.get('status');
@@ -122,7 +165,19 @@ class CreatePropspect extends Component {
         {prospectInApplication &&
           <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
             <Row style={{ padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)" }}>
-              <Col xs={12} md={5} lg={5}>
+              <Col xs={12} md={5} lg={3}>
+                <dt><span>Tipo de cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
+                <ComboBox
+                  name="tipoCliente"
+                  labelInput="Seleccion el tipo de persona del prospecto"
+                  {...clientType}
+                  valueProp={'id'}
+                  textProp={'value'}
+                  onChange={this.clientetypeChange}
+                  data={selectsReducer.get('clientType')}
+                />
+              </Col>
+              <Col xs={12} md={5} lg={4}>
                 <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
@@ -130,10 +185,10 @@ class CreatePropspect extends Component {
                   {...idType}
                   valueProp={'id'}
                   textProp={'value'}
-                  data={selectsReducer.get('dataTypeDocument')}
+                  data={this.state.idTypeMaster}
                 />
               </Col>
-              <Col xs={12} md={5} lg={5} style={{ paddingRight: "30px" }}>
+              <Col xs={12} md={5} lg={3} style={{ paddingRight: "30px" }}>
                 <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="documento"
@@ -157,7 +212,7 @@ class CreatePropspect extends Component {
           <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>
             <Col xs={12} md={4} lg={4}>
               <dt><span>Tipo de documento</span></dt>
-              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)])[0].value}</span></dl>
+              <dl><span>{idType.value && _.filter(selectsReducer.get(this.state.idTypeMasterSelector), ['id', parseInt(idType.value)])[0].value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={3}>
               <dt><span>Número de documento</span></dt>
@@ -175,7 +230,7 @@ class CreatePropspect extends Component {
         }
 
         {!prospectInApplication &&
-          <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
+          <FormCreateProspect clientType={this.state.personType} idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
         <SweetAlert
           type={typeMessage}
@@ -196,7 +251,8 @@ function mapDispatchToProps(dispatch) {
     clearState,
     clearAllState,
     consultDataSelect,
-    consultList
+    consultList,
+    getMasterDataFields
   }, dispatch);
 }
 
@@ -208,15 +264,15 @@ function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idType", "idNumber"],
+  fields: ["idType", "idNumber", "clientType"],
   validate,
   onSubmitFail: errors => {
 
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
-            thisForm.setState({ showEr: true });
-        } else {
-            thisForm.setState({ showEr: true });
-        }
+    if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+      thisForm.setState({ showEr: true });
+    } else {
+      thisForm.setState({ showEr: true });
+    }
 
   }
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);
