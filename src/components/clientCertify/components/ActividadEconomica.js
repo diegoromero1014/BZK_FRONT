@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 
 import {Col, Row} from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import {OPTION_REQUIRED} from "../../../constantsGlobal"
 
 class ActividadEconomica extends React.Component {
 
@@ -74,5 +75,15 @@ function mapStateToProps({selectsReducer}) {
         selectsReducer
     }
 }
+
+export function validate(values, props, errors) {
+    if (!values.idCIIU && !props.isExclient) {
+        errors.idCIIU = OPTION_REQUIRED;
+    } else {
+        errors.idCIIU = null;
+    }
+
+    return errors;
+};
 
 export default connect(mapStateToProps, {})(ActividadEconomica)

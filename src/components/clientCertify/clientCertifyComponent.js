@@ -59,9 +59,11 @@ import Errores from './components/Errores';
 import InfoCliente from './components/InfoCliente';
 import InfoClientePN from './components/InfoClientePN';
 import ActividadEconomica from './components/ActividadEconomica';
+import {validate as validateActividadEconomica} from './components/ActividadEconomica';
 
 import Ubicacion from './components/Ubicacion';
 import {validate as validateUbicacion} from './components/Ubicacion';
+
 
 const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
@@ -123,7 +125,8 @@ const validate = (values, props) => {
     let errorScrollTop = false;
 
     errors = validateUbicacion(values, props, errors);
-
+    errors = validateActividadEconomica(values, props, errors);
+    
     return errors
 
 }
@@ -218,6 +221,10 @@ class clientCertify extends React.Component {
         updateTitleNavBar("Certificar cliente");
 
         var infoClient = clientInformacion.get('responseClientInfo');
+
+       
+
+        isExclient = infoClient.relationshipStatusName === "Excliente";
 
         if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
             setNotes(infoClient.notes);
@@ -782,10 +789,8 @@ class clientCertify extends React.Component {
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
             addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer } = this.props;
         
-        
         var infoClient = clientInformacion.get('responseClientInfo');
-        isExclient = infoClient.relationshipStatusName === "Excliente";
-
+        
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         return (
@@ -1220,7 +1225,10 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
+    const isExclient = infoClient.relationshipStatusName === "Excliente";
+
     return {
+        isExclient,
         clientInformacion,
         selectsReducer,
         notes,
