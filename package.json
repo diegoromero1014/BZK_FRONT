@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "better-npm-run development",
+    "build": "better-npm-run develop",
     "start": "node server.js",
     "develop" : "better-npm-run develop",
     "release" : "better-npm-run release",
