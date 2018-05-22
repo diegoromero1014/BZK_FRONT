@@ -474,7 +474,7 @@ class FormCreateProspect extends Component {
                     {isNature &&
                         <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingRight: "10px" }}>
-                                <dt><span>Primer apellido </span></dt>
+                                <dt><span>Primer apellido  (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <Input
                                     name="lastName"
                                     type="text"

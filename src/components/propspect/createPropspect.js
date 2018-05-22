@@ -209,8 +209,12 @@ class CreatePropspect extends Component {
         }
 
         {!prospectInApplication &&
-          <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>
-            <Col xs={12} md={4} lg={4}>
+          <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>            
+            <Col xs={12} md={3} lg={3}>
+              <dt><span>Tipo de cliente</span></dt>
+              <dl><span>{clientType.value && this.state.personType.value}</span></dl>
+            </Col>
+            <Col xs={12} md={3} lg={4}>
               <dt><span>Tipo de documento</span></dt>
               <dl><span>{idType.value && _.filter(selectsReducer.get(this.state.idTypeMasterSelector), ['id', parseInt(idType.value)])[0].value}</span></dl>
             </Col>
