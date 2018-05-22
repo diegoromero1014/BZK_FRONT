@@ -116,7 +116,7 @@ let isExclient = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
 let validateMarcManagement = true;
 //Establece si el ciente a editar es persona natural para controlar las validaciones
-let isPersonaNatural = true;
+
 
 
 const validate = (values, props) => {
@@ -787,7 +787,7 @@ class clientCertify extends React.Component {
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer } = this.props;
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
         
         var infoClient = clientInformacion.get('responseClientInfo');
         
@@ -1226,9 +1226,11 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     const { contextClient } = infoClient;
 
     const isExclient = infoClient.relationshipStatusName === "Excliente";
+    const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
     return {
         isExclient,
+        isPersonaNatural,
         clientInformacion,
         selectsReducer,
         notes,
