@@ -457,7 +457,7 @@ export function validateFields(values,validations, errors) {
                 switch (row.validation) {
                     case 'required':
                         if (! values[field] ) {
-                            errors[field] = constants.VALUE_REQUIRED;
+                            errors[field] = constants.VALUE_REQUIERED;
                         }
                         break;
                     case 'xss':

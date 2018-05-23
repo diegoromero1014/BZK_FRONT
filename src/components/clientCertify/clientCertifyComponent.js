@@ -140,10 +140,10 @@ const validate = (values, props) => {
         validateFields(values,rulesActividadEconomicaPN(props),errors);
         validateInfoFinancieraPN(values,props,errors);
     } else {
-        validateFields(values,rulesActividadEconomica(props),errors);        
         validateInfoFinanciera(values,props,errors);
+        validateFields(values,rulesActividadEconomica(props),errors);
     }
-    
+
     if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
         errors.economicGroupName = OPTION_REQUIRED;
         errorScrollTop = true;
