@@ -79,3 +79,4 @@ export const BUSINESS_ROL = "relationshipStatus";
 export const TEAM_VALUE_OBJECTS = "teamValueObjects";
 export const MANAGEMENT_BRAND = "managementBrand";
 export const MANAGEMENT_BRAND_KEY = "managementBrandKey";
+export const OCCUPATION = 'occupation';

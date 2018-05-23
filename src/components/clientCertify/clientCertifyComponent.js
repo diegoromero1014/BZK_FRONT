@@ -37,7 +37,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 
-import { xssValidation } from '../../actionsGlobal';
+import { xssValidation, validateFields } from '../../actionsGlobal';
 
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
@@ -59,17 +59,25 @@ import Errores from './components/Errores';
 import InfoCliente from './components/InfoCliente';
 import InfoClientePN from './components/InfoClientePN';
 import ActividadEconomica from './components/ActividadEconomica';
-import {validate as validateActividadEconomica} from './components/ActividadEconomica';
+import {validationRules as rulesActividadEconomica} from './components/ActividadEconomica';
+
+import ActividadEconomicaPN from './components/ActividadEconomicaPN';
+import {validationRules as rulesActividadEconomicaPN} from './components/ActividadEconomicaPN';
 
 import Ubicacion from './components/Ubicacion';
-import {validate as validateUbicacion} from './components/Ubicacion';
+import {validationsRules as rulesUbicacion} from './components/Ubicacion';
 
+import InfoFinanciera from './components/InfoFinanciera';
+import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
+
+import InfoFinancieraPN from './components/InfoFinancieraPN';
+import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
 
 const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber'
+    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation'
 ]
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -123,11 +131,69 @@ const validate = (values, props) => {
 
     let errors = {}
     let errorScrollTop = false;
-
-    errors = validateUbicacion(values, props, errors);
-    errors = validateActividadEconomica(values, props, errors);
     
-    return errors
+    validateFields(values,rulesUbicacion(props),errors);
+    if (props.isPersonaNatural) {
+        validateFields(values,rulesActividadEconomicaPN(props),errors);
+        validateInfoFinancieraPN(values,props,errors);
+    } else {
+        validateFields(values,rulesActividadEconomica(props),errors);        
+        validateInfoFinanciera(values,props,errors);
+    }
+    
+    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
+        errors.economicGroupName = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.economicGroupName = null;
+    }
+
+    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isExclient) {
+        errors.marcGeren = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.marcGeren = null;
+    }
+
+    if (validateMarcManagement === false && !values.justifyNoGeren  && !isExclient) {
+        errors.justifyNoGeren = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.justifyNoGeren = null;
+    }
+
+    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '')  && !isExclient) {
+        errors.centroDecision = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.centroDecision = null;
+    }
+
+    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '')  && !isExclient) {
+        errors.necesitaLME = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.necesitaLME = null;
+    }
+
+    if (values.necesitaLME === 'false' && !values.justifyNoLME  && !isExclient) {
+        errors.justifyNoLME = OPTION_REQUIRED;
+        errorScrollTop = true;
+    } else {
+        errors.justifyNoLME = null;
+    }
+
+
+    if (!values.justifyExClient && isExclient) {
+        errors.justifyExClient = OPTION_REQUIRED;
+        errorScrollTop = true;
+    }else {
+        errors.justifyExClient = null;
+    }
+
+
+
+    return errors;
 
 }
 
@@ -243,7 +309,7 @@ class clientCertify extends React.Component {
 
                 getMasterDataFields([constants.JUSTIFICATION_NO_RM,constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT, 
                     constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
-                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY])
+                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY, constants.OCCUPATION])
                 .then((data) => {
                     if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                         consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -289,36 +355,6 @@ class clientCertify extends React.Component {
         groupEconomic.onChange('');
     }
 
-    _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
-        var pattern;
-        //Elimino los caracteres no validos
-        for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
-            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
-                output += val.toString().charAt(i)
-            }
-        }
-        val = output;
-
-        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) {
-            pattern = /(-?\d+)(\d{3})/;
-            while (pattern.test(val)) {
-                val = val.replace(pattern, "$1,$2");
-            }
-            valuReduxForm.onChange(val);
-        } else {
-            var value = numeral(valuReduxForm.value).format('0');
-            if (value >= 0) {
-                pattern = /(-?\d+)(\d{3})/;
-                while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1,$2");
-                }
-                valuReduxForm.onChange(val);
-            } else {
-                valuReduxForm.onChange("");
-            }
-        }
-    }
-
     clickButtonScrollTop() {
         clickButttonSave = true;
     }
@@ -337,7 +373,7 @@ class clientCertify extends React.Component {
                 nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
                 justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
                 annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-                addressClient, country, province, city, telephone, groupEconomic   
+                addressClient, country, province, city, telephone, groupEconomic, occupation   
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData
         } = this.props;
@@ -364,7 +400,7 @@ class clientCertify extends React.Component {
                 "registrationKey": infoClient.registrationKey,
                 "riskGroup": infoClient.riskGroup,
                 "segment": infoClient.segment,
-                "subCiiu": infoClient.subCiiu,
+                "subCiiu": idSubCIIU.value,
                 "subSegment": infoClient.subSegment,
                 "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
                 "countryOfMainMarket": infoClient.countryOfMainMarket,
@@ -389,6 +425,7 @@ class clientCertify extends React.Component {
                 "isVirtualStatement": infoClient.isVirtualStatement,
                 "lineOfBusiness": infoClient.lineOfBusiness,
                 "isManagedByRm": marcGeren.value,
+                "occupation" : occupation.value,
                 "addresses": [
                     {
                         "typeOfAddress": 41,
@@ -417,7 +454,7 @@ class clientCertify extends React.Component {
                 "operationsForeignCurrency": infoClient.operationsForeignCurrency,
                 "otherOperationsForeign": infoClient.otherOperationsForeign,
                 "operationsForeigns": infoClient.operationsForeigns,
-                "idCustomerTypology": infoClient.idCustomerTypology
+                "idCustomerTypology": infoClient.idCustomerTypology               
             };
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -787,7 +824,7 @@ class clientCertify extends React.Component {
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
         
         var infoClient = clientInformacion.get('responseClientInfo');
         
@@ -807,159 +844,18 @@ class clientCertify extends React.Component {
                 }
 
             <div>
-                <ActividadEconomica idCIIU={idCIIU} isExclient={isExclient} />
-
+                {
+                    isPersonaNatural ?
+                        <ActividadEconomicaPN clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} occupation={occupation} />
+                    :
+                        <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
+                }
+                
                 <Ubicacion addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
 
                 {/* Inicio Informacion financiera  */}
 
-
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="suitcase icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Información financiera</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ventas anuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                type="text"
-                                min={0}
-                                max="16"
-                                onChange={val => this._onChangeValue("annualSales", val)}
-                                placeholder="Ingrese las ventas anuales"
-                                {...annualSales}
-                                value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Fecha de ventas anuales - DD/MM/YYYY</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
-                                touched={true} />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Activos</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                type="text"
-                                max="16"
-                                onChange={val => this._onChangeValue("assets", val)}
-                                placeholder="Ingrese los activos"
-                                {...assets}
-                                value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Pasivos</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("liabilities", val)}
-                                placeholder="Ingrese los pasivos"
-                                {...liabilities}
-                                value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ingresos operacionales mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                onChange={val => this._onChangeValue("operatingIncome", val)}
-                                min={0}
-                                max="16"
-                                type="text"
-                                placeholder="Ingrese los ingresos operacionales mensuales"
-                                {...operatingIncome}
-                                value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Egresos mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("expenses", val)}
-                                placeholder="Ingrese los egresos mensuales"
-                                {...expenses}
-                                value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ingresos no operacionales mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                                placeholder="Ingrese los ingresos no operacionales mensuales"
-                                {...nonOperatingIncome}
-                                value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    
-                </Row>
-
+                <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
 
                 {/*  Fin Informacion financiera   */}
 
@@ -1228,6 +1124,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     const isExclient = infoClient.relationshipStatusName === "Excliente";
     const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
+    console.log('personaNatural', isPersonaNatural);
+
     return {
         isExclient,
         isPersonaNatural,
@@ -1246,6 +1144,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             justifyExClient: infoClient.justificationForLostClient,
             justifyNoLME: infoClient.justificationForCreditNeed,
             idCIIU: infoClient.ciiu,
+            idSubCIIU: infoClient.subCiiu,
             groupEconomic: infoClient.economicGroup,
             annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
             dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,

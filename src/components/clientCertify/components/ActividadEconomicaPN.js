@@ -4,17 +4,18 @@ import { bindActionCreators } from "redux";
 
 import {Col, Row} from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import {OPTION_REQUIRED} from "../../../constantsGlobal";
+import {OPTION_REQUIRED} from "../../../constantsGlobal"
+
 import * as constants from "../../selectsComponent/constants";
 import { consultListWithParameter } from '../../selectsComponent/actions';
 
-class ActividadEconomica extends React.Component {
+
+
+class ActividadEconomicaPN extends React.Component {
 
     constructor(props) {
         super(props)
-
         this._onChangeCIIU = this._onChangeCIIU.bind(this);
-
     }
     
     _onChangeCIIU(val) {
@@ -31,13 +32,12 @@ class ActividadEconomica extends React.Component {
 
     render() {
 
-        const { idCIIU, selectsReducer, isExclient, idSubCIIU } = this.props;
-
-        console.log('idSubCIIU', idSubCIIU.value);
+        const { idCIIU, selectsReducer, isExclient, occupation, idSubCIIU } = this.props;
 
         return (
             <div>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                
+            <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row"
@@ -47,11 +47,29 @@ class ActividadEconomica extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                
                 <Row style={{ padding: "0px 10px 10px 0px" }}>
+                    <Col xs={4}>
+                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                            <dt><span>Ocupación</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
+                            <ComboBox
+                                name="occupation"
+                                labelInput="Seleccione Ocupación..."
+                                {...occupation}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(constants.OCCUPATION)}
+                                touched={true}
+                                showEmptyObject={true}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <Row style={{ padding: "0px 10px 10px 0px" }}>
+                    
                     <Col xs>
                         <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
+                            <dt><span>CIIU</span></dt>
                             <ComboBox
                                 name="idCIIU"
                                 labelInput="Seleccione CIIU..."
@@ -77,7 +95,7 @@ class ActividadEconomica extends React.Component {
                     </Col>
                     <Col xs>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt><span>SubCIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
+                            <dt><span>SubCIIU</span></dt>
                             <ComboBox
                                 name="idSubCIIU"
                                 labelInput="Seleccione subCIIU..."
@@ -101,7 +119,7 @@ class ActividadEconomica extends React.Component {
                         </div>
                     </Col>
                 </Row>
-            </div>
+                </div>
         )
 
     }
@@ -122,16 +140,16 @@ function mapDispatchToProps(dispatch) {
 var validations = [
     {
         validation: 'required',
-        fields: ['idCIIU','idSubCIIU']
+        fields: ['occupation']
     }
 ]
 
 export function validationRules(props) {
-    if (props.isExclient) {
+    if(props.isExclient) {
         return [];
     } else {
         return validations;
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActividadEconomica)
+export default connect(mapStateToProps, mapDispatchToProps)(ActividadEconomicaPN)

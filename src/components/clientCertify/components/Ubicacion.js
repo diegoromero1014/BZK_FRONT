@@ -9,7 +9,9 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 
 import {consultListWithParameterUbication} from '../../selectsComponent/actions'
 import * as selectConstants from "../../selectsComponent/constants";
-import {VALUE_REQUIERED} from "../../../constantsGlobal"
+import {VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../../constantsGlobal"
+
+import { xssValidation, validateFields } from '../../../actionsGlobal';
 
 class Ubicacion extends React.Component {
 
@@ -212,12 +214,35 @@ function mapDispatchToProps(dispatch) {
     }, dispatch)
 }
 
-export function validate(values, props, errors) {
-    if (! values.addressClient) {
-        errors.addressClient = VALUE_REQUIERED;
+
+var validationsWhenIsExclient = [
+    {
+        validation: 'xss',
+        fields: ['addressClient','telephone','country','province','city']
+    }
+]
+
+var validationsWhenIsNotExclient = [
+    {
+        validation: 'required',
+        fields: ['addressClient','telephone','country','province','city']
+    },
+    {
+        validation: 'xss',
+        fields: ['addressClient','telephone','country','province','city']
+    }
+]
+
+
+
+export function validationsRules(props) {
+
+    if (props.isExclient) {
+        return validationsWhenIsExclient;
+    } else {
+        return validationsWhenIsNotExclient;
     }
 
-    return errors;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ubicacion)
