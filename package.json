@@ -17,7 +17,7 @@
   },
   "betterScripts": {
     "develop": {
-      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.dev.js",
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.develop.js",
       "env": {
         "NODE_ENV": "production"
       }
