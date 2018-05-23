@@ -17,6 +17,12 @@ class Dashboard extends Component {
 
       let token = window.localStorage.getItem('sessionTokenFront');
 
+      window.onstorage = function(e){
+          //Leave this empty
+          //or add code to handle
+          //the event
+      };
+
       if( token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1){
         window.localStorage.setItem('sessionTokenFront','');
         document.cookie = 'estadoconexion=activa;path=/';

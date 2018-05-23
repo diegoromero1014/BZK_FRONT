@@ -37,7 +37,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
 
-import { xssValidation } from '../../actionsGlobal';
+import { xssValidation, validateFields } from '../../actionsGlobal';
 
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
@@ -54,11 +54,31 @@ import {
 
 import { showLoading } from "../loading/actions";
 
+
+import Errores from './components/Errores';
+import InfoCliente from './components/InfoCliente';
+import InfoClientePN from './components/InfoClientePN';
+import ActividadEconomica from './components/ActividadEconomica';
+import {validationRules as rulesActividadEconomica} from './components/ActividadEconomica';
+
+import ActividadEconomicaPN from './components/ActividadEconomicaPN';
+import {validationRules as rulesActividadEconomicaPN} from './components/ActividadEconomicaPN';
+
+import Ubicacion from './components/Ubicacion';
+import {validationsRules as rulesUbicacion} from './components/Ubicacion';
+
+import InfoFinanciera from './components/InfoFinanciera';
+import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
+
+import InfoFinancieraPN from './components/InfoFinancieraPN';
+import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
+
 const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber'
+    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation',
+    'firstName', 'middleName', 'lastName', 'middleLastName'
 ]
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -104,137 +124,31 @@ let isProspect = false;
 let isExclient = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
 let validateMarcManagement = true;
+//Establece si el ciente a editar es persona natural para controlar las validaciones
+
 
 
 const validate = (values, props) => {
 
-    const errors = {}
+    let errors = {}
     let errorScrollTop = false;
 
-    if (!values.idCIIU && !isExclient) {
-        errors.idCIIU = OPTION_REQUIRED;
-        errorScrollTop = true;
+    let isExclient = props.isExclient;
+    
+    validateFields(values,rulesUbicacion(props),errors);
+    if (props.isPersonaNatural) {
+        validateFields(values,rulesActividadEconomicaPN(props),errors);
+        validateInfoFinancieraPN(values,props,errors);
     } else {
-        errors.idCIIU = null;
+        validateFields(values,rulesActividadEconomica(props),errors);        
+        validateInfoFinanciera(values,props,errors);
     }
-
-    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !isExclient) {
+    
+    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
         errors.economicGroupName = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.economicGroupName = null;
-    }
-
-    if (!values.addressClient && !isExclient) {
-        errors.addressClient = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.addressClient)) {
-        errors.addressClient = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.addressClient = null;
-    }
-
-    if (!values.telephone && !isExclient) {
-        errors.telephone = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.telephone = null;
-    }
-
-    if (!values.country  && !isExclient) {
-        errors.country = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.country = null;
-    }
-
-    if (!values.province  && !isExclient) {
-        errors.province = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.province = null;
-    }
-
-    if (!values.city  && !isExclient) {
-        errors.city = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.city = null;
-    }
-
-    if (!values.annualSales  && !isExclient) {
-        errors.annualSales = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.annualSales)) {
-        errors.annualSales = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.annualSales = null;
-    }
-
-
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '')  && !isExclient) {
-        errors.dateSalesAnnuals = DATE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.dateSalesAnnuals)) {
-        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.dateSalesAnnuals = null;
-    }
-
-    if (!values.liabilities  && !isExclient) {
-        errors.liabilities = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.liabilities = null;
-    }
-
-    if (!values.assets  && !isExclient) {
-        errors.assets = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.assets = null;
-    }
-
-    if (!values.operatingIncome  && !isExclient) {
-        errors.operatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.operatingIncome = null;
-    }
-
-    if (!values.nonOperatingIncome  && !isExclient) {
-        errors.nonOperatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.nonOperatingIncome = null;
-    }
-
-    if (!values.expenses  && !isExclient) {
-        errors.expenses = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.expenses = null;
     }
 
     if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isExclient) {
@@ -282,13 +196,7 @@ const validate = (values, props) => {
 
 
 
-    if (errorScrollTop && clickButttonSave) {
-        clickButttonSave = false;
-        document.getElementById('dashboardComponentScroll').scrollTop = 0;
-    }
-
-
-    return errors
+    return errors;
 
 }
 
@@ -339,16 +247,13 @@ class clientCertify extends React.Component {
         this._onChangeValueNeedLME = this._onChangeValueNeedLME.bind(this);
         this._onChangeValueJustifyNoNeedLME = this._onChangeValueJustifyNoNeedLME.bind(this);
         this._closeWindow = this._closeWindow.bind(this);
-        this._onChangeCIIU = this._onChangeCIIU.bind(this);
-        this._onChangeCountry = this._onChangeCountry.bind(this);
-        this._onChangeProvince = this._onChangeProvince.bind(this);
         this._submitCertifyClient = this._submitCertifyClient.bind(this);
         this._saveClient = this._saveClient.bind(this);
         this._closeSuccess = this._closeSuccess.bind(this);
         this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
         this._onConfirmExit = this._onConfirmExit.bind(this);
         this._closeError = this._closeError.bind(this);
-        this._onChangeCity = this._onChangeCity.bind(this);
+        
 
     }
 
@@ -386,6 +291,10 @@ class clientCertify extends React.Component {
 
         var infoClient = clientInformacion.get('responseClientInfo');
 
+       
+
+        isExclient = infoClient.relationshipStatusName === "Excliente";
+
         if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
             setNotes(infoClient.notes);
         }
@@ -403,7 +312,7 @@ class clientCertify extends React.Component {
 
                 getMasterDataFields([constants.JUSTIFICATION_NO_RM,constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT, 
                     constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
-                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY])
+                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY, constants.OCCUPATION])
                 .then((data) => {
                     if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                         consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -449,36 +358,6 @@ class clientCertify extends React.Component {
         groupEconomic.onChange('');
     }
 
-    _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
-        var pattern;
-        //Elimino los caracteres no validos
-        for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
-            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
-                output += val.toString().charAt(i)
-            }
-        }
-        val = output;
-
-        if (typeValidation === ALLOWS_NEGATIVE_INTEGER) {
-            pattern = /(-?\d+)(\d{3})/;
-            while (pattern.test(val)) {
-                val = val.replace(pattern, "$1,$2");
-            }
-            valuReduxForm.onChange(val);
-        } else {
-            var value = numeral(valuReduxForm.value).format('0');
-            if (value >= 0) {
-                pattern = /(-?\d+)(\d{3})/;
-                while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1,$2");
-                }
-                valuReduxForm.onChange(val);
-            } else {
-                valuReduxForm.onChange("");
-            }
-        }
-    }
-
     clickButtonScrollTop() {
         clickButttonSave = true;
     }
@@ -497,14 +376,15 @@ class clientCertify extends React.Component {
                 nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
                 justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
                 annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-                addressClient, country, province, city, telephone, groupEconomic   
+                addressClient, country, province, city, telephone, groupEconomic, occupation   
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData
         } = this.props;
         
         const infoClient = clientInformacion.get('responseClientInfo');
-        // ¿Porque existe esta validacion de fecha? Evita el guardado y no lanza error
-        if (isExclient || moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
+      
+            
+
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": infoClient.clientIdType,
@@ -524,7 +404,7 @@ class clientCertify extends React.Component {
                 "registrationKey": infoClient.registrationKey,
                 "riskGroup": infoClient.riskGroup,
                 "segment": infoClient.segment,
-                "subCiiu": infoClient.subCiiu,
+                "subCiiu": idSubCIIU.value,
                 "subSegment": infoClient.subSegment,
                 "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
                 "countryOfMainMarket": infoClient.countryOfMainMarket,
@@ -532,13 +412,13 @@ class clientCertify extends React.Component {
                 "typeOfClient": infoClient.typeOfClient,
                 "status": infoClient.status,
                 "isCreditNeeded": necesitaLME.value,
-                "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+                "annualSales": annualSales.value,
                 "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-                "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-                "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-                "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-                "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-                "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+                "assets": assets.value,
+                "liabilities": liabilities.value,
+                "operatingIncome": operatingIncome.value,
+                "nonOperatingIncome": nonOperatingIncome.value,
+                "expenses": expenses.value,
                 "localMarket": infoClient.localMarket,
                 "marketLeader": infoClient.marketLeader,
                 "territory": infoClient.territory,
@@ -549,6 +429,7 @@ class clientCertify extends React.Component {
                 "isVirtualStatement": infoClient.isVirtualStatement,
                 "lineOfBusiness": infoClient.lineOfBusiness,
                 "isManagedByRm": marcGeren.value,
+                "occupation" : occupation.value,
                 "addresses": [
                     {
                         "typeOfAddress": 41,
@@ -577,7 +458,12 @@ class clientCertify extends React.Component {
                 "operationsForeignCurrency": infoClient.operationsForeignCurrency,
                 "otherOperationsForeign": infoClient.otherOperationsForeign,
                 "operationsForeigns": infoClient.operationsForeigns,
-                "idCustomerTypology": infoClient.idCustomerTypology
+                "idCustomerTypology": infoClient.idCustomerTypology,
+                "clientType" : infoClient.clientType,
+                "firstName" : infoClient.firstName,
+                "middleName" : infoClient.middleName,
+                "lastName" : infoClient.lastName,
+                "middleLastName" : infoClient.middleLastName               
             };
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -596,7 +482,7 @@ class clientCertify extends React.Component {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
             });
-        }
+        
 
     }
 
@@ -681,37 +567,7 @@ class clientCertify extends React.Component {
         goBack();
     }
 
-    _onChangeCountry(val) {
-        const { clientInformacion } = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
-        const { fields: { country, province, city } } = this.props;
-        country.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
-        if (!_.isEqual(infoClient.addresses[0].country, country.value)) {
-            province.onChange('');
-            city.onChange('');
-        }
-    }
-
-    _onChangeProvince(val) {
-        const { clientInformacion } = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
-        const { fields: { country, province, city } } = this.props;
-        province.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_CITY, province.value);
-        if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
-            city.onChange('');
-        }
-    }
-
-    _onChangeCity(val) {
-
-        const { fields: { country, province, city }, selectsReducer } = this.props;
-
-        city.onChange(val);
-    }
+    
 
     _onChangeGroupEconomic(e) {
         const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
@@ -972,448 +828,51 @@ class clientCertify extends React.Component {
         }
     }
 
-    _onChangeCIIU(val) {
-        const { fields: { idCIIU, idSubCIIU } } = this.props;
-        idCIIU.onChange(val);
-    }
-
-    
     render(){
 
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer } = this.props;
-        
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation,
+            firstName, middleName, lastName, middleLastName   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
         
         var infoClient = clientInformacion.get('responseClientInfo');
-        isExclient = infoClient.relationshipStatusName === "Excliente";
-
+        
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         return (
 
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
 
-            { /* VENTANA DE ERRORES */ }
+                <Errores sumErrorsForm={this.state.sumErrorsForm} />
+
+                {
+                    isPersonaNatural ? 
+                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName}/> 
+                    : 
+                        <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
+                }
 
             <div>
-                    <p style={{ paddingTop: '10px' }}></p>
-                    <Row xs={12} md={12} lg={12} style={ EDIT_STYLE }>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
-                            {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
-                                <div>
-                                    <span
-                                        style={{ marginLeft: "20px", marginTop: "10px", color: "red", fontSize: "12pt" }}>Falta información obligatoria del cliente (ver campos seleccionados).</span>
-                                </div>
-                                :
-                                <div>
-                                    <span style={{
-                                        marginLeft: "20px",
-                                        marginTop: "10px",
-                                        color: "green",
-                                        fontSize: "12pt"
-                                    }}>La información del cliente está completa, recuerde revisarla. </span>
-                                </div>
-                            }
-                            
-                        </Col>
-                    </Row>
-                </div>
-
-                { /* FIN VENTANA DE ERRORES  */ }
-
-
-                { /* INFORMACION CLIENTE */ }
-
-                <Row style={{ padding: "10px 28px 10px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social </span></dt>
-                        <dt>
-                            <Input
-                                name="razonSocial"
-                                type="text"
-                                max="150"
-                                placeholder="Razón social del cliente"
-                                {...razonSocial}
-                                disabled={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento </span></dt>
-                        <dt>
-                            
-                            <Input
-                                 name="tipoDocumento"
-                                 type="text"
-                                 placeholder="Tipo de documento del cliente"
-                                 {...idTypeClient}
-                                 disabled={true}
-                                 touched={true}
-                            />
-
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento </span></dt>
-                        <dt>
-                            <Input
-                                name="documento"
-                                type="text"
-                                max="20"
-                                placeholder="Número de documento del cliente"
-                                {...idNumber}
-                                touched={true}
-                                disabled={true}
-                            />
-                        </dt>
-                    </Col>
-
-                    </Row>
-
-                { /* FIN INFORMACION CLIENTE*/ }
-
-
-            <div>
-
+                {
+                    isPersonaNatural ?
+                        <ActividadEconomicaPN clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} occupation={occupation} />
+                    :
+                        <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
+                }
                 
-
-                {/* Inicio Actividad Economica */}
-
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Actividad económica</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 0px" }}>
-                    
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="idCIIU"
-                                labelInput="Seleccione CIIU..."
-                                {...idCIIU}
-                                onChange={val => this._onChangeCIIU(val)}
-                                onBlur={idCIIU.onBlur}
-                                valueProp={'id'}
-                                textProp={'ciiu'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataCIIU')}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
-                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
-                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
-                            </span>
-                        </div>
-                    </Col>
-                </Row>
-
-                {/* Fin Actividad Economica */   }
-
-
-                { /* Inicio Informacion de ubicación y correspondencia */ }
-
-                <Row style={{ padding: "20px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="browser icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Información de ubicación y correspondencia</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 5px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <table style={{ width: "100%" }}>
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <dl style={{
-                                        fontSize: "20px",
-                                        color: "#505050",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <span className="section-title">Dirección sede principal</span>
-                                    </dl>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="tab-content-row"
-                                            style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Dirección</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Textarea
-                                name="addressClient"
-                                validateEnter={true}
-                                type="text"
-                                style={{ width: '100%', height: '100%' }}
-                                max="250"
-                                onChange={val => this._onchangeValue("addressClient", val)}
-                                placeholder="Ingrese la dirección"
-                                {...addressClient}
-                                touched={true}
-                                
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 20px 10px 0px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>País</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="country"
-                                labelInput="Seleccione país..."
-                                {...country}
-                                onChange={val => this._onChangeCountry(val)}
-                                value={country.value}
-                                onBlur={country.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
-                                touched={true}
-                                showEmptyObject={true}
-                                
-                            />
-                        </div>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Departamento</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="province"
-                                labelInput="Seleccione departamento..."
-                                {...province}
-                                onChange={val => this._onChangeProvince(val)}
-                                value={province.value}
-                                onBlur={province.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeProvince') || []}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ paddingLeft: "20px", paddingRight: "15px" }}>
-                            <dt><span>Ciudad</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
-                            <ComboBox
-                                name="city"
-                                labelInput="Seleccione ciudad..."
-                                {...city}
-                                value={city.value}
-                                onBlur={city.onBlur}
-                                onChange={val => this._onChangeCity(val)}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeCity') || []}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 20px 10px 20px" }}>
-                    
-                    <Col xs style={{ marginLeft: "0" }}>
-                        <dt>
-                            <span>Teléfono</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt style={{ marginRight: "15px" }}>
-                            <Input
-                                name="txtTelefono"
-                                type="text"
-                                max="30"
-                                placeholder="Ingrese el teléfono"
-                                {...telephone}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-
-                { /* Fin Informacion de ubicación y correspondencia */ }
-
+                <Ubicacion isExclient={isExclient} addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
 
                 {/* Inicio Informacion financiera  */}
 
+                {
+                    isPersonaNatural ?
+                        <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
+                    :
+                        <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />    
+                }
 
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="suitcase icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Información financiera</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ventas anuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                type="text"
-                                min={0}
-                                max="16"
-                                onChange={val => this._onChangeValue("annualSales", val)}
-                                placeholder="Ingrese las ventas anuales"
-                                {...annualSales}
-                                value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Fecha de ventas anuales - DD/MM/YYYY</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
-                                touched={true} />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Activos</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                type="text"
-                                max="16"
-                                onChange={val => this._onChangeValue("assets", val)}
-                                placeholder="Ingrese los activos"
-                                {...assets}
-                                value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Pasivos</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("liabilities", val)}
-                                placeholder="Ingrese los pasivos"
-                                {...liabilities}
-                                value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ingresos operacionales mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                onChange={val => this._onChangeValue("operatingIncome", val)}
-                                min={0}
-                                max="16"
-                                type="text"
-                                placeholder="Ingrese los ingresos operacionales mensuales"
-                                {...operatingIncome}
-                                value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Egresos mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("expenses", val)}
-                                placeholder="Ingrese los egresos mensuales"
-                                {...expenses}
-                                value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Ingresos no operacionales mensuales</span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <Input
-                                style={{ width: "100%", textAlign: "right" }}
-                                format="0,000"
-                                min={0}
-                                max="16"
-                                type="text"
-                                onChange={val => this._onChangeValue("nonOperatingIncome", val)}
-                                placeholder="Ingrese los ingresos no operacionales mensuales"
-                                {...nonOperatingIncome}
-                                value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    
-                </Row>
-
+                
 
                 {/*  Fin Informacion financiera   */}
 
@@ -1679,7 +1138,15 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
+    isExclient = infoClient.relationshipStatusName === "Excliente";
+    
+    const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
+
+    console.log('personaNatural', isPersonaNatural);
+
     return {
+        isExclient,
+        isPersonaNatural,
         clientInformacion,
         selectsReducer,
         notes,
@@ -1695,6 +1162,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             justifyExClient: infoClient.justificationForLostClient,
             justifyNoLME: infoClient.justificationForCreditNeed,
             idCIIU: infoClient.ciiu,
+            idSubCIIU: infoClient.subCiiu,
             groupEconomic: infoClient.economicGroup,
             annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
             dateSalesAnnuals: infoClient.salesUpadateDate !== '' && infoClient.salesUpadateDate !== null && infoClient.salesUpadateDate !== undefined ? moment(infoClient.salesUpadateDate).format('DD/MM/YYYY') : null,
@@ -1710,7 +1178,12 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
             city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
             telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
-            
+          
+            occupation: infoClient.occupation,
+            firstName: infoClient.firstName,
+            middleName: infoClient.middleName,
+            lastName: infoClient.lastName,
+            middleLastName: infoClient.middleLastName
         }
     }
 }

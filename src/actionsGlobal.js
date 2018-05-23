@@ -448,3 +448,25 @@ export function onSessionExpire() {
     window.localStorage.setItem('sessionTokenFront','');
     redirectUrl("/login");
 }
+
+export function validateFields(values,validations, errors) {
+
+    validations.forEach(row => {
+        row.fields.forEach(field => {
+            if (! errors[field]) {
+                switch (row.validation) {
+                    case 'required':
+                        if (! values[field] ) {
+                            errors[field] = constants.VALUE_REQUIRED;
+                        }
+                        break;
+                    case 'xss':
+                        if (xssValidation(values[field]) ) {
+                            errors[field] = constants.VALUE_XSS_INVALID;
+                        }
+                        break;
+                }
+            }   
+        });
+    })
+}
