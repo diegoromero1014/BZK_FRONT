@@ -1,4 +1,4 @@
-export const VERSION_DATE = "07/02/2018";
+export const VERSION_DATE = "04/04/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
@@ -131,7 +131,7 @@ export const TAB_CUSTOMER_STORY = 10;
 
 let API_URL;
 if (process.env.NODE_ENV === "production") {
-    API_URL = "https://serviciosdllopseries.bancolombia.corp/Biztrack";
+    API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
 } else {
     API_URL = "http://localhost:8084/Centricity";
 }
@@ -190,13 +190,21 @@ export const valuesYesNo = [
 /**
  * INICIO REGEX XSS
  */
-export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<?[\s\S]iframe|<?[\s\S]link|<?[\s\S]script|cmd|scriptlet|error=|http-equiv|@import)/g;
+export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<iframe|<link|<script|(=.*cmd)|scriptlet|error=|http-equiv|@import)/g;
 export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g; 
 export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
 // export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
-export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|cmd|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+
+export const REGEX_SIMPLE_XSS_STRING_TAG = "/<.*?>/g";
+export const REGEX_SIMPLE_XSS_STRING_R_W = "/(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING_SPECIFIC = "/((<[\\S\\s]*(.*?([#-.]|[\\[-^]|[?|{}]))\\s*>)|(<meta|<xss|<style|<iframe|<link|<script|scriptlet|error=|http-equiv|@import))/g";
+
+
+export const REGEX_SIMPLE_XSS_TITLE = "Información invalida";
 export const REGEX_SIMPLE_XSS_MESAGE_SHORT = "La información ingresada contiene caracteres invalidos.";
 export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada contiene caracteres peligrosos para la aplicación.";
+
 
 /**
  * FIN REGEX XSS
@@ -207,11 +215,35 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
   * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
   */
 
-export const NAME_REPORT_PREVISIT = "PreVisita"
-export const TIME_REQUEST_BLOCK_REPORT = 15000;
+ /**
+  * ACCIONES
+  */
+    export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
+    export const STOP_BLOCK_REPORT = "STOP_BLOCK_REPORT";
+
+ /**
+  * TIPOS DE DOCUMENTOS BLOQUEADOS
+  */
+
+    export const NAME_REPORT_PREVISIT = "PreVisita";
+    export const BLOCK_CREDIT_STUDY = "CreditStudy";
+
+ /**
+  * PARAMETROS BLOQUEO
+  */
+    export const TIME_REQUEST_BLOCK_REPORT = 30000;
+
 
 /**
  * Reestablecer permisos
  */
 
 export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREVISITS"
+
+/**
+ * Constantes totalidad de los campos requeridos
+ */
+
+ export const INCOMPLETE_INFORMATION = "Información incompleta";
+ export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
+ export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un evento";

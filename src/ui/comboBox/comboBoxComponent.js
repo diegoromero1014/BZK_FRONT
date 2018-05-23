@@ -73,8 +73,12 @@ class comboBoxComponent extends Component {
                     value: id,
                     used: true
                 });
-                onBlur(id, text);
-                onChange(id, text);
+                if(onBlur){
+                    onBlur(id, text);
+                }
+                if(onChange){
+                    onChange(id, text);
+                }
             },
             forceSelection: false,
             selectOnKeydown: false
@@ -96,10 +100,24 @@ class comboBoxComponent extends Component {
 
     render() {
         const { nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo,
-            parentId, searchClient, styles, shouldHandleUpdate, defaultValue } = this.props;
+            parentId, searchClient, styles, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject } = this.props;
         if (touched && invalid && shouldHandleUpdate) {
             scrollTo(parentId);
         }
+
+        let emptyObject = {};
+
+        let comboData;
+
+        if(showEmptyObject) {
+            emptyObject[valueProp] = '';
+            emptyObject[textProp] = "Seleccione...";
+
+            comboData = [emptyObject, ...data];
+        }else{
+            comboData = data;
+        }
+
         return (
             <div className={disabled} >
                 <div
@@ -109,7 +127,7 @@ class comboBoxComponent extends Component {
                     <i className="dropdown icon" />
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
                     <div className={`right menu ${name}`}>
-                        {_.map(data, this.mapValuesToDropDown)}
+                        {_.map(comboData , this.mapValuesToDropDown)}
                     </div>
                 </div>
                 {
@@ -135,5 +153,9 @@ comboBoxComponent.PropTypes = {
     onChange: PropTypes.func.isRequired,
     defaultValue: PropTypes.string
 };
+
+comboBoxComponent.defaultProps = {
+    showEmptyObject: false
+}
 
 export default scrollToComponent(comboBoxComponent);

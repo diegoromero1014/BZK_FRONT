@@ -9,3 +9,4 @@ npm-debug.log
 semantic.json
 dist/
 .gitignore
+.vscode/

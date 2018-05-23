@@ -29,7 +29,7 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from "../../../../../constantsGlobal";
-import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
+import { stringValidate, validateResponse, xssValidation } from "../../../../../actionsGlobal";
 import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
@@ -49,37 +49,37 @@ const validate = (values) => {
     }
     if (!values.numberDocument) {
         errors.numberDocument = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.numberDocument)) {
+    } else if (xssValidation(values.numberDocument)) {
         errors.numberDocument = VALUE_XSS_INVALID;
     } else {
         errors.numberDocument = null;
     }
     if (!values.firstName) {
         errors.firstName = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstName)) {
+    } else if (xssValidation(values.firstName)) {
         errors.firstName = VALUE_XSS_INVALID;
     } else {
         errors.firstName = null;
     }
     if (!values.firstLastName) {
         errors.firstLastName = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.firstLastName)) {
+    } else if (xssValidation(values.firstLastName)) {
         errors.firstLastName = VALUE_XSS_INVALID;
     } else {
         errors.firstLastName = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.middleName)) {
+    if (xssValidation(values.middleName)) {
         errors.middleName = VALUE_XSS_INVALID;
     } else {
         errors.middleName = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.secondLastName)) {
+    if (xssValidation(values.secondLastName)) {
         errors.secondLastName = VALUE_XSS_INVALID;
     } else {
         errors.secondLastName = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.observations)) {
+    if (xssValidation(values.observations)) {
         errors.observations = VALUE_XSS_INVALID;
     } else {
         errors.observations = null;
@@ -233,7 +233,7 @@ class ModalCreateBoardMembers extends Component {
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
 
 
-            if (eval(REGEX_SIMPLE_XSS_STRING).test(numberDocument.value)) {
+            if (xssValidation(numberDocument.value)) {
                 this.setState({ showErrorXss: true });
                 return;
             }

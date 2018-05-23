@@ -33,6 +33,7 @@ class ClientTypology extends Component {
                         {...customerTypology}
                         error={!stringValidate(customerTypology.value) && fieldRequiered ? VALUE_REQUIERED : ''}
                         touched={true}
+                        showEmptyObject={true}
                     />
                 </div>
             </Col>

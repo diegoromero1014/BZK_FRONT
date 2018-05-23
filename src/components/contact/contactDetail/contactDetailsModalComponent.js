@@ -15,7 +15,7 @@ import moment from 'moment';
 import SweetAlert from 'sweetalert-react';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { downloadFilePDF } from '../actions';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { changeStateSaveData } from '../../dashboard/actions';
 import {
@@ -51,6 +51,7 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
@@ -116,21 +117,21 @@ const validate = values => {
     }
     if (!values.contactIdentityNumber) {
         errors.contactIdentityNumber = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactIdentityNumber)) {
+    } else if (xssValidation(values.contactIdentityNumber)) {
         errors.contactIdentityNumber = VALUE_XSS_INVALID;
     } else {
         errors.contactIdentityNumber = null;
     }
     if (!values.contactFirstName) {
         errors.contactFirstName = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactFirstName)) {
+    } else if (xssValidation(values.contactFirstName)) {
         errors.contactFirstName = VALUE_XSS_INVALID;
     } else {
         errors.contactFirstName = null;
     }
     if (!values.contactFirstLastName) {
         errors.contactFirstLastName = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactFirstLastName)) {
+    } else if (xssValidation(values.contactFirstLastName)) {
         errors.contactFirstLastName = VALUE_XSS_INVALID;
     } else {
         errors.contactFirstLastName = null;
@@ -140,7 +141,7 @@ const validate = values => {
     } else {
         if (!(/\S+@\S+\.\S+/.test(values.contactEmailAddress))) {
             errors.contactEmailAddress = INVALID_EMAIL;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactEmailAddress)) {
+        } else if (xssValidation(values.contactEmailAddress)) {
             errors.contactEmailAddress = VALUE_XSS_INVALID;
         } else {
             errors.contactFunctions = null;
@@ -148,7 +149,7 @@ const validate = values => {
     }
     if (!values.contactTelephoneNumber) {
         errors.contactTelephoneNumber = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactTelephoneNumber)) {
+    } else if (xssValidation(values.contactTelephoneNumber)) {
         errors.contactTelephoneNumber = VALUE_XSS_INVALID;
     } else {
         errors.contactTelephoneNumber = null;
@@ -162,48 +163,48 @@ const validate = values => {
     }
     if (!values.contactAddress || values.contactAddress === '') {
         errors.contactAddress = VALUE_REQUIERED;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactAddress)) {
+    } else if (xssValidation(values.contactAddress)) {
         errors.contactAddress = VALUE_XSS_INVALID;
     } else {
         errors.contactAddress = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactNeighborhood)) {
+    if (xssValidation(values.contactNeighborhood)) {
         errors.contactNeighborhood = VALUE_XSS_INVALID;
     }else {
         errors.contactNeighborhood = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactPostalCode)) {
+    if (xssValidation(values.contactPostalCode)) {
         errors.contactPostalCode = VALUE_XSS_INVALID;
     }else {
         errors.contactPostalCode = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactExtension)) {
+    if (xssValidation(values.contactExtension)) {
         errors.contactExtension = VALUE_XSS_INVALID;
     }else {
         errors.contactExtension = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMobileNumber)) {
+    if (xssValidation(values.contactMobileNumber)) {
         errors.contactMobileNumber = VALUE_XSS_INVALID;
     }else {
         errors.contactMobileNumber = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactMiddleName)) {
+    if (xssValidation(values.contactMiddleName)) {
         errors.contactMiddleName = VALUE_XSS_INVALID;
     }else {
         errors.contactMiddleName = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactSecondLastName)) {
+    if (xssValidation(values.contactSecondLastName)) {
         errors.contactSecondLastName = VALUE_XSS_INVALID;
     }else {
         errors.contactSecondLastName = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactDateOfBirth)) {
+    if (xssValidation(values.contactDateOfBirth)) {
         errors.contactDateOfBirth = VALUE_XSS_INVALID;
     }else {
         errors.contactDateOfBirth = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contactRelevantFeatures)) {
+    if (xssValidation(values.contactRelevantFeatures)) {
         errors.contactRelevantFeatures = VALUE_XSS_INVALID;
     }else {
         errors.contactRelevantFeatures = null;

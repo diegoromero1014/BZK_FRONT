@@ -64,7 +64,7 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate } from "../../actionsGlobal";
+import { validateResponse, stringValidate, xssValidation } from "../../actionsGlobal";
 
 let idButton;
 let errorContact;
@@ -142,7 +142,7 @@ const validate = (values, props) => {
     if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.razonSocial)) {
+    } else if (xssValidation(values.razonSocial)) {
         errors.razonSocial = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -159,179 +159,179 @@ const validate = (values, props) => {
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.idNumber)) {
+    } else if (xssValidation(values.idNumber)) {
         errors.idNumber = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.idNumber = null;
     }
 
-    if (!values.idCIIU) {
+    if (!values.idCIIU && idButton !== BUTTON_EDIT) {
         errors.idCIIU = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.idCIIU = null;
     }
-    if (!values.idSubCIIU) {
+    if (!values.idSubCIIU && idButton !== BUTTON_EDIT) {
         errors.idSubCIIU = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.idSubCIIU = null;
     }
 
-    if (!values.addressClient) {
+    if (!values.addressClient && idButton !== BUTTON_EDIT) {
         errors.addressClient = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.addressClient)) {
+    } else if (xssValidation(values.addressClient)) {
         errors.addressClient = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.addressClient = null;
     }
 
-    if (!values.telephone) {
+    if (!values.telephone && idButton !== BUTTON_EDIT) {
         errors.telephone = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.telephone)) {
+    } else if (xssValidation(values.telephone)) {
         errors.telephone = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.telephone = null;
     }
 
-    if (!values.annualSales) {
+    if (!values.annualSales && idButton !== BUTTON_EDIT) {
         errors.annualSales = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.annualSales)) {
+    } else if (xssValidation(values.annualSales)) {
         errors.annualSales = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.annualSales = null;
     }
 
-    if (!values.country) {
+    if (!values.country && idButton !== BUTTON_EDIT) {
         errors.country = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.country = null;
     }
 
-    if (!values.province) {
+    if (!values.province && idButton !== BUTTON_EDIT) {
         errors.province = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.province = null;
     }
 
-    if (!values.city) {
+    if (!values.city && idButton !== BUTTON_EDIT) {
         errors.city = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.city = null;
     }
 
-    if (!values.dateSalesAnnuals || values.dateSalesAnnuals === '') {
+    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && idButton !== BUTTON_EDIT ) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dateSalesAnnuals)) {
+    } else if (xssValidation(values.dateSalesAnnuals)) {
         errors.dateSalesAnnuals = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.dateSalesAnnuals = null;
     }
 
-    if (!values.liabilities) {
+    if (!values.liabilities && idButton !== BUTTON_EDIT) {
         errors.liabilities = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.liabilities)) {
+    } else if (xssValidation(values.liabilities)) {
         errors.liabilities = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.liabilities = null;
     }
 
-    if (!values.assets) {
+    if (!values.assets && idButton !== BUTTON_EDIT) {
         errors.assets = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.assets)) {
+    } else if (xssValidation(values.assets)) {
         errors.assets = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.assets = null;
     }
 
-    if (!values.operatingIncome) {
+    if (!values.operatingIncome && idButton !== BUTTON_EDIT) {
         errors.operatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.operatingIncome)) {
+    } else if (xssValidation(values.operatingIncome)) {
         errors.operatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.operatingIncome = null;
     }
 
-    if (!values.nonOperatingIncome) {
+    if (!values.nonOperatingIncome && idButton !== BUTTON_EDIT) {
         errors.nonOperatingIncome = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.nonOperatingIncome)) {
+    } else if (xssValidation(values.nonOperatingIncome)) {
         errors.nonOperatingIncome = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.nonOperatingIncome = null;
     }
 
-    if (!values.expenses) {
+    if (!values.expenses && idButton !== BUTTON_EDIT) {
         errors.expenses = VALUE_REQUIERED;
         errorScrollTop = true;
-    } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.expenses)) {
+    } else if (xssValidation(values.expenses)) {
         errors.expenses = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.expenses = null;
     }
 
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect) {
+    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect && idButton !== BUTTON_EDIT) {
         errors.marcGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.marcGeren = null;
     }
 
-    if (values.marcGeren === 'false' && !values.justifyNoGeren) {
+    if (values.marcGeren === 'false' && !values.justifyNoGeren && idButton !== BUTTON_EDIT) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoGeren = null;
     }
 
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect) {
+    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect && idButton !== BUTTON_EDIT) {
         errors.centroDecision = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.centroDecision = null;
     }
 
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect) {
+    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect && idButton !== BUTTON_EDIT) {
         errors.necesitaLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.necesitaLME = null;
     }
 
-    if (values.necesitaLME === 'false' && !values.justifyNoLME) {
+    if (values.necesitaLME === 'false' && !values.justifyNoLME && idButton !== BUTTON_EDIT) {
         errors.justifyNoLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoLME = null;
     }
 
-    if (values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') {
+    if ((values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') && idButton !== BUTTON_EDIT) {
         errors.reportVirtual = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.reportVirtual = null;
     }
-    if (values.extractsVirtual === null || values.extractsVirtual === undefined || values.extractsVirtual === '') {
+    if ((values.extractsVirtual === null || values.extractsVirtual === undefined || values.extractsVirtual === '') && idButton !== BUTTON_EDIT) {
         errors.extractsVirtual = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
@@ -339,10 +339,10 @@ const validate = (values, props) => {
     }
 
     if (otherOriginGoodsEnable !== 'disabled') {
-        if (values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') {
+        if ((values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') && idButton !== BUTTON_EDIT) {
             errors.otherOriginGoods = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginGoods)) {
+        } else if (xssValidation(values.otherOriginGoods)) {
             errors.otherOriginGoods = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -350,10 +350,10 @@ const validate = (values, props) => {
         }
     }
     if (otherOriginResourceEnable !== 'disabled') {
-        if (values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') {
+        if ((values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') && idButton !== BUTTON_EDIT) {
             errors.otherOriginResource = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOriginResource)) {
+        } else if (xssValidation(values.otherOriginResource)) {
             errors.otherOriginResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -361,10 +361,10 @@ const validate = (values, props) => {
         }
     }
     if (otherOperationsForeignEnable !== 'disabled') {
-        if (values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') {
+        if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.otherOperationsForeign)) {
+        } else if (xssValidation(values.otherOperationsForeign)) {
             errors.otherOperationsForeign = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -374,7 +374,7 @@ const validate = (values, props) => {
 
     //Valido que el cliente tenga ciudad de origen de los recursos
     if (values.originCityResource) {
-        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+        if (xssValidation(values.originCityResource)) {
             errors.originCityResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -383,7 +383,7 @@ const validate = (values, props) => {
     }
 
     if (values.detailNonOperatingIncome) {
-        if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+        if (xssValidation(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
         }else{
@@ -393,7 +393,7 @@ const validate = (values, props) => {
 
     //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
-        if (values.taxNature === null || values.taxNature === undefined || values.taxNature === '') {
+        if ((values.taxNature === null || values.taxNature === undefined || values.taxNature === '') && idButton !== BUTTON_EDIT) {
             errors.taxNature = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -401,17 +401,17 @@ const validate = (values, props) => {
         }
 
         //Valido si el cliente tiene ingresos no operaciones
-        if (values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') {
+        if ((values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
             errors.nonOperatingIncome = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
             errors.nonOperatingIncome = null;
             //En caso tal de que los ingresos operacionales sean mayor a 0, se debe de validar el de
             if (numeral(values.nonOperatingIncome).format('0') > 0) {
-                if (values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') {
+                if ((values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
                     errors.detailNonOperatingIncome = OPTION_REQUIRED;
                     errorScrollTop = true;
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.detailNonOperatingIncome)) {
+                } else if (xssValidation(values.detailNonOperatingIncome)) {
                     errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
                     errorScrollTop = true;
                 } else {
@@ -421,7 +421,7 @@ const validate = (values, props) => {
         }
 
         //Valido que el cliente tenga asociado el origen de los bienes
-        if (values.originGoods === null || values.originGoods === undefined || values.originGoods === '' || values.originGoods[0] === '') {
+        if ((values.originGoods === null || values.originGoods === undefined || values.originGoods === '' || values.originGoods[0] === '') && idButton !== BUTTON_EDIT) {
             errors.originGoods = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -429,7 +429,7 @@ const validate = (values, props) => {
         }
 
         //Valido que el cliente tenga asociado el origen de los recursos
-        if (values.originResource === null || values.originResource === undefined || values.originResource === '' || values.originResource[0] === '') {
+        if ((values.originResource === null || values.originResource === undefined || values.originResource === '' || values.originResource[0] === '') && idButton !== BUTTON_EDIT) {
             errors.originResource = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -437,7 +437,7 @@ const validate = (values, props) => {
         }
 
         //Valido que el cliente tenga asociado el país de origen
-        if (values.countryOrigin === null || values.countryOrigin === undefined || values.countryOrigin === '') {
+        if ((values.countryOrigin === null || values.countryOrigin === undefined || values.countryOrigin === '') && idButton !== BUTTON_EDIT) {
             errors.countryOrigin = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -445,10 +445,10 @@ const validate = (values, props) => {
         }
 
         //Valido que el cliente tenga ciudad de origen de los recursos
-        if (values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') {
+        if ((values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') && idButton !== BUTTON_EDIT) {
             errors.originCityResource = OPTION_REQUIRED;
             errorScrollTop = true;
-        } else if (eval(REGEX_SIMPLE_XSS_STRING).test(values.originCityResource)) {
+        } else if (xssValidation(values.originCityResource)) {
             errors.originCityResource = VALUE_XSS_INVALID;
             errorScrollTop = true;
         } else {
@@ -456,14 +456,14 @@ const validate = (values, props) => {
         }
 
         //Valido si el cliente realiza operaciones en moneda extranjera
-        if (values.operationsForeignCurrency === null || values.operationsForeignCurrency === undefined || values.operationsForeignCurrency === '') {
+        if ((values.operationsForeignCurrency === null || values.operationsForeignCurrency === undefined || values.operationsForeignCurrency === '') && idButton !== BUTTON_EDIT) {
             errors.operationsForeignCurrency = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
             //En caso de que si realice operaciones, obligo a que me indique cuales
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
-                if (values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') {
+                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
                 } else {
@@ -475,14 +475,14 @@ const validate = (values, props) => {
             }
         }
 
-        if (!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) {
+        if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && idButton !== BUTTON_EDIT) {
             errors.economicGroupName = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
             errors.economicGroupName = null;
         }
 
-        if (!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) {
+        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT) {
             errors.controlLinkedPayments = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
@@ -495,7 +495,7 @@ const validate = (values, props) => {
         errors.segment = OPTION_REQUIRED;
     } else {
         const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value)) {
+        if (_.isEqual(CONSTRUCT_PYME, value) && idButton !== BUTTON_EDIT) {
             if (!values.subSegment) {
                 errors.subSegment = OPTION_REQUIRED;
             } else {
@@ -507,28 +507,28 @@ const validate = (values, props) => {
 
 
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.description)) {
+    if (xssValidation(values.description)) {
         errors.description = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.description = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.neighborhood)) {
+    if (xssValidation(values.neighborhood)) {
         errors.neighborhood = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.neighborhood = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.contextClientField)) {
+    if (xssValidation(values.contextClientField)) {
         errors.contextClientField = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
         errors.contextClientField = null;
     }
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.inventoryPolicy)) {
+    if (xssValidation(values.inventoryPolicy)) {
         errors.inventoryPolicy = VALUE_XSS_INVALID;
         errorScrollTop = true;
     } else {
@@ -546,7 +546,7 @@ const validate = (values, props) => {
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
-
+    
     return errors;
 };
 
@@ -568,6 +568,7 @@ function SelectsJustificacion(props) {
                     touched={true}
                     parentId="dashboardComponentScroll"
                     onChange={props.onChange}
+                    showEmptyObject={true}
                 />
             </dt>
         </Col>;
@@ -984,7 +985,7 @@ class clientEdit extends Component {
         const { clientInformacion } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');
         const { consultListWithParameter } = this.props;
-        consultListWithParameter(constants.SUB_CIIU, val);
+        consultListWithParameter(constants.SUB_CIIU, idCIIU.value);
         if (!_.isEqual(infoClient.ciiu, idCIIU.value)) {
             idSubCIIU.onChange('');
         }
@@ -1135,7 +1136,11 @@ class clientEdit extends Component {
             productsArray.push(_.omit(map, ['uid']))
         });
         const infoClient = clientInformacion.get('responseClientInfo');
-        if (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
+        
+        if (idButton === BUTTON_EDIT || (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined)) {
+            
+           
+
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
@@ -1205,11 +1210,12 @@ class clientEdit extends Component {
                 "otherOriginResource": otherOriginResource.value,
                 "countryOriginId": countryOrigin.value,
                 "originCityResource": originCityResource.value,
-                "operationsForeignCurrency": operationsForeignCurrency.value === 'false' ? 0 : 1,
+                "operationsForeignCurrency": operationsForeignCurrency.value? (operationsForeignCurrency.value === 'false' ? 0 : 1): '',
                 "otherOperationsForeign": otherOperationsForeign.value,
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
                 "idCustomerTypology": customerTypology.value
             };
+           
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
@@ -1349,6 +1355,7 @@ class clientEdit extends Component {
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
+       
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -1358,9 +1365,11 @@ class clientEdit extends Component {
         let existNoteExceptionNoNeedLME = false;
         notes.map(map => {
             if (map.combo === idExcepcionNoGerenciado) {
+                
                 existNoteExceptionNoGeren = true;
             }
             if (map.combo === idExcepcionNoNeedLME) {
+               
                 existNoteExceptionNoNeedLME = true;
             }
             const noteItem = {
@@ -1376,6 +1385,7 @@ class clientEdit extends Component {
         const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
+           
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1387,6 +1397,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
+           
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1394,6 +1405,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
         } else if (addNoteNoNeedLME) {
+            
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,
                 typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
@@ -1401,26 +1413,33 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
+           
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
-            if (errorContact || errorShareholder) {
+            if ((errorContact || errorShareholder)  && idButton !== BUTTON_EDIT) {
+                
                 updateErrorsNotes(false);
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
-            if (_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient')) {
+            if ((_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient'))  || idButton === BUTTON_EDIT) {
+               
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
                     this.state.showFormAddMainSupplier || this.state.showFormAddMainCompetitor || this.state.showFormAddIntOperatrions) {
-                    swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+                        
+                        swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
+                   
                     if (idButton === BUTTON_UPDATE) {
                         this.setState({
                             showConfirmSave: true
                         });
                     } else {
+                        
                         this._saveClient(BUTTON_EDIT);
                     }
                 }
             } else {
+               
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
         }
@@ -1493,11 +1512,13 @@ class clientEdit extends Component {
                         var dataOriginGoods = JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]');
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
+                        
                         this._changeSegment(infoClient.segment, true, infoClient.subSegment);
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
                         showLoading(false, '');
+
                     }, (reason) => {
                         showLoading(false, '');
                         this.setState({ showEx: true });
@@ -1678,7 +1699,7 @@ class clientEdit extends Component {
                     {
                         isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
                             <div style={{ marginTop: "10px" }}>
-                                <dt><span>Subsegmento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT &&(<span style={{ color: "red" }}>*</span>)}</dt>
                                 <ComboBox
                                     name="subSegment"
                                     labelInput="Sebsegmento"
@@ -1690,6 +1711,7 @@ class clientEdit extends Component {
                                     parentId="dashboardComponentScroll"
                                     data={selectsReducer.get(constants.SUBSEGMENTS)}
                                     touched={true}
+                                    showEmptyObject={true}
                                 />
                             </div>
                         </Col>
@@ -1744,6 +1766,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.CLIENT_TAX_NATURA)}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1761,6 +1784,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataCIIU')}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1785,6 +1809,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataSubCIIU')}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1882,6 +1907,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1898,6 +1924,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataTypeProvince') || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -1913,6 +1940,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get('dataTypeCity') || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -2235,6 +2263,7 @@ class clientEdit extends Component {
                         data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
                         onChange={val => this._onChangeJustifyNoGeren(val)}
                         touched={true}
+                        
                     />
                     <Col xs={12} md={4} lg={4}>
                         <dt>
@@ -2421,6 +2450,7 @@ class clientEdit extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.FILTER_COUNTRY) || []}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
@@ -2655,6 +2685,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
+
     return {
         clientInformacion,
         selectsReducer,

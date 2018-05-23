@@ -5,7 +5,7 @@ import {
     CLEAR_LIST_OBSERVATIONS, SAVE_OBSERVATION, CLEAR_LINK_REQUEST_PAGINATOR
 } from './constants';
 
-export function getLinkRequests(pageNum, maxRows) {
+export function getLinkRequests(pageNum, maxRows, keyWord) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionToken'),
@@ -22,10 +22,10 @@ export function getLinkRequests(pageNum, maxRows) {
         },
         "messageBody": {
             "pageNum": pageNum,
-            "maxRows": maxRows
+            "maxRows": maxRows,
+            "searchTerm": keyWord
         }
     };
-
 
     var request = axios.post(APP_URL + "/getLinkRequests", json);
     return {
@@ -109,7 +109,7 @@ export function clearListObservations() {
     }
 }
 
-export function clearLinkRequestPaginator(){
+export function clearLinkRequestPaginator() {
     return {
         type: CLEAR_LINK_REQUEST_PAGINATOR
     };

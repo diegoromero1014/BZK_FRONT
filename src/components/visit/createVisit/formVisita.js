@@ -21,12 +21,15 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS
+  TITLE_OTHERS_PARTICIPANTS,
+  VALUE_XSS_INVALID,
+  REGEX_SIMPLE_XSS_MESAGE,
+  REGEX_SIMPLE_XSS_TITLE
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import RaitingInternal from "../../clientInformation/ratingInternal";
 import { clearIdPrevisit, createVisti } from "../actions";
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
 import { downloadFilePdf } from "../../clientInformation/actions";
 import SweetAlert from "sweetalert-react";
 import moment from "moment";
@@ -61,7 +64,7 @@ class FormVisita extends Component {
     this.state = {
       showErrorSaveVisit: false,
       typeVisitError: null,
-      dateVisit: new Date(),
+      dateVisit: null,
       dateVisitError: null,
       showConfirm: false,
       activeItemTabBanc: '',
@@ -69,7 +72,11 @@ class FormVisita extends Component {
       activeItemTabOther: '',
       conclusionsVisit: "",
       conclusionsVisitError: null,
-      orderContactId: 0
+      orderContactId: 0,
+      showAlertDate: false,
+      titleMassageDate: '¡Atención!',
+      messageDate: 'Señor usuario, el cliente ya tiene asignada una visita para ese día; seleccione ir a la visita para editarla o seleccione continuar aquí para permanecer en esta vista.',
+      idEqualDateVisit: null
     }
     this._submitCreateVisita = this._submitCreateVisita.bind(this);
     this._closeMessageCreateVisit = this._closeMessageCreateVisit.bind(this);
@@ -83,6 +90,16 @@ class FormVisita extends Component {
     this._consultInfoPrevisit = this._consultInfoPrevisit.bind(this);
     this._addParticipantsToReducer = this._addParticipantsToReducer.bind(this);
     this._executeFunctionFromAssociatePrevisit = this._executeFunctionFromAssociatePrevisit.bind(this);
+    this._redirectToVisit = this._redirectToVisit.bind(this);
+  
+  }
+
+  _redirectToVisit() {
+    this.setState({ showAlertDate: false });
+
+    if (this.state.idEqualDateVisit) {
+      redirectUrl("/dashboard/visitaEditar/"+this.state.idEqualDateVisit);
+    }
   }
 
   _closeMessageCreateVisit() {
@@ -130,6 +147,9 @@ class FormVisita extends Component {
     const { fields: { tipoVisita, fechaVisita, desarrolloGeneral },
       participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData } = this.props;
     var errorInForm = false;
+    let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
+    let errorMessageTitle = "Campos obligatorios";
+
     if (this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "") {
       errorInForm = true;
       this.setState({
@@ -148,6 +168,13 @@ class FormVisita extends Component {
       this.setState({
         conclusionsVisitError: "Debe ingresar la conclusión de la visita"
       });
+    } else if (xssValidation(this.state.conclusionsVisit, true)) {
+      errorInForm = true;
+      this.setState({
+        conclusionsVisitError: VALUE_XSS_INVALID
+      });
+      errorMessageTitle = REGEX_SIMPLE_XSS_TITLE;
+      errorMessage = REGEX_SIMPLE_XSS_MESAGE;
     }
 
     if (!errorInForm) {
@@ -164,9 +191,11 @@ class FormVisita extends Component {
           }
         }
       );
+
       if (dataBanco.length > 0 && dataBanco[0] === undefined) {
         dataBanco = [];
       }
+
       if (dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT) {
         var dataClient = [];
         _.map(participants.toArray(),
@@ -181,6 +210,7 @@ class FormVisita extends Component {
             }
           }
         );
+
         if (dataClient.length > 0 && dataClient[0] === undefined) {
           dataClient = [];
         }
@@ -199,6 +229,7 @@ class FormVisita extends Component {
             }
           }
         );
+
         var tareas = [];
         _.map(tasks.toArray(),
           function (task) {
@@ -216,6 +247,7 @@ class FormVisita extends Component {
         if (dataOthers.length > 0 && dataOthers[0] === undefined) {
           dataOthers = [];
         }
+
         var visitJson = {
           "id": null,
           "client": window.localStorage.getItem('idClientSelected'),
@@ -229,7 +261,9 @@ class FormVisita extends Component {
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
+
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
+
         createVisti(visitJson).then((data) => {
           changeStateSaveData(false, "");
           if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -262,8 +296,8 @@ class FormVisita extends Component {
       }
     } else {
       typeMessage = "error";
-      titleMessage = "Campos obligatorios";
-      message = "Señor usuario, debe ingresar todos los campos obligatorios.";
+      titleMessage =  errorMessageTitle;
+      message = errorMessage;
       this.setState({ showMessageCreateVisit: true });
     }
   }
@@ -282,6 +316,43 @@ class FormVisita extends Component {
   }
 
   _changeDateVisit(value) {
+
+    const { visitReducer } = this.props;
+
+    
+
+    let fechaSeleccionada = moment(value).format('MM/DD/YYYY');
+    console.log("fecha componente", fechaSeleccionada);    
+
+    // Consultar la lista de previsitas por cliente
+    let visitas = visitReducer.get('visitList');
+
+    let fechasIguales = false;
+    let fechaVisita;
+    let visitaIgual = null;
+    
+
+    // Recorrer la respuesta comparando las fechas
+    for(let i = 0; i<visitas.length; i++ ) {
+
+      fechaVisita = moment(visitas[i].dateVisit).format('MM/DD/YYYY');
+
+      if(fechaVisita == fechaSeleccionada) {
+        fechasIguales = true;
+        visitaIgual = visitas[i];
+        break;
+      }
+
+    }
+    // Alertar en caso de que se encuentre una fecha igual
+    if(fechasIguales && visitaIgual) {
+      console.log("fechas iguales");
+      this.setState({showAlertDate: true, idEqualDateVisit: visitaIgual.id});
+    }
+
+    // Permitir el redirect
+
+
     this.setState({
       dateVisit: value,
       dateVisitError: null
@@ -642,6 +713,18 @@ class FormVisita extends Component {
           showCancelButton={true}
           onCancel={() => this.setState({ showConfirm: false })}
           onConfirm={this._closeConfirmCloseVisit} />
+        <SweetAlert
+          type="warning"
+          show={this.state.showAlertDate}
+          title={this.state.titleMassageDate}
+          text={this.state.messageDate}
+          confirmButtonColor='#DD6B55'
+          confirmButtonText='Ir a la Visita!'
+          cancelButtonText="Continuar aquí"
+          showCancelButton={true}
+          onCancel={() => this.setState({ showAlertDate: false })} 
+          onConfirm={this._redirectToVisit} />
+          />
       </form>
     );
   }

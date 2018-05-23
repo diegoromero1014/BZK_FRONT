@@ -6,16 +6,19 @@ import { consultList } from '../../selectsComponent/actions';
 import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID, VALUE_REQUIERED,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED, MOST_ADD_AN_EVENT
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask } from '../../../actionsGlobal';
+import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
+import {addEvent} from './events/actions';
+
 import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
 import _ from 'lodash';
 import {
@@ -30,34 +33,49 @@ const fields = ["id", "corporateGobernance", "corporateGobernanceDate", "recipro
     "dificultSituationsDate"];
 const errors = {};
 
-const validate = (values) => {
+let const_callFromDeliveryClient = null; 
+let thisForm = null; 
 
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.corporateGobernance)) {
+const validate = (values) => {    
+
+    if (!values.corporateGobernance && const_callFromDeliveryClient) {
+        errors.corporateGobernance = VALUE_REQUIERED;
+    } else if (xssValidation(values.corporateGobernance)) {
         errors.corporateGobernance = VALUE_XSS_INVALID;
     } else {
         errors.corporateGobernance = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.reciprocity)) {
+    if (!values.reciprocity && const_callFromDeliveryClient) {
+        errors.reciprocity = VALUE_REQUIERED;
+    } else if (xssValidation(values.reciprocity)) {
         errors.reciprocity = VALUE_XSS_INVALID;
     } else {
         errors.reciprocity = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.specialConsiderations)) {
+    if (!values.specialConsiderations && const_callFromDeliveryClient) {
+        errors.specialConsiderations = VALUE_REQUIERED;
+    } else if (xssValidation(values.specialConsiderations)) {
         errors.specialConsiderations = VALUE_XSS_INVALID;
     } else {
         errors.specialConsiderations = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.businessWithAffiliates)) {
+    if (!values.businessWithAffiliates && const_callFromDeliveryClient) {
+        errors.businessWithAffiliates = VALUE_REQUIERED;
+    } else if (xssValidation(values.businessWithAffiliates)) {
         errors.businessWithAffiliates = VALUE_XSS_INVALID;
     } else {
         errors.businessWithAffiliates = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.mergers)) {
+    if (!values.mergers && const_callFromDeliveryClient) {
+        errors.mergers = VALUE_REQUIERED;
+    } else if (xssValidation(values.mergers)) {
         errors.mergers = VALUE_XSS_INVALID;
     } else {
         errors.mergers = null;
     }
-    if (eval(REGEX_SIMPLE_XSS_STRING).test(values.dificultSituations)) {
+    if (!values.dificultSituations && const_callFromDeliveryClient) {
+        errors.dificultSituations = VALUE_REQUIERED;
+    } else if (xssValidation(values.dificultSituations)) {
         errors.dificultSituations = VALUE_XSS_INVALID;
     } else {
         errors.dificultSituations = null;
@@ -67,9 +85,14 @@ const validate = (values) => {
     return errors;
 };
 
+
+
 class componentStructuredDelivery extends Component {
     constructor(props) {
         super(props);
+
+        thisForm = this;
+
         this._submitStructuredDelivery = this._submitStructuredDelivery.bind(this);
         this._getStructuredDeliveryDetail = this._getStructuredDeliveryDetail.bind(this);
         this._closeEdit = this._closeEdit.bind(this);
@@ -84,20 +107,28 @@ class componentStructuredDelivery extends Component {
     _submitStructuredDelivery() {
         const {
             fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, idClientSeleted, updateEventErrors
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, 
+            idClientSeleted, updateEventErrors, callFromDeliveryClient, addEvent
         } = this.props;
 
         let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
         let _arrValues = [corporateGobernance.value, reciprocity.value, specialConsiderations.value, businessWithAffiliates.value, mergers.value, dificultSituations.value]
-        console.log(stringValidate(_arrValues.join("")));
-
+        
         let succesValidateEmpty = stringValidate(_arrValues.join(""));
 
-        let succesValidateXss = _arrValues.filter((value) => eval(REGEX_SIMPLE_XSS_STRING).test(value)).length == 0;
+        let succesValidateXss = _arrValues.filter((value) => xssValidation(value)).length == 0;
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
 
-        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) {
+        if(callFromDeliveryClient && structuredDeliveryEvents.size == 0 ) {
+            const uuid = _.uniqueId('event_');
+            addEvent(uuid);
+            updateEventErrors(true, "Debe ingresar un evento");
+            swtShowMessage('error', INCOMPLETE_INFORMATION, MOST_ADD_AN_EVENT);
+            return;
+        }
+
+        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) { 
             let listEvents = [];
             let allowSave = true;
 
@@ -105,7 +136,7 @@ class componentStructuredDelivery extends Component {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
                     allowSave = false;
-                } else if (eval(REGEX_SIMPLE_XSS_STRING).test(event.name)) {
+                } else if (xssValidation(event.name)) {
                     updateEventErrors(true, VALUE_XSS_INVALID);
                     invalidMessage = REGEX_SIMPLE_XSS_MESAGE;
                     allowSave = false;
@@ -213,7 +244,9 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
-        const { clearEvents, changeStateSaveData } = this.props;
+        const { clearEvents, changeStateSaveData,callFromDeliveryClient} = this.props;
+        
+        const_callFromDeliveryClient = callFromDeliveryClient;
         clearEvents();
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         this._getStructuredDeliveryDetail();
@@ -242,6 +275,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Gobierno corporativo - Junta directiva del cliente</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         corporateGobernanceDate.value &&
                                         <span style={{
@@ -271,6 +309,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Reciprocidades</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         reciprocityDate.value &&
                                         <span style={{
@@ -300,6 +343,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Consideraciones especiales de cuotas de manejo</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         specialConsiderationsDate.value &&
                                         <span style={{
@@ -325,6 +373,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Negocios del cliente con filiales</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         businessWithAffiliatesDate.value &&
                                         <span style={{
@@ -354,6 +407,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Fusiones - Adquisiciones</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         mergersDate.value &&
                                         <span style={{
@@ -384,6 +442,11 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Situaciones difíciles - Nuevos mercados</span>
+                                    {callFromDeliveryClient && 
+                                    <span>
+                                        (<span style={{ color: "red" }}>*</span>)
+                                    </span>
+                                    }
                                     {
                                         dificultSituationsDate.value &&
                                         <span style={{
@@ -443,7 +506,8 @@ function mapDispatchToProps(dispatch) {
         setEvents,
         clearEvents,
         changeStateSaveData,
-        updateEventErrors
+        updateEventErrors,
+        addEvent
     }, dispatch);
 }
 
@@ -461,5 +525,9 @@ function mapStateToProps({ navBar, customerStory, selectsReducer, reducerGlobal,
 export default reduxForm({
     form: 'formStructuredCustomer',
     fields,
-    validate
+    validate,
+    onSubmitFail : (data)=>  {
+        const { swtShowMessage } = thisForm.props;
+        swtShowMessage('error', INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED);
+    }
 }, mapStateToProps, mapDispatchToProps)(componentStructuredDelivery);

@@ -173,8 +173,7 @@ class ModalComponentEconomicGroup extends Component {
                         style={{ borderRadius: "3px" }}
                         autoComplete="off"
                         type="text"
-                        value={this.state.nameClientSearch}
-                        onBlur={() => console.log('')}
+                        value={this.state.nameClientSearch}                        
                         placeholder="Ingrese un criterio de búsqueda..."
                         onChange={(e) => this.setState({ nameClientSearch: e.target.value })}
                         onKeyPress={this.updateKeyValueClient}
