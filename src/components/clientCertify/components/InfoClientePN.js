@@ -6,7 +6,7 @@ class InfoCliente extends React.Component {
 
     render() {
 
-        const {razonSocial, idTypeClient, idNumber} = this.props;
+        const {razonSocial, idTypeClient, idNumber, firstName, middleName, lastName, middleLastName} = this.props;
 
         return (
             <Row style={{ padding: "10px 28px 10px 20px" }}>
@@ -18,7 +18,7 @@ class InfoCliente extends React.Component {
                                 type="text"
                                 max="150"
                                 placeholder="Primer nombre"
-                                {...razonSocial}
+                                {...firstName}
                                 disabled={true}
                             />
                         </dt>
@@ -31,7 +31,7 @@ class InfoCliente extends React.Component {
                                 type="text"
                                 max="150"
                                 placeholder="Segundo nombre"
-                                {...razonSocial}
+                                {...middleName}
                                 disabled={true}
                             />
                         </dt>
@@ -43,8 +43,8 @@ class InfoCliente extends React.Component {
                                 name="primerApellido"
                                 type="text"
                                 max="150"
-                                placeholder=""
-                                {...razonSocial}
+                                placeholder="Primer apellido"
+                                {...lastName}
                                 disabled={true}
                             />
                         </dt>
@@ -56,8 +56,8 @@ class InfoCliente extends React.Component {
                                 name="segundoApellido"
                                 type="text"
                                 max="150"
-                                placeholder="Razón social del cliente"
-                                {...razonSocial}
+                                placeholder="Segundo apellido"
+                                {...middleLastName}
                                 disabled={true}
                             />
                         </dt>

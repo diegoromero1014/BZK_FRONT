@@ -77,7 +77,8 @@ const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
     'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation'
+    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation',
+    'firstName', 'middleName', 'lastName', 'middleLastName'
 ]
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
@@ -131,6 +132,8 @@ const validate = (values, props) => {
 
     let errors = {}
     let errorScrollTop = false;
+
+    let isExclient = props.isExclient;
     
     validateFields(values,rulesUbicacion(props),errors);
     if (props.isPersonaNatural) {
@@ -379,8 +382,9 @@ class clientCertify extends React.Component {
         } = this.props;
         
         const infoClient = clientInformacion.get('responseClientInfo');
-        // ¿Porque existe esta validacion de fecha? Evita el guardado y no lanza error
-        if (isExclient || moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined) {
+      
+            
+
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": infoClient.clientIdType,
@@ -408,13 +412,13 @@ class clientCertify extends React.Component {
                 "typeOfClient": infoClient.typeOfClient,
                 "status": infoClient.status,
                 "isCreditNeeded": necesitaLME.value,
-                "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
+                "annualSales": annualSales.value,
                 "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-                "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-                "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-                "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-                "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-                "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
+                "assets": assets.value,
+                "liabilities": liabilities.value,
+                "operatingIncome": operatingIncome.value,
+                "nonOperatingIncome": nonOperatingIncome.value,
+                "expenses": expenses.value,
                 "localMarket": infoClient.localMarket,
                 "marketLeader": infoClient.marketLeader,
                 "territory": infoClient.territory,
@@ -454,7 +458,12 @@ class clientCertify extends React.Component {
                 "operationsForeignCurrency": infoClient.operationsForeignCurrency,
                 "otherOperationsForeign": infoClient.otherOperationsForeign,
                 "operationsForeigns": infoClient.operationsForeigns,
-                "idCustomerTypology": infoClient.idCustomerTypology               
+                "idCustomerTypology": infoClient.idCustomerTypology,
+                "clientType" : infoClient.clientType,
+                "firstName" : infoClient.firstName,
+                "middleName" : infoClient.middleName,
+                "lastName" : infoClient.lastName,
+                "middleLastName" : infoClient.middleLastName               
             };
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -473,7 +482,7 @@ class clientCertify extends React.Component {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
             });
-        }
+        
 
     }
 
@@ -824,7 +833,8 @@ class clientCertify extends React.Component {
         const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation,
+            firstName, middleName, lastName, middleLastName   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
         
         var infoClient = clientInformacion.get('responseClientInfo');
         
@@ -838,7 +848,7 @@ class clientCertify extends React.Component {
 
                 {
                     isPersonaNatural ? 
-                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} /> 
+                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName}/> 
                     : 
                         <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
                 }
@@ -851,11 +861,18 @@ class clientCertify extends React.Component {
                         <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
                 }
                 
-                <Ubicacion addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
+                <Ubicacion isExclient={isExclient} addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
 
                 {/* Inicio Informacion financiera  */}
 
-                <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
+                {
+                    isPersonaNatural ?
+                        <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
+                    :
+                        <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />    
+                }
+
+                
 
                 {/*  Fin Informacion financiera   */}
 
@@ -1121,7 +1138,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
-    const isExclient = infoClient.relationshipStatusName === "Excliente";
+    isExclient = infoClient.relationshipStatusName === "Excliente";
+    
     const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
     console.log('personaNatural', isPersonaNatural);
@@ -1160,7 +1178,12 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
             city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
             telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
-            
+          
+            occupation: infoClient.occupation,
+            firstName: infoClient.firstName,
+            middleName: infoClient.middleName,
+            lastName: infoClient.lastName,
+            middleLastName: infoClient.middleLastName
         }
     }
 }
