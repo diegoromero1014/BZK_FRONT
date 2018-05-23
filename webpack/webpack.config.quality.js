@@ -104,7 +104,7 @@ var webpack = require('webpack'),
                 __SERVER__: false,
                 __DEVELOPMENT__: false,
                 __DEVTOOLS__: false,
-                WP_VAR_ENVIRONMENT: JSON.stringify("development")
+                WP_VAR_ENVIRONMENT: JSON.stringify("quality")
             }),
 
             // ignore dev config
