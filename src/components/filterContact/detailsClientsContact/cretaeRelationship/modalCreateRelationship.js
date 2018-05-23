@@ -74,7 +74,7 @@ class ModalCreateRelationship extends Component {
             const json = {
                 "idClientContact": null,
                 "clients": JSON.parse('[' + idValuesClients + ']'),
-                "idContact": window.localStorage.getItem('idContactSelected'),
+                "idContact": window.sessionStorage.getItem('idContactSelected'),
                 "typeOfContact": contactTypeOfContact.value !== undefined ? contactTypeOfContact.value : null,
                 "function": JSON.parse('[' + ((contactFunctions.value) ? contactFunctions.value : "") + ']'),
                 "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']')
@@ -85,7 +85,7 @@ class ModalCreateRelationship extends Component {
                     redirectUrl("/login");
                 } else {
                     if (_.get(data, 'payload.data.status') === 200) {
-                        getContactDetails(window.localStorage.getItem('idContactSelected'));
+                        getContactDetails(window.sessionStorage.getItem('idContactSelected'));
                         this.setState({
                             showErrorForm: true,
                             typeView: "success",

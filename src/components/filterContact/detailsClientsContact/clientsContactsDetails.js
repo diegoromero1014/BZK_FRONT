@@ -32,7 +32,7 @@ class ClientsContactsDetails extends Component {
     componentWillMount() {
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
-        } else if (window.localStorage.getItem('idContactSelected') === "") {
+        } else if (window.sessionStorage.getItem('idContactSelected') === "") {
             redirectUrl("/dashboard/clients");
         } else {
             const { updateTitleNavBar, validatePermissionsByModule } = this.props;
@@ -48,7 +48,7 @@ class ClientsContactsDetails extends Component {
     render() {
         const { contactDetail } = this.props;
 
-        const contactId = window.localStorage.getItem('idContactSelected');
+        const contactId = window.sessionStorage.getItem('idContactSelected');
         return (
             <div style={{ backgroundColor: "#FFFFFF", width: "100%", paddingBottom: '70px' }}>
                 <FormContactDetails callFromModuleContact={true} contactId={contactId} />

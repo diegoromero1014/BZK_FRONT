@@ -58,10 +58,6 @@ class ListCovenantsComponent extends Component {
                 key: "managerAccount"
             },
             {
-                title: "Covenant",
-                key: "covenant"
-            },
-            {
                 title: "Acta o contrato",
                 key: "agreement"
             },

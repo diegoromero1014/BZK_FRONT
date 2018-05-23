@@ -48,15 +48,16 @@ const validate = (values) => {
 
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
-        } else {
+        } else if (xssValidation(values.observations)) {
+            errors.observations = VALUE_XSS_INVALID;;
+        }
+        else {
             errors.observations = null;
         }
-    } else if (xssValidation(values.observations)) {
-        errors.observations = VALUE_XSS_INVALID;;
     } else {
         errors.observations = null;
     }
-    
+
     if (isFinancialStatements) {
         if (!values.dateFinancialStatements) {
             errors.dateFinancialStatements = VALUE_REQUIERED;
@@ -85,6 +86,7 @@ class FormCreateTracking extends Component {
         this._onChangeValidCovenant = this._onChangeValidCovenant.bind(this);
         this._onFullfillmentCovenant = this._onFullfillmentCovenant.bind(this);
         this.validateCovenantObservation = this.validateCovenantObservation.bind(this);
+        this._onBlurComboBox  =  this._onBlurComboBox.bind(this);
 
     }
 
@@ -108,6 +110,10 @@ class FormCreateTracking extends Component {
 
     }
 
+    _onBlurComboBox() {
+        this.setState(this.state);
+    }
+
     _onChangeValidCovenant(val) {
         const { selectsReducer, fields: { validCovenant, fullfillmentCovenant } } = this.props;
         this.validateCovenantObservation(val, fullfillmentCovenant.value);
@@ -118,7 +124,7 @@ class FormCreateTracking extends Component {
         const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant } } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         this.validateCovenantObservation(validCovenant.value, val);
-        
+
         let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == val);
         isFinancialStatements = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
         this.setState({ isFinancialStatements: isFinancialStatements });
@@ -219,7 +225,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...validCovenant}
                                 onChange={val => this._onChangeValidCovenant(val)}
-                                onBlur={() => null}
+                                onBlur={()  =>  this._onBlurComboBox()}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
@@ -234,7 +240,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...fullfillmentCovenant}
                                 onChange={val => this._onFullfillmentCovenant(val)}
-                                onBlur={() => null}
+                                onBlur={()  =>  this._onBlurComboBox()}
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>

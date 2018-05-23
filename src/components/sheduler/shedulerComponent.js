@@ -73,7 +73,7 @@ class Sheduler extends Component {
         });
 
         const { consultInfoClient } = this.props;
-        window.localStorage.setItem("idClientSelected", idClient);
+        window.sessionStorage.setItem("idClientSelected", idClient);
         consultInfoClient().then((success) => {
             showLoading(false, null);
             this.setState({

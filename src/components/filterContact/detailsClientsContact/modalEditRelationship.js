@@ -64,7 +64,7 @@ class ModalEditRelationship extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
-                    getContactDetails(window.localStorage.getItem('idContactSelected'));
+                    getContactDetails(window.sessionStorage.getItem('idContactSelected'));
                     this.setState({
                         showErrorForm: true,
                         typeView: "success",
