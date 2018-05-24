@@ -95,6 +95,13 @@ class CreatePropspect extends Component {
     idNumber.onChange('');
     idType.onChange('');
     clientType.onChange('');
+
+    this.setState({
+      idTypeMaster: [],
+      idTypeMasterSelector: "",
+      personType: null
+    });
+
   };
 
   _clickButtonCreateProps(formData) {
@@ -122,7 +129,7 @@ class CreatePropspect extends Component {
   clientetypeChange(valor) {
     const { fields: { idType }, selectsReducer } = this.props;
     let clientTypes = selectsReducer.get('clientType');
-    
+
     if (clientTypes) {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = clientType.key == constantsPropect.NATURE_PERSON ?
@@ -169,7 +176,7 @@ class CreatePropspect extends Component {
                 <dt><span>Tipo de cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoCliente"
-                  labelInput="Seleccion el tipo de persona del prospecto"
+                  labelInput="Seleccione el tipo de persona del prospecto"
                   {...clientType}
                   valueProp={'id'}
                   textProp={'value'}
@@ -181,7 +188,7 @@ class CreatePropspect extends Component {
                 <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
-                  labelInput="Seleccion el tipo de documento del prospecto"
+                  labelInput="Seleccione el tipo de documento del prospecto"
                   {...idType}
                   valueProp={'id'}
                   textProp={'value'}
@@ -209,7 +216,7 @@ class CreatePropspect extends Component {
         }
 
         {!prospectInApplication &&
-          <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>            
+          <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>
             <Col xs={12} md={3} lg={3}>
               <dt><span>Tipo de cliente</span></dt>
               <dl><span>{clientType.value && this.state.personType.value}</span></dl>
@@ -223,7 +230,7 @@ class CreatePropspect extends Component {
               <dl><span>{idNumber.value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={2} style={{ margingLeft: "30px" }}>
-              <button className="btn" type="button" title="cambiar tipo y número documento"
+              <button className="btn" type="button" title="cambiar tipo de cliente, tipo de documento y número documento"
                 style={{ marginTop: "5px", color: "white" }}
                 onClick={this._onClickButtonChange}
               >
