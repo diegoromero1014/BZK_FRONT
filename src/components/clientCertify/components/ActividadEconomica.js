@@ -33,8 +33,6 @@ class ActividadEconomica extends React.Component {
 
         const { idCIIU, selectsReducer, isExclient, idSubCIIU } = this.props;
 
-        console.log('idSubCIIU', idSubCIIU.value);
-
         return (
             <div>
                 <Row style={{ padding: "0px 10px 20px 20px" }}>

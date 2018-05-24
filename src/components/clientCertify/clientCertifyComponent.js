@@ -1142,8 +1142,6 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
     
     const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
-    console.log('personaNatural', isPersonaNatural);
-
     return {
         isExclient,
         isPersonaNatural,
