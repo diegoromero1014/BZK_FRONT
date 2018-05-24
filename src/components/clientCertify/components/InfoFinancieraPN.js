@@ -44,6 +44,14 @@ class InfoFinanciera extends React.Component {
         }
     }
 
+    _handleChangeDate(val, field) {
+        if (moment(val, "DD/MM/YYYY").isValid()) {
+            field.onChange(val);
+        } else {
+            field.onChange('');
+        }
+    }
+
     render () {
         const { isExclient, annualSales, dateSalesAnnuals, assets, liabilities, operatingIncome, expenses, nonOperatingIncome } = this.props;
 
@@ -84,7 +92,7 @@ class InfoFinanciera extends React.Component {
                         </dt>
                         <dt>
                             <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
-                                touched={true} />
+                                touched={true} onChange={val => this._handleChangeDate(val, dateSalesAnnuals) } onBlur={val => null}/>
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>

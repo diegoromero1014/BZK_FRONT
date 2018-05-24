@@ -69,7 +69,7 @@ class ActividadEconomicaPN extends React.Component {
                     
                     <Col xs>
                         <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span></dt>
+                            <dt><span>CIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
                             <ComboBox
                                 name="idCIIU"
                                 labelInput="Seleccione CIIU..."
@@ -95,7 +95,7 @@ class ActividadEconomicaPN extends React.Component {
                     </Col>
                     <Col xs>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt><span>SubCIIU</span></dt>
+                            <dt><span>SubCIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
                             <ComboBox
                                 name="idSubCIIU"
                                 labelInput="Seleccione subCIIU..."
