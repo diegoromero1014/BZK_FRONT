@@ -75,7 +75,7 @@ class CreatePropspect extends Component {
     }
     const { consultDataSelect, consultList, getMasterDataFields } = this.props;
 
-    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CLIENT_TYPE, constants.DOCUMENT_TYPE_PERSON]).then((data) => {
+    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE , constants.CLIENT_TYPE, constants.DOCUMENT_TYPE_PERSON]).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
         onSessionExpire();
       }
@@ -133,7 +133,7 @@ class CreatePropspect extends Component {
     if (clientTypes) {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = clientType.key == constantsPropect.NATURE_PERSON ?
-        constants.DOCUMENT_TYPE_PERSON : constants.CLIENT_ID_TYPE;
+        constants.DOCUMENT_TYPE_PERSON : constants.CONTACT_ID_TYPE;
 
       this.setState({
         idTypeMaster: selectsReducer.get(idTypeMaster),
