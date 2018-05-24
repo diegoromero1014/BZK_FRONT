@@ -161,7 +161,7 @@ class ParticipantesCliente extends Component {
                                         valueProp={'id'}
                                         textProp={'nameComplet'}
                                         data={contactsByClient.get('contacts')}
-                                        onComboChange={(val) => console.log(val)}
+                                        onComboChange={(val) => null}
                                     
                                     />
                                 </dt>

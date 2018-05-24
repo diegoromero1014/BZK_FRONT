@@ -10,10 +10,14 @@ import {ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, OPTION_R
 import {xssValidation} from "../../../actionsGlobal";
 
 import numeral from "numeral";
+import moment from "moment";
 
 
 class InfoFinanciera extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
 
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
         var pattern;
@@ -42,6 +46,15 @@ class InfoFinanciera extends React.Component {
             } else {
                 valuReduxForm.onChange("");
             }
+        }
+    }
+
+    _handleChangeDate(val, field) {
+    
+        if (moment(val, "DD/MM/YYYY").isValid()) {
+            field.onChange(val);
+        } else {
+            field.onChange('');
         }
     }
 
@@ -85,7 +98,7 @@ class InfoFinanciera extends React.Component {
                         </dt>
                         <dt>
                             <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
-                                touched={true} />
+                                touched={true} onChange={val => this._handleChangeDate(val, dateSalesAnnuals) } onBlur={val => null} />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
