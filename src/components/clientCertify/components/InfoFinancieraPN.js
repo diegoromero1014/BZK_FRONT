@@ -10,6 +10,7 @@ import {ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, OPTION_R
 import {xssValidation} from "../../../actionsGlobal";
 
 import numeral from "numeral";
+import moment from "moment";
 
 class InfoFinanciera extends React.Component {
 
@@ -51,6 +52,7 @@ class InfoFinanciera extends React.Component {
             field.onChange('');
         }
     }
+    
 
     render () {
         const { isExclient, annualSales, dateSalesAnnuals, assets, liabilities, operatingIncome, expenses, nonOperatingIncome } = this.props;
