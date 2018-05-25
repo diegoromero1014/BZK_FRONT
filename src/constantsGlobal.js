@@ -135,11 +135,22 @@ export const TAB_RISKS_MANAGEMENT = 9;
 export const TAB_CUSTOMER_STORY = 10;
 
 let API_URL;
-if (process.env.NODE_ENV === "production") {
-    API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
-} else {
+
+if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
+} else {
+    if (WP_VAR_ENVIRONMENT === "production") {
+        API_URL = "https://biztrackback.bancolombia.corp/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'development') {
+        API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
+    } else if (WP_VAR_ENVIRONMENT === 'quality') {
+        API_URL = "https://biztrackcertificacion.bancolombia.corp/Biztrack";
+    }
 }
+
+ 
+
+
 
 export const APP_URL = API_URL;
 

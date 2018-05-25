@@ -35,7 +35,7 @@ class ModaltrackingCovenant extends Component {
     render() {
         const {covenant, isOpen} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
-        console.log(infoCovenant.strCovenant);
+  
         const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.creationTimestamp.split(" ")[0], 'DD MMM YYYY');
         const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
         return (

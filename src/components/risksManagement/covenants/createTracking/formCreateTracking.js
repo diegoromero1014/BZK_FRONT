@@ -54,6 +54,8 @@ const validate = (values) => {
         else {
             errors.observations = null;
         }
+    } else if (xssValidation(values.observations)) {
+        errors.observations = VALUE_XSS_INVALID;;
     } else {
         errors.observations = null;
     }
@@ -62,7 +64,11 @@ const validate = (values) => {
         if (!values.dateFinancialStatements) {
             errors.dateFinancialStatements = VALUE_REQUIERED;
         } else {
-            errors.dateFinancialStatements = null;
+            if (!values.dateFinancialStatements.trim()) {
+                errors.dateFinancialStatements = VALUE_REQUIERED;
+            } else {
+                errors.dateFinancialStatements = null;
+            }
         }
     } else {
         errors.dateFinancialStatements = null;
@@ -86,7 +92,7 @@ class FormCreateTracking extends Component {
         this._onChangeValidCovenant = this._onChangeValidCovenant.bind(this);
         this._onFullfillmentCovenant = this._onFullfillmentCovenant.bind(this);
         this.validateCovenantObservation = this.validateCovenantObservation.bind(this);
-        this._onBlurComboBox  =  this._onBlurComboBox.bind(this);
+        this._onBlurComboBox = this._onBlurComboBox.bind(this);
 
     }
 
@@ -225,7 +231,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...validCovenant}
                                 onChange={val => this._onChangeValidCovenant(val)}
-                                onBlur={()  =>  this._onBlurComboBox()}
+                                onBlur={() => this._onBlurComboBox()}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
@@ -240,7 +246,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...fullfillmentCovenant}
                                 onChange={val => this._onFullfillmentCovenant(val)}
-                                onBlur={()  =>  this._onBlurComboBox()}
+                                onBlur={() => this._onBlurComboBox()}
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>

@@ -1,3 +1,5 @@
+export const CLIENT_TYPE = "clientType";
+export const DOCUMENT_TYPE_PERSON = "documentTypePerson";
 export const CLIENT_ID_TYPE = "clientIdType";
 export const CONTACT_ID_TYPE = "contactType";
 export const FILTER_FUNCTION_ID = "function";
@@ -79,3 +81,4 @@ export const BUSINESS_ROL = "relationshipStatus";
 export const TEAM_VALUE_OBJECTS = "teamValueObjects";
 export const MANAGEMENT_BRAND = "managementBrand";
 export const MANAGEMENT_BRAND_KEY = "managementBrandKey";
+export const OCCUPATION = "occupation";

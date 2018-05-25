@@ -9,16 +9,31 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "better-npm-run build",
-    "start": "node server.js"
+    "build": "better-npm-run develop",
+    "start": "node server.js",
+    "develop" : "better-npm-run develop",
+    "release" : "better-npm-run release",
+    "master" : "better-npm-run master"
   },
   "betterScripts": {
-    "build": {
+    "develop": {
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.develop.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "release":{
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.quality.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "master" : {
       "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.prod.js",
       "env": {
         "NODE_ENV": "production"
       }
-    }
+    } 
   },
   "keywords": [],
   "author": "",
