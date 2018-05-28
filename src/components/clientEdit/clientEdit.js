@@ -67,6 +67,9 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import { saveCreditStudy } from "../clients/creditStudy/actions";
 import { validateResponse, stringValidate, xssValidation, onSessionExpire } from "../../actionsGlobal";
 
+import ComponentInfoClient from './components/InfoClient';
+import ComponentInfoClientPN from './components/InfoClientPN';
+
 let idButton;
 let errorContact;
 let errorShareholder;
@@ -97,7 +100,7 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
     "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
     "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "contributionDC",
-    "contributionLB", "controlLinkedPayments"];
+    "contributionLB", "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -116,8 +119,7 @@ var clickButttonSave = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
 let validateMarcManagement = true;
 
-//Controla si el campo Segmento esta seleccionado constructor pyme.
-let isSegmentPymeConstruct = false;
+let isPersonaNatural = false;
 
 let otherOperationsForeignEnable = 'disabled';
 let otherOriginGoodsEnable = 'disabled';
@@ -643,7 +645,6 @@ class clientEdit extends Component {
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
         this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
-        this._changeSegment = this._changeSegment.bind(this);
         this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
         this.showFormOut = this.showFormOut.bind(this);
 
@@ -1183,7 +1184,8 @@ class clientEdit extends Component {
             dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
+            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology,
+            firstName, middleName, lastName, middleLastName, occupation
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -1195,11 +1197,17 @@ class clientEdit extends Component {
 
         if (idButton === BUTTON_EDIT || (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined)) {
 
+            let razonSocialPN = "";
+
+            if (isPersonaNatural) {
+                razonSocialPN = firstName.value + middleName.value + lastName.value + middleLastName.value;
+            }
+
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
                 "clientIdNumber": idNumber.value,
-                "clientName": razonSocial.value,
+                "clientName": isPersonaNatural ? razonSocialPN : razonSocial.value,
                 "clientStatus": infoClient.clientStatus,
                 "riskRating": infoClient.riskRating,
                 "isProspect": infoClient.isProspect,
@@ -1267,7 +1275,16 @@ class clientEdit extends Component {
                 "operationsForeignCurrency": operationsForeignCurrency.value ? (operationsForeignCurrency.value === 'false' ? 0 : 1) : '',
                 "otherOperationsForeign": otherOperationsForeign.value,
                 "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
-                "idCustomerTypology": customerTypology.value
+                "idCustomerTypology": customerTypology.value,
+
+                "firstName": firstName.value,
+                "middleName": middleName.value,
+                "lastName": lastName.value,
+                "middleLastName": middleLastName.value,
+                "occupation": occupation.value,
+                "clientType" : infoClient.clientType,
+
+
             };
 
             const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
@@ -1568,7 +1585,7 @@ class clientEdit extends Component {
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
                 constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
-                constants.MANAGEMENT_BRAND])
+                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1578,7 +1595,7 @@ class clientEdit extends Component {
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
 
-                        this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+                       
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
@@ -1606,30 +1623,7 @@ class clientEdit extends Component {
         </div>
     }
 
-    _changeSegment(idSegment, firstConsult, subSegmentId) {
-        const { fields: { segment, customerTypology, subSegment }, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
-        const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
-        segment.onChange(idSegment);
-        if (!_.isUndefined(value)) {
-            if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
-                consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
-            } else {
-                getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
-            }
-            if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data) => {
-                    if (!_.isNull(subSegmentId) && firstConsult) {
-                        subSegment.onChange(subSegmentId);
-                    }
-                });
-            }
-            isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
-            if (!firstConsult) {
-                customerTypology.onChange('');
-                subSegment.onChange('');
-            }
-        }
-    }
+    
 
     render() {
         const {
@@ -1644,9 +1638,9 @@ class clientEdit extends Component {
             termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
             relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
             participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
-            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
+            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
             }, handleSubmit,
-            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal
+            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
@@ -1692,11 +1686,15 @@ class clientEdit extends Component {
                             }
                             {idButton === BUTTON_UPDATE ?
                                 <div>
-                                    <BottonContactAdmin errorContact={errorContact} message={messageContact}
+                                    { ! isPersonaNatural && 
+                                        <BottonContactAdmin errorContact={errorContact} message={messageContact}
                                         functionToExecute={validateContactShareholder} />
-                                    <BottonShareholderAdmin errorShareholder={errorShareholder}
+                                    }
+                                    { ! isPersonaNatural &&
+                                        <BottonShareholderAdmin errorShareholder={errorShareholder}
                                         message={messageShareholder}
                                         functionToExecute={validateContactShareholder} />
+                                    }    
                                 </div>
                                 :
                                 <div></div>
@@ -1704,114 +1702,25 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-                <Row style={{ padding: "10px 28px 10px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="razonSocial"
-                                type="text"
-                                max="150"
-                                placeholder="Razón social del cliente"
-                                {...razonSocial}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <ComboBox
-                                name="tipoDocumento"
-                                labelInput="Tipo de documento del cliente"
-                                {...idTypeClient}
-                                value={idTypeClient.value}
-                                onBlur={idTypeClient.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.CLIENT_ID_TYPE)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="documento"
-                                type="text"
-                                max="20"
-                                placeholder="Número de documento del cliente"
-                                {...idNumber}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ marginTop: "10px" }}>
-                            <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                            <ComboBox
-                                name="segment"
-                                labelInput="Segmento"
-                                {...segment}
-                                value={segment.value}
-                                onBlur={segment.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                style={{ marginBottom: '0px !important' }}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SEGMENTS)}
-                                onChange={(val) => this._changeSegment(val, false, null)}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
-                    {
-                        isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
-                            <div style={{ marginTop: "10px" }}>
-                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
-                                <ComboBox
-                                    name="subSegment"
-                                    labelInput="Sebsegmento"
-                                    {...subSegment}
-                                    value={subSegment.value}
-                                    onBlur={subSegment.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    parentId="dashboardComponentScroll"
-                                    data={selectsReducer.get(constants.SUBSEGMENTS)}
-                                    touched={true}
-                                    showEmptyObject={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    <ClientTypology customerTypology={customerTypology}
-                        data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
 
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ marginTop: "10px" }}>
-                            <dt>
-                                <span>Breve descripción de la empresa</span>
-                                <i className="help circle icon blue"
-                                    style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
-                                    title={TITLE_DESCRIPTION} />
-                            </dt>
-                            <dt>
-                                <Textarea
-                                    name="description"
-                                    type="text"
-                                    style={{ width: '100%', height: '100%' }}
-                                    onChange={val => this._onchangeValue("description", val)}
-                                    placeholder="Ingrese la descripción"
-                                    max="1000"
-                                    rows={4}
-                                    {...description}
-                                />
-                            </dt>
-                        </div>
-                    </Col>
-                </Row>
+
+                {
+                    isPersonaNatural 
+                    ?
+                        <ComponentInfoClientPN firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} idTypeClient={idTypeClient} idNumber={idNumber} 
+                        segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                        idButton={idButton}
+                        />
+                    :
+                        <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} 
+                        segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                        idButton={idButton}
+                        />
+                }
+
+                
+
+                
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -2769,6 +2678,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
+    isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
+
     return {
         clientInformacion,
         selectsReducer,
@@ -2776,6 +2687,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         tabReducer,
         notes,
         reducerGlobal,
+        isPersonaNatural,
         initialValues: {
             razonSocial: infoClient.clientName,
             idTypeClient: infoClient.clientIdType,
@@ -2823,7 +2735,14 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
             contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
             inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy,
-            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments
+            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments,
+        
+            occupation: infoClient.occupation,
+            firstName: infoClient.firstName,
+            middleName: infoClient.middleName,
+            lastName: infoClient.lastName,
+            middleLastName: infoClient.middleLastName
+        
         }
     };
 }
