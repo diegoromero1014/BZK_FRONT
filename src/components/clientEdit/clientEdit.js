@@ -1585,7 +1585,7 @@ class clientEdit extends Component {
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
                 constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
-                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE])
+                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE, constants.OCCUPATION])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1800,6 +1800,28 @@ class clientEdit extends Component {
                             </span>
                         </div>
                     </Col>
+                    {
+                        isPersonaNatural &&
+                        <Row style={{ padding: "0px 10px 10px 0px" }}>
+                        <Col xs={4}>
+                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                            <dt><span>Ocupación</span><span style={{ color: "red" }}>*</span></dt>
+                            <ComboBox
+                                name="occupation"
+                                labelInput="Seleccione Ocupación..."
+                                {...occupation}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(constants.OCCUPATION)}
+                                touched={true}
+                                showEmptyObject={true}
+                            />
+                        </div>
+                        </Col>
+                        </Row>
+                    }
+                    
                     {allowRiskGroupEdit &&
                         <ContextEconomicActivity contextClientField={contextClientField} />
                     }
