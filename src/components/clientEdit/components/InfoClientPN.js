@@ -68,7 +68,7 @@ class InfoClientPN extends React.Component {
         return (
             <Row style={{ padding: "10px 28px 10px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Primer nombre</span></dt>
+                        <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
                             <Input
                                 name="primerNombre"
@@ -92,7 +92,7 @@ class InfoClientPN extends React.Component {
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4}>
-                        <dt><span>Primer Apellido</span></dt>
+                        <dt><span>Primer Apellido(</span><span style={{ color: "red" }}>*</span>)</dt>
                         <dt>
                             <Input
                                 name="primerApellido"
@@ -230,6 +230,40 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication
     }, dispatch)
 }
+
+var validations = [
+    {
+        validation: 'required',
+        fields: ['firstName','lastName','idTypeClient', 'idNumber']
+    },
+    {
+        validation: 'xss',
+        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+    }
+]
+
+var validationsEditClient = [
+    {
+        validation: 'required',
+        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+    },
+    {
+        validation: 'xss',
+        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+    }
+]
+
+export function validationRules(props) {
+    
+    if (props.idButton === BUTTON_EDIT) {
+        return validationsEditClient;
+    } else {
+        return validations;
+    }
+
+    return validations;
+    
+};
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoClientPN);

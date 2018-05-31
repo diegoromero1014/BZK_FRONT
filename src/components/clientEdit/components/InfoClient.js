@@ -25,6 +25,8 @@ class InfoClient extends React.Component {
             isSegmentPymeConstruct: false
         }
 
+
+
     }
 
     componentWillMount() {
@@ -179,6 +181,40 @@ class InfoClient extends React.Component {
     }
 
 }
+
+var validations = [
+    {
+        validation: 'required',
+        fields: ['razonSocial', 'idTypeClient', 'idNumber']
+    },
+    {
+        validation: 'xss',
+        fields: ['razonSocial', 'idNumber']
+    }
+]
+
+var validationsEditClient = [
+    {
+        validation: 'required',
+        fields: ['razonSocial', 'idTypeClient', 'idNumber']
+    },
+    {
+        validation: 'xss',
+        fields: ['razonSocial', 'idNumber']
+    }
+]
+
+export function validationRules(props) {
+    
+    if (props.idButton === BUTTON_EDIT) {
+        return validationsEditClient;
+    } else {
+        return validations;
+    }
+
+    return validations;
+    
+};
 
 function mapStateToProps({selectsReducer,clientInformacion}) {
     return {
