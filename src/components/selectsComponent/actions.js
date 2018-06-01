@@ -319,3 +319,5 @@ export function getRegionsByEmployee() {
   };
 
 }
+
+export default {getMasterDataFields}

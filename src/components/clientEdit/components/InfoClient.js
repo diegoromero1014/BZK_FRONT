@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from "redux";
+import _ from "lodash";
 
 import {Col, Row} from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
@@ -14,7 +15,7 @@ import { getMasterDataFields, consultListWithParameterUbication } from '../../se
 import {TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS} from '../constants';
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
 
-class InfoClient extends React.Component {
+export class InfoClient extends React.Component {
 
     constructor(props) {
         super(props);

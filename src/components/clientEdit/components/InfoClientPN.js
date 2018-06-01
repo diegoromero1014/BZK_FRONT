@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from "redux";
+import _ from "lodash";
 
 import {Col, Row} from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
