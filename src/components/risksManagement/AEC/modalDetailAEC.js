@@ -33,6 +33,7 @@ class ModalDetailAEC extends Component {
     render() {
         const { AECClient, selectsReducer } = this.props;
         const detailAEC = AECClient.get('detailAEC');
+        console.log('detailAEC', detailAEC);
         const statesAEC = selectsReducer.get(AEC_STATUS);
         const levelsAEC = selectsReducer.get(AEC_LEVEL);
         const stateAEC = _.get(_.filter(statesAEC, ['id', parseInt(detailAEC.aecStatus)]), '[0].value');
@@ -86,6 +87,18 @@ class ModalDetailAEC extends Component {
                             <Col xs={12} md={12} lg={12} >
                                 <dt style={{ paddingTop: '5px' }}>Plan de acción</dt>
                                 <dd style={{ textAlign: 'justify' }}>{detailAEC.actionPlan}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Hechos relevantes para provisiones individuales</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.individualProvisions}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Razón cambio nivel de riesgo</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.reasonChangeLevelRisk}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Razón ingreso aec</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word' }}>{detailAEC.reasonIncomeAec}</dd>
                             </Col>
                         </Row>
                     </div>
