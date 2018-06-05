@@ -251,7 +251,7 @@ var validations = [
 var validationsEditClient = [
     {
         validation: 'required',
-        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+        fields: ['firstName','lastName','idTypeClient', 'idNumber']
     },
     {
         validation: 'xss',
