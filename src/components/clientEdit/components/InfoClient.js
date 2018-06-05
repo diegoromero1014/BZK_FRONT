@@ -15,6 +15,7 @@ import { getMasterDataFields, consultListWithParameterUbication } from '../../se
 import {TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS} from '../constants';
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
 
+
 export class InfoClient extends React.Component {
 
     constructor(props) {
@@ -22,27 +23,34 @@ export class InfoClient extends React.Component {
 
         this._changeSegment = this._changeSegment.bind(this);
 
+        this.firstChange = false;
+
         this.state = {
             isSegmentPymeConstruct: false
         }
 
-
-
     }
 
-    componentWillMount() {
+    componentDidUpdate() {
 
-        const {clientInformacion} = this.props;
+        const {selectsReducer, clientInformacion} = this.props;
 
-        var infoClient = clientInformacion.get('responseClientInfo');
-
-        this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+        if (!this.firstChange && typeof selectsReducer.get(constants.SEGMENTS) != 'undefined' && selectsReducer.get(constants.SEGMENTS).length > 0) {
+            this.firstChange = true;
+            const infoClient = clientInformacion.get('responseClientInfo');
+            console.log('callingChangeSegment', selectsReducer.get(constants.SEGMENTS));
+            this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+        }
     }
 
     _changeSegment(idSegment, firstConsult, subSegmentId) {
         const { segment, customerTypology, subSegment, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
+
+        console.log(selectsReducer.get(constants.SEGMENTS));
+        console.log('changeSegment', value);
+
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);

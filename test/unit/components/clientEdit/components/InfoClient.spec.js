@@ -7,7 +7,7 @@ import ComboBox from "~/src/ui/comboBox/comboBoxComponent";
 import Textarea from "~/src/ui/textarea/textareaComponent";
 import InfoClientRedux, { InfoClient } from '~/src/components/clientEdit/components/InfoClient';
 
-import SelectActions from '~/src/components/selectsComponent/actions';
+import * as SelectActions from '~/src/components/selectsComponent/actions';
 
 class ReduxFormField {
     constructor() {
@@ -73,7 +73,7 @@ describe('Test Subsegment InfoClient', () => {
     });
 
     after(() => {
-        getMasterDataFields.restore()
+        SelectActions.getMasterDataFields.restore();
     });
     
     it('should render Subsegmento when Segmento is Constructor Pyme', () => {

@@ -553,7 +553,6 @@ const validate = (values, props) => {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
 
-    console.log(errors);
 
     return errors;
 };
@@ -1460,7 +1459,6 @@ class clientEdit extends Component {
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
             if ((errorContact || errorShareholder) && idButton !== BUTTON_EDIT && !isPersonaNatural) {
-                console.log('errorContact or errorShareholder');
                 updateErrorsNotes(false);
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
 
@@ -2276,7 +2274,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>¿Cuál? {drawRequiredField(otherOriginGoodsEnable !== 'disabled')}</span>
+                            <span>¿Cuál? {drawRequiredField(otherOriginGoodsEnable !== 'disabled' && !isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2316,7 +2314,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>¿Cuál? {drawRequiredField(otherOriginResourceEnable !== 'disabled')}</span>
+                            <span>¿Cuál? {drawRequiredField(otherOriginResourceEnable !== 'disabled' && !isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input

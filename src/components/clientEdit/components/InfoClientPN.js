@@ -22,19 +22,24 @@ class InfoClientPN extends React.Component {
 
         this._changeSegment = this._changeSegment.bind(this);
 
+        this.firstChange = false;
+
         this.state = {
             isSegmentPymeConstruct: false
         }
 
     }
 
-    componentWillMount() {
+    componentDidUpdate() {
 
-        const {clientInformacion} = this.props;
+        const {selectsReducer, clientInformacion} = this.props;
 
-        var infoClient = clientInformacion.get('responseClientInfo');
-
-        this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+        if (!this.firstChange && typeof selectsReducer.get(constants.SEGMENTS) != 'undefined' && selectsReducer.get(constants.SEGMENTS).length > 0) {
+            this.firstChange = true;
+            const infoClient = clientInformacion.get('responseClientInfo');
+            console.log('callingChangeSegment', selectsReducer.get(constants.SEGMENTS));
+            this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+        }
     }
 
     _changeSegment(idSegment, firstConsult, subSegmentId) {
