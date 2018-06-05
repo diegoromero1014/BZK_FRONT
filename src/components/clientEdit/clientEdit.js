@@ -1530,14 +1530,20 @@ class clientEdit extends Component {
         const {
             fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
+            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading, isMethodEditClient
         } = this.props;
         
         updateErrorsNotes(false);
         clearValuesAdressess();
         clearNotes();
         clearProducts();
-        updateTitleNavBar("Actualizar/Editar cliente");
+
+        if (isMethodEditClient) {
+            updateTitleNavBar("Editar cliente");
+        } else {
+            updateTitleNavBar("Actualizar cliente");
+        }
+
         var infoClient = clientInformacion.get('responseClientInfo');
         if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
             setNotes(infoClient.notes);
