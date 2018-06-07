@@ -22,6 +22,7 @@ export class InfoClient extends React.Component {
         super(props);
 
         this._changeSegment = this._changeSegment.bind(this);
+        this._checkSubSegmentRender = this._checkSubSegmentRender.bind(this);
 
         this.firstChange = false;
 
@@ -31,25 +32,29 @@ export class InfoClient extends React.Component {
 
     }
 
-    componentDidUpdate() {
-
+    _checkSubSegmentRender() {
         const {selectsReducer, clientInformacion} = this.props;
 
         if (!this.firstChange && typeof selectsReducer.get(constants.SEGMENTS) != 'undefined' && selectsReducer.get(constants.SEGMENTS).length > 0) {
             this.firstChange = true;
             const infoClient = clientInformacion.get('responseClientInfo');
-            console.log('callingChangeSegment', selectsReducer.get(constants.SEGMENTS));
             this._changeSegment(infoClient.segment, true, infoClient.subSegment);
         }
+    }
+
+    componentWillMount() {
+        this._checkSubSegmentRender();
+    }
+
+    componentDidUpdate() {
+        this._checkSubSegmentRender();
+        
     }
 
     _changeSegment(idSegment, firstConsult, subSegmentId) {
         const { segment, customerTypology, subSegment, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
-
-        console.log(selectsReducer.get(constants.SEGMENTS));
-        console.log('changeSegment', value);
 
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {

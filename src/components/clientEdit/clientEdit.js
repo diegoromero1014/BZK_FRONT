@@ -1530,7 +1530,7 @@ class clientEdit extends Component {
         const {
             fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading, isMethodEditClient
+            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
         } = this.props;
         
         updateErrorsNotes(false);

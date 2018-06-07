@@ -29,7 +29,7 @@ const drawRequiredField = (condition) => {
 let ciiuRequired = false;
 let subciiuRequired = false;
 
-class ActividadEconomicaPN extends React.Component {
+export class ActividadEconomicaPN extends React.Component {
 
     constructor(props) {
         super(props);

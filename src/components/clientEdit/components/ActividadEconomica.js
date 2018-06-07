@@ -23,7 +23,7 @@ const drawRequiredField = (condition) => {
     }
 }
 
-class ActividadEconomica extends React.Component {
+export class ActividadEconomica extends React.Component {
 
      //Detecta el cambio en el select de ciiu para ejecutar la consulta de subciiu
      _onChangeCIIU(val) {

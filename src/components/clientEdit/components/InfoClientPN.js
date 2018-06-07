@@ -15,12 +15,13 @@ import { getMasterDataFields, consultListWithParameterUbication } from '../../se
 import {TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS} from '../constants';
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
 
-class InfoClientPN extends React.Component {
+export class InfoClientPN extends React.Component {
 
     constructor(props) {
         super(props);
 
         this._changeSegment = this._changeSegment.bind(this);
+        this._checkSubSegmentRender = this._checkSubSegmentRender.bind(this);
 
         this.firstChange = false;
 
@@ -30,16 +31,22 @@ class InfoClientPN extends React.Component {
 
     }
 
-    componentDidUpdate() {
-
+    _checkSubSegmentRender() {
         const {selectsReducer, clientInformacion} = this.props;
 
         if (!this.firstChange && typeof selectsReducer.get(constants.SEGMENTS) != 'undefined' && selectsReducer.get(constants.SEGMENTS).length > 0) {
             this.firstChange = true;
             const infoClient = clientInformacion.get('responseClientInfo');
-            console.log('callingChangeSegment', selectsReducer.get(constants.SEGMENTS));
             this._changeSegment(infoClient.segment, true, infoClient.subSegment);
         }
+    }
+
+    componentWillMount() {
+        this._checkSubSegmentRender();
+    }
+
+    componentDidUpdate() {
+        this._checkSubSegmentRender();
     }
 
     _changeSegment(idSegment, firstConsult, subSegmentId) {
