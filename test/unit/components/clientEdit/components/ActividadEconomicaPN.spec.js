@@ -7,7 +7,7 @@ import Textarea from "~/src/ui/textarea/textareaComponent";
 
 import {ActividadEconomicaPN} from "~/src/components/clientEdit/components/ActividadEconomicaPN";
 
-const clientInformacion = Immutable.Map({ 'responseClientInfo': {} });
+const clientInformacion = Immutable.Map({ 'responseClientInfo': {'occupation': [{id: 1, field: 'occupation', value: 'Commerciante', key: 'Comerciante'}]} });
 const selectsReducer = Immutable.Map({});
 
 const occupation = {
@@ -43,11 +43,18 @@ describe('Test ClientEdit/ActividadEconomica', () => {
         expect(wrapper.find(ComboBox).find({name: 'idSubCIIU'})).to.have.length(1);
     });
 
-    it("CIIU shouldn't be required when occupation is empty", () => {
+    it("CIIU and SUBCIIU shouldn't be required when occupation is empty", () => {
         const wrapper = shallow(<ActividadEconomicaPN {...defaultProps} />);
-        expect(wrapper.state())
+        expect(wrapper.state().subciiuRequired).to.equal(false);
+        expect(wrapper.state().ciiuRequired).to.equal(false);
+    });
 
-
+    it('CIIU and SUBCCIU should be required when occupation is Comerciante', () => {
+        let comerciante = {...occupation}
+        const wrapper = shallow(<ActividadEconomicaPN {...defaultProps} occupation={comerciante} />);
+        
+        expect(wrapper.state().ciiuRequired).to.equal(true);
+        expect(wrapper.state().subciiuRequired).to.equal(true);
     });
 });
 
