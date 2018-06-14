@@ -5,6 +5,6 @@
   ],
   "plugins": [
     ["transform-class-properties", { "spec": true }],
-    "transform-object-assign"
+    "transform-object-assign","babel-plugin-root-import"
   ]
 }

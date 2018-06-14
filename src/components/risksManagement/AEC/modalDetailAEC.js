@@ -81,11 +81,23 @@ class ModalDetailAEC extends Component {
                             </Col>
                             <Col xs={12} md={12} lg={12} >
                                 <dt style={{ paddingTop: '5px' }}>Observaciones</dt>
-                                <dd style={{ textAlign: 'justify' }}>{detailAEC.description}</dd>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.description}</dd>
                             </Col>
                             <Col xs={12} md={12} lg={12} >
                                 <dt style={{ paddingTop: '5px' }}>Plan de acción</dt>
-                                <dd style={{ textAlign: 'justify' }}>{detailAEC.actionPlan}</dd>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.actionPlan}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Hechos relevantes para provisiones individuales</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.individualProvisions}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Razón cambio nivel de riesgo</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word', paddingBottom: '10px' }}>{detailAEC.reasonChangeLevelRisk}</dd>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} >
+                                <dt style={{ paddingTop: '5px' }}>Razón ingreso AEC</dt>
+                                <dd style={{ textAlign: 'justify', wordWrap: 'break-word' }}>{detailAEC.reasonIncomeAec}</dd>
                             </Col>
                         </Row>
                     </div>

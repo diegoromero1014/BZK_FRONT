@@ -455,6 +455,10 @@ export function validateFields(values,validations, errors) {
         row.fields.forEach(field => {
             if (! errors[field]) {
                 switch (row.validation) {
+                    case 'option-required':
+                        if (! values[field] ) {
+                            errors[field] = constants.OPTION_REQUIRED;
+                        }
                     case 'required':
                         if (! values[field] ) {
                             errors[field] = constants.VALUE_REQUIERED;
@@ -465,6 +469,7 @@ export function validateFields(values,validations, errors) {
                             errors[field] = constants.VALUE_XSS_INVALID;
                         }
                         break;
+
                 }
             }   
         });
