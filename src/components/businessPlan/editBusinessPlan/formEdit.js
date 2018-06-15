@@ -162,7 +162,7 @@ class FormEdit extends Component {
             _.map(needs.toArray(),
                 function (need) {
                     let data = {
-                        "id": null,
+                        "id": need.id,
                         "clientNeed": need.needIdType,
                         "clientNeedDescription": need.descriptionNeed,
                         "productFamily": need.productFamilyId,

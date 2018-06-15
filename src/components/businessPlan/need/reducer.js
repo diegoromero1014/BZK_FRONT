@@ -8,8 +8,9 @@ const initialState = Immutable.List();
 export default (state = initialState, action) => {
     switch (action.type) {
     case constants.ADD_NEED:
-      const need = action.data;     
+      const need = action.data;           
       const newNeed = _.assign({}, {
+        id: need.id,
         uuid: need.uuid,
         needType: need.needType,
         needIdType: need.needIdType,
