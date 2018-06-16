@@ -110,6 +110,7 @@ export function deleteRiskGroup(data) {
 
 
 export function addClientRiskGroup(data) {
+    console.log("data",data);
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -131,7 +132,8 @@ export function addClientRiskGroup(data) {
             segmentClientId: data.segmentClientId,
             conformationReasonId: data.conformationReasonId,
             riskGroupId: data.riskGroupId,
-            justification: data.justification
+            justification: data.justification,
+            clientType: data.clientType
         }
     };
     const request = axios.post(APP_URL + "/requestAddClientRiskGroup", json);

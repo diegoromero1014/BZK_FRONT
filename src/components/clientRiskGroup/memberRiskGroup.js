@@ -174,10 +174,10 @@ class memberRiskGroup extends Component {
 }
 const constHandlerSubmitGroup = () => {
     const { fields: { clientName, conformationReasonId, segmentClient, justification }, riskGroup,
-        swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber,
+        swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber, clientType,
         addClientRiskGroup, getClientsRiskGroup, clientInformacion, validateHasRiskGroup
     } = thisForm.props;
-
+console.log('clientType',clientType);
     validateHasRiskGroup(() => {
         // thisForm.requestAddMemberRiskGroup();
 
@@ -188,7 +188,8 @@ const constHandlerSubmitGroup = () => {
             clientName: clientName.value,
             conformationReasonId: conformationReasonId.value,
             riskGroupId: riskGroup.id,
-            justification: justification.value
+            justification: justification.value,
+            clientType: clientType
         };
 
         const infoClient = clientInformacion.get('responseClientInfo');
