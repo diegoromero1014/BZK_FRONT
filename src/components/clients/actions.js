@@ -176,7 +176,8 @@ export function findClientByStrTypeIdAndNumber(jsonFindClient) {
         "messageBody": {
             strTypeDocument: jsonFindClient.strTypeDocument,
             typeDocument: jsonFindClient.typeDocument,
-            numberDocument: jsonFindClient.numberDocument
+            numberDocument: jsonFindClient.numberDocument,
+            strClientType: jsonFindClient.strClientType
         }
     };
     const request = axios.post(APP_URL + "/getClientByStrDocumentTypeAndNumber", json);

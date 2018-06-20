@@ -1,6 +1,7 @@
 export const VERSION_DATE = "02/05/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
+export const NATURAL_PERSON = "Persona natural";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
 export const FILE_OPTION_REPORT_VISIT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
