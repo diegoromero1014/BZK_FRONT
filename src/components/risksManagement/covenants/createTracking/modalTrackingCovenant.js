@@ -44,9 +44,13 @@ class ModaltrackingCovenant extends Component {
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del covenant</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
-                            <Col xs={12} md={12} lg={12} >
+                            <Col xs={12} md={4} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Covenant</dt>
                                 <dd style={{ textAlign: 'justify' }}>{infoCovenant.strCovenant}</dd>
+                            </Col>
+                            <Col xs={12} md={8} lg={8} >
+                                <dt style={{ paddingTop: '5px' }}>Descripción Covenant</dt>
+                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.description}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Id covenant</dt>
