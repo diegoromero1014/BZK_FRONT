@@ -97,10 +97,10 @@ class modalComponentMemberRiskGroup extends Component {
         const catalogoPN = selectsReducer.get(constants.CLIENT_TYPE);
         let typeClient = _.get(_.filter(catalogoPN, ['value', text]), '[0].value');
         if (_.isEqual(typeClient, NATURAL_PERSON)) {
-            this.setState({selectTypeReducer: constants.CONTACT_ID_TYPE});
-        }else{
-            this.setState({selectTypeReducer: constants.CLIENT_ID_TYPE});
-        }        
+            this.setState({ selectTypeReducer: constants.CONTACT_ID_TYPE });
+        } else {
+            this.setState({ selectTypeReducer: constants.CLIENT_ID_TYPE });
+        }
     }
 
     _onchangeValue(file, val) {
@@ -121,8 +121,10 @@ class modalComponentMemberRiskGroup extends Component {
 
     _handlerSubmitGroup() {
         const { fields: { idType, idNumber, clientType }, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer } = this.props;
-        const strTypeDocument = _.get(_.find(selectsReducer.get(constants.SHAREHOLDER_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
-        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'value', '');
+        const strTypeDocument = _.get(_.find(selectsReducer.get(constants.CLIENT_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
+        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'key', '');
+        //const catalogoPN = selectsReducer.get(constants.CLIENT_TYPE);
+        
         const jsonFindClient = {
             strTypeDocument: strTypeDocument,
             typeDocument: idType.value !== undefined ? idType.value : null,
