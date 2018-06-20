@@ -2160,7 +2160,7 @@ class clientEdit extends Component {
                         textProp={"value"}
                         parentId="dashboardComponentScroll"
                         justify={justifyNoGeren}
-                        obligatory={true}
+                        obligatory={!validateMarcManagement && !isMethodEditClient}
                         data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
                         onChange={val => this._onChangeJustifyNoGeren(val)}
                         touched={true}
@@ -2215,7 +2215,7 @@ class clientEdit extends Component {
                         valueProp={"id"}
                         textProp={"value"}
                         justify={justifyNoLME}
-                        obligatory={true}
+                        obligatory={necesitaLME.value === 'false' && !isMethodEditClient}
                         data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
                         onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
                         touched={true}
