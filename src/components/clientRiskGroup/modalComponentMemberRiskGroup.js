@@ -104,7 +104,6 @@ class modalComponentMemberRiskGroup extends Component {
     }
 
     _onchangeValue(file, val) {
-        console.log("val", val);
         switch (file) {
             case "idType":
                 let { fields: { idType } } = this.props;
@@ -123,7 +122,6 @@ class modalComponentMemberRiskGroup extends Component {
         const { fields: { idType, idNumber, clientType }, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer } = this.props;
         const strTypeDocument = _.get(_.find(selectsReducer.get(constants.CLIENT_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
         const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'key', '');
-        //const catalogoPN = selectsReducer.get(constants.CLIENT_TYPE);
         
         const jsonFindClient = {
             strTypeDocument: strTypeDocument,
@@ -170,7 +168,6 @@ class modalComponentMemberRiskGroup extends Component {
         const { fields: { clientType, idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
         const { selectsReducer } = this.props;
         // onClick={() => dispatch(submit('submitMemberForm'))}
-        // console.log(submit);
         return (
             <div>
                 <div id="content-modal-rosk-group"

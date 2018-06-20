@@ -177,7 +177,6 @@ const constHandlerSubmitGroup = () => {
         swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber, clientType,
         addClientRiskGroup, getClientsRiskGroup, clientInformacion, validateHasRiskGroup
     } = thisForm.props;
-console.log('clientType',clientType);
     validateHasRiskGroup(() => {
         // thisForm.requestAddMemberRiskGroup();
 

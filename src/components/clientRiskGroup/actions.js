@@ -110,7 +110,6 @@ export function deleteRiskGroup(data) {
 
 
 export function addClientRiskGroup(data) {
-    console.log("data",data);
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
