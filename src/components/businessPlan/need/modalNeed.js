@@ -136,7 +136,7 @@ class ModalNeed extends Component {
 
     componentDidMount() {
         const { fields: { idEmployee, needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
-        if (needEdit !== undefined) {
+        if (needEdit !== undefined) {        
             needType.onChange(needEdit.needIdType);
             descriptionNeed.onChange(needEdit.descriptionNeed);
             productFamily.onChange(needEdit.productFamilyId);
@@ -190,7 +190,7 @@ class ModalNeed extends Component {
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
         
-            if (needEdit !== undefined) {
+            if (needEdit !== undefined) {                
                 needEdit.needIdType = needType.value;
                 needEdit.needType = needC;
                 needEdit.descriptionNeed = descriptionNeed.value;
