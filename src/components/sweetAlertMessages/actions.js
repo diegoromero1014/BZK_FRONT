@@ -9,15 +9,18 @@ export const SHOW_SWT_MESSAGE = "SHOW_SWT_MESSAGE";
  * @param {String} typeMessage 
  * @param {String} title 
  * @param {String} message 
- * @param {Object} props - Recibe las siguientes propiedades:
+ * @param {Object} customProps - Recibe las siguientes propiedades:
  *          - onConfirmCallback: Funcion a ejecutar cuando se cierra el PopUp 
+ *          - onCancelCallback: Funcion a ejecutar cuando se da click en el PopUp
+ * @param {Object} props - Recibe propiedades propias del metodo sweetAlert
  */
-export function swtShowMessage(typeMessage, title, message, props){
+export function swtShowMessage(typeMessage, title, message, customProps, props){
     return {
         type: SHOW_SWT_MESSAGE,
         typeMessage,
         title,
         message,
+        customProps,
         props
     };
 }

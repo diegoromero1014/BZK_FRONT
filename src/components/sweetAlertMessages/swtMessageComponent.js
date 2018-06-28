@@ -12,24 +12,30 @@ class SwtMessage extends Component {
     constructor(props) {
         super(props);
         this._closeMessage = this._closeMessage.bind(this);
+        this._onCancel = this._onCancel.bind(this);
     }
 
     _closeMessage() {
-        const {options} = this.props;
+        const {customProps} = this.props;
         this.props.swtCloseMessage();
 
-        
-
-        if (typeof options !== 'undefined') {
-
-            if (typeof options.onConfirmCallback === "function") {
-        
-               
-                options.onConfirmCallback();
+        if (typeof customProps !== 'undefined') {
+            if (typeof customProps.onConfirmCallback === "function") {
+                customProps.onConfirmCallback();
             }
-
         }
 
+    }
+
+    _onCancel() {
+        const {customProps} = this.props;
+        this.props.swtCloseMessage();
+
+        if (typeof customProps !== 'undefined') {
+            if (typeof customProps.onCancelCallback === "function") {
+                customProps.onCancelCallback();
+            }
+        }
     }
 
 
@@ -57,6 +63,7 @@ class SwtMessage extends Component {
             title,
             message,
             onConfirmCallback,
+            customProps,
             options
         } = this.props;
 
@@ -66,7 +73,11 @@ class SwtMessage extends Component {
                 show={isShow}
                 title={title}
                 text={message}
+                {...options}
+                showCancelButton={typeof customProps.onCancelCallback === "function"}
                 onConfirm={() => {this._closeMessage()}}
+                onCancel={() => {this._onCancel()}}
+                
             />);
     }
 
@@ -81,7 +92,8 @@ function mapStateToProps({ swtMessage }) {
         typeMessage: swtMessage.get('typeMessage'),
         title: swtMessage.get('title'),
         message: swtMessage.get('message'),
-        options: swtMessage.get('props')
+        options: swtMessage.get('props'),
+        customProps: swtMessage.get('customProps')
     };
 }
 

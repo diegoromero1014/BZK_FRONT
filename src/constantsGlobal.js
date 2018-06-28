@@ -97,6 +97,7 @@ export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
 export const VISOR_CLIENTE = "Visor cliente";
 
 export const INFO_ESTUDIO_CREDITO = "Info Estudio de Crédito";
+export const GENERAR_PDF_ESTUDIO_CREDITO = "Generar PDF Estudio de crédito";
 export const GESTION_DOCUMENTAL = "Gestión Documental";
 export const GRUPO_RIESGO = "Grupo de Riesgo";
 
@@ -165,6 +166,9 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
+
+//Mensajes advertencia
+export const MESSAGE_REPLACE_PDF = "Señor usuario, ya fue generado un PDF para este cliente, ¿Desea reemplazarlo?"
 
 export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
 export const STYLE_CONTAINER_BUTTONS = {
@@ -248,7 +252,7 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
  /**
   * PARAMETROS BLOQUEO
   */
-    export const TIME_REQUEST_BLOCK_REPORT = 30000;
+    export const TIME_REQUEST_BLOCK_REPORT = 40000;
 
 
 /**
