@@ -140,7 +140,8 @@ export function generatePDF() {
         messageBody: window.sessionStorage.getItem('idClientSelected')
     }
 
-    var request = new Promise((resolve, reject) => setTimeout(() => {resolve(true)}, 100 ));
+    var request = axios.post(APP_URL + "/generatePDFContextClient", json);
+
     return {
         type: GENERATE_PDF,
         payload: request

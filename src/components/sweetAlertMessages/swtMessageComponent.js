@@ -74,7 +74,7 @@ class SwtMessage extends Component {
                 title={title}
                 text={message}
                 {...options}
-                showCancelButton={typeof customProps.onCancelCallback === "function"}
+                showCancelButton={typeof customProps !== 'undefined' && typeof customProps.onCancelCallback === "function"}
                 onConfirm={() => {this._closeMessage()}}
                 onCancel={() => {this._onCancel()}}
                 

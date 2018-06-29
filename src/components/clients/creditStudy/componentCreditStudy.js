@@ -26,7 +26,7 @@ import {
 import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
-    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
+    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID, APP_URL,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT, 
     BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
 } from '../../../constantsGlobal';
@@ -152,7 +152,8 @@ class ComponentStudyCredit extends Component {
             intervalId: null,
             userEditingPrevisita: '',
             isComponentMounted: true,
-            showButtonPDF: false
+            showButtonPDF: false,
+            isPDFGenerated: false
 
         }
     }
@@ -583,31 +584,39 @@ class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { generatePDF } = this.props;
-        generatePDF().then(() => {
-            console.log("PDF generado....")
+        const { generatePDF, swtShowMessage } = this.props;
+        generatePDF().then((response) => {
+            console.log(response);
+            swtShowMessage('success', '', 'PDF generado correctamente');
+            this.setState({isPDFGenerated : true});
+            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
         })
     }
 
     handleClickButtonPDF() {
-        const { existsPDFforTheSameDay, swtShowMessage } = this.props;
-        console.log('click pdf')
-        existsPDFforTheSameDay().then((response) => {
+        const { existsPDFforTheSameDay, swtShowMessage, studyCreditReducer } = this.props;
+    
+        if (this.state.isPDFGenerated) {
+            swtShowMessage(
+                "warning", "Advertencia", 
+                MESSAGE_REPLACE_PDF, 
+                {
+                    onConfirmCallback: this.callGeneratePDF, 
+                    onCancelCallback: () => {} 
+                },
+                {
+                    confirmButtonText: 'Confirmar'
+                }
+            );
+        } else {
+            this.callGeneratePDF();
+        }
+
+
+        /*existsPDFforTheSameDay().then((response) => {
             console.log(response);
-            if (response.payload) {
-                swtShowMessage(
-                    "warning", "Advertencia", 
-                    MESSAGE_REPLACE_PDF, 
-                    {
-                        onConfirmCallback: this.callGeneratePDF, 
-                        onCancelCallback: () => {} 
-                    },
-                    {
-                        confirmButtonText: 'Confirmar'
-                    }
-                );
-            }
-        })
+            
+        })*/
 
     }
 
@@ -718,7 +727,7 @@ class ComponentStudyCredit extends Component {
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport, reducerGlobal } = this.props;
+            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport, reducerGlobal, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         
         if (_.isEmpty(infoClient)) {
@@ -754,6 +763,7 @@ class ComponentStudyCredit extends Component {
             updateTitleNavBar("Informe estudio de crédito");
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             getContextClient(idClient).then((data) => {
+
                 changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -763,6 +773,11 @@ class ComponentStudyCredit extends Component {
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
+
+                console.log(data);
+
+                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated});
+
             }, (reason) => {
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
