@@ -76,7 +76,7 @@ class ClientsFind extends Component {
             clearClients();
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
-            getMasterDataFields([constants.CERTIFICATION_STATUS, constants.BUSINESS_ROL, constants.AEC_LEVEL]).then((data) => {
+            getMasterDataFields([constants.CERTIFICATION_STATUS, constants.BUSINESS_ROL, constants.AEC_LEVEL, constants.MANAGEMENT_BRAND]).then((data) => {
                 const lists = _.groupBy(data.payload.data.messageBody.masterDataDetailEntries, 'field');
                 const aecLevel = lists.aecLevel;
                 aecLevel.push({
@@ -193,7 +193,7 @@ class ClientsFind extends Component {
         const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
-
+        
         clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, bussinesRol.value, management.value, 
             decisionCenter.value, levelAEC.value).then((data) => {
             showLoading(false, "");
@@ -314,7 +314,7 @@ class ClientsFind extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 searchClient={'client'}
-                                data={valuesYesNo}
+                                data={selectsReducer.get(constants.MANAGEMENT_BRAND) || []}
                             />
                         </Col>
                         <Col xs={4} sm={4} md={2} lg={2}>
