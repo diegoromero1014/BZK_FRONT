@@ -92,6 +92,7 @@ export const VINCULAR = "Vincular";
 export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
+export const GENERATE_PDF = "Generar PDF";
 export const ANALYST = "Analista";
 export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
 export const VISOR_CLIENTE = "Visor cliente";

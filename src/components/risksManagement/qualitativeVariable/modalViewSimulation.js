@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { redirectUrl } from '../../globalComponents/actions';
 import { Row, Col } from 'react-flexbox-grid';
-import { changeValueModalIsOpen } from './actions';
-import {formatCurrency} from '../../../actionsGlobal';
+import { changeValueModalIsOpen, pdfDescarga } from './actions';
+import { formatCurrency } from '../../../actionsGlobal';
 import Modal from 'react-modal';
-import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy } from 'lodash';
+import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy, indexOf, isEqual } from 'lodash';
+import { GENERATE_PDF } from '../../../constantsGlobal';
 
 const STYLE_TD = {
     borderLeft: '1px solid gray',
@@ -24,6 +25,8 @@ class ModalViewSimulation extends Component {
         this.closeModal = this.closeModal.bind(this);
         this._mapFactor = this._mapFactor.bind(this);
         this.buildTableConclusion = this.buildTableConclusion.bind(this);
+        this._onClickPDF = this._onClickPDF.bind(this);
+        this._dataMapFactor = this._dataMapFactor.bind(this);
     }
 
     closeModal() {
@@ -31,8 +34,30 @@ class ModalViewSimulation extends Component {
         changeValueModalIsOpen(false);
     }
 
+    _onClickPDF() {
+        const { pdfDescarga, qualitativeVariableReducer, clientInformacion } = this.props;
+        const listFactor = get(qualitativeVariableReducer.get('survey'), 'listFactor', []);
+        const survey = qualitativeVariableReducer.get('survey');
+        const infoClient = clientInformacion.get('responseClientInfo');
+        var listFactVariables = this._dataMapFactor(listFactor);
+        let jsonPDF = Object.assign(listFactVariables, {
+            idClient: window.sessionStorage.getItem('idClientSelected'),
+            scoreMax: formatCurrency(((this.state.totalSumPoints * 100) / this.state.scoreMax), '0.00') + '%',
+            totalSumPoints: this.state.totalSumPoints,
+            state: survey.estado,
+            latestUpdated: survey.latestUpdated,
+            clientName: infoClient.clientName,
+            clientNameType: infoClient.clientNameType,
+            clientIdNumber: infoClient.clientIdNumber,
+            relationshipStatusName: infoClient.relationshipStatusName,
+
+        });
+        console.log("infoClient", infoClient);
+        pdfDescarga(jsonPDF);
+    }
+
     componentWillReceiveProps(nextProps) {
-        const { qualitativeVariableReducer } = nextProps;
+        const { qualitativeVariableReducer, reducerGlobal } = nextProps;
         if (qualitativeVariableReducer.get('isOpenModalSimulation')) {
             let sumScoreFactor = 0;
             const listQuestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
@@ -61,7 +86,8 @@ class ModalViewSimulation extends Component {
                 sumScoreFactor += get(range, 'score', 0);
                 return get(range, 'name', '');
             });
-            this.setState({ listCalculatedResults: listQuestionsGroup, 
+            this.setState({
+                listCalculatedResults: listQuestionsGroup,
                 totalSumPoints: sumScoreFactor,
                 scoreMax: scoreMaxAverage
             });
@@ -86,7 +112,7 @@ class ModalViewSimulation extends Component {
                     </tr>
                     {listFactor.map(this._mapFactor)}
                     <tr>
-                        <td colSpan={3} style={{textAlign: 'right'}}>
+                        <td colSpan={3} style={{ textAlign: 'right' }}>
                             <span style={{ fontWeight: 'bold' }}>Puntos: {this.state.totalSumPoints}</span>
                         </td>
                     </tr>
@@ -95,13 +121,30 @@ class ModalViewSimulation extends Component {
         </Row>
     }
 
+    _dataMapFactor(listFactor) {
+        return {
+            listFactVariables: listFactor.map(factor => {
+                return {
+                    factor: factor.name,
+                    variables: factor.listVariables.map(variable => {
+                        return {
+                            name: variable.name,
+                            resume: get(this.state.listCalculatedResults, variable.id)
+                        }
+                    })
+                }
+            })
+
+        }
+    }
+
     _mapFactor(factor, idx) {
         let firstReg = true;
         return map(factor.listVariables, variable => {
             if (firstReg) {
                 firstReg = false;
                 return <tr>
-                    <td rowSpan={size(factor.listVariables)} style={{ verticalAlign: 'middle'}} > {factor.name}</td >
+                    <td rowSpan={size(factor.listVariables)} style={{ verticalAlign: 'middle' }} > {factor.name}</td >
                     <td style={STYLE_TD}>{variable.name}</td>
                     <td style={STYLE_TD}>{get(this.state.listCalculatedResults, variable.id)}</td>
                 </tr >
@@ -115,7 +158,8 @@ class ModalViewSimulation extends Component {
     }
 
     render() {
-        const { qualitativeVariableReducer } = this.props;
+        const { qualitativeVariableReducer, reducerGlobal } = this.props;
+        const generatePDF = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), GENERATE_PDF), false);
         return (
             <Modal
                 isOpen={qualitativeVariableReducer.get('isOpenModalSimulation')}
@@ -132,11 +176,18 @@ class ModalViewSimulation extends Component {
                         </div>
                         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden' }}>
                             <div style={{ textAlign: "right", marginRight: '20px', marginTop: '10px', marginBottom: '5px' }}>
-                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {formatCurrency( ((this.state.totalSumPoints * 100) / this.state.scoreMax), '0.00' )}%</span>
+                                <span style={{ color: "#818282", paddingRight: '10px', fontSize: '12pt' }}>Puntos asignados: {formatCurrency(((this.state.totalSumPoints * 100) / this.state.scoreMax), '0.00')}%</span>
                             </div>
                             {this.buildTableConclusion()}
                         </div>
                         <div className="modalBt4-footer modal-footer">
+                            {isEqual(generatePDF, GENERATE_PDF) ?
+                                <button type="button" onClick={this._onClickPDF} className="btn btn-primary modal-button-edit">
+                                    <span>Descargar PDF</span>
+                                </button>
+                                :
+                                ''
+                            }
                             <button type="button" onClick={this.closeModal} className="btn btn-primary modal-button-edit">
                                 <span>Aceptar</span>
                             </button>
@@ -152,14 +203,16 @@ class ModalViewSimulation extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        changeValueModalIsOpen
+        changeValueModalIsOpen,
+        pdfDescarga
     }, dispatch);
 }
 
-function mapStateToProps({ reducerGlobal, qualitativeVariableReducer }, ownerProps) {
+function mapStateToProps({ reducerGlobal, qualitativeVariableReducer, clientInformacion }, ownerProps) {
     return {
         reducerGlobal,
-        qualitativeVariableReducer
+        qualitativeVariableReducer,
+        clientInformacion
     };
 }
 
