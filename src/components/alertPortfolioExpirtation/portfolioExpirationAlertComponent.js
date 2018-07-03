@@ -36,6 +36,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
+import { relative } from 'path';
 
 const fields = ["team", "region", "zone"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
@@ -199,7 +200,7 @@ class ClientsPendingUpdate extends Component {
                         </Col>
                     </Row>
                 </form>
-                <Row>
+                <Row style={{position: 'relative', heigth: '50px'}}>
                     <div style={{
                         marginTop: "18px",
                         marginLeft: "18px",

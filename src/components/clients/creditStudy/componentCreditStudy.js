@@ -21,14 +21,14 @@ import { consultListWithParameterUbication, getMasterDataFields } from '../../se
 import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
 import {
     getContextClient, saveCreditStudy, validateInfoCreditStudy,
-    updateNotApplyCreditContact
+    updateNotApplyCreditContact, existsPDFforTheSameDay, generatePDF
 } from './actions';
 import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
 import {
-    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
+    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
+    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID, APP_URL,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT, 
-    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT
+    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
 } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -116,6 +116,8 @@ class ComponentStudyCredit extends Component {
         this._validateInformationToSave = this._validateInformationToSave.bind(this);
         this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
+        this.handleClickButtonPDF = this.handleClickButtonPDF.bind(this);
+        this.callGeneratePDF = this.callGeneratePDF.bind(this);
         
         this._ismounted = false;
 
@@ -149,7 +151,9 @@ class ComponentStudyCredit extends Component {
             showErrorBlockedPreVisit: false,
             intervalId: null,
             userEditingPrevisita: '',
-            isComponentMounted: true
+            isComponentMounted: true,
+            showButtonPDF: false,
+            isPDFGenerated: false
 
         }
     }
@@ -579,6 +583,43 @@ class ComponentStudyCredit extends Component {
         });
     }
 
+    callGeneratePDF() {
+        const { generatePDF, swtShowMessage } = this.props;
+        generatePDF().then((response) => {
+            console.log(response);
+            swtShowMessage('success', '', 'PDF generado correctamente');
+            this.setState({isPDFGenerated : true});
+            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
+        })
+    }
+
+    handleClickButtonPDF() {
+        const { existsPDFforTheSameDay, swtShowMessage, studyCreditReducer } = this.props;
+    
+        if (this.state.isPDFGenerated) {
+            swtShowMessage(
+                "warning", "Advertencia", 
+                MESSAGE_REPLACE_PDF, 
+                {
+                    onConfirmCallback: this.callGeneratePDF, 
+                    onCancelCallback: () => {} 
+                },
+                {
+                    confirmButtonText: 'Confirmar'
+                }
+            );
+        } else {
+            this.callGeneratePDF();
+        }
+
+
+        /*existsPDFforTheSameDay().then((response) => {
+            console.log(response);
+            
+        })*/
+
+    }
+
 
     canUserEditBlockedReport(myUserName) {
 
@@ -686,7 +727,7 @@ class ComponentStudyCredit extends Component {
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport } = this.props;
+            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport, reducerGlobal, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         
         if (_.isEmpty(infoClient)) {
@@ -696,6 +737,12 @@ class ComponentStudyCredit extends Component {
             let logUser = window.localStorage.getItem('userNameFront');
             var idClient = window.sessionStorage.getItem('idClientSelected');
 
+            const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false);
+            
+            this.setState({showButtonPDF});
+
+            console.log("boton PDF", showButtonPDF);
+            
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
@@ -716,6 +763,7 @@ class ComponentStudyCredit extends Component {
             updateTitleNavBar("Informe estudio de crédito");
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             getContextClient(idClient).then((data) => {
+
                 changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -725,6 +773,11 @@ class ComponentStudyCredit extends Component {
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
+
+                console.log(data);
+
+                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated});
+
             }, (reason) => {
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -970,10 +1023,18 @@ class ComponentStudyCredit extends Component {
                                     <Col style={paddingButtons}   >
                                         <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
                                     </Col>
+
+                                    { this.state.showButtonPDF && 
+                                        <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
+                                            <button className="btn" type="button" style={{backgroundColor: "#eb984e"}}><span>Generar PDF</span></button>
+                                        </Col> 
+                                    }
                                 
                                     <Col style={paddingButtons} onClick={this._closeWindow} >
                                         <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
                                     </Col>
+
+                                    
                                 
                             </Row>
                         </div>
@@ -1016,6 +1077,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         updateTitleNavBar,
         getContextClient,
+        existsPDFforTheSameDay,
+        generatePDF,
         swtShowMessage,
         changeStateSaveData,
         consultListWithParameterUbication,
@@ -1028,11 +1091,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer }, ownerProps) {
+function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }, ownerProps) {
     return {
         selectsReducer,
         clientInformacion,
-        studyCreditReducer
+        studyCreditReducer,
+        reducerGlobal
     };
 }
 
