@@ -9,7 +9,8 @@ const initialState = Immutable.Map({
     title:'',
     message: '',
     isShow: false,
-    props: {}
+    props: {},
+    customProps: {}
 });
 
 export default(state = initialState, action) => {
@@ -21,6 +22,7 @@ export default(state = initialState, action) => {
                     .set('message', action.message)
                     .set('isShow', true)
                     .set('props', action.props)
+                    .set('customProps', action.customProps)
             });
         case CLOSE_SWT_MESSAGE:
             return state.set("isShow", false);

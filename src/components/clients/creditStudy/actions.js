@@ -1,7 +1,7 @@
 import { APP_URL } from '../../../constantsGlobal';
 import {
     GET_CONTEXT_CLIENT, SAVE_CREDIT_STUDY, VALIDATE_INFO_CREDIT_STUDY,
-    UPDATE_NOT_APPLY_CREDIT_CONTACT
+    UPDATE_NOT_APPLY_CREDIT_CONTACT, EXISTS_PDF_FOR_SAME_DAY, GENERATE_PDF
 } from './constants';
 import axios from 'axios';
 import _ from 'lodash';
@@ -95,6 +95,55 @@ export function updateNotApplyCreditContact(jsonCreditContact) {
     var request = axios.post(APP_URL + "/updateNotApplyCreditContact", jsonComplete);
     return {
         type: UPDATE_NOT_APPLY_CREDIT_CONTACT,
+        payload: request
+    }
+}
+
+export function existsPDFforTheSameDay(){
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        messageBody: window.sessionStorage.getItem('idClientSelected')
+    }
+
+    var request = new Promise((resolve, reject) => setTimeout(() => {resolve(true)}, 100 ));
+    return {
+        type: EXISTS_PDF_FOR_SAME_DAY,
+        payload: request
+    }
+}
+
+export function generatePDF() {
+    const json = {
+        messageHeader: {
+            "timestamp": new Date().getTime(),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        messageBody: window.sessionStorage.getItem('idClientSelected')
+    }
+
+    var request = axios.post(APP_URL + "/generatePDFContextClient", json);
+
+    return {
+        type: GENERATE_PDF,
         payload: request
     }
 }
