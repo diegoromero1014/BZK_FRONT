@@ -7,7 +7,9 @@ import { changeValueModalIsOpen, pdfDescarga } from './actions';
 import { formatCurrency } from '../../../actionsGlobal';
 import Modal from 'react-modal';
 import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy, indexOf, isEqual } from 'lodash';
-import { GENERATE_PDF } from '../../../constantsGlobal';
+import { GENERATE_PDF, APP_URL } from '../../../constantsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
 
 const STYLE_TD = {
     borderLeft: '1px solid gray',
@@ -20,7 +22,8 @@ class ModalViewSimulation extends Component {
             listCalculatedResults: [],
             totalSumPoints: 0,
             scoreMax: 0,
-            points: 0
+            points: 0,
+            isPDFGenerated: false
         };
         this.closeModal = this.closeModal.bind(this);
         this._mapFactor = this._mapFactor.bind(this);
@@ -35,7 +38,7 @@ class ModalViewSimulation extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, qualitativeVariableReducer, clientInformacion } = this.props;
+        const { pdfDescarga, qualitativeVariableReducer, clientInformacion, swtShowMessage } = this.props;
         const listFactor = get(qualitativeVariableReducer.get('survey'), 'listFactor', []);
         const survey = qualitativeVariableReducer.get('survey');
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -52,8 +55,12 @@ class ModalViewSimulation extends Component {
             relationshipStatusName: infoClient.relationshipStatusName,
 
         });
-        console.log("infoClient", infoClient);
-        pdfDescarga(jsonPDF);
+        pdfDescarga(jsonPDF).then((response) => {
+            console.log(response);
+            swtShowMessage('success', '', 'PDF generado correctamente');
+            this.setState({ isPDFGenerated: true });
+            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -204,7 +211,8 @@ class ModalViewSimulation extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeValueModalIsOpen,
-        pdfDescarga
+        pdfDescarga,
+        swtShowMessage
     }, dispatch);
 }
 
