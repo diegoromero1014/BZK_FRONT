@@ -586,7 +586,6 @@ class ComponentStudyCredit extends Component {
     callGeneratePDF() {
         const { generatePDF, swtShowMessage } = this.props;
         generatePDF().then((response) => {
-            console.log(response);
             swtShowMessage('success', '', 'PDF generado correctamente');
             this.setState({isPDFGenerated : true});
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
@@ -613,10 +612,7 @@ class ComponentStudyCredit extends Component {
         }
 
 
-        /*existsPDFforTheSameDay().then((response) => {
-            console.log(response);
-            
-        })*/
+        
 
     }
 
@@ -741,7 +737,7 @@ class ComponentStudyCredit extends Component {
             
             this.setState({showButtonPDF});
 
-            console.log("boton PDF", showButtonPDF);
+            
             
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
@@ -774,7 +770,7 @@ class ComponentStudyCredit extends Component {
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
 
-                console.log(data);
+         
 
                 this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated});
 
