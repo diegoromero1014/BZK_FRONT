@@ -1,5 +1,8 @@
 import Immutable from 'immutable';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL, GET_ALLOW_SURVEY_QUALITATIVE } from './constants';
+import {
+    GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL,
+    GET_ALLOW_SURVEY_QUALITATIVE, GET_EXIST_PDF_VC
+} from './constants';
 import { get, sortBy, clone, remove } from 'lodash';
 import { validateValueExist } from '../../../actionsGlobal';
 
@@ -42,6 +45,14 @@ export default (state = initialState, action) => {
         case GET_ALLOW_SURVEY_QUALITATIVE:
             const response_allow = get(action.payload.data, 'data', false);
             return state.set('allowSurveyQualitative', (response_allow == true));
+        case GET_EXIST_PDF_VC:
+            console.log("response", action);
+
+            const responsePDFVC = get(action.payload.data, 'data', "");
+            return state.withMutations(map => {
+                map
+                    .set("responsePDFVC", responsePDFVC);
+            });
         default:
             return state;
     }
