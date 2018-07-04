@@ -584,11 +584,20 @@ class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { generatePDF, swtShowMessage } = this.props;
+        const { generatePDF, swtShowMessage, showLoading } = this.props;
+
+        showLoading(true, 'Cargando..');
+
         generatePDF().then((response) => {
-            swtShowMessage('success', '', 'PDF generado correctamente');
+            swtShowMessage('success', 'Estudio de crédito', 'PDF generado correctamente');
             this.setState({isPDFGenerated : true});
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
+        
+            showLoading(false, null);
+        
+        }).catch((error) => {
+            showLoading(false, null);
+            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
         })
     }
 
@@ -1081,7 +1090,8 @@ function mapDispatchToProps(dispatch) {
         validateInfoCreditStudy,
         updateNotApplyCreditContact,
         getUserBlockingReport,
-        stopBlockToReport
+        stopBlockToReport,
+        showLoading
     }, dispatch);
 }
 
