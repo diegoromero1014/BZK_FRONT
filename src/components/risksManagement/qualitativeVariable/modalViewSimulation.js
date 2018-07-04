@@ -48,7 +48,7 @@ class ModalViewSimulation extends Component {
         }
         getExistPdfVC(jsonClietnSurvey).then((data) => {
             console.log("data", data);
-            if (data != true) {
+            if (data.payload.data.data) {
                 swtShowMessage(
                     "warning", "Advertencia",
                     MESSAGE_REPLACE_PDF,
