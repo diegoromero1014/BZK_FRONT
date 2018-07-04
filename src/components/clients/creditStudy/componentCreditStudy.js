@@ -733,9 +733,7 @@ class ComponentStudyCredit extends Component {
             let logUser = window.localStorage.getItem('userNameFront');
             var idClient = window.sessionStorage.getItem('idClientSelected');
 
-            const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false);
             
-            this.setState({showButtonPDF});
 
             
             
@@ -770,9 +768,9 @@ class ComponentStudyCredit extends Component {
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
 
-         
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
 
-                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated});
+                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated, showButtonPDF});
 
             }, (reason) => {
                 changeStateSaveData(false, "");
