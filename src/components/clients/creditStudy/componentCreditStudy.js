@@ -584,12 +584,20 @@ class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { generatePDF, swtShowMessage } = this.props;
+        const { generatePDF, swtShowMessage, showLoading } = this.props;
+
+        showLoading(true, 'Cargando..');
+
         generatePDF().then((response) => {
-            console.log(response);
-            swtShowMessage('success', '', 'PDF generado correctamente');
+            swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
             this.setState({isPDFGenerated : true});
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
+        
+            showLoading(false, null);
+        
+        }).catch((error) => {
+            showLoading(false, null);
+            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
         })
     }
 
@@ -613,10 +621,7 @@ class ComponentStudyCredit extends Component {
         }
 
 
-        /*existsPDFforTheSameDay().then((response) => {
-            console.log(response);
-            
-        })*/
+        
 
     }
 
@@ -737,11 +742,9 @@ class ComponentStudyCredit extends Component {
             let logUser = window.localStorage.getItem('userNameFront');
             var idClient = window.sessionStorage.getItem('idClientSelected');
 
-            const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false);
             
-            this.setState({showButtonPDF});
 
-            console.log("boton PDF", showButtonPDF);
+            
             
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
@@ -774,9 +777,9 @@ class ComponentStudyCredit extends Component {
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
 
-                console.log(data);
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
 
-                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated});
+                this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated, showButtonPDF});
 
             }, (reason) => {
                 changeStateSaveData(false, "");
@@ -1087,7 +1090,8 @@ function mapDispatchToProps(dispatch) {
         validateInfoCreditStudy,
         updateNotApplyCreditContact,
         getUserBlockingReport,
-        stopBlockToReport
+        stopBlockToReport,
+        showLoading
     }, dispatch);
 }
 
