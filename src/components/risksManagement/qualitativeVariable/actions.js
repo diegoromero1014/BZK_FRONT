@@ -1,5 +1,10 @@
 import { APP_URL } from '../../../constantsGlobal';
-import { GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES, SAVE_RESPONSE_SURVEY, CLEAR_SURVEY, CAHNGE_VALUE_MODAL, GET_ALLOW_SURVEY_QUALITATIVE, GENERATE_PDF } from './constants';
+import {
+    GET_SURVEY_QUALITATIVE, SAVE_ANSWER, FIELDS_EDITABLES,
+    SAVE_RESPONSE_SURVEY, CLEAR_SURVEY, CAHNGE_VALUE_MODAL,
+    GET_ALLOW_SURVEY_QUALITATIVE, GENERATE_PDF,
+    SAVE_CLIENT_SURVEY, GET_EXIST_PDF_VC
+} from './constants';
 import axios from 'axios';
 
 
@@ -122,6 +127,52 @@ export function pdfDescarga(jsonPDF) {
     var request = axios.post(APP_URL + "/pdfReportQualitativeVariables", json);
     return {
         type: GENERATE_PDF,
+        payload: request
+    }
+}
+
+export function saveClientSurvey(jsonClietnSurvey) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": jsonClietnSurvey
+    }
+    var request = axios.post(APP_URL + "/saveClientSurvey", json);
+    return {
+        type: SAVE_CLIENT_SURVEY,
+        payload: request
+    }
+}
+
+export function getExistPdfVC(jsonClietnSurvey) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": jsonClietnSurvey
+    }
+    var request = axios.post(APP_URL + "/getExistPdfVC", json);
+    return {
+        type: GET_EXIST_PDF_VC,
         payload: request
     }
 }

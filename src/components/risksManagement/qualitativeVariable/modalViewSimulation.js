@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { redirectUrl } from '../../globalComponents/actions';
 import { Row, Col } from 'react-flexbox-grid';
-import { changeValueModalIsOpen, pdfDescarga } from './actions';
+import { changeValueModalIsOpen, pdfDescarga, saveClientSurvey, getExistPdfVC } from './actions';
 import { formatCurrency } from '../../../actionsGlobal';
 import Modal from 'react-modal';
 import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy, indexOf, isEqual } from 'lodash';
-import { GENERATE_PDF, APP_URL } from '../../../constantsGlobal';
+import { GENERATE_PDF, APP_URL, MESSAGE_REPLACE_PDF } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 
@@ -30,6 +30,7 @@ class ModalViewSimulation extends Component {
         this.buildTableConclusion = this.buildTableConclusion.bind(this);
         this._onClickPDF = this._onClickPDF.bind(this);
         this._dataMapFactor = this._dataMapFactor.bind(this);
+        this.functionGeneratePDF = this.functionGeneratePDF.bind(this);
     }
 
     closeModal() {
@@ -38,10 +39,42 @@ class ModalViewSimulation extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, qualitativeVariableReducer, clientInformacion, swtShowMessage } = this.props;
-        const listFactor = get(qualitativeVariableReducer.get('survey'), 'listFactor', []);
+        const { qualitativeVariableReducer, swtShowMessage, saveClientSurvey, getExistPdfVC } = this.props;
         const survey = qualitativeVariableReducer.get('survey');
+
+        const jsonClietnSurvey = {
+            clientId: window.sessionStorage.getItem('idClientSelected'),
+            surveyId: survey.id
+        }
+        getExistPdfVC(jsonClietnSurvey).then((data) => {
+            console.log("data", data);
+            if (data != true) {
+                swtShowMessage(
+                    "warning", "Advertencia",
+                    MESSAGE_REPLACE_PDF,
+                    {
+                        onConfirmCallback: this.functionGeneratePDF,
+                        onCancelCallback: () => { }
+                    },
+                    {
+                        confirmButtonText: 'Confirmar'
+                    }
+                );
+
+            } else {
+                saveClientSurvey(jsonClietnSurvey);
+                this.functionGeneratePDF()
+            }
+        });
+
+
+    }
+
+    functionGeneratePDF() {
+        const { pdfDescarga, swtShowMessage, clientInformacion, qualitativeVariableReducer } = this.props;
+        const listFactor = get(qualitativeVariableReducer.get('survey'), 'listFactor', []);
         const infoClient = clientInformacion.get('responseClientInfo');
+        const survey = qualitativeVariableReducer.get('survey');
         var listFactVariables = this._dataMapFactor(listFactor);
         let jsonPDF = Object.assign(listFactVariables, {
             idClient: window.sessionStorage.getItem('idClientSelected'),
@@ -56,7 +89,6 @@ class ModalViewSimulation extends Component {
 
         });
         pdfDescarga(jsonPDF).then((response) => {
-            console.log(response);
             swtShowMessage('success', '', 'PDF generado correctamente');
             this.setState({ isPDFGenerated: true });
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
@@ -212,7 +244,9 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeValueModalIsOpen,
         pdfDescarga,
-        swtShowMessage
+        swtShowMessage,
+        saveClientSurvey,
+        getExistPdfVC
     }, dispatch);
 }
 
