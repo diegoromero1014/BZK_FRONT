@@ -79,7 +79,7 @@ const validate = (values) => {
     return errors;
 };
 
-class FormCreateTracking extends Component {
+export class FormCreateTracking extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -258,6 +258,7 @@ class FormCreateTracking extends Component {
                                 </span>
                             </dt>
                             <DateTimePickerUi
+                                name='dateFinancialStatements'
                                 culture='es'
                                 format={DATE_FORMAT}
                                 time={false}
