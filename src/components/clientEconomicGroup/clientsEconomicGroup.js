@@ -24,26 +24,36 @@ class clientsEconomicGroup extends Component {
   }
 
   _handleClickClientItem(e) {
-    const { navBar, dataId, dataIsAccess, dataDeleveryClient, clientInformacion, consultInfoClient,showLoading } = this.props;
-    const infoClient = clientInformacion.get('responseClientInfo');
-    console.log(infoClient + "//" + infoClient.id + "//" + clientInformacion + "//" + dataId);
-    console.log("el id "+dataId);
+    const { dataIsAccess, dataId, consultInfoClient, showLoading, swtShowMessage, closeModal } = this.props;
+
     if (dataIsAccess) {
-      window.localStorage.setItem('idClientSelected', dataId);
-      
-      consultInfoClient().then((data) => {
-        if (!_.get(data, 'payload.data.validateLogin')) {
-            onSessionExpire();
-        }
-        showLoading(false, '');
-      });
-    
-    }
-  }  
+
+   
+    window.sessionStorage.setItem('idClientSelected', dataId);
+
+    showLoading(true, 'Cargando...');
+
+    consultInfoClient(dataId).then((data) => {
+      if (!_.get(data, 'payload.data.validateLogin')) {
+        onSessionExpire();
+      }
+      showLoading(false, '');
+      closeModal();
+    }).catch(() => {
+      showLoading(false, '');
+      swtShowMessage("error", "Error servidor", "Señor usuario, ha ocurrido un error en el servidor.");
+    });
+
+  } else {
+    swtShowMessage("error", "Acceso denegado", "Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información.");
+  }
+
+  }
+
 
   _removeClientOfEconomicGroup() {
     this.setState({ showConfirmDelete: false });
-    const { deleteRelationEconomicGroup, getClientsEconomicGroup, clientInformacion, dataId, swtShowMessage, 
+    const { deleteRelationEconomicGroup, getClientsEconomicGroup, clientInformacion, dataId, swtShowMessage,
       changeStateSaveData, changeEconomicGroup } = this.props;
     deleteRelationEconomicGroup(dataId).then((data) => {
       if (validateResponse(data)) {
@@ -62,10 +72,10 @@ class clientsEconomicGroup extends Component {
 
   render() {
     const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess, clientInformacion } = this.props;
-    const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
+    const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'), 'haveAccessEdit', false);
     return (
       <div className="client-card" style={{ width: "265px", float: "left", cursor: 'auto' }}>
-        <div className="celula-card-top" onClick={this._handleClickClientItem}>
+        <div className="celula-card-top" onClick={this._handleClickClientItem} style={ { cursor: "pointer" } }>
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>

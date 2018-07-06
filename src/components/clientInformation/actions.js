@@ -3,7 +3,7 @@ import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, FIND_ECONOMIC_GROUP, CLAER_CLI
   CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT} from './constants';
 import axios from 'axios';
 
-export function consultInfoClient(){
+export function consultInfoClient(idClient){
   const json = {
     "messageHeader":{
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -18,7 +18,7 @@ export function consultInfoClient(){
       "isSuccessful": true
     },
     "messageBody":{
-      "clientId": window.sessionStorage.getItem('idClientSelected')
+      "clientId":  (idClient) ? idClient : window.sessionStorage.getItem('idClientSelected')
     }
   };
 

@@ -26,6 +26,7 @@ class ModalComponentEconomicGroup extends Component {
     this._closeError = this._closeError.bind(this);
     this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
     this.addClientToRelationship = this.addClientToRelationship.bind(this);
+    this._mapClientItems = this._mapClientItems.bind(this);
   }
 
   _closeError() {
@@ -50,6 +51,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   _mapClientItems(item, idx) {
+    const {isOpen} = this.props;
     return <ClientsEconomicGroup
       key={idx}
       dataId={item.id}
@@ -60,6 +62,7 @@ class ModalComponentEconomicGroup extends Component {
       dataEconomicGroup={item.economicGroup}
       dataIsProspect={item.prospect}
       dataIsAccess={item.access}
+      closeModal={isOpen}
     />
   }
 
@@ -152,7 +155,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   render() {
-    const { clientEconomicGroupReducer, clientInformacion} = this.props;
+    const { clientEconomicGroupReducer, clientInformacion, isOpen} = this.props;
     const nameEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nameEconomicGroup", "");
     const nitEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nitEconomicGroup", "");
     const clientsEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []);
