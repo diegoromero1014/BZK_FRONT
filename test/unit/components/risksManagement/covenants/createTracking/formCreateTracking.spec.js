@@ -10,9 +10,12 @@ import {FormCreateTracking} from '~/src/components/risksManagement/covenants/cre
 import ReduxFormField from "~/test/helpers/ReduxFormField.js"
 
 const validCovenant = new ReduxFormField('');
+const fullfillmentCovenant = new ReduxFormField('');
+
+const covenant = Immutable.Map({});
 const selectsReducer = Immutable.Map({});
 
-const defaultProps = { fields: {validCovenant}, selectsReducer, getMasterDataFields:() => null, handleSubmit:()=> null };
+const defaultProps = { fields: {validCovenant, fullfillmentCovenant}, covenant, selectsReducer, getMasterDataFields:() => null, handleSubmit:()=> null };
 
 describe('Test Covenant/formCreateTracking', () => {
     it('should render Covenant vigente', () => {
@@ -34,5 +37,10 @@ describe('Test Covenant/formCreateTracking', () => {
     it('should render Observaciones', () => {
         const wrapper = shallow(<FormCreateTracking {...defaultProps} />);
         expect(wrapper.find(Textarea).find({name: 'observations'})).to.have.length(1);
+    });
+    it("Fecha de estados financieros shouldn't be required when fullfillmentCovenant is Not 'Si'", () => {
+        const wrapper = shallow(<FormCreateTracking {...defaultProps}  />);
+        wrapper.instance()._onFullfillmentCovenant(1);
+        expect(wrapper.state().isFinancialStatements).to.equal(false);
     });        
 });
