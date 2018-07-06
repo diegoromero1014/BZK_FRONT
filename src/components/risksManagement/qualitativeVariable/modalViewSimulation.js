@@ -86,6 +86,7 @@ class ModalViewSimulation extends Component {
             clientNameType: infoClient.clientNameType,
             clientIdNumber: infoClient.clientIdNumber,
             relationshipStatusName: infoClient.relationshipStatusName,
+            clientType: infoClient.clientTypeKey
 
         });
         pdfDescarga(jsonPDF).then((response) => {
