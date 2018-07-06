@@ -46,8 +46,6 @@ export default (state = initialState, action) => {
             const response_allow = get(action.payload.data, 'data', false);
             return state.set('allowSurveyQualitative', (response_allow == true));
         case GET_EXIST_PDF_VC:
-            console.log("response", action);
-
             const responsePDFVC = get(action.payload.data, 'data', "");
             return state.withMutations(map => {
                 map
