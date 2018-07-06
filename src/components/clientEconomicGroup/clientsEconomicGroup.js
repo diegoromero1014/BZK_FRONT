@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { redirectUrl } from '../globalComponents/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
@@ -7,7 +8,10 @@ import SweetAlert from '../sweetalertFocus';
 import { getClientsEconomicGroup, deleteRelationEconomicGroup } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse } from '../../actionsGlobal';
-import { changeEconomicGroup } from '../clientInformation/actions';
+import { changeEconomicGroup, consultInfoClient } from '../clientInformation/actions';
+import { showLoading } from '../loading/actions';
+
+
 
 class clientsEconomicGroup extends Component {
   constructor(props) {
@@ -15,8 +19,27 @@ class clientsEconomicGroup extends Component {
     this.state = {
       showConfirmDelete: false
     };
+    this._handleClickClientItem = this._handleClickClientItem.bind(this);
     this._removeClientOfEconomicGroup = this._removeClientOfEconomicGroup.bind(this);
   }
+
+  _handleClickClientItem(e) {
+    const { navBar, dataId, dataIsAccess, dataDeleveryClient, clientInformacion, consultInfoClient,showLoading } = this.props;
+    const infoClient = clientInformacion.get('responseClientInfo');
+    console.log(infoClient + "//" + infoClient.id + "//" + clientInformacion + "//" + dataId);
+    console.log("el id "+dataId);
+    if (dataIsAccess) {
+      window.localStorage.setItem('idClientSelected', dataId);
+      
+      consultInfoClient().then((data) => {
+        if (!_.get(data, 'payload.data.validateLogin')) {
+            onSessionExpire();
+        }
+        showLoading(false, '');
+      });
+    
+    }
+  }  
 
   _removeClientOfEconomicGroup() {
     this.setState({ showConfirmDelete: false });
@@ -42,7 +65,7 @@ class clientsEconomicGroup extends Component {
     const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
     return (
       <div className="client-card" style={{ width: "265px", float: "left", cursor: 'auto' }}>
-        <div className="celula-card-top">
+        <div className="celula-card-top" onClick={this._handleClickClientItem}>
           <div className="celula-card-top-left">
             <div className="celula-title">{dataName.length > 60 ? dataName.substring(0, 60) + "..." : dataName}</div>
             <div className="celula-name">{dataDocumentType}: {dataDocument.length > 20 ? dataDocument.substring(0, 20) + "..." : dataDocument}</div>
@@ -81,7 +104,9 @@ function mapDispatchToProps(dispatch) {
     deleteRelationEconomicGroup,
     getClientsEconomicGroup,
     changeEconomicGroup,
-    swtShowMessage
+    swtShowMessage,
+    consultInfoClient,
+    showLoading
   }, dispatch);
 }
 

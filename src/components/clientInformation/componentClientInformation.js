@@ -83,6 +83,8 @@ class ComponentClientInformation extends Component {
         var showAECNivel = true;
         var aecStatus = "";
 
+        console.log("render", clientInformacion);
+
         const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
 
         if (infoClient !== null && infoClient !== undefined) {
