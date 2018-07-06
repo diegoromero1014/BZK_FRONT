@@ -109,7 +109,6 @@ export function saveResponseQualitativeSurvey(jsonSave) {
 }
 
 export function pdfDescarga(jsonPDF) {
-    console.log("jsonPDF", jsonPDF);
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
