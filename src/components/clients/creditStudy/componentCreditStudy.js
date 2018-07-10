@@ -591,11 +591,10 @@ export class ComponentStudyCredit extends Component {
 
         generatePDF().then((response) => {
             swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
-            this.setState({isPDFGenerated : true});
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
         
             showLoading(false, null);
-        
+            this.setState({isPDFGenerated : true});
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
