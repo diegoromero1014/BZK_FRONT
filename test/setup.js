@@ -49,8 +49,10 @@ const ReactDOM = require('react-dom');
 global.React = React;
 global.PropTypes = PropTypes;
 global.ReactDOM = ReactDOM;
-
-
+global.Node = {};
+global.window.localStorage = { getItem: () => {}, setItem: () => {} };
+global.window.sessionStorage = { getItem: () => {}, setItem: () => {} };
+global.window.open = () => {}
 // ------------------
 // Helpers
 // ------------------

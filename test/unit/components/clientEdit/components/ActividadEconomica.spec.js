@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import Input from "~/src/ui/input/inputComponent";
 import ComboBox from "~/src/ui/comboBox/comboBoxComponent";
 import Textarea from "~/src/ui/textarea/textareaComponent";
+import {ComponentStudyCredit} from "~/src/components/clients/creditStudy/componentCreditStudy";
 
 import {ActividadEconomica} from "~/src/components/clientEdit/components/ActividadEconomica";
 
