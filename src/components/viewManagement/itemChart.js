@@ -6,7 +6,7 @@ import { changeTabSeletedChartView, getCsv, changeErrorYearSeleted } from './act
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYearComponent';
-import { TYPE_YEAR, TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS } from './constants';
+import { TYPE_YEAR, TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS, TAB_TASKS } from './constants';
 import { APP_URL, MESSAGE_DOWNLOAD_DATA, DESCARGAR } from '../../constantsGlobal';
 import ButtonDownloadModal from './buttonDownloadModal';
 import { changeStateSaveData } from '../dashboard/actions';
@@ -95,6 +95,9 @@ class ItemChart extends Component {
             <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
           }
           {itemSeleted === TAB_BUSINESS && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+            <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
+          }
+          {itemSeleted === TAB_TASKS && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
             <ButtonDownloadModal year={this.state.valueYear} itemSeleted={itemSeleted} />
           }
         </div>
