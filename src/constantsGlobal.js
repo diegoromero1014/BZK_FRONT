@@ -96,6 +96,7 @@ export const GENERATE_PDF = "Generar PDF";
 export const ANALYST = "Analista";
 export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
 export const VISOR_CLIENTE = "Visor cliente";
+export const DOWNLOAD_TASK = "Descargar Tareas"
 
 export const INFO_ESTUDIO_CREDITO = "Info Estudio de Crédito";
 export const GENERAR_PDF_ESTUDIO_CREDITO = "Generar PDF Estudio de crédito";

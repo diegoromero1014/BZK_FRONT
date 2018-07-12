@@ -4,9 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ModalDownloadPreVisit from '../previsita/downloadPrevisits/component';
 import ModalDownloadBusinessPlan from '../businessPlan/downloadBusinessPlan/component';
+import DownloadTask from '../pendingTask/downloadTask/component';
 import {changeErrorYearSeleted} from './actions';
 import Modal from 'react-modal';
-import { TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS } from './constants';
+import { TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS, TAB_TASKS } from './constants';
+import { TAB_PENDING_TASK } from '../../constantsGlobal';
 
 class ButtonDownloadModal extends Component {
 
@@ -42,6 +44,8 @@ class ButtonDownloadModal extends Component {
       title = "de previsita";
     } else if (itemSeleted === TAB_BUSINESS) {
       title = "de planes de negocio";
+    } else if (itemSeleted === TAB_TASKS) {
+      title = "de tareas";
     }
     return (
       <div>
@@ -62,6 +66,7 @@ class ButtonDownloadModal extends Component {
               {itemSeleted === TAB_VISIT && <ModalDownloadVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
               {itemSeleted === TAB_PREVISIT && <ModalDownloadPreVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
               {itemSeleted === TAB_BUSINESS && <ModalDownloadBusinessPlan itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
+              {itemSeleted === TAB_TASKS && <DownloadTask itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
             </div>
           </div>
         </Modal>
