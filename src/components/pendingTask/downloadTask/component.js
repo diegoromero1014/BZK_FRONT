@@ -1,95 +1,107 @@
 import React, {Component} from 'react';
 import {Row, Grid, Col} from 'react-flexbox-grid';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT} from '../../../constantsGlobal';
+import {MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT} from '../../../constantsGlobal';
 import {TAB_BUSINESS} from '../../viewManagement/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {changeStateSaveData} from '../../dashboard/actions';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import { reduxForm } from 'redux-form';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+const fields = ["initialValidityDate", "finalValidityDate"];
+
+const validate = values => {
+    var errors = {};
+    return errors;
+};
 
 class DownloadTask extends Component {
 
 	constructor(props) {
 	  super(props);
   		momentLocalizer(moment);
-	  //this._checkCheckBox = this._checkCheckBox.bind(this);
-	  //this._downloadBusinessPlans = this._downloadBusinessPlans.bind(this);
-	  this.state = {
-	  	haveNeeds: false
+	  	this._onSelectFieldDate = this._onSelectFieldDate.bind(this);
+	  	this.state = {
+			initialDateError: null,
+            finalDateError: null
 	  };
 	}
+	
+	_onSelectFieldDate(valueInitialDate, valueFinalDate) {
+        const { swtShowMessage } = this.props;
+        const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
+        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
+        if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
+            this.setState({
+                initialDateError: false,
+                finalDateError: false,
+            });
+            if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
+                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');				                
+            } else {
+				console.log('Fechas correctas');	
+			}
+        } else {
+            if (!_.isNull(initialDate)) {
+                this.setState({
+                    initialDateError: false
+                });
+            } else {
+                this.setState({
+                    finalDateError: false
+                });
+            }
+        }
+    }
 
-	/*_checkCheckBox(event) {
-		if (event.target.name === 'haveNeeds') {
-			this.setState({haveNeeds: !this.state.haveNeeds});
-		}
-    }*/
-
-	/*_downloadBusinessPlans() {
-		let year;
-		let url;
-		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
-		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
-		  	url = '/getCsvBusinessPlan';
-			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
-				 if (data.payload.data.status === 200) {
-				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
-				 }
-				 changeStateSaveData(false, "");
-			});
-		} else {
-			getCsvBusinessPlanByClient(window.sessionStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
-				changeStateSaveData(false, "");
-				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
-					isOpen();
-				}
-			});
-		}
-    }*/
-
+	
 	render() {
+		const { fields: {initialValidityDate, finalValidityDate} } = this.props;
 		return (
 			<div>
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione almenos un estado para las tareas que desea descargar a excel:'}</span>
-						<Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Seleccione rango de fechas - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-                        </dt>
-                        <div style={{ display: "flex" }}>
-                            <DateTimePickerUi
-                                culture='es'
-                                format={DATE_FORMAT}
-                                style={{ width: '200px' }}
-                                placeholder="Fecha inicial"
-                                time={false}
-                                touched={true}                                                                
-                            />
-                            <div style={{ marginLeft: '20px' }}>
-                                <DateTimePickerUi
-                                    culture='es'
-                                    style={{ width: '200px' }}
-                                    format={DATE_FORMAT}
-                                    placeholder="Fecha final"
-                                    time={false}
-                                    touched={true}                                                                       
-                                />
-                            </div>
-                        </div>
-                    </Col>
+							<Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
+								<dt>
+									<span>Seleccione rango de fechas - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+								</dt>
+                        		<div style={{ display: "flex" }}>
+									<DateTimePickerUi
+										culture='es'
+										format={DATE_FORMAT}
+										style={{ width: '200px' }}
+										placeholder="Fecha inicial"
+										time={false}
+										touched={true}
+										{...initialValidityDate}
+										onSelect={(val) => this._onSelectFieldDate(moment(val).format(DATE_FORMAT), finalValidityDate.value, finalValidityDate, false)}
+                                		error={this.state.initialDateError}                                                                
+								/>
+								<div style={{ marginLeft: '20px' }}>
+									<DateTimePickerUi
+										culture='es'
+										style={{ width: '200px' }}
+										format={DATE_FORMAT}
+										placeholder="Fecha final"
+										time={false}
+										touched={true}
+										{...finalValidityDate}
+										onSelect={(val) => this._onSelectFieldDate(initialValidityDate.value, moment(val).format(DATE_FORMAT), initialValidityDate, false)}
+                                    	error={this.state.finalDateError}
+									/>
+								</div>
+                        		</div>
+                   			</Col>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Pendiente'}</div>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Cerrada'}</div>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Cancelada'}</div>
+							<div className="item"><input name="pending" type="checkbox" onChange={this._checkCheckBox} /> {'Pendiente'}</div>
+							<div className="item"><input name="closed" type="checkbox" onChange={this._checkCheckBox} /> {'Cerrada'}</div>
+							<div className="item"><input name="cancelled" type="checkbox" onChange={this._checkCheckBox} /> {'Cancelada'}</div>
 						</ul>
 						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
                         <Row style={{margin:'10px'}}>
@@ -131,7 +143,7 @@ class DownloadTask extends Component {
 
 function mapStateToProps({businessPlanReducer}, ownerProps) {
   return {
-    businessPlanReducer
+	businessPlanReducer
   };
 }
 
@@ -139,8 +151,13 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getCsvBusinessPlanByClient,
 				getCsvBusinessPlan,
-				changeStateSaveData
+				changeStateSaveData,
+				swtShowMessage
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadTask);
+export default reduxForm({
+    form: 'formBusinessPlanCreate',
+    fields,
+    validate
+}, mapStateToProps, mapDispatchToProps)(DownloadTask);
