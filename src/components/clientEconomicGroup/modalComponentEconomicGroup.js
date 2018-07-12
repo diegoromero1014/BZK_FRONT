@@ -11,6 +11,9 @@ import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
 import ClientsEconomicGroup from './clientsEconomicGroup';
 import { clientsFindServer } from '../clients/actions';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
+import { showLoading } from '../loading/actions';
+import { consultInfoClient } from '../clientInformation/actions';
+
 import _ from 'lodash';
 import $ from 'jquery';
 
@@ -26,6 +29,39 @@ class ModalComponentEconomicGroup extends Component {
     this._closeError = this._closeError.bind(this);
     this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
     this.addClientToRelationship = this.addClientToRelationship.bind(this);
+    this._mapClientItems = this._mapClientItems.bind(this);
+    this._handleClickClientItem = this._handleClickClientItem.bind(this);
+  }
+
+  _handleClickClientItem(e) {
+    const { clientEconomicGroupReducer, consultInfoClient, showLoading, swtShowMessage, isOpen } = this.props;
+    
+    const idMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "idMainClient", "");
+    const accessMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "accessMainClient", "");
+
+    if (accessMainClient) {
+
+    window.sessionStorage.setItem('idClientSelected', idMainClient);
+
+    showLoading(true, 'Cargando...');
+
+    consultInfoClient(idMainClient).then((data) => {
+      if (!_.get(data, 'payload.data.validateLogin')) {
+        onSessionExpire();
+      }
+      showLoading(false, '');
+      //isOpen cierra el modal
+      isOpen();
+    }).catch((reason) => {
+      console.log(reason);
+      showLoading(false, '');
+      swtShowMessage("error", "Señor usuario, ha ocurrido un error en el servidor.");
+    });
+
+  } else {
+    swtShowMessage("error", "Acceso denegado", "Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información.");
+  }
+
   }
 
   _closeError() {
@@ -50,6 +86,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   _mapClientItems(item, idx) {
+    const {isOpen} = this.props;
     return <ClientsEconomicGroup
       key={idx}
       dataId={item.id}
@@ -60,6 +97,7 @@ class ModalComponentEconomicGroup extends Component {
       dataEconomicGroup={item.economicGroup}
       dataIsProspect={item.prospect}
       dataIsAccess={item.access}
+      closeModal={isOpen}
     />
   }
 
@@ -152,7 +190,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   render() {
-    const { clientEconomicGroupReducer, clientInformacion} = this.props;
+    const { clientEconomicGroupReducer, clientInformacion, isOpen} = this.props;
     const nameEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nameEconomicGroup", "");
     const nitEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nitEconomicGroup", "");
     const clientsEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []);
@@ -194,7 +232,7 @@ class ModalComponentEconomicGroup extends Component {
             <div className="news-page content">
               <div className="team-modal" style={{ textAlign: 'center', marginBottom: "30px" }}>
                 <div className="client-card" style={{ width: '300px', textAlign: 'left', height: '100px' }}>
-                  <div className="celula-card-top" style={{ borderBottom: '0px' }}>
+                  <div className="celula-card-top" onClick={this._handleClickClientItem} style={{ borderBottom: '0px', cursor: "pointer"  }}>
                     <div className="celula-card-top-left">
                       <div className="celula-title">{nameEconomicGroup.length > 60 ? nameEconomicGroup.substring(0, 60) + "..." : nameEconomicGroup}</div>
                       {nitEconomicGroup !== '' &&
@@ -229,7 +267,9 @@ function mapDispatchToProps(dispatch) {
     updateEconomicGroupClient,
     getClientsEconomicGroup,
     clientsFindServer,
-    swtShowMessage
+    swtShowMessage,
+    consultInfoClient,
+    showLoading
   }, dispatch);
 }
 
