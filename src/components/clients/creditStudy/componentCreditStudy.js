@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import _ from "lodash";
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../../navBar/actions';
-import { redirectUrl } from '../../globalComponents/actions';
+import * as globalActions from '../../globalComponents/actions';
 import SweetAlert from '../../sweetalertFocus';
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import ClientTypology from '../../contextClient/ClientTypology';
@@ -96,7 +97,7 @@ const validate = (values, props) => {
 
 }
 
-class ComponentStudyCredit extends Component {
+export class ComponentStudyCredit extends Component {
     constructor(props) {
         super(props);
         this._closeWindow = this._closeWindow.bind(this);
@@ -261,7 +262,7 @@ class ComponentStudyCredit extends Component {
             showConfirmExit: false
         });
         const { updateTabSeleted } = this.props;
-        redirectUrl("/dashboard/clientInformation");
+        globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _createJsonSaveContextClient(isDraft) {
@@ -566,7 +567,7 @@ class ComponentStudyCredit extends Component {
         this.setState({
             showSuccessMessage: false
         });
-        redirectUrl("/dashboard/clientInformation");
+        globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _validateInfoStudyCredit() {
@@ -590,11 +591,10 @@ class ComponentStudyCredit extends Component {
 
         generatePDF().then((response) => {
             swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
-            this.setState({isPDFGenerated : true});
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
         
             showLoading(false, null);
-        
+            this.setState({isPDFGenerated : true});
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
@@ -702,7 +702,7 @@ class ComponentStudyCredit extends Component {
 
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
-        redirectUrl("/dashboard/clientInformation")
+        globalActions.redirectUrl("/dashboard/clientInformation")
     }
 
     componentWillUnmount() {
@@ -736,16 +736,12 @@ class ComponentStudyCredit extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         
         if (_.isEmpty(infoClient)) {
-            redirectUrl("/dashboard/clientInformation");
+            globalActions.redirectUrl("/dashboard/clientInformation");
         } else {
 
             let logUser = window.localStorage.getItem('userNameFront');
             var idClient = window.sessionStorage.getItem('idClientSelected');
-
-            
-
-            
-            
+     
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
                 const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
@@ -778,10 +774,9 @@ class ComponentStudyCredit extends Component {
                 }
 
                 const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
-
                 this.setState({isPDFGenerated : data.payload.data.data.isPDFGenerated, showButtonPDF});
 
-            }, (reason) => {
+            }, (reason) => { 
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });

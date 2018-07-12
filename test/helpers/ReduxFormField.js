@@ -11,4 +11,18 @@ class ReduxFormField {
 
 }
 
+export function createFieldsFromArray(fields) {
+
+    const reduxFormFields = [];
+
+    for (let index = 0; index < fields.length; index++) {
+        const element = fields[index];
+        reduxFormFields[element] = new ReduxFormField('');
+    }
+
+    return reduxFormFields;
+
+
+}
+
 export default ReduxFormField;
