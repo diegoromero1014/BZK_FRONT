@@ -4,12 +4,13 @@ import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
+import {APP_URL, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT} from '../../../constantsGlobal';
 import {TAB_BUSINESS} from '../../viewManagement/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {changeStateSaveData} from '../../dashboard/actions';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 
 class DownloadTask extends Component {
 
@@ -59,7 +60,32 @@ class DownloadTask extends Component {
 			<div>
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
-						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione los campos que desea descargar a excel:'}</span>
+						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione almenos un estado para las tareas que desea descargar a excel:'}</span>
+						<Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
+                        <dt>
+                            <span>Seleccione rango de fechas - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+                        </dt>
+                        <div style={{ display: "flex" }}>
+                            <DateTimePickerUi
+                                culture='es'
+                                format={DATE_FORMAT}
+                                style={{ width: '200px' }}
+                                placeholder="Fecha inicial"
+                                time={false}
+                                touched={true}                                                                
+                            />
+                            <div style={{ marginLeft: '20px' }}>
+                                <DateTimePickerUi
+                                    culture='es'
+                                    style={{ width: '200px' }}
+                                    format={DATE_FORMAT}
+                                    placeholder="Fecha final"
+                                    time={false}
+                                    touched={true}                                                                       
+                                />
+                            </div>
+                        </div>
+                    </Col>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
 							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Pendiente'}</div>
 							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Cerrada'}</div>

@@ -81,7 +81,7 @@ class ItemChart extends Component {
           color: 'white', backgroundColor: '#f5f5f5', borderColor: styleColor,
           borderRadius: '0px 0px 4px 4px', height: '40px', border: styleBorderDownload
         }}>
-          {_.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
+          {_.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) && itemSeleted != TAB_TASKS &&
             <SelectYearComponent idTypeFilter={TYPE_YEAR} config={{ onChange: (value) => this.setState({ valueYear: value.id }) }} />
           }
           {itemSeleted === TAB_VISIT && _.get(reducerGlobal.get('permissionsManagerialView'), _.indexOf(reducerGlobal.get('permissionsManagerialView'), DESCARGAR), false) &&
