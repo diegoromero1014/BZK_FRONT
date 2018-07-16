@@ -9,4 +9,3 @@ export const CLEAR_USER_TASK_ORDER = "CLEAR_USER_TASK_ORDER";
 export const CLEAR_USER_TASK_CREAR = "CLEAR_USER_TASK_CREAR";
 export const TASK_STATUS = "taskStatus";
 export const CLEAR_USER_TASK_CREATE ="CLEAR_USER_TASK_CREATE";
-export const GET_XLS_TASK = 'GET_XLS_TASK';
