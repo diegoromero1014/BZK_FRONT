@@ -1,26 +1,27 @@
-import React, {Component} from "react";
-import {Col, Row} from "react-flexbox-grid";
-import {bindActionCreators} from "redux";
+import React, { Component } from "react";
+import { Col, Row } from "react-flexbox-grid";
+import { bindActionCreators } from "redux";
 import {
     changeKeyword,
     changePage,
     clearClients,
     clientsFindServer,
     deleteAllRecentClients,
-    getRecentClients
+    getRecentClients,
+    saveSelectValue
 } from "./actions";
 import ClientListItem from "./clientListItem";
 import SearchBarClient from "./searchBarClient";
-import {AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS} from "./constants";
+import { AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS } from "./constants";
 import Pagination from "./pagination";
-import {redirectUrl} from "../globalComponents/actions";
+import { redirectUrl } from "../globalComponents/actions";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
-import {consultList, getMasterDataFields} from "../selectsComponent/actions";
+import { consultList, getMasterDataFields } from "../selectsComponent/actions";
 import * as constants from "../selectsComponent/constants";
-import {reduxForm} from "redux-form";
-import {updateTitleNavBar} from "../navBar/actions";
-import {clearContact} from "../contact/actions";
-import {clearInfoClient} from "../clientInformation/actions";
+import { reduxForm } from "redux-form";
+import { updateTitleNavBar } from "../navBar/actions";
+import { clearContact } from "../contact/actions";
+import { clearInfoClient } from "../clientInformation/actions";
 import {
     MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_LOAD_DATA,
@@ -32,15 +33,15 @@ import {
     VISUALIZAR,
     valuesYesNo
 } from "../../constantsGlobal";
-import {validatePermissionsByModule, validateResponse, onSessionExpire} from "../../actionsGlobal";
-import {updateTabSeleted} from "../clientDetailsInfo/actions";
-import {updateTabSeletedRisksManagment} from "../risksManagement/actions";
-import {TAB_AEC} from "../risksManagement/constants";
-import {swtShowMessage} from "../sweetAlertMessages/actions";
+import { validatePermissionsByModule, validateResponse, onSessionExpire } from "../../actionsGlobal";
+import { updateTabSeleted } from "../clientDetailsInfo/actions";
+import { updateTabSeletedRisksManagment } from "../risksManagement/actions";
+import { TAB_AEC } from "../risksManagement/constants";
+import { swtShowMessage } from "../sweetAlertMessages/actions";
 import Tooltip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
-import {showLoading} from '../loading/actions';
-import {isNil} from 'lodash';
+import { showLoading } from '../loading/actions';
+import { isNil } from 'lodash';
 
 const fields = ["team", "certificationStatus", "bussinesRol", "management", "decisionCenter", "levelAEC"];
 var levelsAEC;
@@ -69,9 +70,34 @@ class ClientsFind extends Component {
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
-            const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
+            const { fields: { team, bussinesRol, management, decisionCenter, certificationStatus, levelAEC }, clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading } = this.props;
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR } = this.props;
+            const filters = clientR.get('filterValues');
+            _.forEach(filters, function (value, key) {
+                switch (value.name) {
+                    case "celula":
+                        team.onChange(value.value);
+                        break;
+                    case "bussinesRol":
+                        bussinesRol.onChange(value.value);
+                        break;
+                    case "management":
+                        management.onChange(value.value);
+                        break;
+                    case "decisionCenter":
+                        decisionCenter.onChange(value.value);
+                        break;
+                    case "certificationStatus":
+                        certificationStatus.onChange(value.value);
+                        break;
+                    case "levelAEC":
+                        levelAEC.onChange(value.value);
+                        break;
+                }
+            });
+
+
             showLoading(true, MESSAGE_LOAD_DATA);
             clearClients();
             updateTabSeleted(null);
@@ -137,43 +163,69 @@ class ClientsFind extends Component {
     }
 
     _onChangeTeam(val) {
-        const { fields: { team } } = this.props;
+        const { fields: { team }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "celula",
+            value: val
+        };
         team.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
     }
 
     _onChangeBussinesRol(val) {
-        const { fields: { bussinesRol } } = this.props;
+        const { fields: { bussinesRol }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "bussinesRol",
+            value: val
+        };
         bussinesRol.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
     }
 
     _onChangeManagement(val) {
-        const { fields: { management } } = this.props;
+        const { fields: { management }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "management",
+            value: val
+        };
         management.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
+
     }
 
     _onChangeDecisionCenter(val) {
-        const { fields: { decisionCenter } } = this.props;
+        const { fields: { decisionCenter }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "decisionCenter",
+            value: val
+        };
         decisionCenter.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
     }
 
     _onChangeCertificationStatus(val) {
-        const { fields: { certificationStatus } } = this.props;
+        const { fields: { certificationStatus }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "certificationStatus",
+            value: val
+        };
         certificationStatus.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
     }
 
     _onChangeLevelAEC(val) {
@@ -182,25 +234,31 @@ class ClientsFind extends Component {
             updateTabSeleted(TAB_RISKS_MANAGEMENT);
             updateTabSeletedRisksManagment(TAB_AEC);
         }
-        const { fields: { levelAEC } } = this.props;
+        const { fields: { levelAEC }, saveSelectValue } = this.props;
+        const jsonFilter = {
+            name: "levelAEC",
+            value: val
+        };
         levelAEC.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
+        saveSelectValue(jsonFilter);
+
     }
 
     _handleClientsFind() {
         const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
-        
-        clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, bussinesRol.value, management.value, 
+
+        clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, bussinesRol.value, management.value,
             decisionCenter.value, levelAEC.value).then((data) => {
-            showLoading(false, "");
-            if (!validateResponse(data)) {
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }
-        });
+                showLoading(false, "");
+                if (!validateResponse(data)) {
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                }
+            });
         changePage(1);
     }
 
@@ -249,12 +307,13 @@ class ClientsFind extends Component {
         const countClients = isNil(clientR.get('countClients')) ? 0 : clientR.get('countClients');
         const status = clientR.get('status');
         const clientItems = isNil(clientR.get('responseClients')) ? [] : clientR.get('responseClients');
+
         return (
             <div>
                 <form>
-                    <Row style={{ marginTop: "15px", marginLeft: '10px'}}>
+                    <Row style={{ marginTop: "15px", marginLeft: '10px' }}>
                         <Col xs={12} sm={12} md={6} lg={6}>
-                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRol={bussinesRol.value} 
+                            <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRol={bussinesRol.value}
                                 management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} />
                         </Col>
                         <Col xs={7} sm={7} md={4} lg={4}>
@@ -396,7 +455,7 @@ class ClientsFind extends Component {
                     </Col>
                     <Col xs={12} md={12} lg={12}>
                         <Pagination valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRolValue={bussinesRol.value}
-                            managementValue={management.value} decisionCenterValue={decisionCenter.value} levelAECValue={levelAEC.value}/>
+                            managementValue={management.value} decisionCenterValue={decisionCenter.value} levelAECValue={levelAEC.value} />
                     </Col>
                 </Row>
                 <SweetAlert
@@ -432,7 +491,8 @@ function mapDispatchToProps(dispatch) {
         getRecentClients,
         swtShowMessage,
         showLoading,
-        deleteAllRecentClients
+        deleteAllRecentClients,
+        saveSelectValue
     }, dispatch);
 }
 
