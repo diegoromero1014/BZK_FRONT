@@ -1,96 +1,189 @@
 import React, {Component} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import {getCsvBusinessPlanByClient} from '../actions';
-import {connect} from 'react-redux';
+import {Row, Col} from 'react-flexbox-grid';
+import {getXlsTask} from '../actions';
 import {bindActionCreators} from 'redux';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT} from '../../../constantsGlobal';
-import {TAB_BUSINESS} from '../../viewManagement/constants';
-import {getCsvBusinessPlan} from '../actions';
+import {MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL, OPTION_REQUIRED, VALUE_XSS_INVALID} from '../../../constantsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {changeStateSaveData} from '../../dashboard/actions';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import { reduxForm } from 'redux-form';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { TAB_TASKS } from '../../viewManagement/constants';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import { TASK_STATUS } from '../../selectsComponent/constants';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+
+const fields = ["initialValidityDate", "finalValidityDate", "taskStatus"];
+var errors = {};
+let thisForm;
+const validate = (values) => {
+	
+	if(!values.initialValidityDate) {
+		errors.OPTION_REQUIRED
+	} else {
+		errors.initialValidityDate = null;
+	}
+	if (!values.finalValidityDate) {
+		errors.OPTION_REQUIRED
+	} else {
+		errors.finalValidityDate = null;
+	}
+	if (!values.taskStatus || values.taskStatus === undefined) {
+		errors.OPTION_REQUIRED
+	} else {
+		errors.taskStatus = null;
+	}    
+    return errors;
+};
 
 class DownloadTask extends Component {
 
 	constructor(props) {
 	  super(props);
   		momentLocalizer(moment);
-	  //this._checkCheckBox = this._checkCheckBox.bind(this);
-	  //this._downloadBusinessPlans = this._downloadBusinessPlans.bind(this);
-	  this.state = {
-	  	haveNeeds: false
-	  };
+		this._onSelectFieldDate = this._onSelectFieldDate.bind(this);		
+	  	this._downloadTask = this._downloadTask.bind(this);
+	  	this.state = {
+			pending: false,
+			closed: false,
+			cancelled: false,
+			initialDateError: null,
+			finalDateError: null,
+			statusError: null
+		  };
+		  thisForm = this;  
 	}
 
-	/*_checkCheckBox(event) {
-		if (event.target.name === 'haveNeeds') {
-			this.setState({haveNeeds: !this.state.haveNeeds});
-		}
-    }*/
+	componentWillMount() {
+		const { getMasterDataFields } = this.props;
+		getMasterDataFields([TASK_STATUS]);
+	}
 
-	/*_downloadBusinessPlans() {
-		let year;
+	_downloadTask() {
+		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSeletedModal } = this.props;
+		var errorInForm = false;
 		let url;
-		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
-		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
-		  	url = '/getCsvBusinessPlan';
-			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
-				 if (data.payload.data.status === 200) {
-				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
-				 }
-				 changeStateSaveData(false, "");
-			});
-		} else {
-			getCsvBusinessPlanByClient(window.sessionStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
-				changeStateSaveData(false, "");
-				if (data.payload.data.status === 200) {
-					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
-					isOpen();
-				}
-			});
-		}
-    }*/
+		
+		const states = JSON.parse('[' + ((taskStatus.value) ? taskStatus.value : "") + ']');
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
+            errorInForm = true;
+            this.setState({
+                initialDateError: "Debe seleccionar una fecha"
+            });
+        }
 
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)  || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
+            errorInForm = true;
+            this.setState({
+                finalDateError: "Debe seleccionar una fecha"
+            });
+		}		
+
+		if (! taskStatus.value) {
+			errorInForm = true;
+			this.setState({
+                statusError: "Debe seleccionar almenos un estado"
+            });
+		}
+		
+		if (!errorInForm) {
+			changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+			if(TAB_TASKS === itemSeletedModal) {
+				url = '/getXlsTask';
+				getXlsTask(initialValidityDate.value, finalValidityDate.value, states).then(function(data) {
+					if (data.payload.data.status === 200) {
+						window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
+					}
+					changeStateSaveData(false, "");
+				});
+			}
+		} else {
+			swtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.');
+		}
+	}
+	
+	_onSelectFieldDate(valueInitialDate, valueFinalDate) {
+        const { swtShowMessage } = this.props;
+        const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
+        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
+        if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
+            this.setState({
+                initialDateError: false,
+                finalDateError: false,
+            });
+            if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
+                swtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');				                
+			}
+        } else {
+            if (!_.isNull(initialDate)) {
+                this.setState({
+                    initialDateError: false
+                });
+            } else {
+                this.setState({
+                    finalDateError: false
+                });
+            }
+        }
+    }
+	
 	render() {
+		const { fields: {initialValidityDate, finalValidityDate, taskStatus}, selectsReducer } = this.props;				
 		return (
 			<div>
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione almenos un estado para las tareas que desea descargar a excel:'}</span>
-						<Col xs={12} md={5} lg={5} style={{ paddingRight: "20px" }}>
-                        <dt>
-                            <span>Seleccione rango de fechas - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
-                        </dt>
-                        <div style={{ display: "flex" }}>
-                            <DateTimePickerUi
-                                culture='es'
-                                format={DATE_FORMAT}
-                                style={{ width: '200px' }}
-                                placeholder="Fecha inicial"
-                                time={false}
-                                touched={true}                                                                
-                            />
-                            <div style={{ marginLeft: '20px' }}>
-                                <DateTimePickerUi
-                                    culture='es'
-                                    style={{ width: '200px' }}
-                                    format={DATE_FORMAT}
-                                    placeholder="Fecha final"
-                                    time={false}
-                                    touched={true}                                                                       
-                                />
-                            </div>
-                        </div>
-                    </Col>
-						<ul className="ui list" style={{marginLeft:'0px'}}>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Pendiente'}</div>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Cerrada'}</div>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Cancelada'}</div>
-						</ul>
+							<Col>
+								<dt>
+									<span>Seleccione rango de fechas en el que desea el archivo - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
+								</dt>
+                        		<div style={{ display: "flex" }}>
+									<DateTimePickerUi
+										{...initialValidityDate}
+										culture='es'
+										format={DATE_FORMAT}
+										style={{ width: '200px' }}
+										placeholder="Fecha inicial"
+										time={false}
+										touched={true}										
+										onSelect={(val) => this._onSelectFieldDate(moment(val).format(DATETIME_FORMAT), finalValidityDate.value, finalValidityDate, false)}
+                                		error={this.state.initialDateError}                                                                
+								/>
+								<div style={{ marginLeft: '20px' }}>
+									<DateTimePickerUi
+										{...finalValidityDate}
+										culture='es'
+										style={{ width: '200px' }}
+										format={DATE_FORMAT}
+										placeholder="Fecha final"
+										time={false}
+										touched={true}										
+										onSelect={(val) => this._onSelectFieldDate(initialValidityDate.value, moment(val).format(DATETIME_FORMAT), initialValidityDate, false)}
+                                    	error={this.state.finalDateError}
+									/>
+								</div>
+                        		</div>
+                   			</Col>							    								
+								<div>
+									<Row>
+										<Col xs>
+											<dl style={{ width: '100%' }}>
+												<dt><span>Estados (</span><span style={{ color: "red" }}>*</span>)</dt>
+												<dd><MultipleSelect name="taskStatus" labelInput="Seleccione"
+													{...taskStatus}
+													valueProp={'id'}
+													textProp={'key'}
+													data={selectsReducer.get('taskStatus') || []}
+													touched={true}
+													error={this.state.statusError}
+													onChange={() => {this.setState({statusError: null})}}
+												/></dd>
+											</dl>
+										</Col>
+									</Row>            
+								</div>
 						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
                         <Row style={{margin:'10px'}}>
                             <Col>
@@ -122,25 +215,41 @@ class DownloadTask extends Component {
 					</div>
 				</div>
 				<div className="modalBt4-footer modal-footer">
-					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadBusinessPlans}>{'Descargar '}<i className="file excel outline icon"></i></button>
+					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadTask}>{'Descargar '}<i className="file excel outline icon"></i></button>
 				</div>
 			</div>
 		);
 	}
 }
 
-function mapStateToProps({businessPlanReducer}, ownerProps) {
+function mapStateToProps({businessPlanReducer, selectsReducer}, ownerProps) {
   return {
-    businessPlanReducer
+	businessPlanReducer,
+	selectsReducer
   };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getCsvBusinessPlanByClient,
-				getCsvBusinessPlan,
-				changeStateSaveData
+        getXlsTask,
+		changeStateSaveData,
+		swtShowMessage,
+		getMasterDataFields
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadTask);
+export default reduxForm({
+    form: 'formBusinessPlanCreate',
+    fields,
+	validate,
+	onSubmitFail: errors => {
+        document.getElementById('modalComponentScroll').scrollTop = 0;
+        const { swtShowMessage } = thisForm.props;
+        let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
+        if (numXssValidation > 0) {
+            swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
+        } else {
+            swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
+        }
+    }
+}, mapStateToProps, mapDispatchToProps)(DownloadTask);
