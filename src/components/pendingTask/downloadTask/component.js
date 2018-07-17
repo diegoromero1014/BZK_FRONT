@@ -113,7 +113,8 @@ class DownloadTask extends Component {
                 finalDateError: false,
             });
             if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
-                swtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');				                
+				swtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
+				setTimeout(() => {finalValidityDate.onChange('')},2000);				                
 			}
         } else {
             if (!_.isNull(initialDate)) {
