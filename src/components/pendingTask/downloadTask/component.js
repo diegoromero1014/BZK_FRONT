@@ -83,7 +83,7 @@ class DownloadTask extends Component {
 		if (! taskStatus.value) {
 			errorInForm = true;
 			this.setState({
-                statusError: "Debe seleccionar almenos un estado"
+                statusError: "Debe seleccionar al menos un estado"
             });
 		}
 		
