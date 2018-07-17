@@ -10,7 +10,8 @@ const initialState = Immutable.Map({
   countClients: 0,
   responseClients: [],
   showingRecentClients: true,
-  filterValues: []
+  filterValues: [],
+  backStateFilters: false
 });
 
 export default (state = initialState, action) => {
@@ -78,7 +79,9 @@ export default (state = initialState, action) => {
       }
       return state.withMutations(map => {
         map.set('filterValues', list);
-      })
+      });
+    case actions.BACK_BUTTON_FILTER:
+      return state.set("backStateFilters", action.data);
     default:
       return state;
   }

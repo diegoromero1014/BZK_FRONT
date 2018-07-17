@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateTitleNavBar, consultModulesAccess, viewAlertClient } from './actions';
+import { backButtonFilter } from '../clients/actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
 
@@ -15,6 +16,9 @@ class NavBarComponent extends Component {
         }
     }
     _clickReturnClients() {
+        const { backButtonFilter } = this.props;
+        let varBackButtonFilter = true;
+        backButtonFilter(varBackButtonFilter);
         redirectUrl("/dashboard/clients");
     }
 
@@ -66,7 +70,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         updateTitleNavBar,
         consultModulesAccess,
-        viewAlertClient
+        viewAlertClient,
+        backButtonFilter
     }, dispatch);
 }
 

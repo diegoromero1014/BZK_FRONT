@@ -1,7 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
     CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS, GET_RECENT_CLIENTS,
-    DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT, CLIENTS_FIND_TYPE_NUMBER_BASIC, SAVE_FILTER
+    DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT, CLIENTS_FIND_TYPE_NUMBER_BASIC, SAVE_FILTER, BACK_BUTTON_FILTER
 } from './constants';
 import axios from 'axios';
 
@@ -190,6 +190,13 @@ export function findClientByStrTypeIdAndNumber(jsonFindClient) {
 export function saveSelectValue(data) {
     return {
         type: SAVE_FILTER,
+        data
+    }
+}
+
+export function backButtonFilter(data) {
+    return {
+        type: BACK_BUTTON_FILTER,
         data
     }
 }

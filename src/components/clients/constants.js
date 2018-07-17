@@ -15,3 +15,4 @@ export const DELETE_ALL_RECENT_CLIENTS = 2;
 export const DELETE_RECENT_CLIENT = 3;
 
 export const SAVE_FILTER = "SAVE_FILTER";
+export const BACK_BUTTON_FILTER = "BACK_BUTTON_FILTER";
