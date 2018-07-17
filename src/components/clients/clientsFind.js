@@ -8,7 +8,8 @@ import {
     clientsFindServer,
     deleteAllRecentClients,
     getRecentClients,
-    saveSelectValue
+    saveSelectValue,
+    backButtonFilter
 } from "./actions";
 import ClientListItem from "./clientListItem";
 import SearchBarClient from "./searchBarClient";
@@ -45,6 +46,7 @@ import { isNil } from 'lodash';
 
 const fields = ["team", "certificationStatus", "bussinesRol", "management", "decisionCenter", "levelAEC"];
 var levelsAEC;
+let varBackButtonFilter = false;
 
 class ClientsFind extends Component {
     constructor(props) {
@@ -72,30 +74,37 @@ class ClientsFind extends Component {
         } else {
             const { fields: { team, bussinesRol, management, decisionCenter, certificationStatus, levelAEC }, clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR } = this.props;
-            const filters = clientR.get('filterValues');
-            _.forEach(filters, function (value, key) {
-                switch (value.name) {
-                    case "celula":
-                        team.onChange(value.value);
-                        break;
-                    case "bussinesRol":
-                        bussinesRol.onChange(value.value);
-                        break;
-                    case "management":
-                        management.onChange(value.value);
-                        break;
-                    case "decisionCenter":
-                        decisionCenter.onChange(value.value);
-                        break;
-                    case "certificationStatus":
-                        certificationStatus.onChange(value.value);
-                        break;
-                    case "levelAEC":
-                        levelAEC.onChange(value.value);
-                        break;
-                }
-            });
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter } = this.props;
+
+            const backButtonVariable = clientR.get('backStateFilters');
+            if (backButtonVariable) {
+                const filters = clientR.get('filterValues');
+                _.forEach(filters, function (value, key) {
+                    switch (value.name) {
+                        case "celula":
+                            team.onChange(value.value);
+                            break;
+                        case "bussinesRol":
+                            bussinesRol.onChange(value.value);
+                            break;
+                        case "management":
+                            management.onChange(value.value);
+                            break;
+                        case "decisionCenter":
+                            decisionCenter.onChange(value.value);
+                            break;
+                        case "certificationStatus":
+                            certificationStatus.onChange(value.value);
+                            break;
+                        case "levelAEC":
+                            levelAEC.onChange(value.value);
+                            break;
+                    }
+                });
+                
+            } else {
+                backButtonFilter(varBackButtonFilter);
+            }
 
 
             showLoading(true, MESSAGE_LOAD_DATA);
@@ -492,7 +501,8 @@ function mapDispatchToProps(dispatch) {
         swtShowMessage,
         showLoading,
         deleteAllRecentClients,
-        saveSelectValue
+        saveSelectValue,
+        backButtonFilter
     }, dispatch);
 }
 

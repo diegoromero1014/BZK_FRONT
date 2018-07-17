@@ -7,6 +7,9 @@ import { redirectUrl } from '../globalComponents/actions';
 import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
+import { saveSelectValue, backButtonFilter } from '../clients/actions';
+
+let varBackButtonFilter = false;
 
 class SearchBarClient extends Component {
 
@@ -25,7 +28,26 @@ class SearchBarClient extends Component {
   }
 
   componentWillMount() {
-    const { login, updateTabSeleted } = this.props;
+    const { login, updateTabSeleted, clientR, changeKeyword } = this.props;
+
+    const backButtonVariable = clientR.get('backStateFilters');
+    console.log(backButtonVariable);
+    if (backButtonVariable) {
+      const filters = clientR.get('filterValues');
+      _.forEach(filters, (value) => {
+        switch (value.name) {
+          case "searchBarClient":
+            changeKeyword(value.value);
+            this._handleClientsFind();
+            break;
+        }
+      });
+
+      backButtonFilter(varBackButtonFilter);
+    } else {
+      backButtonFilter(varBackButtonFilter);
+    }
+
     updateTabSeleted(null);
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
@@ -33,9 +55,14 @@ class SearchBarClient extends Component {
   }
 
   _handleChangeKeyword(e) {
-    const { changeKeyword } = this.props;
+    const { changeKeyword, saveSelectValue } = this.props;
+    const jsonFilter = {
+      name: "searchBarClient",
+      value: e.target.value
+    };
     changeKeyword(e.target.value);
     if (e.keyCode === 13 || e.which === 13) {
+      saveSelectValue(jsonFilter);
       this._handleClientsFind(e);
     }
   }
@@ -81,7 +108,7 @@ class SearchBarClient extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl
+    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, saveSelectValue, backButtonFilter
   }, dispatch);
 }
 
