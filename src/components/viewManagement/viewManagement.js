@@ -115,7 +115,7 @@ class ViewManagement extends Component {
               key={1}
               textValue={'Tareas'}
               iconValue={'bar chart icon'}
-              styleColor={"#87CEFA"}
+              styleColor={"#696969"}
               itemSeleted={TAB_TASKS}
             />
           </Row>}
