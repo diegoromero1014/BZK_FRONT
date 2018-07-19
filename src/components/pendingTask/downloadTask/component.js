@@ -104,7 +104,7 @@ class DownloadTask extends Component {
 	}
 	
 	_onSelectFieldDate(valueInitialDate, valueFinalDate) {
-        const { swtShowMessage } = this.props;
+        const { swtShowMessage, fields: {finalValidityDate} } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -114,7 +114,7 @@ class DownloadTask extends Component {
             });
             if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
 				swtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
-				setTimeout(() => {finalValidityDate.onChange('')},2000);				                
+				setTimeout(() => {finalValidityDate.onChange('')},1000);				                
 			}
         } else {
             if (!_.isNull(initialDate)) {
@@ -135,7 +135,7 @@ class DownloadTask extends Component {
 			<div>
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
-						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione almenos un estado para las tareas que desea descargar a excel:'}</span>
+						<span>{'En esta sección podrá descargar algunos campos de las Tareas del usuario.\n Seleccione al menos un estado para las tareas que desea descargar a excel:'}</span>
 							<Col>
 								<dt>
 									<span>Seleccione rango de fechas en el que desea el archivo - DD/MM/YYYY (</span><span style={{ color: "red" }}>*</span>)
