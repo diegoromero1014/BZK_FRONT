@@ -323,7 +323,7 @@ class ClientsFind extends Component {
                     <Row style={{ marginTop: "15px", marginLeft: '10px' }}>
                         <Col xs={12} sm={12} md={6} lg={6}>
                             <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRol={bussinesRol.value}
-                                management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} />
+                                management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} backButtonActive={true}/>
                         </Col>
                         <Col xs={7} sm={7} md={4} lg={4}>
                             <ComboBox
