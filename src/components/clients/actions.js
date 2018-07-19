@@ -1,7 +1,7 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
     CLIENTS_FIND, CHANGE_PAGE, CHANGE_KEYWORD, CLEAR_CLIENTS, GET_RECENT_CLIENTS,
-    DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT, CLIENTS_FIND_TYPE_NUMBER_BASIC, SAVE_FILTER, BACK_BUTTON_FILTER
+    DELETE_ALL_RECENT_CLIENTS, DELETE_RECENT_CLIENT, CLIENTS_FIND_TYPE_NUMBER_BASIC, SAVE_FILTER, BACK_BUTTON_FILTER, CLEAR_SAVE_FILTER
 } from './constants';
 import axios from 'axios';
 
@@ -198,6 +198,12 @@ export function backButtonFilter(data) {
     return {
         type: BACK_BUTTON_FILTER,
         data
+    }
+}
+
+export function clearSaveSelectedValue(){
+    return{
+        type: CLEAR_SAVE_FILTER
     }
 }
 

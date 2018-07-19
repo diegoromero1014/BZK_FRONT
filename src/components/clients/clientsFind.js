@@ -9,7 +9,8 @@ import {
     deleteAllRecentClients,
     getRecentClients,
     saveSelectValue,
-    backButtonFilter
+    backButtonFilter,
+    clearSaveSelectedValue
 } from "./actions";
 import ClientListItem from "./clientListItem";
 import SearchBarClient from "./searchBarClient";
@@ -74,7 +75,7 @@ class ClientsFind extends Component {
         } else {
             const { fields: { team, bussinesRol, management, decisionCenter, certificationStatus, levelAEC }, clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter } = this.props;
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter, clearSaveSelectedValue } = this.props;
 
             const backButtonVariable = clientR.get('backStateFilters');
             if (backButtonVariable) {
@@ -101,8 +102,8 @@ class ClientsFind extends Component {
                             break;
                     }
                 });
-               // backButtonFilter(varBackButtonFilter);
             } else {
+                clearSaveSelectedValue();
                 backButtonFilter(varBackButtonFilter);
             }
 
@@ -502,7 +503,8 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         deleteAllRecentClients,
         saveSelectValue,
-        backButtonFilter
+        backButtonFilter,
+        clearSaveSelectedValue
     }, dispatch);
 }
 

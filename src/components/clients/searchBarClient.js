@@ -7,7 +7,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
-import { saveSelectValue, backButtonFilter } from '../clients/actions';
+import { saveSelectValue, backButtonFilter,clearSaveSelectedValue } from '../clients/actions';
 
 let varBackButtonFilter = false;
 
@@ -28,7 +28,7 @@ class SearchBarClient extends Component {
   }
 
   componentWillMount() {
-    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter } = this.props;
+    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter, clearSaveSelectedValue} = this.props;
 
     const backButtonVariable = clientR.get('backStateFilters');
     if (backButtonVariable) {
@@ -39,9 +39,10 @@ class SearchBarClient extends Component {
             changeKeyword(value.value);
             break;
         }
-      });
+      });      
       backButtonFilter(varBackButtonFilter);
     } else {
+      clearSaveSelectedValue();
       backButtonFilter(varBackButtonFilter);
     }
 
@@ -105,7 +106,7 @@ class SearchBarClient extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, saveSelectValue, backButtonFilter
+    clientsFindServer, changePage, changeKeyword, updateTabSeleted, redirectUrl, saveSelectValue, backButtonFilter, clearSaveSelectedValue
   }, dispatch);
 }
 
