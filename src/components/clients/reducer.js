@@ -82,6 +82,8 @@ export default (state = initialState, action) => {
       });
     case actions.BACK_BUTTON_FILTER:
       return state.set("backStateFilters", action.data);
+    case actions.CLEAR_SAVE_FILTER:
+      return state.set("filterValues", []);
     default:
       return state;
   }
