@@ -31,7 +31,6 @@ class SearchBarClient extends Component {
     const { login, updateTabSeleted, clientR, changeKeyword } = this.props;
 
     const backButtonVariable = clientR.get('backStateFilters');
-    console.log(backButtonVariable);
     if (backButtonVariable) {
       const filters = clientR.get('filterValues');
       _.forEach(filters, (value) => {

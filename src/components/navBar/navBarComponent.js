@@ -12,7 +12,7 @@ class NavBarComponent extends Component {
         super(props);
         this._clickReturnClients = this._clickReturnClients.bind(this);
         this.state = {
-            urlClientInfo: "/dashboard/clientInformation"
+            urlClientInfo: "clientInformation"
         }
     }
     _clickReturnClients() {
@@ -43,8 +43,8 @@ class NavBarComponent extends Component {
                         </li>
                     </ul>
                 </div>
-                {this.state.urlClientInfo === window.location.pathname ?
-                    <div className="pull-right" style={{ marginTop: "17px", marginRight: "40px", fontSize: "35px" }}>
+                {_.includes(window.location.pathname, this.state.urlClientInfo) ?
+                    <div className="pull-right" style={{ marginTop: "17px", marginRight: "40px", fontSize: "35px", cursor: "pointer" }}>
                         <a onClick={this._clickReturnClients}>
                             <i className="reply all icon"></i>
                         </a>
