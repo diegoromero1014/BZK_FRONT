@@ -28,7 +28,7 @@ class SearchBarClient extends Component {
   }
 
   componentWillMount() {
-    const { login, updateTabSeleted, clientR, changeKeyword } = this.props;
+    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter } = this.props;
 
     const backButtonVariable = clientR.get('backStateFilters');
     if (backButtonVariable) {
@@ -37,11 +37,9 @@ class SearchBarClient extends Component {
         switch (value.name) {
           case "searchBarClient":
             changeKeyword(value.value);
-            this._handleClientsFind();
             break;
         }
       });
-
       backButtonFilter(varBackButtonFilter);
     } else {
       backButtonFilter(varBackButtonFilter);
