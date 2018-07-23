@@ -1,6 +1,6 @@
-import {APP_URL} from '../../constantsGlobal';
-import {VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE} from './constants';
-import {INIT_INPUT_EVENTS, STOP_INPUT_EVENTS,APP_NAME} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
+import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, APP_NAME } from '../../constantsGlobal';
 import axios from 'axios';
 import momentTimeZone from 'moment-timezone';
 //
@@ -40,11 +40,11 @@ export function saveSessionToken(sessionToken) {
     }
 }
 
-export function saveSessionUserName(userName){
-    window.localStorage.setItem('userNameFront',userName);
+export function saveSessionUserName(userName) {
+    window.localStorage.setItem('userNameFront', userName);
 }
 
-export function clearSessionUserName(){
+export function clearSessionUserName() {
     window.sessionStorage.clear();
 }
 export function clearStateLogin() {
@@ -65,3 +65,5 @@ export function stopObservablesLeftTimer() {
         type: STOP_INPUT_EVENTS
     }
 }
+
+
