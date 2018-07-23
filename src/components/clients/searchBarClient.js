@@ -37,6 +37,8 @@ class SearchBarClient extends Component {
         switch (value.name) {
           case "searchBarClient":
             changeKeyword(value.value);
+            this._handleClientsFind(null, value.value);
+        
             break;
         }
       });      
@@ -65,14 +67,25 @@ class SearchBarClient extends Component {
     }
   }
 
-  _handleClientsFind(e) {
+  _handleClientsFind(e, value) {
     const { clientsFindServer, valueTeam, valueCertification, bussinesRol, management, decisionCenter, levelAEC } = this.props;
     const { clientR } = this.props;
-    if (clientR.get('keyword') === '' || clientR.get('keyword') === undefined) {
+    let keyword
+    if (typeof value === "string") {
+      keyword = value ? value : clientR.get('keyword');
+    } else {
+      keyword = clientR.get('keyword');
+    }
+
+    
+    console.log('keyword',keyword);
+    console.log('value',value);
+    console.log('reductor',clientR.get('keyword'));
+    if (keyword === '' || keyword === undefined) {
       this.setState({ showEr: true });
     } else {
       const { changePage } = this.props;
-      clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, valueCertification, valueTeam, bussinesRol, management, decisionCenter, levelAEC).then((data) => {
+      clientsFindServer(keyword, 0, NUMBER_RECORDS, valueCertification, valueTeam, bussinesRol, management, decisionCenter, levelAEC).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin')) {
           redirectUrl("/login");
         }
