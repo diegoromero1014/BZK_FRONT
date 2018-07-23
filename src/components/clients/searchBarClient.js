@@ -7,7 +7,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
-import { saveSelectValue, backButtonFilter,clearSaveSelectedValue } from '../clients/actions';
+import { saveSelectValue, backButtonFilter, clearSaveSelectedValue } from '../clients/actions';
 
 let varBackButtonFilter = false;
 
@@ -21,6 +21,7 @@ class SearchBarClient extends Component {
     this._handleClientsFind = this._handleClientsFind.bind(this);
     this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
     this._closeError = this._closeError.bind(this);
+    this._handledClicChange = this._handledClicChange.bind(this);
   }
 
   _closeError() {
@@ -28,7 +29,7 @@ class SearchBarClient extends Component {
   }
 
   componentWillMount() {
-    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter, clearSaveSelectedValue} = this.props;
+    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter, clearSaveSelectedValue } = this.props;
 
     const backButtonVariable = clientR.get('backStateFilters');
     if (backButtonVariable) {
@@ -38,10 +39,10 @@ class SearchBarClient extends Component {
           case "searchBarClient":
             changeKeyword(value.value);
             this._handleClientsFind(null, value.value);
-        
+
             break;
         }
-      });      
+      });
       backButtonFilter(varBackButtonFilter);
     } else {
       clearSaveSelectedValue();
@@ -67,6 +68,16 @@ class SearchBarClient extends Component {
     }
   }
 
+  _handledClicChange() {
+    const { clientR } = this.props;
+    const jsonFilter = {
+      name: "searchBarClient",
+      value: clientR.get('keyword')
+    };
+    saveSelectValue(jsonFilter);
+    this._handleClientsFind();
+  }
+
   _handleClientsFind(e, value) {
     const { clientsFindServer, valueTeam, valueCertification, bussinesRol, management, decisionCenter, levelAEC } = this.props;
     const { clientR } = this.props;
@@ -77,10 +88,6 @@ class SearchBarClient extends Component {
       keyword = clientR.get('keyword');
     }
 
-    
-    console.log('keyword',keyword);
-    console.log('value',value);
-    console.log('reductor',clientR.get('keyword'));
     if (keyword === '' || keyword === undefined) {
       this.setState({ showEr: true });
     } else {
@@ -101,7 +108,7 @@ class SearchBarClient extends Component {
       <div>
         <div className="InputAddOn">
           <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Búsqueda por cliente, NIT o grupo económico" value={keyword} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field" />
-          <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
+          <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handledClicChange} style={{ backgroundColor: "#E0E2E2" }}>
             <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
           </button>
         </div>
