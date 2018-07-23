@@ -69,7 +69,7 @@ class SearchBarClient extends Component {
   }
 
   _handledClicChange() {
-    const { clientR } = this.props;
+    const { clientR,saveSelectValue } = this.props;
     const jsonFilter = {
       name: "searchBarClient",
       value: clientR.get('keyword')
