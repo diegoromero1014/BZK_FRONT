@@ -102,6 +102,14 @@ class ClientsFind extends Component {
                             break;
                     }
                 });
+                let dataFilterStore = filters.reduce((a, b, i, o) => {
+                    let _filters = a;
+                    _filters[b.name] = b.value;
+                    return _filters;
+                }, {})
+
+                this._handleClientsFind(dataFilterStore)
+
             } else {
                 clearSaveSelectedValue();
                 backButtonFilter(varBackButtonFilter);
@@ -157,11 +165,12 @@ class ClientsFind extends Component {
     }
 
     _cleanSearch() {
-        const { fields: { team }, clearClients, updateTabSeleted, updateTabSeletedRisksManagment,
+        const { fields: { team }, clearClients, updateTabSeleted, clearSaveSelectedValue, updateTabSeletedRisksManagment,
             getRecentClients, showLoading } = this.props;
         this.props.resetForm();
         showLoading(true, MESSAGE_LOAD_DATA);
         clearClients();
+        clearSaveSelectedValue();
         updateTabSeleted(null);
         updateTabSeletedRisksManagment(null);
         getRecentClients().then((data) => {
@@ -257,13 +266,29 @@ class ClientsFind extends Component {
 
     }
 
-    _handleClientsFind() {
+    _handleClientsFind(dataFilterStore) {
         const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
 
-        clientsFindServer(clientR.get('keyword'), 0, NUMBER_RECORDS, certificationStatus.value, team.value, bussinesRol.value, management.value,
-            decisionCenter.value, levelAEC.value).then((data) => {
+        let filters = {
+            certificationStatus: certificationStatus.value,
+            celula: team.value,
+            bussinesRol: bussinesRol.value,
+            management: management.value,
+            decisionCenter: decisionCenter.value,
+            levelAEC: levelAEC.value
+        }
+
+        let searchBar = clientR.get('keyword');
+
+        if (dataFilterStore) {
+            filters = Object.assign(filters, dataFilterStore);
+            searchBar = dataFilterStore.searchBarClient ? dataFilterStore.searchBarClient : searchBar;
+        }
+
+        clientsFindServer(searchBar, 0, NUMBER_RECORDS, filters.certificationStatus, filters.celula, filters.bussinesRol, filters.management,
+            filters.decisionCenter, filters.levelAEC).then((data) => {
                 showLoading(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);

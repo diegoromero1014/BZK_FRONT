@@ -61,6 +61,7 @@ class SearchBarClient extends Component {
       name: "searchBarClient",
       value: e.target.value
     };
+
     changeKeyword(e.target.value);
     if (e.keyCode === 13 || e.which === 13) {
       saveSelectValue(jsonFilter);
@@ -69,7 +70,7 @@ class SearchBarClient extends Component {
   }
 
   _handledClicChange() {
-    const { clientR,saveSelectValue } = this.props;
+    const { clientR, saveSelectValue } = this.props;
     const jsonFilter = {
       name: "searchBarClient",
       value: clientR.get('keyword')
@@ -81,11 +82,10 @@ class SearchBarClient extends Component {
   _handleClientsFind(e, value) {
     const { clientsFindServer, valueTeam, valueCertification, bussinesRol, management, decisionCenter, levelAEC } = this.props;
     const { clientR } = this.props;
-    let keyword
+
+    let keyword = clientR.get('keyword');
     if (typeof value === "string") {
       keyword = value ? value : clientR.get('keyword');
-    } else {
-      keyword = clientR.get('keyword');
     }
 
     if (keyword === '' || keyword === undefined) {
