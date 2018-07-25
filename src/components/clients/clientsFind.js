@@ -124,7 +124,7 @@ class ClientsFind extends Component {
                     }
                 }
             });
-            
+
 
             const backButtonVariable = clientR.get('backStateFilters');
             if (backButtonVariable) {
@@ -277,7 +277,7 @@ class ClientsFind extends Component {
 
         let filters = {
             certificationStatus: certificationStatus.value,
-            celula: team.value,
+            team: team.value,
             bussinesRol: bussinesRol.value,
             management: management.value,
             decisionCenter: decisionCenter.value,
@@ -292,7 +292,7 @@ class ClientsFind extends Component {
 
 
 
-        clientsFindServer(searchBar, 0, NUMBER_RECORDS, filters.certificationStatus, filters.celula, filters.bussinesRol, filters.management,
+        clientsFindServer(searchBar, 0, NUMBER_RECORDS, filters.certificationStatus, filters.team, filters.bussinesRol, filters.management,
             filters.decisionCenter, filters.levelAEC).then((data) => {
                 showLoading(false, "");
                 if (!validateResponse(data)) {
