@@ -49,6 +49,10 @@ const fields = ["team", "certificationStatus", "bussinesRol", "management", "dec
 var levelsAEC;
 let varBackButtonFilter = false;
 
+let filterSearchBar = "";
+let dataFilterStore = null;
+let firstChangeValidateFilters = false;
+
 class ClientsFind extends Component {
     constructor(props) {
         super(props);
@@ -68,53 +72,18 @@ class ClientsFind extends Component {
             showConfirmDeleteRecentClientes: false
         }
     }
-
+    componentDidMount() {
+        firstChangeValidateFilters = false;
+    }
     componentWillMount() {
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             const { fields: { team, bussinesRol, management, decisionCenter, certificationStatus, levelAEC }, clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
                 updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter, clearSaveSelectedValue } = this.props;
+                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter, clearSaveSelectedValue, changeKeyword } = this.props;
 
-            const backButtonVariable = clientR.get('backStateFilters');
-            if (backButtonVariable) {
-                const filters = clientR.get('filterValues');
-                _.forEach(filters, function (value, key) {
-                    switch (value.name) {
-                        case "celula":
-                            team.onChange(value.value);
-                            break;
-                        case "bussinesRol":
-                            bussinesRol.onChange(value.value);
-                            break;
-                        case "management":
-                            management.onChange(value.value);
-                            break;
-                        case "decisionCenter":
-                            decisionCenter.onChange(value.value);
-                            break;
-                        case "certificationStatus":
-                            certificationStatus.onChange(value.value);
-                            break;
-                        case "levelAEC":
-                            levelAEC.onChange(value.value);
-                            break;
-                    }
-                });
-                let dataFilterStore = filters.reduce((a, b, i, o) => {
-                    let _filters = a;
-                    _filters[b.name] = b.value;
-                    return _filters;
-                }, {})
-
-                this._handleClientsFind(dataFilterStore)
-
-            } else {
-                clearSaveSelectedValue();
-                backButtonFilter(varBackButtonFilter);
-            }
-
+            const { fields } = this.props;
 
             showLoading(true, MESSAGE_LOAD_DATA);
             clearClients();
@@ -155,12 +124,43 @@ class ClientsFind extends Component {
                     }
                 }
             });
-            getRecentClients().then((data) => {
-                showLoading(false, "");
-                if (!validateResponse(data)) {
-                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                }
-            });
+            
+
+            const backButtonVariable = clientR.get('backStateFilters');
+            if (backButtonVariable) {
+                const filters = clientR.get('filterValues');
+                _.forEach(filters, function (value, key) {
+                    if (fields[value.name]) {
+                        fields[value.name].onChange(value.value);
+                    } else {
+                        // filterSearchBar = value.value;
+                        changeKeyword(value.value);
+                    }
+                });
+
+                let _dataFilterStore = filters.reduce((a, b, i, o) => {
+                    let _filters = a;
+                    _filters[b.name] = b.value;
+                    return _filters;
+                }, {})
+
+                dataFilterStore = _dataFilterStore;
+                firstChangeValidateFilters = true;
+
+                this._handleClientsFind();
+                backButtonFilter(false);
+
+            } else {
+                clearSaveSelectedValue();
+
+                getRecentClients().then((data) => {
+                    showLoading(false, "");
+                    if (!validateResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    }
+                });
+            }
+
         }
     }
 
@@ -184,7 +184,7 @@ class ClientsFind extends Component {
     _onChangeTeam(val) {
         const { fields: { team }, saveSelectValue } = this.props;
         const jsonFilter = {
-            name: "celula",
+            name: "team",
             value: val
         };
         team.onChange(val);
@@ -209,6 +209,7 @@ class ClientsFind extends Component {
 
     _onChangeManagement(val) {
         const { fields: { management }, saveSelectValue } = this.props;
+
         const jsonFilter = {
             name: "management",
             value: val
@@ -223,6 +224,7 @@ class ClientsFind extends Component {
 
     _onChangeDecisionCenter(val) {
         const { fields: { decisionCenter }, saveSelectValue } = this.props;
+
         const jsonFilter = {
             name: "decisionCenter",
             value: val
@@ -236,6 +238,7 @@ class ClientsFind extends Component {
 
     _onChangeCertificationStatus(val) {
         const { fields: { certificationStatus }, saveSelectValue } = this.props;
+
         const jsonFilter = {
             name: "certificationStatus",
             value: val
@@ -254,6 +257,7 @@ class ClientsFind extends Component {
             updateTabSeletedRisksManagment(TAB_AEC);
         }
         const { fields: { levelAEC }, saveSelectValue } = this.props;
+
         const jsonFilter = {
             name: "levelAEC",
             value: val
@@ -266,7 +270,7 @@ class ClientsFind extends Component {
 
     }
 
-    _handleClientsFind(dataFilterStore) {
+    _handleClientsFind() {
         const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
             swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
@@ -282,10 +286,11 @@ class ClientsFind extends Component {
 
         let searchBar = clientR.get('keyword');
 
-        if (dataFilterStore) {
+        if (dataFilterStore && firstChangeValidateFilters) {
             filters = Object.assign(filters, dataFilterStore);
-            searchBar = dataFilterStore.searchBarClient ? dataFilterStore.searchBarClient : searchBar;
         }
+
+
 
         clientsFindServer(searchBar, 0, NUMBER_RECORDS, filters.certificationStatus, filters.celula, filters.bussinesRol, filters.management,
             filters.decisionCenter, filters.levelAEC).then((data) => {
@@ -349,7 +354,7 @@ class ClientsFind extends Component {
                     <Row style={{ marginTop: "15px", marginLeft: '10px' }}>
                         <Col xs={12} sm={12} md={6} lg={6}>
                             <SearchBarClient valueTeam={team.value} valueCertification={certificationStatus.value} bussinesRol={bussinesRol.value}
-                                management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} />
+                                management={management.value} decisionCenter={decisionCenter.value} levelAEC={levelAEC.value} handleClientsFind={this._handleClientsFind} />
                         </Col>
                         <Col xs={7} sm={7} md={4} lg={4}>
                             <ComboBox

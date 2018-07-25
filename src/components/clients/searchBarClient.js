@@ -18,7 +18,7 @@ class SearchBarClient extends Component {
     this.state = {
       showEr: false,
     }
-    this._handleClientsFind = this._handleClientsFind.bind(this);
+    // this._handleClientsFind = this._handleClientsFind.bind(this);
     this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
     this._closeError = this._closeError.bind(this);
     this._handledClicChange = this._handledClicChange.bind(this);
@@ -31,23 +31,6 @@ class SearchBarClient extends Component {
   componentWillMount() {
     const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter, clearSaveSelectedValue } = this.props;
 
-    const backButtonVariable = clientR.get('backStateFilters');
-    if (backButtonVariable) {
-      const filters = clientR.get('filterValues');
-      _.forEach(filters, (value) => {
-        switch (value.name) {
-          case "searchBarClient":
-            changeKeyword(value.value);
-            this._handleClientsFind(null, value.value);
-
-            break;
-        }
-      });
-      backButtonFilter(varBackButtonFilter);
-    } else {
-      clearSaveSelectedValue();
-      backButtonFilter(varBackButtonFilter);
-    }
 
     updateTabSeleted(null);
     if (window.localStorage.getItem('sessionTokenFront') === "") {
@@ -56,7 +39,7 @@ class SearchBarClient extends Component {
   }
 
   _handleChangeKeyword(e) {
-    const { changeKeyword, saveSelectValue } = this.props;
+    const { changeKeyword, saveSelectValue, handleClientsFind } = this.props;
     const jsonFilter = {
       name: "searchBarClient",
       value: e.target.value
@@ -64,42 +47,26 @@ class SearchBarClient extends Component {
 
     changeKeyword(e.target.value);
     if (e.keyCode === 13 || e.which === 13) {
-      saveSelectValue(jsonFilter);
-      this._handleClientsFind(e);
+      this._handledClicChange(e.target.value);
     }
   }
 
-  _handledClicChange() {
-    const { clientR, saveSelectValue } = this.props;
-    const jsonFilter = {
-      name: "searchBarClient",
-      value: clientR.get('keyword')
-    };
-    saveSelectValue(jsonFilter);
-    this._handleClientsFind();
-  }
-
-  _handleClientsFind(e, value) {
-    const { clientsFindServer, valueTeam, valueCertification, bussinesRol, management, decisionCenter, levelAEC } = this.props;
-    const { clientR } = this.props;
-
-    let keyword = clientR.get('keyword');
-    if (typeof value === "string") {
-      keyword = value ? value : clientR.get('keyword');
-    }
+  _handledClicChange(keywordValue) {
+    const { clientR, saveSelectValue, handleClientsFind } = this.props;
+    let keyword = keywordValue ? keywordValue : clientR.get('keyword');
 
     if (keyword === '' || keyword === undefined) {
       this.setState({ showEr: true });
     } else {
-      const { changePage } = this.props;
-      clientsFindServer(keyword, 0, NUMBER_RECORDS, valueCertification, valueTeam, bussinesRol, management, decisionCenter, levelAEC).then((data) => {
-        if (!_.get(data, 'payload.data.validateLogin')) {
-          redirectUrl("/login");
-        }
-      });
-      changePage(1);
+      const jsonFilter = {
+        name: "searchBarClient",
+        value: keyword
+      };
+      saveSelectValue(jsonFilter);
+      handleClientsFind();
     }
   }
+
 
   render() {
     const { clientR } = this.props;
@@ -108,7 +75,7 @@ class SearchBarClient extends Component {
       <div>
         <div className="InputAddOn">
           <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Búsqueda por cliente, NIT o grupo económico" value={keyword} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword} className="input-lg input InputAddOn-field" />
-          <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={this._handledClicChange} style={{ backgroundColor: "#E0E2E2" }}>
+          <button id="searchClients" className="btn" title="Buscar clientes" type="button" onClick={()=>{this._handledClicChange()}} style={{ backgroundColor: "#E0E2E2" }}>
             <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
           </button>
         </div>
