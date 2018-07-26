@@ -193,6 +193,7 @@ class ModalComponentEconomicGroup extends Component {
     const { clientEconomicGroupReducer, clientInformacion, isOpen} = this.props;
     const nameEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nameEconomicGroup", "");
     const nitEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nitEconomicGroup", "");
+    const accessMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "accessMainClient", "");
     const clientsEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []);
     const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
 
@@ -240,7 +241,7 @@ class ModalComponentEconomicGroup extends Component {
                       }
                     </div>
                   </div>
-                  <div className="celula-card-bottom" style={{ backgroundColor: "#B0E0E6", marginTop: '-45px' }}></div>
+                  <div className="celula-card-bottom" style={{ backgroundColor: accessMainClient ? "#B0E0E6" : "#DCDCDC", marginTop: '-45px' }}></div>
                 </div>
               </div>
             </div>

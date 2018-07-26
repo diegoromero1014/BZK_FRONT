@@ -13,7 +13,7 @@ import { TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS, TAB_TASKS } from '
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import AlertErrorYearNoSeleted from '../globalComponents/alertErrorYearNoSeleted';
-import { MODULE_MANAGERIAL_VIEW, BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR, DOWNLOAD_TASK } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, LightSkyBlue, BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR, DOWNLOAD_TASK } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
 
@@ -115,7 +115,7 @@ class ViewManagement extends Component {
               key={1}
               textValue={'Tareas'}
               iconValue={'bar chart icon'}
-              styleColor={'red'}
+              styleColor={"#696969"}
               itemSeleted={TAB_TASKS}
             />
           </Row>}
