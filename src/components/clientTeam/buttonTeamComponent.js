@@ -29,7 +29,7 @@ class buttonTeamComponent extends Component {
     return (
         <div>
           <button className="btn btn-primary" type="button" title="Ver célula" style={{backgroundColor: ORANGE_COLOR, borderRadius: "0px", height:"50%", float:"right", cursor: 'pointer'}} onClick={this.openModal}>
-            <i className="users outline icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}/>
+            <i className="users icon" style={{color: "white",margin:'0em', fontSize : '1.5em'}}/>
           </button>
 
           <Modal isOpen={this.state.modalIsOpen} contentLabel="Célula" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">

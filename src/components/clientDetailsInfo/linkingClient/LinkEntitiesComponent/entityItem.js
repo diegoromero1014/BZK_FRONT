@@ -104,7 +104,7 @@ class EntityItem extends Component {
                                 title="Eliminar"
                                 className="btn btn-sm  btn-danger"
                                 type="button">
-                            <i style={{margin: '0em', fontSize: '1.2em'}} className="trash outline icon"/>
+                            <i style={{margin: '0em', fontSize: '1.2em'}} className="trash icon"/>
                         </button>
                     </Col>
                 </Row>
