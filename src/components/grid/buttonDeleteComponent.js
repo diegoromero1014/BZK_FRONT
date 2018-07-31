@@ -184,7 +184,7 @@ class ButtonDeleteComponent extends Component {
         return (
             <td style={{ padding: '10px', textAlign: 'center' }}>
                 <button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash outline icon"></i>
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash icon"></i>
                 </button>
                 <SweetAlert
                     type="warning"

@@ -6,6 +6,7 @@ netbeans/
 npm-debug.log
 /node_modules/
 /semantic
+/semantic-ui
 semantic.json
 dist/
 .gitignore
