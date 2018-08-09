@@ -12,7 +12,7 @@ import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
-import { CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
+import { CONTACT_ID_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
   from '../../../../selectsComponent/constants';
 import {
   PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR,
@@ -285,8 +285,13 @@ class ComponentShareHolderDetail extends Component {
       shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
       tributaryNumber }, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId, reducerGlobal } = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
       valueTypeShareholder = shareHolderEdit.shareHolderType;
+      console.log(selectsReducer.get(CONTACT_ID_TYPE));
+      console.log(shareHolderIdType);
+      console.log(_.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') );
+      
     }
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -294,11 +299,21 @@ class ComponentShareHolderDetail extends Component {
           <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información básica accionista</span></dt>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>
+            <Col xs={12} md={4} lg={4}>
+                <dt>
+                  <span>Tipo de persona</span>
+                </dt>
+                <dt>
+                  <p style={{ fontWeight: "normal" }}>
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("clientType"))) ? _.get(_.filter(selectsReducer.get("clientType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                  </p>
+                </dt>
+              </Col>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de documento</span></dt>
                 <dt>
                   <p style={{ fontWeight: "normal", wordBreak: 'keep-all' }}>
-                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(SHAREHOLDER_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(SHAREHOLDER_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') : ''}
+                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(CONTACT_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') : _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value')}
                   </p>
                 </dt>
               </Col>
@@ -311,17 +326,7 @@ class ComponentShareHolderDetail extends Component {
                     {shareHolderIdNumber.value}
                   </p>
                 </dt>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <dt>
-                  <span>Tipo de persona</span>
-                </dt>
-                <dt>
-                  <p style={{ fontWeight: "normal" }}>
-                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholdersType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
-                  </p>
-                </dt>
-              </Col>
+              </Col>              
             </Row>
             <Row>
               <Col xs={12} md={4} lg={4}>
