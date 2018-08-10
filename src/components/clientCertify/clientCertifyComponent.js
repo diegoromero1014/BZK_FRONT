@@ -72,6 +72,7 @@ import { validate as validateInfoFinanciera } from './components/InfoFinanciera'
 
 import InfoFinancieraPN from './components/InfoFinancieraPN';
 import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 const fields = [
     'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
@@ -843,7 +844,7 @@ class clientCertify extends React.Component {
         return (
 
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
-
+            <SecurityMessageComponent/>
                 <Errores sumErrorsForm={this.state.sumErrorsForm} />
 
                 {
