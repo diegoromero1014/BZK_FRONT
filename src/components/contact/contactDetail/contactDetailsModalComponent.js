@@ -57,6 +57,7 @@ import { connect } from 'react-redux';
 import { NUMBER_RECORDS } from '../constants';
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
     "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -514,6 +515,7 @@ class ContactDetailsModalComponent extends Component {
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                <SecurityMessageComponent/>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalEditCotact"
                     style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
