@@ -293,13 +293,15 @@ class ModalComponentShareholder extends Component {
     if (clientTypes) {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = "";
-      if(clientType.key == NATURE_PERSON ) {
-        idTypeMaster = CONTACT_ID_TYPE;
-      } else {
-        idTypeMaster = CLIENT_ID_TYPE;
-      }
-      valueTypeShareholder = clientType.value;
-      console.log(clientType.key);
+      if (clientType != undefined) {
+        if(clientType.key == NATURE_PERSON ) {
+          idTypeMaster = CONTACT_ID_TYPE;
+        } else {
+          idTypeMaster = CLIENT_ID_TYPE;
+        }
+        valueTypeShareholder = clientType.value;
+            
+      
                           
       this.setState({
         idTypeMaster: selectsReducer.get(idTypeMaster),
@@ -307,7 +309,7 @@ class ModalComponentShareholder extends Component {
         idTypeMasterSelector: idTypeMaster,
         personType: _.filter(selectsReducer.get(CLIENT_TYPE), ['id', parseInt(valor)]).pop()
       });
-
+    }
     } else {
       this.setState({
         idTypeMaster: [],
@@ -322,7 +324,8 @@ class ModalComponentShareholder extends Component {
     const { fields: { tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;
+      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;      
+      
     var messageBody = {
       "clientId": window.sessionStorage.getItem('idClientSelected'),
       "shareHolderIdType": tipoDocumento.value.trim(),

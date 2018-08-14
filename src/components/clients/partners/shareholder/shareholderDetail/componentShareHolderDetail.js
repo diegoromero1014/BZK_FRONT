@@ -12,7 +12,7 @@ import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
-import { CONTACT_ID_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
+import { CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
   from '../../../../selectsComponent/constants';
 import {
   PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR,
@@ -257,7 +257,7 @@ class ComponentShareHolderDetail extends Component {
     showLoading(true, MESSAGE_LOAD_DATA);
     nonValidateEnter(true);
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
+    getMasterDataFields([CONTACT_ID_TYPE, CLIENT_ID_TYPE, CLIENT_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
     getDetailShareHolder(shareHolderId).then((data) => {
       showLoading(false, "");
@@ -285,13 +285,15 @@ class ComponentShareHolderDetail extends Component {
       shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
       tributaryNumber }, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId, reducerGlobal } = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
-    
+    var typeClient;
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
       valueTypeShareholder = shareHolderEdit.shareHolderType;
-      console.log(selectsReducer.get(CONTACT_ID_TYPE));
-      console.log(shareHolderIdType);
-      console.log(_.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') );
-      
+      var valueSh = _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
+      typeClient = CLIENT_ID_TYPE;
+      if (valueSh === undefined) {
+        valueSh = _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
+        typeClient = CONTACT_ID_TYPE;
+      }
     }
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -313,7 +315,7 @@ class ComponentShareHolderDetail extends Component {
                 <dt><span>Tipo de documento</span></dt>
                 <dt>
                   <p style={{ fontWeight: "normal", wordBreak: 'keep-all' }}>
-                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(CONTACT_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') : _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value')}
+                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(typeClient))) ? valueSh : ''}
                   </p>
                 </dt>
               </Col>
