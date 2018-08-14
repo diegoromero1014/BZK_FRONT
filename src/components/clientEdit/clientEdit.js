@@ -76,6 +76,8 @@ import ActividadEconomicaPN from './components/ActividadEconomicaPN';
 import ActividadEconomica from './components/ActividadEconomica';
 import {validationRules as rulesActividadEconomica} from './components/ActividadEconomica';
 import {validationRules as rulesActividadEconomicaPN} from './components/ActividadEconomicaPN';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+
 
 
 
@@ -1642,6 +1644,7 @@ class clientEdit extends Component {
 
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
+            <SecurityMessageComponent/>
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>

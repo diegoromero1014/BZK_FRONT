@@ -45,6 +45,7 @@ import {
 import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
 import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
 import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
@@ -863,6 +864,7 @@ export class ComponentStudyCredit extends Component {
         }
         return (
             <form id="formComponentCreditStudy" style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
+                <SecurityMessageComponent/>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12} style={{ marginLeft: '20px', paddingTop: '10px' }}>
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>

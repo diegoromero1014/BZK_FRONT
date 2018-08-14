@@ -28,6 +28,7 @@ import * as constants from './constants';
 import { changeStateSaveData } from '../../../../dashboard/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["tipoDocumento", "numeroDocumento", "tipoPersona",
   "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -397,6 +398,7 @@ class ModalComponentShareholder extends Component {
       selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;      
     return (
       <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+        <SecurityMessageComponent/>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información básica accionista</span></dt>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
