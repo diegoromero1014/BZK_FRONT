@@ -61,7 +61,7 @@ const validate = values => {
   } else {
     errors.firstLastName = null;
   }
-  if (!values.shareHolderName && valueTypeShareholder === NATURAL_PERSON) {
+  if (!values.shareHolderName && valueTypeShareholder === JURIDICAL_PERSON) {
     errors.shareHolderName = "Debe ingresar un valor";
   } else if (xssValidation(values.shareHolderName)) {
     errors.shareHolderName = VALUE_XSS_INVALID;
