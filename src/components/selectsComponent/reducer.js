@@ -43,11 +43,11 @@ const initialState = Immutable.Map({
     subSegment: [],
     reasonConformation: [],
     products: [],
-    allProducts: []
+    allProducts: [],
+    managementsOfsectorStrategy: []
 });
 
 export default (state = initialState, action) => {
-
     switch (action.type) {
         case constants.CLIENT_ID_TYPE:
             return state.set("dataTypeDocument", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
@@ -160,6 +160,8 @@ export default (state = initialState, action) => {
                     map.set(item, []);
                 });
             });
+        case constants.MANAGEMENTS_OF_SECTOR_STRATEGY :
+            return state.set('managementsOfsectorStrategy', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
             return state;
     }

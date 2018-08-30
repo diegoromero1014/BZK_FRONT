@@ -56,6 +56,7 @@ import {
     FILTER_ATTITUDE_OVER_GROUP
 } from '../../selectsComponent/constants';
 import Tooltip from '../../toolTip/toolTipComponent';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
     "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
@@ -456,7 +457,8 @@ class ModalComponentContact extends Component {
         } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateContact)}
-                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+              onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+              <SecurityMessageComponent/>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalComponentScrollCreateContact">
                     <dt className="business-title">

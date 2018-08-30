@@ -20,14 +20,15 @@ import { shareholdersByClientFindServer, clearShareholderOrder, clearShareholder
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess } from '../../../../selectsComponent/actions';
 import {
   CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
-  SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER
+  SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER, CLIENT_ID_TYPE, CLIENT_TYPE
 } from '../../../../selectsComponent/constants';
-import { NUMBER_RECORDS } from '../constants';
+import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
 import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../../../actionsGlobal';
 import * as constants from './constants';
 import { changeStateSaveData } from '../../../../dashboard/actions';
 import numeral from 'numeral';
 import _ from 'lodash';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["tipoDocumento", "numeroDocumento", "tipoPersona",
   "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -41,9 +42,7 @@ var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar 
 
 var valueTypeShareholder;
 
-const validate = (values) => {
-
-
+const validate = (values) => {  
 
   if (!values.tipoDocumento) {
     errors.tipoDocumento = "Debe seleccionar una opción";
@@ -69,7 +68,7 @@ const validate = (values) => {
     errors.numeroDocumento = "Debe ingresar un valor"
     errors.numeroDocumento = null;
   }
-  if (!values.primerNombre && valueTypeShareholder === PERSONA_NATURAL) {
+  if (!values.primerNombre && valueTypeShareholder === NATURE_PERSON) {
     errors.primerNombre = "Debe ingresar un valor";
   } else if (xssValidation(values.primerNombre)) {
     errors.primerNombre = VALUE_XSS_INVALID;
@@ -77,14 +76,14 @@ const validate = (values) => {
     errors.primerNombre = null;
   }
 
-  if (!values.primerApellido && valueTypeShareholder === PERSONA_NATURAL) {
+  if (!values.primerApellido && valueTypeShareholder === NATURE_PERSON) {
     errors.primerApellido = "Debe ingresar un valor";
   } else if (xssValidation(values.primerApellido)) {
     errors.primerApellido = VALUE_XSS_INVALID;
   } else {
     errors.primerApellido = null;
   }
-  if (!values.razonSocial && valueTypeShareholder === PERSONA_JURIDICA) {
+  if (!values.razonSocial && valueTypeShareholder != NATURE_PERSON) {
     errors.razonSocial = "Debe ingresar un valor";
   } else if (xssValidation(values.razonSocial)) {
     errors.razonSocial = VALUE_XSS_INVALID;
@@ -131,6 +130,7 @@ const validate = (values) => {
 
   return errors;
 };
+
 class ModalComponentShareholder extends Component {
   constructor(props) {
     super(props);
@@ -141,15 +141,20 @@ class ModalComponentShareholder extends Component {
     this._handleCreateShareholder = this._handleCreateShareholder.bind(this);
     this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     this._selectTypeOfPerson = this._selectTypeOfPerson.bind(this);
+    this.clientetypeChange = this.clientetypeChange.bind(this);
     this.state = {
       showMessage: false,
       noExiste: 'hidden',
       disabled: '',
       botonBus: 'block',
       typeShareholder: [],
+      idTypeMaster: [],
+      idTypeMasterSelector: "",
+      personType: null,
       disabledPer: 'disabled',
       valueTypeShareholder: "",
       showErrorXss: false,
+      validateTypePerson: false
     }
   }
 
@@ -194,7 +199,7 @@ class ModalComponentShareholder extends Component {
     nonValidateEnter(true);
     clearValuesAdressess();
     this.props.resetForm();
-    getMasterDataFields([SHAREHOLDER_TYPE, CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
+    getMasterDataFields([SHAREHOLDER_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, CONTACT_ID_TYPE, SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
   }
 
@@ -282,11 +287,46 @@ class ModalComponentShareholder extends Component {
     ciudad.onChange('');
   }
 
+  clientetypeChange(valor) {
+    const { fields: { tipoDocumento }, selectsReducer } = this.props;
+    let clientTypes = selectsReducer.get(CLIENT_TYPE);
+
+    if (clientTypes) {
+      let clientType = clientTypes.find(type => type.id == valor);
+      let idTypeMaster = "";
+      if (clientType != undefined) {
+        if(clientType.key == NATURE_PERSON ) {
+          idTypeMaster = CONTACT_ID_TYPE;
+        } else {
+          idTypeMaster = CLIENT_ID_TYPE;
+        }
+        valueTypeShareholder = clientType.value;
+            
+      
+                          
+      this.setState({
+        idTypeMaster: selectsReducer.get(idTypeMaster),
+        valueTypeShareholder: clientType.key,
+        idTypeMasterSelector: idTypeMaster,
+        personType: _.filter(selectsReducer.get(CLIENT_TYPE), ['id', parseInt(valor)]).pop()
+      });
+    }
+    } else {
+      this.setState({
+        idTypeMaster: [],
+        idTypeMasterSelector: "",
+        personType: null
+      });
+    }
+    tipoDocumento.onChange('');
+  }
+
   _handleCreateShareholder() {
     const { fields: { tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;
+      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;      
+      
     var messageBody = {
       "clientId": window.sessionStorage.getItem('idClientSelected'),
       "shareHolderIdType": tipoDocumento.value.trim(),
@@ -355,30 +395,42 @@ class ModalComponentShareholder extends Component {
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
       numeroIdTributaria, observaciones },
-      selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;
+      selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;      
     return (
       <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+        <SecurityMessageComponent/>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información básica accionista</span></dt>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>
-              <Col xs>
+              <Col xs={12} md={5} lg={4}>
                 <dl style={{ width: '100%' }}>
-                  <dt><span>Tipo de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                  <dt><span>Tipo de persona accionista (<span style={{ color: 'red' }}>*</span>)</span></dt>
                   <dd>
                     <ComboBox name="tipoDocumento"
-                      {...tipoDocumento}
-                      disabled={this.state.disabled}
+                      name="tipoCliente"
+                      labelInput="Seleccione..."
+                      {...tipoPersona}
                       valueProp={'id'}
                       textProp={'value'}
-                      labelInput="Seleccione"
-                      data={selectsReducer.get(SHAREHOLDER_ID_TYPE) || []}
-                      onChange={val => this._selectTypeOfPerson(val)}
+                      onChange={this.clientetypeChange}
+                      data={selectsReducer.get(CLIENT_TYPE)}
                     />
                   </dd>
                 </dl>
               </Col>
-              <Col xs>
+              <Col xs={12} md={5} lg={4}>
+                <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                <ComboBox
+                  name="tipoDocumento"
+                  labelInput="Seleccione..."
+                  {...tipoDocumento}
+                  valueProp={'id'}
+                  textProp={'value'}
+                  data={this.state.idTypeMaster}
+                />
+              </Col>
+              <Col xs={12} md={5} lg={3}>
                 <dl style={{ width: '100%' }}>
                   <dt><span>Número de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
                   <dd><InputComponent
@@ -397,19 +449,7 @@ class ModalComponentShareholder extends Component {
                 </dl>
               </Col>
             </Row>
-            <Row style={{ visibility: this.state.noExiste }}>
-              <Col xs={12} md={4} lg={4}>
-                <dt><span>Tipo de persona (</span><span style={{ color: "red" }}>*</span>)</dt>
-                <ComboBox name="tipoPersona"
-                  {...tipoPersona}
-                  valueProp={'id'}
-                  textProp={'value'}
-                  labelInput="Seleccione"
-                  disabled={this.state.disabledPer}
-                  onChange={val => this._onChangeTypeShareholder(val)}
-                  data={this.state.typeShareholder}
-                />
-              </Col>
+            <Row style={{ visibility: this.state.noExiste }}>              
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de accionista (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox name="tipoAccionista"
@@ -432,7 +472,7 @@ class ModalComponentShareholder extends Component {
                   onBlur={val => this._handleBlurValueNumber(porcentajePart, val)}
                 />
               </Col>
-              <Col xs={12} md={12} lg={12} style={this.state.valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={12} lg={12} style={this.state.valueTypeShareholder != NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="razonSocial"
@@ -441,7 +481,7 @@ class ModalComponentShareholder extends Component {
                   {...razonSocial}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="primerNombre"
@@ -450,7 +490,7 @@ class ModalComponentShareholder extends Component {
                   {...primerNombre}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Segundo nombre</span></dt>
                 <InputComponent
                   name="segundoNombre"
@@ -459,7 +499,7 @@ class ModalComponentShareholder extends Component {
                   {...segundoNombre}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder == NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Primer apellido (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="primerApellido"
@@ -468,7 +508,7 @@ class ModalComponentShareholder extends Component {
                   {...primerApellido}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Segundo apellido</span></dt>
                 <InputComponent
                   name="segundoApellido"
@@ -477,7 +517,7 @@ class ModalComponentShareholder extends Component {
                   {...segundoApellido}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={this.state.valueTypeShareholder === NATURE_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Género</span></dt>
                 <ComboBox name="genero"
                   {...genero}

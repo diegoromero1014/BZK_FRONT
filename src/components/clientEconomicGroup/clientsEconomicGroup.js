@@ -84,7 +84,7 @@ class clientsEconomicGroup extends Component {
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: dataIsAccess ? "#B0E0E6" : "#DCDCDC" }}>
           {dataIsAccess && haveAccessEdit &&
-            <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
+            <i className="trash icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={() => this.setState({ showConfirmDelete: true })}
               title="Eliminar cliente del grupo económico" />
           }

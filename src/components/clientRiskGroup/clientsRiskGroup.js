@@ -57,7 +57,7 @@ class clientsRiskGroup extends Component {
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6"), width: "100%" }}>
           {!client.isPending && !isPending &&
-            <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
+            <i className="trash icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={this.openModalRemoveClient}
               title="Remover cliente grupo de riesgo" />
           }

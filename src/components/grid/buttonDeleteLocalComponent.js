@@ -34,14 +34,14 @@ class ButtonDeleteLocalComponent extends Component {
         switch (typeAction) {
             case ACTION_BUTTON:
                 return (<button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{ margin: '0em', fontSize: '1.2em' }} className='trash outline icon' />
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} className='trash icon' />
                 </button>);
             case ACTION_ICON:
-                return (<i className='trash outline icon' title='Eliminar' style={{ cursor: "pointer" }}
+                return (<i className='trash icon' title='Eliminar' style={{ cursor: "pointer" }}
                     onClick={this._confirmDeleteEntity} />);
             default:
                 return (<button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
-                    <i style={{ margin: '0em', fontSize: '1.2em' }} title='Eliminar' className='trash outline icon' />
+                    <i style={{ margin: '0em', fontSize: '1.2em' }} title='Eliminar' className='trash icon' />
                 </button>);
         }
 

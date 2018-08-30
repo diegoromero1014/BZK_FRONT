@@ -26,6 +26,7 @@ import {
 } from '../../../constantsGlobal';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { xssValidation } from '../../../actionsGlobal';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["observationTrader"];
 const errors = {};
@@ -229,6 +230,7 @@ class ButtonLinkClientComponent extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent/>
                             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                                 style={{ padding: '20px 20px 20px 20px' }} id="containerModal">
                                 <table style={{ width: "100%" }}>
