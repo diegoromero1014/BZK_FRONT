@@ -22,8 +22,8 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
-
+import BlockingComponent from '../../blockingComponent/blockingComponent';
+import {BLOCK_BUSINESS_PLAN} from '../../../constantsGlobal'
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -62,6 +62,13 @@ class FormEdit extends Component {
     }
 
     _editBusiness() {
+        const {hasAccess, swtShowMessage} = this.props;
+        console.log(hasAccess);
+        if (!hasAccess) {
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento otra persona esta editando este formulario. Intente mas tarde');
+            return;
+        }
+
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -648,8 +655,10 @@ function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPla
         navBar
     };
 }
-export default reduxForm({
+const FormEditRedux = reduxForm({
     form: 'submitValidation',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(FormEdit);
+
+export default BlockingComponent(FormEditRedux, BLOCK_BUSINESS_PLAN);
