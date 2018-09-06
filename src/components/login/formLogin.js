@@ -54,7 +54,7 @@ class FormLogin extends Component {
         this.setState({ showMessageNotification: false });
         redirectUrl("/dashboard/clients");
     }
-    
+
 
     _handleValidateLogin(e) {
         e.preventDefault();
@@ -80,13 +80,13 @@ class FormLogin extends Component {
 
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
 
-                        if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
-                           //Mensaje notificacion
-                           this.setState({showMessageNotification : true, messageNotification: messageNotification  });
+                        // if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
+                        //    //Mensaje notificacion
+                        // //    this.setState({showMessageNotification : true, messageNotification: messageNotification  });
 
-                        } else {
-                           redirectUrl("/dashboard/clients");
-                        }
+                        // } else {
+                        // }
+                        redirectUrl("/dashboard/clients");
                     }
                 } else {
                     this.setState({
@@ -118,11 +118,11 @@ class FormLogin extends Component {
 
         } else {
             // El usuario ya se encuentra logueado
-            
+
             redirectUrl("/dashboard/clients");
         }
 
-        
+
     }
 
     render() {
@@ -173,7 +173,7 @@ class FormLogin extends Component {
                     text={this.state.messageNotification}
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Continuar'
-            
+
                     onConfirm={this._redirectLogin} />
             </form>
         );

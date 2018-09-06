@@ -101,6 +101,7 @@ class ListShareholderComponent extends Component {
     const { reducerGlobal } = this.props;
     var permissionsShareholders = reducerGlobal.get('permissionsShareholders');
     return _.forOwn(data, function (value, key) {
+      
       var json1 = {
         "messageHeader": {
           "sessionToken": window.localStorage.getItem('sessionTokenFront'),

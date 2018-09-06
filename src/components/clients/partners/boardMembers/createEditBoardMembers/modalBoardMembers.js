@@ -34,6 +34,7 @@ import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};
@@ -357,6 +358,7 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
+            <SecurityMessageComponent/>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>

@@ -1,7 +1,8 @@
-export const VERSION_DATE = "31/07/2018";
+export const VERSION_DATE = "03/09/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
+export const JURIDICAL_PERSON = "Persona jurídica";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
 export const FILE_OPTION_REPORT_VISIT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
@@ -164,6 +165,8 @@ export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
 export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
 export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
 export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
+
+
 
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
