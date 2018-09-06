@@ -81,6 +81,8 @@ class ActividadEconomica extends React.Component {
                             </span>
                         </div>
                     </Col>
+                </Row>
+                <Row style={{ padding: "0px 10px 10px 0px" }}> 
                     <Col xs>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt><span>SubCIIU</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
