@@ -67,6 +67,14 @@ class ActividadEconomica extends React.Component {
                     </Col>
                     <Col xs>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Descripción CIIU</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].description') : ''}
+                            </span>
+                        </div>
+                    </Col>
+                    <Col xs>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
                             <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
                                 {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}

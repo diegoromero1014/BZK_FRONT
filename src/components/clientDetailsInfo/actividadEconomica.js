@@ -40,20 +40,32 @@ class ActividadEconomica extends Component {
                     <thead>
                         <tr>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>CIIU</span></th>
+                            <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Descripción CIIU</span></th>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Sector</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.ciiu}</td>
+                            <td style={{ width: "40%", verticalAlign: "initial" }}>{infoClient.ciiuDescription}</td>
+                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.sector}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style={{ width: "100%" }}>
+                    <thead>
+                        <tr>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>SubCIIU</span></th>
                             <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Subsector</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.ciiu}</td>
-                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.sector}</td>
-                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.subCiiuKey}</td>
-                            <td style={{ width: "20%", verticalAlign: "initial" }}>{infoClient.subSector}</td>
+                            <td style={{ width: "40%", verticalAlign: "initial" }}>{infoClient.subCiiuKey}</td>
+                            <td style={{ width: "40%", verticalAlign: "initial" }}>{infoClient.subSector}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table>                
                 <Row style={{ marginTop: '15px' }}>
                     <Col xs={12} md={12} lg={12}>
                         <table style={{ width: "100%" }}>

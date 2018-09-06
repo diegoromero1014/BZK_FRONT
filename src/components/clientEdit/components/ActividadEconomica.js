@@ -56,23 +56,6 @@ export class ActividadEconomica extends React.Component {
             </Row>
             <Row style={{ padding: "0px 10px 10px 0px" }}>
                 <Col xs>
-                    <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                        <dt><span>Naturaleza tributaria</span></dt>
-                        <ComboBox
-                            name="idtaxNature"
-                            labelInput="Seleccione la naturaleza..."
-                            {...taxNature}
-                            onBlur={taxNature.onBlur}
-                            valueProp={'id'}
-                            textProp={'value'}
-                            parentId="dashboardComponentScroll"
-                            data={selectsReducer.get(constants.CLIENT_TAX_NATURA)}
-                            touched={true}
-                            showEmptyObject={true}
-                        />
-                    </div>
-                </Col>
-                <Col xs>
                     <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
                         <dt><span>CIIU { drawRequiredField(true) }  </span></dt>
                         <ComboBox
@@ -92,12 +75,22 @@ export class ActividadEconomica extends React.Component {
                 </Col>
                 <Col xs>
                     <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                        <dt style={{ paddingBottom: "10px" }}><span>Descripción CIIU</span></dt>
+                        <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                            {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].description') : ''}
+                        </span>
+                    </div>
+                </Col>
+                <Col xs>
+                    <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                         <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
                         <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
                             {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
                         </span>
                     </div>
                 </Col>
+            </Row>
+            <Row style={{ padding: "0px 10px 10px 0px" }}>                
                 <Col xs>
                     <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                         <dt><span>SubCIIU {!isMethodEditClient && requiredField }</span></dt>
@@ -123,7 +116,24 @@ export class ActividadEconomica extends React.Component {
                         </span>
                     </div>
                 </Col>
-                </Row>
+                <Col xs>
+                    <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                        <dt><span>Naturaleza tributaria</span></dt>
+                        <ComboBox
+                            name="idtaxNature"
+                            labelInput="Seleccione la naturaleza..."
+                            {...taxNature}
+                            onBlur={taxNature.onBlur}
+                            valueProp={'id'}
+                            textProp={'value'}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(constants.CLIENT_TAX_NATURA)}
+                            touched={true}
+                            showEmptyObject={true}
+                        />
+                    </div>
+                </Col>
+            </Row>
             
                 </div>
         )
