@@ -182,7 +182,7 @@ class ModalNeed extends Component {
 
     _handleCreateNeed() {
         const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
-        let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
+        let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
         let productF = _.get(_.filter(selectsReducer.get(PRODUCT_FAMILY), ['id', parseInt(productFamily.value)]), '[0].value');
@@ -217,6 +217,7 @@ class ModalNeed extends Component {
                 needEdit.needDate = needDate.value;
                 needEdit.needFormat = needDate.value;
                 needEdit.statusIdNeed = statusNeed.value;
+                console.log('modalNeed', status);
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
                 

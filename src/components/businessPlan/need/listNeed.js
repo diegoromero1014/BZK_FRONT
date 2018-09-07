@@ -115,6 +115,7 @@ class ListNeed extends Component {
 
     _mapValuesNeed(needData, idx) {
         var {disabled} = this.props;
+        console.log(needData);
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
