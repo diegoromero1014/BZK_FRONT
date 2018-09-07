@@ -37,13 +37,9 @@ class Dashboard extends Component {
     if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
       window.localStorage.setItem('sessionTokenFront', '');
       document.cookie = 'estadoconexion=activa;path=/';
-      //console.log('redirigir al login')
       redirectUrl("/login");
 
     } else {
-      //console.log('sesion activa');
-      //console.log('token', token);
-      //console.log('cookie', document.cookie);
       const { loadObservablesLeftTimer, dashboardReducer } = this.props;
 
       loadObservablesLeftTimer();

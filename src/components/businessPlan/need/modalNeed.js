@@ -217,7 +217,6 @@ class ModalNeed extends Component {
                 needEdit.needDate = needDate.value;
                 needEdit.needFormat = needDate.value;
                 needEdit.statusIdNeed = statusNeed.value;
-                console.log('modalNeed', status);
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
                 

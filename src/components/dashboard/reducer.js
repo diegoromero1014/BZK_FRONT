@@ -18,7 +18,6 @@ export default (state = initialState, action) => {
       });
     case PRODUCTION_UPGRADE_REQUEST:
       const { messageNotification } = action.payload.data.data;
-      console.log("messageNotification", messageNotification);
       return state.set("productionUpgradeMessage", messageNotification);
     case PRODUCTION_UPGRADE_NOTIFIED:
       return state.set("productionUpgradeNotified", true);

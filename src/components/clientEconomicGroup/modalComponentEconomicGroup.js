@@ -53,7 +53,6 @@ class ModalComponentEconomicGroup extends Component {
       //isOpen cierra el modal
       isOpen();
     }).catch((reason) => {
-      console.log(reason);
       showLoading(false, '');
       swtShowMessage("error", "Señor usuario, ha ocurrido un error en el servidor.");
     });
