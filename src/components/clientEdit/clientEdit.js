@@ -550,7 +550,6 @@ const validate = (values, props) => {
     //ComponentListIntOperations
 
     if (errorScrollTop && clickButttonSave) {
-        //console.log("error faltan datos");
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
