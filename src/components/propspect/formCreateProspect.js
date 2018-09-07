@@ -616,6 +616,14 @@ class FormCreateProspect extends Component {
                             />
                         </div>
                     </Col>
+                    <Col xs={12} md={6} lg={6}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Descripción Ciiu</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                                {idCIIU.value && _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].description}
+                            </span>
+                        </div>
+                    </Col>                    
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>

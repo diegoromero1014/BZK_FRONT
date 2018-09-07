@@ -105,24 +105,6 @@ export class ActividadEconomicaPN extends React.Component {
             <Row style={{ padding: "0px 10px 10px 0px" }}>
                 <Col xs>
                     <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                        <dt><span>Ocupación {drawRequiredField(!isMethodEditClient)}</span></dt>
-                        <ComboBox
-                            name="occupation"
-                            labelInput="Seleccione Ocupación..."
-                            {...occupation}
-                            valueProp={'id'}
-                            textProp={'value'}
-                            parentId="dashboardComponentScroll"
-                            data={selectsReducer.get(constants.OCCUPATION)}
-                            touched={true}
-                            showEmptyObject={true}
-                            onChange={(id, text) => null}
-                            onBlur={(id, text) => {this._onChangeOccupation(id, text)}}
-                        />
-                    </div>
-                </Col>
-                <Col xs>
-                    <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
                         <dt><span>CIIU {drawRequiredField(this.state.ciiuRequired)}</span></dt>
                         <ComboBox
                             name="idCIIU"
@@ -141,12 +123,22 @@ export class ActividadEconomicaPN extends React.Component {
                 </Col>
                 <Col xs>
                     <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                        <dt style={{ paddingBottom: "10px" }}><span>Descripción Ciuu</span></dt>
+                        <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                            {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].description') : ''}
+                        </span>
+                    </div>
+                </Col>                
+                <Col xs>
+                    <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                         <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
                         <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
                             {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
                         </span>
                     </div>
                 </Col>
+            </Row>
+            <Row style={{ padding: "0px 10px 10px 0px" }}>
                 <Col xs>
                     <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                         <dt><span>SubCIIU {drawRequiredField(this.state.subciiuRequired)}</span></dt>
@@ -172,7 +164,27 @@ export class ActividadEconomicaPN extends React.Component {
                         </span>
                     </div>
                 </Col>
-                </Row>
+            </Row>
+            <Row style={{ padding: "0px 10px 10px 0px" }}>                
+                <Col xs>
+                    <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
+                        <dt><span>Ocupación {drawRequiredField(!isMethodEditClient)}</span></dt>
+                        <ComboBox
+                            name="occupation"
+                            labelInput="Seleccione Ocupación..."
+                            {...occupation}
+                            valueProp={'id'}
+                            textProp={'value'}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(constants.OCCUPATION)}
+                            touched={true}
+                            showEmptyObject={true}
+                            onChange={(id, text) => null}
+                            onBlur={(id, text) => {this._onChangeOccupation(id, text)}}
+                        />
+                    </div> 
+                </Col>                
+            </Row>
             
                 </div>
         )
