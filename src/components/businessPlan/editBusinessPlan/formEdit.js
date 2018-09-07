@@ -22,8 +22,8 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
-
+import BlockingComponent from '../../blockingComponent/blockingComponent';
+import {BLOCK_BUSINESS_PLAN} from '../../../constantsGlobal'
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -62,6 +62,8 @@ class FormEdit extends Component {
     }
 
     _editBusiness() {
+        const {hasAccess, swtShowMessage} = this.props;
+        
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -207,6 +209,13 @@ class FormEdit extends Component {
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { hasAccess, swtShowMessage } = this.props;
+        if (!hasAccess) {
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento otra persona esta editando este formulario. Intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
         }
     }
 
@@ -648,8 +657,10 @@ function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPla
         navBar
     };
 }
-export default reduxForm({
+const FormEditRedux = reduxForm({
     form: 'submitValidation',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(FormEdit);
+
+export default BlockingComponent(FormEditRedux, BLOCK_BUSINESS_PLAN);

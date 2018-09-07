@@ -253,11 +253,12 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
 
     export const NAME_REPORT_PREVISIT = "PreVisita";
     export const BLOCK_CREDIT_STUDY = "CreditStudy";
+    export const BLOCK_BUSINESS_PLAN = "BusinessPlan";
 
  /**
   * PARAMETROS BLOQUEO
   */
-    export const TIME_REQUEST_BLOCK_REPORT = 55000;
+    export const TIME_REQUEST_BLOCK_REPORT = 5000;
 
 
 /**

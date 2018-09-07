@@ -17,6 +17,8 @@ import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue, xssValidation } from "../../../actionsGlobal";
 import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
+import {TASK_STATUS} from '../../selectsComponent/constants';
+
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 
@@ -111,12 +113,13 @@ class ModalNeed extends Component {
         this._onClickDate = this._onClickDate.bind(this);
         this._scroll = this._scroll.bind(this);
         this._changeProductFamily = this._changeProductFamily.bind(this);
+        this.disableSubmitButton = false;
         this.state = {
             showSuccessAdd: false,
             showSuccessEdit: false,
             showEr: false,
             prueba: [],
-            showErrorYa: false
+            showErrorYa: false,
         }
         momentLocalizer(moment);
         thisForm = this;
@@ -179,12 +182,18 @@ class ModalNeed extends Component {
 
     _handleCreateNeed() {
         const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
-        let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
+        let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
         let productF = _.get(_.filter(selectsReducer.get(PRODUCT_FAMILY), ['id', parseInt(productFamily.value)]), '[0].value');
         let productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id', parseInt(needProduct.value)]), '[0].value');
-        
+
+        if (this.disableSubmitButton == true) {
+            return;
+        }
+
+        this.disableSubmitButton = true;
+
         if (needResponsable.value !== nameUsuario) {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
@@ -208,6 +217,7 @@ class ModalNeed extends Component {
                 needEdit.needDate = needDate.value;
                 needEdit.needFormat = needDate.value;
                 needEdit.statusIdNeed = statusNeed.value;
+                console.log('modalNeed', status);
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
                 
@@ -239,7 +249,6 @@ class ModalNeed extends Component {
                 addNeed(need);
                 swtShowMessage('success',"Necesidad agregada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.",{onConfirmCallback: this._closeCreate});
             }
-        
     }
 
     updateKeyValueUsersBanco(e) {
@@ -292,7 +301,7 @@ class ModalNeed extends Component {
         const { getClientNeeds, getMasterDataFields, selectsReducer, consultDataSelect } = this.props;
         getClientNeeds();
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);        
-        getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCT_FAMILY]);        
+        getMasterDataFields([IMPLEMENTATION_TIMELINE, TASK_STATUS, PRODUCT_FAMILY]);        
     }
 
     render() {
@@ -443,7 +452,7 @@ class ModalNeed extends Component {
                                         textProp={'value'}
                                         {...statusNeed}
                                         parentId="dashboardComponentScroll"
-                                        data={selectsReducer.get(STATUS_NEED) || []}
+                                        data={selectsReducer.get(TASK_STATUS) || []}
                                         disabled={disabled}
                                     />
                                 </dt>
