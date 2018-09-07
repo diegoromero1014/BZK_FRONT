@@ -63,12 +63,7 @@ class FormEdit extends Component {
 
     _editBusiness() {
         const {hasAccess, swtShowMessage} = this.props;
-        console.log(hasAccess);
-        if (!hasAccess) {
-            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento otra persona esta editando este formulario. Intente mas tarde');
-            return;
-        }
-
+        
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -214,6 +209,13 @@ class FormEdit extends Component {
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { hasAccess, swtShowMessage } = this.props;
+        if (!hasAccess) {
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento otra persona esta editando este formulario. Intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
         }
     }
 
