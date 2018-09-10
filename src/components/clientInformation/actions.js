@@ -40,6 +40,7 @@ export function clearInfoClient(){
 }
 
 export function changeEconomicGroup(economicGroup){
+  console.log(economicGroup);
   return {
     type: CHANGE_INFO_CLIENT,
     economicGroup
