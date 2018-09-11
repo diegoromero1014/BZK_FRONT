@@ -213,9 +213,9 @@ class FormEdit extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { hasAccess, swtShowMessage } = this.props;
+        const { hasAccess, swtShowMessage, userEditing } = this.props;
         if (!hasAccess) {
-            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento otra persona esta editando este formulario. Intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento el formulario esta siendo editado por ' + userEditing + '. Por favor intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
         }
     }
 

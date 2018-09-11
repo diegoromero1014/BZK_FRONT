@@ -41,7 +41,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             let idClient = window.sessionStorage.getItem('idClientSelected');
     
             // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
-    
+            
             return getUserBlockingReport(idClient, nameComponent).then((success) => {
 
                 if (! this.isComponentCreated) {
