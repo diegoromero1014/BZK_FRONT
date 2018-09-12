@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import {getUserBlockingReport,
     stopBlockToReport} from '../../actionsGlobal';
@@ -24,7 +25,9 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
         }
 
         componentWillMount() {
-            this.canUserEditBlockedReport(this.logUser);
+            this.canUserEditBlockedReport(this.logUser)
+            .then(() => {})
+            .catch(() => {});
         }
 
         componentWillUnmount() {
@@ -56,10 +59,9 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
                 }
     
                 let username = success.payload.data.data.username
-    
                 let name = success.payload.data.data.name
-    
-                if (_.isNull(username)) {
+                
+                if (_.isNull(username) || _.isUndefined(username)) {
                     // Error servidor
                     return Promise.reject(new Error('Error interno del servidor'))
                 } else if (username.toUpperCase() === myUserName.toUpperCase()) {
