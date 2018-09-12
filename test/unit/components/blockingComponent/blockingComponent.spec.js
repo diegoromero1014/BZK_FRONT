@@ -55,7 +55,7 @@ describe("Test BlockingComponent", () => {
         stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("icherrer");
         
         setTimeout(() => {
-            expect(wrapper.state()).to.have.property('hasAccess', true);
+            expect(wrapper.state()).to.have.property('hasAccess', false);
             done();
         }, 1000);
         
