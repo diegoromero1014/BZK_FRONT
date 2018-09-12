@@ -4,7 +4,6 @@ import thunk from 'redux-thunk';
 
 import blockingFunction from "~/src/components/blockingComponent/blockingComponent";
 import * as actionsGlobal from "~/src/actionsGlobal";
-import { doesNotReject } from "assert";
 
 class TestComponent extends React.Component {
     render() {
