@@ -20,7 +20,6 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             this.logUser = window.localStorage.getItem('userNameFront');
             this.firstAccess = true;
             this.isComponentCreated = true;
-
             this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
         }
 
@@ -42,7 +41,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             let idClient = window.sessionStorage.getItem('idClientSelected');
     
             // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
-    
+            
             return getUserBlockingReport(idClient, nameComponent).then((success) => {
 
                 if (! this.isComponentCreated) {
@@ -71,9 +70,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
                             hasAccess: true,
                             intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                         })
-
                         this.firstAccess = false;
-
                     }
                 } else { // El reporte esta siendo editado por otra persona
                     
