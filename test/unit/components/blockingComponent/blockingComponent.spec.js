@@ -21,23 +21,56 @@ describe("Test BlockingComponent", () => {
 
     let store;
     let stubGetUser;
+    let stubLocalStorage;
+    const data = {payload: { data: { data: {isPDFGenerated: true} } }};
 
     beforeEach(() => {
         store = mockStore({});
-        stubGetUser = sinon.stub(actionsGlobal, 'getUserBlockingReport').returns(() => Promise.resolve({}));
+        const success = {payload: { data: { data: {username: 'heurrea', name: 'Urrea Ballesteros'} } }};
+        stubGetUser = sinon.stub(actionsGlobal, 'getUserBlockingReport').returns(() => {
+            return new Promise(
+                (resolve, reject) => resolve(success)
+            )
+        });
+        
 
     });
 
     afterEach(function() {
         // runs after each test in this block
         stubGetUser.restore();
+        stubLocalStorage.restore();
     });
 
-    it("should render Component", () => {
+    it("should render wrapper component", () => {
         const BlockingComponent = blockingFunction(TestComponent, "Prueba");
-        const success = {payload: { data: { data: {username: 'heurrea', name: 'Urrea Ballesteros'} } }};
-        store.subscribe()
-        const wrapper = render(<BlockingComponent store={store} />);
+        const wrapper = shallow(<BlockingComponent store={store} />).dive();
+        stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("icherrer");
         expect(wrapper.find(TestComponent)).to.have.length(1);
     });
+
+    it("hasAccess should be false when the user is diferent", (done) => {
+        const BlockingComponent = blockingFunction(TestComponent, "Prueba");
+        const wrapper = shallow(<BlockingComponent store={store} />).dive();
+        stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("icherrer");
+        
+        setTimeout(() => {
+            expect(wrapper.state()).to.have.property('hasAccess', false);
+            done();
+        }, 1000);
+        
+    });
+
+    it("hasAccess should be true when the user is the same", (done) => {
+        const BlockingComponent = blockingFunction(TestComponent, "Prueba");
+        const wrapper = shallow(<BlockingComponent store={store} />).dive();
+        stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("heurrea");
+
+        setTimeout(() => {
+            expect(wrapper.state()).to.have.property('hasAccess',true);
+            done();
+        }, 1000);
+
+    });
+
 })
