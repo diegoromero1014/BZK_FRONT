@@ -25,27 +25,29 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
         }
 
         componentWillMount() {
-            this.canUserEditBlockedReport(this.logUser)
+
+            const {id} = this.props;
+
+            this.canUserEditBlockedReport(this.logUser, id)
             .then(() => {})
             .catch(() => {});
         }
 
         componentWillUnmount() {
+
+            const {id} = this.props;
+
             clearInterval(this.state.intervalId);
             if (this.state.hasAccess) {
-                let idClient = window.sessionStorage.getItem('idClientSelected');
                 this.isComponentCreated = false;
-                stopBlockToReport(idClient, BLOCK_BUSINESS_PLAN);
+                stopBlockToReport(id, BLOCK_BUSINESS_PLAN);
             }  
         }
 
-        canUserEditBlockedReport(myUserName) {
+        canUserEditBlockedReport(myUserName, idEntity) {
             const { getUserBlockingReport } = this.props;
-            let idClient = window.sessionStorage.getItem('idClientSelected');
-    
-            // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
             
-            return getUserBlockingReport(idClient, nameComponent).then((success) => {
+            return getUserBlockingReport(idEntity, nameComponent).then((success) => {
 
                 if (! this.isComponentCreated) {
                     clearInterval(this.state.intervalId);
@@ -70,7 +72,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
                         // Tengo permiso de editar y no estoy editando
                         this.setState({
                             hasAccess: true,
-                            intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                            intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName, idEntity) }, TIME_REQUEST_BLOCK_REPORT)
                         })
                         this.firstAccess = false;
                     }

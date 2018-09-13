@@ -258,7 +258,7 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
  /**
   * PARAMETROS BLOQUEO
   */
-    export const TIME_REQUEST_BLOCK_REPORT = 45000;
+    export const TIME_REQUEST_BLOCK_REPORT = 55000;
 
 
 /**
