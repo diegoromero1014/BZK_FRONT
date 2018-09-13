@@ -34,7 +34,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             clearInterval(this.state.intervalId);
             if (this.state.hasAccess) {
                 let idClient = window.sessionStorage.getItem('idClientSelected');
-                this.isComponentCreated;
+                this.isComponentCreated = false;
                 stopBlockToReport(idClient, BLOCK_BUSINESS_PLAN);
             }  
         }
