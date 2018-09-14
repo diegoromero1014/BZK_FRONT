@@ -22,31 +22,32 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             this.firstAccess = true;
             this.isComponentCreated = true;
             this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
+            this.idEntity = null;
         }
 
         componentWillMount() {
-
             const {id} = this.props;
-
-            this.canUserEditBlockedReport(this.logUser, id)
+            this.idEntity = id;
+            this.canUserEditBlockedReport()
             .then(() => {})
             .catch(() => {});
         }
 
         componentWillUnmount() {
 
-            const {id} = this.props;
-
             clearInterval(this.state.intervalId);
             if (this.state.hasAccess) {
                 this.isComponentCreated = false;
-                stopBlockToReport(id, BLOCK_BUSINESS_PLAN);
+                stopBlockToReport(this.idEntity, BLOCK_BUSINESS_PLAN);
             }  
         }
 
-        canUserEditBlockedReport(myUserName, idEntity) {
+        canUserEditBlockedReport() {
             const { getUserBlockingReport } = this.props;
             
+            let myUserName = this.logUser;
+            let idEntity = this.idEntity;
+
             return getUserBlockingReport(idEntity, nameComponent).then((success) => {
 
                 if (! this.isComponentCreated) {
@@ -72,7 +73,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
                         // Tengo permiso de editar y no estoy editando
                         this.setState({
                             hasAccess: true,
-                            intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName, idEntity) }, TIME_REQUEST_BLOCK_REPORT)
+                            intervalId: setInterval(this.canUserEditBlockedReport, TIME_REQUEST_BLOCK_REPORT)
                         })
                         this.firstAccess = false;
                     }
@@ -97,7 +98,9 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
         }
 
         render() {
-            return <WrappedComponent {...this.props} hasAccess={this.state.hasAccess} userEditing={this.state.userEditing} />
+            return <WrappedComponent {...this.props} hasAccess={this.state.hasAccess} 
+                        userEditing={this.state.userEditing}
+                        canUserEditBlockedReport={this.canUserEditBlockedReport} />
         }
 
     }
