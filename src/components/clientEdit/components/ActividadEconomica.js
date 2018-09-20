@@ -28,6 +28,7 @@ export class ActividadEconomica extends React.Component {
      //Detecta el cambio en el select de ciiu para ejecutar la consulta de subciiu
      _onChangeCIIU(val) {
         const { idCIIU, idSubCIIU } = this.props;
+        console.log('onChangeCIIU', val);
         idCIIU.onChange(val);
         const { clientInformacion } = this.props;
         var infoClient = clientInformacion.get('responseClientInfo');

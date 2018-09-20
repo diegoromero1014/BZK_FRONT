@@ -1174,7 +1174,7 @@ class clientEdit extends Component {
             if (isPersonaNatural) {
                 razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "" );
             }
-
+            console.log("idCIIU.value",idCIIU.value);
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
@@ -1184,6 +1184,7 @@ class clientEdit extends Component {
                 "riskRating": infoClient.riskRating,
                 "isProspect": infoClient.isProspect,
                 "ciiu": idCIIU.value,
+                "idCiiu": idCIIU.value,
                 "commercialRelationshipType": infoClient.commercialRelationshipType,
                 "countryOfOrigin": infoClient.countryOfOrigin,
                 "isDecisionCenter": centroDecision.value,
@@ -2609,7 +2610,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             idTypeClient: infoClient.clientIdType,
             idNumber: infoClient.clientIdNumber,
             description: infoClient.description,
-            idCIIU: infoClient.ciiu,
+            idCIIU: infoClient.idCiiu,
             idSubCIIU: infoClient.subCiiu,
             addressClient: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
             country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
