@@ -3,15 +3,18 @@ import ListParticipantesBancolombia from './listParticipantesBancolombia';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import Textarea from '../../ui/textarea/textareaComponent';
 import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { contactsByClientFindServer } from '../contact/actions';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import { APP_URL, 
+import {
+  APP_URL,
   VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
+  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
 import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -49,7 +52,7 @@ class ParticipantesBancolombia extends Component {
         }
       });
       if (xssValidation(nameUsuario.value)) {
-        swtShowMessage('error',"Error participante",REGEX_SIMPLE_XSS_MESAGE);
+        swtShowMessage('error', "Error participante", REGEX_SIMPLE_XSS_MESAGE);
         return;
       }
       if (particip === undefined) {
@@ -71,11 +74,11 @@ class ParticipantesBancolombia extends Component {
         cargoUsuario.onChange('');
         empresaUsuario.onChange('');
       } else {
-        swtShowMessage('error',"Participante existente","Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+        swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
 
       }
     } else {
-        swtShowMessage('error',"Error participante","Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
+      swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
     }
   }
 
@@ -97,7 +100,7 @@ class ParticipantesBancolombia extends Component {
       empresaUsuario.onChange(userSelected.company);
     } else {
 
-      if (idUsuario.value > 0 ) {
+      if (idUsuario.value > 0) {
         idUsuario.onChange('');
       }
 
@@ -165,8 +168,8 @@ class ParticipantesBancolombia extends Component {
           }, 150);
         });
       } else {
-        if (nameUsuario.value.length <=3) {
-          swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+        if (nameUsuario.value.length <= 3) {
+          swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
         }
       }
     }
@@ -201,19 +204,17 @@ class ParticipantesBancolombia extends Component {
                 <dt><span>Nombre (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt>
                   <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                    <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                      <input className="prompt" id="inputParticipantBanc"
-                        style={{ borderRadius: "3px" }}
-                        autoComplete="off"
-                        type="text"
-                        value={nameUsuario.value}
-                        onChange={nameUsuario.onChange}
-                        placeholder="Ingrese un criterio de búsqueda..."
-                        onKeyPress={this.updateKeyValueUsersBanco}
-                        onSelect={val => this._updateValue(val)}
-                      />
-                      <i className="search icon" id="iconSearchParticipants"></i>
-                    </div>
+                    <ComboBoxFilter
+                      name="inputParticipantBanc"
+                      placeholder="Ingrese un criterio de búsqueda..."
+                      {...nameUsuario}
+                      parentId="dashboardComponentScroll"
+                      value={nameUsuario.value}
+                      onChange={nameUsuario.onChange}
+                      onKeyPress={this.updateKeyValueUsersBanco}
+                      onSelect={val => this._updateValue(val)}
+                      max="255"
+                    />
                     <div className="menu results"></div>
                   </div>
                 </dt>

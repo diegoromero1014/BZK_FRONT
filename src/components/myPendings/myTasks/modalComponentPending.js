@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import { Col, Grid, Row } from "react-flexbox-grid";
 import { redirectUrl } from "../../globalComponents/actions";
 import { consultParameterServer, formValidateKeyEnter, htmlToText } from '../../../actionsGlobal';
-
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import { updateTitleNavBar } from "../../navBar/actions";
 import {
     clearMyPendingPaginator,
@@ -191,7 +191,7 @@ class ModalComponentPending extends Component {
         clearMyPendingPaginator();
         clearMyPendingsOrder();
         this.setState({ keywordMyPending: this.state.keywordMyPending.trim() });
-        if(this.state.keywordMyPending){
+        if (this.state.keywordMyPending) {
             showLoading(true, MESSAGE_LOAD_DATA);
             tasksByUser(0, NUMBER_RECORDS, this.state.keywordMyPending, null, "").then((data) => {
                 showLoading(false, '');
@@ -320,8 +320,8 @@ class ModalComponentPending extends Component {
         const selfThis = this;
 
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
-            if(nameUsuario.value.length < 3) {
-                swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+            if (nameUsuario.value.length < 3) {
+                swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
                 return;
             }
             $('.ui.search.participantBanc').toggleClass('loading');
@@ -372,7 +372,7 @@ class ModalComponentPending extends Component {
     _changeResponsableInput(e) {
         const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
         nameUsuario.onChange(e);
-        
+
         if (!e.currentTarget.value) {
             objetoUsuario.onChange(null);
             nameUsuario.onChange(null);
@@ -483,20 +483,17 @@ class ModalComponentPending extends Component {
                                     <Col xs={12} sm={12} md={6} lg={6}>
 
                                         <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                            <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                                                <input className="prompt" id="inputParticipantBanc"
-                                                    style={{ borderRadius: "3px" }}
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    value={nameUsuario.value}
-                                                    onChange={this._changeResponsableInput}
-                                                    placeholder="Responsable"
-                                                    onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                                                    
-                                                />
-                                                <i onClick={this._loadResponsable} className="search icon" id="iconSearchParticipants"></i>
-                                            </div>
-                                            <div className="menu results"></div>
+                                            <ComboBoxFilter
+                                                name="inputParticipantBanc"
+                                                placeholder="Responsable"
+                                                {...nameUsuario}
+                                                parentId="dashboardComponentScroll"
+                                                value={nameUsuario.value}
+                                                onChange={nameUsuario.onChange}
+                                                onKeyPress={this.updateKeyValueUsersBanco}
+                                                onSelect={val => this._updateValue(val)}
+                                                max="255"
+                                            />
                                         </div>
 
                                     </Col>
@@ -508,10 +505,10 @@ class ModalComponentPending extends Component {
                             {!this.state.teamViewTask &&
                                 <Col xs={12} sm={12} md={6} lg={6}>
                                     <div className="InputAddOn">
-                                        <input type="text" style={{ padding: '0px 11px !important' }} 
+                                        <input type="text" style={{ padding: '0px 11px !important' }}
                                             placeholder="Búsqueda por tipo de documento, número de documento y nombre del cliente"
-                                            value={this.state.keywordMyPending} 
-                                            onKeyPress={this._handleChangeKeyword} 
+                                            value={this.state.keywordMyPending}
+                                            onKeyPress={this._handleChangeKeyword}
                                             onChange={this._handleChangeKeyword}
                                             className="input-lg input InputAddOn-field" />
                                         <button id="searchExpression" className="btn" title="Búsqueda por tipo de documento, número de documento y nombre del cliente" type="button"
