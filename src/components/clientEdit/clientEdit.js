@@ -1174,7 +1174,7 @@ class clientEdit extends Component {
             if (isPersonaNatural) {
                 razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "" );
             }
-            console.log("idCIIU.value",idCIIU.value);
+            
             const jsonCreateProspect = {
                 "id": infoClient.id,
                 "clientIdType": idTypeClient.value,
