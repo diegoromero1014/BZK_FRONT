@@ -11,7 +11,6 @@ import InputComponent from "../../../../../ui/input/inputComponent";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
-import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
@@ -361,7 +360,6 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
-                <SecurityMessageComponent />
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>

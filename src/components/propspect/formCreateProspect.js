@@ -262,6 +262,7 @@ class FormCreateProspect extends Component {
                 "riskRating": null,
                 "isProspect": true,
                 "ciiu": idCIIU.value,
+                "idCiiu": idCIIU.value,
                 "celulaId": idCelula.value,
                 "commercialRelationshipType": "",
                 "countryOfOrigin": "",
@@ -369,6 +370,7 @@ class FormCreateProspect extends Component {
 
     _onChangeCIIU(val) {
         const { fields: { idCIIU, idSubCIIU } } = this.props;
+        
         idCIIU.onChange(val);
         const { consultListWithParameter } = this.props;
         consultListWithParameter(constants.SUB_CIIU, val);
