@@ -11,7 +11,8 @@ import {
 } from './actions';
 import GridComponent from '../grid/component';
 import {redirectUrl} from '../globalComponents/actions'
-import {VISUALIZAR} from '../../constantsGlobal';
+import {VISUALIZAR, EDITAR, MODULE_CLIENTS} from '../../constantsGlobal';
+import { validatePermissionsByModule } from "../../actionsGlobal";
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './clientPendingUpdateUtilities';
@@ -38,6 +39,13 @@ class ListClientsPendingUpdate extends Component {
             orderA: 'none',
             orderD: 'inline-block'
         }
+
+        const { validatePermissionsByModule } = this.props;
+        let globalResponse = this.props.reducerGlobal.get('permissionsClients');
+        if(globalResponse !== null || globalResponse.length > 0) {
+            validatePermissionsByModule(MODULE_CLIENTS);
+        }
+
     }
 
     _orderColumn(orderClients, columnClients) {
@@ -52,6 +60,7 @@ class ListClientsPendingUpdate extends Component {
         const idRegion = alertPendingUpdateClient.get('idRegion');
         const idZone = alertPendingUpdateClient.get('idZone');
         const page = alertPendingUpdateClient.get('pageNum');
+        
         showLoading(true, 'Cargando..');
         clientsPendingUpdateFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, orderClients, columnClients).then((data) => {
             if (has(data, 'payload.data.data')) {
@@ -61,6 +70,9 @@ class ListClientsPendingUpdate extends Component {
     }
 
     _renderHeaders() {
+
+        let hasPermissionView = has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false);        
+        let hasPermissionEdit = has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), EDITAR), false); 
 
         const headersTable = [
             {
@@ -77,7 +89,7 @@ class ListClientsPendingUpdate extends Component {
                 title: "Nombre/Razón social",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "clientName")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "clientName")}></i></span>,
                 key: "clientNameLink",
-                showLink :has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false)
+                showLink : hasPermissionView && hasPermissionEdit
             },
             {
                 title: "Célula",
@@ -126,7 +138,8 @@ function mapDispatchToProps(dispatch) {
         clearClientPagination,
         orderColumnClientPendingUpdate,
         clientsPendingUpdateFindServer,
-        showLoading
+        showLoading,
+        validatePermissionsByModule
     }, dispatch);
 }
 
