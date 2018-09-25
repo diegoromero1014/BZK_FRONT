@@ -339,99 +339,103 @@ class clientCertify extends React.Component {
         } = this.props;
 
         const infoClient = clientInformacion.get('responseClientInfo');
+      
+            
 
-        const jsonCreateProspect = {
-            "id": infoClient.id,
-            "clientIdType": infoClient.clientIdType,
-            "clientIdNumber": infoClient.clientIdNumber,
-            "clientName": infoClient.clientName,
-            "clientStatus": infoClient.clientStatus,
-            "riskRating": infoClient.riskRating,
-            "isProspect": infoClient.isProspect,
-            "ciiu": idCIIU.value,
-            "commercialRelationshipType": infoClient.commercialRelationshipType,
-            "countryOfOrigin": infoClient.countryOfOrigin,
-            "isDecisionCenter": centroDecision.value,
-            "economicGroup": groupEconomic.value,
-            "internalRating": infoClient.internalRating,
-            "isic": infoClient.isic,
-            "ratingHistory": infoClient.ratingHistory,
-            "registrationKey": infoClient.registrationKey,
-            "riskGroup": infoClient.riskGroup,
-            "segment": infoClient.segment,
-            "subCiiu": idSubCIIU.value,
-            "subSegment": infoClient.subSegment,
-            "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
-            "countryOfMainMarket": infoClient.countryOfMainMarket,
-            "relationshipStatus": infoClient.relationshipStatus,
-            "typeOfClient": infoClient.typeOfClient,
-            "status": infoClient.status,
-            "isCreditNeeded": necesitaLME.value,
-            "annualSales": (annualSales.value === undefined || annualSales.value === null || annualSales.value === '') ? null : numeral(annualSales.value).format('0'),
-            "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-            "assets": (assets.value === undefined || assets.value === null || assets.value === '') ? null : numeral(assets.value).format('0'),
-            "liabilities": (liabilities.value === undefined || liabilities.value === null || liabilities.value === '') ? null : numeral(liabilities.value).format('0'),
-            "operatingIncome": (operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === '') ? null : numeral(operatingIncome.value).format('0'),
-            "nonOperatingIncome": (nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === '') ? null : numeral(nonOperatingIncome.value).format('0'),
-            "expenses": (expenses.value === undefined || expenses.value === null || expenses.value === '') ? null : numeral(expenses.value).format('0'),
-            "localMarket": infoClient.localMarket,
-            "marketLeader": infoClient.marketLeader,
-            "territory": infoClient.territory,
-            "actualizationDate": infoClient.actualizationDate,
-            "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
-            "justificationForLostClient": justifyExClient.value,
-            "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
-            "isVirtualStatement": infoClient.isVirtualStatement,
-            "lineOfBusiness": infoClient.lineOfBusiness,
-            "isManagedByRm": marcGeren.value,
-            "occupation": occupation.value,
-            "addresses": [
-                {
-                    "typeOfAddress": 41,
-                    "address": addressClient.value,
-                    "country": country.value,
-                    "province": province.value,
-                    "city": city.value,
-                    "neighborhood": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].neighborhood,
-                    "isPrincipalAddress": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].isPrincipalAddress,
-                    "phoneNumber": telephone.value,
-                    "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
-                }],
-            "notes": notesArray,
-            "description": infoClient.description,
-            "celulaId": infoClient.celulaId,
-            "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
-            "foreignProducts": infoClient.foreignProducts,
-            "originGoods": infoClient.originGoods,
-            "originResources": infoClient.originResources,
-            "taxNature": infoClient.taxNature,
-            "detailNonOperatinIncome": infoClient.detailNonOperatinIncome,
-            "otherOriginGoods": infoClient.otherOriginGoods,
-            "otherOriginResource": infoClient.otherOriginResource,
-            "countryOriginId": infoClient.countryOriginId,
-            "originCityResource": infoClient.originCityResource,
-            "operationsForeignCurrency": infoClient.operationsForeignCurrency,
-            "otherOperationsForeign": infoClient.otherOperationsForeign,
-            "operationsForeigns": infoClient.operationsForeigns,
-            "idCustomerTypology": infoClient.idCustomerTypology,
-            "clientType": infoClient.clientType,
-            "firstName": infoClient.firstName,
-            "middleName": infoClient.middleName,
-            "lastName": infoClient.lastName,
-            "middleLastName": infoClient.middleLastName
-        };
-
-        const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        createProspect(jsonCreateProspect).then((data) => {
-            if (_.get(data, 'payload.data.status', 500) === 200) {
-                changeStateSaveData(false, "");
-                messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                this.setState({ showEx: true });
-            } else {
-                changeStateSaveData(false, "");
-                this.setState({ showEr: true });
-            }
+            const jsonCreateProspect = {
+                "id": infoClient.id,
+                "clientIdType": infoClient.clientIdType,
+                "clientIdNumber": infoClient.clientIdNumber,
+                "clientName": infoClient.clientName,
+                "clientStatus": infoClient.clientStatus,
+                "riskRating": infoClient.riskRating,
+                "isProspect": infoClient.isProspect,
+                "ciiu": idCIIU.value,
+                "idCiiu": idCIIU.value,
+                "commercialRelationshipType": infoClient.commercialRelationshipType,
+                "countryOfOrigin": infoClient.countryOfOrigin,
+                "isDecisionCenter": centroDecision.value,
+                "economicGroup": groupEconomic.value,
+                "internalRating": infoClient.internalRating,
+                "isic": infoClient.isic,
+                "ratingHistory": infoClient.ratingHistory,
+                "registrationKey": infoClient.registrationKey,
+                "riskGroup": infoClient.riskGroup,
+                "segment": infoClient.segment,
+                "subCiiu": idSubCIIU.value,
+                "subSegment": infoClient.subSegment,
+                "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
+                "countryOfMainMarket": infoClient.countryOfMainMarket,
+                "relationshipStatus": infoClient.relationshipStatus,
+                "typeOfClient": infoClient.typeOfClient,
+                "status": infoClient.status,
+                "isCreditNeeded": necesitaLME.value,
+                "annualSales": (annualSales.value === undefined || annualSales.value === null || annualSales.value === '') ? null : numeral(annualSales.value).format('0'),
+                "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
+                "assets": (assets.value === undefined || assets.value === null || assets.value === '') ? null : numeral(assets.value).format('0'),
+                "liabilities": (liabilities.value === undefined || liabilities.value === null || liabilities.value === '') ? null : numeral(liabilities.value).format('0'),
+                "operatingIncome": (operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === '') ? null : numeral(operatingIncome.value).format('0'),
+                "nonOperatingIncome": (nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === '') ? null : numeral(nonOperatingIncome.value).format('0'),
+                "expenses": (expenses.value === undefined || expenses.value === null || expenses.value === '') ? null : numeral(expenses.value).format('0'),
+                "localMarket": infoClient.localMarket,
+                "marketLeader": infoClient.marketLeader,
+                "territory": infoClient.territory,
+                "actualizationDate": infoClient.actualizationDate,
+                "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
+                "justificationForLostClient": justifyExClient.value,
+                "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
+                "isVirtualStatement": infoClient.isVirtualStatement,
+                "lineOfBusiness": infoClient.lineOfBusiness,
+                "isManagedByRm": marcGeren.value,
+                "occupation" : occupation.value,
+                "addresses": [
+                    {
+                        "typeOfAddress": 41,
+                        "address": addressClient.value,
+                        "country": country.value,
+                        "province": province.value,
+                        "city": city.value,
+                        "neighborhood": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].neighborhood,
+                        "isPrincipalAddress": infoClient.addresses[0] === null ? "" : infoClient.addresses[0].isPrincipalAddress,
+                        "phoneNumber": telephone.value,
+                        "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
+                    }],
+                "notes": notesArray,
+                "description": infoClient.description,
+                "celulaId": infoClient.celulaId,
+                "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
+                "foreignProducts": infoClient.foreignProducts,
+                "originGoods": infoClient.originGoods,
+                "originResources": infoClient.originResources,
+                "taxNature": infoClient.taxNature,
+                "detailNonOperatinIncome": infoClient.detailNonOperatinIncome,
+                "otherOriginGoods": infoClient.otherOriginGoods,
+                "otherOriginResource": infoClient.otherOriginResource,
+                "countryOriginId": infoClient.countryOriginId,
+                "originCityResource": infoClient.originCityResource,
+                "operationsForeignCurrency": infoClient.operationsForeignCurrency,
+                "otherOperationsForeign": infoClient.otherOperationsForeign,
+                "operationsForeigns": infoClient.operationsForeigns,
+                "idCustomerTypology": infoClient.idCustomerTypology,
+                "clientType" : infoClient.clientType,
+                "firstName" : infoClient.firstName,
+                "middleName" : infoClient.middleName,
+                "lastName" : infoClient.lastName,
+                "middleLastName" : infoClient.middleLastName               
+            };
+            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
+            changeStateSaveData(true, MESSAGE_SAVE_DATA);
+            createProspect(jsonCreateProspect).then((data) => {
+                if (_.get(data, 'payload.data.status', 500) === 200) {
+                    
+                    changeStateSaveData(false, "");
+                    messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                    this.setState({ showEx: true });
+                    
+                } else {
+                    changeStateSaveData(false, "");
+                    this.setState({ showEr: true });
+                }
         }, (reason) => {
             changeStateSaveData(false, "");
             this.setState({ showEr: true });
@@ -1100,7 +1104,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             justifyNoGeren: infoClient.justificationForNoRM,
             justifyExClient: infoClient.justificationForLostClient,
             justifyNoLME: infoClient.justificationForCreditNeed,
-            idCIIU: infoClient.ciiu,
+            idCIIU: infoClient.idCiiu,
             idSubCIIU: infoClient.subCiiu,
             groupEconomic: infoClient.economicGroup,
             annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
