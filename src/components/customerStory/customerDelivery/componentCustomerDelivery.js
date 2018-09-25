@@ -126,8 +126,8 @@ class ComponentCustomerDelivery extends Component {
             const validateErrorsSuppliers = _.filter(customerStory.get('listClientsDelivery'), ['mainSuppliersComplete', false]);
             // Se tiene en cuenta el permiso de estudio de credito para validar obligatoriedad de clientes y proveedores principales
             if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0 ||
-                ( ( ( _.size(validateErrorsClients) > 0 ) || ( _.size(validateErrorsSuppliers) > 0 ) ) && allowAccessContextClient ) ) {
-                    swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
+                (((_.size(validateErrorsClients) > 0) || (_.size(validateErrorsSuppliers) > 0)) && allowAccessContextClient)) {
+                swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
             } else {
                 this.setState({ showConfirmUpdate: true });
             }
@@ -164,7 +164,7 @@ class ComponentCustomerDelivery extends Component {
     }
 
     render() {
-        
+
         const { fields: { idCelula, reasonTranfer, otherReason }, customerStory, selectsReducer, handleSubmit, clientInformacion, reducerGlobal } = this.props;
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
         allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);

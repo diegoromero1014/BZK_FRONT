@@ -16,27 +16,24 @@ class TestComponent extends React.Component {
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-
 describe("Test BlockingComponent", () => {
 
     let store;
     let stubGetUser;
     let stubLocalStorage;
-    const data = {payload: { data: { data: {isPDFGenerated: true} } }};
+    const data = { payload: { data: { data: { isPDFGenerated: true } } } };
 
     beforeEach(() => {
         store = mockStore({});
-        const success = {payload: { data: { data: {username: 'heurrea', name: 'Urrea Ballesteros'} } }};
+        const success = { payload: { data: { data: { username: 'heurrea', name: 'Urrea Ballesteros' } } } };
         stubGetUser = sinon.stub(actionsGlobal, 'getUserBlockingReport').returns(() => {
             return new Promise(
                 (resolve, reject) => resolve(success)
             )
         });
-        
-
     });
 
-    afterEach(function() {
+    afterEach(function () {
         // runs after each test in this block
         stubGetUser.restore();
         stubLocalStorage.restore();
@@ -53,12 +50,12 @@ describe("Test BlockingComponent", () => {
         const BlockingComponent = blockingFunction(TestComponent, "Prueba");
         const wrapper = shallow(<BlockingComponent store={store} />).dive();
         stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("icherrer");
-        
+
         setTimeout(() => {
             expect(wrapper.state()).to.have.property('hasAccess', false);
             done();
         }, 1000);
-        
+
     });
 
     it("hasAccess should be true when the user is the same", (done) => {
@@ -67,10 +64,8 @@ describe("Test BlockingComponent", () => {
         stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("heurrea");
 
         setTimeout(() => {
-            expect(wrapper.state()).to.have.property('hasAccess',true);
+            expect(wrapper.state()).to.have.property('hasAccess', true);
             done();
         }, 1000);
-
     });
-
 })

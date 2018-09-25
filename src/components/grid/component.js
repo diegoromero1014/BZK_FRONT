@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
+
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
@@ -11,8 +12,9 @@ import PdfLinkComponent from './pdfLinkComponent';
 import LinkComponent from './linkComponent';
 import LinkModalComponent from './linkModalComponent';
 import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
-import { ACTION_CHECK } from './constants';
 import CheckComponent from './checkComponent';
+
+import { ACTION_CHECK } from './constants';
 
 class GridComponent extends Component {
 

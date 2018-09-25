@@ -1,31 +1,36 @@
 import React, { Component } from 'react';
 import { Row, Grid, Col } from 'react-flexbox-grid';
-import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
-import { clearContactDelete } from '../actions';
-import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
-import { NUMBER_RECORDS } from '../constants';
 import { bindActionCreators } from 'redux';
-import SweetAlert from '../../sweetalertFocus';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { reduxForm } from 'redux-form';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import { OrderedMap } from 'immutable';
+import moment from 'moment';
+import _ from 'lodash';
+
+import SweetAlert from '../../sweetalertFocus';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
-import { changeStateSaveData } from '../../dashboard/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import TextareaComponent from '../../../ui/textarea/textareaComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import { createErrorsPriority, shouldHandleError } from '../../../utils';
+import Tooltip from '../../toolTip/toolTipComponent';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
+
+import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
+import { clearContactDelete } from '../actions';
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
+import { changeStateSaveData } from '../../dashboard/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
 import {
     consultDataSelect,
     consultList,
     consultListWithParameterUbication,
     getMasterDataFields
 } from '../../selectsComponent/actions';
-import { createErrorsPriority, shouldHandleError } from '../../../utils';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
-import { OrderedMap } from 'immutable';
-import _ from 'lodash';
+
+import { NUMBER_RECORDS } from '../constants';
 import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
@@ -55,8 +60,6 @@ import {
     FILTER_SOCIAL_STYLE,
     FILTER_ATTITUDE_OVER_GROUP
 } from '../../selectsComponent/constants';
-import Tooltip from '../../toolTip/toolTipComponent';
-import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["id", "tipoDocumento", "numeroDocumento", "tipoTratamiendo", "tipoGenero", "primerNombre", "segundoNombre", "primerApellido", "segundoApellido",
     "tipoCargo", "tipoDependencia", "fechaNacimiento", "tipoEstiloSocial", "tipoActitud", "pais", "departamento", "ciudad", "direccion", "barrio",
@@ -217,8 +220,8 @@ const validate = (values) => {
 
     return errors;
 };
-class ModalComponentContact extends Component {
 
+class ModalComponentContact extends Component {
     constructor(props) {
         super(props);
         this._close = this._close.bind(this);
@@ -338,9 +341,9 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-            numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad,
-            contactRelevantFeatures
+                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad,
+                contactRelevantFeatures
             }, handleSubmit, error
         } = this.props;
         const { searchContact, clearSearchContact } = this.props;
@@ -379,8 +382,8 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-            numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-            codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
+                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
+                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             }, handleSubmit, error
         } = this.props;
         var messageBody = {
@@ -437,7 +440,6 @@ class ModalComponentContact extends Component {
         });
     }
 
-
     componentWillReceiveProps(props) {
         this.setState({
             errorMap: createErrorsPriority(props.fields, fields)
@@ -451,14 +453,14 @@ class ModalComponentContact extends Component {
                 id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
                 tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
                 primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, 
+                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte,
                 pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             }, handleSubmit, error, reducerGlobal
         } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateContact)}
-              onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-              <SecurityMessageComponent/>
+                onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                <SecurityMessageComponent />
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalComponentScrollCreateContact">
                     <dt className="business-title">
@@ -911,7 +913,7 @@ class ModalComponentContact extends Component {
                                     /></dd>
                                 </dl>
                             </Col>
-                        </Row>            
+                        </Row>
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
@@ -1046,7 +1048,6 @@ export default reduxForm({
     destroyOnUnmount: false,
     validate,
     onSubmitFail: errors => {
-        
         document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
         if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
             thisForm.setState({ showErrorXss: true });
