@@ -1,18 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
-import { toggleModal } from './action';
-import { clearClienEdit } from '../contact/contactDetail/actions';
 import { bindActionCreators } from 'redux';
-import * as views from './constants';
-import { clearSearchShareholder } from '../clients/partners/shareholder/shareholderDetail/actions';
-import { clearValuesAdressessKeys } from '../selectsComponent/actions';
+
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../clients/partners/shareholder/shareholderDetail/componentShareHolderDetail';
 import ModalTask from '../visit/tasks/modalTask';
 import ModalCreateTask from '../pendingTask/modalCreateTask';
 import ModalTrackingCovenant from '../risksManagement/covenants/createTracking/modalTrackingCovenant';
-import { get } from 'lodash';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
 import ModalPendingAEC from '../myPendings/AEC/modalPendingAEC';
@@ -20,6 +15,16 @@ import ModalViewEmailsGroup from '../contact/favoritesGroup/modalViewEmailsGroup
 import ModalBoardMembers from '../clients/partners/boardMembers/createEditBoardMembers/modalBoardMembers';
 import ModalObsersationLinkingRequests from '../myPendings/linkingRequests/observations/modalObservation';
 import ModalObservationsRiskGroup from '../clientRiskGroup/observationsRiskGoup/modalObservationRiskGroup';
+import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
+
+import { toggleModal } from './action';
+import { clearClienEdit } from '../contact/contactDetail/actions';
+import { clearSearchShareholder } from '../clients/partners/shareholder/shareholderDetail/actions';
+import { clearValuesAdressessKeys } from '../selectsComponent/actions';
+
+import * as views from './constants';
+
+import { get } from 'lodash';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -124,6 +129,7 @@ class ModalComponentDialog extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             {this._contectViewModal(actions)}
                         </div>
                     </div>
@@ -152,6 +158,5 @@ ModalComponentDialog.propTypes = {
     modalTitle: PropTypes.string,
     actions: PropTypes.object
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalComponentDialog);

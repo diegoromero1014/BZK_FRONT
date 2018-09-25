@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { redirectUrl } from '../globalComponents/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
 import Partners from '../clients/partners/tabComponent';
@@ -8,11 +11,13 @@ import VisitaInfo from '../visit/component';
 import PipelineInfo from '../pipeline/component';
 import BusinessPlanInfo from '../businessPlan/component';
 import PendingInfo from '../pendingTask/component';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import RisksManagements from '../risksManagement/componentRisksManagement';
+import ComponentCustomerStory from '../customerStory/componentCustomerStory';
+
+import { redirectUrl } from '../globalComponents/actions';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { consultModulesAccess } from '../navBar/actions';
+
 import {
     MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
     MODULE_PIPELINE, MODULE_BUSSINESS_PLAN, MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY,
@@ -23,9 +28,6 @@ import {
     TAB_PENDING_TASK, TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT,
     TAB_CUSTOMER_STORY
 } from '../../constantsGlobal';
-
-import RisksManagements from '../risksManagement/componentRisksManagement';
-import ComponentCustomerStory from '../customerStory/componentCustomerStory';
 
 class TabClientInfo extends Component {
     constructor(props) {

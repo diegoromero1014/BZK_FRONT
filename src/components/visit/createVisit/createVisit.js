@@ -1,37 +1,37 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {redirectUrl} from '../../globalComponents/actions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { redirectUrl } from '../../globalComponents/actions';
 import FormVisita from './formVisita';
 
-class CreateVisit extends Component{
+class CreateVisit extends Component {
 
-  componentWillMount(){
-    const {clientInformacion} = this.props;
+  componentWillMount() {
+    const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    if(_.isEmpty(infoClient)){
-        redirectUrl("/dashboard/clientInformation");
+    if (_.isEmpty(infoClient)) {
+      redirectUrl("/dashboard/clientInformation");
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
-        <FormVisita/>
+        <FormVisita />
       </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion}, ownerProps){
-    return {
-      clientInformacion
-    };
+function mapStateToProps({ clientInformacion }, ownerProps) {
+  return {
+    clientInformacion
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateVisit);
