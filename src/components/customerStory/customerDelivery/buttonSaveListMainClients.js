@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
-import ComponentListMainClients from '../../contextClient/listMainClients/componentListMainClients';
-import { validateResponse } from '../../../actionsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { reduxForm } from 'redux-form';
+
+import ComponentListMainClients from '../../contextClient/listMainClients/componentListMainClients';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { showLoading } from '../../loading/actions';
-import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { getContextClient } from '../../clients/creditStudy/actions';
+
+import { validateResponse } from '../../../actionsGlobal';
+import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { UPDATE_CONTEXT_CLIENT } from '../constants';
 
 const fields = ["nameMainClient", "participationMC", "termMainClient", "relevantInformationMainClient"];
@@ -37,7 +41,6 @@ class ButtonSaveListMainClients extends Component {
     showFormMainClients(type, value) {
         this.setState({ showFormAddMainClient: value });
     }
-
 
     closeModal() {
         const { clientsByEconomicGroup, customerStory, clientInformacion } = this.props;
@@ -125,6 +128,7 @@ class ButtonSaveListMainClients extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                                 term={termMainClient} relevantInformation={relevantInformationMainClient}
                                 showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormMainClients}

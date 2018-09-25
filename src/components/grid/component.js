@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
+
 import HeaderComponent from './headerComponent';
 import TdComponent from './tdComponent';
 import ButtonDeleteComponent from './buttonDeleteComponent';
@@ -11,8 +12,9 @@ import PdfLinkComponent from './pdfLinkComponent';
 import LinkComponent from './linkComponent';
 import LinkModalComponent from './linkModalComponent';
 import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
-import { ACTION_CHECK } from './constants';
 import CheckComponent from './checkComponent';
+
+import { ACTION_CHECK } from './constants';
 
 class GridComponent extends Component {
 
@@ -65,7 +67,7 @@ class GridComponent extends Component {
         cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)} isEditable={_.get(_.get(row, value.key), 'permissionEdit')}
           styles={_.get(_.get(row, value.key), 'styles')} />
       } else if (value.key === 'clientNameLink') {
-        cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value, 'showLink')} idClient={_.get(row, 'clientNameLink.id')} />
+        cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value, 'showLink')} idClient={_.get(row, 'clientNameLink.id')} hasAccess={_.get(row, 'clientNameLink.hasAccess')} />
       } else if (value.key === 'modalNameLink') {
         cell = <LinkModalComponent key={idx} showModal={_.get(value, 'showLink')} properties={_.get(row, 'modalNameLink')} />
       } else if (value.key === 'deleteLocal') {

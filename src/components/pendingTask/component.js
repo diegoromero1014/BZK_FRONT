@@ -66,7 +66,7 @@ class UserTaskComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit}/>
+                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit} />
                 }
               </Col>
             </Row>

@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
-import ComponentListMainSuppliers from '../../contextClient/listMainSupplier/componentListMainSupplier';
-import { validateResponse } from '../../../actionsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { reduxForm } from 'redux-form';
-import { showLoading } from '../../loading/actions';
-import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+
+import ComponentListMainSuppliers from '../../contextClient/listMainSupplier/componentListMainSupplier';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { getContextClient } from '../../clients/creditStudy/actions';
+import { showLoading } from '../../loading/actions';
+
+import { validateResponse } from '../../../actionsGlobal';
+import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { UPDATE_CONTEXT_CLIENT } from '../constants';
 
 const fields = ["nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier"];
@@ -125,6 +129,7 @@ class ButtonSaveListMainSuppliers extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             <ComponentListMainSuppliers nameSupplier={nameMainSupplier} participation={participationMS}
                                 term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                                 showFormMainSupplier={this.state.fshowFormAddMainSupplier} fnShowForm={this.showFormMainSuppliers}

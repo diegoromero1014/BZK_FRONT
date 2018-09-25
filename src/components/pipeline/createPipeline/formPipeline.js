@@ -1,22 +1,42 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
+import SweetAlert from "../../sweetalertFocus";
+import Business from "../business/business";
+import { addBusiness, clearBusiness } from "../business/ducks";
+import HeaderPipeline from "../headerPipeline";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import RichText from '../../richText/richTextComponent';
+import ToolTip from '../../toolTip/toolTipComponent';
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
 import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { showLoading } from '../../loading/actions';
+import {
+  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+  clearLists, consultDataSelect
+} from "../../selectsComponent/actions";
+import {
+  consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
+  handleFocusValueNumber, xssValidation
+} from "../../../actionsGlobal";
+
 import {
   BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
   MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
   PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
   PRODUCTS, PRODUCTS_MASK
 } from "../../selectsComponent/constants";
-import {
-  getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
-  clearLists, consultDataSelect
-} from "../../selectsComponent/actions";
 import {
   CURRENCY_COP,
   LINE_OF_BUSINESS_LEASING,
@@ -26,7 +46,6 @@ import {
   PRODUCT_FAMILY_LEASING,
   HELP_PROBABILITY
 } from "../constants";
-import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
   DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
   OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
@@ -37,27 +56,12 @@ import {
   REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
-import {
-  consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
-  handleFocusValueNumber, xssValidation
-} from "../../../actionsGlobal";
-import SweetAlert from "../../sweetalertFocus";
-import moment from "moment";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
+
+import moment from "moment";
 import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
-import Business from "../business/business";
-import { addBusiness, clearBusiness } from "../business/ducks";
-import HeaderPipeline from "../headerPipeline";
-import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
-import RichText from '../../richText/richTextComponent';
-import { showLoading } from '../../loading/actions';
-import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths",
   "businessStatus", "businessCategory", "currency", "indexing", "need", "observations", "product",
