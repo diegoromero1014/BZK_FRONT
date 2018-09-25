@@ -30,12 +30,9 @@ class FormLogin extends Component {
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
             messageNotification: ''
-
-
         }
 
         this._redirectLogin = this._redirectLogin.bind(this);
-
     }
 
     _handleChangeId(e) {
@@ -80,12 +77,6 @@ class FormLogin extends Component {
 
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
 
-                        // if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
-                        //    //Mensaje notificacion
-                        // //    this.setState({showMessageNotification : true, messageNotification: messageNotification  });
-
-                        // } else {
-                        // }
                         redirectUrl("/dashboard/clients");
                     }
                 } else {
@@ -115,14 +106,10 @@ class FormLogin extends Component {
             clearSessionUserName();
             //Esto no hace nada
             clearStateLogin();
-
         } else {
             // El usuario ya se encuentra logueado
-
             redirectUrl("/dashboard/clients");
         }
-
-
     }
 
     render() {

@@ -1,23 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Grid, Col } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { Combobox, DateTimePicker, Multiselect } from 'react-widgets';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import moment from 'moment';
+
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import Input from '../../../ui/input/inputComponent';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import SweetAlert from '../../sweetalertFocus';
+import Textarea from '../../../ui/textarea/textareaComponent';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
+
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { downloadFilePDF } from '../actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     consultDataSelect,
     getMasterDataFields,
     consultListWithParameterUbication
 } from '../../selectsComponent/actions';
-import Input from '../../../ui/input/inputComponent';
-import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import moment from 'moment';
-import SweetAlert from '../../sweetalertFocus';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { downloadFilePDF } from '../actions';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import { changeStateSaveData } from '../../dashboard/actions';
+
+import { NUMBER_RECORDS } from '../constants';
 import {
     CONTACT_ID_TYPE,
     FILTER_FUNCTION_ID,
@@ -36,8 +47,6 @@ import {
     FILTER_SPORTS,
     FILTER_SOCIAL_STYLE
 } from '../../selectsComponent/constants';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
-import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
@@ -51,13 +60,6 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { NUMBER_RECORDS } from '../constants';
-import { showLoading } from '../../loading/actions';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
     "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
@@ -172,42 +174,42 @@ const validate = values => {
 
     if (xssValidation(values.contactNeighborhood)) {
         errors.contactNeighborhood = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactNeighborhood = null;
     }
     if (xssValidation(values.contactPostalCode)) {
         errors.contactPostalCode = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactPostalCode = null;
     }
     if (xssValidation(values.contactExtension)) {
         errors.contactExtension = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactExtension = null;
     }
     if (xssValidation(values.contactMobileNumber)) {
         errors.contactMobileNumber = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactMobileNumber = null;
     }
     if (xssValidation(values.contactMiddleName)) {
         errors.contactMiddleName = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactMiddleName = null;
     }
     if (xssValidation(values.contactSecondLastName)) {
         errors.contactSecondLastName = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactSecondLastName = null;
     }
     if (xssValidation(values.contactDateOfBirth)) {
         errors.contactDateOfBirth = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactDateOfBirth = null;
     }
     if (xssValidation(values.contactRelevantFeatures)) {
         errors.contactRelevantFeatures = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.contactRelevantFeatures = null;
     }
 
@@ -243,7 +245,7 @@ class ContactDetailsModalComponent extends Component {
     componentWillMount() {
         const {
             nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading
-            } = this.props;
+        } = this.props;
         thisCallFromModuleContact = callFromModuleContact;
         nonValidateEnter(true);
         const that = this;
@@ -424,7 +426,6 @@ class ContactDetailsModalComponent extends Component {
             clearContactCreate();
             clearContactOrder();
         }
-
     }
 
     /* metodo para enviar el formulario */
@@ -432,11 +433,11 @@ class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-            contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-            contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-                }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
-            } = this.props;
+                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
+                contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
+        } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
         const { saveContact } = this.props;
@@ -506,16 +507,16 @@ class ContactDetailsModalComponent extends Component {
         const { callFromModuleContact } = this.props;
         const {
             initialValues, fields: {
-            contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
+                contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
                 contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
                 contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
                 contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
             }, error, handleSubmit, selectsReducer, reducerGlobal
-            } = this.props;
+        } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-                <SecurityMessageComponent/>
+                <SecurityMessageComponent />
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalEditCotact"
                     style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>

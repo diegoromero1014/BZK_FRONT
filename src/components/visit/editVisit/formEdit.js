@@ -1,17 +1,41 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
-import { VISIT_TYPE } from "../../selectsComponent/constants";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import TaskVisit from "../tasks/taskVisit";
 import RaitingInternal from "../../clientInformation/ratingInternal";
+import SweetAlert from "../../sweetalertFocus";
+import RichText from "../../richText/richTextComponent";
+import ToolTip from "../../toolTip/toolTipComponent";
+import ButtonAssociateComponent from "../createVisit/associateVisit";
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit } from "../actions";
+import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
+import { addParticipant, filterUsersBanco, addListParticipant } from "../../participantsVisitPre/actions";
+import { downloadFilePdf } from "../../clientInformation/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { addTask } from "../tasks/actions";
+import { showLoading } from "../../loading/actions";
+import { detailPrevisit } from "../../previsita/actions";
+import {
+    formValidateKeyEnter,
+    htmlToText,
+    nonValidateEnter,
+    shorterStringValue,
+    validateValueExist, xssValidation
+} from "../../../actionsGlobal";
+
+import { VISIT_TYPE } from "../../selectsComponent/constants";
 import {
     AEC_NO_APLIED,
     EDITAR,
@@ -28,33 +52,14 @@ import {
     REGEX_SIMPLE_XSS_MESAGE,
     REGEX_SIMPLE_XSS_TITLE
 } from "../../../constantsGlobal";
-import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit } from "../actions";
-import { addParticipant, filterUsersBanco, addListParticipant } from "../../participantsVisitPre/actions";
 import {
     KEY_PARTICIPANT_CLIENT,
     KEY_PARTICIPANT_BANCO,
     KEY_PARTICIPANT_OTHER
 } from "../../participantsVisitPre/constants";
-import { downloadFilePdf } from "../../clientInformation/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
-import {
-    formValidateKeyEnter,
-    htmlToText,
-    nonValidateEnter,
-    shorterStringValue,
-    validateValueExist, xssValidation
-} from "../../../actionsGlobal";
 import { MENU_CLOSED } from "../../navBar/constants";
-import { addTask } from "../tasks/actions";
-import SweetAlert from "../../sweetalertFocus";
-import moment from "moment";
-import _ from "lodash";
-import RichText from "../../richText/richTextComponent";
-import ToolTip from "../../toolTip/toolTipComponent";
-import { showLoading } from "../../loading/actions";
-import ButtonAssociateComponent from "../createVisit/associateVisit";
-import { detailPrevisit } from "../../previsita/actions";
 import { KEY_TYPE_VISIT } from "../constants";
+
 
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
@@ -589,7 +594,8 @@ class FormEdit extends Component {
                     width: "100%",
                     paddingBottom: "50px"
                 }}>
-                <header className="header-client-detail">
+                <SecurityMessageComponent />
+                <header className="header-client-detail" style={{ padding: '10px' }}>
                     <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>
                         <div>
                             <h3 style={{ wordBreak: 'keep-all' }} className="inline title-head">

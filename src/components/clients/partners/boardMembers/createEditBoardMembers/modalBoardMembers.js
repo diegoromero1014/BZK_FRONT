@@ -4,9 +4,21 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
+import _ from "lodash";
+
 import ComboBox from "../../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../../ui/input/inputComponent";
+import Textarea from "../../../../../ui/textarea/textareaComponent";
+import ToolTip from "../../../../toolTip/toolTipComponent";
+import SweetAlert from '../../../../sweetalertFocus';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
+
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
+import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
+import { changeStateSaveData } from "../../../../dashboard/actions";
+import { stringValidate, validateResponse, xssValidation } from "../../../../../actionsGlobal";
+import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
+
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
 import {
     LOWER_INITIAL_LIMIT,
@@ -14,9 +26,6 @@ import {
     TITLE_TOOLTIP_BOARD_MEMBERS,
     TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS
 } from "../constants";
-import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
-import { changeStateSaveData } from "../../../../dashboard/actions";
-import _ from "lodash";
 import {
     EDITAR,
     MESSAGE_ERROR_SWEET_ALERT,
@@ -29,12 +38,6 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from "../../../../../constantsGlobal";
-import { stringValidate, validateResponse, xssValidation } from "../../../../../actionsGlobal";
-import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
-import Textarea from "../../../../../ui/textarea/textareaComponent";
-import ToolTip from "../../../../toolTip/toolTipComponent";
-import SweetAlert from '../../../../sweetalertFocus';
-import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
 const errors = {};
@@ -173,7 +176,7 @@ class ModalCreateBoardMembers extends Component {
         const {
             fields: {
                 idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName, observations
+                firstLastName, secondLastName, observations
             }, saveBoardMember, validateExistsBoardMember,
             swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
             getBoardMembers, boardMembersReducer
@@ -226,7 +229,7 @@ class ModalCreateBoardMembers extends Component {
         const {
             fields: {
                 idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
-            firstLastName, secondLastName, observations
+                firstLastName, secondLastName, observations
             }, validateExistsBoardMember, swtShowMessage,
             changeStateSaveData
         } = this.props;
@@ -358,7 +361,7 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
-            <SecurityMessageComponent/>
+                <SecurityMessageComponent />
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingBottom: '30px' }}>
