@@ -250,10 +250,10 @@ export const NAME_REPORT_PREVISIT = "PreVisita";
 export const BLOCK_CREDIT_STUDY = "CreditStudy";
 export const BLOCK_BUSINESS_PLAN = "BusinessPlan";
 
-/**
- * PARAMETROS BLOQUEO
- */
-export const TIME_REQUEST_BLOCK_REPORT = 5000;
+ /**
+  * PARAMETROS BLOQUEO
+  */
+    export const TIME_REQUEST_BLOCK_REPORT = 60000;
 
 
 /**

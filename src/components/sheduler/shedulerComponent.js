@@ -4,6 +4,7 @@ import moment from 'moment';
 import Modal from 'react-modal';
 import { reduxForm } from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { showLoading } from '../loading/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -59,7 +60,7 @@ class Sheduler extends Component {
                 consultDataSelect(LIST_REGIONS);
             }
         });
-        
+
         updateTitleNavBar('Agenda');
     }
 
@@ -113,7 +114,7 @@ class Sheduler extends Component {
 
     _cleanSearch() {
         const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
-        
+
         showLoading(true, "cargando..");
 
         resetForm();
@@ -125,9 +126,9 @@ class Sheduler extends Component {
         this.setState({
             display: 'none'
         });
-        
+
         showLoading(false, false);
-        
+
     }
 
     _onChangeZoneStatus(val) {
@@ -144,7 +145,7 @@ class Sheduler extends Component {
             });
             this._handlePrevisitsFind();
         }
-      
+
     }
 
     _onChangeTeam(val) {
@@ -154,7 +155,7 @@ class Sheduler extends Component {
         if (val) {
             this._handlePrevisitsFind();
         }
-        
+
     }
 
     _handlePrevisitsFind() {
@@ -300,25 +301,19 @@ class Sheduler extends Component {
                             />
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2}>
-                            <dt>
                                 <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                    <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                                        <input className="prompt" id="inputParticipantBanc"
-                                            style={{ borderRadius: "3px" }}
-                                            autoComplete="off"
-                                            type="text"
-                                            value={nameUsuario.value}
-                                            onChange={nameUsuario.onChange}
-                                            onBlur={this.onBlurClear}
-                                            placeholder="Creador"
-                                            onKeyPress={this.updateKeyValueUsersBanco}
-                                            onSelect={val => this._updateValue(val)}
-                                        />
-                                        <i className="search icon" id="iconSearchParticipants"></i>
-                                    </div>
-                                    <div className="menu results"></div>
+                                    <ComboBoxFilter
+                                        name="inputParticipantBanc"
+                                        placeholder="Creador"
+                                        {...nameUsuario}
+                                        parentId="dashboardComponentScroll"
+                                        value={nameUsuario.value}
+                                        onChange={nameUsuario.onChange}
+                                        onKeyPress={this.updateKeyValueUsersBanco}
+                                        onSelect={val => this._updateValue(val)}
+                                        max="255"
+                                    />
                                 </div>
-                            </dt>
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
@@ -367,7 +362,7 @@ class Sheduler extends Component {
 
                         }}
                         scrollToTime={new Date(1970, 1, 1, 6)}
-                        defaultDate={new Date()}                        
+                        defaultDate={new Date()}
                         onSelectEvent={data => this.openModal(data.idClient, data.idPrevisit)}
                         eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />

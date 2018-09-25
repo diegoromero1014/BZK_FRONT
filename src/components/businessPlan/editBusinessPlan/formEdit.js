@@ -115,9 +115,14 @@ class FormEdit extends Component {
 
     _submitCreateBusiness() {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, businessPlanReducer, changeStateSaveData,
-            validateRangeDates, swtShowMessage } = this.props;
+            validateRangeDates, swtShowMessage, canUserEditBlockedReport } = this.props;
+
         let errorInForm = false;
         const detailBusiness = businessPlanReducer.get('detailBusiness');
+
+        canUserEditBlockedReport()
+        .then(() => {
+
 
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
             errorInForm = true;
@@ -210,6 +215,12 @@ class FormEdit extends Component {
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
         }
+
+        })
+        .catch((reason) => {
+            console.log(reason);
+        });
+
     }
 
     componentDidUpdate(prevProps, prevState) {

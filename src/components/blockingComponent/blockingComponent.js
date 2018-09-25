@@ -22,30 +22,33 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
             this.firstAccess = true;
             this.isComponentCreated = true;
             this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
+            this.idEntity = null;
         }
 
         componentWillMount() {
-            this.canUserEditBlockedReport(this.logUser)
+            const {id} = this.props;
+            this.idEntity = id;
+            this.canUserEditBlockedReport()
             .then(() => {})
             .catch(() => {});
         }
 
         componentWillUnmount() {
+
             clearInterval(this.state.intervalId);
             if (this.state.hasAccess) {
-                let idClient = window.sessionStorage.getItem('idClientSelected');
-                this.isComponentCreated;
-                stopBlockToReport(idClient, BLOCK_BUSINESS_PLAN);
+                this.isComponentCreated = false;
+                stopBlockToReport(this.idEntity, BLOCK_BUSINESS_PLAN);
             }  
         }
 
-        canUserEditBlockedReport(myUserName) {
+        canUserEditBlockedReport() {
             const { getUserBlockingReport } = this.props;
-            let idClient = window.sessionStorage.getItem('idClientSelected');
-    
-            // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
             
-            return getUserBlockingReport(idClient, nameComponent).then((success) => {
+            let myUserName = this.logUser;
+            let idEntity = this.idEntity;
+
+            return getUserBlockingReport(idEntity, nameComponent).then((success) => {
 
                 if (! this.isComponentCreated) {
                     clearInterval(this.state.intervalId);
@@ -70,7 +73,7 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
                         // Tengo permiso de editar y no estoy editando
                         this.setState({
                             hasAccess: true,
-                            intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                            intervalId: setInterval(this.canUserEditBlockedReport, TIME_REQUEST_BLOCK_REPORT)
                         })
                         this.firstAccess = false;
                     }
@@ -95,7 +98,9 @@ export default function BlockingComponent(WrappedComponent, nameComponent) {
         }
 
         render() {
-            return <WrappedComponent {...this.props} hasAccess={this.state.hasAccess} userEditing={this.state.userEditing} />
+            return <WrappedComponent {...this.props} hasAccess={this.state.hasAccess} 
+                        userEditing={this.state.userEditing}
+                        canUserEditBlockedReport={this.canUserEditBlockedReport} />
         }
 
     }
