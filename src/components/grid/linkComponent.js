@@ -6,6 +6,10 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {redirectUrl} from '../globalComponents/actions';
 
+import {consultInfoClient} from '../clientInformation/actions';
+import { seletedButton } from '../clientDetailsInfo/actions';
+import { BUTTON_UPDATE } from '../clientDetailsInfo/constants';
+
 class LinkComponent extends Component {
 
     constructor(props) {
@@ -14,14 +18,23 @@ class LinkComponent extends Component {
     }
 
     _redirect() {
-        const {url, idClient} = this.props;
+        const {url, idClient, consultInfoClient, seletedButton} = this.props;
         window.sessionStorage.setItem('idClientSelected', idClient);
-        redirectUrl(url);
+        if (url === '/dashboard/clientEdit') {
+            
+            seletedButton(BUTTON_UPDATE);
+            
+            consultInfoClient(idClient).then(() => {
+                redirectUrl(url);
+            })  
+          
+        }
+        
     }
 
     render() {
-        const {text, isRedirect} = this.props;
-        if (isRedirect) {
+        const {text, isRedirect, hasAccess} = this.props;
+        if (isRedirect && hasAccess) {
             return (<td><a style={{cursor: 'pointer', textDecoration: 'underline'}} onClick={this._redirect}>{text}</a></td>);
         } else {
             return (<td><p>{text}</p></td>);
@@ -37,7 +50,7 @@ LinkComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({consultInfoClient, seletedButton}, dispatch);
 }
 
 function mapStateToProps({}, ownerProps) {
