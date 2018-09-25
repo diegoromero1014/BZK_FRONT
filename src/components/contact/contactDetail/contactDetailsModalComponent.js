@@ -516,7 +516,6 @@ class ContactDetailsModalComponent extends Component {
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-                <SecurityMessageComponent />
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalEditCotact"
                     style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
