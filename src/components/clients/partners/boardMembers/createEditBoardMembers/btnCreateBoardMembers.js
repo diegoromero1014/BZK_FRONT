@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
+
 import ModalBoardMembers from './modalBoardMembers';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 class BtnCreateBoardMembers extends Component {
 
@@ -43,6 +45,7 @@ class BtnCreateBoardMembers extends Component {
                   <span className="sr-only">Close</span>
                 </button>
               </div>
+              <SecurityMessageComponent />
               <ModalBoardMembers isOpen={this.closeModal} />
             </div>
           </div>
@@ -61,6 +64,5 @@ function mapStateToProps({ createShareholder }, ownerProps) {
   return {
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(BtnCreateBoardMembers);
