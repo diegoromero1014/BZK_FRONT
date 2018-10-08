@@ -13,15 +13,12 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
-import Textarea from "../../../ui/textarea/textareaComponent";
-import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { showLoading } from '../../loading/actions';
 import {
   getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
   clearLists, consultDataSelect
@@ -33,13 +30,11 @@ import {
 
 import {
   BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
-  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
+  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS,
   PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
   PRODUCTS, PRODUCTS_MASK
 } from "../../selectsComponent/constants";
 import {
-  CURRENCY_COP,
-  LINE_OF_BUSINESS_LEASING,
   ORIGIN_PIPELIN_BUSINESS,
   BUSINESS_STATUS_COMPROMETIDO,
   BUSINESS_STATUS_COTIZACION,
@@ -47,7 +42,7 @@ import {
   HELP_PROBABILITY
 } from "../constants";
 import {
-  DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
+  MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
   OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
   VALUE_REQUIERED,
   MESSAGE_ERROR,
@@ -56,7 +51,6 @@ import {
   REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
-import { MENU_CLOSED } from "../../navBar/constants";
 
 import moment from "moment";
 import _ from "lodash";
@@ -90,6 +84,7 @@ const validate = values => {
   } else {
     errors.businessStatus = null;
   }
+
   if (!values.value) {
     errors.value = VALUE_REQUIERED;
   } else if (xssValidation(values.value)) {
@@ -97,11 +92,13 @@ const validate = values => {
   } else {
     errors.value = null;
   }
+
   if (!values.currency) {
     errors.currency = OPTION_REQUIRED;
   } else {
     errors.currency = null;
   }
+
   if (!values.need) {
     errors.need = OPTION_REQUIRED;
   } else {
@@ -244,12 +241,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       });
     }
 
-    // TODO: Revisar la asignación del state
     // Colcar aquí el limpiar el formulario
     _closeMessageCreatePipeline() {
       this.setState({
         showMessageCreatePipeline: false
       });
+
       if (origin !== ORIGIN_PIPELIN_BUSINESS && typeMessage === "success") {
         this._cleanForm();
         redirectUrl("/dashboard/clientInformation");
@@ -263,7 +260,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _cleanForm() {
-      const { initialValues, fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+      const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, reviewedDate,
         client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
       nameUsuario.onChange('');
@@ -299,6 +296,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
       }
+
       if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
         contollerErrorChangeType = true;
         if (idCurrencyAux !== null && value.value !== '') {
@@ -314,6 +312,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             showConfirmChangeCurrency: false
           });
         }
+
       } else {
         idCurrencyAux = parseInt(currencyValue);
         contollerErrorChangeType = false;
@@ -321,6 +320,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showConfirmChangeCurrency: false
         });
       }
+
       var lugarSelector = $('.valueMillions');
       var input = lugarSelector.find("input");
       input.focus();
@@ -346,6 +346,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (_.isNil(val) || val === '') {
         this.showFormDisbursementPlan(false);
       }
+
       value.onChange(val);
     }
 
@@ -360,6 +361,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
+
       consultListWithParameterUbication(PRODUCTS, currencyValue);
       product.onChange('');
     }
@@ -371,6 +373,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           output += val.toString().charAt(i)
         }
       }
+
       valuReduxForm.onChange(output);
     }
 
@@ -389,23 +392,25 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
         showConfirmChangeCurrency: false
       });
+
       contollerErrorChangeType = false;
       const { fields: { currency } } = this.props;
       if (idCurrencyAux !== null) {
         currency.onChange(idCurrencyAux);
       }
-
     }
 
     _closeConfirmChangeCurrency() {
       this.setState({
         showConfirmChangeCurrency: false
       });
+
       contollerErrorChangeType = false;
       const { fields: { value, currency } } = this.props;
       if (idCurrencyAux !== null) {
         value.onChange('');
       }
+
       idCurrencyAux = currency.value;
     }
 
@@ -413,7 +418,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (errorBusinessCategory === null) {
         const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
           businessCategory, currency, indexing, need, observations, product,
-          client, documentStatus, probability, nameUsuario, opportunityName,
+          probability, nameUsuario, opportunityName,
           productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
           termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
           changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
@@ -431,6 +436,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             } else {
               nameDisbursementPlansInReducer = "disbursementPlans";
             }
+
             const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
             if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
               let pipelineJson = {
@@ -478,14 +484,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
                   return item;
                 });
+
                 pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
                   pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
                     item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
                     return item;
                   });
                   return _.omit(pipelineBusiness, ['uuid']);
-                }
-                );
+                });
+
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                 createEditPipeline(pipelineJson).then((data) => {
                   changeStateSaveData(false, "");
@@ -525,7 +532,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     updateKeyValueUsersBanco(e) {
       const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
       var self = this;
-      // idUsuario.onChange('');
+
       if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
         e.consultclick ? "" : e.preventDefault();
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -533,7 +540,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
             return;
           }
+
           $('.ui.search.' + participantBanc).toggleClass('loading');
+
           filterUsersBanco(nameUsuario.value).then((data) => {
             let usersBanco = _.get(data, 'payload.data.data');
             $('.ui.search.' + participantBanc)
@@ -557,8 +566,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   return 'default';
                 }
               });
+
             $('.ui.search.' + participantBanc).toggleClass('loading');
             $('.ui.search.' + participantBanc).search('search local', nameUsuario.value);
+
             setTimeout(function () {
               $('#' + inputParticipantBanc).focus();
             }, 150);
@@ -577,6 +588,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           return contact;
         }
       });
+
       if (userSelected !== null && userSelected !== undefined) {
         idUsuario.onChange(userSelected.id);
         nameUsuario.onChange(userSelected.nameComplet);
@@ -594,15 +606,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
         consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect } = this.props;
+
       nonValidateEnter(true);
       updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
+
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
       }
+
       const infoClient = clientInformacion.get('responseClientInfo');
       getPipelineCurrencies();
       getClientNeeds();
+
       typeButtonClick = null;
       if (_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
@@ -626,25 +642,33 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
-        client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
+        probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
-        clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
+        selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
+
       const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
-          <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
+          <form onSubmit={handleSubmit(this._submitCreatePipeline)}
+            onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+            className="my-custom-tab"
             style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
 
-            <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""} style={origin === ORIGIN_PIPELIN_BUSINESS ? { overflowX: "hidden", paddingBottom: "0px", marginTop: "10px" } : {}}>
-              <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+            <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""}
+              style={origin === ORIGIN_PIPELIN_BUSINESS ? { overflowX: "hidden", paddingBottom: "0px", marginTop: "10px" } : {}}>
+
+              <span style={{ marginLeft: "20px" }} >
+                Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
+              </span>
 
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                     <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                     <i className="browser icon" style={{ fontSize: "20px" }} />
-                    <span style={{ fontSize: "20px" }}> Oportunidad</span>
+                    <span style={{ fontSize: "20px" }}>Oportunidad</span>
                   </div>
                 </Col>
               </Row>
@@ -1025,11 +1049,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
+
               <ComponentDisbursementPlan
-                disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
-                fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
-                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                pendingDisbursementAmount={pendingDisbursementAmount} origin={origin} isEditable={true} />
+                disbursementAmount={amountDisbursed}
+                estimatedDisburDate={estimatedDisburDate}
+                fnShowForm={this.showFormDisbursementPlan}
+                registrationRequired={this.state.disbursementPlanRequired}
+                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan}
+                nominalValue={value}
+                pendingDisbursementAmount={pendingDisbursementAmount}
+                origin={origin}
+                isEditable={true}
+              />
+
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -1150,7 +1182,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }, dispatch);
   }
 
-  function mapStateToProps({ pipelineReducer, clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar, pipelineBusinessReducer }, ownerProps) {
+  function mapStateToProps({ pipelineReducer, clientInformacion, selectsReducer, contactsByClient,
+    reducerGlobal, navBar, pipelineBusinessReducer }, ownerProps) {
+
     return {
       pipelineReducer,
       clientInformacion,
