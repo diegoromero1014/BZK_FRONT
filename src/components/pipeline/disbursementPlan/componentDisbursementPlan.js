@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import Modal from 'react-modal';
+import { Row, Col } from 'react-flexbox-grid';
+
 import ListDisbursementPlans from './listDisbursementPlans';
 
 class ComponentDisbursementPlan extends Component {
@@ -15,6 +15,7 @@ class ComponentDisbursementPlan extends Component {
         const { disbursementAmount, estimatedDisburDate, fnShowForm, showFormDisbursementPlan,
             registrationRequired, nominalValue, pendingDisbursementAmount, isEditable,
             origin } = this.props;
+
         return (
             <div>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>

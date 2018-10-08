@@ -1,17 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
+import { Row, Col } from 'react-flexbox-grid';
+import _ from 'lodash';
+
 import { deleteBusiness } from './ducks';
 import BtnCreateBusiness from '../btnCreateBusiness';
 import SweetAlert from '../../sweetalertFocus';
-import _ from 'lodash';
-import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
-import { shorterStringValue } from '../../../actionsGlobal';
 import BtnEditBusiness from '../btnEditBusiness';
 
-var arrayValueBusiness = [];
+import { shorterStringValue } from '../../../actionsGlobal';
+
+import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
+
 var idBusinessSeleted = null;
 
 class ListBusiness extends Component {
@@ -35,7 +36,7 @@ class ListBusiness extends Component {
     };
 
     _deleteBusiness = () => {
-        const { deleteBusiness, businessList } = this.props;
+        const { deleteBusiness } = this.props;
         deleteBusiness(idBusinessSeleted);
         this.setState({
             showConfirmDeleteBusiness: false
@@ -51,11 +52,10 @@ class ListBusiness extends Component {
         const { uuid, product, businessStatus } = businessData;
         let nameProduct, nameBusiness, nameState;
 
-        
-
         if (product !== null && product !== '' && product !== undefined) {
             nameProduct = _.get(_.filter(products, ['id', parseInt(product)]), '[0].value');
         }
+
         nameState = _.get(_.filter(states, ['id', parseInt(businessStatus)]), '[0].value');
 
         return <tr key={idx}>
@@ -80,6 +80,7 @@ class ListBusiness extends Component {
         } else {
             disabledButtonCreate = '';
         }
+        
         const modalTitle = 'Negocio detalle';
 
         return (
