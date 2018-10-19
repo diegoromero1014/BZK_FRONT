@@ -11,6 +11,7 @@ import InputComponent from "../../../../../ui/input/inputComponent";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
+import { fields, validations as validate } from './fieldsAndValidationsForReduxForm';
 
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
@@ -29,67 +30,9 @@ import {
     EDITAR,
     MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_LOAD_DATA,
-    OPTION_REQUIRED,
     TITLE_ERROR_SWEET_ALERT,
-    VALUE_REQUIERED,
-    REGEX_SIMPLE_XSS,
-    REGEX_SIMPLE_XSS_STRING,
-    VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from "../../../../../constantsGlobal";
-
-const fields = ["idBoardMember", "typeOfDocument", "numberDocument", "firstName", "middleName", "firstLastName", "secondLastName", "observations"];
-const errors = {};
-let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
-let showAuditFields = false;
-
-const validate = (values) => {
-
-    if (!values.typeOfDocument) {
-        errors.typeOfDocument = OPTION_REQUIRED;
-    } else {
-        errors.typeOfDocument = null;
-    }
-    if (!values.numberDocument) {
-        errors.numberDocument = VALUE_REQUIERED;
-    } else if (xssValidation(values.numberDocument)) {
-        errors.numberDocument = VALUE_XSS_INVALID;
-    } else {
-        errors.numberDocument = null;
-    }
-    if (!values.firstName) {
-        errors.firstName = VALUE_REQUIERED;
-    } else if (xssValidation(values.firstName)) {
-        errors.firstName = VALUE_XSS_INVALID;
-    } else {
-        errors.firstName = null;
-    }
-    if (!values.firstLastName) {
-        errors.firstLastName = VALUE_REQUIERED;
-    } else if (xssValidation(values.firstLastName)) {
-        errors.firstLastName = VALUE_XSS_INVALID;
-    } else {
-        errors.firstLastName = null;
-    }
-
-    if (xssValidation(values.middleName)) {
-        errors.middleName = VALUE_XSS_INVALID;
-    } else {
-        errors.middleName = null;
-    }
-    if (xssValidation(values.secondLastName)) {
-        errors.secondLastName = VALUE_XSS_INVALID;
-    } else {
-        errors.secondLastName = null;
-    }
-    if (xssValidation(values.observations)) {
-        errors.observations = VALUE_XSS_INVALID;
-    } else {
-        errors.observations = null;
-    }
-
-    return errors;
-};
 
 function GetBtnAllowEditOrBtnSearchExists(props) {
     if (!props.thisSelf.state.allowsEditingOFDocument) {
@@ -124,6 +67,9 @@ function GetBtnAllowEditOrBtnSearchExists(props) {
         }
     }
 }
+
+let fechaModString = '', fechaCreateString = '', createdBy = '', updatedBy = '';
+let showAuditFields = false;
 
 class ModalCreateBoardMembers extends Component {
 
@@ -176,10 +122,10 @@ class ModalCreateBoardMembers extends Component {
             fields: {
                 idBoardMember, typeOfDocument, numberDocument, firstName, middleName,
                 firstLastName, secondLastName, observations
-            }, saveBoardMember, validateExistsBoardMember,
-            swtShowMessage, changeStateSaveData, changeKeyword, clearFilters, isOpen,
-            getBoardMembers, boardMembersReducer
+            }, saveBoardMember, swtShowMessage, changeStateSaveData, changeKeyword,
+            clearFilters, isOpen, getBoardMembers
         } = this.props;
+
         var boardMember = {
             idClientBoardMember: null,
             idClient: window.sessionStorage.getItem('idClientSelected'),
@@ -192,6 +138,7 @@ class ModalCreateBoardMembers extends Component {
             secondLastName: secondLastName.value,
             observations: observations.value
         };
+
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         saveBoardMember(boardMember).then((data) => {
             changeStateSaveData(false, "");
@@ -353,11 +300,12 @@ class ModalCreateBoardMembers extends Component {
 
     render() {
         const {
-            initialValues, fields: {
-                idBoardMember, typeOfDocument, numberDocument, firstName,
-                middleName, firstLastName, secondLastName, observations
-            }, isOpen, handleSubmit, error, boardMember, reducerGlobal, selectsReducer
+            fields: {
+                typeOfDocument, numberDocument, firstName, middleName, firstLastName, secondLastName, observations
+            },
+            isOpen, handleSubmit, boardMember, reducerGlobal, selectsReducer
         } = this.props;
+
         return (
             <form onSubmit={handleSubmit(this._handleBoardMember)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -387,7 +335,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="numberDocument"
                                     type="text"
-                                    max="20"
+                                    max="30"
                                     {...numberDocument}
                                     disabled={this.state.isEditable && this.state.allowsEditingOFDocument ? '' : 'disabled'}
                                 />
@@ -401,7 +349,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="firstName"
                                     type="text"
-                                    max="60"
+                                    max="10"
                                     {...firstName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -411,7 +359,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="middleName"
                                     type="text"
-                                    max="60"
+                                    max="10"
                                     {...middleName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -423,7 +371,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="firstLastName"
                                     type="text"
-                                    max="60"
+                                    max="10"
                                     {...firstLastName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -433,7 +381,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="<secondLastName></secondLastName>"
                                     type="text"
-                                    max="60"
+                                    max="10"
                                     {...secondLastName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
