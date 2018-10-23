@@ -1,22 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import _ from 'lodash';
 import moment from 'moment';
-import { shorterStringValue, joinName, validateResponse } from '../../../../actionsGlobal';
+
 import GridComponent from '../../../grid/component';
-import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
-import { CONTACT_ID_TYPE } from '../../../selectsComponent/constants';
+
+import { joinName, validateResponse } from '../../../../actionsGlobal';
 import { deleteBoardMemberByClient, getBoardMembers, clearFilters, changeKeyword } from './actions';
+import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../../../dashboard/actions';
+
+import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
+import { NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import {
   TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, ELIMINAR,
   MESSAGE_LOAD_DATA
 } from '../../../../constantsGlobal';
-import { swtShowMessage } from '../../../sweetAlertMessages/actions';
-import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
-import { changeStateSaveData } from '../../../dashboard/actions';
 
 class ListBoardMembers extends Component {
 
@@ -150,7 +151,4 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
   };
 }
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(ListBoardMembers);
-
-
