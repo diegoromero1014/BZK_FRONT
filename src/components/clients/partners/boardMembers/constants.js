@@ -16,3 +16,4 @@ export const TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS = "La longitud máxima del ca
 export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";
 export const MESSAGE_WARNING_ONLY_ALPHABETICAL = "Solo se permiten caracteres alfabéticos";
+export const MESSAGE_WARNING_MIN_LENGTH_TWO = "Requiere dos o más caracteres";
