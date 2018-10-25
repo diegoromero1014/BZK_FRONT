@@ -181,7 +181,10 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
 
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
-
+            const patternOfNumberDocument = /[^a-zA-Z0-9\-ÁÉÍÓÚáéíóúÑñÜü]/g;
+            if (patternOfNumberDocument.test(numberDocument.value)) {
+                return;
+            }
 
             if (xssValidation(numberDocument.value)) {
                 this.setState({ showErrorXss: true });
@@ -193,6 +196,7 @@ class ModalCreateBoardMembers extends Component {
                 numberDocument: (numberDocument.value).trim(),
                 idClient: window.sessionStorage.getItem('idClientSelected')
             };
+
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             validateExistsBoardMember(jsonBoardMember).then((data) => {
                 changeStateSaveData(false, "");
@@ -226,6 +230,7 @@ class ModalCreateBoardMembers extends Component {
                         showAuditFields = false;
                         this._sendAuditInformation(true, null, null, null, null);
                     }
+
                     if (cleanFieldsBoardMember) {
                         idBoardMember.onChange('');
                         firstName.onChange('');
@@ -234,6 +239,7 @@ class ModalCreateBoardMembers extends Component {
                         secondLastName.onChange('');
                         observations.onChange('');
                     }
+                    
                     if (allowShowCompleteForm) {
                         this.setState({
                             showCompleteForm: 'visible',
