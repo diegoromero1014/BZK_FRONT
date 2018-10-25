@@ -13,7 +13,7 @@ export const LOWER_INITIAL_LIMIT = 0;
 export const TITLE_TOOLTIP_BOARD_MEMBERS = "Corresponde además de la experiencia, al carácter de los mismos. En este campo se debe indicar si es un miembro externo, el poder de decisión en la compañía o información relevante que considere se debe conocer de la junta directiva";
 export const TITLE_TOOLTIP_TEXT_AREA_BOARD_MEMBERS = "La longitud máxima del campo es de 1,000 caracteres";
 
-export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?";
+export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";
 export const MESSAGE_WARNING_ONLY_ALPHABETICAL = "Solo se permiten caracteres alfabéticos";
 export const MESSAGE_WARNING_MIN_LENGTH_TWO = "Requiere dos o más caracteres";
