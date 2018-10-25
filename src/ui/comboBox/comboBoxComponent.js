@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { scrollToComponent } from '../../components/scrollTo/scrollComponent';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import { scrollToComponent } from '../../components/scrollTo/scrollComponent';
 
 class comboBoxComponent extends Component {
     constructor(props) {
@@ -109,13 +110,12 @@ class comboBoxComponent extends Component {
 
         let comboData;
 
-        let _data = Object.assign([], data);// data?data:[]
+        let _data = Object.assign([], data);
 
 
         if (showEmptyObject) {
             emptyObject[valueProp] = '';
             emptyObject[textProp] = "Seleccione...";
-
             comboData = [emptyObject, ..._data];
         } else {
             comboData = _data;

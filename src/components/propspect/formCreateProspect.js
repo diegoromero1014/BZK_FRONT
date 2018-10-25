@@ -2,36 +2,37 @@ import React, { Component, PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import moment from 'moment';
+import _ from 'lodash';
+import numeral from 'numeral';
+
 import Textarea from '../../ui/textarea/textareaComponent';
 import SweetAlert from '../sweetalertFocus';
-import { createProspect } from './actions';
-import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import { redirectUrl } from '../globalComponents/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import _ from 'lodash';
-import numeral from 'numeral';
+
+import { createProspect } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
-import { MENU_CLOSED } from '../navBar/constants';
-import {
-    MESSAGE_SAVE_DATA, MODULE_PROSPECT, OPTION_REQUIRED, VALUE_REQUIERED,
-    VALUE_XSS_INVALID
-} from '../../constantsGlobal';
+import { getMasterDataFields } from '../selectsComponent/actions';
+import { xssValidation } from '../../actionsGlobal';
 import {
     consultDataSelect,
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication
 } from '../selectsComponent/actions';
-import { SEGMENTS, SUBSEGMENTS, OCCUPATION } from '../selectsComponent/constants';
-import { getMasterDataFields } from '../selectsComponent/actions';
-import { CONSTRUCT_PYME } from '../clientEdit/constants';
-import { xssValidation } from '../../actionsGlobal';
-import * as constantsPropect from './constants';
 
+import * as constants from '../selectsComponent/constants';
+import { SEGMENTS, SUBSEGMENTS, OCCUPATION } from '../selectsComponent/constants';
+import {
+    MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED,
+    VALUE_XSS_INVALID
+} from '../../constantsGlobal';
+import { CONSTRUCT_PYME } from '../clientEdit/constants';
+import * as constantsPropect from './constants';
 
 const valuesYesNo = [
     { 'id': true, 'value': "Si" },
@@ -55,59 +56,46 @@ const validate = (values, props) => {
     const errors = {}
     if (!values.razonSocial && !isNature) {
         errors.razonSocial = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.razonSocial)) {
+    } else if (xssValidation(values.razonSocial)) {
         errors.razonSocial = VALUE_XSS_INVALID;
-    }
-    else {
+    } else {
         errors.razonSocial = null;
     }
 
-    /**
-     * validaciones persona natural
-     */
     if (!values.firstName && isNature) {
         errors.firstName = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.firstName)) {
+    } else if (xssValidation(values.firstName)) {
         errors.firstName = VALUE_XSS_INVALID;
-    }
-    else {
+    } else {
         errors.firstName = null;
     }
 
     if (xssValidation(values.middleName)) {
         errors.middleName = VALUE_XSS_INVALID;
-    }
-    else {
+    } else {
         errors.middleName = null;
     }
 
     if (xssValidation(values.middleLastName)) {
         errors.middleLastName = VALUE_XSS_INVALID;
-    }
-    else {
+    } else {
         errors.middleLastName = null;
     }
 
     if (!values.lastName && isNature) {
         errors.lastName = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.lastName)) {
+    } else if (xssValidation(values.lastName)) {
         errors.lastName = VALUE_XSS_INVALID;
-    }
-    else {
+    } else {
         errors.lastName = null;
     }
-    /**
-     * fin
-     */
 
     if (!values.idCelula) {
         errors.idCelula = VALUE_REQUIERED;
     } else {
         errors.idCelula = null;
     }
+
     if (!values.segment) {
         errors.segment = OPTION_REQUIRED;
     } else {
@@ -248,12 +236,10 @@ class FormCreateProspect extends Component {
             const {
                 fields: {
                     razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-                address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
+                    address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+                    nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
                 }, idTupeDocument, numberDocument, changeStateSaveData, clientType
             } = this.props;
-
-
 
             var jsonCreateProspect = {
                 "clientIdNumber": numberDocument,
@@ -370,7 +356,7 @@ class FormCreateProspect extends Component {
 
     _onChangeCIIU(val) {
         const { fields: { idCIIU, idSubCIIU } } = this.props;
-        
+
         idCIIU.onChange(val);
         const { consultListWithParameter } = this.props;
         consultListWithParameter(constants.SUB_CIIU, val);
@@ -406,8 +392,8 @@ class FormCreateProspect extends Component {
         const {
             fields: {
                 razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-            address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-            nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
+                address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
             },
             error, handleSubmit, selectsReducer, navBar, clientType
         } = this.props;
@@ -418,9 +404,6 @@ class FormCreateProspect extends Component {
 
         return (
             <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
-
-
-
                 <Row style={{
                     height: "100%",
                     marginTop: "3px",
@@ -518,8 +501,6 @@ class FormCreateProspect extends Component {
                             </div>
                         </Col>
                     }
-
-
 
                     <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "45px" }}>
                         <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -625,7 +606,7 @@ class FormCreateProspect extends Component {
                                 {idCIIU.value && _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].description}
                             </span>
                         </div>
-                    </Col>                    
+                    </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
@@ -986,12 +967,6 @@ export default reduxForm({
     fields,
     validate,
     onSubmitFail: errors => {
-
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
-            thisForm.setState({ showEr: true });
-        } else {
-            thisForm.setState({ showEr: true });
-        }
-
+        thisForm.setState({ showEr: true });
     }
 }, mapStateToProps, mapDispatchToProps)(FormCreateProspect);

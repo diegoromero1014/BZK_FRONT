@@ -57,10 +57,7 @@ import {
     KEY_PARTICIPANT_BANCO,
     KEY_PARTICIPANT_OTHER
 } from "../../participantsVisitPre/constants";
-import { MENU_CLOSED } from "../../navBar/constants";
 import { KEY_TYPE_VISIT } from "../constants";
-
-
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -209,7 +206,7 @@ class FormEdit extends Component {
                         contactParticipantCliente = _.filter(detailVisit.data.participatingContacts, ['id', value.idParticipante]);
                     }
                     dataClient.push({
-                        "id": contactParticipantCliente.length > 0 ? value.idParticipante : null,
+                        "id": contactParticipantCliente ? value.idParticipante : null,
                         "contact": value.idParticipante,
                         "order": value.order
                     });
@@ -220,7 +217,7 @@ class FormEdit extends Component {
                             contactParticipantBanco = _.filter(detailVisit.data.participatingEmployees, ['id', value.idParticipante]);
                         }
                         dataBanco.push({
-                            "id": contactParticipantBanco.length > 0 ? value.idParticipante : null,
+                            "id": contactParticipantBanco ? value.idParticipante : null,
                             "employee": value.idParticipante,
                             "order": value.order
                         });

@@ -1,9 +1,7 @@
-/**
- * Created by ahurtado on 11/23/2016.
- */
+import axios from 'axios';
+
 import { APP_URL } from '../../../constantsGlobal';
 import * as constant from './constants';
-import axios from 'axios';
 
 export function groupFindServer(keyWordName, pageNum, maxRows) {
     const json = {
@@ -340,8 +338,7 @@ export function setFunctionContactsByFunctionOrType(functionContact) {
 
 export function setTypeContactsByFunctionOrType(type) {
     return {
-        type: constant.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE,
-        type
+        type: constant.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE
     }
 }
 

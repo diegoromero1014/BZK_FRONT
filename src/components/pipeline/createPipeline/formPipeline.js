@@ -1076,7 +1076,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={12} md={12} lg={12}>
                   <RichText
                     name="observations"
-                    {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations)}
+                    {...observations}
                     placeholder="Ingrese una observación."
                     touched={true}
                     style={{ width: '100%', height: '178px' }}

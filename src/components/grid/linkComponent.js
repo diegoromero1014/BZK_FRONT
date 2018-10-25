@@ -1,13 +1,11 @@
-/**
- * Created by ahurtado on 12/6/2016.
- */
-import React, {Component, PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {redirectUrl} from '../globalComponents/actions';
+import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import {consultInfoClient} from '../clientInformation/actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { consultInfoClient } from '../clientInformation/actions';
 import { seletedButton } from '../clientDetailsInfo/actions';
+
 import { BUTTON_UPDATE } from '../clientDetailsInfo/constants';
 
 class LinkComponent extends Component {
@@ -18,24 +16,24 @@ class LinkComponent extends Component {
     }
 
     _redirect() {
-        const {url, idClient, consultInfoClient, seletedButton} = this.props;
+        const { url, idClient, consultInfoClient, seletedButton } = this.props;
         window.sessionStorage.setItem('idClientSelected', idClient);
         if (url === '/dashboard/clientEdit') {
-            
+
             seletedButton(BUTTON_UPDATE);
-            
+
             consultInfoClient(idClient).then(() => {
                 redirectUrl(url);
-            })  
-          
+            })
+
         }
-        
+
     }
 
     render() {
-        const {text, isRedirect, hasAccess} = this.props;
+        const { text, isRedirect, hasAccess } = this.props;
         if (isRedirect && hasAccess) {
-            return (<td><a style={{cursor: 'pointer', textDecoration: 'underline'}} onClick={this._redirect}>{text}</a></td>);
+            return (<td><a style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={this._redirect}>{text}</a></td>);
         } else {
             return (<td><p>{text}</p></td>);
         }
@@ -50,10 +48,10 @@ LinkComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({consultInfoClient, seletedButton}, dispatch);
+    return bindActionCreators({ consultInfoClient, seletedButton }, dispatch);
 }
 
-function mapStateToProps({}, ownerProps) {
+function mapStateToProps({ }, ownerProps) {
     return {};
 }
 

@@ -22,11 +22,8 @@ import { changeStateSaveData } from '../../../../dashboard/actions';
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
 import * as constants from './constants';
 import {
-  PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA,
-  REGEX_SIMPLE_XSS,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS_MESAGE,
-  REGEX_SIMPLE_XSS_STRING
+  MESSAGE_SAVE_DATA,
+  REGEX_SIMPLE_XSS_MESAGE
 } from '../../../../../constantsGlobal';
 import {
   CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
@@ -69,8 +66,10 @@ const validate = (values) => {
     errors.numeroDocumento = VALUE_XSS_INVALID;
   } else if (values.numeroDocumento.trim()) {
     errors.numeroDocumento = "Debe ingresar un valor"
+  } else {
     errors.numeroDocumento = null;
   }
+
   if (!values.primerNombre && valueTypeShareholder === NATURE_PERSON) {
     errors.primerNombre = "Debe ingresar un valor";
   } else if (xssValidation(values.primerNombre)) {
@@ -86,6 +85,7 @@ const validate = (values) => {
   } else {
     errors.primerApellido = null;
   }
+
   if (!values.razonSocial && valueTypeShareholder != NATURE_PERSON) {
     errors.razonSocial = "Debe ingresar un valor";
   } else if (xssValidation(values.razonSocial)) {
@@ -93,6 +93,7 @@ const validate = (values) => {
   } else {
     errors.razonSocial = null;
   }
+
   if (!values.porcentajePart) {
     errors.porcentajePart = "Debe ingresar un valor";
   } else if (xssValidation(values.porcentajePart)) {
@@ -110,21 +111,25 @@ const validate = (values) => {
   } else {
     errors.segundoNombre = null;
   }
+
   if (xssValidation(values.segundoApellido)) {
     errors.segundoApellido = VALUE_XSS_INVALID;
   } else {
     errors.segundoApellido = null;
   }
+
   if (xssValidation(values.direccion)) {
     errors.direccion = VALUE_XSS_INVALID;
   } else {
     errors.direccion = null;
   }
+
   if (xssValidation(values.numeroIdTributaria)) {
     errors.numeroIdTributaria = VALUE_XSS_INVALID;
   } else {
     errors.numeroIdTributaria = null;
   }
+
   if (xssValidation(values.observaciones)) {
     errors.observaciones = VALUE_XSS_INVALID;
   } else {
