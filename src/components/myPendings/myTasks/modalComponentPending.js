@@ -273,7 +273,7 @@ class ModalComponentPending extends Component {
     }
 
     _onChangeZone() {
-        const { fields: { region, zone, team }, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } = this.props;
+        const { fields: { region, zone, team }, consultListWithParameter } = this.props;
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
             region: region.value,
             zone: zone.value
@@ -411,7 +411,7 @@ class ModalComponentPending extends Component {
                                             {...zone}
                                             value={zone.value}
                                             onBlur={zone.onBlur}
-                                            onChange={() => this._onChangeZone()}
+                                            onChange={this._onChangeZone}
                                             valueProp={'id'}
                                             textProp={'value'}
                                             searchClient={'client'}
@@ -426,7 +426,7 @@ class ModalComponentPending extends Component {
                                             {...team}
                                             value={team.value}
                                             onBlur={team.onBlur}
-                                            onChange={() => this._onChangeTeam()}
+                                            onChange={this._onChangeTeam}
                                             valueProp={'id'}
                                             textProp={'description'}
                                             searchClient={'client'}
@@ -440,7 +440,7 @@ class ModalComponentPending extends Component {
                                             {...taskStatus}
                                             value={taskStatus.value}
                                             onBlur={taskStatus.onBlur}
-                                            onChange={() => this._onChangeTaskState()}
+                                            onChange={this._onChangeTaskState}
                                             valueProp={'id'}
                                             textProp={'value'}
                                             searchClient={'client'}

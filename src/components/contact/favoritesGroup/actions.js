@@ -338,7 +338,7 @@ export function setFunctionContactsByFunctionOrType(functionContact) {
 
 export function setTypeContactsByFunctionOrType(type) {
     return {
-        type: constant.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE
+        type
     }
 }
 

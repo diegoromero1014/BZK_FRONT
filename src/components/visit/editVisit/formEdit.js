@@ -206,7 +206,7 @@ class FormEdit extends Component {
                         contactParticipantCliente = _.filter(detailVisit.data.participatingContacts, ['id', value.idParticipante]);
                     }
                     dataClient.push({
-                        "id": contactParticipantCliente ? value.idParticipante : null,
+                        "id": (contactParticipantCliente && contactParticipantCliente.length > 0) ? value.idParticipante : null,
                         "contact": value.idParticipante,
                         "order": value.order
                     });
@@ -217,7 +217,7 @@ class FormEdit extends Component {
                             contactParticipantBanco = _.filter(detailVisit.data.participatingEmployees, ['id', value.idParticipante]);
                         }
                         dataBanco.push({
-                            "id": contactParticipantBanco ? value.idParticipante : null,
+                            "id": (contactParticipantBanco && contactParticipantBanco.length > 0) ? value.idParticipante : null,
                             "employee": value.idParticipante,
                             "order": value.order
                         });
