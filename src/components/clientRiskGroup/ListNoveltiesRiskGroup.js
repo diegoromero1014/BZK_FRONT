@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { NUMBER_RECORDS, PAGE_INITIAL } from './constants';
-import GridComponent from '../grid/component';
-import {
-    MESSAGE_SAVE_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR,
-    VISUALIZAR
-} from '../../constantsGlobal';
-import { shorterStringValue } from '../../actionsGlobal';
-import moment from "moment";
-import { VIEW_OBSERVATIONS_BY_RISK_GROUP } from '../modal/constants';
-import { has, get, indexOf } from 'lodash';
-import { getAllNoveltiesRiskGroup } from './actions';
-import { changeStateSaveData } from '../dashboard/actions';
 
+import GridComponent from '../grid/component';
+
+import { VIEW_OBSERVATIONS_BY_RISK_GROUP } from '../modal/constants';
 
 class ListNoveltiesRiskGroup extends Component {
     constructor(props) {
@@ -60,19 +49,21 @@ class ListNoveltiesRiskGroup extends Component {
                 "REMOVE": "Remover",
                 "EDIT": "Editar"
             }
+
             let map_trans_novelty_state = {
                 "APPROVED": "Aprobado",
                 "REJECTED": "Rechazado",
                 "PENDING": "Pendiente"
             }
+
             const infoRiskGroup = {
                 code: item.riskGroupCode,
                 nameData: item.name,
-                novelty: item.novelty,
                 novelty: map_trans_novelty_type[item.novelty],
                 stateNovelty: map_trans_novelty_state[item.stateNovelty],
                 entity: item.entity
             }
+
             return {
                 actions: {
                     actionView: true,

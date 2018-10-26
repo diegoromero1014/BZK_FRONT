@@ -38,7 +38,7 @@ export const validations = (values) => {
     } else if (values.numberDocument && patternOfNumberDocument.test(values.numberDocument)) {
         errors.numberDocument = MESSAGE_WARNING_NUMBER_DOCUMENT;
     } else if (values.numberDocument && values.numberDocument.length > 30) {
-        errors.secondLastName = MESSAGE_WARNING_MIN_LENGTH_THIRTY;
+        errors.numberDocument = MESSAGE_WARNING_MIN_LENGTH_THIRTY;
     } else {
         errors.numberDocument = null;
     }

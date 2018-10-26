@@ -1,9 +1,9 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import _ from "lodash";
 
-import {Col, Row} from "react-flexbox-grid";
+import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
@@ -12,8 +12,8 @@ import * as constants from "../../selectsComponent/constants";
 
 import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
 
-import {TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS} from '../constants';
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
+import { TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
+import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
 
 export class InfoClientPN extends React.Component {
 
@@ -32,7 +32,7 @@ export class InfoClientPN extends React.Component {
     }
 
     _checkSubSegmentRender() {
-        const {selectsReducer, clientInformacion} = this.props;
+        const { selectsReducer, clientInformacion } = this.props;
 
         if (!this.firstChange && typeof selectsReducer.get(constants.SEGMENTS) != 'undefined' && selectsReducer.get(constants.SEGMENTS).length > 0) {
             this.firstChange = true;
@@ -59,6 +59,7 @@ export class InfoClientPN extends React.Component {
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
+
             if (_.isEqual(CONSTRUCT_PYME, value)) {
                 consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data) => {
                     if (!_.isNull(subSegmentId) && firstConsult) {
@@ -66,7 +67,8 @@ export class InfoClientPN extends React.Component {
                     }
                 });
             }
-            this.setState({isSegmentPymeConstruct : _.isEqual(CONSTRUCT_PYME, value)});
+            
+            this.setState({ isSegmentPymeConstruct: _.isEqual(CONSTRUCT_PYME, value) });
             if (!firstConsult) {
                 customerTypology.onChange('');
                 subSegment.onChange('');
@@ -76,161 +78,161 @@ export class InfoClientPN extends React.Component {
 
     render() {
 
-        const {firstName, middleName, lastName, middleLastName, occupation, razonSocial, idTypeClient, idNumber, segment, subSegment, description, customerTypology, idButton, selectsReducer} = this.props;
+        const { firstName, middleName, lastName, middleLastName, occupation, razonSocial, idTypeClient, idNumber, segment, subSegment, description, customerTypology, idButton, selectsReducer } = this.props;
 
         return (
             <Row style={{ padding: "10px 28px 10px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="primerNombre"
-                                type="text"
-                                max="150"
-                                placeholder="Primer nombre"
-                                {...firstName}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Segundo nombre</span></dt>
-                        <dt>
-                            <Input
-                                name="segundoNombre"
-                                type="text"
-                                max="150"
-                                placeholder="Segundo nombre"
-                                {...middleName}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Primer Apellido(</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="primerApellido"
-                                type="text"
-                                max="150"
-                                placeholder="Primer apellido"
-                                {...lastName}
-                                
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Segundo apellido</span></dt>
-                        <dt>
-                            <Input
-                                name="segundoApellido"
-                                type="text"
-                                max="150"
-                                placeholder="Segundo apellido"
-                                {...middleLastName}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <ComboBox
-                                name="tipoDocumento"
-                                labelInput="Tipo de documento del cliente"
-                                {...idTypeClient}
-                                value={idTypeClient.value}
-                                onBlur={idTypeClient.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.CONTACT_ID_TYPE)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="documento"
-                                type="text"
-                                max="20"
-                                placeholder="Número de documento del cliente"
-                                {...idNumber}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ marginTop: "10px" }}>
-                            <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                            <ComboBox
-                                name="segment"
-                                labelInput="Segmento"
-                                {...segment}
-                                value={segment.value}
-                                onBlur={segment.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                style={{ marginBottom: '0px !important' }}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SEGMENTS)}
-                                onChange={(val) => this._changeSegment(val, false, null)}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
-                    {
-                        this.state.isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
-                            <div style={{ marginTop: "10px" }}>
-                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
-                                <ComboBox
-                                    name="subSegment"
-                                    labelInput="Sebsegmento"
-                                    {...subSegment}
-                                    value={subSegment.value}
-                                    onBlur={subSegment.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    parentId="dashboardComponentScroll"
-                                    data={selectsReducer.get(constants.SUBSEGMENTS)}
-                                    touched={true}
-                                    showEmptyObject={true}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    <ClientTypology customerTypology={customerTypology}
-                        data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
+                    <dt>
+                        <Input
+                            name="primerNombre"
+                            type="text"
+                            max="150"
+                            placeholder="Primer nombre"
+                            {...firstName}
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Segundo nombre</span></dt>
+                    <dt>
+                        <Input
+                            name="segundoNombre"
+                            type="text"
+                            max="150"
+                            placeholder="Segundo nombre"
+                            {...middleName}
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Primer Apellido(</span><span style={{ color: "red" }}>*</span>)</dt>
+                    <dt>
+                        <Input
+                            name="primerApellido"
+                            type="text"
+                            max="150"
+                            placeholder="Primer apellido"
+                            {...lastName}
 
-                    <Col xs={12} md={12} lg={12}>
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Segundo apellido</span></dt>
+                    <dt>
+                        <Input
+                            name="segundoApellido"
+                            type="text"
+                            max="150"
+                            placeholder="Segundo apellido"
+                            {...middleLastName}
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                    <dt>
+                        <ComboBox
+                            name="tipoDocumento"
+                            labelInput="Tipo de documento del cliente"
+                            {...idTypeClient}
+                            value={idTypeClient.value}
+                            onBlur={idTypeClient.onBlur}
+                            valueProp={'id'}
+                            textProp={'value'}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(constants.CONTACT_ID_TYPE)}
+                            touched={true}
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                    <dt>
+                        <Input
+                            name="documento"
+                            type="text"
+                            max="20"
+                            placeholder="Número de documento del cliente"
+                            {...idNumber}
+                            touched={true}
+                        />
+                    </dt>
+                </Col>
+                <Col xs={12} md={4} lg={4}>
+                    <div style={{ marginTop: "10px" }}>
+                        <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                        <ComboBox
+                            name="segment"
+                            labelInput="Segmento"
+                            {...segment}
+                            value={segment.value}
+                            onBlur={segment.onBlur}
+                            valueProp={'id'}
+                            textProp={'value'}
+                            style={{ marginBottom: '0px !important' }}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(constants.SEGMENTS)}
+                            onChange={(val) => this._changeSegment(val, false, null)}
+                            touched={true}
+                        />
+                    </div>
+                </Col>
+                {
+                    this.state.isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
                         <div style={{ marginTop: "10px" }}>
-                            <dt>
-                                <span>Breve descripción de la empresa</span>
-                                <i className="help circle icon blue"
-                                    style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
-                                    title={TITLE_DESCRIPTION} />
-                            </dt>
-                            <dt>
-                                <Textarea
-                                    name="description"
-                                    type="text"
-                                    style={{ width: '100%', height: '100%' }}
-                                    onChange={val => this._onchangeValue("description", val)}
-                                    placeholder="Ingrese la descripción"
-                                    max="1000"
-                                    rows={4}
-                                    {...description}
-                                />
-                            </dt>
+                            <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
+                            <ComboBox
+                                name="subSegment"
+                                labelInput="Sebsegmento"
+                                {...subSegment}
+                                value={subSegment.value}
+                                onBlur={subSegment.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(constants.SUBSEGMENTS)}
+                                touched={true}
+                                showEmptyObject={true}
+                            />
                         </div>
                     </Col>
-                </Row>
+                }
+                <ClientTypology customerTypology={customerTypology}
+                    data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
+
+                <Col xs={12} md={12} lg={12}>
+                    <div style={{ marginTop: "10px" }}>
+                        <dt>
+                            <span>Breve descripción de la empresa</span>
+                            <i className="help circle icon blue"
+                                style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
+                                title={TITLE_DESCRIPTION} />
+                        </dt>
+                        <dt>
+                            <Textarea
+                                name="description"
+                                type="text"
+                                style={{ width: '100%', height: '100%' }}
+                                onChange={val => this._onchangeValue("description", val)}
+                                placeholder="Ingrese la descripción"
+                                max="1000"
+                                rows={4}
+                                {...description}
+                            />
+                        </dt>
+                    </div>
+                </Col>
+            </Row>
         )
 
     }
 
 }
 
-function mapStateToProps({selectsReducer,clientInformacion}) {
+function mapStateToProps({ selectsReducer, clientInformacion }) {
     return {
         selectsReducer,
         clientInformacion
@@ -238,7 +240,7 @@ function mapStateToProps({selectsReducer,clientInformacion}) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators ({
+    return bindActionCreators({
         getMasterDataFields,
         consultListWithParameterUbication
     }, dispatch)
@@ -247,36 +249,31 @@ function mapDispatchToProps(dispatch) {
 var validations = [
     {
         validation: 'required',
-        fields: ['firstName','lastName','idTypeClient', 'idNumber']
+        fields: ['firstName', 'lastName', 'idTypeClient', 'idNumber']
     },
     {
         validation: 'xss',
-        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+        fields: ['firstName', 'lastName', 'middleName', 'middleLastName', 'idNumber']
     }
 ]
 
 var validationsEditClient = [
     {
         validation: 'required',
-        fields: ['firstName','lastName','idTypeClient', 'idNumber']
+        fields: ['firstName', 'lastName', 'idTypeClient', 'idNumber']
     },
     {
         validation: 'xss',
-        fields: ['firstName','lastName','middleName','middleLastName','idNumber']
+        fields: ['firstName', 'lastName', 'middleName', 'middleLastName', 'idNumber']
     }
 ]
 
 export function validationRules(props) {
-    
     if (props.idButton === BUTTON_EDIT) {
         return validationsEditClient;
     } else {
         return validations;
     }
-
-    return validations;
-    
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoClientPN);

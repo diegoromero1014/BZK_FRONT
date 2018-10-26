@@ -1,11 +1,13 @@
-import React, { Component, PropTypes } from 'react';
-import GridComponent from '../grid/component';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_CLIENT } from './constants';
-import { deleteParticipant } from './actions';
-import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
+
+import SweetAlert from '../sweetalertFocus';
+
+import { deleteParticipant } from './actions';
+
+import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_CLIENT } from './constants';
 
 class ListParticipantesCliente extends Component {
 
@@ -28,15 +30,16 @@ class ListParticipantesCliente extends Component {
 
   _clickButtonDelete() {
     const { participants, deleteParticipant } = this.props;
-    var indexDelete = participants.findIndex(item=> {
+    var indexDelete = participants.findIndex(item => {
       return item.idParticipante === this.state.idParticipantSelect;
     });
-     this.setState({
+
+    this.setState({
       showConfirmDeleteParticiClient: false,
       idParticipantSelect: null
     });
+
     deleteParticipant(indexDelete, KEY_PARTICIPANT_CLIENT);
-   
   }
 
   _mapValuesData(clientData, idx) {
@@ -77,6 +80,7 @@ function orderListParticipant(participants, disabled) {
   participants = participants.sort((valueA, valueB) => {
     return valueA.fecha > valueB.fecha;
   })
+  
   if (participants.size > 0) {
     const data = _.chain(participants.toArray()).map(participant => {
       const { tipoParticipante, idParticipante, nombreParticipante, cargo, empresa, estiloSocial, actitudBanco, uuid, order } = participant;

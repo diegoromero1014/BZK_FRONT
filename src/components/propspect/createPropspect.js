@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 
@@ -32,27 +32,24 @@ const validate = values => {
   const errors = {}
   if (!values.idType) {
     errors.idType = "Debe seleccionar un valor";
-  }
-  else {
+  } else {
     errors.idType = null;
   }
 
   if (!values.clientType) {
     errors.clientType = "Debe seleccionar un valor";
-  }
-  else {
+  } else {
     errors.clientType = null;
   }
 
   if (!values.idNumber) {
     errors.idNumber = "Debe ingresar un valor";
-  }
-  else if (xssValidation(values.idNumber)) {
+  } else if (xssValidation(values.idNumber)) {
     errors.idNumber = VALUE_XSS_INVALID;
-  }
-  else {
+  } else {
     errors.idNumber = null;
   }
+
   return errors
 };
 
@@ -285,12 +282,6 @@ export default reduxForm({
   fields: ["idType", "idNumber", "clientType"],
   validate,
   onSubmitFail: errors => {
-
-    if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
-      thisForm.setState({ showEr: true });
-    } else {
-      thisForm.setState({ showEr: true });
-    }
-
+    thisForm.setState({ showEr: true });
   }
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);

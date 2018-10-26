@@ -1,24 +1,27 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
+import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+
 import ComboBox from "../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../ui/input/inputComponent";
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../../ui/dateTimePicker/dateTimePickerComponent";
-import { Col, Row } from "react-flexbox-grid";
-import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
+
 import { xssValidation, validateIsNullOrUndefined } from "../../../../actionsGlobal";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeStatusCreate, clientCovenants, createTrackingCovenant, getInfoCovenant } from "../actions";
-import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
-import { TITLE_FIELD_OBSERVED_VALUE, CLASSIFICATION_SPECIFIC } from "../constants";
 import { getMasterDataFields } from "../../../selectsComponent/actions";
 import { changePage, covenantsFindServer } from "../../../alertCovenants/actions";
 import { showLoading } from "../../../loading/actions";
-import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
-import moment from "moment";
-import _ from "lodash";
 import { swtShowMessage } from "../../../sweetAlertMessages/actions";
+
+import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
+import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
+import { TITLE_FIELD_OBSERVED_VALUE, CLASSIFICATION_SPECIFIC } from "../constants";
+import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
 
 const fields = ["validCovenant", "fullfillmentCovenant", "observedValue", "dateFinancialStatements", "observations"];
 const errors = {};
@@ -31,11 +34,13 @@ const validate = (values) => {
     } else {
         errors.validCovenant = null;
     }
+
     if (!values.fullfillmentCovenant) {
         errors.fullfillmentCovenant = OPTION_REQUIRED;
     } else {
         errors.fullfillmentCovenant = null;
     }
+
     if (!values.observedValue) {
         errors.observedValue = VALUE_REQUIERED;
     } else if (xssValidation(values.observedValue)) {
@@ -43,6 +48,7 @@ const validate = (values) => {
     } else {
         errors.observedValue = null;
     }
+
     // error={isMandatoryObservations ? VALUE_REQUIERED : null}
     if (isMandatoryObservations) {
 
@@ -50,8 +56,7 @@ const validate = (values) => {
             errors.observations = VALUE_REQUIERED;
         } else if (xssValidation(values.observations)) {
             errors.observations = VALUE_XSS_INVALID;;
-        }
-        else {
+        } else {
             errors.observations = null;
         }
     } else if (xssValidation(values.observations)) {
@@ -74,8 +79,6 @@ const validate = (values) => {
         errors.dateFinancialStatements = null;
     }
 
-    VALUE_XSS_INVALID
-    xssValidation
     return errors;
 };
 

@@ -191,11 +191,7 @@ class ComponentClientInformation extends Component {
                             </div>
                         </Col>
                         <Col xs={1} md={1} lg={1}>
-                            <table style={infoClient.economicGroup !== null ? {
-                                height: '100%',
-                                width: '50%',
-                                float: 'right'
-                            } : { height: '100%', width: '50%', float: 'right' }}>
+                            <table style={{ height: '100%', width: '50%', float: 'right' }}>
                                 <tbody>
                                     <tr>
                                         <td style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
