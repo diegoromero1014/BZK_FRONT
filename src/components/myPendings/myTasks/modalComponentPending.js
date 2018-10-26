@@ -79,6 +79,7 @@ class ModalComponentPending extends Component {
             dateTaskTeam: ""
 
         };
+
         this.consultInfoMyPendingTask = this.consultInfoMyPendingTask.bind(this);
         this._handleMyPendingByClientsFind = this._handleMyPendingByClientsFind.bind(this);
         this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
@@ -88,8 +89,6 @@ class ModalComponentPending extends Component {
         this.consultInfoMyPendingTeamTask = this.consultInfoMyPendingTeamTask.bind(this);
         this._onChangeRegion = this._onChangeRegion.bind(this);
         this._onChangeZone = this._onChangeZone.bind(this);
-        this._onChangeTeam = this._onChangeTeam.bind(this);
-        this._onChangeTaskState = this._onChangeTaskState.bind(this);
         this._changeDateTaskTeam = this._changeDateTaskTeam.bind(this);
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._loadResponsable = this._loadResponsable.bind(this);
@@ -194,7 +193,6 @@ class ModalComponentPending extends Component {
         }
     }
 
-
     _changeViewModeTeamTask() {
         const { fields: { region, zone, team }, clearMyPendingTeamPaginator, clearOnlyListPendingTaskTeam, clearPendingTaskTeam, updateTitleNavBar } = this.props;
 
@@ -252,9 +250,7 @@ class ModalComponentPending extends Component {
         this.setState({
             enabledZona: false
         })
-
     }
-
 
     _onChangeRegion(val) {
         const { fields: { region, zone, team }, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } = this.props;
@@ -282,19 +278,8 @@ class ModalComponentPending extends Component {
         team.onChange("");
     }
 
-    _onChangeTeam() {
-        const { fields: { region, zone, team } } = this.props;
-        if (team.value) {
-            //this.consultInfoMyPendingTeamTask();
-        }
-    }
-
-    _onChangeTaskState() {
-
-    }
-
     _changeDateTaskTeam(value) {
-        const { fields: { region, zone, team, dateTaskTeam } } = this.props;
+        const { fields: { dateTaskTeam } } = this.props;
         dateTaskTeam.onChange(value);
     }
 
@@ -426,7 +411,6 @@ class ModalComponentPending extends Component {
                                             {...team}
                                             value={team.value}
                                             onBlur={team.onBlur}
-                                            onChange={this._onChangeTeam}
                                             valueProp={'id'}
                                             textProp={'description'}
                                             searchClient={'client'}
@@ -440,7 +424,6 @@ class ModalComponentPending extends Component {
                                             {...taskStatus}
                                             value={taskStatus.value}
                                             onBlur={taskStatus.onBlur}
-                                            onChange={this._onChangeTaskState}
                                             valueProp={'id'}
                                             textProp={'value'}
                                             searchClient={'client'}
