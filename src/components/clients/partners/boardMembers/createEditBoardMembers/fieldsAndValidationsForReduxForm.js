@@ -1,4 +1,5 @@
 import { xssValidation } from "../../../../../actionsGlobal";
+import _ from "lodash";
 
 import {
     MESSAGE_WARNING_OBSERVATIONS,
@@ -22,7 +23,7 @@ export const fields = [
 
 const errors = {};
 export const validations = (values) => {
-    const patternOfOnlyAlphabetical = /[^a-zA-Z\sÁÉÍÓÚáéíóúÑñÜü]/g;
+    const patternOfOnlyAlphabetical = "/[^a-zA-Z\sÁÉÍÓÚáéíóúÑñÜü]/g";
 
     if (!values.typeOfDocument) {
         errors.typeOfDocument = OPTION_REQUIRED;
@@ -30,14 +31,14 @@ export const validations = (values) => {
         errors.typeOfDocument = null;
     }
 
-    const patternOfNumberDocument = /[^a-zA-Z0-9\-ÁÉÍÓÚáéíóúÑñÜü]/g;
+    const patternOfNumberDocument = "/[^a-zA-Z0-9\-ÁÉÍÓÚáéíóúÑñÜü]/g";
     if (!values.numberDocument) {
         errors.numberDocument = VALUE_REQUIERED;
     } else if (xssValidation(values.numberDocument)) {
         errors.numberDocument = VALUE_XSS_INVALID;
-    } else if (values.numberDocument && patternOfNumberDocument.test(values.numberDocument)) {
+    } else if (!_.isNull(values.numberDocument) && eval(patternOfNumberDocument).test(values.numberDocument)) {
         errors.numberDocument = MESSAGE_WARNING_NUMBER_DOCUMENT;
-    } else if (values.numberDocument && values.numberDocument.length > 30) {
+    } else if (!_.isNull(values.numberDocument) && values.numberDocument.length > 30) {
         errors.numberDocument = MESSAGE_WARNING_MIN_LENGTH_THIRTY;
     } else {
         errors.numberDocument = null;
@@ -47,11 +48,11 @@ export const validations = (values) => {
         errors.firstName = VALUE_REQUIERED;
     } else if (xssValidation(values.firstName)) {
         errors.firstName = VALUE_XSS_INVALID;
-    } else if (values.firstName && patternOfOnlyAlphabetical.test(values.firstName)) {
+    } else if (!_.isNull(values.firstName) && eval(patternOfOnlyAlphabetical).test(values.firstName)) {
         errors.firstName = MESSAGE_WARNING_ONLY_ALPHABETICAL;
-    } else if (values.firstName && values.firstName.length > 0 && values.firstName.length < 2) {
+    } else if (!_.isNull(values.firstName) && values.firstName.length > 0 && values.firstName.length < 2) {
         errors.firstName = MESSAGE_WARNING_MIN_LENGTH_TWO;
-    } else if (values.firstName && values.firstName.length > 10) {
+    } else if (!_.isNull(values.firstName) && values.firstName.length > 10) {
         errors.firstName = MESSAGE_WARNING_MIN_LENGTH_TEN;
     } else {
         errors.firstName = null;
@@ -61,11 +62,11 @@ export const validations = (values) => {
         errors.firstLastName = VALUE_REQUIERED;
     } else if (xssValidation(values.firstLastName)) {
         errors.firstLastName = VALUE_XSS_INVALID;
-    } else if (values.firstLastName && patternOfOnlyAlphabetical.test(values.firstLastName)) {
+    } else if (!_.isNull(values.firstLastName) && eval(patternOfOnlyAlphabetical).test(values.firstLastName)) {
         errors.firstLastName = MESSAGE_WARNING_ONLY_ALPHABETICAL;
-    } else if (values.firstLastName && values.firstLastName.length > 0 && values.firstLastName.length < 2) {
+    } else if (!_.isNull(values.firstLastName) && values.firstLastName.length > 0 && values.firstLastName.length < 2) {
         errors.firstLastName = MESSAGE_WARNING_MIN_LENGTH_TWO;
-    } else if (values.firstLastName && values.firstLastName.length > 10) {
+    } else if (!_.isNull(values.firstLastName) && values.firstLastName.length > 10) {
         errors.firstLastName = MESSAGE_WARNING_MIN_LENGTH_TEN;
     } else {
         errors.firstLastName = null;
@@ -73,11 +74,11 @@ export const validations = (values) => {
 
     if (xssValidation(values.middleName)) {
         errors.middleName = VALUE_XSS_INVALID;
-    } else if (values.middleName && patternOfOnlyAlphabetical.test(values.middleName)) {
+    } else if (!_.isNull(values.middleName) && eval(patternOfOnlyAlphabetical).test(values.middleName)) {
         errors.middleName = MESSAGE_WARNING_ONLY_ALPHABETICAL;
-    } else if (values.middleName && values.middleName.length > 0 && values.middleName.length < 2) {
+    } else if (!_.isNull(values.middleName) && values.middleName.length > 0 && values.middleName.length < 2) {
         errors.middleName = MESSAGE_WARNING_MIN_LENGTH_TWO;
-    } else if (values.middleName && values.middleName.length > 10) {
+    } else if (!_.isNull(values.middleName) && values.middleName.length > 10) {
         errors.middleName = MESSAGE_WARNING_MIN_LENGTH_TEN;
     } else {
         errors.middleName = null;
@@ -85,20 +86,20 @@ export const validations = (values) => {
 
     if (xssValidation(values.secondLastName)) {
         errors.secondLastName = VALUE_XSS_INVALID;
-    } else if (values.secondLastName && patternOfOnlyAlphabetical.test(values.secondLastName)) {
+    } else if (!_.isNull(values.secondLastName) && eval(patternOfOnlyAlphabetical).test(values.secondLastName)) {
         errors.secondLastName = MESSAGE_WARNING_ONLY_ALPHABETICAL;
-    } else if (values.secondLastName && values.secondLastName.length > 0 && values.secondLastName.length < 2) {
+    } else if (!_.isNull(values.secondLastName) && values.secondLastName.length > 0 && values.secondLastName.length < 2) {
         errors.secondLastName = MESSAGE_WARNING_MIN_LENGTH_TWO;
-    } else if (values.secondLastName && values.secondLastName.length > 10) {
+    } else if (!_.isNull(values.secondLastName) && values.secondLastName.length > 10) {
         errors.secondLastName = MESSAGE_WARNING_MIN_LENGTH_TEN;
     } else {
         errors.secondLastName = null;
     }
 
-    const patternOfObservation = /[^a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]/g;
+    const patternOfObservation = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]/g";
     if (xssValidation(values.observations)) {
         errors.observations = VALUE_XSS_INVALID;
-    } else if (values.observations && patternOfObservation.test(values.observations)) {
+    } else if (!_.isNull(values.observations) && eval(patternOfObservation).test(values.observations)) {
         errors.observations = MESSAGE_WARNING_OBSERVATIONS;
     } else {
         errors.observations = null;
