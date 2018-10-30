@@ -8,6 +8,9 @@ import { bindActionCreators } from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
 import { loadObservablesLeftTimer } from '../login/actions';
 import SweetAlert from "../sweetalertFocus";
+import moment from 'moment';
+
+moment.tz.setDefault('America/Bogota');
 
 class Dashboard extends Component {
   constructor(props) {
