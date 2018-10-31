@@ -39,9 +39,9 @@ class buttonClientVisorComponent extends Component {
                 data.payload.data.parameter !== undefined) {
 
                 let parameter = JSON.parse(data.payload.data.parameter).value;
-                
+
                 this.setState({
-                    visor_url: parameter.replace( URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber) 
+                    visor_url: parameter
                 })
             }
         })
@@ -50,6 +50,7 @@ class buttonClientVisorComponent extends Component {
 
 
     render() {
+        const { clientdIdNumber } = this.props;
 
         return (
             <div>
@@ -66,7 +67,11 @@ class buttonClientVisorComponent extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <iframe style={{ width: "100%", border: "0", flexGrow: "1" }} src={this.state.visor_url}></iframe>
+                            {this.state.modalIsOpen &&
+                                <iframe style={{ width: "100%", border: "0", flexGrow: "1" }} src={
+                                    this.state.visor_url.replace(URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber)
+                                }></iframe>
+                            }
                         </div>
                     </div>
                 </Modal>
