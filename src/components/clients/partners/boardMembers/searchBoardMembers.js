@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import { changeKeyword, getBoardMembers, clearFilters } from './actions';
-import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { validateResponse, xssValidation } from '../../../../actionsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
-import { MESSAGE_LOAD_DATA, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, VALUE_XSS_INVALID } from '../../../../constantsGlobal';
+
+import { NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
+import { MESSAGE_LOAD_DATA, VALUE_XSS_INVALID } from '../../../../constantsGlobal';
 
 
 class SearchBoardMembers extends Component {
@@ -60,7 +62,6 @@ class SearchBoardMembers extends Component {
     const { disabled, boardMembersReducer } = this.props;
     return (
       <div>
-
         <div className="InputAddOn">
           <input style={{ padding: '0px 11px !important' }} disabled={disabled} id="searchExpression"
             onKeyPress={this._handleChangeKeyword} type="text"

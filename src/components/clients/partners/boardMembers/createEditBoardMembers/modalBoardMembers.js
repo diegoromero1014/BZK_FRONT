@@ -11,7 +11,7 @@ import InputComponent from "../../../../../ui/input/inputComponent";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
-import { fields, validations as validate } from './fieldsAndValidationsForReduxForm';
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";

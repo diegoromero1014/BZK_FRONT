@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import SearchContactComponent from './searchContactComponent';
-import ListContactComponent from './listContactComponent';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { contactsByClientFindServer, clearContact } from './actions';
-import { Combobox } from 'react-widgets';
+
+import SearchContactComponent from './searchContactComponent';
+import ListContactComponent from './listContactComponent';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationContactComponent from './paginationContactComponent';
-import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
 import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
-import { validatePermissionsByModule } from '../../actionsGlobal';
-import { redirectUrl } from '../globalComponents/actions';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
+
+import { redirectUrl } from '../globalComponents/actions';
+import { validatePermissionsByModule } from '../../actionsGlobal';
+import { contactsByClientFindServer, clearContact } from './actions';
+
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
+import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
 
 class ContactComponent extends Component {
 
