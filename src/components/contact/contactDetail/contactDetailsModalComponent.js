@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { Combobox, DateTimePicker, Multiselect } from 'react-widgets';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 
@@ -13,7 +11,6 @@ import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import SweetAlert from '../../sweetalertFocus';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';

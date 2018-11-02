@@ -6,11 +6,10 @@ import {
 } from './patternsToValidateField';
 
 import {
-    MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH_TWO,
-    MESSAGE_WARNING_MAX_LENGTH_SIXTY, MESSAGE_WARNING_MIN_LENGTH_THIRTY, MESSAGE_WARNING_OBSERVATIONS,
-    MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_MIN_LENGTH_FIVE, MESSAGE_WARNING_NEIGHBORHOOD,
-    MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL,
-    MESSAGE_WARNING_RELEVANT_FEATURES
+    MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
+    MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_NUMBER_DOCUMENT,
+    MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES
 } from './validationsMessages';
 
 
@@ -44,37 +43,19 @@ export const checkOnlyAlphabetical = (value) => {
     return message;
 }
 
-export const checkMinLengthTow = value => {
+export const checkMinLength = minLength => value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 0 && value.length < 2) {
-        message = MESSAGE_WARNING_MIN_LENGTH_TWO;
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 0 && value.length < minLength) {
+        message = MESSAGE_WARNING_MIN_LENGTH(minLength);
     }
 
     return message;
 }
 
-export const checkMinLengthFive = value => {
+export const checkMaxLength = maxLength => value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 0 && value.length < 5) {
-        message = MESSAGE_WARNING_MIN_LENGTH_FIVE;
-    }
-
-    return message;
-}
-
-export const checkMinLengthThirty = value => {
-    let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 30) {
-        message = MESSAGE_WARNING_MIN_LENGTH_THIRTY;
-    }
-
-    return message;
-}
-
-export const checkMaxLengthSixty = value => {
-    let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 60) {
-        message = MESSAGE_WARNING_MAX_LENGTH_SIXTY;
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > maxLength) {
+        message = MESSAGE_WARNING_MAX_LENGTH(maxLength);
     }
 
     return message;

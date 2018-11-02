@@ -17,6 +17,7 @@ import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import Tooltip from '../../toolTip/toolTipComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { patternOfNumberDocument } from '../../../validations/patternsToValidateField';
 
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
@@ -176,13 +177,9 @@ class ModalComponentContact extends Component {
     _searchContact(e) {
         e.preventDefault();
         const {
-            fields: {
-                id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad,
-                contactRelevantFeatures
-            }, handleSubmit, error
+            fields: { tipoDocumento, numeroDocumento, ciudad },
         } = this.props;
+
         const { searchContact, clearSearchContact } = this.props;
         const documentNumber = _.isNull(numeroDocumento.value) ? null : numeroDocumento.value.trim();
         numeroDocumento.onChange(documentNumber);

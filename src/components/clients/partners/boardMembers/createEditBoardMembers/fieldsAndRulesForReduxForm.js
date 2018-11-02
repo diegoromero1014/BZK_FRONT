@@ -1,18 +1,18 @@
 import _ from "lodash";
 
 import {
-    checkRequired, checkNumberDocument, checkMinLengthThirty, checkOnlyAlphabetical, checkMinLengthTow,
-    checkMaxLengthSixty, checkObservations, processRules
-} from './../../../../../ui/input/rulesField';
+    checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
+    checkMaxLength, checkObservations, processRules
+} from '../../../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     idBoardMember: { rules: [] },
     typeOfDocument: { rules: [checkRequired] },
-    numberDocument: { rules: [checkRequired, checkNumberDocument, checkMinLengthThirty] },
-    firstName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    firstLastName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    middleName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    secondLastName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
+    numberDocument: { rules: [checkRequired, checkNumberDocument, checkMaxLength(30)] },
+    firstName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    firstLastName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    middleName: { rules: [checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    secondLastName: { rules: [checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
     observations: { rules: [checkObservations] },
 };
 

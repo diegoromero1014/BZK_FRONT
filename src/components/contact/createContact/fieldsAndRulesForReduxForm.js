@@ -1,21 +1,21 @@
 import _ from "lodash";
 
 import {
-    checkRequired, checkNumberDocument, checkMinLengthThirty, checkOnlyAlphabetical, checkMinLengthTow,
-    checkMaxLengthSixty, checkAddress, checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers,
-    checkContactRelevantFeatures, checkEmail, checkMinLengthFive, processRules
-} from './../../../ui/input/rulesField';
+    checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
+    checkMaxLength, checkAddress, checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers,
+    checkContactRelevantFeatures, checkEmail, processRules
+} from '../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     id: { rules: [] },
     tipoDocumento: { rules: [] },
-    numeroDocumento: { rules: [checkRequired, checkNumberDocument, checkMinLengthThirty] },
+    numeroDocumento: { rules: [checkRequired, checkNumberDocument, checkMaxLength(30)] },
     tipoTratamiendo: { rules: [checkRequired] },
     tipoGenero: { rules: [checkRequired] },
-    primerNombre: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    segundoNombre: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    primerApellido: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
-    segundoApellido: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
+    primerNombre: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    segundoNombre: { rules: [checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    primerApellido: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
+    segundoApellido: { rules: [checkOnlyAlphabetical, checkMinLength(2), checkMaxLength(60)] },
     tipoCargo: { rules: [checkRequired] },
     tipoDependencia: { rules: [checkRequired] },
     fechaNacimiento: { rules: [] },
@@ -24,7 +24,7 @@ const fieldsWithRules = {
     pais: { rules: [checkRequired] },
     departamento: { rules: [checkRequired] },
     ciudad: { rules: [checkRequired] },
-    direccion: { rules: [checkRequired, checkMinLengthFive, checkAddress] },
+    direccion: { rules: [checkRequired, checkMinLength(5), checkAddress] },
     barrio: { rules: [checkNeighborhood] },
     codigoPostal: { rules: [checkPostalCode] },
     telefono: { rules: [checkRequired, checkPhone] },
