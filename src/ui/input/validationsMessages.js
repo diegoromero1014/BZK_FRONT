@@ -1,7 +1,15 @@
 export const MESSAGE_WARNING_ONLY_ALPHABETICAL = "Solo se permiten caracteres alfabéticos";
-export const MESSAGE_REQUIRED_VALUE= "Debe especificar un valor";
+export const MESSAGE_REQUIRED_VALUE= "Requiere que especifique un valor";
 export const MESSAGE_WARNING_MIN_LENGTH_TWO = "Requiere dos o más caracteres";
-export const MESSAGE_WARNING_MAX_LENGTH_TEN = "Solo se permiten 10 caracteres";
+export const MESSAGE_WARNING_MIN_LENGTH_FIVE = "Requiere cinco o más caracteres";
+export const MESSAGE_WARNING_MAX_LENGTH_SIXTY = "Solo se permiten 60 caracteres";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";
 export const MESSAGE_WARNING_MIN_LENGTH_THIRTY= "Solo se permiten 30 caracteres";
 export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_ADDRESS = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/";
+export const MESSAGE_WARNING_NEIGHBORHOOD = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/";
+export const MESSAGE_WARNING_INVALID_EMAIL = "Debe ingresar un formato válido";
+export const MESSAGE_WARNING_POSTAL_CODE = "Solo se permiten valores alfanuméricos y -";
+export const MESSAGE_WARNING_PHONE = "Solo se permiten valores numéricos y espacios";
+export const MESSAGE_WARNING_ONLY_NUMBERS = "Solo se permiten valores numéricos";
+export const MESSAGE_WARNING_RELEVANT_FEATURES = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";

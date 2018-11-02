@@ -355,7 +355,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="firstName"
                                     type="text"
-                                    max="10"
+                                    max="60"
                                     {...firstName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -365,7 +365,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="middleName"
                                     type="text"
-                                    max="10"
+                                    max="60"
                                     {...middleName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -377,7 +377,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="firstLastName"
                                     type="text"
-                                    max="10"
+                                    max="60"
                                     {...firstLastName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />
@@ -387,7 +387,7 @@ class ModalCreateBoardMembers extends Component {
                                 <InputComponent
                                     name="<secondLastName></secondLastName>"
                                     type="text"
-                                    max="10"
+                                    max="60"
                                     {...secondLastName}
                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                 />

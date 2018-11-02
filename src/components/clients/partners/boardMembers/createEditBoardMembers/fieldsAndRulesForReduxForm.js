@@ -2,37 +2,22 @@ import _ from "lodash";
 
 import {
     checkRequired, checkNumberDocument, checkMinLengthThirty, checkOnlyAlphabetical, checkMinLengthTow,
-    checkMaxLengthTen, checkObservations
-} from '../../../../../ui/input/rulesField';
+    checkMaxLengthSixty, checkObservations, processRules
+} from './../../../../../ui/input/rulesField';
 
 const fieldsWithRules = {
     idBoardMember: { rules: [] },
     typeOfDocument: { rules: [checkRequired] },
     numberDocument: { rules: [checkRequired, checkNumberDocument, checkMinLengthThirty] },
-    firstName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthTen] },
-    firstLastName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthTen] },
-    middleName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthTen] },
-    secondLastName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthTen] },
+    firstName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
+    firstLastName: { rules: [checkRequired, checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
+    middleName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
+    secondLastName: { rules: [checkOnlyAlphabetical, checkMinLengthTow, checkMaxLengthSixty] },
     observations: { rules: [checkObservations] },
 };
 
 export const fields = _.keys(fieldsWithRules);
 
-const errors = {};
-export const validations = (values) => {
-    _.mapKeys(values, function (value, field) {
-        if (!_.isEmpty(fieldsWithRules[field].rules)) {
-            _.forEach(fieldsWithRules[field].rules, function (rule) {
-                const message = rule(value);
-                if (!_.isEmpty(message)) {
-                    errors[field] = message;
-                    return false;
-                } else {
-                    errors[field] = null;
-                }
-            });
-        }
-    });
-
-    return errors;
+export const validations = (formFields) => {
+    return processRules(formFields, fieldsWithRules)
 };

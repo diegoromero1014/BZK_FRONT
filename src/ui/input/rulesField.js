@@ -1,14 +1,38 @@
 import _ from "lodash";
 
-import { patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation } from './patternsToValidateField';
+import {
+    patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail
+} from './patternsToValidateField';
+
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH_TWO,
-    MESSAGE_WARNING_MAX_LENGTH_TEN, MESSAGE_WARNING_MIN_LENGTH_THIRTY, MESSAGE_WARNING_OBSERVATIONS,
-    MESSAGE_WARNING_NUMBER_DOCUMENT
+    MESSAGE_WARNING_MAX_LENGTH_SIXTY, MESSAGE_WARNING_MIN_LENGTH_THIRTY, MESSAGE_WARNING_OBSERVATIONS,
+    MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_MIN_LENGTH_FIVE, MESSAGE_WARNING_NEIGHBORHOOD,
+    MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL
 } from './validationsMessages';
 
 
-export const checkRequired = value => _.isNull(value) ? MESSAGE_REQUIRED_VALUE : null;
+export const processRules = (formFields, fieldsWithRules) => {
+    const errors = {};
+    _.mapKeys(formFields, function (value, field) {
+        if (!_.isEmpty(fieldsWithRules[field].rules)) {
+            _.forEach(fieldsWithRules[field].rules, function (rule) {
+                const message = rule(value);
+                if (!_.isEmpty(message)) {
+                    errors[field] = message;
+                    return false;
+                } else {
+                    errors[field] = null;
+                }
+            });
+        }
+    });
+
+    return errors;
+}
+
+export const checkRequired = value => (_.isNull(value) || _.isEmpty(value)) ? MESSAGE_REQUIRED_VALUE : null;
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
@@ -28,6 +52,15 @@ export const checkMinLengthTow = value => {
     return message;
 }
 
+export const checkMinLengthFive = value => {
+    let message = null;
+    if (!_.isNull(value) && value.length < 5) {
+        message = MESSAGE_WARNING_MIN_LENGTH_FIVE;
+    }
+
+    return message;
+}
+
 export const checkMinLengthThirty = value => {
     let message = null;
     if (!_.isNull(value) && value.length > 30) {
@@ -37,10 +70,10 @@ export const checkMinLengthThirty = value => {
     return message;
 }
 
-export const checkMaxLengthTen = value => {
+export const checkMaxLengthSixty = value => {
     let message = null;
-    if (!_.isNull(value) && value.length > 10) {
-        message = MESSAGE_WARNING_MAX_LENGTH_TEN;
+    if (!_.isNull(value) && value.length > 60) {
+        message = MESSAGE_WARNING_MAX_LENGTH_SIXTY;
     }
 
     return message;
@@ -59,6 +92,69 @@ export const checkObservations = value => {
     let message = null;
     if (!_.isNull(value) && eval(patternOfObservation).test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
+    }
+
+    return message;
+}
+
+export const checkAddress = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfAddress).test(value)) {
+        message = MESSAGE_WARNING_ADDRESS;
+    }
+
+    return message;
+}
+
+export const checkNeighborhood = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfNeighborhood).test(value)) {
+        message = MESSAGE_WARNING_NEIGHBORHOOD;
+    }
+
+    return message;
+}
+
+export const checkPostalCode = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfPostalCode).test(value)) {
+        message = MESSAGE_WARNING_POSTAL_CODE;
+    }
+
+    return message;
+}
+
+export const checkPhone = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfPhone).test(value)) {
+        message = MESSAGE_WARNING_PHONE;
+    }
+
+    return message;
+}
+
+export const checkOnlyNumbers = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfOnlyNumbers).test(value)) {
+        message = MESSAGE_WARNING_ONLY_NUMBERS;
+    }
+
+    return message;
+}
+
+export const checkEmail = value => {
+    let message = null;
+    if (!_.isNull(value) && !patternOfEmail.test(value)) {
+        message = MESSAGE_WARNING_INVALID_EMAIL;
+    }
+
+    return message;
+}
+
+export const checkContactRelevantFeatures = value => {
+    let message = null;
+    if (!_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
+        message = MESSAGE_WARNING_RELEVANT_FEATURES;
     }
 
     return message;
