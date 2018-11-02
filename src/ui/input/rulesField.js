@@ -9,7 +9,8 @@ import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH_TWO,
     MESSAGE_WARNING_MAX_LENGTH_SIXTY, MESSAGE_WARNING_MIN_LENGTH_THIRTY, MESSAGE_WARNING_OBSERVATIONS,
     MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_MIN_LENGTH_FIVE, MESSAGE_WARNING_NEIGHBORHOOD,
-    MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL
+    MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL,
+    MESSAGE_WARNING_RELEVANT_FEATURES
 } from './validationsMessages';
 
 
@@ -36,7 +37,7 @@ export const checkRequired = value => (_.isNull(value) || _.isEmpty(value)) ? ME
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
         message = MESSAGE_WARNING_ONLY_ALPHABETICAL;
     }
 
@@ -45,7 +46,7 @@ export const checkOnlyAlphabetical = (value) => {
 
 export const checkMinLengthTow = value => {
     let message = null;
-    if (!_.isNull(value) && value.length < 2) {
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 0 && value.length < 2) {
         message = MESSAGE_WARNING_MIN_LENGTH_TWO;
     }
 
@@ -54,7 +55,7 @@ export const checkMinLengthTow = value => {
 
 export const checkMinLengthFive = value => {
     let message = null;
-    if (!_.isNull(value) && value.length < 5) {
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 0 && value.length < 5) {
         message = MESSAGE_WARNING_MIN_LENGTH_FIVE;
     }
 
@@ -63,7 +64,7 @@ export const checkMinLengthFive = value => {
 
 export const checkMinLengthThirty = value => {
     let message = null;
-    if (!_.isNull(value) && value.length > 30) {
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 30) {
         message = MESSAGE_WARNING_MIN_LENGTH_THIRTY;
     }
 
@@ -72,7 +73,7 @@ export const checkMinLengthThirty = value => {
 
 export const checkMaxLengthSixty = value => {
     let message = null;
-    if (!_.isNull(value) && value.length > 60) {
+    if (!_.isUndefined(value) && !_.isNull(value) && value.length > 60) {
         message = MESSAGE_WARNING_MAX_LENGTH_SIXTY;
     }
 
@@ -81,7 +82,7 @@ export const checkMaxLengthSixty = value => {
 
 export const checkNumberDocument = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfNumberDocument).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfNumberDocument).test(value)) {
         message = MESSAGE_WARNING_NUMBER_DOCUMENT;
     }
 
@@ -90,7 +91,7 @@ export const checkNumberDocument = value => {
 
 export const checkObservations = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfObservation).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservation).test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
@@ -99,7 +100,7 @@ export const checkObservations = value => {
 
 export const checkAddress = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfAddress).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfAddress).test(value)) {
         message = MESSAGE_WARNING_ADDRESS;
     }
 
@@ -108,7 +109,7 @@ export const checkAddress = value => {
 
 export const checkNeighborhood = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfNeighborhood).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfNeighborhood).test(value)) {
         message = MESSAGE_WARNING_NEIGHBORHOOD;
     }
 
@@ -117,7 +118,7 @@ export const checkNeighborhood = value => {
 
 export const checkPostalCode = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfPostalCode).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfPostalCode).test(value)) {
         message = MESSAGE_WARNING_POSTAL_CODE;
     }
 
@@ -126,7 +127,7 @@ export const checkPostalCode = value => {
 
 export const checkPhone = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfPhone).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfPhone).test(value)) {
         message = MESSAGE_WARNING_PHONE;
     }
 
@@ -135,7 +136,7 @@ export const checkPhone = value => {
 
 export const checkOnlyNumbers = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfOnlyNumbers).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyNumbers).test(value)) {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
@@ -144,7 +145,7 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isNull(value) && !patternOfEmail.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfEmail.test(value)) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
@@ -153,7 +154,7 @@ export const checkEmail = value => {
 
 export const checkContactRelevantFeatures = value => {
     let message = null;
-    if (!_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
     }
 
