@@ -289,7 +289,7 @@ class FormCreateProspect extends Component {
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                         redirectUrl("/login");
                     } else {
-                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
                             this.setState({ showEx: true });
                         } else {
                             this.setState({ showEr: true });
