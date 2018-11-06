@@ -12,7 +12,7 @@ import {
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS
 } from './validationsMessages';
 
-
+export let globalCondition = false;
 export const processRules = (formFields, fieldsWithRules) => {
     const errors = {};
     _.mapKeys(formFields, function (value, field) {
@@ -33,6 +33,7 @@ export const processRules = (formFields, fieldsWithRules) => {
 }
 
 export const checkRequired = value => (_.isNull(value) || _.isEmpty(value)) ? MESSAGE_REQUIRED_VALUE : null;
+export const checkRequiredWithGlobalCondition = value => globalCondition ? checkRequired(value) : null;
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
