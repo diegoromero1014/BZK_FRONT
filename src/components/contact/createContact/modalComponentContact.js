@@ -17,7 +17,7 @@ import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import Tooltip from '../../toolTip/toolTipComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
-import { patternOfNumberDocument } from '../../../validations/patternsToValidateField';
+import { patternOfNumberDocument } from '../../../validationsFields/patternsToValidateField';
 
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
@@ -186,6 +186,10 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
+            if (eval(patternOfNumberDocument).test(numeroDocumento.value)) {
+                return;
+            }
+
             if (xssValidation(numeroDocumento.value)) {
                 this.setState({ showErrorXss: true });
                 return;
@@ -214,9 +218,10 @@ class ModalComponentContact extends Component {
         const { createContactNew, contactsByClientFindServer, createContactReducer, changeStateSaveData } = this.props;
         const {
             fields: {
-                id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial, tipoActitud, tipoContacto,
-                numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
+                id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
+                tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
+                fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
+                tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             }, handleSubmit, error
         } = this.props;
 
@@ -253,7 +258,7 @@ class ModalComponentContact extends Component {
             "attitudeOverGroup": tipoActitud.value,
             "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false,
-            "favoritesGroups": JSON.parse('[' + ((listaFavoritos.value) ? listaFavoritos.value : "") + ']')
+            "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']')
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);

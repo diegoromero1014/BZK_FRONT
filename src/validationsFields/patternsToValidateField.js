@@ -3,7 +3,7 @@ export const patternOfOnlyNumbers = "/[^0-9]/g";
 export const patternOfNumberDocument = "/[^a-zA-Z0-9\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfPostalCode = "/[^a-zA-Z0-9\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfAddress = "/[^a-zA-Z0-9\\s\\-#();,.\"\/]/g";
-export const patternOfNeighborhood = "/[^a-zA-Z0-9\\s\\-#();,.\"\/]/g";
+export const patternOfNeighborhood = "/[^a-zA-Z0-9\\s\\-ÁÉÍÓÚáéíóúÑñÜü#();,.\"\/]/g";
 export const patternOfObservation = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfPhone = "/[^0-9\\s]/g";
 export const patternOfContactRelevantFeatures = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
