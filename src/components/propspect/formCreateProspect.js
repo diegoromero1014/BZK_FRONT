@@ -54,40 +54,12 @@ let isNature = false;
 
 const validate = (values, props) => {
     const errors = {}
-    if (!values.razonSocial && !isNature) {
+    if (!values.razonSocial) {
         errors.razonSocial = VALUE_REQUIERED;
     } else if (xssValidation(values.razonSocial)) {
         errors.razonSocial = VALUE_XSS_INVALID;
     } else {
         errors.razonSocial = null;
-    }
-
-    if (!values.firstName && isNature) {
-        errors.firstName = VALUE_REQUIERED;
-    } else if (xssValidation(values.firstName)) {
-        errors.firstName = VALUE_XSS_INVALID;
-    } else {
-        errors.firstName = null;
-    }
-
-    if (xssValidation(values.middleName)) {
-        errors.middleName = VALUE_XSS_INVALID;
-    } else {
-        errors.middleName = null;
-    }
-
-    if (xssValidation(values.middleLastName)) {
-        errors.middleLastName = VALUE_XSS_INVALID;
-    } else {
-        errors.middleLastName = null;
-    }
-
-    if (!values.lastName && isNature) {
-        errors.lastName = VALUE_REQUIERED;
-    } else if (xssValidation(values.lastName)) {
-        errors.lastName = VALUE_XSS_INVALID;
-    } else {
-        errors.lastName = null;
     }
 
     if (!values.idCelula) {
@@ -243,7 +215,7 @@ class FormCreateProspect extends Component {
 
             var jsonCreateProspect = {
                 "clientIdNumber": numberDocument,
-                "clientName": !isNature ? razonSocial.value : (firstName.value + " " + middleName.value + " " + lastName.value + " " + middleLastName.value),
+                "clientName": razonSocial.value,
                 "clientStatus": "",
                 "riskRating": null,
                 "isProspect": true,
@@ -305,7 +277,8 @@ class FormCreateProspect extends Component {
                 "middleName": middleName.value,
                 "lastName": lastName.value,
                 "middleLastName": middleLastName.value,
-                "occupation": isNature ? occupation.value : null
+                "occupation": isNature ? occupation.value : null,
+                "saveMethod": "prospecto"
             };
             const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -411,8 +384,6 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-
-                    {!isNature &&
                         <Col xs={12} md={8} lg={8} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -425,65 +396,8 @@ class FormCreateProspect extends Component {
                                 />
                             </div>
                         </Col>
-                    }
-
-                    {isNature &&
-
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="firstName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer nombre del prospecto"
-                                    {...firstName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo nombre </span></dt>
-                                <Input
-                                    name="middleName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo nombre del prospecto"
-                                    {...middleName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingRight: "10px" }}>
-                                <dt><span>Primer apellido  (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="lastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer apellido del prospecto"
-                                    {...lastName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo apellido</span></dt>
-                                <Input
-                                    name="middleLastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo apellido del prospecto"
-                                    {...middleLastName}
-                                />
-                            </div>
-                        </Col>
-                    }
+                
+                
                     {isNature &&
 
                         <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
