@@ -14,7 +14,7 @@ import {
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
-    globalCondition =  value;
+    globalCondition = value;
 };
 
 export const processRules = (formFields, fieldsWithRules) => {
