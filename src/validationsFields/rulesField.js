@@ -12,7 +12,11 @@ import {
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS
 } from './validationsMessages';
 
-export let globalCondition = false;
+let globalCondition = false;
+export const setGlobalCondition = value => {
+    globalCondition =  value;
+};
+
 export const processRules = (formFields, fieldsWithRules) => {
     const errors = {};
     _.mapKeys(formFields, function (value, field) {
