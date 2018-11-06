@@ -162,12 +162,16 @@ export class FormCreateTracking extends Component {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             } else {
+                var messageProcess = _.get(data, 'payload.data.data');
                 if (_.isEqual(_.get(data, 'payload.data.status'), 500)) {
-                    swtShowMessage("error", "Creación seguimiento", "Señor usuario, ocurrió un error tratando de crear el seguimiento.");
-                    console.error('Error creando seguimiento', _.get(data, 'payload.data.data'));
+                    if(messageProcess){
+                        swtShowMessage("error", "Creación seguimiento", messageProcess);
+                    }else{
+                        swtShowMessage("error", "Creación seguimiento", "Señor usuario, ocurrió un error tratando de crear el seguimiento.");
+                    }
                 } else {
                     swtShowMessage("success", "Creación seguimiento", "Señor usuario, el seguimiento se creó de forma exitosa.");
-                    if (_.get(data, 'payload.data.data') || _.get(data, 'payload.data.data') === true) {
+                    if (messageProcess || messageProcess === true) {
                         isOpen();
                     } else {
                         getInfoCovenant(_.get(covenant.get('covenantInfo'), 'idCovenant'));
