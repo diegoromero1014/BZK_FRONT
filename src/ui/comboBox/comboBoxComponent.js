@@ -48,10 +48,10 @@ class comboBoxComponent extends Component {
         const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
         const valueIsNotEmpty = value !== null && value !== undefined && value !== "";
         const setPristineAgain = (value === null || value === undefined || value === "") && pristine && this.state.used;
+        
         if (setPristineAgain) {
             this._setPristine(labelInput, name);
-        }
-        else {
+        } else {
             if (valueIsNotEmpty) {
                 this._changeValue(value, name);
             } else {
@@ -63,7 +63,7 @@ class comboBoxComponent extends Component {
     }
 
     componentDidMount() {
-        const { onChange, onBlur, name, defaultValue, value, data } = this.props;
+        const { onChange, onBlur, name } = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
@@ -107,11 +107,8 @@ class comboBoxComponent extends Component {
         }
 
         let emptyObject = {};
-
         let comboData;
-
         let _data = Object.assign([], data);
-
 
         if (showEmptyObject) {
             emptyObject[valueProp] = '';

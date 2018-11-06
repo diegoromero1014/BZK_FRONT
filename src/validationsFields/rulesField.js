@@ -36,7 +36,7 @@ export const processRules = (formFields, fieldsWithRules) => {
     return errors;
 }
 
-export const checkRequired = value => (_.isNull(value) || _.isEmpty(value)) ? MESSAGE_REQUIRED_VALUE : null;
+export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1) ? MESSAGE_REQUIRED_VALUE : null;
 export const checkRequiredWithGlobalCondition = value => globalCondition ? checkRequired(value) : null;
 
 export const checkOnlyAlphabetical = (value) => {
