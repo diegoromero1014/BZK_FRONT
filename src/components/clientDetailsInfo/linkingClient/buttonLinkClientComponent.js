@@ -32,11 +32,11 @@ const fields = ["observationTrader"];
 const errors = {};
 
 const validate = (values) => {
-    if (xssValidation(values.observationTrader)) {
-        errors.observationTrader = VALUE_XSS_INVALID;
-    } else {
+   // if (xssValidation(values.observationTrader)) {
+        //errors.observationTrader = VALUE_XSS_INVALID;
+    //} else {
         errors.observationTrader = null;
-    }
+   //}
 
     return errors;
 };
@@ -111,12 +111,13 @@ class ButtonLinkClientComponent extends Component {
                     || isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())) {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
-                        isValidLinkEntities = false;
-                    } else if (xssValidation(linkEntity.traderCode)) {
-                        updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
-                        inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
-                        isValidLinkEntities = false;
-                    }
+                         isValidLinkEntities = false;
+                     } 
+                    //  else if (xssValidation(linkEntity.traderCode)) {
+                    //      updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
+                    //      inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+                    //      isValidLinkEntities = false;
+                    //  }
 
                     return {
                         id: linkEntity.idEntity,
@@ -138,10 +139,10 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if (xssValidation(observationTrader.value)) {
-            inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
-            isValidLinkEntities = false;
-        }
+     //   if (xssValidation(observationTrader.value)) {
+          //  inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+           // isValidLinkEntities = false;
+      //  }
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
