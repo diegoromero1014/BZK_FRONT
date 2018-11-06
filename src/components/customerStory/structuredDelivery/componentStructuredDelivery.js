@@ -12,6 +12,7 @@ import {
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
+import {MAX_LENGTH_EVENT_NAME} from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -86,7 +87,6 @@ class componentStructuredDelivery extends Component {
             let listEvents = [];
             let allowSave = true;
             let message = null;
-
             structuredDeliveryEvents.map((event) => {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
@@ -95,8 +95,8 @@ class componentStructuredDelivery extends Component {
                     message = MESSAGE_WARNING_HISTORY_EVENT;
                     updateEventErrors(true, message);
                     allowSave = false;
-                } else if(!_.isUndefined(event.name) && !_.isNull(event.name) && event.name.length > maxLength) {
-                    message = MESSAGE_WARNING_MAX_LENGTH(maxLength);
+                } else if(!_.isUndefined(event.name) && !_.isNull(event.name) && event.name.length > MAX_LENGTH_EVENT_NAME) {
+                    message = MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_EVENT_NAME);
                     updateEventErrors(true, message);
                     allowSave = false;
                 }
