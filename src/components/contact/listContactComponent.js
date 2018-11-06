@@ -1,14 +1,14 @@
-import React, {
-  Component,
-  PropTypes
-} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { contactsByClientFindServer, clearContactPaginator, orderColumnContact, clearContactOrder } from './actions';
+
 import GridComponent from '../grid/component';
+
+import { contactsByClientFindServer, clearContactPaginator, orderColumnContact, clearContactOrder } from './actions';
+import { shorterStringValue } from '../../actionsGlobal';
+
 import { NUMBER_RECORDS, DELETE_TYPE_CONTACT } from './constants';
 import { ELIMINAR } from '../../constantsGlobal';
-import { shorterStringValue } from '../../actionsGlobal';
 
 let v1 = "";
 let v2 = "";
@@ -37,10 +37,10 @@ class ListContactComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {
-          value1,
+      value1,
       value2,
       value3
-      } = nextProps;
+    } = nextProps;
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
       (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
@@ -166,7 +166,6 @@ class ListContactComponent extends Component {
     );
   }
 }
-
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
