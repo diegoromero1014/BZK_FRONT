@@ -12,17 +12,25 @@ import {
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS
 } from './validationsMessages';
 
+import {
+    SEGMENTS
+} from '../components/selectsComponent/constants';
+
+import {
+    CONSTRUCT_PYME
+} from '../components/clientEdit/constants';
+
 let globalCondition = false;
 export const setGlobalCondition = value => {
     globalCondition = value;
 };
 
-export const processRules = (formFields, fieldsWithRules) => {
+export const processRules = (formFields, fieldsWithRules, props) => {
     const errors = {};
     _.mapKeys(formFields, function (value, field) {
         if (!_.isEmpty(fieldsWithRules[field].rules)) {
             _.forEach(fieldsWithRules[field].rules, function (rule) {
-                const message = rule(value);
+                const message = rule(value, formFields, props);
                 if (!_.isEmpty(message)) {
                     errors[field] = message;
                     return false;
@@ -43,6 +51,25 @@ export const checkOnlyAlphabetical = (value) => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
         message = MESSAGE_WARNING_ONLY_ALPHABETICAL;
+    }
+
+    return message;
+}
+
+export const checkForValueSubSegment = (value, fields, props) => {
+    let message = null;
+
+    console.log("props", props);
+
+    let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');
+
+    console.log("fieldSegment", fields.segment);
+    console.log("segmentValue", segmentValue);
+
+    if (_.isEqual(CONSTRUCT_PYME, segmentValue)) {
+        if (_.isNull(value) || _.isEmpty(value)) {
+            message = MESSAGE_REQUIRED_VALUE;  
+        }
     }
 
     return message;

@@ -34,6 +34,8 @@ import {
 import { CONSTRUCT_PYME } from '../clientEdit/constants';
 import * as constantsPropect from './constants';
 
+import { fields, validations as validate } from './fieldsAndRules';
+
 const valuesYesNo = [
     { 'id': true, 'value': "Si" },
     { 'id': false, 'value': "No" }
@@ -46,84 +48,7 @@ let typeConfirm = "create";
 //Controla si el campo Segmento esta seleccionado constructor pyme.
 let isSegmentPymeConstruct = false;
 
-const fields = ["razonSocial", "firstName", "middleName", "lastName", "middleLastName", "occupation", "descriptionCompany", "reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-    "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
-    "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals", "segment", "subSegment"];
-
 let isNature = false;
-
-const validate = (values, props) => {
-    const errors = {}
-    if (!values.razonSocial) {
-        errors.razonSocial = VALUE_REQUIERED;
-    } else if (xssValidation(values.razonSocial)) {
-        errors.razonSocial = VALUE_XSS_INVALID;
-    } else {
-        errors.razonSocial = null;
-    }
-
-    if (!values.idCelula) {
-        errors.idCelula = VALUE_REQUIERED;
-    } else {
-        errors.idCelula = null;
-    }
-
-    if (!values.segment) {
-        errors.segment = OPTION_REQUIRED;
-    } else {
-        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value)) {
-            if (!values.subSegment) {
-                errors.subSegment = OPTION_REQUIRED;
-            } else {
-                errors.subSegment = null;
-            }
-        }
-        errors.segment = null;
-    }
-
-    if (xssValidation(values.descriptionCompany)) {
-        errors.descriptionCompany = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.address)) {
-        errors.address = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.district)) {
-        errors.district = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.anualSales)) {
-        errors.anualSales = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-    }
-
-    return errors;
-};
 
 class FormCreateProspect extends Component {
     constructor(props) {
@@ -273,10 +198,6 @@ class FormCreateProspect extends Component {
                 "description": descriptionCompany.value,
                 "clientIdType": idTupeDocument,
                 "clientType": clientType.id,
-                "firstName": firstName.value,
-                "middleName": middleName.value,
-                "lastName": lastName.value,
-                "middleLastName": middleLastName.value,
                 "occupation": isNature ? occupation.value : null,
                 "saveMethod": "prospecto"
             };
