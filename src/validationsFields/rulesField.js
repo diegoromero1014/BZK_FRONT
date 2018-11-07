@@ -2,14 +2,14 @@ import _ from "lodash";
 
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail, patternOfObservationLinkClient
 } from './patternsToValidateField';
 
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT
 } from './validationsMessages';
 
 
@@ -137,6 +137,15 @@ export const checkContactRelevantFeatures = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
+    }
+
+    return message;
+}
+
+export const checkObservationsLinkClient = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservationLinkClient).test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
     }
 
     return message;
