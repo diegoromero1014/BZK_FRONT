@@ -87,10 +87,6 @@ export const checkMaxLength = maxLength => value => {
 
         message = MESSAGE_WARNING_MAX_LENGTH(maxLength);
     }
-    console.log(value);
-    console.log(message);
-    console.log(maxLength);
-
     return message;
 }
 
