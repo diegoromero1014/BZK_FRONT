@@ -2,14 +2,16 @@ import _ from "lodash";
 
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail, patternOfHistory
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail, 
+    patternOfHistory, patternOfClientName
 } from './patternsToValidateField';
 
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS,
+    MESSAGE_WARNING_CLIENT_NAME
 } from './validationsMessages';
 
 import {
@@ -58,13 +60,7 @@ export const checkOnlyAlphabetical = (value) => {
 
 export const checkForValueSubSegment = (value, fields, props) => {
     let message = null;
-
-    console.log("props", props);
-
     let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');
-
-    console.log("fieldSegment", fields.segment);
-    console.log("segmentValue", segmentValue);
 
     if (_.isEqual(CONSTRUCT_PYME, segmentValue)) {
         if (_.isNull(value) || _.isEmpty(value)) {
@@ -178,6 +174,16 @@ export const checkHistoryFields = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfHistory).test(value)) {
         message = MESSAGE_WARNING_HISTORY;
+    }
+
+    return message;
+}
+
+export const checkClientName = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && ! patternOfClientName.test(value)) {
+        message = MESSAGE_WARNING_CLIENT_NAME;
     }
 
     return message;

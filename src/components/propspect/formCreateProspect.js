@@ -17,7 +17,6 @@ import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import { createProspect } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
-import { xssValidation } from '../../actionsGlobal';
 import {
     consultDataSelect,
     consultList,

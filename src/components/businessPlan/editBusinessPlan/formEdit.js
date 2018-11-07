@@ -218,7 +218,7 @@ class FormEdit extends Component {
 
         })
         .catch((reason) => {
-            console.log(reason);
+            
         });
 
     }

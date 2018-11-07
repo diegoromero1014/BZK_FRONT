@@ -1,12 +1,12 @@
 import _ from "lodash";
 
 import {
-    checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
+    checkRequired, checkClientName, checkOnlyAlphabetical, checkMinLength,
     checkMaxLength, checkObservations, processRules, checkForValueSubSegment
 } from '../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    razonSocial: { rules: [checkRequired] },
+    razonSocial: { rules: [checkRequired, checkClientName] },
     occupation: { rules: [] },      
     descriptionCompany: { rules: [] },
     reportVirtual: { rules: [] },
