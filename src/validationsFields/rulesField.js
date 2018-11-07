@@ -3,7 +3,8 @@ import _ from "lodash";
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail, 
-    patternOfHistory, patternOfClientName
+    patternOfHistory, patternOfClientName, patternOfDescription, patternOfClientAddress, patternOfClientNeighborhood,
+    regexNumbers
 } from './patternsToValidateField';
 
 import {
@@ -83,8 +84,12 @@ export const checkMinLength = minLength => value => {
 export const checkMaxLength = maxLength => value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && value.length > maxLength) {
+
         message = MESSAGE_WARNING_MAX_LENGTH(maxLength);
     }
+    console.log(value);
+    console.log(message);
+    console.log(maxLength);
 
     return message;
 }
@@ -182,9 +187,51 @@ export const checkHistoryFields = value => {
 export const checkClientName = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && ! patternOfClientName.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientName.test(value)) {
         message = MESSAGE_WARNING_CLIENT_NAME;
     }
 
     return message;
+}
+
+export const checkClientDescription = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfDescription.test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS;
+    }
+
+    return message;
+}
+
+export const checkClientAddress = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientAddress.test(value)) {
+        message = MESSAGE_WARNING_ADDRESS;
+    }
+
+    return message;
+
+}
+
+export const checkClientNeighborhood = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientNeighborhood.test(value)) {
+        message = MESSAGE_WARNING_NEIGHBORHOOD;
+    }
+
+    return message;
+}
+
+export const checkNumbers = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! regexNumbers.test(value)) {
+        message = MESSAGE_WARNING_ONLY_NUMBERS;
+    }
+
+    return message;
+
 }
