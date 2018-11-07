@@ -10,4 +10,8 @@ export const patternOfContactRelevantFeatures = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡
 export const patternOfEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const patternOfHistory = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfHistoryEvent = "/[^a-zA-Z0-9\\s()\\;,.´'\"&\/°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
-export const patternOfClientName = /^[a-zA-Z0-9\s]+$/;
+export const patternOfClientName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s]+$/;
+export const patternOfDescription = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?]+$/;
+export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´']+$/;
+export const patternOfClientNeighborhood = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/]+$/;
+export const regexNumbers = /^[0-9]+$/;

@@ -310,7 +310,7 @@ class FormCreateProspect extends Component {
                                 <Input
                                     name="razonSocial"
                                     type="text"
-                                    max="150"
+                                    max="50"
                                     placeholder="Ingrese la razón social del prospecto"
                                     {...razonSocial}
                                 />
@@ -493,7 +493,7 @@ class FormCreateProspect extends Component {
                             <Input
                                 name="address"
                                 type="text"
-                                max="250"
+                                max="60"
                                 placeholder="Ingrese la dirección del prospecto"
                                 {...address}
                             />
@@ -551,7 +551,7 @@ class FormCreateProspect extends Component {
                                 <Input
                                     name="district"
                                     type="text"
-                                    max="120"
+                                    max="40"
                                     placeholder="Ingrese el barrio del prospecto"
                                     {...district}
                                 />
@@ -614,88 +614,82 @@ class FormCreateProspect extends Component {
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Ventas anuales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese las ventas anuales"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...annualSales}
-                                value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, annualSales, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Activos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los activos"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...assets}
-                                value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, assets, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Pasivos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los pasivos"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...liabilities}
-                                value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, liabilities, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "35px" }}>
                             <dt><span>Ingresos operacionales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos operacionales"
                                 type="text"
-                                maxLength="16"
+                                max="15"
                                 {...operatingIncome}
-                                value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(2, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(2, operatingIncome, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px" }}>
                             <dt><span>Ingresos no operacionales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos no operacionales"
                                 type="text"
-                                maxLength="16"
+                                max="15"
                                 {...nonOperatingIncome}
-                                value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px" }}>
                             <dt><span>Egresos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los egresos"
-                                min={0}
-                                maxLength="16"
+                                name="expenses"
                                 type="text"
+                                max="15"
                                 {...expenses}
-                                value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(1, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, expenses, val)}
                             />
                         </div>
                     </Col>

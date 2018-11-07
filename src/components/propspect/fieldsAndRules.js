@@ -2,25 +2,26 @@ import _ from "lodash";
 
 import {
     checkRequired, checkClientName, checkOnlyAlphabetical, checkMinLength,
-    checkMaxLength, checkObservations, processRules, checkForValueSubSegment
+    checkMaxLength, processRules, checkForValueSubSegment, checkNumbers,
+    checkClientDescription, checkClientAddress, checkClientNeighborhood
 } from '../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    razonSocial: { rules: [checkRequired, checkClientName] },
+    razonSocial: { rules: [checkRequired, checkClientName, checkMaxLength(50)] },
     occupation: { rules: [] },      
-    descriptionCompany: { rules: [] },
+    descriptionCompany: { rules: [checkClientDescription] },
     reportVirtual: { rules: [] },
     extractsVirtual: { rules: [] },
     marcGeren: { rules: [] },
     necesitaLME: { rules: [] },
     idCIIU: { rules: [] },
     idSubCIIU: { rules: [] },
-    address: { rules: [] },
+    address: { rules: [checkClientAddress] },
     country: { rules: [] },
     province: { rules: [] },
     city: { rules: [] },
-    telephone: { rules: [] },
-    district: { rules: [] },
+    telephone: { rules: [checkNumbers] },
+    district: { rules: [checkClientNeighborhood] },
     annualSales: { rules: [] },
     assets: { rules: [] },
     centroDecision: { rules: [] },
