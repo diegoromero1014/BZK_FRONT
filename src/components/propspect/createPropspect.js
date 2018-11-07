@@ -4,7 +4,6 @@ import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 
 import SweetAlert from '../sweetalertFocus';
-import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
 import FormCreateProspect from './formCreateProspect';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
@@ -13,45 +12,21 @@ import SecurityMessageComponent from './../globalComponents/securityMessageCompo
 import { validateProspectExists, clearState, clearAllState } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
-import { xssValidation, onSessionExpire } from '../../actionsGlobal';
+import { onSessionExpire } from '../../actionsGlobal';
 
-import { SESSION_EXPIRED, VALUE_XSS_INVALID } from '../../constantsGlobal';
+import { SESSION_EXPIRED } from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
 import * as constantsPropect from './constants';
+
+import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
 
 import _ from 'lodash';
 
 var prospectInApplication = true;
-var nameTipeDocument = "";
 
 var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
-
-const validate = values => {
-  const errors = {}
-  if (!values.idType) {
-    errors.idType = "Debe seleccionar un valor";
-  } else {
-    errors.idType = null;
-  }
-
-  if (!values.clientType) {
-    errors.clientType = "Debe seleccionar un valor";
-  } else {
-    errors.clientType = null;
-  }
-
-  if (!values.idNumber) {
-    errors.idNumber = "Debe ingresar un valor";
-  } else if (xssValidation(values.idNumber)) {
-    errors.idNumber = VALUE_XSS_INVALID;
-  } else {
-    errors.idNumber = null;
-  }
-
-  return errors
-};
 
 class CreatePropspect extends Component {
   constructor(props) {
@@ -162,7 +137,6 @@ class CreatePropspect extends Component {
     const { propspectReducer } = this.props;
     const { selectsReducer } = this.props;
     const status = propspectReducer.get('status');
-    const validateLogin = propspectReducer.get('validateLogin');
     const prospectExist = propspectReducer.get('prospectExist');
     if (status !== "OK") {
       prospectInApplication = prospectExist;
@@ -279,7 +253,7 @@ function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idType", "idNumber", "clientType"],
+  fields: fields,
   validate,
   onSubmitFail: errors => {
     thisForm.setState({ showEr: true });

@@ -17,7 +17,6 @@ import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 import { createProspect } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
-import { xssValidation } from '../../actionsGlobal';
 import {
     consultDataSelect,
     consultList,
@@ -34,6 +33,8 @@ import {
 import { CONSTRUCT_PYME } from '../clientEdit/constants';
 import * as constantsPropect from './constants';
 
+import { fields, validations as validate } from './fieldsAndRules';
+
 const valuesYesNo = [
     { 'id': true, 'value': "Si" },
     { 'id': false, 'value': "No" }
@@ -46,112 +47,7 @@ let typeConfirm = "create";
 //Controla si el campo Segmento esta seleccionado constructor pyme.
 let isSegmentPymeConstruct = false;
 
-const fields = ["razonSocial", "firstName", "middleName", "lastName", "middleLastName", "occupation", "descriptionCompany", "reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-    "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
-    "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals", "segment", "subSegment"];
-
 let isNature = false;
-
-const validate = (values, props) => {
-    const errors = {}
-    if (!values.razonSocial && !isNature) {
-        errors.razonSocial = VALUE_REQUIERED;
-    } else if (xssValidation(values.razonSocial)) {
-        errors.razonSocial = VALUE_XSS_INVALID;
-    } else {
-        errors.razonSocial = null;
-    }
-
-    if (!values.firstName && isNature) {
-        errors.firstName = VALUE_REQUIERED;
-    } else if (xssValidation(values.firstName)) {
-        errors.firstName = VALUE_XSS_INVALID;
-    } else {
-        errors.firstName = null;
-    }
-
-    if (xssValidation(values.middleName)) {
-        errors.middleName = VALUE_XSS_INVALID;
-    } else {
-        errors.middleName = null;
-    }
-
-    if (xssValidation(values.middleLastName)) {
-        errors.middleLastName = VALUE_XSS_INVALID;
-    } else {
-        errors.middleLastName = null;
-    }
-
-    if (!values.lastName && isNature) {
-        errors.lastName = VALUE_REQUIERED;
-    } else if (xssValidation(values.lastName)) {
-        errors.lastName = VALUE_XSS_INVALID;
-    } else {
-        errors.lastName = null;
-    }
-
-    if (!values.idCelula) {
-        errors.idCelula = VALUE_REQUIERED;
-    } else {
-        errors.idCelula = null;
-    }
-
-    if (!values.segment) {
-        errors.segment = OPTION_REQUIRED;
-    } else {
-        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value)) {
-            if (!values.subSegment) {
-                errors.subSegment = OPTION_REQUIRED;
-            } else {
-                errors.subSegment = null;
-            }
-        }
-        errors.segment = null;
-    }
-
-    if (xssValidation(values.descriptionCompany)) {
-        errors.descriptionCompany = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.address)) {
-        errors.address = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.district)) {
-        errors.district = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.anualSales)) {
-        errors.anualSales = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-    }
-
-    return errors;
-};
 
 class FormCreateProspect extends Component {
     constructor(props) {
@@ -243,7 +139,7 @@ class FormCreateProspect extends Component {
 
             var jsonCreateProspect = {
                 "clientIdNumber": numberDocument,
-                "clientName": !isNature ? razonSocial.value : (firstName.value + " " + middleName.value + " " + lastName.value + " " + middleLastName.value),
+                "clientName": razonSocial.value,
                 "clientStatus": "",
                 "riskRating": null,
                 "isProspect": true,
@@ -301,11 +197,8 @@ class FormCreateProspect extends Component {
                 "description": descriptionCompany.value,
                 "clientIdType": idTupeDocument,
                 "clientType": clientType.id,
-                "firstName": firstName.value,
-                "middleName": middleName.value,
-                "lastName": lastName.value,
-                "middleLastName": middleLastName.value,
-                "occupation": isNature ? occupation.value : null
+                "occupation": isNature ? occupation.value : null,
+                "saveMethod": "prospecto"
             };
             const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -316,7 +209,7 @@ class FormCreateProspect extends Component {
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                         redirectUrl("/login");
                     } else {
-                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
                             this.setState({ showEx: true });
                         } else {
                             this.setState({ showEr: true });
@@ -411,8 +304,6 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-
-                    {!isNature &&
                         <Col xs={12} md={8} lg={8} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -425,65 +316,8 @@ class FormCreateProspect extends Component {
                                 />
                             </div>
                         </Col>
-                    }
-
-                    {isNature &&
-
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="firstName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer nombre del prospecto"
-                                    {...firstName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo nombre </span></dt>
-                                <Input
-                                    name="middleName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo nombre del prospecto"
-                                    {...middleName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingRight: "10px" }}>
-                                <dt><span>Primer apellido  (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="lastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer apellido del prospecto"
-                                    {...lastName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo apellido</span></dt>
-                                <Input
-                                    name="middleLastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo apellido del prospecto"
-                                    {...middleLastName}
-                                />
-                            </div>
-                        </Col>
-                    }
+                
+                
                     {isNature &&
 
                         <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>

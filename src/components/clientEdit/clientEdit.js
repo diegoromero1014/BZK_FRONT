@@ -1239,7 +1239,7 @@ class clientEdit extends Component {
             if (_.get(data, 'payload.data.status', 500) === 200) {
                 saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
                     if (validateResponse(response)) {
-                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
                             if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
                                 messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";

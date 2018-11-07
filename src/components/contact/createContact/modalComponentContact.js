@@ -473,7 +473,6 @@ class ModalComponentContact extends Component {
                                         {...tipoEstiloSocial}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get(FILTER_SOCIAL_STYLE) || []}
                                     /></dd>
                                 </dl>
@@ -485,7 +484,6 @@ class ModalComponentContact extends Component {
                                         {...tipoActitud}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get(FILTER_ATTITUDE_OVER_GROUP) || []}
                                     /></dd>
                                 </dl>
@@ -509,7 +507,6 @@ class ModalComponentContact extends Component {
                                         onBlur={pais.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get(FILTER_COUNTRY) || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
                                     /></dd>
@@ -528,7 +525,6 @@ class ModalComponentContact extends Component {
                                         onBlur={departamento.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get('dataTypeProvince')}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
                                     /></dd>
@@ -544,7 +540,6 @@ class ModalComponentContact extends Component {
                                         {...ciudad}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get('dataTypeCity')}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
                                     /></dd>
@@ -655,7 +650,6 @@ class ModalComponentContact extends Component {
                                         {...tipoContacto}
                                         valueProp={'id'}
                                         textProp={'value'}
-
                                         data={selectsReducer.get(FILTER_TYPE_CONTACT_ID) || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoContacto')}
                                     /></dd>
