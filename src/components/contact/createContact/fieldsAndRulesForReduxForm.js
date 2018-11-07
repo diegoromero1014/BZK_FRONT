@@ -4,7 +4,7 @@ import {
     checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
     checkMaxLength, checkAddress, checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers,
     checkContactRelevantFeatures, checkEmail, processRules
-} from '../../../validationsFields/rulesField';
+} from './../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     id: { rules: [] },
