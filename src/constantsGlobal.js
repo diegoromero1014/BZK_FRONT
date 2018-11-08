@@ -140,6 +140,8 @@ export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
 export const TAB_CUSTOMER_STORY = 10;
 
+export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
+
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {

@@ -2,8 +2,8 @@ import _ from "lodash";
 
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail, 
-    patternOfHistory, patternOfClientName, patternOfDescription, patternOfClientAddress, patternOfClientNeighborhood,
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail,
+    patternOfHistory, patternOfClientName, patternOfDescription, patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient,
     regexNumbers
 } from './patternsToValidateField';
 
@@ -11,7 +11,7 @@ import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS,
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
     MESSAGE_WARNING_CLIENT_NAME
 } from './validationsMessages';
 
@@ -65,7 +65,7 @@ export const checkForValueSubSegment = (value, fields, props) => {
 
     if (_.isEqual(CONSTRUCT_PYME, segmentValue)) {
         if (_.isNull(value) || _.isEmpty(value)) {
-            message = MESSAGE_REQUIRED_VALUE;  
+            message = MESSAGE_REQUIRED_VALUE;
         }
     }
 
@@ -171,6 +171,14 @@ export const checkContactRelevantFeatures = value => {
     return message;
 }
 
+export const checkObservationsLinkClient = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservationLinkClient).test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
+    }
+
+    return message;
+}
 export const checkHistoryFields = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfHistory).test(value)) {
@@ -183,7 +191,7 @@ export const checkHistoryFields = value => {
 export const checkClientName = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientName.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfClientName.test(value)) {
         message = MESSAGE_WARNING_CLIENT_NAME;
     }
 
@@ -193,7 +201,7 @@ export const checkClientName = value => {
 export const checkClientDescription = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfDescription.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfDescription.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
@@ -203,7 +211,7 @@ export const checkClientDescription = value => {
 export const checkClientAddress = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientAddress.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfClientAddress.test(value)) {
         message = MESSAGE_WARNING_ADDRESS;
     }
 
@@ -214,7 +222,7 @@ export const checkClientAddress = value => {
 export const checkClientNeighborhood = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! patternOfClientNeighborhood.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfClientNeighborhood.test(value)) {
         message = MESSAGE_WARNING_NEIGHBORHOOD;
     }
 
@@ -224,7 +232,7 @@ export const checkClientNeighborhood = value => {
 export const checkNumbers = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && ! regexNumbers.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !regexNumbers.test(value)) {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
