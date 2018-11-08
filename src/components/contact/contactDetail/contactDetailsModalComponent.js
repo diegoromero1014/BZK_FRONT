@@ -88,12 +88,18 @@ class ContactDetailsModalComponent extends Component {
         setGlobalCondition(callFromModuleContact);
 
         nonValidateEnter(true);
-        const that = this;
         showLoading(true, MESSAGE_LOAD_DATA);
+        
+        const that = this;
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
         const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
-        getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
-            FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]).then(function (data) {
+        const masterData = [
+            CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY,
+            FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS,
+            FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
+        ];
+
+        getMasterDataFields(masterData).then(function (data) {
                 getContactDetails(contactId, idClient)
                     .then(function (data) {
                         showLoading(false, "");
@@ -346,20 +352,21 @@ class ContactDetailsModalComponent extends Component {
     render() {
         const { callFromModuleContact } = this.props;
         const {
-            initialValues, fields: {
-                contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
-                contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-                contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-            }, error, handleSubmit, selectsReducer, reducerGlobal
+            fields: {
+                contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
+                contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
+                contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            }, handleSubmit, selectsReducer, reducerGlobal
         } = this.props;
 
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                    id="modalEditCotact"
-                    style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
+                    id="modalEditCotact" style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
                     <dt className="business-title" style={{ fontSize: '17px' }}>
                         <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
