@@ -336,17 +336,19 @@ class FormCreateProspect extends Component {
                         </Col>
                     }
 
-                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "45px" }}>
-                        <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <ComboBox
-                            name="Célula"
-                            labelInput="Célula"
-                            valueProp={'id'}
-                            textProp={'description'}
-                            parentId="dashboardComponentScroll"
-                            data={selectsReducer.get('teamValueObjects')}
-                            {...idCelula}
-                        />
+                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+                            <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <ComboBox
+                                name="Célula"
+                                labelInput="Célula"
+                                valueProp={'id'}
+                                textProp={'description'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get('teamValueObjects')}
+                                {...idCelula}
+                            />
+                        </div>
                     </Col>
 
                     <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
