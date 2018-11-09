@@ -4,7 +4,7 @@ export const MESSAGE_WARNING_MIN_LENGTH = minLength => "Requiere " + minLength +
 export const MESSAGE_WARNING_MAX_LENGTH = maxLength => "Solo se permiten " + maxLength + " caracteres";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";
 export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
-export const MESSAGE_WARNING_ADDRESS = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/";
+export const MESSAGE_WARNING_ADDRESS = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/_´'";
 export const MESSAGE_WARNING_NEIGHBORHOOD = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/";
 export const MESSAGE_WARNING_INVALID_EMAIL = "Debe ingresar un formato válido";
 export const MESSAGE_WARNING_POSTAL_CODE = "Solo se permiten valores alfanuméricos y -";
