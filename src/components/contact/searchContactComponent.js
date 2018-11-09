@@ -24,11 +24,6 @@ class SearchContactComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      value1,
-      value2,
-      value3
-    } = nextProps;
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
       (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
@@ -51,7 +46,7 @@ class SearchContactComponent extends Component {
   }
 
   _handleContactsByClientsFind() {
-    const { contactsByClientFindServer, contactsByClient, clearContactPaginator, clearContactOrder } = this.props;
+    const { contactsByClientFindServer, clearContactPaginator, clearContactOrder } = this.props;
 
     clearContactPaginator();
     clearContactOrder();

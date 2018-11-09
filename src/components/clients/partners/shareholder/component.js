@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { clearShareholder, shareholdersByClientFindServer, updateCertificateNoShareholder } from './actions';
-import { changeCheckInfoClient } from '../../../clientInformation/actions';
 import { bindActionCreators } from 'redux';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import $ from 'jquery';
+
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
 import PaginationShareholderComponent from './paginationShareholderComponent';
 import ListShareholderComponent from './listShareholderComponent';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants';
 import SelectFilterContact from '../../../selectsComponent/selectFilterContact/selectFilterComponent';
-import $ from 'jquery';
+import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
+
+import { clearShareholder, shareholdersByClientFindServer, updateCertificateNoShareholder } from './actions';
+import { changeCheckInfoClient } from '../../../clientInformation/actions';
 import { redirectUrl } from '../../../globalComponents/actions';
 import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
-import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
+
+import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
 
 var enableClickCertificationShareholder = "";
@@ -128,8 +131,11 @@ class ShareholderComponent extends Component {
                   disabled={this.state.disabledComponents}
                 />
               </Col>
-              {_.get(reducerGlobal.get('permissionsShareholders'), _.indexOf(reducerGlobal.get('permissionsShareholders'), CREAR), false) &&
-                <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
+              {
+                _.get(
+                  reducerGlobal.get('permissionsShareholders'),
+                  _.indexOf(reducerGlobal.get('permissionsShareholders'), CREAR),
+                  false) && <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
               }
             </Row>
             <Row>

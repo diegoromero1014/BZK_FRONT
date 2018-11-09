@@ -36,11 +36,6 @@ class ListContactComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      value1,
-      value2,
-      value3
-    } = nextProps;
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
       (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
@@ -58,7 +53,8 @@ class ListContactComponent extends Component {
     } else {
       this.setState({ orderA: 'inline-block', orderD: 'none' });
     }
-    const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2, value3, clearContactPaginator, orderColumnContact } = this.props;
+    
+    const { contactsByClientFindServer, contactsByClient, clearContactPaginator, orderColumnContact } = this.props;
     clearContactPaginator();
     orderColumnContact(order, column);
     contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, column, order, contactsByClient.get('keywordContact'),

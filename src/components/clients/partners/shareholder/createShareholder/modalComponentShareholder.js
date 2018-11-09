@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
-import numeral from 'numeral';
 
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
@@ -20,7 +18,6 @@ import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../
 import { changeStateSaveData } from '../../../../dashboard/actions';
 
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
-import * as constants from './constants';
 import {
   MESSAGE_SAVE_DATA,
   REGEX_SIMPLE_XSS_MESAGE
@@ -64,7 +61,7 @@ const validate = (values) => {
     errors.numeroDocumento = "Debe ingresar un valor";
   } else if (xssValidation(values.numeroDocumento)) {
     errors.numeroDocumento = VALUE_XSS_INVALID;
-  } else if (values.numeroDocumento.trim()) {
+  } else if (values.numeroDocumento.trim().length == 0) {
     errors.numeroDocumento = "Debe ingresar un valor"
   } else {
     errors.numeroDocumento = null;

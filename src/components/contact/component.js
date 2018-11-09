@@ -33,8 +33,7 @@ class ContactComponent extends Component {
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2,
-        value3, clearContact, validatePermissionsByModule } = this.props;
+      const { contactsByClientFindServer, clearContact, validatePermissionsByModule } = this.props;
       clearContact();
       contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
       validatePermissionsByModule(MODULE_CONTACTS).then((data) => {

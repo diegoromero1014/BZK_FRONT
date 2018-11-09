@@ -130,7 +130,7 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _genero(val) {
-        const { fields: { contactTitle, contactGender }, selectsReducer, contactDetail } = this.props;
+        const { fields: { contactGender }, selectsReducer, contactDetail } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
@@ -231,7 +231,7 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _onChangeProvince(val) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
+        const { fields: { contactProvince, contactCity } } = this.props;
         if (val !== undefined && val !== null) {
             contactProvince.onChange(val);
             const { consultListWithParameterUbication } = this.props;
@@ -241,7 +241,6 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _uploadProvincesByCountryId(countryId) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         const { consultListWithParameterUbication } = this.props;
         if (countryId !== undefined && countryId !== null) {
             consultListWithParameterUbication(FILTER_PROVINCE, countryId);
@@ -249,7 +248,6 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _uploadCitiesByProvinceId(provinceId) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         const { consultListWithParameterUbication } = this.props;
         if (provinceId !== undefined && provinceId !== null) {
             consultListWithParameterUbication(FILTER_CITY, provinceId);
@@ -277,11 +275,13 @@ class ContactDetailsModalComponent extends Component {
     _handlerSubmitContact() {
         const {
             fields: {
-                contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-                contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-            }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
+                contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
+                contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
+                contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage
         } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');

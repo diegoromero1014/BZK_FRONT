@@ -30,9 +30,7 @@ class comboBoxComponent extends Component {
     }
 
     _changeValue(value, name, data) {
-
         const selector = $(`.ui.selection.dropdown.${name}`);
-
         let valueField = value;
 
         if(data && data.length > 0 && !this.existValueToMap(value, data) ){
@@ -120,8 +118,11 @@ class comboBoxComponent extends Component {
     }
 
     render() {
-        const { nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo,
-            parentId, searchClient, styles, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject } = this.props;
+        const {
+            nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId,
+            searchClient, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject
+        } = this.props;
+        
         if (touched && invalid && shouldHandleUpdate) {
             scrollTo(parentId);
         }

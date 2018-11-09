@@ -96,7 +96,6 @@ class ModalCreateBoardMembers extends Component {
      * Reinicia el formulario para realizar de nuevo la búsqueda de un miembro de junta
      */
     _onClickClear() {
-        const { fields: { typeOfDocument } } = this.props;
         this.setState({
             showCompleteForm: 'hidden',
             allowsEditingOFDocument: true
@@ -209,7 +208,6 @@ class ModalCreateBoardMembers extends Component {
                         if (_.get(detailBoardMember, 'idClientBoardMember', null) !== null) {
                             swtShowMessage('warning', 'Relación existente', 'Señor usuario, el miembro de junta ya presenta una relación con el cliente');
                             cleanFieldsBoardMember = true;
-                            allowShowCompleteForm = false;
                             showAuditFields = false;
                         } else {
                             idBoardMember.onChange(detailBoardMember.idBoardMember);
