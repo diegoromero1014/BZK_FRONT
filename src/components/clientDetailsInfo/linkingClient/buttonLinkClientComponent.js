@@ -33,7 +33,7 @@ import {
     } from './../../../validationsFields/patternsToValidateField';
     
     import {
-    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT
     } from './../../../validationsFields/validationsMessages'; 
 
 let helpLinksMessage = "";
