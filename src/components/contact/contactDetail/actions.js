@@ -1,9 +1,10 @@
+import axios from 'axios';
+
 import { APP_URL } from '../../../constantsGlobal';
 import {
   GET_CONTACT_DETAILS, SAVE_CONTACT, CLEAR_EDIT_CONTACT, DELETE_RELATOINSHIP_SERVER,
   SET_ARRAY_DELETE_CLIENT_CONTACT, DELETE_RELATOINSHIP_LOCAL
 } from '../constants';
-import axios from 'axios';
 
 /**
  * Metodo para llamar al servicio y traer la informacion del contacto por su identficacion

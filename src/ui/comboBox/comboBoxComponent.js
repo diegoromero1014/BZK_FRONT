@@ -15,6 +15,7 @@ class comboBoxComponent extends Component {
         this._setUsed = this._setUsed.bind(this);
         this._changeValue = this._changeValue.bind(this);
         this._setPristine = this._setPristine.bind(this);
+        this.existValueToMap = this.existValueToMap.bind(this);
     }
 
     _setUsed(used) {
@@ -28,11 +29,30 @@ class comboBoxComponent extends Component {
         selector.dropdown('clear');
     }
 
-    _changeValue(value, name) {
+    _changeValue(value, name, data) {
+
         const selector = $(`.ui.selection.dropdown.${name}`);
-        selector.dropdown('set selected', value);
-        selector.dropdown('set value', value);
+
+        let valueField = value;
+
+        if(data && data.length > 0 && !this.existValueToMap(value, data) ){
+            valueField = null;
+        }
+
+        selector.dropdown('set selected',  valueField);
+        selector.dropdown('set value', valueField);
         this._setUsed(true);
+    }
+
+    existValueToMap(value, dataSource = []) {
+        let existValue = false;
+        _.forEach(dataSource, function (data) {
+            if (_.isEqual(_.toString(value), _.toString(data.id))) {
+                existValue = true;
+            }
+        });
+
+        return existValue;
     }
 
     _setPristine(labelInput, name) {
@@ -42,18 +62,18 @@ class comboBoxComponent extends Component {
         selector.dropdown('set text', labelInput);
     }
 
-    componentWillReceiveProps({ value, name, pristine, labelInput }) {
+    componentWillReceiveProps({ value, name, pristine, labelInput, data }) {
         const selector = $(`.ui.selection.dropdown.${name}`);
         selector.dropdown('refresh');
         const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
         const valueIsNotEmpty = value !== null && value !== undefined && value !== "";
         const setPristineAgain = (value === null || value === undefined || value === "") && pristine && this.state.used;
+
         if (setPristineAgain) {
             this._setPristine(labelInput, name);
-        }
-        else {
+        } else {
             if (valueIsNotEmpty) {
-                this._changeValue(value, name);
+                this._changeValue(value, name, data);
             } else {
                 if (isEmptyAndUsed) {
                     this._clearValues(name);
@@ -63,7 +83,7 @@ class comboBoxComponent extends Component {
     }
 
     componentDidMount() {
-        const { onChange, onBlur, name, defaultValue, value, data } = this.props;
+        const { onChange, onBlur, name } = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
@@ -107,11 +127,8 @@ class comboBoxComponent extends Component {
         }
 
         let emptyObject = {};
-
         let comboData;
-
         let _data = Object.assign([], data);
-
 
         if (showEmptyObject) {
             emptyObject[valueProp] = '';
