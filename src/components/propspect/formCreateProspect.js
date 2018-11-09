@@ -664,7 +664,7 @@ class FormCreateProspect extends Component {
                                 type="text"
                                 max="15"
                                 {...operatingIncome}
-                                onBlur={val => this._handleBlurValueNumber(2, operatingIncome, val)}
+                                onBlur={val => this._handleBlurValueNumber(1, operatingIncome, val)}
                             />
                         </div>
                     </Col>
@@ -677,7 +677,7 @@ class FormCreateProspect extends Component {
                                 type="text"
                                 max="15"
                                 {...nonOperatingIncome}
-                                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome, val)}
+                                onBlur={val => this._handleBlurValueNumber(1, nonOperatingIncome, val)}
                             />
                         </div>
                     </Col>
