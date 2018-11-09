@@ -1006,11 +1006,13 @@ class FormEditPrevisita extends Component {
             positionCreatedBy = detailPrevisit.data.positionCreatedBy;
             positionUpdatedBy = detailPrevisit.data.positionUpdatedBy;
             if (detailPrevisit.data.updatedTimestamp !== null) {
-                let fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp, "x").locale('es');
+                //TODO: Validar moment x
+                let fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp).locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
             if (detailPrevisit.data.createdTimestamp !== null) {
-                let fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp, "x").locale('es');
+                //TODO: Validar moment x
+                let fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp).locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
         }
