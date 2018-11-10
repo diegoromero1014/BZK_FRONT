@@ -21,25 +21,20 @@ import { consultInfoClient } from '../../clientInformation/actions';
 import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
+import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE} from "../../../constantsGlobal";
+
 import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
-import ToolTipComponent from '../../toolTip/toolTipComponent';
-import { xssValidation } from '../../../actionsGlobal';
-
-const fields = ["observationTrader"];
-const errors = {};
-
-const validate = (values) => {
-    if (xssValidation(values.observationTrader)) {
-        errors.observationTrader = VALUE_XSS_INVALID;
-    } else {
-        errors.observationTrader = null;
-    }
-
-    return errors;
-};
+import {fields, validations as validate} from './fieldsAndRulesForReduxForm';
+import {
+    patternOfOnlyNumbersLinkClient,patternOfObservationLinkClient
+    } from './../../../validationsFields/patternsToValidateField';
+    
+    import {
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT
+    } from './../../../validationsFields/validationsMessages'; 
 
 let helpLinksMessage = "";
 
@@ -97,6 +92,7 @@ class ButtonLinkClientComponent extends Component {
             swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
             message, level, consultInfoClient
         } = this.props;
+        let messageWhiteList = null;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
@@ -105,19 +101,24 @@ class ButtonLinkClientComponent extends Component {
                 updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                 isValidLinkEntities = false;
             }
-
+            
             if (isValidLinkEntities) {
                 if (isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())
                     || isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())) {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
+                         isValidLinkEntities = false;
+                     } 
+                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && eval(patternOfOnlyNumbersLinkClient).test(linkEntity.traderCode)) {
+                        messageWhiteList  = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
+                        updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    } else if (xssValidation(linkEntity.traderCode)) {
-                        updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
-                        inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+                    }  else  if (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && linkEntity.traderCode.length > MAX_LENGTH_LINK_CLIENT_TRACER_CODE) {
+                        messageWhiteList  =  MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_LINK_CLIENT_TRACER_CODE);
+                        updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    }
-
+                    } 
+                    
                     return {
                         id: linkEntity.idEntity,
                         entity: linkEntity.entity,
@@ -138,15 +139,15 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if (xssValidation(observationTrader.value)) {
-            inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && eval(patternOfObservationLinkClient).test(observationTrader.value)) {
+            messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
-        }
+        } 
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
         } else if (!isValidLinkEntities) {
-            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities);
+            swtShowMessage('error', 'Vinculación', messageWhiteList);
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
@@ -158,8 +159,8 @@ class ButtonLinkClientComponent extends Component {
             };
             showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
-                .then((data) => {
-                    if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
+                .then((data) => {                   
+                    if ((_.get(data, 'payload.data.status') === 200)) {
                         consultInfoClient();
                         showLoading(false, '');
                         this.closeModal();
@@ -359,7 +360,7 @@ class ButtonLinkClientComponent extends Component {
                                                     name="actionArea"
                                                     type="text"
                                                     style={{ width: '100%', height: '100%', textAlign: 'justify' }}
-                                                    max="500"
+                                                    max="1000"
                                                     rows={3}
                                                     touched={true}
                                                 />

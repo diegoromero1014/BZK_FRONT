@@ -1,7 +1,7 @@
 /**
  * Created by Andres Hurtado on 16/03/2017.
  */
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {Row, Col} from 'react-flexbox-grid';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../../ui/input/inputComponent';
@@ -11,6 +11,7 @@ import {updateErrorsLinkEntities} from '../../../clientDetailsInfo/actions';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import {ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA} from './constants';
+import {swtShowMessage} from '../../../sweetAlertMessages/actions';
 
 class EntityItem extends Component {
     constructor(props) {
@@ -22,6 +23,8 @@ class EntityItem extends Component {
         };
         this._updateValue = this._updateValue.bind(this);
         this._deleteLinkEntity = this._deleteLinkEntity.bind(this);
+        this._onChange = this._onChange.bind(this);
+        this.firstChange = false;
     }
 
     _updateValue(prop, value, text) {
@@ -57,6 +60,28 @@ class EntityItem extends Component {
         this.setState(_.set({}, 'traderCode', traderCode));
     }
 
+    _onChange(val, text) {
+
+        const {linkEntitiesClient, swtShowMessage} = this.props;
+        let exists = false;
+
+        linkEntitiesClient.map(linkEntity => {
+            if (linkEntity.entity == val) {
+                exists = true;
+            }
+        });
+
+        if (! exists || ! this.firstChange) {
+            if (! this.firstChange) {
+                this.firstChange = true;
+            }
+            this._updateValue('entity', val, text);
+        } else {
+            swtShowMessage("warning", "Error!",'El cliente ya tiene seleccionada esta linea de negocio');
+            this.setState({entity: ""})   
+        }           
+    }
+
     render() {
         const {index, data} = this.props;
         const allowEdit = !this.state.isTraderVisible ? 'disabled' : '';
@@ -70,9 +95,7 @@ class EntityItem extends Component {
                                 name={`linkEntity${index}`}
                                 value={this.state.entity}
                                 defaultValue={this.state.entity}
-                                onChange={(val, text) => {
-                                    return this._updateValue('entity', val, text);
-                                }}                                
+                                onChange={this._onChange}                                
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={data}
@@ -117,7 +140,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         deleteLinkEntity,
         updateLinkEntity,
-        updateErrorsLinkEntities
+        updateErrorsLinkEntities, 
+        swtShowMessage
     }, dispatch);
 }
 
