@@ -2,7 +2,8 @@ import _ from "lodash";
 
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
+    patternOfStructureEmail, patternOfEmail
 } from './patternsToValidateField';
 
 import {
@@ -131,7 +132,8 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfEmail.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) &&
+        (!patternOfStructureEmail.test(value) || eval(patternOfEmail).test(value))) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
